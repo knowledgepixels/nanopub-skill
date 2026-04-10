@@ -1,0 +1,5 @@
+tmp/
+*.jar
+assertion-templates/
+queries/
+resource-views/
