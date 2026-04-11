@@ -1,0 +1,75 @@
+@prefix this: <https://w3id.org/np/RAx1gUtDVeKoVfot1sJMfIIXO-LOc5Vw_i5rIlYqkPZeQ> .
+@prefix sub: <https://w3id.org/np/RAx1gUtDVeKoVfot1sJMfIIXO-LOc5Vw_i5rIlYqkPZeQ/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-search-strategy-for-systematic-review a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the search strategy (or strategies) for the given systematic review.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get search strategy for systematic review";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/8769b80f69ed4b77de4aba1bfdddaa4756eb65c0ed0112a75d9a71b3f67bf236>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix sl: <https://w3id.org/sciencelive/o/terms/>
+
+select ?searchStrategy ?searchStrategy_label ?creator ?date ?np (\"^\" as ?np_label) where {
+  graph npa:graph {
+    ?np npx:hasNanopubType sl:SystematicReviewSearchStrategy .
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np dct:created ?date .
+    ?np npx:signedBy ?creator .
+    ?np npx:introduces ?searchStrategy .
+    ?np rdfs:label ?searchStrategy_label .
+    ?np np:hasAssertion ?a .
+  }
+  values ?_systematicReview_multi_iri {}
+  graph ?a {
+    ?searchStrategy dct:isPartOf ?_systematicReview_multi_iri .
+  }
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-01-13T08:49:57.013Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-search-strategy-for-systematic-review;
+    npx:supersedes <https://w3id.org/np/RAkOzwcvcmLSbYb1S_NHrQ4W9tGoVZ-6IOUbpEB8PyE54>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "nKPCFutDdnZDOluudOQfeYibfn26vGu00Dy8Ms/9Dv4p9J9434bZZBkETHyyGpuH5CerLb0yF9aV2r+G1SFRAtSSXKWz5F1Sa89ct6goPWKrSv1luWfK22p2fgtszSf1/Ol0DC8S/ytcDcO8h0te1KRzxNGWBxNld3TTU1hVK64=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

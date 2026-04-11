@@ -1,0 +1,96 @@
+@prefix this: <https://w3id.org/np/RA3TCUnxihtB_QLqhHFsGfblVDUHF174lhr2QKcrYxbOA> .
+@prefix sub: <https://w3id.org/np/RA3TCUnxihtB_QLqhHFsGfblVDUHF174lhr2QKcrYxbOA#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-3pff-events a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns a list of all events related to the Three Point FAIRification Framework (3PFF)";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get 3PFF Events";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/1c6aa07996de9244076dbdbf96515ae280fb28a8a0cc49f7b0b8c819bc8d54cf>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix tpff: <https://w3id.org/fair/3pff/>
+
+select (?event as ?Event_ID) (?eventShortName as ?Event_ID__label) (?eventLongName as ?Event_Name) (?eventDate as ?Date) (group_concat(distinct ?eventOrganizer; separator=\" \") as ?Organizers) (group_concat(distinct ?eventFacilitator; separator=\" \") as ?Facilitators) (group_concat(distinct ?eventMoreInfoLink; separator=\" \") as ?More_Info) (?np as ?Source) where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    ?np dct:created ?npDate .
+    ?np dct:creator ?npCreator .
+    ?np np:hasAssertion ?assertion .
+    ?np npx:introduces ?event .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+  }
+  graph ?assertion {
+    ?event a tpff:3PFF-event .
+    ?event rdfs:label ?eventName .
+    bind(replace(str(?eventName), ' ?\\\\|.*$', '') as ?eventShortName)
+    bind(replace(str(?eventName), '^([A-Z0-9]{2,3}).*$', '$1') as ?eventSeries)
+    bind(replace(str(?eventName), '^.*\\\\| ?(.*)$', '$1') as ?eventLongName)
+    ?event dct:date ?eventDate .
+    optional {
+      ?event tpff:has-event-organizer ?eventOrganizer .
+    }
+    optional {
+      ?event tpff:has-event-facilitator ?eventFacilitator .
+    }
+    #optional {
+    #  values ?eventType { tpff:In-Person-Event tpff:Hybrid-Event tpff:Virtual-Event }
+    #  ?event a ?eventType .
+    #  bind(replace(str(?eventType), '^.*/', '') as ?eventTypeName)
+    #}
+    optional {
+      ?event rdfs:seeAlso ?eventMoreInfoLink .
+    }
+  }
+}
+group by ?event ?eventShortName ?eventLongName ?eventDate ?np
+order by desc(?eventDate)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "fiYqzcPP9s9/BcKok4fUvjhOb2DkgLEiawjguOW3LjYfVYo0T+7gS9jEAqG7MYe55aKfXe6r7hB145+LPuHF3kX5gl5Lja0VP6cVuhJw7VxTlc9EiuQu7BCoR0cfMxZxi+7KiZQcrMCJjdeFJOZvJtomvpd/Ui8Ez7irAvyPw1w=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-12-04T08:43:22.729Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-3pff-events;
+    npx:supersedes <https://w3id.org/np/RASK7bWbCC1-n4F9WNHrxtF10i0dXWPntU0jWnW8G9KUY>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+}
+

@@ -1,0 +1,172 @@
+@prefix this: <https://w3id.org/np/RAmGcVly_3y2JG8vuVt0DyO429bA_-lRxFDzGfu1FGMh0> .
+@prefix sub: <https://w3id.org/np/RAmGcVly_3y2JG8vuVt0DyO429bA_-lRxFDzGfu1FGMh0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:find-gofair-qualified-vocab-onto a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query allows for searching for resources (FERs etc.) together with the info about whether GO FAIR qualified them.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Find GO FAIR qualified vocabularies/ontologies";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+
+select distinct ?thing ?label (group_concat(distinct ?type; separator=\" \") as ?types) ?description ?np ?date ?pubkey ?retraction ?newversion ?qualifier ?qualification_np (group_concat(distinct ?recommender; separator=\" \") as ?recommenders) (group_concat(distinct ?recommendation_np; separator=\" \") as ?recommendation_nps) (count(distinct ?recommender) as ?recommender_count) where {
+  graph npa:graph {
+    <https://w3id.org/np/RA27Uhopq4MHZziL2lKXX-wTb1jz4KVLbHaupxyAcCt9Y> npa:hasValidSignatureForPublicKey ?curators_np_pk .
+    ?latest_curators_np npa:hasValidSignatureForPublicKey ?curators_np_pk .
+    filter not exists { ?latest_curators_npx npx:invalidates ?latest_curators_np ; npa:hasValidSignatureForPublicKey ?curators_np_pk . }
+    ?latest_curators_np np:hasAssertion ?latest_curators_assertion .
+  }
+  graph npa:networkGraph {
+    ?latest_curators_np (npx:supersedes)* <https://w3id.org/np/RA27Uhopq4MHZziL2lKXX-wTb1jz4KVLbHaupxyAcCt9Y> .
+    filter not exists { ?latest_curators_npxx npx:supersedes ?latest_curators_np }
+  }
+  
+  graph npa:graph {
+    values ?type { fip:Semantic-model fip:Structured-vocabulary }
+    ?np npx:hasNanopubType ?type .
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    optional { ?retraction npx:retracts ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+    optional { ?newversion npx:supersedes ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+    ?np (npx:introduces|npx:describes) ?thing .
+    ?np rdfs:label ?label .
+    ?np dct:description ?description .
+    ?np dct:created ?date .
+    filter(str(?date) > \"2022\")
+  }
+  bind(concat(\" \",lcase(str(?label)),\" \",lcase(str(?description)),\" \") as ?text)
+  filter( contains(?text, lcase(str(?_searchterm))) )
+
+  optional {
+    graph npa:graph {
+      ?disapproval npa:hasValidSignatureForPublicKey ?dpubkey .
+    }
+    graph ?latest_curators_assertion {
+      ?dpubkeys npx:hasPublicKey ?dpubkey .
+    }
+    graph npa:graph {
+      filter not exists { ?disapproval_x npx:invalidates ?disapproval ; npa:hasValidSignatureForPublicKey ?dpubkey . }
+      ?disapproval np:hasAssertion ?da .
+    }
+    graph ?da {
+      ?dsomebody ( npx:disapproves-of | npx:disapprovesOf ) ?np .
+    }
+  } filter(!bound(?disapproval))  # Faster than \"filter not exists\" for some reason
+
+  optional {
+    graph npa:graph {
+      ?qualification_np npx:hasNanopubType npx:qualifies .
+      ?qualification_np npa:hasValidSignatureForPublicKey ?qpubkey .
+    }
+    graph ?latest_curators_assertion {
+      ?qpubkeys npx:hasPublicKey ?qpubkey .
+    }
+    graph npa:graph {
+      filter not exists { ?qualification_np_x npx:invalidates ?qualification_np ; npa:hasValidSignatureForPublicKey ?qpubkey . }
+      ?qualification_np np:hasAssertion ?qa .
+    }
+    graph ?qa {
+      ?qualifier npx:qualifies ?np .
+    }
+  }
+
+  optional {
+    graph npa:graph {
+      ?recommendation_np npx:hasNanopubType fip:recommended-by .
+      ?recommendation_np npa:hasValidSignatureForPublicKey ?rpubkey .
+    }
+    graph ?latest_curators_assertion {
+      ?rpubkeys npx:hasPublicKey ?rpubkey .
+    }
+    graph npa:graph {
+      filter not exists { ?recommendation_np_x npx:invalidates ?recommendation_np ; npa:hasValidSignatureForPublicKey ?rpubkey . }
+      ?recommendation_np np:hasAssertion ?ra .
+    }
+    graph ?ra {
+      ?thing fip:recommended-by ?recommender .
+    }
+    filter exists {
+      graph npa:graph {
+        ?fip_np npx:hasNanopubType fip:Reference-FAIR-Implementation-Profile .
+        ?fip_np npa:hasValidSignatureForPublicKey ?fip_pubkey .
+      }
+      graph ?latest_curators_assertion {
+        ?dpubkeys npx:hasPublicKey ?fip_pubkey .
+      }
+      graph npa:graph {
+        filter not exists { ?fip_np_x npx:invalidates ?fip_np ; npa:hasValidSignatureForPublicKey ?fip_pubkey . }
+        ?fip_np np:hasAssertion ?fip_np_a .
+      }
+      graph ?fip_np_a {
+        ?fip fip:has-declaration-index ?index .
+      }
+      graph npa:graph {
+        ?index np:hasAssertion ?index_a .
+      }
+      graph ?index_a {
+        ?index npx:includesElement ?decl_np .
+      }
+      graph npa:graph {
+        ?decl_np npx:hasNanopubType fip:FIP-Declaration .
+        ?decl_np np:hasAssertion ?decl_np_a
+      }
+      graph ?decl_np_a {
+        ?subj ?pred ?thing .
+        values ?pred { fip:declares-current-use-of fip:declares-planned-use-of }
+        ?decl fip:declared-by ?recommender .
+      }
+    }
+  }
+}
+group by ?thing ?label ?description ?np ?date ?pubkey ?retraction ?newversion ?qualifier ?qualification_np
+order by desc(?recommender_count) asc(?label)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-1062-5576 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-1062-5576 foaf:name "Gerhard Burger" .
+  
+  this: dct:created "2025-07-28T13:44:17.183Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0003-1062-5576;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:find-gofair-qualified-vocab-onto;
+    npx:supersedes <https://w3id.org/np/RAoFIpfeHRWfAA-_uJb0CoXjr6dCz1OLtypH-e1imfdQs>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAm0_gAm9xiNz_RkvqqT4P0LRpNWn3JtC7SHoPRDYOUEY>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCKS0JLO/bGqK4GRv2E0dDCoFK5OAXtAsN8qrRCmaeMeBq/lp6gk/4vQ+/mbd2qZHt7bu0fbYWBmFwYDgxU3HqErq4mGo7JZ1UoKoNsEjq+pJCwv0sa5TsLfd1N/3xb0JLqouru63QrzS0VIPM0+X4Kar1SpZgxlpRapRc5NFZkUwIDAQAB";
+    npx:hasSignature "JFoiyqhHIERkjLTsy8JI0XJ3pbmHmUL1w0y5vpP+3Jn+hOnpqP7ScXxftjdz4OSDAGLafRb8LgkEgZNYgqCxkP8nurKGZFuiCCUIdYDBeX30w4rFK03MOMLpERnisFIMvcIKSU/OOXQOycyJxL7low4OttinbWIyS1ZFOl6qWPc=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-1062-5576 .
+}
+

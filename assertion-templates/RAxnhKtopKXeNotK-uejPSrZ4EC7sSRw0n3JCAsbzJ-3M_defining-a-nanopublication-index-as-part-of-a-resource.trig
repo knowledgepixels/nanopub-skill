@@ -1,0 +1,112 @@
+@prefix this: <https://w3id.org/np/RAxnhKtopKXeNotK-uejPSrZ4EC7sSRw0n3JCAsbzJ-3M> .
+@prefix sub: <https://w3id.org/np/RAxnhKtopKXeNotK-uejPSrZ4EC7sSRw0n3JCAsbzJ-3M/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:isPartOf rdfs:label "is a part of" .
+  
+  npx:NanopubIndex rdfs:label "nanopublication index" .
+  
+  npx:appendsIndex rdfs:label "is an index that appends" .
+  
+  npx:includesElement rdfs:label "is an index that includes as element" .
+  
+  npx:includesSubindex rdfs:label "is an index that includes as sub-index" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  sub:appended a nt:TrustyUriPlaceholder;
+    rdfs:label "nanopublication URI of the index to be appended" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Defining a nanopublication index as part of a resource";
+    nt:hasNanopubLabelPattern "${label}";
+    nt:hasRequiredPubinfoElement <https://w3id.org/np/RA4i2f5h4oqUC9Zgtv5QkpTyEyaHVpQSojlf1oAj9NXSk>;
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st1, sub:st2, sub:st3;
+    nt:hasTag "Meta" .
+  
+  sub:element a nt:TrustyUriPlaceholder;
+    rdfs:label "nanopublication URI of the element to be included" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "plain-text label for the index" .
+  
+  sub:resource a nt:ExternalUriPlaceholder;
+    rdfs:label "resource of which this index is a part of" .
+  
+  sub:st01 rdf:object npx:NanopubIndex;
+    rdf:predicate rdf:type;
+    rdf:subject nt:NANOPUB .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject nt:NANOPUB .
+  
+  sub:st03 a nt:OptionalStatement;
+    rdf:object sub:resource;
+    rdf:predicate dct:isPartOf;
+    rdf:subject nt:NANOPUB .
+  
+  sub:st1 a nt:OptionalStatement;
+    rdf:object sub:appended;
+    rdf:predicate npx:appendsIndex;
+    rdf:subject nt:NANOPUB .
+  
+  sub:st2 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:element;
+    rdf:predicate npx:includesElement;
+    rdf:subject nt:NANOPUB .
+  
+  sub:st3 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:sub;
+    rdf:predicate npx:includesSubindex;
+    rdf:subject nt:NANOPUB .
+  
+  sub:sub a nt:TrustyUriPlaceholder;
+    rdfs:label "nanopublication URI of the index to be included as sub-index" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-11-12T10:43:42.906+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAF-cQcc7wq1Hemh_OPzzGA_bD9WSeX--4F7Ke_XH3a20>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Defining a nanopublication index as part of a resource";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "A8O0T/sOQkcFudI/xcGT8FlEVM9n6nFL5lhZZs1IULK1HsNqmhXJZV7sDWLb05SNEj9HIbvmbpHWfV+tDJoGOEzgnE5erBOwZIvClfpYuJ4c/RtlGbIjM8+nHEPXB81fgjj+sY3an1RcHxliZRQwrWEUvdIBE4jIya7cHeJjjsE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

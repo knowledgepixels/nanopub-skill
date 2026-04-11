@@ -1,0 +1,151 @@
+@prefix this: <https://w3id.org/np/RAiAVIVrBnwxW8YtwfKgI_eEFmVvmtKSMnKShAka3gDVM> .
+@prefix sub: <https://w3id.org/np/RAiAVIVrBnwxW8YtwfKgI_eEFmVvmtKSMnKShAka3gDVM#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "is interpreted as follows" .
+  
+  rdfs:label rdfs:label "is called" .
+  
+  <https://schema.org/about> rdfs:label "about a specific FAIR Principle" .
+  
+  <https://w3id.org/fair/fip/latest/declared-by> rdfs:label "declared by" .
+  
+  <https://w3id.org/fair/principles/terms/A1> rdfs:label "FAIR Principle A1" .
+  
+  <https://w3id.org/fair/principles/terms/A1.1> rdfs:label "FAIR Principle A1.1" .
+  
+  <https://w3id.org/fair/principles/terms/A1.2> rdfs:label "FAIR Principle A1.2" .
+  
+  <https://w3id.org/fair/principles/terms/A2> rdfs:label "FAIR Principle A2" .
+  
+  <https://w3id.org/fair/principles/terms/F1> rdfs:label "FAIR Principle F1" .
+  
+  <https://w3id.org/fair/principles/terms/F2> rdfs:label "FAIR Principle F2" .
+  
+  <https://w3id.org/fair/principles/terms/F3> rdfs:label "FAIR Principle F3" .
+  
+  <https://w3id.org/fair/principles/terms/F4> rdfs:label "FAIR Principle F4" .
+  
+  <https://w3id.org/fair/principles/terms/I1> rdfs:label "FAIR Principle I1" .
+  
+  <https://w3id.org/fair/principles/terms/I2> rdfs:label "FAIR Principle I2" .
+  
+  <https://w3id.org/fair/principles/terms/I3> rdfs:label "FAIR Principle I3" .
+  
+  <https://w3id.org/fair/principles/terms/R1> rdfs:label "FAIR Principle R1" .
+  
+  <https://w3id.org/fair/principles/terms/R1.1> rdfs:label "FAIR Principle R1.1" .
+  
+  <https://w3id.org/fair/principles/terms/R1.2> rdfs:label "FAIR Principle R1.2" .
+  
+  <https://w3id.org/fair/principles/terms/R1.3> rdfs:label "FAIR Principle R1.3" .
+  
+  sub:FAIRPrinciple a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue <https://w3id.org/fair/principles/terms/A1>, <https://w3id.org/fair/principles/terms/A1.1>,
+      <https://w3id.org/fair/principles/terms/A1.2>, <https://w3id.org/fair/principles/terms/A2>,
+      <https://w3id.org/fair/principles/terms/F1>, <https://w3id.org/fair/principles/terms/F2>,
+      <https://w3id.org/fair/principles/terms/F3>, <https://w3id.org/fair/principles/terms/F4>,
+      <https://w3id.org/fair/principles/terms/I1>, <https://w3id.org/fair/principles/terms/I2>,
+      <https://w3id.org/fair/principles/terms/I3>, <https://w3id.org/fair/principles/terms/R1>,
+      <https://w3id.org/fair/principles/terms/R1.1>, <https://w3id.org/fair/principles/terms/R1.2>,
+      <https://w3id.org/fair/principles/terms/R1.3> .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Declaring a FAIR Interpretation";
+    nt:hasNanopubLabelPattern "FAIR Interpretation: ${name}";
+    nt:hasRequiredPubinfoElement ns1:RA_R5w4lZ-6xuZyylG8qSlMhmWBaTE41-zlhiBVUQblCc;
+    nt:hasStatement sub:st0, sub:st01, sub:st02, sub:st1, sub:st1a, sub:st2, sub:st3a,
+      sub:st3b;
+    nt:hasTag "FAIR" .
+  
+  sub:comment a nt:LiteralPlaceholder;
+    rdfs:label "the interpretation text" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the FAIR Interpretation" .
+  
+  sub:organisation a nt:UriPlaceholder;
+    rdfs:label "ROR-ID of organisation" .
+  
+  sub:resource a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix" .
+  
+  sub:st0 rdf:object <https://w3id.org/fair/fip/terms/FAIR-Supporting-Resource>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st01 rdf:object <https://w3id.org/fair/fip/terms/FAIR-Declaration>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st02 rdf:object <https://w3id.org/fair/fip/terms/FAIR-Interpretation>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st1 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:resource .
+  
+  sub:st1a rdf:object sub:FAIRPrinciple;
+    rdf:predicate <https://schema.org/about>;
+    rdf:subject sub:resource .
+  
+  sub:st2 rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:resource .
+  
+  sub:st3a rdf:object sub:organisation;
+    rdf:predicate <https://w3id.org/fair/fip/latest/declared-by>;
+    rdf:subject sub:resource .
+  
+  sub:st3b a nt:OptionalStatement;
+    rdf:object sub:website;
+    rdf:predicate <https://schema.org/url>;
+    rdf:subject sub:resource .
+  
+  sub:website a nt:UriPlaceholder;
+    rdfs:label "a link to a website with further information" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFntPrMZqvg2kVhCNArNnEn37ddXGwZ/0r4C8CS4lDry7C7YkYgng9yb0UMZQUHiTVkR/5A4m/xjE+Vy+AnwcWUeB75SfGZjE5ylI6VeHjTHi9+2hh2PHYIWnkhU4WHl3COEnxSSa/VouvPzZ2BIWLH6fTrq7NNL3RF5hGegGG0QIDAQAB";
+    npx:hasSignature "hIvZEujPag0pgig/1WeKZGAjZaLtsxqLoEIws8pDX8jTKfw6g4e4oSxOARxx85sOoinwXnwDEyHaktazlITQYJeOl9q2QKiXRELNwxUJ7SfdT/j6WH9q7gNkpbDec+Cv3ffmkZazlk3GA0F9Yt3HvsOnGWD7Rc/o5Rky35j2VFE=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-12-21T23:46:08.825Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA2uML5mNU_0CedtkdphdLwXaqNGhfyKX3R5JZO061hXM>;
+    rdfs:label "Template: Declaring a FAIR Interpretation";
+    prov:wasDerivedFrom ns1:RAtG8zeo_0OYP63K60rrot8vFOkHNOg_1_zu618NbL4pI;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM, ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

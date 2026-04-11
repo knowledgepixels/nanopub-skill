@@ -1,0 +1,80 @@
+@prefix this: <https://w3id.org/np/RAumk_6pLPHg00vXXJXCjUDfdhQDqUqy9ZzO9PCaMdZec> .
+@prefix sub: <https://w3id.org/np/RAumk_6pLPHg00vXXJXCjUDfdhQDqUqy9ZzO9PCaMdZec/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-presentations-for-event a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns all presentations of the given event, with label, date, event, and nanopub link.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get presentations for event";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/3952cad1a6d2561f045d33e5e79c03e7264b0a492b8becf6c62656c596cf398c>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix wd: <http://www.wikidata.org/entity/>
+
+select ?presentation ?presentation_label ?date ?speaker ?np (\"^\" as ?np_label) where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np dct:created ?npdate .
+    ?np np:hasAssertion ?a .
+    ?np npx:introduces ?presentation .
+  }
+  values ?_event_multi_iri {}
+  graph ?a {
+    ?presentation a wd:Q604733 .
+    ?presentation dct:isPartOf ?_event_multi_iri .
+    ?presentation wd:P823 ?speaker .
+    optional { ?presentation rdfs:label ?presentation_label . }
+    optional { ?presentation dct:date ?date . }
+  }
+} order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-03-18T14:12:22.959Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-presentations-for-event;
+    npx:supersedes <https://w3id.org/np/RAn4ngqA29fh9mH1nU8ZXjPhRV0bUKrnILLsiM3KLtb5Q>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RA_IcmwsJjICvGpSudP3AgR9ckFFoNQh7m5m8-veaHSJM>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RAcm8OurwUk15WOgBM9wySo-T3a5h6as4K8YR5MBrrxUc;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "hG4fmIDPw+aBj9wAP9yJC136yQ0Btks1Y3tqPGQptd1rdtv+FLHfYV1T2cW7gQ2ONhLwtF5itPvyQevLFBO7DGraiRM5S9b/wFXXVuC9ud8uA/rnT3x3X+V72JKuilIv12rqrvGTKtnMfSKbjpuP22g3zgxeee14autycJHX+mI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

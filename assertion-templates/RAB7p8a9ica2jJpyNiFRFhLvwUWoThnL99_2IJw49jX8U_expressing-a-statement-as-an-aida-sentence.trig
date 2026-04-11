@@ -1,0 +1,93 @@
+@prefix this: <http://purl.org/np/RAB7p8a9ica2jJpyNiFRFhLvwUWoThnL99_2IJw49jX8U> .
+@prefix sub: <http://purl.org/np/RAB7p8a9ica2jJpyNiFRFhLvwUWoThnL99_2IJw49jX8U#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:aida a nt:AutoEscapeUriPlaceholder;
+    rdfs:label "Type your AIDA sentence here (needs to end with a full stop)";
+    nt:hasPrefix "http://purl.org/aida/";
+    nt:hasPrefixLabel "The sentence";
+    nt:hasRegex "[\\S ]{5,500}\\." .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description """<p>Such nanopublications use the concept of an AIDA sentence to express a (scientific) statement in an informal or semi-formal manner, which can be formally linked.</p>
+
+<p>AIDA sentences are:<p>
+
+<ul>
+<li><strong>Atomic:</strong> a sentence describing one thought that cannot be further broken down in a practical way</li>
+<li><strong>Independent:</strong> a sentence that can stand on its own, without external references like \"this effect\" or \"we\"</li>
+<li><strong>Declarative:</strong> a complete sentence ending with a full stop that could in theory be either true or false</li>
+<li><strong>Absolute:</strong> a sentence describing the core of a claim ignoring the (un)certainty about its truth and ignoring how it was discovered (no \"probably\" or \"evaluation showed that\"); typically in present tense</li>
+</ul>
+
+<p>You can find more information about AIDA sentences <a href=\"https://github.com/tkuhn/aida\" target=\"_blank\">here</a>.</p>""";
+    rdfs:label "Expressing a statement as an AIDA sentence";
+    nt:hasNanopubLabelPattern "AIDA sentence: ${aida}";
+    nt:hasStatement sub:st0, sub:st1;
+    nt:hasTag "Claims";
+    nt:hasTargetNanopubType <http://purl.org/petapico/o/hycl#AIDA-Sentence> .
+  
+  sub:st0 rdf:object <http://purl.org/petapico/o/hycl#AIDA-Sentence>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:aida .
+  
+  sub:st1 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:topic;
+    rdf:predicate <http://schema.org/about>;
+    rdf:subject sub:aida .
+  
+  sub:topic a nt:GuidedChoicePlaceholder;
+    rdfs:label "identifier of concept or topic the sentence is about";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  <http://purl.org/petapico/o/hycl#AIDA-Sentence> rdfs:label "AIDA sentence - an English sentence that is Atomic, Independent, Declarative, and Absolute" .
+  
+  <http://schema.org/about> rdfs:label "is about - connects a thing (left) to a subject matter that this thing is about (right)" .
+  
+  rdf:type rdfs:label "is an - connects a thing (left) to a class it belongs to (right)" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "U9ZyEWnTwAzIC2XEskTpSWxBUSW0FmGg7kjr9oZMnXdnaibbKF6oaD7eKSXjCdwX3YJ1GtN361rQD2hTK7CsZqqYEThXWQ4bCwmoxWpLMeB27oa/rxEgeDVtO6cr9rQ6a1xKuY07FaOP8/rbN9UGhty+MDDeipxbNplvnba5w1o=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-10-22T09:35:55.378Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes ns1:RAe39AG652u7Mj8nnuQdhfttfvu5vYTIARJwADGYLMjS0;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Template: Expressing a statement as an AIDA sentence";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALtjkZX1lYrTL2eCZp4VTW6vGGxiDZ-aaU-s1Z0Fcs2I> .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+}
+

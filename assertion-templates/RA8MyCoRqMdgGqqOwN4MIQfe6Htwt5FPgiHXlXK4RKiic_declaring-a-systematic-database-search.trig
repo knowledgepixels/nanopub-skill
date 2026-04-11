@@ -1,0 +1,129 @@
+@prefix this: <https://w3id.org/np/RA8MyCoRqMdgGqqOwN4MIQfe6Htwt5FPgiHXlXK4RKiic> .
+@prefix sub: <https://w3id.org/np/RA8MyCoRqMdgGqqOwN4MIQfe6Htwt5FPgiHXlXK4RKiic/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:isPartOf rdfs:label "is part of" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Declaring a systematic database search";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st03b, sub:st04, sub:st05, sub:st06,
+      sub:st07 .
+  
+  sub:databaseUrl a nt:ExternalUriPlaceholder;
+    rdfs:label "database URL" .
+  
+  sub:date a nt:LiteralPlaceholder;
+    rdfs:label "date when search was conducted";
+    nt:hasDatatype xsd:date .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "label of the search" .
+  
+  sub:query a nt:LongLiteralPlaceholder;
+    rdfs:label "exact search string as executed (copy-paste from database interface)" .
+  
+  sub:retrievedRecordCount a nt:LiteralPlaceholder;
+    rdfs:label "number of records retrieved from this database" .
+  
+  sub:search a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this search" .
+  
+  sub:searchStrategy a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the search strategy";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https://w3id.org/sciencelive/o/terms/SystematicReviewSearchStrategy&searchterm=" .
+  
+  sub:st01 rdf:object <https://w3id.org/sciencelive/o/terms/SystematicDatabaseSearch>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:search .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:search .
+  
+  sub:st03 rdf:object sub:systematicReview;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:search .
+  
+  sub:st03b rdf:object sub:searchStrategy;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/followsSearchStrategy>;
+    rdf:subject sub:search .
+  
+  sub:st04 rdf:object sub:databaseUrl;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasDatabaseUrl>;
+    rdf:subject sub:search .
+  
+  sub:st05 rdf:object sub:date;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasSearchTime>;
+    rdf:subject sub:search .
+  
+  sub:st06 rdf:object sub:query;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasSearchQuery>;
+    rdf:subject sub:search .
+  
+  sub:st07 rdf:object sub:retrievedRecordCount;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasRetrievedRecordCount>;
+    rdf:subject sub:search .
+  
+  sub:systematicReview a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of systematic review";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http://purl.org/spar/fabio/SystematicReview&searchterm=" .
+  
+  <https://w3id.org/sciencelive/o/terms/SystematicDatabaseSearch> rdfs:label "systematic database search" .
+  
+  <https://w3id.org/sciencelive/o/terms/followsSearchStrategy> rdfs:label "follows the search strategy" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasDatabaseUrl> rdfs:label "has the database URL" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasRetrievedRecordCount> rdfs:label "has the retrieved record count" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasSearchQuery> rdfs:label "has the search query" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasSearchTime> rdfs:label "has the search date" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-11-24T14:51:30.181Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA2N58-rrFLgghJF9-cD25EsQUrWqV3xb_IL5J1bvCltQ>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Declaring a systematic database search";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "s3tXgFd3VFZ6lxWGa4WkQ9LJVXjyMaxWFJF1SvwdXNxV4Eq5VbwN8zIN4J/UZrriZKzWUrNCp3nySo285iVq4BiHaQgKMY3e57KC+xTe4gZWVE59GrcydKOcb9TALoBtzHrMo8e1YjzyUARk04GP28tm3SG9UCeOwRk5ZR9KC04=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

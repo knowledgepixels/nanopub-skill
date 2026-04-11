@@ -1,0 +1,111 @@
+@prefix this: <https://w3id.org/np/RAo3PQwKHuaTxw6TG4IS_4UWiyXtZ-bX19rg3h6sgOi-0> .
+@prefix sub: <https://w3id.org/np/RAo3PQwKHuaTxw6TG4IS_4UWiyXtZ-bX19rg3h6sgOi-0#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  npx:NanopubService rdfs:label "nanopub service" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has label" .
+  
+  <https://github.com/peta-pico/nanopub-services#grlc-np-api> rdfs:label "grlc-based Nanopub API" .
+  
+  <https://github.com/peta-pico/nanopub-services#np-ldf-server> rdfs:label "Nanopub LDF Server" .
+  
+  <https://github.com/peta-pico/signed-nanopub-services#grlc-np-api> rdfs:label "grlc-based Signed Nanopub API" .
+  
+  <https://github.com/peta-pico/signed-nanopub-services#np-ldf-server> rdfs:label "Signed Nanopub LDF Server" .
+  
+  <https://github.com/peta-pico/signed-nanopub-services#np-sparql-api> rdfs:label "Signed Nanopub SPARQL API" .
+  
+  <https://github.com/tkuhn/nanopub-monitor#service> rdfs:label "Nanopub Monitor" .
+  
+  <https://github.com/tkuhn/nanopub-server#service> rdfs:label "Nanopub Server" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Announcing a nanopub service";
+    nt:hasNanopubLabelPattern "Nanopub service: ${label}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2;
+    nt:hasTag "Infrastructure" .
+  
+  sub:class a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the URI of the nanopub service class";
+    nt:possibleValue <https://github.com/peta-pico/nanopub-services#grlc-np-api>, <https://github.com/peta-pico/nanopub-services#np-ldf-server>,
+      <https://github.com/peta-pico/signed-nanopub-services#grlc-np-api>, <https://github.com/peta-pico/signed-nanopub-services#np-ldf-server>,
+      <https://github.com/peta-pico/signed-nanopub-services#np-sparql-api>, <https://github.com/tkuhn/nanopub-monitor#service>,
+      <https://github.com/tkuhn/nanopub-server#service>, <https://w3id.org/np/o/service/terms/nanodash-2.x>,
+      <https://w3id.org/np/o/service/terms/nanopub-query-1.0>, <https://w3id.org/np/o/service/terms/nanopub-query-1.1>,
+      <https://w3id.org/np/o/service/terms/nanopub-registry-1.0> .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "short label or comment for the service" .
+  
+  sub:service a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "the URL of the nanopub service" .
+  
+  sub:st0 rdf:object npx:NanopubService;
+    rdf:predicate rdf:type;
+    rdf:subject sub:service .
+  
+  sub:st1 rdf:object sub:class;
+    rdf:predicate rdf:type;
+    rdf:subject sub:service .
+  
+  sub:st2 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:service .
+  
+  <https://w3id.org/np/o/service/terms/nanodash-2.x> rdfs:label "Nanodash version 2.x" .
+  
+  <https://w3id.org/np/o/service/terms/nanopub-query-1.0> rdfs:label "Nanopub Query 1.0" .
+  
+  <https://w3id.org/np/o/service/terms/nanopub-query-1.1> rdfs:label "Nanopub Query 1.1" .
+  
+  <https://w3id.org/np/o/service/terms/nanopub-registry-1.0> rdfs:label "Nanopub Registry 1.0" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "2RIm0hPykV64U0dG06h6TJB3rDy8qq+CAGvq3iJnyCCWVAdgRSDGSXciIFvrUqkAZRbsYiNZYmCXjoc7h9I9sn4TIClCtQDGm8DNPQd87UZlKuKEbfbGY7gA+CtQGxtOjsAZKkiUgzI+A/Z5RH4x7tz/ovGFq/mCxt7SwtbDtMY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2025-03-07T09:03:10.937Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAyEurPItuWwpFmeonJZiW8cw6iOPQSaNLP7FjKuc3apk>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Announcing a nanopub service";
+    prov:wasDerivedFrom <https://w3id.org/np/RARAWI6F3iLG9CQvth6MXTEI7MLfENPJaKjmQifRZVftc>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA,
+      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAGBEisKAxwcQTdfR7ALwCeQBrUVeU23F8uFvFmO-H6F0> .
+}
+

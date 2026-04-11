@@ -1,0 +1,170 @@
+@prefix this: <https://w3id.org/np/RAwQj3SNiopwPrHXfoRT2JtYZSt-5JsDHjBDW6nYz_rDE> .
+@prefix sub: <https://w3id.org/np/RAwQj3SNiopwPrHXfoRT2JtYZSt-5JsDHjBDW6nYz_rDE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:created rdfs:label "was completed on" .
+  
+  dct:hasExtractionMethod rdfs:label "used the extraction method" .
+  
+  dct:hasQualityAssessment rdfs:label "has the quality assessment" .
+  
+  dct:hasStudyResults rdfs:label "includes the study results" .
+  
+  dct:isPartOf rdfs:label "is part of" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template documents study characteristics, eligibility criteria, and risk of bias assessment for included studies in systematic reviews following PRISMA 2020 guidelines. It captures eligibility criteria specification (Item 5), risk of bias assessment methods (Item 11), study characteristics (Item 17), and individual study results (Items 18-19), providing structured documentation for transparent study evaluation and data extraction.";
+    rdfs:label "Declaring a PRISMA study assessment dataset";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st09, sub:st10, sub:st11, sub:st12;
+    nt:hasTag "PRISMA" .
+  
+  sub:assessmentTechnique a nt:LongLiteralPlaceholder;
+    rdfs:label "Risk of bias assessment tools and methods used (PRISMA Item 11)" .
+  
+  sub:creationDate a nt:LiteralPlaceholder;
+    rdfs:label "Date of assessment completion";
+    nt:hasDatatype xsd:date .
+  
+  sub:datasetFileLocation a nt:ExternalUriPlaceholder;
+    rdfs:label "URI where study assessment data is deposited (Zenodo, Figshare, etc.)" .
+  
+  sub:eligibilityCriteria a nt:LongLiteralPlaceholder;
+    rdfs:label "Detailed inclusion and exclusion criteria (PRISMA Item 5)" .
+  
+  sub:extractionMethod a nt:LongLiteralPlaceholder;
+    rdfs:label "Data extraction methodology and reviewer processes" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "Label of study assessment dataset" .
+  
+  sub:limitations a nt:LongLiteralPlaceholder;
+    rdfs:label "Assessment limitations, modifications, and methodological notes" .
+  
+  sub:qualityAssessment a nt:LongLiteralPlaceholder;
+    rdfs:label "Risk of bias assessment results for included studies (PRISMA Item 18)" .
+  
+  sub:st01 rdf:object <https://w3id.org/sciencelive/o/terms/StudyAssessmentDataset>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:studyAssessmentDataset .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:studyAssessmentDataset .
+  
+  sub:st03 rdf:object sub:systematicReview;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:studyAssessmentDataset .
+  
+  sub:st04 rdf:object sub:creationDate;
+    rdf:predicate dct:created;
+    rdf:subject sub:studyAssessmentDataset .
+  
+  sub:st05 rdf:object sub:eligibilityCriteria;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/followsEligibilityCriteria>;
+    rdf:subject sub:studyAssessmentDataset .
+  
+  sub:st06 rdf:object sub:assessmentTechnique;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/usesAssessmentTechnique>;
+    rdf:subject sub:studyAssessmentDataset .
+  
+  sub:st07 rdf:object sub:studyCharacteristics;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasStudyCharacteristics>;
+    rdf:subject sub:studyAssessmentDataset .
+  
+  sub:st08 rdf:object sub:extractionMethod;
+    rdf:predicate dct:hasExtractionMethod;
+    rdf:subject sub:studyAssessmentDataset .
+  
+  sub:st09 rdf:object sub:studyResults;
+    rdf:predicate dct:hasStudyResults;
+    rdf:subject sub:studyAssessmentDataset .
+  
+  sub:st10 rdf:object sub:qualityAssessment;
+    rdf:predicate dct:hasQualityAssessment;
+    rdf:subject sub:studyAssessmentDataset .
+  
+  sub:st11 rdf:object sub:datasetFileLocation;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasDatasetFileLocation>;
+    rdf:subject sub:studyAssessmentDataset .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:limitations;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasLimitations>;
+    rdf:subject sub:studyAssessmentDataset .
+  
+  sub:studyAssessmentDataset a nt:IntroducedResource;
+    rdfs:label "this study assessment dataset" .
+  
+  sub:studyCharacteristics a nt:LongLiteralPlaceholder;
+    rdfs:label "Summary of study characteristics across included studies (PRISMA Item 17)" .
+  
+  sub:studyResults a nt:LongLiteralPlaceholder;
+    rdfs:label "Individual study results and effect estimates (PRISMA Item 19)" .
+  
+  sub:systematicReview a nt:GuidedChoicePlaceholder;
+    rdfs:label "Choose systematic review";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http://purl.org/spar/fabio/SystematicReview&searchterm=" .
+  
+  <https://w3id.org/sciencelive/o/terms/StudyAssessmentDataset> rdfs:label "study assessment dataset" .
+  
+  <https://w3id.org/sciencelive/o/terms/followsEligibilityCriteria> rdfs:label "follows the eligibility criteria" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasDatasetFileLocation> rdfs:label "has the dataset file location" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasLimitations> rdfs:label "has the limitations" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasStudyCharacteristics> rdfs:label "has the study characteristics" .
+  
+  <https://w3id.org/sciencelive/o/terms/usesAssessmentTechnique> rdfs:label "used the assessment technique" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1784-2920 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0002-1784-2920 foaf:name "Anne Fouilloux" .
+  
+  this: dct:created "2025-11-24T11:57:48.896Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0002-1784-2920;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Declaring a PRISMA study assessment dataset";
+    prov:wasDerivedFrom <https://w3id.org/np/RAEpMeneCha0ukXSAErCiLqf7fUvp8sgrhcThsz7YID0g>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "od6/GWCavxuNyUqDSNx7XPlkh6pqKgx/0jRbpWQlfwoFKHaqoit9mGm02D9BV3hyZy8jdpm5mIYyMqvOe7ZzVq33AECQvU2v6QUfAzQ+LzdpQn9NR1rFgbhMZvb7x6lPF183jyHOcsoaZjxzx4++T+OYQ2KuakGyDqTF99rcOZM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

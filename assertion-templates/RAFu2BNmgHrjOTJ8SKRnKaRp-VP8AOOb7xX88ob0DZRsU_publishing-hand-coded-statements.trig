@@ -1,0 +1,61 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix this: <http://purl.org/np/RAFu2BNmgHrjOTJ8SKRnKaRp-VP8AOOb7xX88ob0DZRsU> .
+@prefix sub: <http://purl.org/np/RAFu2BNmgHrjOTJ8SKRnKaRp-VP8AOOb7xX88ob0DZRsU#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    dcterms:description "This nanopublication consists of hand-coded statements in the form of RDF triples where subject, predicate, as well as object values can be arbitrarily set.";
+    rdfs:label "Publishing hand-coded statements";
+    nt:hasStatement sub:st1;
+    nt:hasTag "General" .
+  
+  sub:obj a nt:ValuePlaceholder;
+    rdfs:label "Object URI or literal" .
+  
+  sub:pred a nt:UriPlaceholder;
+    rdfs:label "Predicate URI" .
+  
+  sub:st1 a nt:RepeatableStatement;
+    rdf:object sub:obj;
+    rdf:predicate sub:pred;
+    rdf:subject sub:subj;
+    nt:statementOrder "1" .
+  
+  sub:subj a nt:UriPlaceholder;
+    rdfs:label "Subject URI" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "RkqUhNogQIxCCWAW5ZVRt5ITe7I2pDzdgFc5a1gBO/WtjZvTF+YLIPF9v9Al7sDY2u4naW3T/onL+TEiyGlgmBwZdVU8mc2vzzfJajtouA/Ux1OXibC0VpTsZKrHrdCE3Y09HWUpZxEGLXoTEWDG1zQ798TvV5P43ykvuupEOR0=";
+    npx:hasSignatureTarget this: .
+  
+  this: dcterms:created "2023-01-24T11:31:54.815+01:00"^^xsd:dateTime;
+    dcterms:creator orcid:0000-0002-1267-0234;
+    npx:supersedes <http://purl.org/np/RAWGhfJrucYDOlD9h9FInJYEbaoXTJIsUbomrGn9qU9n4>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RAfOOKT0WnXO1CRfIAWv28JbSfpEzuTojsT84B9wBj0lo> .
+}
+

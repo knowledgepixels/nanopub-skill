@@ -1,0 +1,95 @@
+@prefix this: <https://w3id.org/np/RAPkmPk1FT2RzZZL4bQu_4Ghfogn-xbk969p8sMiuC8lk> .
+@prefix sub: <https://w3id.org/np/RAPkmPk1FT2RzZZL4bQu_4Ghfogn-xbk969p8sMiuC8lk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-replication-study-definition a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the definition relations of a replication study.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get replication study definition";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/3ebd75ffc866d7fe53f05b3189bd2258cc8eaea56b8a5de74b64846708547fc8>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+
+select ?relation ?relation_label                                                                                                                                                                               
+    (group_concat(replace(replace(str(?value), \"\\\\\\\\\", \"\\\\\\\\\\\\\\\\\"), \"[\\r\\n]{1,2}\", \"\\\\\\\\n\"); separator=\"\\n\") as ?value_multi_val)
+    (group_concat(replace(replace(coalesce(?valueLabel, \"\"), \"\\\\\\\\\", \"\\\\\\\\\\\\\\\\\"), \"[\\r\\n]{1,2}\", \"\\\\\\\\n\"); separator=\"\\n\") as ?value_label_multi)                                                                
+    ?np (\"^\" as ?np_label) where {
+  values ?_resource_multi_iri {}
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np np:hasAssertion ?a .
+    ?np npx:introduces ?_resource_multi_iri .
+  }
+  values (?relation ?relation_label ?order) {
+    (<http://www.w3.org/1999/02/22-rdf-syntax-ns#type> \"Type:\" 1)
+    (<http://www.w3.org/2000/01/rdf-schema#label> \"Label:\" 2)
+    (<https://w3id.org/sciencelive/o/terms/targetsClaim> \"Target claim:\" 3)
+    (<https://w3id.org/sciencelive/o/terms/hasScopeDescription> \"Scope:\" 4)
+    (<https://w3id.org/sciencelive/o/terms/hasMethodologyDescription> \"Methodology:\" 5)
+    (<https://w3id.org/sciencelive/o/terms/hasDeviationDescription> \"Deviation:\" 6)
+    (<http://www.w3.org/2004/02/skos/core#related> \"Related:\" 7)
+    (<https://w3id.org/sciencelive/o/terms/hasDiscipline> \"Discipline:\" 8)
+  }
+  graph ?a {
+    ?_resource_multi_iri ?relation ?value .
+  }    optional {                                                                                                                                                                                                   
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/type/29ca2b209f9afb89e9c2c7b61c9c6aa447fb7b941c1db2fd26099346cc4fed29> {                                                                             
+        graph npa:graph {                                                                                                                                                                                        
+          ?vnp np:hasAssertion ?va .                                                                                                                                                                             
+          ?vnp npx:introduces ?value .                                                                                                                                                                           
+          ?vnp npa:hasValidSignatureForPublicKeyHash ?vpubkey .                                                                                                                                                  
+          filter not exists { ?vnpx npx:invalidates ?vnp ; npa:hasValidSignatureForPublicKeyHash ?vpubkey . }                                                                                                    
+        }                                                                                                                                                                                                        
+        graph ?va {
+          ?value rdfs:label ?valueLabel .                                                                                                                                                                        
+        }
+      }                                                                                                                                                                                                          
+    }
+} group by ?relation ?relation_label ?order ?np order by ?order""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-03-30T10:12:11.137Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:get-replication-study-definition;
+    npx:supersedes <https://w3id.org/np/RAtUiSGnT0KGSmqzJSozzxo17rtmcQn4xt9DdaeUxdjD0>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "GQH1p50H6vszvz1ZYZyuzQnu4pX/2fQC6OYvOi3S4RqXe3LTmKMU9QwyFC6op92M28kfe5CC/U2MwEw2FV4eGGI3dVSLicepLvXqi23T1RHpj+6j3rZr/XcL1mR9WTS3E8BR/7gbbpTreV1LARkSUJvkjMPbdobfWW9oLslA1xE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

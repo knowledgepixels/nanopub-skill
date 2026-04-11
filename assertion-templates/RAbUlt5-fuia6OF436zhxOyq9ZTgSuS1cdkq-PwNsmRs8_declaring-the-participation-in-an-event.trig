@@ -1,0 +1,69 @@
+@prefix this: <https://w3id.org/np/RAbUlt5-fuia6OF436zhxOyq9ZTgSuS1cdkq-PwNsmRs8> .
+@prefix sub: <https://w3id.org/np/RAbUlt5-fuia6OF436zhxOyq9ZTgSuS1cdkq-PwNsmRs8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <https://w3id.org/kpxl/gen/terms/hasObserver> rdfs:label "has observer" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "The creator of such a nanopublication declares to have participated in the specified event.";
+    rdfs:label "Declaring the participation in an event";
+    nt:hasNanopubLabelPattern "${resource} has observer: ${user}";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Events" .
+  
+  sub:resource a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of resource that is observed" .
+  
+  sub:st1 rdf:object sub:user;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasObserver>;
+    rdf:subject sub:resource .
+  
+  sub:user a nt:AgentPlaceholder;
+    rdfs:label "choose user";
+    nt:hasDefaultValue nt:CREATOR .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-02-03T15:56:53.912Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354, orcid:0000-0001-9488-1870, orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:supersedes <https://w3id.org/np/RAM3r1Fitq-txwkVuWzeQ0FRwXANX9WOAH55FjZP8FGpc>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Declaring the participation in an event";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAN86BgF4vKkLCClXc6YfvswozBLXKscQ3iFi53FfjlXc>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "qvZsuMLLMUF23VB+GyJU0kX0leLIEsZiGEwU2KuxtPfRm4zeq5f62Xafkfa7qR67UEV97eKvgKzWXkuccRAd+kYfDsNAnyrWVmJBzB/66DDlT3Qzy+p6BdtXLelAp2ozBv+h21efaY3jm49d1ktInhpXfkuXQhoKO5+gYkvTu0Y=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

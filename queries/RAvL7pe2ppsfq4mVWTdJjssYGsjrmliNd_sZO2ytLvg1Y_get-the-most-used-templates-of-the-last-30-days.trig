@@ -1,0 +1,87 @@
+@prefix this: <https://w3id.org/np/RAvL7pe2ppsfq4mVWTdJjssYGsjrmliNd_sZO2ytLvg1Y> .
+@prefix sub: <https://w3id.org/np/RAvL7pe2ppsfq4mVWTdJjssYGsjrmliNd_sZO2ytLvg1Y#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-most-used-templates-last30d a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the most used assertion templates of the last 30 days, considering the latest versions of these templates.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the most used templates of the last 30 days";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/last30d>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+prefix dct: <http://purl.org/dc/terms/>
+
+select ?template_np ?label (sum(?npcount) as ?overallcount) {
+  { select ?used_template_np (count(distinct ?np) as ?npcount) where {
+    graph npa:graph {
+      ?np npa:hasValidSignatureForPublicKey ?pubkey .
+      filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+      ?np np:hasPublicationInfo ?i .
+    }
+    graph ?i {
+      ?np nt:wasCreatedFromTemplate ?used_template_np .
+    }
+  } group by ?used_template_np }
+  bind(uri(concat(\"https://w3id.org/np/l/nanopub-query-1.1/repo/type/\", sha256(str(nt:AssertionTemplate)))) as ?atservice)
+  { service ?atservice {
+    graph npa:networkGraph {
+      ?template_np npx:supersedes* ?used_template_np .
+    }
+    graph npa:graph {
+      ?used_template_np npa:hasValidSignatureForPublicKey ?pubkey .
+      ?template_np npa:hasValidSignatureForPublicKey ?pubkey .
+      filter not exists { ?template_npx npx:invalidates ?template_np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+      ?used_template_np np:hasAssertion ?a .
+    }
+    graph ?a {
+      ?a rdfs:label ?label .
+    } 
+  } }
+} group by ?template_np ?label order by desc(?overallcount) limit 10""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "L4Kq1BM/4P6RBd+o0dH5x7mF1VCRMn12gGrIffykof0eiaisk4Z9JoIX8PQbdMrP+op0M+qiAT4u7FZJGo4z7jqav087wCaUBqsbtQJAiAfsDLLild50ITrrKso9eKHxzVqysK4VlkD21cuq8V8ei/zlXrwTf6Qk2/ys2zaFXuk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-09-24T12:18:41.405Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-most-used-templates-last30d;
+    npx:supersedes <https://w3id.org/np/RAT5odJScFpREW7nbgGcnZBw4b4r3nPdqva7h24NJbbiI>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+}
+

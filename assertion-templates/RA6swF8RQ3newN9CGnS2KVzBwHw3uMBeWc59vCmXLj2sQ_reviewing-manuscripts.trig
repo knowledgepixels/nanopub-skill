@@ -1,0 +1,99 @@
+@prefix this: <https://w3id.org/np/RA6swF8RQ3newN9CGnS2KVzBwHw3uMBeWc59vCmXLj2sQ> .
+@prefix sub: <https://w3id.org/np/RA6swF8RQ3newN9CGnS2KVzBwHw3uMBeWc59vCmXLj2sQ/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://example.org/review#fair> rdfs:label "has my comment on the FAIRness of the work" .
+  
+  <http://example.org/review#innovation> rdfs:label "has my comment on the innovation of the work" .
+  
+  <http://example.org/review#significance> rdfs:label "has my comment on the scientific significance of the work" .
+  
+  <http://example.org/review#techsound> rdfs:label "has my comment on the tech soundness of the work" .
+  
+  <http://example.org/review#writing> rdfs:label "has my comment on the writing quality of the work" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "A template for reviewing manuscripts";
+    rdfs:label "Reviewing manuscripts";
+    nt:hasNanopubLabelPattern "Review on: ${paper}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st4, sub:st5;
+    nt:hasTag "Comments" .
+  
+  sub:fair a nt:LongLiteralPlaceholder .
+  
+  sub:innovation a nt:LongLiteralPlaceholder .
+  
+  sub:paper a nt:ExternalUriPlaceholder;
+    rdfs:label "DOI of the paper" .
+  
+  sub:significance a nt:LongLiteralPlaceholder .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:innovation;
+    rdf:predicate <http://example.org/review#innovation>;
+    rdf:subject sub:paper .
+  
+  sub:st2 rdf:object sub:significance;
+    rdf:predicate <http://example.org/review#significance>;
+    rdf:subject sub:paper .
+  
+  sub:st3 rdf:object sub:techsound;
+    rdf:predicate <http://example.org/review#techsound>;
+    rdf:subject sub:paper .
+  
+  sub:st4 rdf:object sub:writing;
+    rdf:predicate <http://example.org/review#writing>;
+    rdf:subject sub:paper .
+  
+  sub:st5 rdf:object sub:fair;
+    rdf:predicate <http://example.org/review#fair>;
+    rdf:subject sub:paper .
+  
+  sub:techsound a nt:LongLiteralPlaceholder .
+  
+  sub:writing a nt:LongLiteralPlaceholder .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8325-8848 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8325-8848 foaf:name "Chang Sun" .
+  
+  this: dct:created "2025-06-02T13:26:30.292Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8325-8848;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Reviewing manuscripts";
+    prov:wasDerivedFrom ns1:RA3gQDMnYbKCTiQeiUYJYBaH6HUhz8f3HIg71itlsZDgA;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA5reLVXOCPQFWr2UiCJb19ES7NwOpQRmudb17e2iB0c4> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApQN4+tRG4nElX6qjyt4o3ptY6DYclkAYZSzlXM3oVNjMmZtCIYEugK5xXRpUpOcevJo0xaDIUn3pyXIP2+5zAPfx6nAYZ/NTa/ekywklO5p3yDEFwSIf7rCmn6yPwKhExB+UgBTcamBTTgtYJKIgw7zSsfJekFigvNN89wLLXyDDuww19kcLWB8SW8MQx4yZS4EDSiol6Dl1flnY/H8PxWLrq9pFWi9tgtlhEal3++ObvQWoO1b1uCFs4V/hdCmsV7ODTlEFhQn8qTBkty+mw4Hy33PQwnjsu8Zvcjd9Un/QAneH6SC2MTM4yZgv38fiEyMjt1v2czDSz93sQVvpqwIDAQAB";
+    npx:hasSignature "ZFbpAzGOuVibeJF/ibKTaQ5WN9n88mICgEkdF4izD0bSxeW0eR651TYTCyzysqkTeS/i4rZ0ZL40Odz/+UiluQo0z7IoUcUa7uGeVnWaE5UGoNMfOZRLjvyD9MYNVk3UK4jqxskNHArIfoOYK+n2SS6asRsJwZn1JqXfNO6cnm/pPo3QqBFbu74JQosUghrCUfc+GhS32ddzOWAthMovnFyHS8eR6dMMLy19RkbvYdnuOU6mJQYjLgqR3uI2FUmn4PZgCC6BYVF9oAI19WBmbKJGXPwp7UJd/SWJvkfp5wF0Fee3Ns4PQN/Ni24IVHtoITKoVJJUhYIFTmN74IxCIQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8325-8848 .
+}
+

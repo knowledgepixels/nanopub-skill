@@ -1,0 +1,124 @@
+@prefix ns1: <http://purl.org/np/> .
+@prefix this: <http://purl.org/np/RAG1dm5qDjSeQc6btENbKhZrnN7nlMEVPU1TeZy3OZYgs> .
+@prefix sub: <http://purl.org/np/RAG1dm5qDjSeQc6btENbKhZrnN7nlMEVPU1TeZy3OZYgs#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    dct:description """<p>Such nanopublications express a causal (e.g. \"A caused B\"), spatio-temporal (e.g. \"A is included in B\"), or comparative (e.g. \"A is larger than B\") relation between two things.</p>
+
+<p>Note that the left-hand side element (subject) as well as the right-hand side one (object) need to be <strong>individuals</strong> that exist just once, like <em>the French revolution</em> or <em>the Internet</em>, and <strong>not classes</strong> that stand for a set of things, like <em>city</em> or <em>headache</em>.</p>""";
+    rdfs:label "Expressing a simple scientific relation between two individuals";
+    nt:hasNanopubLabelPattern "${subj} - ${relation} - ${obj}";
+    nt:hasStatement sub:st0;
+    nt:hasTag "Claims";
+    nt:hasTargetNanopubType <https://w3id.org/kpxl/rel/terms/hasRelationTo> .
+  
+  sub:obj a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of the object";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23NamedIndividual&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:relation a nt:RestrictedChoicePlaceholder;
+    rdfs:label "URI of the relation type";
+    nt:possibleValue <https://w3id.org/linkflows/superpattern/terms/affects>, <https://w3id.org/linkflows/superpattern/terms/causes>,
+      <https://w3id.org/linkflows/superpattern/terms/contributesTo>, <https://w3id.org/linkflows/superpattern/terms/cooccursWith>,
+      <https://w3id.org/linkflows/superpattern/terms/decreases>, <https://w3id.org/linkflows/superpattern/terms/enables>,
+      <https://w3id.org/linkflows/superpattern/terms/follows>, <https://w3id.org/linkflows/superpattern/terms/hasDifferentValueFrom>,
+      <https://w3id.org/linkflows/superpattern/terms/hasLargerValueThan>, <https://w3id.org/linkflows/superpattern/terms/hasSameValueAs>,
+      <https://w3id.org/linkflows/superpattern/terms/hasSimilarValueAs>, <https://w3id.org/linkflows/superpattern/terms/hasSmallerValueThan>,
+      <https://w3id.org/linkflows/superpattern/terms/hasSpatiotemporalRelationWith>, <https://w3id.org/linkflows/superpattern/terms/includes>,
+      <https://w3id.org/linkflows/superpattern/terms/increases>, <https://w3id.org/linkflows/superpattern/terms/inhibits>,
+      <https://w3id.org/linkflows/superpattern/terms/isCausedBy>, <https://w3id.org/linkflows/superpattern/terms/isFollowedBy>,
+      <https://w3id.org/linkflows/superpattern/terms/isIncludedIn>, <https://w3id.org/linkflows/superpattern/terms/isNecessaryAndSufficientFor>,
+      <https://w3id.org/linkflows/superpattern/terms/prevents>, <https://w3id.org/linkflows/superpattern/terms/requires> .
+  
+  sub:st0 rdf:object sub:obj;
+    rdf:predicate sub:relation;
+    rdf:subject sub:subj .
+  
+  sub:subj a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of the subject";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23NamedIndividual&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/affects> rdfs:label "affected - the subject positively or negatively affected the intensity or frequency of the activity of the object" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/causes> rdfs:label "caused - the subject caused the existence of the object" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/contributesTo> rdfs:label "contributed to - the subject positively affected the intensity or frequency of the activity of the object" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/cooccursWith> rdfs:label "co-occurred with - the subject was close to the object in terms of space and time" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/decreases> rdfs:label "decreased - the subject caused the value of the object to decrease" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/enables> rdfs:label "enabled - the subject caused the activity of the object to happen" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/follows> rdfs:label "followed - the object came into existence before the subject" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/hasDifferentValueFrom> rdfs:label "has different value from - the quantifiable subject has a value that is different from the quantifiable object" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/hasLargerValueThan> rdfs:label "has larger value than - the quantifiable subject has a larger value than the quantifiable object" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/hasSameValueAs> rdfs:label "has same value as - the quantifiable subject has the same value as the quantifiable object" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/hasSimilarValueAs> rdfs:label "has similar value as - the quantifiable subject has a similar value as the quantifiable object" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/hasSmallerValueThan> rdfs:label "has smaller value than - the quantifiable subject has a smaller value than the quantifiable object" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/includes> rdfs:label "includes - the subject spatiotemporally includes the object" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/increases> rdfs:label "increased - the subject caused the value of the object to increase" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/inhibits> rdfs:label "inhibited - the subject negatively affected the intensity or frequency of the activity of the object" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/isCausedBy> rdfs:label "was caused by - the existence of the subject was caused by the object" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/isFollowedBy> rdfs:label "was followed by - the subject came into existence before the object" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/isIncludedIn> rdfs:label "is included in - the object spatiotemporally included the subject" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/isNecessaryAndSufficientFor> rdfs:label
+      "was necessary and sufficient for - the subject caused the existence of the object, which would not exist if the subject did not exist" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/prevents> rdfs:label "prevented - the subject caused the activity of the object not to happen" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/requires> rdfs:label "required - the subject would not have existed if the object did not exist" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "A9IclWBtYykrotQiUdFdYrjiOakz4MZ8p8jFL4NBgBlaaw3kKudEXQHiNX+4auO+9X0JzQFa96juGxqLXPElcEkg9kUUcKv7ZCK/fiiaHnd9iwUdFH9K9YmGTC+3zjWLSw9SXRGaamC9yfGUB8AMCWtANr1qlZPJlK59VGTx/BU=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-16T11:16:04.337+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes ns1:RAsz-9JwiOPQufQ5AGSNepkPG0hkWWYutBDWtsMRgKaaU;
+    rdfs:label "Template: Expressing a simple scientific relation between two individuals";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RANjqEfLnGSzLuq0heRSXN0psYWW0oX4v3W8w7osb3xfs .
+}
+

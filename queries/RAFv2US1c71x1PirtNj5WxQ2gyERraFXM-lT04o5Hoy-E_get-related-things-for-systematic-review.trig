@@ -1,0 +1,85 @@
+@prefix this: <https://w3id.org/np/RAFv2US1c71x1PirtNj5WxQ2gyERraFXM-lT04o5Hoy-E> .
+@prefix sub: <https://w3id.org/np/RAFv2US1c71x1PirtNj5WxQ2gyERraFXM-lT04o5Hoy-E/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-related-things-for-review a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns related things, like datasets, software, and claims, that are linked to the given systematic review.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get related things for systematic review";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix sl: <https://w3id.org/sciencelive/o/terms/>
+
+select ?thing ?thing_label ?type ?np (\"^\" as ?np_label) where {
+  graph npa:graph {
+    ?qnp npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?qnpx npx:invalidates ?qnp ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?qnp dct:created ?date .
+    ?qnp np:hasAssertion ?a .
+  }
+  values ?_systematicReview_multi_iri { }
+  graph ?a {
+    ?_systematicReview_multi_iri sl:targetsResearchQuestion ?research_question .
+  }
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?ppubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?ppubkey . }
+    ?np np:hasAssertion ?pa .
+  }
+  graph ?pa {
+    ?thing a ?type .
+  values ?type { <http://purl.org/petapico/o/hycl#AIDA-Sentence> <http://purl.org/dc/dcmitype/Software> <http://www.w3.org/ns/dcat#Dataset> }
+    ?thing dct:isPartOf ?research_question .
+    optional { ?thing rdfs:label ?label . }
+    optional { ?thing dct:title ?title . }
+    bind(coalesce(?label, ?title) as ?thing_label)
+  }
+}
+order by ?type ?thing_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-01-21T08:28:24.725Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-related-things-for-review;
+    npx:supersedes <https://w3id.org/np/RAtn9iWaIeHC5HKILVNgm-ltyTWo5GQGrk5g-kglC5yA0>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "muupvoQZX2Q06pAEFGrMKnssQiWYctXi9j28f9nH7eZ5++Iz6XwxV6JRRAyViIgOgfAoQvo2kiDzCVvzbSOVZI8HzXuZBQ/NjettSsF9NOpyFnvSEsKKkKpt69L+dv5awVURl6nVsw+vqYwujhYzd7EXwk2FOLbyhi1FyT8uhQk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

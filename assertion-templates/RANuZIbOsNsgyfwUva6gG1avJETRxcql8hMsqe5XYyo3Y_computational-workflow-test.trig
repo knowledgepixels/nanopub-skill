@@ -1,0 +1,274 @@
+@prefix this: <https://w3id.org/np/RANuZIbOsNsgyfwUva6gG1avJETRxcql8hMsqe5XYyo3Y> .
+@prefix sub: <https://w3id.org/np/RANuZIbOsNsgyfwUva6gG1avJETRxcql8hMsqe5XYyo3Y/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://edamontology.org/format_2333> rdfs:label "Binary format" .
+  
+  <http://edamontology.org/format_3464> rdfs:label "JSON" .
+  
+  <http://edamontology.org/format_3508> rdfs:label "PDF" .
+  
+  <http://edamontology.org/format_3590> rdfs:label "HDF5" .
+  
+  <http://edamontology.org/format_3603> rdfs:label "PNG" .
+  
+  <http://edamontology.org/format_3650> rdfs:label "NetCDF" .
+  
+  <http://edamontology.org/format_3752> rdfs:label "CSV" .
+  
+  <http://edamontology.org/format_3915> rdfs:label "Zarr" .
+  
+  <http://edamontology.org/format_3997> rdfs:label "MPEG-4" .
+  
+  dct:creator rdfs:label "created by" .
+  
+  dct:description rdfs:label "has description" .
+  
+  dct:format rdfs:label "needs or produces data format" .
+  
+  dct:license rdfs:label "has license" .
+  
+  dct:title rdfs:label "has title" .
+  
+  prov:wasDerivedFrom rdfs:label "improves upon method" .
+  
+  <https://creativecommons.org/licenses/by/4.0/> rdfs:label "CC-BY-4.0" .
+  
+  <https://schema.org/applicationCategory> rdfs:label "serves purpose" .
+  
+  <https://schema.org/applicationSubCategory> rdfs:label "applies to domains" .
+  
+  <https://schema.org/codeRepository> rdfs:label "has source repository" .
+  
+  <https://schema.org/keywords> rdfs:label "has keywords" .
+  
+  <https://schema.org/learningResourceType> rdfs:label "uses computational approach" .
+  
+  <https://schema.org/result> rdfs:label "reports performance results" .
+  
+  <https://schema.org/url> rdfs:label "is accessible via" .
+  
+  <https://spdx.org/licenses/Apache-2.0.html> rdfs:label "Apache 2.0" .
+  
+  <https://spdx.org/licenses/BSD-3-Clause.html> rdfs:label "BSD 3 Clause" .
+  
+  <https://spdx.org/licenses/GPL-3.0.html> rdfs:label "GPL 3.0" .
+  
+  <https://spdx.org/licenses/MIT.html> rdfs:label "MIT" .
+  
+  sub:applicable-domains a nt:GuidedChoicePlaceholder;
+    rdfs:label "applicable research domains";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:application-category a nt:GuidedChoicePlaceholder;
+    rdfs:label "primary computational purpose";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Template for describing a computational workflow implemented for and supported by a Workflow Management System";
+    rdfs:label "Computational Workflow (test)";
+    nt:hasNanopubLabelPattern "Method: ${title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st09, sub:st10, sub:st11, sub:st12, sub:st14, sub:st15, sub:st16, sub:st17;
+    nt:hasTag "Computational Workflow";
+    nt:hasTargetNamespace <https://www.wikidata.org/wiki/Q2808660> .
+  
+  sub:base-method a nt:UriPlaceholder;
+    rdfs:label "method this improves upon (DOI or URI)" .
+  
+  sub:computational-approach a nt:GuidedChoicePlaceholder;
+    rdfs:label "computational approach used";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:computational-workflow a nt:UriPlaceholder;
+    rdfs:label "URI of the workflow repository" .
+  
+  sub:creator a nt:UriPlaceholder;
+    rdfs:label "ORCID of creator";
+    nt:hasPrefix "https://orcid.org/";
+    nt:hasPrefixLabel "ORCID (just the 16-digit ID)";
+    nt:hasRegex "0000-\\d{4}-\\d{4}-\\d{4}" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description of what the method does";
+    nt:hasRegex "[\\s\\S]{10,1000}" .
+  
+  sub:doi a nt:UriPlaceholder;
+    rdfs:label "DOI URL";
+    nt:hasPrefix "https://doi.org/";
+    nt:hasPrefixLabel "DOI (starting with '10.')";
+    nt:hasRegex "10.(\\d)+/(\\S)+" .
+  
+  sub:github-repo a nt:UriPlaceholder;
+    rdfs:label "GitHub repository URL" .
+  
+  sub:input-format a nt:RestrictedChoicePlaceholder;
+    rdfs:label "expected input data format";
+    nt:hasPrefix "input:";
+    nt:hasPrefixLabel "Input:";
+    nt:possibleValue <http://edamontology.org/format_2333>, <http://edamontology.org/format_3464>,
+      <http://edamontology.org/format_3590>, <http://edamontology.org/format_3591>, <http://edamontology.org/format_3620>,
+      <http://edamontology.org/format_3650>, <http://edamontology.org/format_3752>, <http://edamontology.org/format_3915>,
+      <http://edamontology.org/format_3997> .
+  
+  sub:keywords a nt:GuidedChoicePlaceholder;
+    rdfs:label "research keywords from Wikidata";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:license a nt:RestrictedChoicePlaceholder;
+    rdfs:label "software license";
+    nt:possibleValue <https://creativecommons.org/licenses/by/4.0/>, <https://spdx.org/licenses/Apache-2.0.html>,
+      <https://spdx.org/licenses/BSD-3-Clause.html>, <https://spdx.org/licenses/GPL-3.0.html>,
+      <https://spdx.org/licenses/MIT.html> .
+  
+  sub:output-format a nt:RestrictedChoicePlaceholder;
+    rdfs:label "produced output format";
+    nt:hasPrefix "output:";
+    nt:hasPrefixLabel "Output:";
+    nt:possibleValue <http://edamontology.org/format_2333>, <http://edamontology.org/format_3464>,
+      <http://edamontology.org/format_3508>, <http://edamontology.org/format_3590>, <http://edamontology.org/format_3603>,
+      <http://edamontology.org/format_3650>, <http://edamontology.org/format_3752>, <http://edamontology.org/format_3915>,
+      <http://edamontology.org/format_3997> .
+  
+  sub:performance-metrics a nt:LongLiteralPlaceholder;
+    rdfs:label "quantitative performance measurements";
+    nt:hasRegex "[\\s\\S]{10,1000}" .
+  
+  sub:st01 rdf:object <https://schema.org/SoftwareSourceCode>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st02 rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st04 rdf:object sub:doi;
+    rdf:predicate <https://schema.org/url>;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st05 a nt:RepeatableStatement;
+    rdf:object sub:github-repo;
+    rdf:predicate <https://schema.org/codeRepository>;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st06 a nt:RepeatableStatement;
+    rdf:object sub:creator;
+    rdf:predicate dct:creator;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st07 rdf:object sub:workflow-management-system;
+    rdf:predicate <https://www.wikidata.org/wiki/Q2808660>;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st08 rdf:object sub:application-category;
+    rdf:predicate <https://schema.org/applicationCategory>;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st09 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:keywords;
+    rdf:predicate <https://schema.org/keywords>;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st10 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:input-format;
+    rdf:predicate dct:format;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st11 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:output-format;
+    rdf:predicate dct:format;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st12 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:license;
+    rdf:predicate dct:license;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st14 a nt:OptionalStatement;
+    rdf:object sub:base-method;
+    rdf:predicate prov:wasDerivedFrom;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st15 a nt:RepeatableStatement;
+    rdf:object sub:performance-metrics;
+    rdf:predicate <https://schema.org/result>;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st16 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:computational-approach;
+    rdf:predicate <https://schema.org/learningResourceType>;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st17 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:applicable-domains;
+    rdf:predicate <https://schema.org/applicationSubCategory>;
+    rdf:subject sub:computational-workflow .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title of the Workflow";
+    nt:hasRegex "[\\s\\S]{5,200}" .
+  
+  sub:workflow-management-system a nt:RestrictedChoicePlaceholder;
+    rdfs:label "Workflow Management System", "uses workflow management system";
+    nt:possibleValue <https://www.wikidata.org/wiki/Q106286298>, <https://www.wikidata.org/wiki/Q51293717>,
+      <https://www.wikidata.org/wiki/Q5518091>, <https://www.wikidata.org/wiki/Q56291707> .
+  
+  <https://www.wikidata.org/wiki/Q2808660> rdfs:label "Nextflow" .
+  
+  <https://www.wikidata.org/wiki/Q51293717> rdfs:label "Snakemake" .
+  
+  <https://www.wikidata.org/wiki/Q5518091> rdfs:label "Galaxy" .
+  
+  <https://www.wikidata.org/wiki/Q56291707> rdfs:label "CWL" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2408-7588 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0003-2408-7588 foaf:name "Christian Meesters" .
+  
+  this: dct:created "2026-02-25T07:49:17.868Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2408-7588;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Computational Workflow (test)";
+    prov:wasDerivedFrom <https://w3id.org/np/RAZPmn81h2ShR_KHIhzaEhGIR4u2pp2mun1hblsySWvSY>,
+      <https://w3id.org/np/RAd3xrwYCOsVgn1S2Ja2knyQBcDy0BHqRIN30ChyhZkcI>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "oo2NCZay5IrcA+0GiPLrmCS8cr25TOJ9ln2xb6xHGSny5yGIwX/yGznL4yjWDBqcjq4irirj59RIsriQtlbMbobZApZwJ9E1Pb4GFiR96jgh3N7f0EUGWtys6NHxqV0nyQIe2crFX8I4iHYS2nhF+Jz9bl2H6V9lyVUBTkhKj8k=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

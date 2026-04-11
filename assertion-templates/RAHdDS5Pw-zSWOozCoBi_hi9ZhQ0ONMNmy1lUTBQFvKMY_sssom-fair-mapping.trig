@@ -1,0 +1,304 @@
+@prefix this: <https://w3id.org/np/RAHdDS5Pw-zSWOozCoBi_hi9ZhQ0ONMNmy1lUTBQFvKMY> .
+@prefix sub: <https://w3id.org/np/RAHdDS5Pw-zSWOozCoBi_hi9ZhQ0ONMNmy1lUTBQFvKMY#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "FAIR Mapping of SSSOM, the datamodel for Simple Standard for Sharing Ontological Mappings.";
+    rdfs:label "SSSOM FAIR Mapping";
+    nt:hasRequiredPubinfoElement ns1:RA_R5w4lZ-6xuZyylG8qSlMhmWBaTE41-zlhiBVUQblCc;
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st09, sub:st10, sub:st11;
+    nt:hasTag "FAIR Mapping";
+    nt:hasTargetNamespace <https://mapping-commons.github.io/sssom/Mapping/>;
+    nt:hasTargetNanopubType <https://w3id.org/fair/connect/FAIR-Supporting-Resource> .
+  
+  sub:author_id a nt:ExternalUriPlaceholder .
+  
+  sub:broadMatch a nt:RestrictedChoicePlaceholder .
+  
+  sub:closeMatch a nt:RestrictedChoicePlaceholder .
+  
+  sub:exactMatch a nt:RestrictedChoicePlaceholder .
+  
+  sub:mapping a nt:IntroducedResource, nt:LocalResource .
+  
+  sub:mapping_justification a nt:GuidedChoicePlaceholder .
+  
+  sub:narrowMatch a nt:RestrictedChoicePlaceholder .
+  
+  sub:object_category a nt:TrustyUriPlaceholder .
+  
+  sub:object_id a nt:UriPlaceholder .
+  
+  sub:object_label a nt:UriPlaceholder .
+  
+  sub:predicate_id a nt:UriPlaceholder .
+  
+  sub:predicate_label a nt:GuidedChoicePlaceholder;
+    nt:possibleValue sub:broadMatch, sub:closeMatch, sub:exactMatch, sub:narrowMatch .
+  
+  sub:reviewer_id a nt:ExternalUriPlaceholder .
+  
+  sub:st01 a rdf:Statement;
+    rdf:object <https://mapping-commons.github.io/sssom/Mapping/>;
+    rdf:predicate <https://nanodash.knowledgepixels.com/explore?id=http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23type>;
+    rdf:subject sub:mapping .
+  
+  sub:st02 a rdf:Statement;
+    rdf:object sub:subject_id;
+    rdf:predicate <https://mapping-commons.github.io/sssom/subject_id/>;
+    rdf:subject sub:mapping .
+  
+  sub:st03 a nt:OptionalStatement;
+    rdf:object sub:subject_label;
+    rdf:predicate <https://mapping-commons.github.io/sssom/subject_label/>;
+    rdf:subject sub:mapping .
+  
+  sub:st04 a nt:OptionalStatement;
+    rdf:object sub:subject_category;
+    rdf:predicate <https://mapping-commons.github.io/sssom/subject_category/>;
+    rdf:subject sub:mapping .
+  
+  sub:st05 a rdf:Statement;
+    rdf:object sub:predicate_id;
+    rdf:predicate <https://mapping-commons.github.io/sssom/predicate_id/>;
+    rdf:subject sub:mapping .
+  
+  sub:st06 a nt:OptionalStatement;
+    rdf:object sub:predicate_label;
+    rdf:predicate <https://mapping-commons.github.io/sssom/predicate_label/>;
+    rdf:subject sub:mapping .
+  
+  sub:st06a rdf:object sub:exactMatch;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#exactMatch>;
+    rdf:subject sub:mapping .
+  
+  sub:st06b rdf:object sub:closeMatch;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#closeMatch>;
+    rdf:subject sub:mapping .
+  
+  sub:st06c rdf:object sub:broadMatch;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#broadMatch>;
+    rdf:subject sub:mapping .
+  
+  sub:st06d rdf:object sub:narrowMatch;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#narrowMatch>;
+    rdf:subject sub:mapping .
+  
+  sub:st07 a nt:OptionalStatement;
+    rdf:object sub:predicate_modifier;
+    rdf:predicate <https://mapping-commons.github.io/sssom/predicate_modifier/>;
+    rdf:subject sub:mapping .
+  
+  sub:st08 a rdf:Statement;
+    rdf:object sub:object_id;
+    rdf:predicate <https://mapping-commons.github.io/sssom/object_id/>;
+    rdf:subject sub:mapping .
+  
+  sub:st09 a nt:OptionalStatement;
+    rdf:object sub:object_label;
+    rdf:predicate <https://mapping-commons.github.io/sssom/object_label/>;
+    rdf:subject sub:mapping .
+  
+  sub:st10 a nt:OptionalStatement;
+    rdf:object sub:object_category;
+    rdf:predicate <https://mapping-commons.github.io/sssom/object_category/>;
+    rdf:subject sub:mapping .
+  
+  sub:st11 a rdf:Statement;
+    rdf:object sub:mapping_justification;
+    rdf:predicate <https://mapping-commons.github.io/sssom/mapping_justification/>;
+    rdf:subject sub:mapping .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:author_id;
+    rdf:predicate <https://mapping-commons.github.io/sssom/author_id/>;
+    rdf:subject sub:mapping .
+  
+  sub:st13 rdf:object sub:author_label;
+    rdf:predicate <https://mapping-commons.github.io/sssom/author_label/>;
+    rdf:subject sub:mapping .
+  
+  sub:st14 rdf:object sub:reviewer_id;
+    rdf:predicate <https://mapping-commons.github.io/sssom/reviewer_id/>;
+    rdf:subject sub:mapping .
+  
+  sub:st15 rdf:object sub:reviewer_label;
+    rdf:predicate <https://mapping-commons.github.io/sssom/reviewer_label/>;
+    rdf:subject sub:mapping .
+  
+  sub:st16 rdf:object sub:creator_id;
+    rdf:predicate <https://mapping-commons.github.io/sssom/creator_id/>;
+    rdf:subject sub:mapping .
+  
+  sub:st17 rdf:object sub:creator_label;
+    rdf:predicate <https://mapping-commons.github.io/sssom/creator_label/>;
+    rdf:subject sub:mapping .
+  
+  sub:st18 rdf:object sub:license;
+    rdf:predicate <https://mapping-commons.github.io/sssom/license/>;
+    rdf:subject sub:mapping .
+  
+  sub:st19 rdf:object sub:subject_type;
+    rdf:predicate <https://mapping-commons.github.io/sssom/subject_type/>;
+    rdf:subject sub:mapping .
+  
+  sub:st20 rdf:object sub:subject_source;
+    rdf:predicate <https://mapping-commons.github.io/sssom/subject_source/>;
+    rdf:subject sub:mapping .
+  
+  sub:st21 rdf:object sub:subject_source_version;
+    rdf:predicate <https://mapping-commons.github.io/sssom/subject_source_version/>;
+    rdf:subject sub:mapping .
+  
+  sub:st22 rdf:object sub:object_type;
+    rdf:predicate <https://mapping-commons.github.io/sssom/object_type/>;
+    rdf:subject sub:mapping .
+  
+  sub:st23 rdf:object sub:object_source;
+    rdf:predicate <https://mapping-commons.github.io/sssom/object_source/>;
+    rdf:subject sub:mapping .
+  
+  sub:st24 rdf:object sub:object_source_version;
+    rdf:predicate <https://mapping-commons.github.io/sssom/object_source_version/>;
+    rdf:subject sub:mapping .
+  
+  sub:st25 rdf:object sub:mapping_provider;
+    rdf:predicate <https://mapping-commons.github.io/sssom/mapping_provider/>;
+    rdf:subject sub:mapping .
+  
+  sub:st26 rdf:object sub:mapping_source;
+    rdf:predicate <https://mapping-commons.github.io/sssom/mapping_source/>;
+    rdf:subject sub:mapping .
+  
+  sub:st27 rdf:object sub:mapping_cardinality;
+    rdf:predicate <https://mapping-commons.github.io/sssom/mapping_cardinality/>;
+    rdf:subject sub:mapping .
+  
+  sub:st28 rdf:object sub:mapping_tool;
+    rdf:predicate <https://mapping-commons.github.io/sssom/mapping_tool/>;
+    rdf:subject sub:mapping .
+  
+  sub:st29 rdf:object sub:mapping_tool_version;
+    rdf:predicate <https://mapping-commons.github.io/sssom/mapping_tool_version/>;
+    rdf:subject sub:mapping .
+  
+  sub:st30 rdf:object sub:mapping_date;
+    rdf:predicate <https://mapping-commons.github.io/sssom/mapping_date/>;
+    rdf:subject sub:mapping .
+  
+  sub:st31 rdf:object sub:publication_date;
+    rdf:predicate <https://mapping-commons.github.io/sssom/publication_date/>;
+    rdf:subject sub:mapping .
+  
+  sub:st32 rdf:object sub:confidence;
+    rdf:predicate <https://mapping-commons.github.io/sssom/confidence/>;
+    rdf:subject sub:mapping .
+  
+  sub:st33 rdf:object sub:curation_rule;
+    rdf:predicate <https://mapping-commons.github.io/sssom/curation_rule/>;
+    rdf:subject sub:mapping .
+  
+  sub:st34 rdf:object sub:curation_rule_text;
+    rdf:predicate <https://mapping-commons.github.io/sssom/curation_rule_text/>;
+    rdf:subject sub:mapping .
+  
+  sub:st35 rdf:object sub:subject_match_field;
+    rdf:predicate <https://mapping-commons.github.io/sssom/subject_match_field/>;
+    rdf:subject sub:mapping .
+  
+  sub:st36 rdf:object sub:object_match_field;
+    rdf:predicate <https://mapping-commons.github.io/sssom/object_match_field/>;
+    rdf:subject sub:mapping .
+  
+  sub:st37 rdf:object sub:match_string;
+    rdf:predicate <https://mapping-commons.github.io/sssom/match_string/>;
+    rdf:subject sub:mapping .
+  
+  sub:st38 rdf:object sub:subject_preprocessing;
+    rdf:predicate <https://mapping-commons.github.io/sssom/subject_preprocessing/>;
+    rdf:subject sub:mapping .
+  
+  sub:st39 rdf:object sub:object_preprocessing;
+    rdf:predicate <https://mapping-commons.github.io/sssom/object_preprocessing/>;
+    rdf:subject sub:mapping .
+  
+  sub:st40 rdf:object sub:semantic_similarity_score;
+    rdf:predicate <https://mapping-commons.github.io/sssom/semantic_similarity_score/>;
+    rdf:subject sub:mapping .
+  
+  sub:st41 rdf:object sub:semantic_similarity_measure;
+    rdf:predicate <https://mapping-commons.github.io/sssom/semantic_similarity_measure/>;
+    rdf:subject sub:mapping .
+  
+  sub:st42 rdf:object sub:see_also;
+    rdf:predicate <https://mapping-commons.github.io/sssom/see_also/>;
+    rdf:subject sub:mapping .
+  
+  sub:st43 rdf:object sub:issue_tracker_item;
+    rdf:predicate <https://mapping-commons.github.io/sssom/issue_tracker_item/>;
+    rdf:subject sub:mapping .
+  
+  sub:st44 rdf:object sub:other;
+    rdf:predicate <https://mapping-commons.github.io/sssom/other/>;
+    rdf:subject sub:mapping .
+  
+  sub:st45 rdf:object sub:comment;
+    rdf:predicate <https://mapping-commons.github.io/sssom/comment/>;
+    rdf:subject sub:mapping .
+  
+  sub:subject_category a nt:RestrictedChoicePlaceholder .
+  
+  sub:subject_id a nt:UriPlaceholder .
+  
+  sub:subject_label a nt:LiteralPlaceholder .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1297-3104 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1297-3104 foaf:name "Anastasios Papadiamantis" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDLrgIs0zCX11YIad1vf4iKrxmu/l3phA4ES5BixalXnpd5LD/znJ3GlB95mZ/KOrhGhBZyj39QaZVpQQuPTsqmigo4blW6FtTc0iWkFSNEj6dyWeavF9nJ0cSr7k6KEx3i8ue+O53k2lmF/UzG/w0cOSV71T3qVBFPupy5WMCTwwIDAQAB";
+    npx:hasSignature "pf0QrYRulXyG3+PkDmLj9k6EKJ/4Kx9wtJg6MLDelKiw1YnEOtxm9qLaIGm4dXwSacj4TIDStssDhHxRxZ0rSVdps7i0jiB1KQeuOGzz8avgESnctRpMcls3XrpUCZG5FTLmXBDXxQl1f0NkNKSSVCtALOymxgKJIeUTkMhVwlU=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1297-3104 .
+  
+  this: dct:created "2024-06-19T09:42:29.754Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0002-1297-3104, orcid:0000-0003-2195-3997,
+      orcid:0000-0003-4250-4584;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAGq5X9noUwV6mfJYkf0syz56-AZ3DUNit1hluY5xzyCU>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: SSSOM FAIR Mapping";
+    prov:wasDerivedFrom ns1:RAntWwY-oLQ5QTSviLZrZ6GD6dniz-_skWtO-4_8031zU, ns1:RAtG8zeo_0OYP63K60rrot8vFOkHNOg_1_zu618NbL4pI,
+      <https://w3id.org/np/RA2FzWT-kYUWZae1lP-dcHbpDzXgprPS9NTbeIJ3feEGs>, <https://w3id.org/np/RAL5PB8358N-ieKxmi-R8ndfZvheMWCp3nokpOqqybNdM>,
+      <https://w3id.org/np/RAcpgIKPA7yWeejFAeQSRqM_UWlcCk5FCgRwp4UAZeAes>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM, ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

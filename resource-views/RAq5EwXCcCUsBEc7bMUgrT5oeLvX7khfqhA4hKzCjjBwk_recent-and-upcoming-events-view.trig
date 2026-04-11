@@ -1,0 +1,58 @@
+@prefix this: <https://w3id.org/np/RAq5EwXCcCUsBEc7bMUgrT5oeLvX7khfqhA4hKzCjjBwk> .
+@prefix sub: <https://w3id.org/np/RAq5EwXCcCUsBEc7bMUgrT5oeLvX7khfqhA4hKzCjjBwk/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:upcoming-events-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:upcoming-events-view-kind;
+    dct:title "📅 Recent and upcoming events";
+    rdfs:label "Recent and upcoming events view";
+    gen:appliesToInstancesOf gen:MaintainedResource, gen:Space;
+    gen:hasStructuralPosition "5.5.upcoming-events";
+    gen:hasViewQuery <https://w3id.org/np/RA1PkOy-Jh3YIA6hSh-ShoKDcPLvMUQt9JbPfPoDeyAf4/get-recent-and-upcoming-events> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RA1PkOy-Jh3YIA6hSh-ShoKDcPLvMUQt9JbPfPoDeyAf4/get-recent-and-upcoming-events>
+    nt:hasLabelFromApi "Get recent and upcoming events - Returns all recent, ongoing, and upcoming events that are defined as Spaces." .
+  
+  this: dct:created "2026-03-20T19:43:00Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:upcoming-events-view;
+    npx:introduces sub:upcoming-events-view-kind;
+    npx:supersedes <https://w3id.org/np/RAhC0hr0tgbOsqtZEr7b2JNEGZvHnBKSFXz_eFQBqaeQc>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Wr2S6jwSO2OtQY1lXBqH96M+2L3magwJSEbDYbDW14BN/AgdVe0Y6Mq3fL1XwGOBhahkQUSA5rIK0X4IBsVx3gqe4A2I4MZGXnyaWtpy4lfW13NwMgLu10yKPZgIBTmWj3pj+NIPVRhtEBkirkaXEC1xF6BmR6rdl2ZG4EKGXTA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

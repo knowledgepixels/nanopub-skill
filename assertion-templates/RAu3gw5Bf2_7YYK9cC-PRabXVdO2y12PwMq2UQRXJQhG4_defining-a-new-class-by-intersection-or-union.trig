@@ -1,0 +1,128 @@
+@prefix this: <http://purl.org/np/RAu3gw5Bf2_7YYK9cC-PRabXVdO2y12PwMq2UQRXJQhG4> .
+@prefix sub: <http://purl.org/np/RAu3gw5Bf2_7YYK9cC-PRabXVdO2y12PwMq2UQRXJQhG4#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "can be described as follows:" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Defining a new class by intersection or union";
+    nt:hasNanopubLabelPattern "Class: ${name}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6, sub:st7;
+    nt:hasTag "Terms" .
+  
+  sub:class1 a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of existing class 1";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:class2 a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of existing class 2";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:description a nt:LiteralPlaceholder;
+    rdfs:label "description of the class" .
+  
+  sub:intersectionOrUnion a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select intersection or union";
+    nt:possibleValue <http://www.w3.org/2002/07/owl#intersectionOf>, <http://www.w3.org/2002/07/owl#unionOf> .
+  
+  sub:list a nt:LocalResource;
+    rdfs:label "a list" .
+  
+  sub:list-rest a nt:LocalResource;
+    rdfs:label "a rest-list" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the class" .
+  
+  sub:newclass a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID of new class" .
+  
+  sub:st0 rdf:object <http://www.w3.org/2002/07/owl#Class>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:newclass .
+  
+  sub:st1 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:newclass .
+  
+  sub:st2 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:newclass .
+  
+  sub:st3 rdf:object sub:list;
+    rdf:predicate sub:intersectionOrUnion;
+    rdf:subject sub:newclass .
+  
+  sub:st4 rdf:object sub:class1;
+    rdf:predicate rdf:first;
+    rdf:subject sub:list .
+  
+  sub:st5 rdf:object sub:list-rest;
+    rdf:predicate rdf:rest;
+    rdf:subject sub:list .
+  
+  sub:st6 rdf:object sub:class2;
+    rdf:predicate rdf:first;
+    rdf:subject sub:list-rest .
+  
+  sub:st7 rdf:object rdf:nil;
+    rdf:predicate rdf:rest;
+    rdf:subject sub:list-rest .
+  
+  rdf:first rdfs:label "has as first element" .
+  
+  rdf:nil rdfs:label "the end of the list" .
+  
+  rdf:rest rdfs:label "has as rest" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "is called" .
+  
+  <http://www.w3.org/2002/07/owl#Class> rdfs:label "class" .
+  
+  <http://www.w3.org/2002/07/owl#intersectionOf> rdfs:label "is the intersection of the classes in" .
+  
+  <http://www.w3.org/2002/07/owl#unionOf> rdfs:label "is the union of the classes in" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "lz6Jh8lfgiUG2zBSq1GPOlU8XAnR80R/Nn9BUHjifddqrYTHLA1pjC7At8GDP7kMMZTgfGED8m9f2dCj/3k9Di1no39Axv/1HbAVsSHGQUW1f76O20/yPHD3uaM19ihys6+HNrrSedORSSy98unRPD9baGP2YljGAjyGzvsnI8E=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-15T15:12:10.456+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <http://purl.org/np/RAhFp_rhQontwVVOpF1ZtIn8x2eWpNabMGL7TdOtZB98o>;
+    rdfs:label "Template: Defining a new class by intersection or union";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RANjqEfLnGSzLuq0heRSXN0psYWW0oX4v3W8w7osb3xfs> .
+}
+

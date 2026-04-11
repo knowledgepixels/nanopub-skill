@@ -1,0 +1,99 @@
+@prefix this: <https://w3id.org/np/RAapc3jbJ3GkDy0ncKx3pok_zEKqwrT6-Z5TkCP1k96II> .
+@prefix sub: <https://w3id.org/np/RAapc3jbJ3GkDy0ncKx3pok_zEKqwrT6-Z5TkCP1k96II/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-view-displays a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns all the view displays declared for a given resource.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get view displays";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/11daee46fdfff957dc17b46f5dc1a618045afd4f5634d5334ce9db19c3689a3c>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select distinct ?display ?view (coalesce(?viewKindOptional, ?view) as ?viewKind) ?label ?displayType ?displayMode ?np ?pubkey ?date where {
+  values ?_resource_multi_iri {}
+  graph npa:graph {
+    ?np npx:hasNanopubType gen:ViewDisplay .
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np dct:created ?date .
+    ?np npx:embeds ?display .
+    ?np np:hasAssertion ?a .
+    optional { ?np rdfs:label ?label }
+  }
+  graph ?a {
+    ?display gen:isDisplayOfView ?view .
+    ?display gen:isDisplayFor ?_resource_multi_iri .
+    optional {
+      values ?displayType { gen:PartLevelViewDisplay gen:TopLevelViewDisplay }
+      ?display a ?displayType .
+    }
+    optional {
+      values ?displayMode { gen:ActivatedViewDisplay gen:DeactivatedViewDisplay }
+      ?display a ?displayMode .
+    }
+  }
+  optional { service <https://w3id.org/np/l/nanopub-query-1.1/repo/type/ec6722efa3b44e0a18aa63afe5964158a1fdb7f0413ea5f23bfddf5c03ca0221> {
+    select ?view ?viewKindOptional {
+      graph npa:graph {
+        ?np npx:hasNanopubType gen:ResourceView .
+        ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+        filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+        ?np npx:embeds ?view .
+        ?np np:hasAssertion ?a .
+      }
+      graph ?a {
+        ?view a gen:ResourceView .
+        ?view dct:isVersionOf ?viewKindOptional .
+      }
+    }
+  } }
+}
+order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-11-27T11:06:26.188+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-view-displays;
+    npx:supersedes <https://w3id.org/np/RA-AWDDv9NTAyr1oLiwz9TfeAybi14EfuXhfiFtQM2Cdw>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "I1DKxyZhj5BPYWa07x/5x5SqajCte7qkgBjSClP8CKwWcg624m8M1KPtG0j3vDQj7cI3Bd8RL/dKv+txVRDNoM5l4qerenvtvFA+vUkb6x4MKeXVfyVx/mG5QfBKrKaR0VZpH1v5LZERAE4vQwKkNBmRRGvAMmj7JRaasdVFpfw=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

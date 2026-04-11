@@ -1,0 +1,97 @@
+@prefix this: <https://w3id.org/np/RA12IOagFtmWWIXOvUocAoVoNDP9b89wW1m9pzLh1prqA> .
+@prefix sub: <https://w3id.org/np/RA12IOagFtmWWIXOvUocAoVoNDP9b89wW1m9pzLh1prqA#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  <https://w3id.org/fair/fip/terms/FAIR-Declaration> rdfs:label "FAIR Declaration" .
+  
+  <https://w3id.org/fair/fip/terms/declared-by> rdfs:label "declared by" .
+  
+  <https://w3id.org/fair/fip/terms/declares-current-use-of> rdfs:label "declares current use of" .
+  
+  <https://w3id.org/fair/fip/terms/declares-planned-use-of> rdfs:label "declares planned use of" .
+  
+  <https://w3id.org/fair/fip/terms/endorses> rdfs:label "endorses" .
+  
+  sub:FIC a nt:GuidedChoicePlaceholder;
+    rdfs:label "FAIR Implementation Community";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FFAIR-Implementation-Community&searchterm=" .
+  
+  sub:FSR a nt:GuidedChoicePlaceholder;
+    rdfs:label "FAIR Supporting Resource";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FFAIR-Enabling-Resource&searchterm=",
+      "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FFAIR-Supporting-Resource&searchterm=" .
+  
+  sub:UsageType a nt:RestrictedChoicePlaceholder;
+    rdfs:label "usage type";
+    nt:possibleValue <https://w3id.org/fair/fip/terms/declares-current-use-of>, <https://w3id.org/fair/fip/terms/declares-planned-use-of>,
+      <https://w3id.org/fair/fip/terms/endorses> .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This nanopublication defines an template for the declaration of the use of a FAIR Supporting Resource by a FAIR Implementation Community";
+    rdfs:label "Defining a FAIR declaration";
+    nt:hasStatement sub:st01, sub:st02, sub:st03;
+    nt:hasTag "FAIR" .
+  
+  sub:declaration a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "This declaration" .
+  
+  sub:st01 rdf:object <https://w3id.org/fair/fip/terms/FAIR-Declaration>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:declaration .
+  
+  sub:st02 rdf:object sub:FSR;
+    rdf:predicate sub:UsageType;
+    rdf:subject sub:declaration .
+  
+  sub:st03 rdf:object sub:FIC;
+    rdf:predicate <https://w3id.org/fair/fip/terms/declared-by>;
+    rdf:subject sub:declaration .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCM0tu3I/KK6A/qPha/6pfngQZ4LBQpLnKAcIUuZLnSEb0epJ2IoY3zh/4N42us/6LpCHgZZZtSOTm5/KVo+OTDIqo294PpEZAO70u5DcMcGMC5OufzxGKs3Dwdo6XqPiDHxXuiaKCTO7/ABWAi7CtFoMrqJAHfeyqe82dAiH2IiwIDAQAB";
+    npx:hasSignature "UiALCXvD6FbFBZJK4F9Cv5JdE/uzJx/eGSrdSxj2qtMlF0USwZTzNeTu1QwSfmRJtnM/YyWeoWs/BTbDjRzHwOu4aGmkRJ1svZE11wmXocBO8a55LEDny7yjZDA4AZ5tJyXckAIWP8TwciyAJsEA7IDUso6kCciT5lmP2gO/aUI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+  
+  this: dct:created "2024-05-03T07:12:54.210Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAjAC1L_lA2iWmCNylJXUGuvkp0jcAy0c_zg73vpYeeIM>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Defining a FAIR declaration";
+    prov:wasDerivedFrom ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM, ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

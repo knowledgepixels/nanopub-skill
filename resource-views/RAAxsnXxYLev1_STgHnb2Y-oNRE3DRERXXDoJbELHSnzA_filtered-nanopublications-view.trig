@@ -1,0 +1,57 @@
+@prefix this: <https://w3id.org/np/RAAxsnXxYLev1_STgHnb2Y-oNRE3DRERXXDoJbELHSnzA> .
+@prefix sub: <https://w3id.org/np/RAAxsnXxYLev1_STgHnb2Y-oNRE3DRERXXDoJbELHSnzA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:filtered-nanopubs-view a <https://w3id.org/kpxl/gen/terms/NanopubSetView>, <https://w3id.org/kpxl/gen/terms/ResourceView>;
+    dct:isVersionOf sub:filtered-nanopubs-view-kind;
+    dct:title "Filtered Nanopublications";
+    rdfs:label "Filtered Nanopublications View";
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "5.5.filtered-nps";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAeoXI4vBzLV_BM2lfI5DWkFSfm6y1z3fOk4E1IncXWUo/get-filtered-nanopub-list>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "types" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-02-11T16:49:03.388Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:filtered-nanopubs-view;
+    npx:introduces sub:filtered-nanopubs-view-kind;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvMIewwOiXTCCbq5hKKbyWFZ7rx45vEfSB0qUOWWKtS7XcOhoikf7RFHHgicuG1rB6h1hBZI5uHpnJLLDAA4cV7YOC5RnY7YWlKvYL5n0fVVgdCCVkUfljHwA4qX3WDZY6LaLW+E5v16Yxsb69g41/v3fEtyGrSyAKi1MkjACROvI66cLVjQAksfaA3ZIDMTlkcCQqIoR7hkx3Y9Memgr2/rq5kHD72tUQqlBnmBDQqUVZvLrXYU44p9sZPsrY9cKhGv84DgBLZMenm0Su6gqT5M/tEVHe9I3Kviqxc5EKhCspzhQZmKrM9GpPNL3MGrIKaIk5+JJFB9ahWt1cLGRqQIDAQAB";
+    npx:hasSignature "nAz7QgkpafIO/cQQBZK1E9VVdHYGOsUHucgmrjbyZRbA06mb7Mu90U0VfOIv7U0uMdgmb7NAyGBrxU34TsZS5sssEIQ/IHvpEV43sL1xrHVYSilqtlrc2u3Q6vqufgA58TWGI99jrpgs5MNZQ5zwxop74Ma8FgkZrzudwI0ulUV9fZUDyEWdLQ4SBTdmI/ejdmnIe9s35F9AmQvLc5G5O0xMpeIOSdKi3wcJyXfaYP+1Sqie5V3YGXLT2tZf2CyW+MFPCn8K+Y8cfIjCQVBvQuEAQ1IxNqNbznrK02jlwWOa6cFZ+oQz1LH0CqSJu9vhOC14I7Um3IK00OsZumSpXw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+  
+  <https://w3id.org/np/RAeoXI4vBzLV_BM2lfI5DWkFSfm6y1z3fOk4E1IncXWUo/get-filtered-nanopub-list>
+    nt:hasLabelFromApi "Get filtered nanopub list (new version) - This query returns a filtered list of nanopublications." .
+}
+

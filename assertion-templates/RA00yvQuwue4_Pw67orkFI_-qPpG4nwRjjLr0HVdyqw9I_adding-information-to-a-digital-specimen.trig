@@ -1,0 +1,126 @@
+@prefix this: <https://w3id.org/np/RA00yvQuwue4_Pw67orkFI_-qPpG4nwRjjLr0HVdyqw9I> .
+@prefix sub: <https://w3id.org/np/RA00yvQuwue4_Pw67orkFI_-qPpG4nwRjjLr0HVdyqw9I#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://example.org/FieldValueSelector> rdfs:label "value field selector" .
+  
+  <http://example.org/hasField> rdfs:label "refers to the field" .
+  
+  rdf:type rdfs:label "is a - connects a thing (left) to the class (right) it belongs to" .
+  
+  rdf:value rdfs:label "is - links an identifier to its value" .
+  
+  <http://www.w3.org/ns/oa#Annotation> rdfs:label "web annotation - a web annotation of a document or other thing" .
+  
+  <http://www.w3.org/ns/oa#hasBody> rdfs:label "contributes - connects an annotation to its body element" .
+  
+  <http://www.w3.org/ns/oa#hasSelector> rdfs:label "is defined by - connects an annotation to its selector" .
+  
+  <http://www.w3.org/ns/oa#hasSource> rdfs:label "refers to the digital specimen" .
+  
+  <http://www.w3.org/ns/oa#hasTarget> rdfs:label "targets - connects an annotation to its target" .
+  
+  sub:annotation a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this annotation" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Adding information to a digital specimen";
+    nt:hasNanopubLabelPattern "Adding info to ${source}: ${selector-field} '${body-value}'";
+    nt:hasStatement sub:st0, sub:st11, sub:st12, sub:st13, sub:st14, sub:st15, sub:st21,
+      sub:st22;
+    nt:hasTag "Annotations" .
+  
+  sub:body a nt:LocalResource;
+    rdfs:label "a field value" .
+  
+  sub:body-value a nt:ValuePlaceholder;
+    rdfs:label "the new suggested value" .
+  
+  sub:selector a nt:LocalResource;
+    rdfs:label "a selector" .
+  
+  sub:selector-field a nt:ExternalUriPlaceholder;
+    rdfs:label "the field this annotation refers to" .
+  
+  sub:source a nt:ExternalUriPlaceholder;
+    rdfs:label "the URI of the specimen being annotated" .
+  
+  sub:st0 rdf:object <http://www.w3.org/ns/oa#Annotation>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:annotation .
+  
+  sub:st11 rdf:object sub:target;
+    rdf:predicate <http://www.w3.org/ns/oa#hasTarget>;
+    rdf:subject sub:annotation .
+  
+  sub:st12 rdf:object sub:source;
+    rdf:predicate <http://www.w3.org/ns/oa#hasSource>;
+    rdf:subject sub:target .
+  
+  sub:st13 rdf:object sub:selector;
+    rdf:predicate <http://www.w3.org/ns/oa#hasSelector>;
+    rdf:subject sub:target .
+  
+  sub:st14 rdf:object <http://example.org/FieldValueSelector>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:selector .
+  
+  sub:st15 rdf:object sub:selector-field;
+    rdf:predicate <http://example.org/hasField>;
+    rdf:subject sub:selector .
+  
+  sub:st21 rdf:object sub:body;
+    rdf:predicate <http://www.w3.org/ns/oa#hasBody>;
+    rdf:subject sub:annotation .
+  
+  sub:st22 rdf:object sub:body-value;
+    rdf:predicate rdf:value;
+    rdf:subject sub:body .
+  
+  sub:target a nt:LocalResource;
+    rdfs:label "a digital specimen aspect" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "dxH4J+rZ8QEfISkj2muAElsUmUfFTkVyiuAR9OHkyZzWCNyrTYlkMIevphkpIDjfv3SBGR0uuiySSIMuU+5yKTriRSEYimf+RLkn8dqMyAMl5qjHPhIJwtZu05/FLKhU483ygs2WgT+1559ChRXyA0o2n8P6Cb3uf0uZOj1gCk4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-04-12T13:01:05.496Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAV1sWwOtYyVE5ZAenMtGOS_ZZDqLLOfuOHLA5DRTWjhg>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Adding information to a digital specimen";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

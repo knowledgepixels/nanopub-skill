@@ -1,0 +1,143 @@
+@prefix this: <https://w3id.org/np/RAp7NAky6VpBduvVnvpp49C-Vp2tOQ2Uu_cuMTiSz2HJI> .
+@prefix sub: <https://w3id.org/np/RAp7NAky6VpBduvVnvpp49C-Vp2tOQ2Uu_cuMTiSz2HJI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:conformsTo rdfs:label "conforms to" .
+  
+  dct:description rdfs:label "is defined as follows:" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:domain rdfs:label "has its subject values from the class (domain)" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  rdfs:range rdfs:label "has its object values from the class (range)" .
+  
+  <http://www.w3.org/2002/07/owl#DatatypeProperty> rdfs:label "datatype property - a relation between an object (any entity) and a literal (a text or number)" .
+  
+  <http://www.w3.org/2002/07/owl#ObjectProperty> rdfs:label "object property - a relation between two objects (any kinds of entities)" .
+  
+  <https://w3id.org/fdoc/o/terms/FdoAttribute> rdfs:label "FDO attribute" .
+  
+  <https://w3id.org/fdoc/o/terms/hasObjectShape> rdfs:label "has the object shape" .
+  
+  <https://w3id.org/fdof/ontology#FAIRDigitalObject> rdfs:label "FAIR Digital Object" .
+  
+  <https://w3id.org/np/RAPydxVo5qyeX2SZRuoJo55I6C3Z226bmElOCxAicboF8/fdo-attribute-profile>
+    rdfs:label "FDO Attribute Profile" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "With this template an object/datatype property is defined in a way it can serve as an FDO attribute of an FDO metadata record.";
+    rdfs:label "Defining an RDF property as FDO attribute";
+    nt:hasStatement sub:st, sub:st0, sub:st0a, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5,
+      sub:st6;
+    nt:hasTag "FDO" .
+  
+  sub:definition a nt:LongLiteralPlaceholder;
+    rdfs:label "definition of the property" .
+  
+  sub:domain a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the domain class";
+    nt:hasDefaultValue <https://w3id.org/fdof/ontology#FAIRDigitalObject> .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "how the property is read, e.g. 'contains' or 'is used by'" .
+  
+  sub:objectShape a nt:ExternalUriPlaceholder;
+    rdfs:label "object shape in SHACL" .
+  
+  sub:property a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short URI suffix or full URI" .
+  
+  sub:propertytype a nt:RestrictedChoicePlaceholder;
+    rdfs:label "type of property (object or datatype property)";
+    nt:possibleValue <http://www.w3.org/2002/07/owl#DatatypeProperty>, <http://www.w3.org/2002/07/owl#ObjectProperty> .
+  
+  sub:range a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the range class" .
+  
+  sub:st rdf:object <https://w3id.org/fdof/ontology#FAIRDigitalObject>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:property .
+  
+  sub:st0 rdf:object <https://w3id.org/fdoc/o/terms/FdoAttribute>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:property .
+  
+  sub:st0a rdf:object <https://w3id.org/np/RAPydxVo5qyeX2SZRuoJo55I6C3Z226bmElOCxAicboF8/fdo-attribute-profile>;
+    rdf:predicate dct:conformsTo;
+    rdf:subject sub:property .
+  
+  sub:st1 rdf:object sub:propertytype;
+    rdf:predicate rdf:type;
+    rdf:subject sub:property .
+  
+  sub:st2 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:property .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:definition;
+    rdf:predicate dct:description;
+    rdf:subject sub:property .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:domain;
+    rdf:predicate rdfs:domain;
+    rdf:subject sub:property .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:range;
+    rdf:predicate rdfs:range;
+    rdf:subject sub:property .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:objectShape;
+    rdf:predicate <https://w3id.org/fdoc/o/terms/hasObjectShape>;
+    rdf:subject sub:property .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-03-11T08:09:40.702Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAYigtwoo2tGdH88DOaxGECIrYB23cfWb_KnIZgzIjL18>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Defining an RDF property as FDO attribute";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "HPIVcp7rpFN0hGymIyoYoQqnQb3QiyQubO1+gDTGpdBWB5i5U+mQQjzADgdYoU8eGEoq19t4KUMesdIjkCtBbe+iWpY2NaDJ1dT3Hl8D+DFpUxhqZy83Bk3NURdfacwDYU4wAC0ChOISu/oxYqfGliyr0OEeKexjNxBzO5VOr6c=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,119 @@
+@prefix this: <https://w3id.org/np/RAbq1a1FwRFAZPDde3Sy4GqNUQ2TmaKOWLydJPOyCKc0w> .
+@prefix sub: <https://w3id.org/np/RAbq1a1FwRFAZPDde3Sy4GqNUQ2TmaKOWLydJPOyCKc0w/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-filtered-nanopub-list a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns a filtered list of nanopublicatoins.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get filtered nanopub list";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/meta>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+
+select ?np ?label ?date (group_concat(distinct ?t; separator=' ') as ?types) ?pubkey where {
+  graph npa:graph {
+
+  
+  #=================== MULTI-VALUE PLACEHOLDER ====================#------ config: ------
+  { select ?pubkey {                                               # <- VAR pubkey
+        
+       #bind(\"1162349fdeaf431e71ab55898cb2a425b971d466150c2aa5b3c1beb498045a37 2a6683923dcbd9810ef4e5debda8c4152c297b12303e286622bbbb0ed1884384\" as ?_pubkeys)
+        
+    bind(?__pubkeys as ?v)                                         # <- VAR _pubkeys
+    {select*{optional{?a ?b ?c}}limit 1} # (for some Virtuoso v.)  #
+    values ?x{0 1 2 3 4 5 6 7 8 9} values ?y{0 1 2 3 4 5 6 7 8 9}  #
+    bind((10*?x)+?y as ?n) # (works for a maximum of 100 values)   #
+    bind(\" \" as ?sep) # (separator as regex-compatible character)  # <- CONST sep
+    bind(concat(\"^([^\",?sep,\"]*\",?sep,\"){\",str(?n),\"}\") as ?p)     #
+    bind(concat(?sep,\".*\") as ?p0)                                 #
+    filter(if(?n=0,true,regex(?v,?p))) # (=0 check for Virtuoso)   #
+    bind(replace(if(?n=0,?v,replace(?v,?p,\"\")),?p0,\"\") as ?pubkey) # <- VAR pubkey
+  } }                                                              #
+  #================================================================#---------------------
+
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+
+  #=================== MULTI-VALUE PLACEHOLDER ====================#------ config: ------
+  { select ?type {                                                # <- VAR type
+        
+       #bind(\"https://w3id.org/kpxl/grlc/grlc-query http://purl.org/nanopub/x/ExampleNanopub\" as ?_types)
+        
+    bind(?__types as ?v)                                           # <- VAR _types
+    {select*{optional{?a ?b ?c}}limit 1} # (for some Virtuoso v.)  #
+    values ?x{0 1 2 3 4 5 6 7 8 9} values ?y{0 1 2 3 4 5 6 7 8 9}  #
+    bind((10*?x)+?y as ?n) # (works for a maximum of 100 values)   #
+    bind(\" \" as ?sep) # (separator as regex-compatible character)  # <- CONST sep
+    bind(concat(\"^([^\",?sep,\"]*\",?sep,\"){\",str(?n),\"}\") as ?p)     #
+    bind(concat(?sep,\".*\") as ?p0)                                 #
+    filter(if(?n=0,true,regex(?v,?p))) # (=0 check for Virtuoso)   #
+    bind(replace(if(?n=0,?v,replace(?v,?p,\"\")),?p0,\"\") as ?typel)  # <- VAR type
+    bind(uri(?typel) as ?type)
+  } }                                                              #
+  #================================================================#---------------------
+
+    ?np npx:hasNanopubType ?type .
+    ?np npx:hasNanopubType ?t .
+
+    ?np dct:created ?date .
+    
+    #bind(\"2024-11-30\" as ?__endtime)
+    bind(coalesce(?__endtime, \"9999\") as ?endtime)
+    filter(?endtime > str(?date))
+    
+    #bind(\"2024-11-29\" as ?__starttime)
+    bind(coalesce(?__starttime, \"0000\") as ?starttime)
+    filter(?starttime < str(?date))
+
+    optional { ?np rdfs:label ?label }
+  }
+}
+group by ?np ?label ?date ?pubkey
+order by desc(?date)
+limit 100""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-09-09T13:32:02.087Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-filtered-nanopub-list;
+    npx:supersedes <https://w3id.org/np/RAsmrGYJ2krc-h3xk0P1v_sMtuZ-uz4F0DEohu3EAXSCs>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "6m4Eco3cFdm1WCtuP5f4mOkM/4GUA6GabVuue8Qy3dvODqoMeJD0gLTzhiJzbhlGY7+lIr5EnB2YoK9U44z1sS8K9+MU6DiMSnNdIQ6thYjdL88tHMvz/LokSTbqlgJATE41lMRX5aAjoWA5yOmPoB2GOMmk9DJzJAPuP5tUB0E=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

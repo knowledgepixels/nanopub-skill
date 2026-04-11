@@ -1,0 +1,312 @@
+@prefix this: <https://w3id.org/np/RASr25r0GxVUYGpsJjx3f8y9JE2PzWJnLusIY8XdysKB8> .
+@prefix sub: <https://w3id.org/np/RASr25r0GxVUYGpsJjx3f8y9JE2PzWJnLusIY8XdysKB8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:accessRights rdfs:label "has term of use" .
+  
+  dct:conformsTo rdfs:label "conforms to the standards" .
+  
+  dct:description rdfs:label "has the description" .
+  
+  dct:license rdfs:label "is licensed under" .
+  
+  dct:rightsHolder rdfs:label "has policy" .
+  
+  <http://schema.org/applicationCategory> rdfs:label "has the application category" .
+  
+  <http://schema.org/applicationSubCategory> rdfs:label "solves the pain points" .
+  
+  <http://schema.org/audience> rdfs:label "is intended for" .
+  
+  <http://schema.org/benefits> rdfs:label "has benefits" .
+  
+  <http://schema.org/dataFeedElement> rdfs:label "is shared via" .
+  
+  <http://schema.org/featureList> rdfs:label "support collaboration, data sharing, and interoperability with other research workflows via" .
+  
+  <http://schema.org/funder> rdfs:label "is funded by" .
+  
+  <http://schema.org/funding> rdfs:label "has long-term funding plan" .
+  
+  <http://schema.org/maintainer> rdfs:label "is maintained by" .
+  
+  <http://schema.org/offers> rdfs:label "offers services" .
+  
+  <http://schema.org/potentialAction> rdfs:label "has API" .
+  
+  <http://schema.org/programmingLanguage> rdfs:label "has programming language" .
+  
+  <http://schema.org/serviceType> rdfs:label "has reliability services" .
+  
+  <http://schema.org/softwareRequirements> rdfs:label "requires software" .
+  
+  <http://schema.org/softwareVersion> rdfs:label "has software version" .
+  
+  <http://schema.org/url> rdfs:label "has documentation at" .
+  
+  rdf:type rdfs:label "has type" .
+  
+  rdfs:label rdfs:label "has name" .
+  
+  prov:hadActivity rdfs:label "has stakeholder engagement" .
+  
+  prov:hadPlan rdfs:label "has data preservation policy" .
+  
+  <https://schema.org/actionableFeedbackPolicy> rdfs:label "has user feedback strategy" .
+  
+  <https://schema.org/description> rdfs:label "has evaluation criteria" .
+  
+  <https://schema.org/disambiguatingDescription> rdfs:label "has key innovations" .
+  
+  sub:api-endpoint a nt:UriPlaceholder;
+    rdfs:label "API Endpoints / Interface URLs" .
+  
+  sub:application-category a nt:LiteralPlaceholder;
+    rdfs:label "Application Domain/Category" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Comprehensive template for documenting research infrastructure design decisions covering all technical design, behavioral design, strategy development, and transparency questions from 'Engineering Open by Design into Research Infrastructures' by Haak et al. (DOI: https://doi.org/10.3897/rio.11.e163817, 2025)";
+    rdfs:label "Template: Research Infrastructure Documentation - Open by Design";
+    nt:hasNanopubLabelPattern "Research Infrastructure: ${infrastructure-name}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st09, sub:st10, sub:st11, sub:st12, sub:st13, sub:st14, sub:st15, sub:st16,
+      sub:st17, sub:st18, sub:st19, sub:st20, sub:st21, sub:st22, sub:st23, sub:st24, sub:st25,
+      sub:st26, sub:st27, sub:st28 .
+  
+  sub:benefits-provided a nt:LongLiteralPlaceholder;
+    rdfs:label "Gains/Benefits the Infrastructure Provides" .
+  
+  sub:collaboration-interoperatibility a nt:LongLiteralPlaceholder;
+    rdfs:label "How does your product support collaboration, data sharing, and interoperability with other research workflows?" .
+  
+  sub:data-preservation a nt:LongLiteralPlaceholder;
+    rdfs:label "How are you ensuring core data are accessible over time?" .
+  
+  sub:data-sharing a nt:LongLiteralPlaceholder;
+    rdfs:label "Data Sharing Mechanisms and Protocols" .
+  
+  sub:documentation-url a nt:UriPlaceholder;
+    rdfs:label "Documentation/Homepage URL" .
+  
+  sub:ethical-policies a nt:LongLiteralPlaceholder;
+    rdfs:label "Ethical Data Collection, Management, and Sharing Policies" .
+  
+  sub:evaluation-criteria a nt:LongLiteralPlaceholder;
+    rdfs:label "What are your product evaluation criteria and how are you collecting data to support evaluation of infrastructure effectiveness and impact?" .
+  
+  sub:feedback-strategy a nt:LongLiteralPlaceholder;
+    rdfs:label "Strategy for Collecting User Feedback" .
+  
+  sub:funding-source a nt:UriPlaceholder;
+    rdfs:label "Funding Organization" .
+  
+  sub:infrastructure a nt:LocalResource .
+  
+  sub:infrastructure-description a nt:LongLiteralPlaceholder;
+    rdfs:label "Infrastructure Description" .
+  
+  sub:infrastructure-name a nt:LiteralPlaceholder;
+    rdfs:label "Infrastructure Name" .
+  
+  sub:key-innovations a nt:LongLiteralPlaceholder;
+    rdfs:label "Key Innovations that Enable Solving Problems" .
+  
+  sub:license a nt:UriPlaceholder;
+    rdfs:label "License URL" .
+  
+  sub:maintainer a nt:UriPlaceholder;
+    rdfs:label "Maintainer (ORCID or ROR)" .
+  
+  sub:problem-solved a nt:LongLiteralPlaceholder;
+    rdfs:label "Pain Points the Infrastructure Solves" .
+  
+  sub:programming-language a nt:LiteralPlaceholder;
+    rdfs:label "Programming Language" .
+  
+  sub:service-reliability a nt:LongLiteralPlaceholder;
+    rdfs:label "Service Reliability Measures and Practices" .
+  
+  sub:software-version a nt:LiteralPlaceholder;
+    rdfs:label "Software Version" .
+  
+  sub:st01 rdf:object <http://schema.org/SoftwareApplication>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:infrastructure .
+  
+  sub:st02 rdf:object sub:infrastructure-name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:infrastructure .
+  
+  sub:st03 rdf:object sub:infrastructure-description;
+    rdf:predicate dct:description;
+    rdf:subject sub:infrastructure .
+  
+  sub:st04 a nt:RepeatableStatement;
+    rdf:object sub:tool-used;
+    rdf:predicate <http://schema.org/softwareRequirements>;
+    rdf:subject sub:infrastructure .
+  
+  sub:st05 a nt:RepeatableStatement;
+    rdf:object sub:programming-language;
+    rdf:predicate <http://schema.org/programmingLanguage>;
+    rdf:subject sub:infrastructure .
+  
+  sub:st06 rdf:object sub:software-version;
+    rdf:predicate <http://schema.org/softwareVersion>;
+    rdf:subject sub:infrastructure .
+  
+  sub:st07 a nt:RepeatableStatement;
+    rdf:object sub:standard-implemented;
+    rdf:predicate dct:conformsTo;
+    rdf:subject sub:infrastructure .
+  
+  sub:st08 rdf:object sub:api-endpoint;
+    rdf:predicate <http://schema.org/potentialAction>;
+    rdf:subject sub:infrastructure .
+  
+  sub:st09 rdf:object sub:funding-source;
+    rdf:predicate <http://schema.org/funder>;
+    rdf:subject sub:infrastructure .
+  
+  sub:st10 rdf:object sub:support-services;
+    rdf:predicate <http://schema.org/offers>;
+    rdf:subject sub:infrastructure .
+  
+  sub:st11 rdf:object sub:sustainability-model;
+    rdf:predicate <http://schema.org/funding>;
+    rdf:subject sub:infrastructure .
+  
+  sub:st12 rdf:object sub:terms-of-use;
+    rdf:predicate dct:accessRights;
+    rdf:subject sub:infrastructure .
+  
+  sub:st13 rdf:object sub:service-reliability;
+    rdf:predicate <http://schema.org/serviceType>;
+    rdf:subject sub:infrastructure .
+  
+  sub:st14 rdf:object sub:ethical-policies;
+    rdf:predicate dct:rightsHolder;
+    rdf:subject sub:infrastructure .
+  
+  sub:st15 rdf:object sub:collaboration-interoperatibility;
+    rdf:predicate <http://schema.org/featureList>;
+    rdf:subject sub:infrastructure .
+  
+  sub:st16 rdf:object sub:data-sharing;
+    rdf:predicate <http://schema.org/dataFeedElement>;
+    rdf:subject sub:infrastructure .
+  
+  sub:st17 a nt:RepeatableStatement;
+    rdf:object sub:target-audience;
+    rdf:predicate <http://schema.org/audience>;
+    rdf:subject sub:infrastructure .
+  
+  sub:st18 rdf:object sub:problem-solved;
+    rdf:predicate <http://schema.org/applicationSubCategory>;
+    rdf:subject sub:infrastructure .
+  
+  sub:st19 rdf:object sub:benefits-provided;
+    rdf:predicate <http://schema.org/benefits>;
+    rdf:subject sub:infrastructure .
+  
+  sub:st20 rdf:object sub:feedback-strategy;
+    rdf:predicate <https://schema.org/actionableFeedbackPolicy>;
+    rdf:subject sub:infrastructure .
+  
+  sub:st21 rdf:object sub:key-innovations;
+    rdf:predicate <https://schema.org/disambiguatingDescription>;
+    rdf:subject sub:infrastructure .
+  
+  sub:st22 rdf:object sub:stakeholder-engagement;
+    rdf:predicate prov:hadActivity;
+    rdf:subject sub:infrastructure .
+  
+  sub:st23 rdf:object sub:evaluation-criteria;
+    rdf:predicate <https://schema.org/description>;
+    rdf:subject sub:infrastructure .
+  
+  sub:st24 rdf:object sub:data-preservation;
+    rdf:predicate prov:hadPlan;
+    rdf:subject sub:infrastructure .
+  
+  sub:st25 rdf:object sub:license;
+    rdf:predicate dct:license;
+    rdf:subject sub:infrastructure .
+  
+  sub:st26 rdf:object sub:documentation-url;
+    rdf:predicate <http://schema.org/url>;
+    rdf:subject sub:infrastructure .
+  
+  sub:st27 a nt:RepeatableStatement;
+    rdf:object sub:maintainer;
+    rdf:predicate <http://schema.org/maintainer>;
+    rdf:subject sub:infrastructure .
+  
+  sub:st28 rdf:object sub:application-category;
+    rdf:predicate <http://schema.org/applicationCategory>;
+    rdf:subject sub:infrastructure .
+  
+  sub:stakeholder-engagement a nt:LongLiteralPlaceholder;
+    rdfs:label "How are you engaging stakeholders in strategy development and decisions?" .
+  
+  sub:standard-implemented a nt:UriPlaceholder;
+    rdfs:label "Standards, Schema, Persistent Identifiers Used" .
+  
+  sub:support-services a nt:LongLiteralPlaceholder;
+    rdfs:label "User Support Services and Financial Support Model" .
+  
+  sub:sustainability-model a nt:LongLiteralPlaceholder;
+    rdfs:label "Long-term Sustainability Strategy" .
+  
+  sub:target-audience a nt:LiteralPlaceholder;
+    rdfs:label "Direct Beneficiaries / Target Stakeholders" .
+  
+  sub:terms-of-use a nt:UriPlaceholder;
+    rdfs:label "Terms and Conditions of Use URL" .
+  
+  sub:tool-used a nt:UriPlaceholder;
+    rdfs:label "Standard (Open) Tools Used" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1784-2920 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1784-2920 foaf:name "Anne Fouilloux" .
+  
+  this: dct:created "2025-09-24T17:28:22.346Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1784-2920;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAsAdiQUiZFuTzYv4k9nvyVcusZr3IZw19da3lLPMCgmE>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Research Infrastructure Documentation - Open by Design";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDWv2pJnmDsBOq8OlT1aSvYXSuWT34WOp4FYqEzdnn2F0kqzcFevBqWGZDxJWC0lqCrDEuNfp2QFyPe/+nES9dlHGYIhqPi68fwK6ZiNUotRFxXou+rjFznVvUxtCL8Ede79EBHwWN61QtwSIcU12bLoZsNPFlqQASQ93BJuKlihwIDAQAB";
+    npx:hasSignature "S8gCcvzpgGE+HpADgqaZsMRhxe9NoxV0A+XXopviR8suN3kZkJALbInWctpY1umYm/sX/z1tFDEedbe59rHBzmHhHmp07UhFGT2+tkU4gGTkxcvmntSFagHWoQJhI8Slqz+UItYJVCx4N3KCAVeFwooVKt4Q2NidGJxTDolwRy4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1784-2920 .
+}
+

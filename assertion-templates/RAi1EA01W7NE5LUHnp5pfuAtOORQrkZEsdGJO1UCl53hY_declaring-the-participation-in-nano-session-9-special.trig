@@ -1,0 +1,59 @@
+@prefix this: <https://w3id.org/np/RAi1EA01W7NE5LUHnp5pfuAtOORQrkZEsdGJO1UCl53hY> .
+@prefix sub: <https://w3id.org/np/RAi1EA01W7NE5LUHnp5pfuAtOORQrkZEsdGJO1UCl53hY#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://www.wikidata.org/entity/P1344> rdfs:label "participates in" .
+  
+  <https://nanopub.net/sessions/#nano-session-9-special> rdfs:label "Nano Session #9 (Special)" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    rdfs:label "Declaring the participation in Nano Session #9 (Special)";
+    nt:hasNanopubLabelPattern "participation in Nano Session #9 (Special)";
+    nt:hasStatement sub:st01;
+    nt:hasTargetNanopubType <https://nanopub.net/sessions/#nano-session-9-special> .
+  
+  sub:st01 rdf:object <https://nanopub.net/sessions/#nano-session-9-special>;
+    rdf:predicate <http://www.wikidata.org/entity/P1344>;
+    rdf:subject nt:CREATOR .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "h2ei9TNdMiGTmdZ3GXMfwUPu99wyLovYeBoNUgGFxmZaXL4+zUtqWcoaiPIRJdUJYGLlAfEk5uvwEQi2Rx9ULgCRYU8pFd/fXhn5U2e3ivJo1Tc2FxNikq/d9FL2o9LeanK3kNq/6PDk9glnEiJNI2Kr8XOHRb/Z28jX+C+vNR0=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2024-01-16T09:25:57.291Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA1JObNpoAZDXefbdlEy2PV-kmKzSXOxUngEzHLTrVrbk>;
+    rdfs:label "Template: Declaring the participation in Nano Session #9 (Special)";
+    prov:wasDerivedFrom ns1:RAs5lERrJU4dEmnHXa4UYHD_Fruox1yydqMlss8WPNI40;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA, ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90,
+      ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

@@ -1,0 +1,125 @@
+@prefix this: <https://w3id.org/np/RAJBH26T4ed8N-_LCDuaTi3UCvKdP-GzOOjkkB2Pw1g90> .
+@prefix sub: <https://w3id.org/np/RAJBH26T4ed8N-_LCDuaTi3UCvKdP-GzOOjkkB2Pw1g90#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <https://w3id.org/fdof/ontology#FAIRDigitalObject> rdfs:label "FAIR Digital Object (FDO)" .
+  
+  <https://w3id.org/fdof/ontology#hasEncodingFormat> rdfs:label "has the format" .
+  
+  <https://w3id.org/fdof/ontology#hasInformationObjectType> rdfs:label "has the type of" .
+  
+  <https://w3id.org/fdof/ontology#hasMetadata> rdfs:label "has its metadata in" .
+  
+  <https://w3id.org/fdof/ontology#materializes> rdfs:label "is a concrete materialization of" .
+  
+  <https://w3id.org/fdof/types#Article> rdfs:label "Article" .
+  
+  <https://w3id.org/fdof/types#Dataset> rdfs:label "Dataset" .
+  
+  <https://w3id.org/fdof/types#Ontology> rdfs:label "Ontology" .
+  
+  <https://w3id.org/fdof/types#Photograph> rdfs:label "Photograph" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Declaring a FAIR Digital Object";
+    nt:hasNanopubLabelPattern "FAIR Digital Object: ${label}";
+    nt:hasStatement sub:st0, sub:st1, sub:st3, sub:st5, sub:st9;
+    nt:hasTag "FDO" .
+  
+  sub:fdo a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID suffix for this FDO" .
+  
+  sub:format a nt:ExternalUriPlaceholder;
+    rdfs:label "MIME type, such as \"text/csv\" or \"application/trig\"";
+    nt:hasPrefix "https://iana.org/assignments/media-types/";
+    nt:hasPrefixLabel "the MIME type" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "label or name for this FDO" .
+  
+  sub:media-object a nt:ExternalUriPlaceholder;
+    rdfs:label "URL of concrete file" .
+  
+  sub:st0 rdf:object <https://w3id.org/fdof/ontology#FAIRDigitalObject>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:fdo .
+  
+  sub:st1 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:fdo .
+  
+  sub:st3 rdf:object sub:type;
+    rdf:predicate <https://w3id.org/fdof/ontology#hasInformationObjectType>;
+    rdf:subject sub:fdo .
+  
+  sub:st5 a nt:GroupedStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st5a, sub:st5b .
+  
+  sub:st5a rdf:object sub:fdo;
+    rdf:predicate <https://w3id.org/fdof/ontology#materializes>;
+    rdf:subject sub:media-object .
+  
+  sub:st5b rdf:object sub:format;
+    rdf:predicate <https://w3id.org/fdof/ontology#hasEncodingFormat>;
+    rdf:subject sub:media-object .
+  
+  sub:st9 rdf:object nt:NANOPUB;
+    rdf:predicate <https://w3id.org/fdof/ontology#hasMetadata>;
+    rdf:subject sub:fdo .
+  
+  sub:type a nt:GuidedChoicePlaceholder;
+    rdfs:label "FDO Type URI";
+    nt:possibleValue <https://w3id.org/fdof/types#Article>, <https://w3id.org/fdof/types#Dataset>,
+      <https://w3id.org/fdof/types#Ontology>, <https://w3id.org/fdof/types#Photograph>;
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/repo/type/f90cda43071e5afd9dbbd07452380c057c26010dd4e1105cdc108f35fc7280c0?query=prefix%20rdfs%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2000%2F01%2Frdf-schema%23%3E%0Aprefix%20np%3A%20%3Chttp%3A%2F%2Fwww.nanopub.org%2Fnschema%23%3E%0Aprefix%20npa%3A%20%3Chttp%3A%2F%2Fpurl.org%2Fnanopub%2Fadmin%2F%3E%0Aprefix%20npx%3A%20%3Chttp%3A%2F%2Fpurl.org%2Fnanopub%2Fx%2F%3E%0A%0Aselect%20%3Fthing%20%3Flabel%20where%20%7B%0A%20%20graph%20npa%3Agraph%20%7B%0A%20%20%20%20%3Fnp%20npa%3AhasValidSignatureForPublicKey%20%3Fpubkey%20.%0A%20%20%20%20filter%20not%20exists%20%7B%20%3Fnpx%20npx%3Ainvalidates%20%3Fnp%20%3B%20npa%3AhasValidSignatureForPublicKey%20%3Fpubkey%20.%20%7D%0A%20%20%20%20%3Fnp%20npx%3Aintroduces%20%3Fthing%20.%0A%20%20%20%20%3Fnp%20np%3AhasAssertion%20%3Fa%20.%0A%20%20%7D%0A%20%20graph%20%3Fa%20%7B%0A%20%20%20%20%3Fthing%20rdfs%3Alabel%20%3Flabel%20.%0A%20%20%20%20filter%28contains%28lcase%28str%28%3Flabel%29%29%2C%20lcase%28%22 %22%29%29%29%0A%20%20%7D%0A%7D%0Alimit%2010" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "mQGLWClAsK/SrTBUTWDWQ/sit7TA3ek0JcHAugFb+NWqwrnoXj2x5GSKiDQYtbnReBWnBF35piO1o5hCUmddcyh10va1Pxkve1TSV0RhdJS/f0Ug7EC32T+uWG+MVgNG0Mt/nNFjMBObDANswiVV9OvWilEf4TIEyfTyGqEsvmg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-09-20T15:14:31.028Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA43X6Bw4colO81GOEF7tySdHCd3C4vhgnW-is9yqlBLw>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Declaring a FAIR Digital Object";
+    prov:wasDerivedFrom ns1:RAbkSFDaRJ-POAm91hKeSoEEZS7stWfpLtImhsb4dNtuY;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA, ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90,
+      ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALtjkZX1lYrTL2eCZp4VTW6vGGxiDZ-aaU-s1Z0Fcs2I> .
+}
+

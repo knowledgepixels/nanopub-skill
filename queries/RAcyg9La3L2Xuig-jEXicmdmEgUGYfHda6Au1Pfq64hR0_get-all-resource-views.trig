@@ -1,0 +1,82 @@
+@prefix this: <https://w3id.org/np/RAcyg9La3L2Xuig-jEXicmdmEgUGYfHda6Au1Pfq64hR0> .
+@prefix sub: <https://w3id.org/np/RAcyg9La3L2Xuig-jEXicmdmEgUGYfHda6Au1Pfq64hR0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-all-resource-views a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns all resource view declarations with their basic structure: view ID, kind, type, label, query, template count, first template, and date.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get all resource views";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+
+select ?view ?view_label ?viewKind ?type ?query (count(distinct ?actionTemplate) as ?template_count) (min(?actionTemplate) as ?first_template) (min(?actionLabel) as ?first_template_label) ?date ?np (\"^\" as ?np_label) where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np dct:created ?date .
+    ?np np:hasAssertion ?a .
+    ?np np:hasPublicationInfo ?pi .
+  }
+  graph ?pi {
+    ?np nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  }
+  graph ?a {
+    ?view a gen:ResourceView .
+    optional {
+      ?view a ?type .
+      filter(?type != gen:ResourceView)
+    }
+    optional { ?view rdfs:label ?view_label . }
+    optional { ?view dct:isVersionOf ?viewKind . }
+    optional { ?view gen:hasViewQuery ?query . }
+    optional {
+      ?view gen:hasViewAction ?action .
+      ?action gen:hasActionTemplate ?actionTemplate .
+      optional { ?action rdfs:label ?actionLabel . }
+    }
+  }
+} group by ?view ?view_label ?viewKind ?type ?query ?date ?np
+order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-03-17T07:18:41Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-all-resource-views;
+    rdfs:label "Get all resource views" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "M5EUBsO0I2kMXF3ZLNvKV6NiYNe/O1U290durwPjOgUiEN05Hynq+hGIhpmLT1atgL7t7ISxcPFPJaf2xstNAAyw0YGTENwHg8FrpDHqfLCcZUiTwLF4Wi+FrSfIBCKZCnIRj+w8f0FtAwSLYe733Ul/H/H0wNgrTkMRZ91btGM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

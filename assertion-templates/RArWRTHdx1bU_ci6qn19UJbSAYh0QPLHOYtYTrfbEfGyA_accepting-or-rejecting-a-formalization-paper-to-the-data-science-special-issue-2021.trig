@@ -1,0 +1,79 @@
+@prefix this: <http://purl.org/np/RArWRTHdx1bU_ci6qn19UJbSAYh0QPLHOYtYTrfbEfGyA> .
+@prefix sub: <http://purl.org/np/RArWRTHdx1bU_ci6qn19UJbSAYh0QPLHOYtYTrfbEfGyA#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has comment for decision" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Accepting or rejecting a formalization paper to the Data Science special issue 2021";
+    nt:hasStatement sub:st01, sub:st02, sub:st03;
+    nt:hasTag "Journals" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "write a comment for the decision here" .
+  
+  sub:nanopub a nt:TrustyUriPlaceholder;
+    rdfs:label "add the URI of the nanopublication here" .
+  
+  sub:st01 rdf:object <https://w3id.org/linkflows/formalization-papers/DataScienceSpecialIssue>;
+    rdf:predicate <http://purl.org/vocab/frbr/core#partOf>;
+    rdf:subject sub:nanopub .
+  
+  sub:st02 rdf:object sub:status;
+    rdf:predicate <http://purl.org/spar/pso/withStatus>;
+    rdf:subject sub:nanopub .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:nanopub .
+  
+  sub:status a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue <http://purl.org/spar/pso/accepted-for-publication>, <http://purl.org/spar/pso/rejected-for-publication> .
+  
+  <http://purl.org/spar/pso/accepted-for-publication> rdfs:label "accepted for publication" .
+  
+  <http://purl.org/spar/pso/rejected-for-publication> rdfs:label "rejected for publication" .
+  
+  <http://purl.org/spar/pso/withStatus> rdfs:label "has the status" .
+  
+  <http://purl.org/vocab/frbr/core#partOf> rdfs:label "is submitted as part of" .
+  
+  <https://w3id.org/linkflows/formalization-papers/DataScienceSpecialIssue> rdfs:label
+      "Formalization Papers Special Issue 2021 at Data Science" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234, orcid:0000-0002-7114-6459 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "KLcQ3jI35Uk32heMrBMzDfxyEmNd38YlSHVIpgVXTNnesuKzAAchoWdP7UYaHdHEejM4sSpbx5h9o69EUG1q95ak0nKsMIX1BXACY2JKgHl0O0Wxy/V5LZJmGxnONNoGdSJF8Jrnb3d2R8wunWICmg73FuRMndclhaZJF82ZgDk=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2022-01-26T15:04:55.657+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    npx:supersedes <http://purl.org/np/RAbN8-_C536GLgIoayNw86zS5ntCEgtFJn_uTgxmMdyeY>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RAi6zZAwhaJ23Hzg4lIjlPir6Take3ZQp-lS9skfBEwfQ>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RARMBqX_-9lnhkaqk4BuxfLcC6H5cqTlzdtDzeDIwuKdU> .
+}
+

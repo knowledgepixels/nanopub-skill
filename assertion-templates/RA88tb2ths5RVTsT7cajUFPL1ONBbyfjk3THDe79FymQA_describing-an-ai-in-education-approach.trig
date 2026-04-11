@@ -1,0 +1,107 @@
+@prefix this: <https://w3id.org/np/RA88tb2ths5RVTsT7cajUFPL1ONBbyfjk3THDe79FymQA> .
+@prefix sub: <https://w3id.org/np/RA88tb2ths5RVTsT7cajUFPL1ONBbyfjk3THDe79FymQA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  dct:source rdfs:label "has the source" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  sub:approach a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "short ID suffix for approach" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Describing an AI in Education approach";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06 .
+  
+  sub:class a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose more specific class";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the approach" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "short text label/name for the approach" .
+  
+  sub:reference a nt:ExternalUriPlaceholder;
+    rdfs:label "paper reference, e.g. DOI" .
+  
+  sub:referenceLabel a nt:LiteralPlaceholder;
+    rdfs:label "the label for the reference (citation line)" .
+  
+  sub:st01 rdf:object <https://w3id.org/spaces/AI-in-education/r/terms/AI-in-Education-approach>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:approach .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:approach .
+  
+  sub:st03 a nt:OptionalStatement;
+    rdf:object sub:class;
+    rdf:predicate rdf:type;
+    rdf:subject sub:approach .
+  
+  sub:st04 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:approach .
+  
+  sub:st05 rdf:object sub:reference;
+    rdf:predicate dct:source;
+    rdf:subject sub:approach .
+  
+  sub:st06 rdf:object sub:referenceLabel;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:reference .
+  
+  <https://w3id.org/spaces/AI-in-education/r/terms/AI-in-Education-approach> rdfs:label
+      "AI in Education approach" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-02-09T07:05:14.162Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA3op80yj2ZElOUMEqSxFu3L-3X2luvO87yMcuzGntI0M>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Describing an AI in Education approach";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "NB8DM2cNTzxnBHHIch+8azfcXOH+FikABTaiHqEF/z8niW7QnrqMpi5QYCV22BzdCQzkohRa0kl1v078nWk5U1z/RNUfCe0yT3adEp4QSiT+E7kJkqf+7Nc6UarUhMQiWzH6Lm8AqazB8QMbmoAGq2GnKvswLyvKcwJ+e0H2qKM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

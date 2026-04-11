@@ -1,0 +1,138 @@
+@prefix this: <https://w3id.org/np/RAhx2YCJOqPVrDJGAwvXomKQYrYBMHSEiAz9iqlXOXtO0> .
+@prefix sub: <https://w3id.org/np/RAhx2YCJOqPVrDJGAwvXomKQYrYBMHSEiAz9iqlXOXtO0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:date rdfs:label "has the presentation date" .
+  
+  dct:description rdfs:label "is described as" .
+  
+  dct:isPartOf rdfs:label "is part of" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  rdfs:seeAlso rdfs:label "see also" .
+  
+  <http://www.wikidata.org/entity/P823> rdfs:label "is presented by" .
+  
+  <http://www.wikidata.org/entity/Q604733> rdfs:label "presentation" .
+  
+  <https://schema.org/about> rdfs:label "is about" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Publish metadata about a presentation, including title, date, presenter, event, and optionally a link to the slides or a recording.";
+    rdfs:label "Publishing information about a presentation";
+    nt:hasNanopubLabelPattern "Presentation: ${title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08;
+    nt:hasTag "Presentations" .
+  
+  sub:date a nt:LiteralPlaceholder;
+    rdfs:label "date of the presentation";
+    nt:hasDatatype xsd:date .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "abstract or description of the presentation" .
+  
+  sub:event a nt:GuidedChoicePlaceholder;
+    rdfs:label "event or conference";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Event" .
+  
+  sub:presentation a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID suffix for the presentation" .
+  
+  sub:presenter a nt:AgentPlaceholder;
+    rdfs:label "the presenter";
+    nt:hasDefaultValue nt:CREATOR .
+  
+  sub:slidesUrl a nt:UriPlaceholder;
+    rdfs:label "URL to slides, recording, or related resource" .
+  
+  sub:st01 rdf:object <http://www.wikidata.org/entity/Q604733>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:presentation .
+  
+  sub:st02 rdf:object sub:title;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:presentation .
+  
+  sub:st03 rdf:object sub:date;
+    rdf:predicate dct:date;
+    rdf:subject sub:presentation .
+  
+  sub:st04 rdf:object sub:presenter;
+    rdf:predicate <http://www.wikidata.org/entity/P823>;
+    rdf:subject sub:presentation .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:event;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:presentation .
+  
+  sub:st06 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:slidesUrl;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:presentation .
+  
+  sub:st07 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:presentation .
+  
+  sub:st08 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:topic;
+    rdf:predicate <https://schema.org/about>;
+    rdf:subject sub:presentation .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title of the presentation" .
+  
+  sub:topic a nt:GuidedChoicePlaceholder;
+    rdfs:label "topic or subject of the presentation";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-03-18T15:04:09.085+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAOtEyqzHYBkEXgCCanL2YqmKs_rb4UoJuiIjpqGfvsIs>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Publishing information about a presentation";
+    nt:wasCreatedFromProvenanceTemplate ns1:RAcm8OurwUk15WOgBM9wySo-T3a5h6as4K8YR5MBrrxUc;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAQIZQdqa_kqYfFSnboJOHst-BTcR7_PPG_ywE5EMUEMI> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "jN5u3VQMuiFSPztcrjXjWjLNvUYS7la1tN4Olrz9mH2+gyOe+Y/rlL4hQ7oUnqjL4dCNzEIZGvyW+GnXKmEfwd2dpU3w57TdiGj0ZqRIviy82COpm4FOBEQXuHapGMiWTawM2lESPzya7KhPga4Dd/aakX+WhtaYhnivXlEih9Y=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

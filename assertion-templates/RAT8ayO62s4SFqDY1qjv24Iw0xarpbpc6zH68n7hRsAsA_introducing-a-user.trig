@@ -1,0 +1,107 @@
+@prefix this: <http://purl.org/np/RAT8ayO62s4SFqDY1qjv24Iw0xarpbpc6zH68n7hRsAsA> .
+@prefix sub: <http://purl.org/np/RAT8ayO62s4SFqDY1qjv24Iw0xarpbpc6zH68n7hRsAsA#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  npx:declaredBy rdfs:label "is declared by" .
+  
+  npx:hasAlgorithm rdfs:label "has algorithm" .
+  
+  npx:hasKeyLocation rdfs:label "has key location" .
+  
+  npx:hasPublicKey rdfs:label "has public key" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Introducing a user";
+    nt:hasNanopubLabelPattern "User: ${name}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3;
+    nt:hasTag "Meta";
+    nt:hasTargetNanopubType npx:declaredBy .
+  
+  sub:key-declaration a nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short id of key declaration" .
+  
+  sub:key-declaration-ref a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue sub:key-declaration .
+  
+  sub:key-location a nt:UriPlaceholder;
+    rdfs:label "URL where the private key is stored" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "name of the user" .
+  
+  sub:public-key a nt:LongLiteralPlaceholder;
+    rdfs:label "public key" .
+  
+  sub:st1 rdf:object sub:name;
+    rdf:predicate foaf:name;
+    rdf:subject sub:user .
+  
+  sub:st2 a nt:GroupedStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st2a, sub:st2b, sub:st2c .
+  
+  sub:st2a rdf:object sub:user;
+    rdf:predicate npx:declaredBy;
+    rdf:subject sub:key-declaration .
+  
+  sub:st2b rdf:object "RSA";
+    rdf:predicate npx:hasAlgorithm;
+    rdf:subject sub:key-declaration .
+  
+  sub:st2c rdf:object sub:public-key;
+    rdf:predicate npx:hasPublicKey;
+    rdf:subject sub:key-declaration .
+  
+  sub:st3 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:key-location;
+    rdf:predicate npx:hasKeyLocation;
+    rdf:subject sub:key-declaration-ref .
+  
+  sub:user a nt:AgentPlaceholder, nt:IntroducedResource;
+    rdfs:label "identifier of the user to be introduced" .
+  
+  foaf:name rdfs:label "has the name" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "QterDn4D6uLYjk+GSesMrTPeunZvhAEiXG++EuZkVny9lCx2s9ejZ4hHMKXujnTIVpHb66Sm2v0w3MK9LX1PMQBcv5WYKmKE/cDy3bcoBYYI1haJ+njx1hBRQoZUjCvTUUSbYCpYjkHVzguMxUrWuify4boaIbTIbxzNV0nsyX0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-12-11T07:16:01.090Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes ns1:RABMVRQW1kq9BZ2mQAMSxSQS6Q3AR4ypH2agpT-xKbxOE;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Template: Introducing a user";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAGBEisKAxwcQTdfR7ALwCeQBrUVeU23F8uFvFmO-H6F0> .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+}
+

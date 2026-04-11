@@ -1,0 +1,68 @@
+@prefix this: <https://w3id.org/np/RA5nlOFxunxpc6mAhmsrEuxqvO7PgQqswxgj5ph7ux498> .
+@prefix sub: <https://w3id.org/np/RA5nlOFxunxpc6mAhmsrEuxqvO7PgQqswxgj5ph7ux498/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    rdfs:label "add...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RAbZPGSnmbAny0ybmvIfpL23e574V3b5JY5xCqKFO1NMw>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "void" .
+  
+  sub:uncertainty-estimate-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf sub:uncertainty-estimate-view-kind;
+    dct:title "Uncertainty estimates";
+    rdfs:label "Uncertainty estimate view";
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.8.uncertaintyEstimates";
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:addAction;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAANLwHVI-PFznMbj5-qER1pG1NIwzmP2eSGenxxqU-1c/get-uncertainty-estimates>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-02-12T14:01:30.484Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:uncertainty-estimate-view;
+    npx:introduces sub:uncertainty-estimate-view-kind;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "HPj5Y0GE0ib8bPkN6vrzeaWSw9ugU8XwIXkdf7QMGp0xjmblkLJin7xgiboD8sZC93qm7fs5Ke0thX2mptn+e0JiEwql5Zkaq1Gloh5AjKQx600uNuRhyF+R4Un+kptNU5mIOgpFKHsb8mjGyC+BthXqEW0/2STNYBcZ3fem/po=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAANLwHVI-PFznMbj5-qER1pG1NIwzmP2eSGenxxqU-1c/get-uncertainty-estimates>
+    nt:hasLabelFromApi "Get uncertainty estimates - This query returns the uncertainty estimates for datasets." .
+  
+  <https://w3id.org/np/RAbZPGSnmbAny0ybmvIfpL23e574V3b5JY5xCqKFO1NMw> nt:hasLabelFromApi
+      "Declaring uncertainty estimates for a dataset" .
+}
+

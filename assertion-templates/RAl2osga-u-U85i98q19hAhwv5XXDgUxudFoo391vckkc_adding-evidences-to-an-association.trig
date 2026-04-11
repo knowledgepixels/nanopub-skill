@@ -1,0 +1,156 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix bl: <https://w3id.org/biolink/vocab/> .
+@prefix this: <http://purl.org/np/RAl2osga-u-U85i98q19hAhwv5XXDgUxudFoo391vckkc> .
+@prefix sub: <http://purl.org/np/RAl2osga-u-U85i98q19hAhwv5XXDgUxudFoo391vckkc#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix sepio: <http://purl.obolibrary.org/obo/SEPIO_> .
+@prefix evi: <https://w3id.org/EVI#> .
+@prefix dao: <https://w3id.org/dao/dao#> .
+@prefix eco: <http://purl.obolibrary.org/obo/ECO_> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  eco:0000006 rdfs:label "experimental evidence" .
+  
+  eco:0000180 rdfs:label "clinical study evidence" .
+  
+  eco:0000204 rdfs:label "author statement" .
+  
+  eco:0000205 rdfs:label "curator inference" .
+  
+  eco:0000362 rdfs:label "computational inference" .
+  
+  eco:0005548 rdfs:label "biological system reconstruction evidence based on inference from background scientific knowledge" .
+  
+  eco:0006152 rdfs:label "medical practitioner statement evidence" .
+  
+  eco:0006153 rdfs:label "self-reported individual's statement evidence" .
+  
+  eco:0007672 rdfs:label "computational evidence" .
+  
+  sepio:0000145 rdfs:label "was quoted from" .
+  
+  sepio:0000398 rdfs:label "has evidence type (ECO code)" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Adding evidences to an association";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06 .
+  
+  sub:confidencescore a nt:LiteralPlaceholder;
+    rdfs:label "add the level of confidence in the evidence from 0 to 1, e.g. 0.5" .
+  
+  sub:evidence a nt:LocalResource;
+    rdfs:label "This evidence" .
+  
+  sub:evidencedescription a nt:LiteralPlaceholder;
+    rdfs:label "provide a human-readable description of the evidence here, and how it supports or challenges the association" .
+  
+  sub:evidencerelation a nt:GuidedChoicePlaceholder;
+    rdfs:label "define the evidence relation";
+    nt:possibleValue evi:challengedBy, evi:indirectlyChallengedBy, evi:indirectlySupportedBy,
+      evi:supportedBy, bl:has_evidence;
+    nt:possibleValuesFromApi "http://data.bioontology.org/search?pagesize=20&apikey=fd451bec-eacd-4519-b972-90fb6c7007cb&include_properties=true&ontologies=EVI&q=" .
+  
+  sub:evidencetype a nt:GuidedChoicePlaceholder;
+    rdfs:label "add the evidence code from the evidence code ontology here";
+    nt:possibleValue eco:0000000, eco:0000006, eco:0000180, eco:0000204, eco:0000205,
+      eco:0000362, eco:0005548, eco:0006152, eco:0006153, eco:0007672;
+    nt:possibleValuesFromApi "http://data.bioontology.org/search?pagesize=20&apikey=fd451bec-eacd-4519-b972-90fb6c7007cb&ontologies=ECO&q=" .
+  
+  sub:evidenceuri a nt:UriPlaceholder;
+    rdfs:label "add the URL to the source of the evidence here (e.g. DailyMed publication)" .
+  
+  sub:st00 a rdf:Statement;
+    rdf:object sub:evidence;
+    rdf:predicate sub:evidencerelation;
+    rdf:subject sub:thing;
+    nt:statementOrder "0"^^xsd:integer .
+  
+  sub:st01 a rdf:Statement;
+    rdf:object sub:evidenceuri;
+    rdf:predicate sepio:0000145;
+    rdf:subject sub:evidence;
+    nt:statementOrder "1"^^xsd:integer .
+  
+  sub:st02 a rdf:Statement;
+    rdf:object sub:evidencedescription;
+    rdf:predicate bl:description;
+    rdf:subject sub:evidence;
+    nt:statementOrder "2"^^xsd:integer .
+  
+  sub:st03 a nt:OptionalStatement;
+    rdf:object sub:confidencescore;
+    rdf:predicate bl:has_confidence_level;
+    rdf:subject sub:evidence;
+    nt:statementOrder "6"^^xsd:integer .
+  
+  sub:st04 a nt:OptionalStatement;
+    rdf:object sub:evidencetype;
+    rdf:predicate sepio:0000398;
+    rdf:subject sub:evidence;
+    nt:statementOrder "3"^^xsd:integer .
+  
+  sub:st05 a rdf:Statement;
+    rdf:object sub:evidence;
+    rdf:predicate bl:id;
+    rdf:subject sub:evidence;
+    nt:statementOrder "4"^^xsd:integer .
+  
+  sub:st06 a rdf:Statement;
+    rdf:object bl:EvidenceType;
+    rdf:predicate rdf:type;
+    rdf:subject sub:evidence;
+    nt:statementOrder "5"^^xsd:integer .
+  
+  sub:thing a nt:UriPlaceholder;
+    rdfs:label "The URI of the association you want to add an evidence to" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "asserts that" .
+  
+  prov:wasQuotedFrom rdfs:label "was quoted from" .
+  
+  bl:EvidenceType rdfs:label "Evidence" .
+  
+  bl:category rdfs:label "has type of evidence" .
+  
+  bl:description rdfs:label "is described by" .
+  
+  bl:has_confidence_level rdfs:label "has a confidence level of" .
+  
+  bl:has_evidence rdfs:label "has evidence" .
+  
+  bl:id rdfs:label "has id" .
+  
+  dao:context rdfs:label "has context" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-4727-9435 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCR9fz0fKCdWOWC+pxhkQhEM/ppbdIYe5TLSdj+lJzSlv9mYBaPgrzVezSwwbmhlHBPDZa4/vHycU315BdmUGq+pXllp9+rWFfrb+kBJwhZjpG6BeyyXBsRFz4jmQVxl/ZYHilQTh/XalYzKkEAyTiEMPee4Kz61PaWOKH24CsnOQIDAQAB";
+    npx:hasSignature "j8b13MFRxVRq3shtONR1ezRxjTLzZW2G+ZNSguzkM/kmLH7fDYPQJZyuAWosOGi5QomhSoItGoOoJrSIGVozjhaIjaqln6vJLlIyDaZUiKHE1kOSPCMYi4oOpzR+MBODA1g1I669ZMBDiWkq3yKSvdx/CC46cC2RUZCic1PjEpQ=";
+    npx:hasSignatureTarget this: .
+  
+  this: dcterms:created "2020-09-18T11:00:00+01:00"^^xsd:dateTime;
+    dcterms:creator orcid:0000-0003-4727-9435;
+    npx:supersedes <http://purl.org/np/RA_tANaWEZaJioW8eHiD9on76KZpodJz03ZSohsblnxv4> .
+}
+

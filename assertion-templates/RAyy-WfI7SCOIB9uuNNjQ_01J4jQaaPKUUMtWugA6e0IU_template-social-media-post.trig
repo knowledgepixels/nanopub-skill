@@ -1,0 +1,174 @@
+@prefix this: <https://w3id.org/np/RAyy-WfI7SCOIB9uuNNjQ_01J4jQaaPKUUMtWugA6e0IU> .
+@prefix sub: <https://w3id.org/np/RAyy-WfI7SCOIB9uuNNjQ_01J4jQaaPKUUMtWugA6e0IU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "A template for creating structured social media posts with proper provenance tracking and metadata";
+    rdfs:label "Template: Social Media Post";
+    nt:hasNanopubLabelPattern "Social Media Post: ${post-title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06-07, sub:st08,
+      sub:st09, sub:st10, sub:st11, sub:st12, sub:st13, sub:st14;
+    nt:hasTag "Social" .
+  
+  sub:engagement-metrics a nt:LongLiteralPlaceholder;
+    rdfs:label "Engagement metrics (e.g., 245 likes, 12 shares, 8 comments)" .
+  
+  sub:hashtag a nt:LiteralPlaceholder;
+    rdfs:label "Hashtag (without # symbol)" .
+  
+  sub:intent a nt:RestrictedChoicePlaceholder;
+    rdfs:label "Purpose/intent of post";
+    nt:possibleValuesFrom <https://w3id.org/np/RALbYAYtp_KLpp189U7fZnAVH2ZVXbjIW0QrNBcYmvlDo> .
+  
+  sub:mention-persistent-id a nt:UriPlaceholder;
+    rdfs:label "Persistent identifier (ORCID or other persistent ID, if available)" .
+  
+  sub:mentioned-user a nt:UriPlaceholder;
+    rdfs:label "Mentioned user (profile URL)" .
+  
+  sub:platform a nt:RestrictedChoicePlaceholder;
+    rdfs:label "Social media platform";
+    nt:possibleValue <https://facebook.com>, <https://instagram.com>, <https://linkedin.com>,
+      <https://mastodon.social>, <https://twitter.com>, <https://www.tiktok.com/>, <https://youtube.com> .
+  
+  sub:post-content a nt:LongLiteralPlaceholder;
+    rdfs:label "Post text content" .
+  
+  sub:post-date a nt:LiteralPlaceholder;
+    rdfs:label "Date and time of post (ISO format: YYYY-MM-DDTHH:MM:SS)";
+    nt:hasDatatype xsd:dateTime .
+  
+  sub:post-title a nt:LiteralPlaceholder;
+    rdfs:label "Post title or brief summary" .
+  
+  sub:post-url a nt:UriPlaceholder;
+    rdfs:label "Direct link to the published post" .
+  
+  sub:publisher-name a nt:LiteralPlaceholder;
+    rdfs:label "Account name/handle (e.g., @username)" .
+  
+  sub:social-media-post a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "Social Media Post" .
+  
+  sub:social-media-publisher a nt:UriPlaceholder;
+    rdfs:label "Social media account (profile URL) that published this post" .
+  
+  sub:source a nt:UriPlaceholder;
+    rdfs:label "Source URL or DOI" .
+  
+  sub:st01 rdf:object sub:post-title;
+    rdf:predicate dct:title;
+    rdf:subject sub:social-media-post .
+  
+  sub:st02 rdf:object sub:post-content;
+    rdf:predicate <https://schema.org/text>;
+    rdf:subject sub:social-media-post .
+  
+  sub:st03 rdf:object sub:platform;
+    rdf:predicate <https://schema.org/publishedOn>;
+    rdf:subject sub:social-media-post .
+  
+  sub:st04 rdf:object sub:topic;
+    rdf:predicate dct:subject;
+    rdf:subject sub:social-media-post .
+  
+  sub:st05 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:hashtag;
+    rdf:predicate <https://schema.org/keywords>;
+    rdf:subject sub:social-media-post .
+  
+  sub:st06 rdf:object sub:social-media-publisher;
+    rdf:predicate <https://schema.org/publisher>;
+    rdf:subject sub:social-media-post .
+  
+  sub:st06-07 a nt:GroupedStatement;
+    nt:hasStatement sub:st06, sub:st07 .
+  
+  sub:st07 rdf:object sub:publisher-name;
+    rdf:predicate <https://schema.org/name>;
+    rdf:subject sub:social-media-publisher .
+  
+  sub:st08 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:mentioned-user;
+    rdf:predicate <https://schema.org/mentions>;
+    rdf:subject sub:social-media-post .
+  
+  sub:st09 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:mention-persistent-id;
+    rdf:predicate <https://schema.org/mentions>;
+    rdf:subject sub:social-media-post .
+  
+  sub:st10 a nt:OptionalStatement;
+    rdf:object sub:intent;
+    rdf:predicate <https://schema.org/about>;
+    rdf:subject sub:social-media-post .
+  
+  sub:st11 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:source;
+    rdf:predicate prov:wasDerivedFrom;
+    rdf:subject sub:social-media-post .
+  
+  sub:st12 rdf:object sub:post-url;
+    rdf:predicate <https://schema.org/url>;
+    rdf:subject sub:social-media-post .
+  
+  sub:st13 a nt:OptionalStatement;
+    rdf:object sub:engagement-metrics;
+    rdf:predicate <https://schema.org/interactionStatistic>;
+    rdf:subject sub:social-media-post .
+  
+  sub:st14 rdf:object sub:post-date;
+    rdf:predicate <https://schema.org/datePublished>;
+    rdf:subject sub:social-media-post .
+  
+  sub:topic a nt:GuidedChoicePlaceholder;
+    rdfs:label "Main topic or subject";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1784-2920 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0002-1784-2920 foaf:name "Anne Fouilloux" .
+  
+  this: dct:created "2025-10-15T05:24:35.676Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0002-1784-2920;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA-TYx4OunCdYJ6Sb4KRznUCnHU351J1LTk0kPu_2ZSu8>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Social Media Post";
+    prov:wasDerivedFrom <https://w3id.org/np/RAUU0RvSigfhzOsxd65gi2ytyHZ2_YENOpYvjm7V4rA8k>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "9yt/kOGqSp2cSRWijXzKdAFXWquUuIhqM5/Xx+Ami4x+VDQBsS07Mq9vN3NjaK0LJVWT3y9C82AYBGgpTmSkbmWg03NZcqm7v6Hc8WicgYpnT1h6QdgJouUeWHGdSY7u+aeMdOs5CinmNMy3YAXZqmneO8aKVIa7v+kXpdBjVLk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

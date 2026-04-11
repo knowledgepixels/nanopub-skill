@@ -1,0 +1,109 @@
+@prefix this: <https://w3id.org/np/RAMxovYPcHntX767Ur_HOVEnIHMeUqQabZrVJaZr6oeJU> .
+@prefix sub: <https://w3id.org/np/RAMxovYPcHntX767Ur_HOVEnIHMeUqQabZrVJaZr6oeJU#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.org/dc/elements/1.1/description> rdfs:label "description" .
+  
+  <http://purl.org/dc/elements/1.1/title> rdfs:label "title" .
+  
+  <http://schema.regen.network/cropPracticeType> rdfs:label "AgriMet Crop Type" .
+  
+  <http://www.w3.org/ns/sosa/FeatureOfInterest> rdfs:label "is a Feature Of Interest" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Template for defining a practice area";
+    rdfs:label "Practice Area Template";
+    nt:hasStatement sub:crop, sub:pa, sub:pa2, sub:pd, sub:property, sub:pt, sub:test .
+  
+  sub:crop a nt:RestrictedChoicePlaceholder;
+    rdf:object sub:crop;
+    rdf:predicate <http://schema.regen.network/cropPracticeType>;
+    rdf:subject sub:practice-area;
+    nt:possibleValuesFrom <https://w3id.org/np/RAfZwivAmGR_VA7paVZ7V0zv1pR4KLas80n6nExVfrs1c>;
+    nt:statementOrder "6" .
+  
+  sub:description a nt:LiteralPlaceholder .
+  
+  sub:pa rdf:object <http://www.w3.org/ns/sosa/FeatureOfInterest>;
+    rdf:predicate sub:a;
+    rdf:subject sub:practice-area;
+    nt:statementOrder "1" .
+  
+  sub:pa2 rdf:object <http://schema.regen.network/PracticeArea>;
+    rdf:predicate sub:a;
+    rdf:subject sub:practice-area;
+    nt:statementOrder "2" .
+  
+  sub:pd rdf:object sub:description;
+    rdf:predicate <http://purl.org/dc/elements/1.1/description>;
+    rdf:subject sub:practice-area;
+    nt:statementOrder "4" .
+  
+  sub:practice-area a nt:ExternalUriPlaceholder;
+    nt:hasPrefix "http://regen.network/project/";
+    nt:hasPrefixLabel "Project URI" .
+  
+  sub:property a nt:RepeatableStatement;
+    rdf:object sub:property-name;
+    rdf:predicate <http://www.w3.org/ns/ssn/hasProperty>;
+    rdf:subject sub:practice-area;
+    nt:statementOrder "5" .
+  
+  sub:property-name a nt:ValuePlaceholder;
+    rdfs:label "has observed property" .
+  
+  sub:pt rdf:object sub:title;
+    rdf:predicate <http://purl.org/dc/elements/1.1/title>;
+    rdf:subject sub:practice-area;
+    nt:statementOrder "3" .
+  
+  sub:test rdf:object sub:test;
+    rdf:predicate <http://paul/meets>;
+    rdf:subject <http://paul> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0001-1060-6917 .
+}
+
+sub:pubinfo {
+  orcid:0009-0001-1060-6917 foaf:name "Paul Weidner" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCkIfkDipYB8H4zMRgLwLvGVH/Z6bw3Pv9U60dgEDX11C2p8c63y9xn+MpLayutal09Bw2fSZ3smtRq13CRs5OlLxKqMajPwwV3qqBKj9Trr5iK57R7K1dwW8IqJPwwUyfUI/huxXif4R9xAVRAk9YLzle14SROrh/OpP+NA9NvRwIDAQAB";
+    npx:hasSignature "SRrXDp14hw7auN10zxXLahc+T5ELVWJ9yt0bMAqu0zFWnvKeOvM9RWH5J9stB/dALcOSOmVg/AvOu7viKXY4T/NYYnLBaDr+DME5b4S1Lo6AZk6F1lo0eOx1S12g/axl8vwskCFn2glj9wMjDBlpoBhFjs0B7GU+c6u/9ZFIDqI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0001-1060-6917 .
+  
+  this: a npx:ExampleNanopub;
+    dct:created "2024-04-17T04:18:57.584Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0001-1060-6917;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAjCrkFm7Mv4-2ve1kBAdy1oiauTjgXhHjWpYxliqU3sE>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Practice Area Template";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RATtBNB9Rj1cIwxJyoHBgNn8eeIR06m0H6C6RTRVqSy3E, ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90,
+      ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

@@ -1,0 +1,246 @@
+@prefix this: <http://purl.org/np/RAXAwu_wRefivM9wZXZcQ019JrAS45uW2GAaB76_9G4r0> .
+@prefix sub: <http://purl.org/np/RAXAwu_wRefivM9wZXZcQ019JrAS45uW2GAaB76_9G4r0#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://lexvo.org/id/iso639-3/> rdfs:label "use language" .
+  
+  dct:description rdfs:label "has Description of the resource" .
+  
+  sub:Actor a nt:IntroducedResource, nt:LocalResource .
+  
+  sub:AssociatedData a nt:UriPlaceholder .
+  
+  sub:Category a nt:GuidedChoicePlaceholder;
+    nt:possibleValue sub:communications, sub:history, sub:languages, sub:literature, sub:media,
+      sub:music .
+  
+  sub:Date a nt:LiteralPlaceholder .
+  
+  sub:Description a nt:LongLiteralPlaceholder .
+  
+  sub:DesignProcedure a nt:ExternalUriPlaceholder .
+  
+  sub:DomainAudience a nt:GuidedChoicePlaceholder, nt:LiteralPlaceholder;
+    nt:possibleValue sub:adult, sub:children, sub:listener, sub:viewer, sub:young .
+  
+  sub:ExtendFormat a nt:LocalResource .
+  
+  sub:Fieldofactivity a nt:GuidedChoicePlaceholder;
+    nt:possibleValue sub:communications, sub:computer, sub:history, sub:information, sub:languages,
+      sub:literature, sub:media, sub:music .
+  
+  sub:Financement a nt:ValuePlaceholder .
+  
+  sub:Format a nt:GuidedChoicePlaceholder;
+    nt:possibleValue sub:AIFF, sub:GZIP, sub:HTML, sub:JPEG, sub:JPG-2000, sub:PDF, sub:PNG,
+      sub:TAR, sub:TIFF, sub:TXT, sub:WAVE, sub:XML, sub:ZIP .
+  
+  sub:Homepage a nt:UriPlaceholder .
+  
+  sub:Identifiant a nt:LiteralPlaceholder .
+  
+  sub:Keywords a nt:LongLiteralPlaceholder .
+  
+  sub:LinguisticObject a nt:GuidedChoicePlaceholder;
+    nt:possibleValue sub:english, sub:french, sub:german .
+  
+  sub:Location a nt:ValuePlaceholder .
+  
+  <http://purl.org/np/RAXAwu_wRefivM9wZXZcQ019JrAS45uW2GAaB76_9G4r0#Place/Location>
+    a nt:LiteralPlaceholder .
+  
+  sub:Profession a nt:GuidedChoicePlaceholder;
+    nt:possibleValue sub:arts, sub:marketing, sub:psychology, sub:writing .
+  
+  sub:References a nt:ValuePlaceholder .
+  
+  sub:Resource_name a nt:LiteralPlaceholder .
+  
+  sub:Type a nt:GuidedChoicePlaceholder;
+    nt:possibleValue sub:Image, sub:dataset, sub:music, sub:text .
+  
+  sub:UserRights a nt:LongLiteralPlaceholder .
+  
+  sub:Vulgarization a nt:UriPlaceholder .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Creating e_humanity data template for validation";
+    rdfs:label "E- Humanity Fair Data Validation";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6, sub:st7,
+      sub:st8, sub:st9, sub:st90, sub:st91, sub:st92, sub:st93, sub:st94, sub:st95, sub:st96,
+      sub:st97, sub:st98, sub:st99, sub:st990, sub:st991, sub:st992 .
+  
+  sub:hasCategory rdfs:label "has Category of the resource" .
+  
+  sub:hasData rdfs:label "has Associated data to the resource" .
+  
+  sub:hasDesignProcedure rdfs:label "has design or procedure applied to the resource" .
+  
+  sub:hasDomainAudience rdfs:label "has Domain audience of the resource" .
+  
+  sub:hasFinancement rdfs:label "has Financement" .
+  
+  sub:hasFormat rdfs:label "has Format of the resource" .
+  
+  sub:hasIdentifiant rdfs:label "Identifiant of the resource" .
+  
+  sub:hasKeywords rdfs:label "resource has Keywords" .
+  
+  sub:hasLocation rdfs:label "has Location", "is Located in e-humanity resource" .
+  
+  sub:hasProfession rdfs:label "has Profession" .
+  
+  sub:hasReferences rdfs:label "has References of the resource" .
+  
+  sub:hasType rdfs:label "has Type of the resource" .
+  
+  sub:hasUserRights rdfs:label "has User rights of the resource" .
+  
+  sub:hasVulgarization rdfs:label "has Vulgarization of the resource" .
+  
+  sub:name a nt:LiteralPlaceholder .
+  
+  sub:st0 rdf:object sub:name;
+    rdf:predicate <https://www.w3.org/TR/rdf-schema/#ch_label>;
+    rdf:subject sub:Actor .
+  
+  sub:st1 rdf:object sub:Fieldofactivity;
+    rdf:predicate <https://www.w3.org/TR/rdf-schema/#ch_type>;
+    rdf:subject sub:Actor .
+  
+  sub:st2 rdf:object sub:Profession;
+    rdf:predicate sub:hasProfession;
+    rdf:subject sub:Actor .
+  
+  sub:st3 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:Homepage;
+    rdf:predicate <http://schema.org/url>;
+    rdf:subject sub:actor .
+  
+  sub:st4 rdf:object <http://purl.org/np/RAXAwu_wRefivM9wZXZcQ019JrAS45uW2GAaB76_9G4r0#Place/Location>;
+    rdf:predicate sub:hasLocation;
+    rdf:subject sub:actor .
+  
+  sub:st5 rdf:object sub:Resource_name;
+    rdf:predicate <https://www.w3.org/TR/rdf-schema/#ch_langstring>;
+    rdf:subject sub:actor .
+  
+  sub:st6 rdf:object sub:Type;
+    rdf:predicate sub:hasType;
+    rdf:subject sub:actor .
+  
+  sub:st7 rdf:object sub:Category;
+    rdf:predicate sub:hasCategory;
+    rdf:subject sub:actor .
+  
+  sub:st8 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:DomainAudience;
+    rdf:predicate sub:hasDomainAudience;
+    rdf:subject sub:actor .
+  
+  sub:st9 rdf:object sub:Description;
+    rdf:predicate dct:description;
+    rdf:subject sub:actor .
+  
+  sub:st90 rdf:object sub:UserRights;
+    rdf:predicate sub:hasUserRights;
+    rdf:subject sub:actor .
+  
+  sub:st91 rdf:object sub:Format;
+    rdf:predicate sub:hasFormat;
+    rdf:subject sub:actor .
+  
+  sub:st92 a rdf:Statement, nt:RepeatableStatement;
+    rdf:object sub:ExtendFormat;
+    rdf:predicate <https://www.w3.org/TR/xmlschema-2/#decimal>;
+    rdf:subject sub:actor .
+  
+  sub:st93 rdf:object sub:DesignProcedure;
+    rdf:predicate sub:hasDesignProcedure;
+    rdf:subject sub:actor .
+  
+  sub:st94 rdf:object sub:LinguisticObject;
+    rdf:predicate <http://lexvo.org/id/iso639-3/>;
+    rdf:subject sub:actor .
+  
+  sub:st95 rdf:object sub:Location;
+    rdf:predicate sub:hasLocation;
+    rdf:subject sub:actor .
+  
+  sub:st96 rdf:object sub:Date;
+    rdf:predicate <https://www.w3.org/TR/xmlschema-2/#date>;
+    rdf:subject sub:actor .
+  
+  sub:st97 rdf:object sub:Keywords;
+    rdf:predicate sub:hasKeywords;
+    rdf:subject sub:actor .
+  
+  sub:st98 rdf:object sub:References;
+    rdf:predicate sub:hasReferences;
+    rdf:subject sub:actor .
+  
+  sub:st99 rdf:object sub:Financement;
+    rdf:predicate sub:hasFinancement;
+    rdf:subject sub:actor .
+  
+  sub:st990 rdf:object sub:AssociatedData;
+    rdf:predicate sub:hasData;
+    rdf:subject sub:actor .
+  
+  sub:st991 rdf:object sub:Identifiant;
+    rdf:predicate sub:hasIdentifiant;
+    rdf:subject sub:actor .
+  
+  sub:st992 a rdf:Statement, nt:RepeatableStatement;
+    rdf:object sub:Vulgarization;
+    rdf:predicate sub:hasVulgarization;
+    rdf:subject sub:actor .
+  
+  <http://schema.org/url> rdfs:label "has Homepage URL" .
+  
+  <https://www.w3.org/TR/rdf-schema/#ch_label> rdfs:label "has" .
+  
+  <https://www.w3.org/TR/rdf-schema/#ch_langstring> rdfs:label "has Name of e-humanity resource" .
+  
+  <https://www.w3.org/TR/rdf-schema/#ch_type> rdfs:label "has field of activity" .
+  
+  <https://www.w3.org/TR/xmlschema-2/#date> rdfs:label "has a date of electronic publication" .
+  
+  <https://www.w3.org/TR/xmlschema-2/#decimal> rdfs:label "has Extend to the format resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1110-8004 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQChHMi2DCrCckpDy96eGXQPNaFhgVok/TdcUjkMwoQ+NkEAq5u8vbmTjNuG898n6sSt684e+KoiEjH45AlcuqPa4hswIdM351F+D0zmSNSwUMXk6qeJ7LshIqOtDPJieXPztr/xIxaZAc8AdAB/gxW8qyxfCCtxtOupsVEC9rNeyQIDAQAB";
+    npx:hasSignature "IqY/HaGnIRABURVmQ4cVEebeu6xVvPyR4Qngp7VyQL4X/aeh0gnWQbDtnkWwE7wSEec9bdZPsmLIuWVYJ1cLqpE96kS0tPujqFtQbGU1kzf4X79rDVJtxjfiSsMOWOkQeHJFw39aEeyNHDkqjLzeyqjIYroIm0avWwANJByWmTc=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-04-08T07:08:35.264Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1110-8004;
+    npx:supersedes <http://purl.org/np/RAkGHlTLnEBUH-Yk9XbXaFq9b515tD0psz_q1C8nxSyUU>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A>,
+      <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RAkONP_jLqAbok3FgtutnKcLs4IHr9KiAuslQNnfEJIwY> .
+}
+

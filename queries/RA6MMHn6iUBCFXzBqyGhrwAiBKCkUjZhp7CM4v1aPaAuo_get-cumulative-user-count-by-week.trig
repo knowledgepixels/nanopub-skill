@@ -1,0 +1,115 @@
+@prefix this: <https://w3id.org/np/RA6MMHn6iUBCFXzBqyGhrwAiBKCkUjZhp7CM4v1aPaAuo> .
+@prefix sub: <https://w3id.org/np/RA6MMHn6iUBCFXzBqyGhrwAiBKCkUjZhp7CM4v1aPaAuo/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-cumulative-user-count a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns the cumulative number of human users (with ORCID) who have published an introduction nanopub, per week (Mon-Sun).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get cumulative user count by week";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+
+select ?week (substr(str(min(?fd1)), 0, 11) as ?firstday) (count(distinct ?u2) as ?totalusers) where {
+  {
+    select ?u1 ?fd1 ?w1 where {
+      {
+        select ?u1 (min(?d1) as ?fd1) where {
+          graph npa:graph {
+            ?np1 npa:hasValidSignatureForPublicKey ?pk1 .
+            ?np1 dct:creator ?u1 .
+            ?np1 dct:created ?d1 .
+            ?np1 np:hasAssertion ?a1 .
+          }
+          graph ?a1 {
+            ?decl1 npx:declaredBy ?agent1 .
+          }
+          filter(strstarts(str(?u1), \"https://orcid.org/\"))
+          filter(?u1 != <https://orcid.org/0000-0000-0000-0000>)
+          filter(?u1 != <https://orcid.org/1234-1234-1234-1234>)
+        }
+        group by ?u1
+      }
+      bind(if(month(?fd1) <= 2, year(?fd1) - 1, year(?fd1)) as ?y1)
+      bind(if(month(?fd1) <= 2, month(?fd1) + 9, month(?fd1) - 3) as ?m1)
+      bind(365*?y1 + xsd:integer(?y1/4) - xsd:integer(?y1/100) + xsd:integer(?y1/400) + xsd:integer((153*?m1 + 2)/5) + day(?fd1) as ?dn1)
+      bind(?dn1 + 1 - xsd:integer((?dn1 + 1) / 7) * 7 as ?dw1)
+      bind(xsd:integer((?dn1 - ?dw1) / 7) as ?w1)
+    }
+  }
+  {
+    select ?u2 ?w2 where {
+      {
+        select ?u2 (min(?d2) as ?fd2) where {
+          graph npa:graph {
+            ?np2 npa:hasValidSignatureForPublicKey ?pk2 .
+            ?np2 dct:creator ?u2 .
+            ?np2 dct:created ?d2 .
+            ?np2 np:hasAssertion ?a2 .
+          }
+          graph ?a2 {
+            ?decl2 npx:declaredBy ?agent2 .
+          }
+          filter(strstarts(str(?u2), \"https://orcid.org/\"))
+          filter(?u2 != <https://orcid.org/0000-0000-0000-0000>)
+          filter(?u2 != <https://orcid.org/1234-1234-1234-1234>)
+        }
+        group by ?u2
+      }
+      bind(if(month(?fd2) <= 2, year(?fd2) - 1, year(?fd2)) as ?y2)
+      bind(if(month(?fd2) <= 2, month(?fd2) + 9, month(?fd2) - 3) as ?m2)
+      bind(365*?y2 + xsd:integer(?y2/4) - xsd:integer(?y2/100) + xsd:integer(?y2/400) + xsd:integer((153*?m2 + 2)/5) + day(?fd2) as ?dn2)
+      bind(?dn2 + 1 - xsd:integer((?dn2 + 1) / 7) * 7 as ?dw2)
+      bind(xsd:integer((?dn2 - ?dw2) / 7) as ?w2)
+    }
+  }
+  bind(?w1 as ?week)
+  filter(?w2 <= ?week)
+}
+group by ?week
+order by desc(?week)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-03-19T10:27:00Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-cumulative-user-count;
+    prov:wasDerivedFrom <https://w3id.org/np/RACukHmzuKKvxudElenc0kX12E4umi9ExirfUVBXvVD3c>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "BwpFUU4JZY4RpRISX3y1EO87R8YiyGvurixNFvAUh0d9ut8tM1TkNMKP3JlqSV4kiq1aya9QXduR2Imr7Sw25UooQOjMxtrWgERNMv8uOtF96lb4J1cjn7lB9GNlvY+HVruTZ29w3pnwTbT3pX3PP9sBMgKy4K4NDfAcY3Ze00U=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

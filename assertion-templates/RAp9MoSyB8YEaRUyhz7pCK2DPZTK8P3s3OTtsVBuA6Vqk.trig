@@ -1,0 +1,91 @@
+@prefix this: <https://w3id.org/np/RAp9MoSyB8YEaRUyhz7pCK2DPZTK8P3s3OTtsVBuA6Vqk> .
+@prefix sub: <https://w3id.org/np/RAp9MoSyB8YEaRUyhz7pCK2DPZTK8P3s3OTtsVBuA6Vqk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <https://w3id.org/np/RAhLKXfMtza77tZcBJ49BDHWeCWBKemB60749O_KegBCs/dpp-profile> a
+      <https://w3id.org/fdoc/o/terms/FdoProfile>, <https://w3id.org/fdof/ontology#FAIRDigitalObject>;
+    dct:conformsTo <https://w3id.org/np/RAprU0T8cWWRNseTC15oQn5oaoiIIgpPx9QMmBZNPsehg/basic-fdo-profile-profile>;
+    rdfs:label "FDO profile for DPP";
+    <https://w3id.org/fdoc/o/terms/hasShape> sub:nodeShape .
+  
+  sub:00_type <http://www.w3.org/ns/shacl#hasValue> <http://w3id.org/dppo/ontology/dpp-odp/DPP>;
+    <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#minCount> "1";
+    <http://www.w3.org/ns/shacl#path> rdf:type .
+  
+  sub:00b_profile <http://www.w3.org/ns/shacl#hasValue> <https://w3id.org/np/RAhLKXfMtza77tZcBJ49BDHWeCWBKemB60749O_KegBCs/dpp-profile>;
+    <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#minCount> "1";
+    <http://www.w3.org/ns/shacl#path> dct:conformsTo .
+  
+  sub:01_containsInformation <http://www.w3.org/ns/shacl#minCount> "1";
+    <http://www.w3.org/ns/shacl#path> <http://w3id.org/dppo/ontology/dpp-info/containsInformation> .
+  
+  sub:02_describes <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#minCount> "1";
+    <http://www.w3.org/ns/shacl#path> <http://w3id.org/dppo/ontology/dpp-odp/describes> .
+  
+  sub:03_hasPart <http://www.w3.org/ns/shacl#path> <http://w3id.org/dppo/ontology/dpp-odp/hasPart> .
+  
+  sub:04_invalidAtTimeStamp <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> <http://w3id.org/dppo/ontology/dpp-prov/invalidAtTimeStamp> .
+  
+  sub:05_creationTimeStamp <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#minCount> "1";
+    <http://www.w3.org/ns/shacl#path> <http://w3id.org/dppo/ontology/dpp-prov/creationTimeStamp> .
+  
+  sub:nodeShape a <http://www.w3.org/ns/shacl#NodeShape>;
+    <http://www.w3.org/ns/shacl#property> sub:00_type, sub:00b_profile, sub:01_containsInformation,
+      sub:02_describes, sub:03_hasPart, sub:04_invalidAtTimeStamp, sub:05_creationTimeStamp;
+    <http://www.w3.org/ns/shacl#targetClass> <https://w3id.org/fdof/ontology#FAIRDigitalObject> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  dct:conformsTo nt:hasLabelFromApi "FDO attribute: conforms to - Links an FDO to the FDO profile it complies to." .
+  
+  rdf:type nt:hasLabelFromApi "FDO attribute: has the type - This relation connects an FDO to its types." .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-08-29T12:50:02.969Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:hasNanopubType nt:AssertionTemplate;
+    npx:introduces <https://w3id.org/np/RAhLKXfMtza77tZcBJ49BDHWeCWBKemB60749O_KegBCs/dpp-profile>;
+    npx:supersedes <https://w3id.org/np/RAQi2v2z7TW0l9Bof1FEsIu-vT4UYmGEW4uzsY5LxCHZc>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAN2lIJYaB3ogBcn3V6O8egLCCKA0i0Se4ogthQp0H0oQ>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALwVLnRJ4Y6ZkRC-fDiU0E8QB0XfWBRS0ntWyDMh1l8I> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "DXR+qicPM3vH2/ebOOkl8T6LXKhd7GHy/t7peiOrK4zTZs4y5g7pazUnuRbFqmGfqst9PIiRldyAPw3o/a4WeaAOuzjlLz1xflD6yjkjhOPyIjjBgwa0T747CA+vvYiWZqDVqPFFSJ324a3vfM121EC4l9FC3WU2FfijNLdsVew=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

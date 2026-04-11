@@ -1,0 +1,432 @@
+@prefix this: <https://w3id.org/np/RAqU4PxVtAGW0oLYwXcFZcST5axl7Kk2gIYBAaavRwhgU> .
+@prefix sub: <https://w3id.org/np/RAqU4PxVtAGW0oLYwXcFZcST5axl7Kk2gIYBAaavRwhgU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C69141> rdfs:label "was curated by" .
+  
+  <http://purl.obolibrary.org/obo/CHMO_0000849> rdfs:label "has crystallographic data" .
+  
+  <http://purl.obolibrary.org/obo/WC#_computational_observation> rdfs:label "has computational descriptor" .
+  
+  <http://purl.org/dc/dcmitype/Dataset> rdfs:label "dataset" .
+  
+  dct:created rdfs:label "was created on" .
+  
+  dct:creator rdfs:label "was produced by" .
+  
+  dct:dateAccepted rdfs:label "was published on" .
+  
+  dct:dateSubmitted rdfs:label "was submitted for publication on" .
+  
+  dct:description rdfs:label "has the description" .
+  
+  dct:hasFormat rdfs:label "has file format" .
+  
+  dct:hasVersion rdfs:label "has version" .
+  
+  dct:identifier rdfs:label "includes chemical(s)/material(s) with identifiers" .
+  
+  dct:isReferencedBy rdfs:label "is referenced by (including the original publication)" .
+  
+  dct:license rdfs:label "has license" .
+  
+  dct:publisher rdfs:label "is published by" .
+  
+  dct:references rdfs:label "has reference" .
+  
+  dct:rightsHolder rdfs:label "is owned by" .
+  
+  dct:title rdfs:label "has the title" .
+  
+  dct:type rdfs:label "has file type" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  <http://www.w3.org/ns/sosa/Procedure> rdfs:label "has used protocol" .
+  
+  <http://www.w3.org/ns/sosa/isHostedBy> rdfs:label "is hosted by" .
+  
+  <http://www.w3.org/ns/sosa/observedProperty> rdfs:label "has observed or measured property" .
+  
+  <https://w3id.org/gdmt/IsVersionOf> rdfs:label "is a version of" .
+  
+  <https://w3id.org/iadopt/ont/VariableSet> rdfs:label "has processing information or variable set" .
+  
+  <https://w3id.org/iadopt/ont/hasApplicableProperty> rdfs:label "has applicable property" .
+  
+  <https://w3id.org/iadopt/ont/hasMatrix> rdfs:label "has assay information" .
+  
+  <https://w3id.org/iadopt/ont/hasObjectOfInterest> rdfs:label "observes the properties and behaviour of" .
+  
+  <https://w3id.org/iadopt/ont/hasProperty> rdfs:label "has characterisation property" .
+  
+  <https://w3id.org/iadopt/ont/hasTarget> rdfs:label "has assay target" .
+  
+  sub:assayinformation a nt:RestrictedChoicePlaceholder;
+    rdfs:label "has assay information";
+    nt:possibleValuesFrom <https://w3id.org/np/RAg5_HWv0tM8LH1fDcd2Sm7I8wto7P4Kkr5RZm1TWucJY> .
+  
+  sub:assayinformationmanual a nt:ValuePlaceholder;
+    rdfs:label "URI or manual input of assay information" .
+  
+  sub:assayobservations a nt:RestrictedChoicePlaceholder;
+    rdfs:label "assay observation(s)";
+    nt:possibleValuesFrom <https://w3id.org/np/RAAOn57jTxMrtbpp_ps9s_OBluGaM3GQjp3rb61LbdluQ> .
+  
+  sub:assayobservationsmanual a nt:ValuePlaceholder;
+    rdfs:label "URI or manual input of assay observation(s)" .
+  
+  sub:assaytarget a nt:RestrictedChoicePlaceholder;
+    rdfs:label "assay target(s) information";
+    nt:possibleValuesFrom <https://w3id.org/np/RA2fFCDhQfvpjYnMOGaPcyzAQVnLCbNOTnQyi8YY_fdPU> .
+  
+  sub:assaytargetmanual a nt:ValuePlaceholder;
+    rdfs:label "URI or manual input of assay target(s) information" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template can be used to produce a machine actionable metadata record regarding the in vitro exposure to (nano)materials. The template allows the recording of scientific, bibliographic, and provenance metadata";
+    rdfs:label "Template for describing an in vitro assay measuring response to nanomaterial(s) exposure";
+    nt:hasNanopubLabelPattern "Dataset: ${title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st09, sub:st10, sub:st11, sub:st12, sub:st13, sub:st14, sub:st15, sub:st16,
+      sub:st17, sub:st18, sub:st19, sub:st19a, sub:st20, sub:st20a, sub:st21, sub:st21a,
+      sub:st22, sub:st22a, sub:st23, sub:st23a, sub:st24, sub:st24a, sub:st25, sub:st25a,
+      sub:st26, sub:st26a, sub:st27, sub:st28, sub:st29;
+    nt:hasTag "Datasets";
+    nt:hasTargetNanopubType <http://purl.org/dc/dcmitype/Dataset> .
+  
+  sub:computationalanalysisinformation a nt:RestrictedChoicePlaceholder;
+    rdfs:label "pre-processing or analysis information";
+    nt:possibleValuesFrom <https://w3id.org/np/RA37Jxlq4hIeFwqw6BHy0sSO-5CGoL8N8_Jo0voV6nM8c> .
+  
+  sub:computationalanalysisinformationmanual a nt:ValuePlaceholder;
+    rdfs:label "URI or manual input of pre-processing or analysis information" .
+  
+  sub:computationaldescriptors a nt:RestrictedChoicePlaceholder;
+    rdfs:label "has enrichment with";
+    nt:possibleValuesFrom <https://w3id.org/np/RAXmNdByjFOEPVG1WKtz4fX1HI0Pqd2a3OAngV2RfhpME> .
+  
+  sub:computationaldescriptorsmanual a nt:ValuePlaceholder;
+    rdfs:label "URI or manual input of included computational descriptors" .
+  
+  sub:crystallographicinformation a nt:RestrictedChoicePlaceholder;
+    rdfs:label "included crystallographic data";
+    nt:possibleValuesFrom <https://w3id.org/np/RAXKaV_s5IwqstCdJLoycXxR6ULtvoQRr1x2YamV1y5TM> .
+  
+  sub:crystallographicinformationmanual a nt:ValuePlaceholder;
+    rdfs:label "URI or manual input of included crystallographic data" .
+  
+  sub:datacurator a nt:ValuePlaceholder;
+    rdfs:label "URI of the curator(s) of the dataset (e.g., ORCID)" .
+  
+  sub:dataproducer a nt:ValuePlaceholder;
+    rdfs:label "URI of the data producer(s) (e.g., ORCID)" .
+  
+  sub:dataset a nt:UriPlaceholder;
+    rdfs:label "URI of the dataset" .
+  
+  sub:datecreated a nt:LiteralPlaceholder;
+    rdfs:label "date the dataset was created" .
+  
+  sub:datepublished a nt:LiteralPlaceholder;
+    rdfs:label "date the dataset was published" .
+  
+  sub:datesubmitted a nt:LiteralPlaceholder;
+    rdfs:label "date the dataset was submitted for publication" .
+  
+  sub:description a nt:LiteralPlaceholder;
+    rdfs:label "description of the dataset" .
+  
+  sub:format a nt:ValuePlaceholder;
+    rdfs:label "the file format(s) of the dataset" .
+  
+  sub:isreferencedby a nt:ExternalUriPlaceholder;
+    rdfs:label "DOI or URI of resource(s) referencing the dataset" .
+  
+  sub:isversionof a nt:ExternalUriPlaceholder;
+    rdfs:label "the URI of the previous dataset version" .
+  
+  sub:license a nt:ExternalUriPlaceholder;
+    rdfs:label "the license of the dataset" .
+  
+  sub:materialinformation a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the material(s) included";
+    nt:possibleValuesFrom <https://w3id.org/np/RAtWyOWnoqPievqzaNlWHIkfsbm09eIN7Q2auQKX2V3Mw> .
+  
+  sub:materialinformationmanual a nt:ValuePlaceholder;
+    rdfs:label "URI or manual input of the material(s) included" .
+  
+  sub:materialscharacterisation a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the material(s) characterisation";
+    nt:possibleValuesFrom <https://w3id.org/np/RAPfT24dH7zkYaIsoIIhMkOZ0wc3AcrHvBa6chQXzK11g> .
+  
+  sub:materialscharacterisationmanual a nt:ValuePlaceholder;
+    rdfs:label "URI or manual input of the material(s) characterisation" .
+  
+  sub:nmidentifiers a nt:ValuePlaceholder;
+    rdfs:label "unique identifier(s) of the assessed material(s) (e.g., CAS, ERM)" .
+  
+  sub:owner a nt:ValuePlaceholder;
+    rdfs:label "URI of the owner(s) of the dataset (e.g., ORCID)" .
+  
+  sub:periodictabledescriptors a nt:RestrictedChoicePlaceholder;
+    rdfs:label "included periodic-table descriptors";
+    nt:possibleValuesFrom <https://w3id.org/np/RABjV-iSE0O2IvhsXE_XEki7ymPrkUUckBlKdhmAv_vUw> .
+  
+  sub:periodictabledescriptorsmanual a nt:ValuePlaceholder;
+    rdfs:label "URI or manual input of included periodic-table descriptors" .
+  
+  sub:protocol a nt:ValuePlaceholder;
+    rdfs:label "the URI/name of the protocol(s) used" .
+  
+  sub:publisher a nt:ValuePlaceholder;
+    rdfs:label "URI/name of the publisher of the dataset (e.g., ORCID)" .
+  
+  sub:references a nt:ExternalUriPlaceholder;
+    rdfs:label "DOI or URI of related reference(s)" .
+  
+  sub:repository a nt:ValuePlaceholder;
+    rdfs:label "URI of the repository hosting the dataset" .
+  
+  sub:st01 a rdf:Statement;
+    rdf:object <http://purl.org/dc/dcmitype/Dataset>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:dataset .
+  
+  sub:st02 a rdf:Statement;
+    rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:dataset .
+  
+  sub:st03 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:dataset .
+  
+  sub:st04 a rdf:Statement;
+    rdf:object sub:publisher;
+    rdf:predicate dct:publisher;
+    rdf:subject sub:dataset .
+  
+  sub:st05 a rdf:Statement;
+    rdf:object sub:repository;
+    rdf:predicate <http://www.w3.org/ns/sosa/isHostedBy>;
+    rdf:subject sub:dataset .
+  
+  sub:st06 a nt:OptionalStatement;
+    rdf:object sub:datecreated;
+    rdf:predicate dct:created;
+    rdf:subject sub:dataset .
+  
+  sub:st07 a nt:OptionalStatement;
+    rdf:object sub:datesubmitted;
+    rdf:predicate dct:dateSubmitted;
+    rdf:subject sub:dataset .
+  
+  sub:st08 a nt:OptionalStatement;
+    rdf:object sub:datepublished;
+    rdf:predicate dct:dateAccepted;
+    rdf:subject sub:dataset .
+  
+  sub:st09 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:owner;
+    rdf:predicate dct:rightsHolder;
+    rdf:subject sub:dataset .
+  
+  sub:st10 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:dataproducer;
+    rdf:predicate dct:creator;
+    rdf:subject sub:dataset .
+  
+  sub:st11 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:datacurator;
+    rdf:predicate <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C69141>;
+    rdf:subject sub:dataset .
+  
+  sub:st12 a rdf:Statement;
+    rdf:object sub:license;
+    rdf:predicate dct:license;
+    rdf:subject sub:dataset .
+  
+  sub:st13 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:format;
+    rdf:predicate dct:hasFormat;
+    rdf:subject sub:dataset .
+  
+  sub:st14 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:type;
+    rdf:predicate dct:type;
+    rdf:subject sub:dataset .
+  
+  sub:st15 a nt:OptionalStatement;
+    rdf:object sub:version;
+    rdf:predicate dct:hasVersion;
+    rdf:subject sub:dataset .
+  
+  sub:st16 a nt:OptionalStatement;
+    rdf:object sub:isversionof;
+    rdf:predicate <https://w3id.org/gdmt/IsVersionOf>;
+    rdf:subject sub:dataset .
+  
+  sub:st17 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:nmidentifiers;
+    rdf:predicate dct:identifier;
+    rdf:subject sub:dataset .
+  
+  sub:st18 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:protocol;
+    rdf:predicate <http://www.w3.org/ns/sosa/Procedure>;
+    rdf:subject sub:dataset .
+  
+  sub:st19 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:materialinformation;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasObjectOfInterest>;
+    rdf:subject sub:dataset .
+  
+  sub:st19a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:materialinformationmanual;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasObjectOfInterest>;
+    rdf:subject sub:dataset .
+  
+  sub:st20 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:crystallographicinformation;
+    rdf:predicate <http://purl.obolibrary.org/obo/CHMO_0000849>;
+    rdf:subject sub:dataset .
+  
+  sub:st20a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:crystallographicinformationmanual;
+    rdf:predicate <http://purl.obolibrary.org/obo/CHMO_0000849>;
+    rdf:subject sub:dataset .
+  
+  sub:st21 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:materialscharacterisation;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasProperty>;
+    rdf:subject sub:dataset .
+  
+  sub:st21a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:materialscharacterisationmanual;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasProperty>;
+    rdf:subject sub:dataset .
+  
+  sub:st22 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:periodictabledescriptors;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasApplicableProperty>;
+    rdf:subject sub:dataset .
+  
+  sub:st22a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:periodictabledescriptorsmanual;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasApplicableProperty>;
+    rdf:subject sub:dataset .
+  
+  sub:st23 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:computationaldescriptors;
+    rdf:predicate <http://purl.obolibrary.org/obo/WC#_computational_observation>;
+    rdf:subject sub:dataset .
+  
+  sub:st23a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:computationaldescriptorsmanual;
+    rdf:predicate <http://purl.obolibrary.org/obo/WC#_computational_observation>;
+    rdf:subject sub:dataset .
+  
+  sub:st24 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:assaytarget;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasTarget>;
+    rdf:subject sub:dataset .
+  
+  sub:st24a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:assaytargetmanual;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasTarget>;
+    rdf:subject sub:dataset .
+  
+  sub:st25 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:assayinformation;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasMatrix>;
+    rdf:subject sub:dataset .
+  
+  sub:st25a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:assayinformationmanual;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasMatrix>;
+    rdf:subject sub:dataset .
+  
+  sub:st26 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:assayobservations;
+    rdf:predicate <http://www.w3.org/ns/sosa/observedProperty>;
+    rdf:subject sub:dataset .
+  
+  sub:st26a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:assayobservationsmanual;
+    rdf:predicate <http://www.w3.org/ns/sosa/observedProperty>;
+    rdf:subject sub:dataset .
+  
+  sub:st27 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:computationalanalysisinformation;
+    rdf:predicate <https://w3id.org/iadopt/ont/VariableSet>;
+    rdf:subject sub:dataset .
+  
+  sub:st27a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:computationalanalysisinformationmanual;
+    rdf:predicate <https://w3id.org/iadopt/ont/VariableSet>;
+    rdf:subject sub:dataset .
+  
+  sub:st28 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:isreferencedby;
+    rdf:predicate dct:isReferencedBy;
+    rdf:subject sub:dataset .
+  
+  sub:st29 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:references;
+    rdf:predicate dct:references;
+    rdf:subject sub:dataset .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "the title of the dataset" .
+  
+  sub:type a nt:ValuePlaceholder;
+    rdfs:label "the file type(s) of the dataset" .
+  
+  sub:version a nt:LiteralPlaceholder;
+    rdfs:label "the version of the dataset" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1297-3104 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1297-3104 foaf:name "Anastasios Papadiamantis" .
+  
+  this: dct:created "2025-07-25T12:39:10.516Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1297-3104;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Template for describing an in vitro assay measuring response to nanomaterial(s) exposure";
+    prov:wasDerivedFrom <https://w3id.org/np/RAqjnxiJR4a8Wson43yxn5u8Q4uCr7ko9fQZ0mpKrbok0>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA5reLVXOCPQFWr2UiCJb19ES7NwOpQRmudb17e2iB0c4> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDLrgIs0zCX11YIad1vf4iKrxmu/l3phA4ES5BixalXnpd5LD/znJ3GlB95mZ/KOrhGhBZyj39QaZVpQQuPTsqmigo4blW6FtTc0iWkFSNEj6dyWeavF9nJ0cSr7k6KEx3i8ue+O53k2lmF/UzG/w0cOSV71T3qVBFPupy5WMCTwwIDAQAB";
+    npx:hasSignature "MRY5AaSdHqhlkPzR3xbsuHulUoOKbZxEw68iH+2HmKtssz4HEZInGwAKhqmwm3zMi7TJv5YJKlr6QSopYkbB/SkzYHIze33vVnEf/zcUJK/Q70OVISmGlgItvZdyKnT7njo2+aYCCuEQTNF0PUi/AZveCW2SD5SOzVDox1Bdym4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1297-3104 .
+}
+

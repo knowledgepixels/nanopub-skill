@@ -1,0 +1,111 @@
+@prefix this: <https://w3id.org/np/RAS1RjfEPrerX54sLiZvNyQsGIS5lzF9OgDI3WaqFwxAk> .
+@prefix sub: <https://w3id.org/np/RAS1RjfEPrerX54sLiZvNyQsGIS5lzF9OgDI3WaqFwxAk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has the comment" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Awarding a Science Live credit";
+    nt:hasNanopubLabelPattern "${awardedAgent} is awarded ${points} Science Live credits";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06;
+    nt:hasTag "Science Live" .
+  
+  sub:awardedAgent a nt:AgentPlaceholder;
+    rdfs:label "choose awarded agent" .
+  
+  sub:awardingAgent a nt:AgentPlaceholder;
+    rdfs:label "choose awarding agent" .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "any free-text comment" .
+  
+  sub:credit a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "This credit" .
+  
+  sub:points a nt:LiteralPlaceholder;
+    rdfs:label "number of points (integer)";
+    nt:hasRegex "[0-9]+" .
+  
+  sub:reason a nt:ExternalUriPlaceholder;
+    rdfs:label "URI/URL that represents the reason for the credit" .
+  
+  sub:st01 rdf:object <https://w3id.org/sciencelive/o/terms/ScienceLiveCredit>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:credit .
+  
+  sub:st02 rdf:object sub:points;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasCreditPoints>;
+    rdf:subject sub:credit .
+  
+  sub:st03 rdf:object sub:awardingAgent;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/isAwardedBy>;
+    rdf:subject sub:credit .
+  
+  sub:st04 rdf:object sub:awardedAgent;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/isAwardedTo>;
+    rdf:subject sub:credit .
+  
+  sub:st05 rdf:object sub:reason;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/isAwardedFor>;
+    rdf:subject sub:credit .
+  
+  sub:st06 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:credit .
+  
+  <https://w3id.org/sciencelive/o/terms/ScienceLiveCredit> rdfs:label "Science Live credit" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasCreditPoints> rdfs:label "has the credit points" .
+  
+  <https://w3id.org/sciencelive/o/terms/isAwardedBy> rdfs:label "is awarded by" .
+  
+  <https://w3id.org/sciencelive/o/terms/isAwardedFor> rdfs:label "is awarded for" .
+  
+  <https://w3id.org/sciencelive/o/terms/isAwardedTo> rdfs:label "is awarded to" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-12-04T15:21:36.941Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RANmlu3ie01xTFdVBohOmRo99XiaLjbBRk-GfemRY7aOc>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Awarding a Science Live credit";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "ANJFuknIGpeN7w1lyZSpFSHgnirXoijeyoLtfi8ABYDs1VVc8z/YbVbvvQscKs9RzDbeL9+9VBC4nZg3+gd3IEEzZqJVzIe3Z5ybJftKfZrAMxfYx54V56w1oF4mu1E5BA31LIurJFoQ/rvtrrSTk8edp81Cwm3p+XvR51JHm+8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

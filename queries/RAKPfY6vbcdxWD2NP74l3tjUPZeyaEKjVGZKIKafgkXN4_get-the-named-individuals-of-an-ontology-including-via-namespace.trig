@@ -1,0 +1,85 @@
+@prefix this: <https://w3id.org/np/RAKPfY6vbcdxWD2NP74l3tjUPZeyaEKjVGZKIKafgkXN4> .
+@prefix sub: <https://w3id.org/np/RAKPfY6vbcdxWD2NP74l3tjUPZeyaEKjVGZKIKafgkXN4/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-named-individuals-of-ontology-ns a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns all named individuals that specify to be part of a given ontology or use its namespace.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the named individuals of an ontology including via namespace";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/f2a0ff8319823c7eb4c1e93c8c6b25c6ebc8a46454801e856e8cc1f98e4641f4>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+select distinct ?individual ?individual_label (?definition as ?description) ?np where {
+  values ?_ontology_multi_iri {}
+  graph npa:graph {
+    ?np npx:hasNanopubType owl:NamedIndividual .
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np dct:created ?date .
+    ?np npx:introduces ?individual .
+    ?np np:hasAssertion ?a .
+  }
+  graph ?a {
+    {{
+      ?individual a owl:NamedIndividual .
+      filter(strstarts(str(?individual), ?__ontologyNamespace))
+    } union {
+      ?individual a owl:NamedIndividual .
+      ?individual dct:partOf ?_ontology_multi_iri .
+    }}
+    optional { ?individual rdfs:label ?individual_label . }
+    optional { ?individual skos:definition ?definition . }
+  }
+}
+order by ?individual_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-12-10T15:08:11.063Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-named-individuals-of-ontology-ns;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RA5y0Ld7e61YY5T0uOTMASbRxxkEyUVgD-LG1xBB0N-8U>,
+      <https://w3id.org/np/RA_u-LypNo_RN5cM3AO9cPNI1b9CSdO2KiReAIgvlxnDg>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "RyGsYK68HYZx9kR2tUKcfXyUFc2dSHpDrHcN9jfcDYWL/pV4b1uIM+QSjoxI+eeEIIuLGywjc/p7eszsc/m87arssTxDHHYhhYWk2Zjv548PfXzaKWH0OKytoN2vkwI2FqRzwDpLqWtWY1IvtQYWteS4JgrY9LWtUV6BNiSfnbw=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,122 @@
+@prefix this: <https://w3id.org/np/RAAEgC2LqnWZdJeKJx131M2vv9M0pgA9Hi01Rt3qU2aXg> .
+@prefix sub: <https://w3id.org/np/RAAEgC2LqnWZdJeKJx131M2vv9M0pgA9Hi01Rt3qU2aXg/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix cb: <https://w3id.org/spaces/carabid-beetles/r/ontology/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "can be described as follows: - gives a thing (left) a human-readable description (right)" .
+  
+  dct:partOf rdfs:label "is part of" .
+  
+  rdf:type rdfs:label "is a - asserts that the given thing (left) belongs to the given class (right)" .
+  
+  rdfs:label rdfs:label "is called - connects an identifier to a human-readable name for it" .
+  
+  rdfs:seeAlso rdfs:label "is further explained at - connects an identifier to a link with further information about it" .
+  
+  owl:NamedIndividual rdfs:label "named individual - a concrete or abstract thing that is given an identifier and a name" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "<p>This template defines a new chorotype individual. A chorotype represents a biogeographic distribution pattern or area category used to classify species by their geographic range.</p>";
+    rdfs:label "Defining a new chorotype";
+    nt:hasNanopubLabelPattern "${name}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6, sub:st7;
+    nt:hasTag "Terms" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the chorotype" .
+  
+  sub:individual a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix - the formal identifier of the chorotype" .
+  
+  sub:letterCode a nt:LiteralPlaceholder;
+    rdfs:label "the letter code of the chorotype" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the chorotype" .
+  
+  sub:numericalCode a nt:LiteralPlaceholder;
+    rdfs:label "the numerical code of the chorotype" .
+  
+  sub:seeAlsoLink a nt:UriPlaceholder;
+    rdfs:label "a URL where more information about this chorotype can be found" .
+  
+  sub:st0 rdf:object owl:NamedIndividual;
+    rdf:predicate rdf:type;
+    rdf:subject sub:individual .
+  
+  sub:st1 rdf:object cb:Chorotype;
+    rdf:predicate rdf:type;
+    rdf:subject sub:individual .
+  
+  sub:st2 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:individual .
+  
+  sub:st3 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:individual .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:seeAlsoLink;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:individual .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:vocabulary;
+    rdf:predicate dct:partOf;
+    rdf:subject sub:individual .
+  
+  sub:st6 rdf:object sub:numericalCode;
+    rdf:predicate cb:hasChorotypeNumericalCode;
+    rdf:subject sub:individual .
+  
+  sub:st7 rdf:object sub:letterCode;
+    rdf:predicate cb:hasChorotypeLetterCode;
+    rdf:subject sub:individual .
+  
+  sub:vocabulary a nt:GuidedChoicePlaceholder;
+    rdfs:label "vocabulary / ontology";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http://www.w3.org/2002/07/owl%23Ontology&searchterm=" .
+  
+  cb:Chorotype rdfs:label "chorotype - a biogeographic distribution pattern category" .
+  
+  cb:hasChorotypeLetterCode rdfs:label "has chorotype letter code" .
+  
+  cb:hasChorotypeNumericalCode rdfs:label "has chorotype numerical code" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-03-17T13:34:55Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:assertion;
+    rdfs:label "Defining a new chorotype" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "XACaEPU3aftCdeuaYFMcnq2X+Ow1793k/T1xN7GaAaeF4u5c7Kt8qegzjlO/+OfyFF17YPXmcRsxY7FaqomiayVv+cjM1mvHYqBWWMFDEVaRBde3OUQERWfE6uOgsf+VrflArfyaLEMHZb58cQTKP+LgXIfsRAksWiwdespIfZE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

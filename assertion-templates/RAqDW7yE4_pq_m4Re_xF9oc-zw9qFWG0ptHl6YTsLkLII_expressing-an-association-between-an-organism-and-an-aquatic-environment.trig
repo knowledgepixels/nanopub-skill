@@ -1,0 +1,237 @@
+@prefix this: <https://w3id.org/np/RAqDW7yE4_pq_m4Re_xF9oc-zw9qFWG0ptHl6YTsLkLII> .
+@prefix sub: <https://w3id.org/np/RAqDW7yE4_pq_m4Re_xF9oc-zw9qFWG0ptHl6YTsLkLII/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.obolibrary.org/obo/RO_0002303> rdfs:label "has habitat" .
+  
+  rdf:type rdfs:label "is an instance of" .
+  
+  rdfs:comment rdfs:label "has the free-text comment" .
+  
+  <http://www.w3.org/2002/07/owl#sameAs> rdfs:label "is the same as" .
+  
+  <https://w3id.org/biolink/vocab/object> rdfs:label "links the organism to the environment" .
+  
+  <https://w3id.org/biolink/vocab/predicate> rdfs:label "refers to the relation" .
+  
+  <https://w3id.org/biolink/vocab/subject> rdfs:label "refers to - links an association to its subject" .
+  
+  <https://w3id.org/biolink/vocab/timepoint> rdfs:label "has the time stamp - points to the date and time associated with this relation or organism (e.g. date of collection); if occurrence URI is given, this is redundant and does not need to be filled in" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/OrganismToEnvironmentAssociation> rdfs:label "an association of an organism to an environment" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasDepth> rdfs:label "has the depth" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasDissolvedOxygenConcentration> rdfs:label "has the dissolved oxygen concentration" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasLifeCycleStage> rdfs:label "has the life cycle stage" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasLocationCoordinates> rdfs:label "has the location coordinates - points to the location coordinates associated with this relation or organism (e.g. place of collection); if occurrence URI is given, this is redundant and does not need to be filled in" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasOccurrence> rdfs:label "has the occurrence - links an organism to a record of a specific occurrence of it" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasSalinity> rdfs:label "has the salinity" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition> rdfs:label "is used as defined in" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonName> rdfs:label "has the name - links a taxon usage to a taxon name" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTemperature> rdfs:label "has the temperature" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "<p>Such a nanopublication expresses an association between an organism instance and an aquatic environment, expressing that the given organism was observed in the specified type of environment, including information about salinity, temperature, and depth.</p>";
+    rdfs:label "Expressing an association between an organism and an aquatic environment";
+    nt:hasDefaultProvenance ns1:RA2VjRiJ5AsNnPHDXuOqvsEJwTwqtj5rBb-OFkpPOzd9s;
+    nt:hasNanopubLabelPattern "Organism of ${taxonname} - ${relation} - ${environment}";
+    nt:hasStatement sub:st00, sub:st05, sub:st09, sub:st10, sub:st11, sub:st12, sub:st20,
+      sub:st25, sub:st30, sub:st81, sub:st82, sub:st85, sub:st86, sub:st87, sub:st88, sub:st89,
+      sub:st90;
+    nt:hasTag "Biodiversity";
+    nt:hasTargetNanopubType <https://w3id.org/kpxl/biodiv/terms/BiodivNanopub> .
+  
+  sub:association a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this association" .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "short explanation related to the above statement" .
+  
+  sub:coordinates a nt:LiteralPlaceholder;
+    rdfs:label "lat/long coordinates in format like '+47.37+8.54' or with altitude '+47.37+8.54+410.5'";
+    nt:hasRegex "[+-][0-9]+(\\.[0-9]+)?[+-][0-9]+(\\.[0-9]+)?([+-][0-9]+(\\.[0-9]+)?)?" .
+  
+  sub:depth a nt:LiteralPlaceholder;
+    rdfs:label "depth below sea level in meters" .
+  
+  sub:environment a nt:GuidedChoicePlaceholder;
+    rdfs:label "the environment to be associated with the organism";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=envo&fieldList=iri,label,description&q=" .
+  
+  sub:lifecyclestage a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select the life cycle stage of the organism; leave blank if unknown";
+    nt:possibleValuesFrom ns1:RAVZS2MV-siFEqsgFTtgSoKA5qJkp7r1nM_n-MqPkvgdE .
+  
+  sub:occurrence a nt:ExternalUriPlaceholder;
+    rdfs:label "occurrence URI from GBIF (https://www.gbif.org/occurrence/...) or iDigBio, BOLD, PlutoF, etc." .
+  
+  sub:organism a nt:LocalResource;
+    rdfs:label "the organism" .
+  
+  sub:organismAlt a nt:ExternalUriPlaceholder;
+    rdfs:label "any existing URI identifier of organism (e.g. of digital collection specimen or observation in nature)" .
+  
+  sub:oxygenConcentration a nt:LiteralPlaceholder;
+    rdfs:label "dissolved oxygen concentration in ml/l" .
+  
+  sub:relation a nt:GuidedChoicePlaceholder;
+    rdfs:label "the relation between the organism and the environment";
+    nt:possibleValue <http://purl.obolibrary.org/obo/RO_0002303>;
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=ro&fieldList=iri,label,description&q=" .
+  
+  sub:salinity a nt:LiteralPlaceholder;
+    rdfs:label "salinity" .
+  
+  sub:st00 rdf:object <https://w3id.org/kpxl/biodiv/terms/OrganismToEnvironmentAssociation>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:association .
+  
+  sub:st05 rdf:object sub:relation;
+    rdf:predicate <https://w3id.org/biolink/vocab/predicate>;
+    rdf:subject sub:association .
+  
+  sub:st09 a nt:AdvancedStatement;
+    rdf:object sub:organism;
+    rdf:predicate <https://w3id.org/biolink/vocab/subject>;
+    rdf:subject sub:association .
+  
+  sub:st10 a nt:AdvancedStatement;
+    rdf:object sub:taxon;
+    rdf:predicate rdf:type;
+    rdf:subject sub:organism .
+  
+  sub:st11 rdf:object sub:taxonname;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonName>;
+    rdf:subject sub:taxon .
+  
+  sub:st12 a nt:AdvancedStatement, nt:OptionalStatement;
+    rdf:object sub:taxondef;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition>;
+    rdf:subject sub:taxon .
+  
+  sub:st20 a nt:OptionalStatement;
+    rdf:object sub:lifecyclestage;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasLifeCycleStage>;
+    rdf:subject sub:organism .
+  
+  sub:st25 a nt:OptionalStatement;
+    rdf:object sub:occurrence;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasOccurrence>;
+    rdf:subject sub:organism .
+  
+  sub:st30 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:organismAlt;
+    rdf:predicate <http://www.w3.org/2002/07/owl#sameAs>;
+    rdf:subject sub:organism .
+  
+  sub:st81 a nt:OptionalStatement;
+    rdf:object sub:coordinates;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasLocationCoordinates>;
+    rdf:subject sub:association .
+  
+  sub:st82 a nt:OptionalStatement;
+    rdf:object sub:timepoint;
+    rdf:predicate <https://w3id.org/biolink/vocab/timepoint>;
+    rdf:subject sub:association .
+  
+  sub:st85 rdf:object sub:environment;
+    rdf:predicate <https://w3id.org/biolink/vocab/object>;
+    rdf:subject sub:association .
+  
+  sub:st86 a nt:OptionalStatement;
+    rdf:object sub:salinity;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasSalinity>;
+    rdf:subject sub:association .
+  
+  sub:st87 a nt:OptionalStatement;
+    rdf:object sub:temperature;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTemperature>;
+    rdf:subject sub:association .
+  
+  sub:st88 a nt:OptionalStatement;
+    rdf:object sub:depth;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasDepth>;
+    rdf:subject sub:association .
+  
+  sub:st89 a nt:OptionalStatement;
+    rdf:object sub:oxygenConcentration;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasDissolvedOxygenConcentration>;
+    rdf:subject sub:association .
+  
+  sub:st90 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject nt:ASSERTION .
+  
+  sub:taxon a nt:LocalResource;
+    rdfs:label "the taxon concept" .
+  
+  sub:taxondef a nt:ExternalUriPlaceholder;
+    rdfs:label "publication DOI (https://doi.org/...) or taxon treatment ID (https://treatment.plazi.org/id/...)";
+    nt:hasRegex "(https://doi.org/|https://treatment.plazi.org/id/).+" .
+  
+  sub:taxonname a nt:GuidedChoicePlaceholder;
+    rdfs:label "search and select from list (if not found, paste identifying URI from IPNI, MycoBank, Index Fungorum, or Zoobank)";
+    nt:possibleValuesFromApi "https://vodex.petapico.org/nidx/query?rows=100&q=label:" .
+  
+  sub:temperature a nt:LiteralPlaceholder;
+    rdfs:label "temperature in °C" .
+  
+  sub:timepoint a nt:LiteralPlaceholder;
+    rdfs:label "time expressed in XSD DateTime format, e.g. '2023-03-30T22:17:11Z'";
+    nt:hasRegex "-?([1-9]\\d\\d\\d+|0\\d\\d\\d)-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T(([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(\\.\\d+)?|24:00:00(\\.0+)?)(Z|[+-](0\\d|1[0-4]):[0-5]\\d)?" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-03-12T07:52:30.074Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA1T2IWD1NE7giRP0Yw0fGHH9EddlvZetEs3Nt63bXtxw>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Expressing an association between an organism and an aquatic environment";
+    prov:wasDerivedFrom ns1:RAZhLP7PiTBTSNhJlRRQT5xPkp___jXP_zC3_yQgkhKhk;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "miVqh+6Eqc+7fprFTtQ1jzA6TbjqS8g8rzNY5e856ZfH6MDrW0VDdsGzo7Dmk5ha/LPKmHZfQGu6hoA1mjJeq7tI5OYVLhHO5T8NF6LocgtGX8eEgyeuokZ86xaN2Z1aifE3EcWPNnOYlFC7rQoV6rT+X5lv1uZD8AnIx4X/QfA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,63 @@
+@prefix this: <https://w3id.org/np/RAZrhcYOG2GeBmNZsWfVpvOGtTqKSv6tFQOD6GutXVH2c> .
+@prefix sub: <https://w3id.org/np/RAZrhcYOG2GeBmNZsWfVpvOGtTqKSv6tFQOD6GutXVH2c/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-replication-study-outcome-view a <https://w3id.org/kpxl/gen/terms/ResourceView>,
+      <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RAlBRm2TfxYFqs-_i1h5lP-WhYi2KKdJHQjjQ8aGOvvGQ/get-replication-study-outcome-view-kind>;
+    dct:title "📊 Outcome";
+    rdfs:label "Replication study outcome view";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/MaintainedResource>,
+      <https://w3id.org/kpxl/gen/terms/Space>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "5.1.replicationStudyOutcome";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RA2iGE4eTFfjc1YHhTc25Cd_QYJJF9wx0ygvUErqVDPxg/get-replication-study-outcome>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "replicationStudy" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RA2iGE4eTFfjc1YHhTc25Cd_QYJJF9wx0ygvUErqVDPxg/get-replication-study-outcome>
+    nt:hasLabelFromApi "Get replication study outcome - This query returns the outcome relations of a replication study." .
+  
+  this: dct:created "2026-03-30T06:59:10.021Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:get-replication-study-outcome-view;
+    npx:introduces <https://w3id.org/np/RAlBRm2TfxYFqs-_i1h5lP-WhYi2KKdJHQjjQ8aGOvvGQ/get-replication-study-outcome-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAH81jhKr8GtmKXd3IZgtaq_zQNa_g8B19ZxF8mKXl_CI>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAobXkEYX0Iy1xlt-f8miSf53zQhAb-0J0U6Sco_-60Uc>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "372XmwsjuAxF3u/S8VfS9HPSH67M1pz8fiqSfusfPR4fJ5snJEFE7QXpd82xalrRo6GElFz6u/6Dozh6nxrfg8BChpL/G2Ld9Mh7RS86zsOXOl4I++fmBZKQbyeqRRzQyLOFd36xlZczptBnUaY2yT1m4F4SzGZMkWQPy97zj3g=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

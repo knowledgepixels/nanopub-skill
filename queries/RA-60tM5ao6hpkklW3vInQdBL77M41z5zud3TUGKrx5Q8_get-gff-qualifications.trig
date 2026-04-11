@@ -1,0 +1,72 @@
+@prefix this: <https://w3id.org/np/RA-60tM5ao6hpkklW3vInQdBL77M41z5zud3TUGKrx5Q8> .
+@prefix sub: <https://w3id.org/np/RA-60tM5ao6hpkklW3vInQdBL77M41z5zud3TUGKrx5Q8#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-gff-qualifications a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the IDs of the qualified nanopublications by the GO FAIR Foundation (GFF).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get GFF qualifications";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/cd51a3ac3e109fd12aacd5a324e14ebff644ce209c916e4250a3f50c2ddf0051>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+
+select distinct ?res_np ?qualification_np where {
+    values ?qpubkey {
+      \"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCtpcftn7kbe6toJbOTDQaCcCssEFSWqt6J4rZ02w+TfY7/eIOgJZYOlpL6G3AzO2RNmVYWRPSlMiykaFuaRuBitvk1GKfGdprfZbvXwmeOxpqCTRBQX9EnFyQyd+Ra/ajfw/UsG8skeu1xnUEpnQbpgbQYc/fvhJNN0UwEc77mOwIDAQAB\"^^xsd:string
+      \"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDO4xkU+/dGujq1raR66QtRqquMxiJ9hm2uzc2uBj7bCBBRnWhTw7M8f77BqAFHShgxqxYTr2do7/tVmoKeM51ISyttxWrh9ebZRoz5o6Muxt7HyA4sLHAmnixeZ5VJfZzsKAmVN23Y2ZiCqMoXjtcp5jO2lOC0AXaGPftnaA8b9QIDAQAB\"^^xsd:string
+      \"MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFntPrMZqvg2kVhCNArNnEn37ddXGwZ/0r4C8CS4lDry7C7YkYgng9yb0UMZQUHiTVkR/5A4m/xjE+Vy+AnwcWUeB75SfGZjE5ylI6VeHjTHi9+2hh2PHYIWnkhU4WHl3COEnxSSa/VouvPzZ2BIWLH6fTrq7NNL3RF5hGegGG0QIDAQAB\"^^xsd:string
+    }
+    graph npa:graph {
+      ?qualification_np npa:hasValidSignatureForPublicKey ?qpubkey .
+      filter not exists { ?qualification_np_x npx:invalidates ?qualification_np ; npa:hasValidSignatureForPublicKey ?qpubkey . }
+      ?qualification_np np:hasAssertion ?qa .
+    }
+    graph ?qa {
+      ?qualifier npx:qualifies ?res_np .
+    }
+} order by ?res_np ?qualification_np""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "wsrXVBUfr7xz5sEEnGrcFFpXRPSP29+yT0ilM3wOh4AeV9a0Nw0kDdQ4IZpvNl6iAo9e6fuGDbm8yq8V+PpqEVJzUVps7DuEcgjo5O6Q3PFkvX51IzhnUz6TJonYZD8ZpaS6SlDXpferQ02E5YQK8ghFB8OXDJ7xGmmFof01mnY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2025-03-10T13:24:40.367Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-gff-qualifications;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+}
+

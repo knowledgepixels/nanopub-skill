@@ -1,0 +1,83 @@
+@prefix this: <https://w3id.org/np/RAFr0RyK-ATWGUnJzKXeRTL0_OrW-mEzoKCaJz0TE8Ao0> .
+@prefix sub: <https://w3id.org/np/RAFr0RyK-ATWGUnJzKXeRTL0_OrW-mEzoKCaJz0TE8Ao0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdfs:label rdfs:label "has the text" .
+  
+  rdfs:seeAlso rdfs:label "has the link / further info at" .
+  
+  <https://schema.org/about> rdfs:label "is about" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Publish a plain-text message for a resource";
+    nt:hasNanopubLabelPattern "${message}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3;
+    nt:hasTag "Spaces" .
+  
+  sub:link a nt:ExternalUriPlaceholder;
+    rdfs:label "link your message is about or with additional info" .
+  
+  sub:message a nt:LongLiteralPlaceholder;
+    rdfs:label "your plain-text message" .
+  
+  sub:resource a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the resource (e.g. Space)";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/MaintainedResource",
+      "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st1 rdf:object sub:message;
+    rdf:predicate rdfs:label;
+    rdf:subject nt:ASSERTION .
+  
+  sub:st2 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:link;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject nt:ASSERTION .
+  
+  sub:st3 rdf:object sub:resource;
+    rdf:predicate <https://schema.org/about>;
+    rdf:subject nt:ASSERTION .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-10-23T07:30:36.154Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Publish a plain-text message for a resource";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "8cmEaWL/D1+r4lNM+FrvN8CQGSF3fbnTerMfFTHW794d5UWjnQoxAQ/Q7ENEe6P3xYJmRbD9JWTVgshjWD9ABT1QY/mdGT79m9dX7zYBMzxRIIs9Jcgezxb5HLvOXRb4+Z/UlTYszg1jwuZseNf6LJUHkgXXCR27FIAiR+xzpKY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

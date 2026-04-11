@@ -1,0 +1,84 @@
+@prefix this: <https://w3id.org/np/RAHhVKUA6GgNS0KE2gbOSrDynLHFBWg3ZoM9x0LbsMBjk> .
+@prefix sub: <https://w3id.org/np/RAHhVKUA6GgNS0KE2gbOSrDynLHFBWg3ZoM9x0LbsMBjk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-paragraphs a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the paragraphs of an entity (e.g. a space) with their title and content, including source nanopub and date.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get paragraphs of an entity";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix schema: <http://schema.org/>
+prefix schemas: <https://schema.org/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?title ?content ?date ?np where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np dct:created ?date .
+    ?np dct:creator ?user .
+    ?np np:hasAssertion ?a .
+  }
+  graph ?a {
+    ?paragraph schema:title|schemas:title ?title .
+    ?paragraph rdf:type gen:Paragraph .
+    ?paragraph gen:hasContent ?content .
+    values ?_resource_multi_iri {}
+    ?paragraph schema:isPartOf|schemas:isPartOf|schema:about|schemas:about ?_resource_multi_iri .
+    optional { ?paragraph gen:hasPositionString ?position }
+  }
+}
+order by ?position ?title""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-04-10T11:42:48.175+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354, orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-paragraphs;
+    npx:supersedes <https://w3id.org/np/RAQaFR0db7azwmRmqgZRavqvZS_Fgy3oUcvu85kCXWAFA>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAlOvJfMEkvhvQE9j6LaQXRZQ2Q23X62bB31yUB_hroC0>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "fGjY6r7P9sKr1FZnuFHBnizr966u36sdbc7afnoHIDTpwrXlHiC/BM5sWjz0Dl2Or77VenfirI3p+ogjlK+Btdo6UuHCocvBkRUG8MOYwGSe4h1md9rhBICHILITZ2bHWNfBdMjEhrwp+mMmzRykjiyunO6ZZp9ulOaAih6cOJQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

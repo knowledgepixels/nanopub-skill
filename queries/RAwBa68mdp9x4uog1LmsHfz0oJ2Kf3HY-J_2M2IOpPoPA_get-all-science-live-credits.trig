@@ -1,0 +1,76 @@
+@prefix this: <https://w3id.org/np/RAwBa68mdp9x4uog1LmsHfz0oJ2Kf3HY-J_2M2IOpPoPA> .
+@prefix sub: <https://w3id.org/np/RAwBa68mdp9x4uog1LmsHfz0oJ2Kf3HY-J_2M2IOpPoPA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-all-science-live-credits a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns all Science Live credits.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get all Science Live credits";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/bdf856c68ec61d7b4652d29185645fa5c6d4279f6bc9be8e14d8fbce59fbf691>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix sl: <https://w3id.org/sciencelive/o/terms/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+
+select ?credit ?points ?awardedAgent ?awardingAgent ?reason ?comment where {
+  graph npa:graph {
+    ?np npx:hasNanopubType sl:ScienceLiveCredit .
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np dct:created ?date .
+    ?np np:hasAssertion ?a .
+    ?np npx:introduces ?credit .
+  }
+  graph ?a {
+    ?credit a sl:ScienceLiveCredit .
+    ?credit sl:hasCreditPoints ?points .
+    ?credit sl:isAwardedTo ?awardedAgent .
+    ?credit sl:isAwardedBy ?awardingAgent .
+    ?credit sl:isAwardedFor ?reason .
+    ?credit rdfs:comment ?comment .
+  }
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-12-04T15:28:02.741Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-all-science-live-credits;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "gO6TXwV9mHDT4oOwxFpbkFKycFqVtktqwoWfIaCwaAgTEn/AR2Uurf8Qv6mOVaKrIma8Bzc7LA5T39dxnzMDwkmudJQbXd5K/vY49TD6w85/XNVTH6dsPwpyX79kDWK7CrHfosgwstFokne0FJ2VHBkgV1QVVvxWhcuQwKY0A+c=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,188 @@
+@prefix this: <https://w3id.org/np/RAV_H3udaSzxYOhhR0t-q7PKS6URwauD_Z5sMLbHmM2x0> .
+@prefix sub: <https://w3id.org/np/RAV_H3udaSzxYOhhR0t-q7PKS6URwauD_Z5sMLbHmM2x0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:created rdfs:label "was completed on" .
+  
+  dct:isPartOf rdfs:label "is a part of" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template documents search execution and initial study selection for systematic reviews following PRISMA 2020 guidelines. It captures verbatim search strategies (Item 7), information source details (Item 6), selection methodology (Item 8), and study flow documentation (Items 16a-16b), providing structured documentation for transparent and reproducible search execution and screening processes.";
+    rdfs:label "Declaring a PRISMA search execution dataset";
+    nt:hasStatement sub:st01, sub:st02, sub:st04, sub:st05, sub:st06, sub:st07, sub:st08,
+      sub:st09, sub:st10, sub:st11, sub:st12, sub:st13, sub:st14, sub:st15;
+    nt:hasTag "PRISMA" .
+  
+  sub:creationDate a nt:LiteralPlaceholder;
+    rdfs:label "Date of search execution completion";
+    nt:hasDatatype xsd:date .
+  
+  sub:datasetFileLocation a nt:ExternalUriPlaceholder;
+    rdfs:label "URL where complete search results are deposited (Zenodo, Figshare, etc.)" .
+  
+  sub:dbSearch a nt:GuidedChoicePlaceholder;
+    rdfs:label "select DB search";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https://w3id.org/sciencelive/o/terms/SystematicDatabaseSearch&searchterm=" .
+  
+  sub:deduplicationMethodology a nt:LongLiteralPlaceholder;
+    rdfs:label "Deduplication software and methodology (e.g., EndNote 20: automatic + manual verification)" .
+  
+  sub:exclusionBreakdown a nt:LongLiteralPlaceholder;
+    rdfs:label "Summary of exclusion reasons with study counts by category", "has the exclusion breakdown" .
+  
+  sub:finalIncludedStudyCount a nt:LiteralPlaceholder;
+    rdfs:label "Final number of studies included in review" .
+  
+  sub:fulltextScreenedRecordCount a nt:LiteralPlaceholder;
+    rdfs:label "Number of records proceeding to full-text screening" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "Label of this search execution dataset" .
+  
+  sub:limitations a nt:LongLiteralPlaceholder;
+    rdfs:label "Search limitations, protocol modifications, and additional methodological notes" .
+  
+  sub:reviewMethodology a nt:LongLiteralPlaceholder .
+  
+  sub:screenedRecordCount a nt:LiteralPlaceholder;
+    rdfs:label "Total records screened" .
+  
+  sub:screeningMethod a nt:LongLiteralPlaceholder;
+    rdfs:label "Title/abstract and full-text screening methodology" .
+  
+  sub:searchExecutionDataset a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this search execution dataset" .
+  
+  sub:st01 rdf:object <https://w3id.org/sciencelive/o/terms/SearchExecutionDataset>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:searchExecutionDataset .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:searchExecutionDataset .
+  
+  sub:st04 rdf:object sub:systematicReview;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:searchExecutionDataset .
+  
+  sub:st05 rdf:object sub:creationDate;
+    rdf:predicate dct:created;
+    rdf:subject sub:searchExecutionDataset .
+  
+  sub:st06 a nt:RepeatableStatement;
+    rdf:object sub:dbSearch;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/includesDbSearch>;
+    rdf:subject sub:searchExecutionDataset .
+  
+  sub:st07 rdf:object sub:deduplicationMethodology;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/usesDeduplicationMethodology>;
+    rdf:subject sub:searchExecutionDataset .
+  
+  sub:st08 rdf:object sub:reviewMethodology;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/usesReviewMethodology>;
+    rdf:subject sub:searchExecutionDataset .
+  
+  sub:st09 rdf:object sub:screeningMethod;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/usesScreeningMethodology>;
+    rdf:subject sub:searchExecutionDataset .
+  
+  sub:st10 rdf:object sub:screenedRecordCount;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasScreenedRecordCount>;
+    rdf:subject sub:searchExecutionDataset .
+  
+  sub:st11 rdf:object sub:fulltextScreenedRecordCount;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasFulltextScreenedRecordCount>;
+    rdf:subject sub:searchExecutionDataset .
+  
+  sub:st12 rdf:object sub:finalIncludedStudyCount;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasFinalIncludedStudyCount>;
+    rdf:subject sub:searchExecutionDataset .
+  
+  sub:st13 rdf:object sub:exclusionBreakdown;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasExclusionBreakdown>;
+    rdf:subject sub:searchExecutionDataset .
+  
+  sub:st14 a nt:OptionalStatement;
+    rdf:object sub:limitations;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasLimitations>;
+    rdf:subject sub:searchExecutionDataset .
+  
+  sub:st15 rdf:object sub:datasetFileLocation;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasDatasetFileLocation>;
+    rdf:subject sub:searchExecutionDataset .
+  
+  sub:systematicReview a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the systematic review" .
+  
+  <https://w3id.org/sciencelive/o/terms/SearchExecutionDataset> rdfs:label "search execution dataset" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasDatasetFileLocation> rdfs:label "has the dataset file location" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasFinalIncludedStudyCount> rdfs:label "has the final included study count" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasFulltextScreenedRecordCount> rdfs:label "has full-text screened record count" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasLimitations> rdfs:label "has the limitations" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasScreenedRecordCount> rdfs:label "has the screened record count" .
+  
+  <https://w3id.org/sciencelive/o/terms/includesDbSearch> rdfs:label "included the database search" .
+  
+  <https://w3id.org/sciencelive/o/terms/usesDeduplicationMethodology> rdfs:label "used the deduplication methodology" .
+  
+  <https://w3id.org/sciencelive/o/terms/usesReviewMethodology> rdfs:label "Number of reviewers, independence status, disagreement resolution methods",
+      "used the review methodology" .
+  
+  <https://w3id.org/sciencelive/o/terms/usesScreeningMethodology> rdfs:label "used the screening methodology" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1784-2920 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0002-1784-2920 foaf:name "Anne Fouilloux" .
+  
+  this: dct:created "2025-11-21T08:32:46.512Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0002-1784-2920;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAFkC17_8j7yPb04iNer9pBoVfKY_TkbA-3DSPCSbQW2o>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Declaring a PRISMA search execution dataset";
+    prov:wasDerivedFrom <https://w3id.org/np/RABdZf6griTve7mP-0LMd_xWrtYnRPOdN5eNYLbGmJO0I>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "O8pw/NS4uy2ajQUpjsnyzMVUvKKvNXnSgsrHudMEKKNvnXRS575kqSqEc2Gsv1roafWH+PfOBhl3K9jYpHfp25/OCFdfC3GZodFCvd1MWABp1BziCXH9XvMhZjKPwEOfgLjgOoZPLLLn53P5g+sueWGcFFkD0U4KLQl6LTNvoeg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

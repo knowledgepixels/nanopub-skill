@@ -1,0 +1,75 @@
+@prefix this: <https://w3id.org/np/RAyalx7SHXb5nd-rnImrGZfxJthKgzRnqe7S54rJ_ZWV0> .
+@prefix sub: <https://w3id.org/np/RAyalx7SHXb5nd-rnImrGZfxJthKgzRnqe7S54rJ_ZWV0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dpp-odp: <http://w3id.org/dppo/ontology/dpp-odp/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix dpp-info: <http://w3id.org/dppo/ontology/dpp-info/> .
+@prefix dpp-prov: <http://w3id.org/dppo/ontology/dpp-prov/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:_1 sh:maxCount "1"^^xsd:integer;
+    sh:minCount "1"^^xsd:integer;
+    sh:path dpp-prov:creationTimeStamp .
+  
+  sub:_2 sh:maxCount "1"^^xsd:integer;
+    sh:path dpp-prov:invalidAtTimeStamp .
+  
+  sub:_3 sh:class dpp-prov:Actor;
+    sh:maxCount "1"^^xsd:integer;
+    sh:minCount "1"^^xsd:integer;
+    sh:path dpp-prov:responsibleActor .
+  
+  sub:_4 sh:class dpp-info:DPPInformation;
+    sh:maxCount "1"^^xsd:integer;
+    sh:path dpp-info:supersededBy .
+  
+  sub:_5 sh:class dpp-odp:Product;
+    sh:maxCount "1"^^xsd:integer;
+    sh:path dpp-info:isAbout .
+  
+  sub:_6 rdf:first sub:_7;
+    rdf:rest sub:_8 .
+  
+  sub:_7 sh:maxCount "0"^^xsd:integer;
+    sh:path dpp-info:supersededBy .
+  
+  sub:_8 rdf:first sub:_9;
+    rdf:rest rdf:nil .
+  
+  sub:_9 sh:minCount "1"^^xsd:integer;
+    sh:path dpp-prov:invalidAtTimeStamp .
+  
+  sub:shape a sh:NodeShape;
+    sh:or sub:_6;
+    sh:property sub:_1, sub:_2, sub:_3, sub:_4, sub:_5;
+    sh:targetClass dpp-info:DPPInformation .
+}
+
+sub:provenance {
+  sub:assertion prov:hadPrimarySource <https://orcid.org/0000-0002-1267-0234> .
+}
+
+sub:pubinfo {
+  this: dct:created "2025-07-07T12:04:11.554+02:00"^^xsd:dateTime;
+    dct:creator <https://orcid.org/0000-0002-1267-0234>;
+    npx:hasNanopubType <https://w3id.org/np/o/ntemplate/AssertionTemplate>;
+    npx:introduces sub:shape .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "fd7XhdXVQK4P0JYDO2JtMshshtKhTMTctDrIv5lLZwPNH1tXHuWzNAHB7FtbWWi2zoEmrRIgXZ7grpNPlRh6/wtCbwmEs+znHoiHzNbRVNLRHvUmF7eNVvMY3SlyHz3WFgG6ltPyBiQoqls4X5OWsnlIsJWatLCE8Umb06UDirQ=";
+    npx:hasSignatureTarget this: .
+}
+

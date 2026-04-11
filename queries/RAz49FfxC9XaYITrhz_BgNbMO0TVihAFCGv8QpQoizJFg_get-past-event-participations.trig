@@ -1,0 +1,91 @@
+@prefix this: <https://w3id.org/np/RAz49FfxC9XaYITrhz_BgNbMO0TVihAFCGv8QpQoizJFg> .
+@prefix sub: <https://w3id.org/np/RAz49FfxC9XaYITrhz_BgNbMO0TVihAFCGv8QpQoizJFg/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-past-event-participations a grlc:grlc-query;
+    dct:description "This query returns the past events the given user has participated in.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get past event participations";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/c57ab33a5dd555f386714db4cfff523b9fbdaa3b2cdd448e1ed810317280308c>;
+    grlc:sparql """prefix wd: <http://www.wikidata.org/entity/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix schema: <http://schema.org/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+select distinct ?event ?event_label ?date ?np (\"^\" as ?np_label) where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np np:hasAssertion ?a .
+  }
+  graph ?a {
+    ?_user_iri wd:P1344 ?event .
+  }
+  optional {
+    bind(iri(concat(\"https://w3id.org/np/l/nanopub-query-1.1/repo/type/\", sha256(str(gen:Space)))) as ?space_repo)
+    service ?space_repo {
+      graph npa:graph {
+        ?nps npx:introduces ?event .
+        ?nps npa:hasValidSignatureForPublicKeyHash ?pks .
+        filter not exists { ?npsx npx:invalidates ?nps ; npa:hasValidSignatureForPublicKeyHash ?pks . }
+        ?nps np:hasAssertion ?as .
+      }
+      graph ?as {
+        ?event rdfs:label ?el .
+        optional {
+          ?event schema:startDate ?datetime .
+        }
+      }
+    }
+  }
+  bind(xsd:date(substr(str(?datetime), 0, 11)) as ?date)
+  bind(?el as ?event_label)
+  filter(?date < xsd:date(substr(str(now()), 0, 11)))
+} order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-04-07T13:49:01Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-past-event-participations;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "iGBnCAzeEMVIFuWfWL5DbHWwm7/FP9GbA7y6Zz1vC6mZA7U4WRIVJqBnPS5yox1qGbHSIt4iIl18/7e2QDHe8nCfE+Wxaxxa7vaL+KGMs6QOJ2UD6iudFC/ZfHyCQaZhs/b6JpMFiVNPQ0yw3V0jpEMZ1eiaQCXvcmpaoNPX/AE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

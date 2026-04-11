@@ -1,0 +1,74 @@
+@prefix this: <https://w3id.org/np/RAaKXYMunUKMkbYpgc4PmTji21pS0Ox1hsiVLiV-AfiUU> .
+@prefix sub: <https://w3id.org/np/RAaKXYMunUKMkbYpgc4PmTji21pS0Ox1hsiVLiV-AfiUU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-poster-presentations-for-event a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns all poster presentations for a given event, with title, date, authors, and nanopub link.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get poster presentations for event";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/61e9c0168586a3ddcef2b010c69b596ac2529760aeb82231962c228c5a63b8eb>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?poster ?poster_label ?date
+  (group_concat(str(?author); separator=\" \") as ?authors_multi_iri)
+  (group_concat(replace(replace(?authorname, \"\\\\\\\\\", \"\\\\\\\\\\\\\\\\\"), \"\\\\n\", \"\\\\\\\\n\"); separator=\"\\n\") as ?authors_label_multi)
+  ?np (\"^\" as ?np_label)
+where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np dct:created ?npdate .
+    ?np np:hasAssertion ?a .
+    ?np npx:introduces ?poster .
+  }
+  values ?_event_multi_iri {}
+  graph ?a {
+    ?poster a gen:PosterPresentation .
+    ?poster dct:isPartOf ?_event_multi_iri .
+    ?poster dct:creator ?author .
+    optional { ?author rdfs:label ?authorname . }
+    optional { ?poster rdfs:label ?poster_label . }
+    optional { ?poster dct:date ?date . }
+  }
+}
+group by ?poster ?poster_label ?date ?np
+order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-03-23T11:26:26Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-poster-presentations-for-event .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "nmIrf44iRk3nPfUj8+k1KOwLOp3NnJQJWDgrVzIet7e5tnBVG+V5QnR8Zf3TALCf0bK2wKbEAyZlmGB7JM1K8qjFKryz6D1MheZF/IrLFaqsfDHCQfrV4/KmbFb0PPFIuPNRQ01rBbhOjCwZYiLRVZ05BrI6xRGxL05ViUxotNE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

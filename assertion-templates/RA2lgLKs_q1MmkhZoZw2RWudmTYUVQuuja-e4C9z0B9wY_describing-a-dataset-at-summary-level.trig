@@ -1,0 +1,171 @@
+@prefix this: <https://w3id.org/np/RA2lgLKs_q1MmkhZoZw2RWudmTYUVQuuja-e4C9z0B9wY> .
+@prefix sub: <https://w3id.org/np/RA2lgLKs_q1MmkhZoZw2RWudmTYUVQuuja-e4C9z0B9wY#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.org/dc/dcmitype/Dataset> rdfs:label "dataset" .
+  
+  dct:description rdfs:label "has the description" .
+  
+  dct:license rdfs:label "has license" .
+  
+  dct:title rdfs:label "has the title" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  <https://schema.org/DataCatalog> rdfs:label "data catalog" .
+  
+  <https://schema.org/archivedAt> rdfs:label "is archived at" .
+  
+  <https://schema.org/datePublished> rdfs:label "was published on" .
+  
+  <https://schema.org/expires> rdfs:label "will be no longer after from" .
+  
+  <https://schema.org/https://schema.org/sourceOrganization> rdfs:label "has source" .
+  
+  <https://schema.org/includedInDataCatalog> rdfs:label "is included in" .
+  
+  <https://schema.org/maintainer> rdfs:label "has repository" .
+  
+  <https://schema.org/result> rdfs:label "results from" .
+  
+  sub:archive a nt:ValuePlaceholder;
+    rdfs:label "URI of institution/organization where dataset is archived" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Template for describing a dataset at summary level";
+    rdfs:label "Describing a dataset at summary level";
+    nt:hasNanopubLabelPattern "Dataset: ${title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st09, sub:st10, sub:st11, sub:st12;
+    nt:hasTag "Datasets";
+    nt:hasTargetNanopubType <http://purl.org/dc/dcmitype/Dataset> .
+  
+  sub:datacatalog a nt:UriPlaceholder;
+    rdfs:label "URI (larger) datacatalog" .
+  
+  sub:dataset a nt:UriPlaceholder;
+    rdfs:label "short URI suffix or full URI" .
+  
+  sub:description a nt:LiteralPlaceholder;
+    rdfs:label "description of the dataset" .
+  
+  sub:expiredate a nt:LiteralPlaceholder;
+    rdfs:label "date when dataset availability expires (YYYY-MM-DD)" .
+  
+  sub:license a nt:UriPlaceholder;
+    rdfs:label "URI of license of the published dataset" .
+  
+  sub:organization a nt:UriPlaceholder;
+    rdfs:label "URI, ROR of insitution/organization where dataset was produced" .
+  
+  sub:project a nt:UriPlaceholder;
+    rdfs:label "URI of research project in which data was produced" .
+  
+  sub:publishdate a nt:LiteralPlaceholder;
+    rdfs:label "date when made publicly available (YYYY-MM-DD)" .
+  
+  sub:repository a nt:UriPlaceholder;
+    rdfs:label "URI of repository where dataset is published" .
+  
+  sub:st01 rdf:object <http://purl.org/dc/dcmitype/Dataset>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:dataset .
+  
+  sub:st02 rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:dataset .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:dataset .
+  
+  sub:st04 a nt:OptionalStatement;
+    rdf:object sub:organization;
+    rdf:predicate <https://schema.org/https://schema.org/sourceOrganization>;
+    rdf:subject sub:dataset .
+  
+  sub:st05 rdf:object sub:license;
+    rdf:predicate dct:license;
+    rdf:subject sub:dataset .
+  
+  sub:st06 rdf:object sub:repository;
+    rdf:predicate <https://schema.org/maintainer>;
+    rdf:subject sub:dataset .
+  
+  sub:st07 rdf:object sub:project;
+    rdf:predicate <https://schema.org/result>;
+    rdf:subject sub:dataset .
+  
+  sub:st08 a nt:OptionalStatement;
+    rdf:object sub:datacatalog;
+    rdf:predicate <https://schema.org/includedInDataCatalog>;
+    rdf:subject sub:dataset .
+  
+  sub:st09 a nt:OptionalStatement;
+    rdf:object <https://schema.org/DataCatalog>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:datacatalog .
+  
+  sub:st10 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:archive;
+    rdf:predicate <https://schema.org/archivedAt>;
+    rdf:subject sub:dataset .
+  
+  sub:st11 rdf:object sub:publishdate;
+    rdf:predicate <https://schema.org/datePublished>;
+    rdf:subject sub:dataset .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:expiredate;
+    rdf:predicate <https://schema.org/expires>;
+    rdf:subject sub:dataset .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title of the dataset" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-4930-2662 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-4930-2662 foaf:name "Alessa An Gambardella" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCEJGVv2xFV8o+Ojt3f0N2LgtZTt4+24Lxp8esEZiFYKryDGBYaR0Ef4ajadqtlSpvUHlwNlVIF7XRWiGd64P8drVnqPtpRtxJ+SOl0UNvxuHzUjeWlOYKpKZ/UgrGwVSSR3LvwqXOM9qUkWqy0IQ2KsFbJHHwzgNbcEZuZOD+/WQIDAQAB";
+    npx:hasSignature "A6sA3+UnO16XOcnbyFVK+fLKq5CBNgPl+jBvPiJ/3B9pbPn5YsJHzdH//S2K2roaHsn61V/ZvGe+zppD8r48YAn4khmV7OYabhnQ0wkK00YSja6uGMdmurGQ1sEh8bkLyRjvnRGOpm+PG9qN+zbDIlBf7/Nc39ynwT3rMttDMK0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-4930-2662 .
+  
+  this: a npx:ExampleNanopub;
+    dct:created "2024-08-14T17:00:55.450Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-4930-2662;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA-quV0e54R1__TQgL8NH0AjpeNeporssVIUiAyraHAIs>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Describing a dataset at summary level";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RATtBNB9Rj1cIwxJyoHBgNn8eeIR06m0H6C6RTRVqSy3E, ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90,
+      ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALtjkZX1lYrTL2eCZp4VTW6vGGxiDZ-aaU-s1Z0Fcs2I> .
+}
+

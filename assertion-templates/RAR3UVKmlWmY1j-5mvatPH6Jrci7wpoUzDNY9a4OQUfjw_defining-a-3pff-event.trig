@@ -1,0 +1,248 @@
+@prefix this: <https://w3id.org/np/RAR3UVKmlWmY1j-5mvatPH6Jrci7wpoUzDNY9a4OQUfjw> .
+@prefix sub: <https://w3id.org/np/RAR3UVKmlWmY1j-5mvatPH6Jrci7wpoUzDNY9a4OQUfjw/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://schema.org/endDate> rdfs:label "has the end date" .
+  
+  <http://schema.org/startDate> rdfs:label "has the start date" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has name" .
+  
+  rdfs:seeAlso rdfs:label "is further described by" .
+  
+  <https://schema.org/location> rdfs:label "located in" .
+  
+  <https://w3id.org/fair/3pff/3PFF-Training> rdfs:label "3PFF training" .
+  
+  <https://w3id.org/fair/3pff/3PFF-Workshop> rdfs:label "3PFF workshop" .
+  
+  <https://w3id.org/fair/3pff/FAIR-Awareness> rdfs:label "FAIR awareness" .
+  
+  <https://w3id.org/fair/3pff/FAIR-Convergence> rdfs:label "FAIR convergence" .
+  
+  <https://w3id.org/fair/3pff/FIP-Consultation> rdfs:label "FIP consultation" .
+  
+  <https://w3id.org/fair/3pff/FIP-Event> rdfs:label "FIP event" .
+  
+  <https://w3id.org/fair/3pff/FIP-Introduction> rdfs:label "FIP introduction" .
+  
+  <https://w3id.org/fair/3pff/Hybrid-Event> rdfs:label "hybrid event" .
+  
+  <https://w3id.org/fair/3pff/In-Person-Event> rdfs:label "in-person event" .
+  
+  <https://w3id.org/fair/3pff/M4M-Consultation> rdfs:label "M4M consultation" .
+  
+  <https://w3id.org/fair/3pff/M4M-I-ADOPT> rdfs:label "M4M I-ADOPT" .
+  
+  <https://w3id.org/fair/3pff/M4M-Introduction> rdfs:label "M4M introduction" .
+  
+  <https://w3id.org/fair/3pff/M4M-Schema> rdfs:label "M4M schema" .
+  
+  <https://w3id.org/fair/3pff/M4M-Vocabulary> rdfs:label "M4M vocabulary" .
+  
+  <https://w3id.org/fair/3pff/Orchestration> rdfs:label "Orchestration" .
+  
+  <https://w3id.org/fair/3pff/Virtual-Event> rdfs:label "virtual event" .
+  
+  <https://w3id.org/fair/3pff/has-event-assistant> rdfs:label "has event assistant" .
+  
+  <https://w3id.org/fair/3pff/has-event-facilitator> rdfs:label "has event facilitator" .
+  
+  <https://w3id.org/fair/3pff/has-event-organizer> rdfs:label "has event organizer" .
+  
+  <https://w3id.org/fair/3pff/has-event-sponsor> rdfs:label "has event sponsor" .
+  
+  <https://w3id.org/fair/3pff/has-participating-community> rdfs:label "has participating community" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Defining a 3PFF event";
+    nt:hasStatement sub:st01, sub:st02, sub:st03a, sub:st03b, sub:st04, sub:st05, sub:st05a,
+      sub:st06, sub:st06a, sub:st06b, sub:st07, sub:st08, sub:st09, sub:st10, sub:st11;
+    nt:hasTag "3PFF";
+    nt:hasTargetNanopubType <https://w3id.org/fair/fip/terms/FAIR-Supporting-Resource> .
+  
+  sub:assistant a nt:ExternalUriPlaceholder;
+    rdfs:label "ORCID of event assistant" .
+  
+  sub:community a nt:GuidedChoicePlaceholder;
+    rdfs:label "community";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FFAIR-Implementation-Community&searchterm=" .
+  
+  sub:date rdfs:label "date of the event (e.g. 2020-12-31)";
+    nt:hasRegex "[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]" .
+  
+  sub:endDate a nt:LiteralPlaceholder;
+    rdfs:label "end date (and optionally time)";
+    nt:hasDatatype xsd:dateTime .
+  
+  sub:event a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix";
+    nt:hasPrefix "https://w3id.org/fair/3pff/";
+    nt:hasPrefixLabel "3 PFF event" .
+  
+  sub:event-type a nt:RestrictedChoicePlaceholder;
+    rdfs:label "event type";
+    nt:possibleValue <https://w3id.org/fair/3pff/Hybrid-Event>, <https://w3id.org/fair/3pff/In-Person-Event>,
+      <https://w3id.org/fair/3pff/Virtual-Event> .
+  
+  sub:facilitator a nt:ExternalUriPlaceholder;
+    rdfs:label "ORCID of event facilitator" .
+  
+  sub:hours a nt:LiteralPlaceholder;
+    rdfs:label "hours" .
+  
+  sub:location a nt:ValuePlaceholder;
+    rdfs:label "location of the event (URL or name)" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the event" .
+  
+  sub:online-resource a nt:ExternalUriPlaceholder;
+    rdfs:label "online resource" .
+  
+  sub:organizer a nt:ValuePlaceholder;
+    rdfs:label "organizer of the event (ROR, URL or name)" .
+  
+  sub:resource-type1 a nt:RestrictedChoicePlaceholder;
+    rdfs:label "3PFF type";
+    nt:possibleValue <https://w3id.org/fair/3pff/FAIR-Awareness>, <https://w3id.org/fair/3pff/FAIR-Convergence>,
+      <https://w3id.org/fair/3pff/FIP-Consultation>, <https://w3id.org/fair/3pff/FIP-Event>,
+      <https://w3id.org/fair/3pff/FIP-Introduction>, <https://w3id.org/fair/3pff/M4M-Consultation>,
+      <https://w3id.org/fair/3pff/M4M-I-ADOPT>, <https://w3id.org/fair/3pff/M4M-Introduction>,
+      <https://w3id.org/fair/3pff/M4M-Schema>, <https://w3id.org/fair/3pff/M4M-Vocabulary>,
+      <https://w3id.org/fair/3pff/Orchestration> .
+  
+  sub:resource-type2 a nt:RestrictedChoicePlaceholder;
+    rdfs:label "workshop type";
+    nt:possibleValue <https://w3id.org/fair/3pff/3PFF-Training>, <https://w3id.org/fair/3pff/3PFF-Workshop> .
+  
+  sub:sponsor a nt:ValuePlaceholder;
+    rdfs:label "sponsor of the event (ROR or name)" .
+  
+  sub:st01 rdf:object <https://w3id.org/fair/3pff/3PFF-event>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:event .
+  
+  sub:st02 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:event .
+  
+  sub:st03 rdf:object sub:date;
+    rdf:predicate dct:date;
+    rdf:subject sub:event .
+  
+  sub:st03a a nt:OptionalStatement;
+    rdf:object sub:startDate;
+    rdf:predicate <http://schema.org/startDate>;
+    rdf:subject sub:event .
+  
+  sub:st03b a nt:OptionalStatement;
+    rdf:object sub:endDate;
+    rdf:predicate <http://schema.org/endDate>;
+    rdf:subject sub:event .
+  
+  sub:st04 rdf:object sub:hours;
+    rdf:predicate <https://www.w3.org/TR/owl-time/#time:hours>;
+    rdf:subject sub:event .
+  
+  sub:st05 rdf:object sub:resource-type1;
+    rdf:predicate rdf:type;
+    rdf:subject sub:event .
+  
+  sub:st05a rdf:object sub:resource-type2;
+    rdf:predicate rdf:type;
+    rdf:subject sub:event .
+  
+  sub:st06 a nt:RepeatableStatement;
+    rdf:object sub:organizer;
+    rdf:predicate <https://w3id.org/fair/3pff/has-event-organizer>;
+    rdf:subject sub:event .
+  
+  sub:st06a a nt:RepeatableStatement;
+    rdf:object sub:facilitator;
+    rdf:predicate <https://w3id.org/fair/3pff/has-event-facilitator>;
+    rdf:subject sub:event .
+  
+  sub:st06b a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:assistant;
+    rdf:predicate <https://w3id.org/fair/3pff/has-event-assistant>;
+    rdf:subject sub:event .
+  
+  sub:st07 a nt:OptionalStatement;
+    rdf:object sub:sponsor;
+    rdf:predicate <https://w3id.org/fair/3pff/has-event-sponsor>;
+    rdf:subject sub:event .
+  
+  sub:st08 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:community;
+    rdf:predicate <https://w3id.org/fair/3pff/has-participating-community>;
+    rdf:subject sub:event .
+  
+  sub:st09 a nt:RepeatableStatement;
+    rdf:object sub:online-resource;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:event .
+  
+  sub:st10 rdf:object sub:event-type;
+    rdf:predicate rdf:type;
+    rdf:subject sub:event .
+  
+  sub:st11 a nt:OptionalStatement;
+    rdf:object sub:location;
+    rdf:predicate <https://schema.org/location>;
+    rdf:subject sub:event .
+  
+  sub:startDate a nt:LiteralPlaceholder;
+    rdfs:label "start date (and optionally time)";
+    nt:hasDatatype xsd:dateTime .
+  
+  <https://www.w3.org/TR/owl-time/#time:hours> rdfs:label "has duration in hours" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  this: dct:created "2026-03-10T17:03:20.055Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAuUOox4ER7_NcszPZ4GSAa88pAZZSl5an2QZqVVivv3M>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Defining a 3PFF event";
+    prov:wasDerivedFrom ns1:RA5QXHAruIptCO2ZGZEb3frAHdZQnTCixIlDns0xgdcEo, ns1:RAJsudG1v68PR6B_nR4S6HmfjrRTjyqP4ooejqCQdT3IM;
+    nt:wasCreatedFromProvenanceTemplate ns1:RAi6zZAwhaJ23Hzg4lIjlPir6Take3ZQp-lS9skfBEwfQ;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA, <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFntPrMZqvg2kVhCNArNnEn37ddXGwZ/0r4C8CS4lDry7C7YkYgng9yb0UMZQUHiTVkR/5A4m/xjE+Vy+AnwcWUeB75SfGZjE5ylI6VeHjTHi9+2hh2PHYIWnkhU4WHl3COEnxSSa/VouvPzZ2BIWLH6fTrq7NNL3RF5hGegGG0QIDAQAB";
+    npx:hasSignature "Dvc8eWInpHDRLs5KVADvLTsMcoqdjVULWrKM1g/kcmNfIFA+D8kGqiGN6m/qbsPEBq+Fuq4iLcJEnKms8Pnn/Q61RtAcUQpW6eiXKgKRyrKXiGuQ7FSt8wD2rDMgRYJVDln3G5FbaCWfijF8lbauN46LqFXlWGQqEfuoLdShwws=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+}
+

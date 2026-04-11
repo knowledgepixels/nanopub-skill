@@ -1,0 +1,282 @@
+@prefix this: <https://w3id.org/np/RAZPmn81h2ShR_KHIhzaEhGIR4u2pp2mun1hblsySWvSY> .
+@prefix sub: <https://w3id.org/np/RAZPmn81h2ShR_KHIhzaEhGIR4u2pp2mun1hblsySWvSY/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://edamontology.org/format_2333> rdfs:label "Binary format" .
+  
+  <http://edamontology.org/format_3464> rdfs:label "JSON" .
+  
+  <http://edamontology.org/format_3508> rdfs:label "PDF" .
+  
+  <http://edamontology.org/format_3590> rdfs:label "HDF5" .
+  
+  <http://edamontology.org/format_3603> rdfs:label "PNG" .
+  
+  <http://edamontology.org/format_3650> rdfs:label "NetCDF" .
+  
+  <http://edamontology.org/format_3752> rdfs:label "CSV" .
+  
+  <http://edamontology.org/format_3915> rdfs:label "Zarr" .
+  
+  <http://edamontology.org/format_3997> rdfs:label "MPEG-4" .
+  
+  dct:creator rdfs:label "created by" .
+  
+  dct:description rdfs:label "has description" .
+  
+  dct:format rdfs:label "needs or produces data format" .
+  
+  dct:license rdfs:label "has license" .
+  
+  dct:title rdfs:label "has title" .
+  
+  prov:wasDerivedFrom rdfs:label "improves upon method" .
+  
+  <http://www.wikidata.org/entity/Q15777> rdfs:label "C" .
+  
+  <http://www.wikidata.org/entity/Q206904> rdfs:label "R" .
+  
+  <http://www.wikidata.org/entity/Q2407> rdfs:label "C++" .
+  
+  <http://www.wikidata.org/entity/Q28865> rdfs:label "Python" .
+  
+  <https://creativecommons.org/licenses/by/4.0/> rdfs:label "CC-BY-4.0" .
+  
+  <https://schema.org/actionPlatform> rdfs:label "executable via" .
+  
+  <https://schema.org/applicationCategory> rdfs:label "serves purpose" .
+  
+  <https://schema.org/applicationSubCategory> rdfs:label "applies to domains" .
+  
+  <https://schema.org/codeRepository> rdfs:label "has source repository" .
+  
+  <https://schema.org/keywords> rdfs:label "has keywords" .
+  
+  <https://schema.org/learningResourceType> rdfs:label "uses computational approach" .
+  
+  <https://schema.org/programmingLanguage> rdfs:label "uses programming language" .
+  
+  <https://schema.org/result> rdfs:label "reports performance results" .
+  
+  <https://schema.org/url> rdfs:label "is accessible via" .
+  
+  <https://spdx.org/licenses/Apache-2.0.html> rdfs:label "Apache 2.0" .
+  
+  <https://spdx.org/licenses/BSD-3-Clause.html> rdfs:label "BSD 3 Clause" .
+  
+  <https://spdx.org/licenses/GPL-3.0.html> rdfs:label "GPL 3.0" .
+  
+  <https://spdx.org/licenses/MIT.html> rdfs:label "MIT" .
+  
+  sub:applicable-domains a nt:GuidedChoicePlaceholder;
+    rdfs:label "applicable research domains";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:application-category a nt:GuidedChoicePlaceholder;
+    rdfs:label "primary computational purpose";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Template for describing a Jupyter Notebook as a reusable computational method with semantic metadata for discovery and reuse tracking";
+    rdfs:label "Jupyter Notebook Computational Method";
+    nt:hasNanopubLabelPattern "Method: ${title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st09, sub:st10, sub:st11, sub:st12, sub:st13, sub:st14, sub:st15, sub:st16,
+      sub:st17;
+    nt:hasTag "Jupyter Method";
+    nt:hasTargetNanopubType <https://schema.org/SoftwareSourceCode> .
+  
+  sub:base-method a nt:UriPlaceholder;
+    rdfs:label "method this improves upon (DOI or URI)" .
+  
+  sub:computational-approach a nt:GuidedChoicePlaceholder;
+    rdfs:label "computational approach used";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:creator a nt:UriPlaceholder;
+    rdfs:label "ORCID of creator";
+    nt:hasPrefix "https://orcid.org/";
+    nt:hasPrefixLabel "ORCID (just the 16-digit ID)";
+    nt:hasRegex "0000-\\d{4}-\\d{4}-\\d{4}" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description of what the method does";
+    nt:hasRegex "[\\s\\S]{10,1000}" .
+  
+  sub:executable-url a nt:UriPlaceholder;
+    rdfs:label "direct link to execute this notebook online (e.g. binder)" .
+  
+  sub:github-repo a nt:UriPlaceholder;
+    rdfs:label "GitHub repository URL" .
+  
+  sub:input-format a nt:RestrictedChoicePlaceholder;
+    rdfs:label "expected input data format";
+    nt:hasPrefix "input:";
+    nt:hasPrefixLabel "Input:";
+    nt:possibleValue <http://edamontology.org/format_2333>, <http://edamontology.org/format_3464>,
+      <http://edamontology.org/format_3590>, <http://edamontology.org/format_3591>, <http://edamontology.org/format_3620>,
+      <http://edamontology.org/format_3650>, <http://edamontology.org/format_3752>, <http://edamontology.org/format_3915>,
+      <http://edamontology.org/format_3997> .
+  
+  sub:keywords a nt:GuidedChoicePlaceholder;
+    rdfs:label "research keywords from Wikidata";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:license a nt:RestrictedChoicePlaceholder;
+    rdfs:label "software license";
+    nt:possibleValue <https://creativecommons.org/licenses/by/4.0/>, <https://spdx.org/licenses/Apache-2.0.html>,
+      <https://spdx.org/licenses/BSD-3-Clause.html>, <https://spdx.org/licenses/GPL-3.0.html>,
+      <https://spdx.org/licenses/MIT.html> .
+  
+  sub:notebook a nt:UriPlaceholder;
+    rdfs:label "URI of the Jupyter Notebook method" .
+  
+  sub:output-format a nt:RestrictedChoicePlaceholder;
+    rdfs:label "produced output format";
+    nt:hasPrefix "output:";
+    nt:hasPrefixLabel "Output:";
+    nt:possibleValue <http://edamontology.org/format_2333>, <http://edamontology.org/format_3464>,
+      <http://edamontology.org/format_3508>, <http://edamontology.org/format_3590>, <http://edamontology.org/format_3603>,
+      <http://edamontology.org/format_3650>, <http://edamontology.org/format_3752>, <http://edamontology.org/format_3915>,
+      <http://edamontology.org/format_3997> .
+  
+  sub:performance-metrics a nt:LongLiteralPlaceholder;
+    rdfs:label "quantitative performance measurements";
+    nt:hasRegex "[\\s\\S]{10,1000}" .
+  
+  sub:programming-language a nt:RestrictedChoicePlaceholder;
+    rdfs:label "primary programming language";
+    nt:possibleValue <http://www.wikidata.org/entity/Q15777>, <http://www.wikidata.org/entity/Q206904>,
+      <http://www.wikidata.org/entity/Q2407>, <http://www.wikidata.org/entity/Q28865> .
+  
+  sub:st01 rdf:object <https://schema.org/SoftwareSourceCode>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:notebook .
+  
+  sub:st02 rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:notebook .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:notebook .
+  
+  sub:st04 rdf:object sub:zenodo-doi;
+    rdf:predicate <https://schema.org/url>;
+    rdf:subject sub:notebook .
+  
+  sub:st05 a nt:RepeatableStatement;
+    rdf:object sub:github-repo;
+    rdf:predicate <https://schema.org/codeRepository>;
+    rdf:subject sub:notebook .
+  
+  sub:st06 a nt:RepeatableStatement;
+    rdf:object sub:creator;
+    rdf:predicate dct:creator;
+    rdf:subject sub:notebook .
+  
+  sub:st07 rdf:object sub:programming-language;
+    rdf:predicate <https://schema.org/programmingLanguage>;
+    rdf:subject sub:notebook .
+  
+  sub:st08 rdf:object sub:application-category;
+    rdf:predicate <https://schema.org/applicationCategory>;
+    rdf:subject sub:notebook .
+  
+  sub:st09 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:keywords;
+    rdf:predicate <https://schema.org/keywords>;
+    rdf:subject sub:notebook .
+  
+  sub:st10 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:input-format;
+    rdf:predicate dct:format;
+    rdf:subject sub:notebook .
+  
+  sub:st11 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:output-format;
+    rdf:predicate dct:format;
+    rdf:subject sub:notebook .
+  
+  sub:st12 rdf:object sub:license;
+    rdf:predicate dct:license;
+    rdf:subject sub:notebook .
+  
+  sub:st13 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:executable-url;
+    rdf:predicate <https://schema.org/actionPlatform>;
+    rdf:subject sub:notebook .
+  
+  sub:st14 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:base-method;
+    rdf:predicate prov:wasDerivedFrom;
+    rdf:subject sub:notebook .
+  
+  sub:st15 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:performance-metrics;
+    rdf:predicate <https://schema.org/result>;
+    rdf:subject sub:notebook .
+  
+  sub:st16 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:computational-approach;
+    rdf:predicate <https://schema.org/learningResourceType>;
+    rdf:subject sub:notebook .
+  
+  sub:st17 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:applicable-domains;
+    rdf:predicate <https://schema.org/applicationSubCategory>;
+    rdf:subject sub:notebook .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title of the computational method";
+    nt:hasRegex "[\\s\\S]{5,200}" .
+  
+  sub:zenodo-doi a nt:UriPlaceholder;
+    rdfs:label "Zenodo DOI URL";
+    nt:hasPrefix "https://doi.org/";
+    nt:hasPrefixLabel "DOI (starting with '10.')";
+    nt:hasRegex "10.(\\d)+/(\\S)+" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1784-2920 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1784-2920 foaf:name "Anne Fouilloux" .
+  
+  this: dct:created "2025-08-15T16:32:22.964Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1784-2920;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAEPNaZToISK5x3tTRcBlG5olZawQ75UPVqF5uOXuelok>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Jupyter Notebook Computational Method";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA5reLVXOCPQFWr2UiCJb19ES7NwOpQRmudb17e2iB0c4> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDWv2pJnmDsBOq8OlT1aSvYXSuWT34WOp4FYqEzdnn2F0kqzcFevBqWGZDxJWC0lqCrDEuNfp2QFyPe/+nES9dlHGYIhqPi68fwK6ZiNUotRFxXou+rjFznVvUxtCL8Ede79EBHwWN61QtwSIcU12bLoZsNPFlqQASQ93BJuKlihwIDAQAB";
+    npx:hasSignature "pvk+QHexJN5jV6gCuEd6iWoG9omM9wrFfWX1NNs1gHBcZ5SVMKoIDo/WrgvuSkoWxwv5cHW54whg9jvZOkEHdRXIer+At+I7+NyveKzQbYE3/CKT6T8h/XgIrbj12gEuCNDexe75qfs4lQVMCA80dKP1f1JKnAX8+6wYJOeRzt0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1784-2920 .
+}
+

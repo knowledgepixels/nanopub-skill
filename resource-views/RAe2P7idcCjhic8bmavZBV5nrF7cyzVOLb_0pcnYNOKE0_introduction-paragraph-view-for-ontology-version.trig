@@ -1,0 +1,60 @@
+@prefix this: <https://w3id.org/np/RAe2P7idcCjhic8bmavZBV5nrF7cyzVOLb_0pcnYNOKE0> .
+@prefix sub: <https://w3id.org/np/RAe2P7idcCjhic8bmavZBV5nrF7cyzVOLb_0pcnYNOKE0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:ontology-paragraphs-view a <https://w3id.org/kpxl/gen/terms/PlainParagraphView>,
+      <https://w3id.org/kpxl/gen/terms/ResourceView>;
+    dct:isVersionOf <https://w3id.org/np/RATlK9QXdlsGSTRKQ2xOoBmwxJ-DiZBaPbeYhFxrz3IOw/ontology-paragraphs-view-kind>;
+    dct:title "Introduction";
+    rdfs:label "Introduction paragraph view for ontology version";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/OntologyVersion>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "3.1.intro";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAB1cGJ67wFpvE5HV2xl8-izmp_R8q25UlTg9UXIb6pRE/get-paragraphs-of-ontology-version>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "ontologyVersion" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RAB1cGJ67wFpvE5HV2xl8-izmp_R8q25UlTg9UXIb6pRE/get-paragraphs-of-ontology-version>
+    nt:hasLabelFromApi "Get the paragraphs of an ontology version - This query returns all paragraphs that are part of a given version of an onto..." .
+  
+  this: dct:created "2026-02-27T14:55:44.653Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:ontology-paragraphs-view;
+    npx:introduces <https://w3id.org/np/RATlK9QXdlsGSTRKQ2xOoBmwxJ-DiZBaPbeYhFxrz3IOw/ontology-paragraphs-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAIymYCZdiylntWxgF7BwUyVkuZ5frlfInBOZk-VlsD8k>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "n0ON+/HBH4PxCIAm+Zs6KQ7iP0alLq70AymGO83li2/iIe6EX3NXiiAWBEh9b62XlYuGxErLQCQAnLR5mPCqwcCqOStkMSSmMhE80M6tscpUeLkH8WvBYnV+BMaEoG7+bx4UU8nIu/bSO/b4SbqCLkNF/mEaEJD6ZCffTFxW1J8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,133 @@
+@prefix this: <https://w3id.org/np/RAZg-r7oQjVZ3Ewy7pUzd9eINl6fCa3HGclTsDeRag5to> .
+@prefix sub: <https://w3id.org/np/RAZg-r7oQjVZ3Ewy7pUzd9eINl6fCa3HGclTsDeRag5to/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  <https://w3id.org/kpxl/gen/terms/ActivatedViewDisplay> rdfs:label "activated view display" .
+  
+  <https://w3id.org/kpxl/gen/terms/DeactivatedViewDisplay> rdfs:label "deactivated view display" .
+  
+  <https://w3id.org/kpxl/gen/terms/ViewDisplay> rdfs:label "view display" .
+  
+  <https://w3id.org/kpxl/gen/terms/appliesTo> rdfs:label "only applies to resource" .
+  
+  <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> rdfs:label "applies to all instances of" .
+  
+  <https://w3id.org/kpxl/gen/terms/appliesToNamespace> rdfs:label "applies to the namespace" .
+  
+  <https://w3id.org/kpxl/gen/terms/isDisplayFor> rdfs:label "is a display for" .
+  
+  <https://w3id.org/kpxl/gen/terms/isDisplayOfView> rdfs:label "is a display of the view" .
+  
+  sub:appliesToClass a nt:ExternalUriPlaceholder;
+    rdfs:label "class URI, overriding view definition" .
+  
+  sub:appliesToNamespace a nt:ExternalUriPlaceholder;
+    rdfs:label "namespace, overriding view definition" .
+  
+  sub:appliesToResource a nt:ExternalUriPlaceholder;
+    rdfs:label "resource URI" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Displaying a view for a part-level resource";
+    nt:hasNanopubLabelPattern "${resource} displays view: ${view}";
+    nt:hasStatement sub:st10, sub:st12, sub:st20, sub:st30, sub:st31, sub:st32, sub:st33;
+    nt:hasTag "Spaces" .
+  
+  sub:display a nt:EmbeddedResource, nt:LocalResource;
+    rdfs:label "this" .
+  
+  sub:displayMode a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select whether this display is activated or deactivated";
+    nt:hasDefaultValue <https://w3id.org/kpxl/gen/terms/ActivatedViewDisplay>;
+    nt:possibleValue <https://w3id.org/kpxl/gen/terms/ActivatedViewDisplay>, <https://w3id.org/kpxl/gen/terms/DeactivatedViewDisplay> .
+  
+  sub:resource a nt:GuidedChoicePlaceholder;
+    rdfs:label "the ID of the resource";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/MaintainedResource",
+      "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st10 rdf:object <https://w3id.org/kpxl/gen/terms/ViewDisplay>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:display .
+  
+  sub:st12 a nt:AdvancedStatement;
+    rdf:object sub:displayMode;
+    rdf:predicate rdf:type;
+    rdf:subject sub:display .
+  
+  sub:st20 rdf:object sub:view;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/isDisplayOfView>;
+    rdf:subject sub:display .
+  
+  sub:st30 rdf:object sub:resource;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/isDisplayFor>;
+    rdf:subject sub:display .
+  
+  sub:st31 a nt:AdvancedStatement, nt:OptionalStatement;
+    rdf:object sub:appliesToResource;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/appliesTo>;
+    rdf:subject sub:display .
+  
+  sub:st32 a nt:AdvancedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:appliesToClass;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf>;
+    rdf:subject sub:display .
+  
+  sub:st33 a nt:AdvancedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:appliesToNamespace;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/appliesToNamespace>;
+    rdf:subject sub:display .
+  
+  sub:view a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the view";
+    nt:possibleValue <https://w3id.org/np/RAw-qvMHOy5P4CT__dpQIN3YiB2tlULQpr-ngyIA6jXkk/definition-relations-view>;
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAs7Q2IMbb7C2WzFa98bVwlDMhN3kJ0rrF9cSEybtvLaA/find-embedded-things?type=https://w3id.org/kpxl/gen/terms/ResourceView" .
+  
+  <https://w3id.org/np/RAw-qvMHOy5P4CT__dpQIN3YiB2tlULQpr-ngyIA6jXkk/definition-relations-view>
+    rdfs:label "basic view of definition relations" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-02-13T08:13:49.670+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Displaying a view for a part-level resource";
+    prov:wasDerivedFrom <https://w3id.org/np/RA8a6AuDKWpWEbUcjwJCFclezi1eMjjn5QdmTLu9PX6OQ>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ACHVwqFn/RDRUp/amfI+25fQjbcVuD2CBYTzG58gvNth8PunoKpyGOKy/t5StlngZL1Pupva/KaeKToyZ9pT2BAbqAI3QrxC7ZZeE3J8GpkUm5sCQNDKoB2KqZKKqlK2EPigcjnPDMlDMMmV2vntoPtZ3orxBq2pLrkatCCprf4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

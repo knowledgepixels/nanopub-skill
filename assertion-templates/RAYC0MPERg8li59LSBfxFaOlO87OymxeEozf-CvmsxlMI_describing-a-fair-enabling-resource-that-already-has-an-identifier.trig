@@ -1,0 +1,159 @@
+@prefix fip: <https://w3id.org/fair/fip/terms/> .
+@prefix this: <http://purl.org/np/RAYC0MPERg8li59LSBfxFaOlO87OymxeEozf-CvmsxlMI> .
+@prefix sub: <http://purl.org/np/RAYC0MPERg8li59LSBfxFaOlO87OymxeEozf-CvmsxlMI#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Describing a FAIR-enabling resource that already has an identifier";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st6, sub:st6b, sub:st7;
+    nt:hasTag "FAIR" .
+  
+  sub:comment a nt:LiteralPlaceholder;
+    rdfs:label "description of the FAIR-enabling resource" .
+  
+  sub:downloadUrl a nt:UriPlaceholder;
+    rdfs:label "download URL" .
+  
+  sub:mappedResource a nt:UriPlaceholder;
+    rdfs:label "the identifier of the related resource" .
+  
+  sub:mappingPredicate a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue <http://www.w3.org/2004/02/skos/core#closeMatch>, <http://www.w3.org/2004/02/skos/core#exactMatch>,
+      <http://www.w3.org/2004/02/skos/core#relatedMatch> .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the FAIR-enabling resource" .
+  
+  sub:resource a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "existing resource identifier" .
+  
+  sub:resource-type1 a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue fip:Available-FAIR-Enabling-Resource, fip:FAIR-Enabling-Resource-to-be-Developed .
+  
+  sub:resource-type2 a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue fip:Authentication-and-authorization-service, fip:Communication-protocol,
+      fip:Data-usage-license, fip:Identifier-service, fip:Knowledge-representation-language,
+      fip:Metadata-data-linking-schema, fip:Metadata-preservation-policy, fip:Metadata-schema,
+      fip:Provenance-model, fip:Registry, fip:Semantic-model, fip:Structured-vocabulary .
+  
+  sub:st0 rdf:object fip:FAIR-Enabling-Resource;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st1 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:resource .
+  
+  sub:st2 rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:resource .
+  
+  sub:st3 rdf:object sub:resource-type1;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st4 a nt:RepeatableStatement;
+    rdf:object sub:resource-type2;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:website;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:resource .
+  
+  sub:st6b a nt:OptionalStatement;
+    rdf:object sub:downloadUrl;
+    rdf:predicate <http://www.w3.org/ns/dcat#downloadURL>;
+    rdf:subject sub:resource .
+  
+  sub:st7 a nt:OptionalStatement;
+    rdf:object sub:mappedResource;
+    rdf:predicate sub:mappingPredicate;
+    rdf:subject sub:resource .
+  
+  sub:website a nt:UriPlaceholder;
+    rdfs:label "a link to a website with further information" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has the description" .
+  
+  rdfs:label rdfs:label "is called" .
+  
+  rdfs:seeAlso rdfs:label "is further described by" .
+  
+  <http://www.w3.org/2004/02/skos/core#closeMatch> rdfs:label "can in some situations be considered the same as" .
+  
+  <http://www.w3.org/2004/02/skos/core#exactMatch> rdfs:label "is (almost) exactly the same as" .
+  
+  <http://www.w3.org/2004/02/skos/core#relatedMatch> rdfs:label "is related to" .
+  
+  <http://www.w3.org/ns/dcat#downloadURL> rdfs:label "is accessible via" .
+  
+  fip:Authentication-and-authorization-service rdfs:label "Authentication and authorization service" .
+  
+  fip:Available-FAIR-Enabling-Resource rdfs:label "available FAIR-enabling resource" .
+  
+  fip:Communication-protocol rdfs:label "Communication protocol" .
+  
+  fip:Data-usage-license rdfs:label "Data usage license" .
+  
+  fip:FAIR-Enabling-Resource rdfs:label "FAIR-Enabling Resource" .
+  
+  fip:FAIR-Enabling-Resource-to-be-Developed rdfs:label "FAIR-enabling resource to be developed" .
+  
+  fip:Identifier-service rdfs:label "Identifier service" .
+  
+  fip:Knowledge-representation-language rdfs:label "Knowledge representation language" .
+  
+  fip:Metadata-data-linking-schema rdfs:label "Metadata data linking schema" .
+  
+  fip:Metadata-preservation-policy rdfs:label "Metadata preservation policy" .
+  
+  fip:Metadata-schema rdfs:label "Metadata schema" .
+  
+  fip:Provenance-model rdfs:label "Provenance model" .
+  
+  fip:Registry rdfs:label "Registry" .
+  
+  fip:Semantic-model rdfs:label "Semantic model" .
+  
+  fip:Structured-vocabulary rdfs:label "Structured vocabulary" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "LO4z3n+Tm59KDqy0vcM+xQJxwtZ3WbtFJRJZILsumVUHZ3kAPgTi3F4B6vnAbv+0xR32kFgkR/5JMl7DHHu0uRdKBUq/kWWqpk5WBHmWLiEw/LqCXAo6h6AY6epF9f//Kf89CLOq9CSqs+wHiCySWz1y3QIHhdeIUVcM3AXoLvg=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2022-07-15T20:45:52.780+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    npx:supersedes <http://purl.org/np/RALh5ABUA3ZuGowJpCLSqClxVklgFq6x4MRtjIzNhW2gg>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RARMBqX_-9lnhkaqk4BuxfLcC6H5cqTlzdtDzeDIwuKdU> .
+}
+

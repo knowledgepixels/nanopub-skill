@@ -1,0 +1,128 @@
+@prefix this: <http://purl.org/np/RA23kbRTeyqPHs76jThlvVz2MD8TQv1nzxDFixjD81nmg> .
+@prefix sub: <http://purl.org/np/RA23kbRTeyqPHs76jThlvVz2MD8TQv1nzxDFixjD81nmg#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  dct:publisher rdfs:label "is published by" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Describing a knowledge graph about COVID-19";
+    nt:hasNanopubLabelPattern "COVID-19 knowledge graph: ${name}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08;
+    nt:hasTag "Datasets";
+    nt:hasTargetNanopubType <http://www.w3.org/ns/dcat#Dataset> .
+  
+  sub:citation a nt:UriPlaceholder;
+    rdfs:label "URI of publication" .
+  
+  sub:description a nt:LiteralPlaceholder;
+    rdfs:label "description of the dataset" .
+  
+  sub:endpoint a nt:UriPlaceholder;
+    rdfs:label "SPARQL endpoint URL" .
+  
+  sub:kg a nt:UriPlaceholder;
+    rdfs:label "URI of the knowledge graph" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "name of the dataset" .
+  
+  sub:publisher a nt:UriPlaceholder;
+    rdfs:label "URI of the publisher of the dataset" .
+  
+  sub:source a nt:UriPlaceholder;
+    rdfs:label "entity from which the knowledge graph was derived" .
+  
+  sub:st01 rdf:object <http://www.w3.org/ns/dcat#Dataset>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:kg .
+  
+  sub:st02 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:kg .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:kg .
+  
+  sub:st04 a nt:OptionalStatement;
+    rdf:object sub:publisher;
+    rdf:predicate dct:publisher;
+    rdf:subject sub:kg .
+  
+  sub:st05 rdf:object sub:url;
+    rdf:predicate <http://schema.org/url>;
+    rdf:subject sub:kg .
+  
+  sub:st06 a nt:OptionalStatement;
+    rdf:object sub:citation;
+    rdf:predicate <http://purl.org/spar/cito/citesAsAuthority>;
+    rdf:subject sub:kg .
+  
+  sub:st07 a nt:OptionalStatement;
+    rdf:object sub:source;
+    rdf:predicate prov:wasDerivedFrom;
+    rdf:subject sub:kg .
+  
+  sub:st08 a nt:OptionalStatement;
+    rdf:object sub:endpoint;
+    rdf:predicate <http://www.w3.org/ns/sparql-service-description#endpoint>;
+    rdf:subject sub:kg .
+  
+  sub:url a nt:LiteralPlaceholder;
+    rdfs:label "URL of the knowledge graph" .
+  
+  <http://purl.org/spar/cito/citesAsAuthority> rdfs:label "has authoritative citation" .
+  
+  <http://schema.org/url> rdfs:label "has the URL" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "is called" .
+  
+  <http://www.w3.org/ns/dcat#Dataset> rdfs:label "dataset" .
+  
+  prov:wasDerivedFrom rdfs:label "was derived from" .
+  
+  <http://www.w3.org/ns/sparql-service-description#endpoint> rdfs:label "has SPARQL endpoint" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ESrcrC7rW1nr+I97txiL3GXiKDGRA7tb0O3qflfIsZp4IQFDbZ21kDlQ6luW2ete2TbTywZ/gUDB6aLSvbUUaTlKtDUSqhzT6EdwZE7Mk6gyQrwT6fAZ2k5qs30paA16iguyCi28m100pVoSHZrd+4sh84aI5h7rzGgDQClKuWc=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-16T12:36:12.095+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <http://purl.org/np/RAUsdwHR1fJfbEVaWSwqBXljJwkXkKz6gwcEw9thggjKM>;
+    rdfs:label "Template: Describing a knowledge graph about COVID-19";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RANjqEfLnGSzLuq0heRSXN0psYWW0oX4v3W8w7osb3xfs> .
+}
+

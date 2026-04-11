@@ -1,0 +1,70 @@
+@prefix this: <https://w3id.org/np/RAvP8141ilUn0IJGPeKHG7cXjMH4gNTW54YsT5ofnrMWU> .
+@prefix sub: <https://w3id.org/np/RAvP8141ilUn0IJGPeKHG7cXjMH4gNTW54YsT5ofnrMWU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-weekly-nanopub-count a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns the number of nanopublications published per week (Mon-Sun).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get weekly nanopub count";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+
+select ?week (substr(str(min(?date)), 0, 11) as ?firstday) (count(?np) as ?nanopubcount) where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    ?np dct:created ?date .
+  }
+
+  bind(if(month(?date) <= 2, year(?date) - 1, year(?date)) as ?y)
+  bind(if(month(?date) <= 2, month(?date) + 9, month(?date) - 3) as ?m)
+  bind(365*?y + xsd:integer(?y/4) - xsd:integer(?y/100) + xsd:integer(?y/400) + xsd:integer((153*?m + 2)/5) + day(?date) as ?daynum)
+  bind(?daynum + 1 - xsd:integer((?daynum + 1) / 7) * 7 as ?dow)
+  bind(xsd:integer((?daynum - ?dow) / 7) as ?week)
+}
+group by ?week
+order by desc(?week)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-04-01T16:30:36Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-weekly-nanopub-count;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "RnAYCwVb3rD6qp39Gmw4e7bUWNuHGcoPl18GHUCDXdz0+kn8w6u+KlGscDJKfsuUub3xvj+coma09INfkQ4aK0qbwkRrqqNDSNhFkeaEw03Aw9oZ7ByGzjJiz+yOpyDZvyMyG7ZPtH+CiEnYPDZ7B6Vs6eLksyyQrMWipCRtgjU=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,243 @@
+@prefix this: <https://w3id.org/np/RABdZf6griTve7mP-0LMd_xWrtYnRPOdN5eNYLbGmJO0I> .
+@prefix sub: <https://w3id.org/np/RABdZf6griTve7mP-0LMd_xWrtYnRPOdN5eNYLbGmJO0I/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:accrualMethod rdfs:label "used screening method" .
+  
+  dct:created rdfs:label "was completed on" .
+  
+  dct:description rdfs:label "has exclusion breakdown" .
+  
+  dct:provenance rdfs:label "used deduplication methodology" .
+  
+  dct:source rdfs:label "searched database" .
+  
+  dct:title rdfs:label "has title" .
+  
+  rdf:type rdfs:label "is of type" .
+  
+  rdfs:comment rdfs:label "has limitations" .
+  
+  prov:wasDerivedFrom rdfs:label "was derived from" .
+  
+  prov:wasInfluencedBy rdfs:label "was influenced by" .
+  
+  <https://schema.org/dateCreated> rdfs:label "was searched on" .
+  
+  <https://schema.org/distribution> rdfs:label "available as dataset" .
+  
+  <https://schema.org/maxValue> rdfs:label "advanced to full-text" .
+  
+  <https://schema.org/measurementMethod> rdfs:label "used review methodology" .
+  
+  <https://schema.org/minValue> rdfs:label "included studies" .
+  
+  <https://schema.org/potentialAction> rdfs:label "performed action" .
+  
+  <https://schema.org/query> rdfs:label "used query" .
+  
+  <https://schema.org/reviewCount> rdfs:label "screened records" .
+  
+  <https://schema.org/size> rdfs:label "retrieved records" .
+  
+  <https://schema.org/url> rdfs:label "accessed at URL" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template documents search execution and initial study selection for systematic reviews following PRISMA 2020 guidelines. It captures verbatim search strategies (Item 7), information source details (Item 6), selection methodology (Item 8), and study flow documentation (Items 16a-16b), providing structured documentation for transparent and reproducible search execution and screening processes.";
+    rdfs:label "PRISMA Search Results and Selection Documentation";
+    nt:hasNanopubLabelPattern "Search Execution: ${review-title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st09, sub:st10, sub:st11, sub:st12, sub:st13, sub:st14, sub:st15;
+    nt:hasTag "PRISMA" .
+  
+  sub:database-search a nt:IntroducedResource .
+  
+  sub:database-uri a nt:UriPlaceholder;
+    rdfs:label "Database/source URI (e.g., https://pubmed.ncbi.nlm.nih.gov/)" .
+  
+  sub:dataset-creation-date a nt:LiteralPlaceholder;
+    rdfs:label "Date of search execution completion (YYYY-MM-DD)";
+    nt:hasDatatype xsd:date .
+  
+  sub:dataset-file-location a nt:UriPlaceholder;
+    rdfs:label "URI where complete search results are deposited (Zenodo, Figshare, etc.)" .
+  
+  sub:deduplication-methodology a nt:LongLiteralPlaceholder;
+    rdfs:label "Deduplication software and methodology (e.g., EndNote 20: automatic + manual verification)" .
+  
+  sub:exclusion-reasons-breakdown a nt:LongLiteralPlaceholder;
+    rdfs:label "Summary of exclusion reasons with study counts by category" .
+  
+  sub:final-studies-included a nt:LiteralPlaceholder;
+    rdfs:label "Final number of studies included in review" .
+  
+  sub:pico-research-question-nanopub a nt:UriPlaceholder;
+    rdfs:label "URI of PICO research question nanopub (Template 1)" .
+  
+  sub:records-found a nt:LiteralPlaceholder;
+    rdfs:label "Number of records retrieved from this database" .
+  
+  sub:records-to-fulltext a nt:LiteralPlaceholder;
+    rdfs:label "Records proceeding to full-text screening" .
+  
+  sub:review-title a nt:LiteralPlaceholder;
+    rdfs:label "Systematic review title" .
+  
+  sub:reviewer-process-details a nt:LongLiteralPlaceholder;
+    rdfs:label "Number of reviewers, independence status, disagreement resolution methods" .
+  
+  sub:search-action a nt:IntroducedResource .
+  
+  sub:search-date a nt:LiteralPlaceholder;
+    rdfs:label "Date this database was searched (YYYY-MM-DD)";
+    nt:hasDatatype xsd:date .
+  
+  sub:search-execution-dataset a nt:IntroducedResource .
+  
+  sub:search-limitations-notes a nt:LongLiteralPlaceholder;
+    rdfs:label "Search limitations, protocol modifications, and additional methodological notes" .
+  
+  sub:search-strategy-nanopub a nt:UriPlaceholder;
+    rdfs:label "URI of search strategy nanopub (Template 2)" .
+  
+  sub:selection-screening-method a nt:LongLiteralPlaceholder;
+    rdfs:label "Title/abstract and full-text screening methodology" .
+  
+  sub:st01 rdf:object <http://purl.org/dc/dcmitype/Dataset>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:search-execution-dataset .
+  
+  sub:st02 rdf:object sub:review-title;
+    rdf:predicate dct:title;
+    rdf:subject sub:search-execution-dataset .
+  
+  sub:st03 rdf:object sub:pico-research-question-nanopub;
+    rdf:predicate prov:wasInfluencedBy;
+    rdf:subject sub:search-execution-dataset .
+  
+  sub:st04 rdf:object sub:search-strategy-nanopub;
+    rdf:predicate prov:wasDerivedFrom;
+    rdf:subject sub:search-execution-dataset .
+  
+  sub:st05 rdf:object sub:dataset-creation-date;
+    rdf:predicate dct:created;
+    rdf:subject sub:search-execution-dataset .
+  
+  sub:st06 a nt:GroupedStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st06a, sub:st06b, sub:st06c, sub:st06d, sub:st06e, sub:st06f,
+      sub:st06g .
+  
+  sub:st06a rdf:object sub:database-search;
+    rdf:predicate dct:source;
+    rdf:subject sub:search-execution-dataset .
+  
+  sub:st06b rdf:object sub:database-uri;
+    rdf:predicate <https://schema.org/url>;
+    rdf:subject sub:database-search .
+  
+  sub:st06c rdf:object sub:search-date;
+    rdf:predicate <https://schema.org/dateCreated>;
+    rdf:subject sub:database-search .
+  
+  sub:st06d rdf:object sub:search-action;
+    rdf:predicate <https://schema.org/potentialAction>;
+    rdf:subject sub:database-search .
+  
+  sub:st06e rdf:object <https://schema.org/SearchAction>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:search-action .
+  
+  sub:st06f rdf:object sub:verbatim-search-string;
+    rdf:predicate <https://schema.org/query>;
+    rdf:subject sub:search-action .
+  
+  sub:st06g rdf:object sub:records-found;
+    rdf:predicate <https://schema.org/size>;
+    rdf:subject sub:database-search .
+  
+  sub:st07 rdf:object sub:deduplication-methodology;
+    rdf:predicate dct:provenance;
+    rdf:subject sub:search-execution-dataset .
+  
+  sub:st08 rdf:object sub:reviewer-process-details;
+    rdf:predicate <https://schema.org/measurementMethod>;
+    rdf:subject sub:search-execution-dataset .
+  
+  sub:st09 rdf:object sub:selection-screening-method;
+    rdf:predicate dct:accrualMethod;
+    rdf:subject sub:search-execution-dataset .
+  
+  sub:st10 rdf:object sub:total-records-screened;
+    rdf:predicate <https://schema.org/reviewCount>;
+    rdf:subject sub:search-execution-dataset .
+  
+  sub:st11 rdf:object sub:records-to-fulltext;
+    rdf:predicate <https://schema.org/maxValue>;
+    rdf:subject sub:search-execution-dataset .
+  
+  sub:st12 rdf:object sub:final-studies-included;
+    rdf:predicate <https://schema.org/minValue>;
+    rdf:subject sub:search-execution-dataset .
+  
+  sub:st13 rdf:object sub:exclusion-reasons-breakdown;
+    rdf:predicate dct:description;
+    rdf:subject sub:search-execution-dataset .
+  
+  sub:st14 a nt:OptionalStatement;
+    rdf:object sub:search-limitations-notes;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:search-execution-dataset .
+  
+  sub:st15 rdf:object sub:dataset-file-location;
+    rdf:predicate <https://schema.org/distribution>;
+    rdf:subject sub:search-execution-dataset .
+  
+  sub:total-records-screened a nt:LiteralPlaceholder;
+    rdfs:label "Total records screened" .
+  
+  sub:verbatim-search-string a nt:LongLiteralPlaceholder;
+    rdfs:label "Exact search string as executed (copy-paste from database interface)" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1784-2920 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1784-2920 foaf:name "Anne Fouilloux" .
+  
+  this: dct:created "2025-08-30T07:46:18.980Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1784-2920;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAd2m1CfXAfT7bsKo9QKk99kkTqC_sdX3kqwnx-94tFoE>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "PRISMA Search Results and Selection Documentation";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDWv2pJnmDsBOq8OlT1aSvYXSuWT34WOp4FYqEzdnn2F0kqzcFevBqWGZDxJWC0lqCrDEuNfp2QFyPe/+nES9dlHGYIhqPi68fwK6ZiNUotRFxXou+rjFznVvUxtCL8Ede79EBHwWN61QtwSIcU12bLoZsNPFlqQASQ93BJuKlihwIDAQAB";
+    npx:hasSignature "dyVJXW2b62h1e1bgTzG8qsedeajkmdbFFtReD9SoAOy4Qq/ivi6PTFv26l4NwmS1uo/FlQZI6iaeKP5B48Om3Uf+Cp3Dv71l07W3CV/1a4M2yt+lYXb2PgOmCVfX6zgSmRon3tVtcW5a4lysc4mz8FC4bguHby2gLhUzgMw/TvA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1784-2920 .
+}
+

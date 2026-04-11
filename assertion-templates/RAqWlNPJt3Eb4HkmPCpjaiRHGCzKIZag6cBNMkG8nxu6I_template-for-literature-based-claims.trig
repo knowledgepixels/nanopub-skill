@@ -1,0 +1,172 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix this: <http://purl.org/np/RAqWlNPJt3Eb4HkmPCpjaiRHGCzKIZag6cBNMkG8nxu6I> .
+@prefix sub: <http://purl.org/np/RAqWlNPJt3Eb4HkmPCpjaiRHGCzKIZag6cBNMkG8nxu6I#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix fabio: <http://purl.org/spar/fabio/> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix sio: <http://semanticscience.org/resource/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dcterms:creator rdfs:label "has authors" .
+  
+  dcterms:date rdfs:label "was published in" .
+  
+  dcterms:identifier rdfs:label "has document identifier" .
+  
+  dcterms:title rdfs:label "has title" .
+  
+  dcterms:type rdfs:label "is a" .
+  
+  sub:accessed-on a nt:LiteralPlaceholder;
+    rdfs:label "add the date (DD-MM-YYYY) last accessed";
+    nt:hasRegex "[0-9]{2}-[0-9]{2}-[0-9]{4}" .
+  
+  sub:article-type a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue fabio:Book, fabio:PositionPaper, fabio:ResearchPaper, fabio:ReviewPaper,
+      fabio:WebSite .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Template for literature-based claims";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6, sub:st7,
+      sub:st8, sub:st9 .
+  
+  sub:authors a nt:LiteralPlaceholder;
+    rdfs:label "add the authors here" .
+  
+  sub:cites1 a nt:UriPlaceholder;
+    rdfs:label "add a citation (nanopub URL, or URL) for the quoted claim" .
+  
+  sub:cites2 a nt:UriPlaceholder;
+    rdfs:label "add a citation (nanopub URL, or URL) for the quoted claim" .
+  
+  sub:comment a nt:LiteralPlaceholder;
+    rdfs:label "add a comment for this document" .
+  
+  sub:document-id a nt:UriPlaceholder;
+    rdfs:label "add the document identifier (e.g. HTTP URI, HTTP DOI)" .
+  
+  sub:document-title a nt:LiteralPlaceholder;
+    rdfs:label "specify title of the document" .
+  
+  sub:local a nt:LocalResource;
+    rdfs:label "This document" .
+  
+  sub:quotedtext a nt:LiteralPlaceholder;
+    rdfs:label "add a quote here" .
+  
+  sub:st0 a rdf:Statement;
+    rdf:object sub:article-type;
+    rdf:predicate dcterms:type;
+    rdf:subject sub:local;
+    nt:statementOrder "0"^^xsd:integer .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:document-title;
+    rdf:predicate dcterms:title;
+    rdf:subject sub:local;
+    nt:statementOrder "1"^^xsd:integer .
+  
+  sub:st2 a rdf:Statement;
+    rdf:object sub:authors;
+    rdf:predicate dcterms:creator;
+    rdf:subject sub:local;
+    nt:statementOrder "2"^^xsd:integer .
+  
+  sub:st3 a rdf:Statement;
+    rdf:object sub:document-id;
+    rdf:predicate dcterms:identifier;
+    rdf:subject sub:local;
+    nt:statementOrder "3"^^xsd:integer .
+  
+  sub:st4 a rdf:Statement;
+    rdf:object sub:year;
+    rdf:predicate dcterms:date;
+    rdf:subject sub:local;
+    nt:statementOrder "4"^^xsd:integer .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:accessed-on;
+    rdf:predicate pav:sourceAccessedOn;
+    rdf:subject sub:local;
+    nt:statementOrder "5"^^xsd:integer .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:quotedtext;
+    rdf:predicate prov:quotedText;
+    rdf:subject sub:local;
+    nt:statementOrder "6"^^xsd:integer .
+  
+  sub:st7 a nt:OptionalStatement;
+    rdf:object sub:cites1;
+    rdf:predicate sio:SIO_000277;
+    rdf:subject sub:local;
+    nt:statementOrder "7"^^xsd:integer .
+  
+  sub:st8 a nt:OptionalStatement;
+    rdf:object sub:cites2;
+    rdf:predicate sio:SIO_000277;
+    rdf:subject sub:local;
+    nt:statementOrder "8"^^xsd:integer .
+  
+  sub:st9 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:local;
+    nt:statementOrder "9"^^xsd:integer .
+  
+  sub:year a nt:LiteralPlaceholder;
+    rdfs:label "add the year (YYYY) of the published document";
+    nt:hasRegex "[0-9]{4}" .
+  
+  pav:sourceAccessedOn rdfs:label "was last accessed on" .
+  
+  fabio:Book rdfs:label "book or book chapter" .
+  
+  fabio:PositionPaper rdfs:label "opinion, commentary, or news in an indexed publication" .
+  
+  fabio:ResearchPaper rdfs:label "original research article" .
+  
+  fabio:ReviewPaper rdfs:label "review, meta-analysis, or consensus paper" .
+  
+  fabio:WebSite rdfs:label "website" .
+  
+  sio:SIO_000277 rdfs:label "cites" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has the following observation" .
+  
+  prov:quotedText rdfs:label "claims" .
+  
+  prov:wasQuotedFrom rdfs:label "was quoted from" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-4727-9435 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTQs+mANCSHWhIW/YPio468UdGNHsPvADpjfaW8um/v2L4AoDIANginfoU65VNbPT5D0ADt1y0uFNne3VEMr9Y+I2HFaz6IKj+LdYMJk6VUf5WJoImRHIX6BZQwcUc22CbTBFYxvqvp3UmmHrCrhLIZjDSyutExK3tOTRoMDjGowIDAQAB";
+    npx:hasSignature "ObngxT8Rpjw7hVJxYK21Q31QruIVnzdbeEPhOYcp7W4GO2+Lm6cqMa++TQS0O9dmIpFRha3bamUFWPbGsjNvAcM5RkU6A5cJwqPjX6a4qg2iDKkP9/hC+QQZIPs1gVDXgHTACuARPz3I+FE3AXtKWbn5kAb/ygutOM1PXStBC3I=";
+    npx:hasSignatureTarget this: .
+  
+  this: dcterms:created "2020-04-29T18:00:00.000+01:00"^^xsd:dateTime;
+    dcterms:creator orcid:0000-0003-4727-9435;
+    npx:supercedes <http://purl.org/np/RABb_MP4KTUKLfxWNtVbB_BxyZv5-6jpqH_MpwwWe3h-M> .
+}
+

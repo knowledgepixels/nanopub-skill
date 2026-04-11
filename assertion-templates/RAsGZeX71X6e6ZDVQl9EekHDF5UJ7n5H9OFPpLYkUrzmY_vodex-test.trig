@@ -1,0 +1,52 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix this: <http://purl.org/np/RAsGZeX71X6e6ZDVQl9EekHDF5UJ7n5H9OFPpLYkUrzmY> .
+@prefix sub: <http://purl.org/np/RAsGZeX71X6e6ZDVQl9EekHDF5UJ7n5H9OFPpLYkUrzmY#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    rdfs:label "vodex test";
+    nt:hasStatement sub:st1 .
+  
+  sub:species a nt:GuidedChoicePlaceholder;
+    rdfs:label "NCBI Taxon species identifier";
+    nt:possibleValuesFromApi "https://vodex.petapico.org/ncbitaxon/query?q=label:" .
+  
+  sub:st1 rdf:object sub:species;
+    rdf:predicate rdf:type;
+    rdf:subject sub:organism .
+  
+  rdf:type rdfs:label "is a" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "eyCndks0bfKN3+0RNSDhoisR+p34ZbY3pNbC0R+mJY/hLGqHcYKPChTT9HHbPS/PwEMYgVulvX8nHUoxt3vS1A8kapP+Ghvrlqhe9eiQ4rBjExNWHeJAAIB81pzpRt8njXckDvuul/rOhNH99XArqaDle3z7U0XvrE6hNjFeqKw=";
+    npx:hasSignatureTarget this: .
+  
+  this: dcterms:created "2022-11-29T15:36:10.251+01:00"^^xsd:dateTime;
+    dcterms:creator orcid:0000-0002-1267-0234;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RARMBqX_-9lnhkaqk4BuxfLcC6H5cqTlzdtDzeDIwuKdU> .
+}
+

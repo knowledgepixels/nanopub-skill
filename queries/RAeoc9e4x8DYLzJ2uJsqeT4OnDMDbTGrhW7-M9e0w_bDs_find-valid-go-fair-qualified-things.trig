@@ -1,0 +1,158 @@
+@prefix this: <https://w3id.org/np/RAeoc9e4x8DYLzJ2uJsqeT4OnDMDbTGrhW7-M9e0w_bDs> .
+@prefix sub: <https://w3id.org/np/RAeoc9e4x8DYLzJ2uJsqeT4OnDMDbTGrhW7-M9e0w_bDs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:find-valid-gofair-qualified-things a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query allows for searching for resources (FERs etc.) together with the info about whether GO FAIR qualified them.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Find valid GO FAIR qualified things";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+prefix prov: <http://www.w3.org/ns/prov#>
+
+select distinct ?thing ?label ?description ?np ?date ?pubkey ?qualifier ?qualification_np (group_concat(distinct ?recommender; separator=\" \") as ?recommenders) (group_concat(distinct ?recommendation_np; separator=\" \") as ?recommendation_nps) (count(distinct ?recommender) as ?recommender_count) where {
+  graph npa:graph {
+    <https://w3id.org/np/RA27Uhopq4MHZziL2lKXX-wTb1jz4KVLbHaupxyAcCt9Y> npa:hasValidSignatureForPublicKey ?curators_np_pk .
+    ?latest_curators_np npa:hasValidSignatureForPublicKey ?curators_np_pk .
+    filter not exists { ?latest_curators_npx npx:invalidates ?latest_curators_np ; npa:hasValidSignatureForPublicKey ?curators_np_pk . }
+    ?latest_curators_np np:hasAssertion ?latest_curators_assertion .
+  }
+  graph npa:networkGraph {
+    ?latest_curators_np (npx:supersedes)* <https://w3id.org/np/RA27Uhopq4MHZziL2lKXX-wTb1jz4KVLbHaupxyAcCt9Y> .
+    filter not exists { ?latest_curators_npxx npx:supersedes ?latest_curators_np }
+  }
+  
+  graph npa:graph {
+    ?np npx:hasNanopubType ?__type_iri .
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+    ?np (npx:introduces|npx:describes) ?thing .
+    ?np rdfs:label ?label .
+    ?np dct:description ?description .
+    ?np dct:created ?date .
+    filter(str(?date) > \"2022\")
+  }
+  bind(concat(\" \",lcase(str(?label)),\" \",lcase(str(?description)),\" \") as ?text)
+  filter( contains(?text, lcase(str(?_searchterm))) )
+
+  optional {
+    graph npa:graph {
+      ?disapproval npa:hasValidSignatureForPublicKey ?dpubkey .
+    }
+    graph ?latest_curators_assertion {
+      ?dpubkeys npx:hasPublicKey ?dpubkey .
+    }
+    graph npa:graph {
+      filter not exists { ?disapproval_x npx:invalidates ?disapproval ; npa:hasValidSignatureForPublicKey ?dpubkey . }
+      ?disapproval np:hasAssertion ?da .
+    }
+    graph ?da {
+      ?dsomebody ( npx:disapproves-of | npx:disapprovesOf ) ?np .
+    }
+  } filter(!bound(?disapproval))  # Faster than \"filter not exists\" for some reason
+
+  optional {
+  optional {
+    graph npa:graph {
+      ?recommendation_np npx:hasNanopubType fip:recommended-by .
+      ?recommendation_np npa:hasValidSignatureForPublicKey ?rpubkey .
+      filter not exists { ?recommendation_np_x npx:invalidates ?recommendation_np ; npa:hasValidSignatureForPublicKey ?rpubkey . }
+      ?recommendation_np np:hasAssertion ?ra .
+      ?recommendation_np np:hasProvenance ?rp .
+    }
+    graph ?ra {
+      ?thing fip:recommended-by ?recommender .
+    }
+    graph ?rp {
+      ?ra prov:wasDerivedFrom ?rfip_np .
+    }
+    graph npa:graph {
+      ?rfip_np npx:hasNanopubType fip:Reference-FAIR-Implementation-Profile .
+      ?rfip_np npa:hasValidSignatureForPublicKey ?rfip_pubkey .
+      ?latest_rfip_np npa:hasValidSignatureForPublicKey ?rfip_pubkey .
+      filter not exists { ?latest_rfip_npx npx:invalidates ?latest_rfip_np ; npa:hasValidSignatureForPublicKey ?rfip_pubkey . }
+    }
+    graph npa:networkGraph {
+      ?latest_rfip_np (npx:supersedes)* ?rfip_np .
+    }
+    graph ?rfip_qa {
+      ?rfip_qualifier npx:qualifies ?latest_rfip_np .
+    }
+    graph npa:graph {
+      ?rfip_qualification_np np:hasAssertion ?rfip_qa .
+      ?rfip_qualification_np npx:hasNanopubType npx:qualifies .
+      ?rfip_qualification_np npa:hasValidSignatureForPublicKey ?rfip_qpubkey .
+      filter not exists { ?rfip_qualification_np_x npx:invalidates ?rfip_qualification_np ; npa:hasValidSignatureForPublicKey ?rfip_qpubkey . }
+    }
+    graph ?latest_curators_assertion {
+      ?rfip_qpubkeys npx:hasPublicKey ?rfip_qpubkey .
+    }
+  }
+    graph npa:graph {
+      ?qualification_np npx:hasNanopubType npx:qualifies .
+      ?qualification_np npa:hasValidSignatureForPublicKey ?qpubkey .
+    }
+    graph ?latest_curators_assertion {
+      ?qpubkeys npx:hasPublicKey ?qpubkey .
+    }
+    graph npa:graph {
+      filter not exists { ?qualification_np_x npx:invalidates ?qualification_np ; npa:hasValidSignatureForPublicKey ?qpubkey . }
+      ?qualification_np np:hasAssertion ?qa .
+    }
+    graph ?qa {
+      ?qualifier npx:qualifies ?np .
+    }
+  }
+
+}
+group by ?thing ?label ?description ?np ?date ?pubkey ?retraction ?newversion ?qualifier ?qualification_np
+order by desc(?recommender_count) asc(?label)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-09-15T09:47:13.086Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:find-valid-gofair-qualified-things;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAgTmBBkkSCJ-S8Agtr24URhsNplV_iVHnkfsHw8ba_Fw>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "9Zz4j4CCWbbnyU8+4XggOK0bcoxOJ4JJQ57c7CLZTpDmXTH5IWIHEL1ezUZRzMINddushTy3jfMfwUOwWZ7esM9XfEXd6SJWw39FRCWh1YNeCyienCIUwwnz+PIswI43SqXzrA5YQ0ESR37R4GY6BV/019zIeESrpj1GYbeZR2Q=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

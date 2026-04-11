@@ -1,0 +1,49 @@
+@prefix this: <https://w3id.org/np/RAc8YRwpKhgg4dFb6EodjrXu_sZDqOSZL6lygQFm6zVXQ> .
+@prefix sub: <https://w3id.org/np/RAc8YRwpKhgg4dFb6EodjrXu_sZDqOSZL6lygQFm6zVXQ#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix orcid: <https://orcid.org/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdfs:label rdfs:label "has the label" .
+  
+  sub:assertion a <https://w3id.org/kpxl/gen/terms/Evidence>, <https://w3id.org/np/o/ntemplate/AssertionTemplate>,
+      <https://w3id.org/np/o/ntemplate/UnlistedTemplate>;
+    dcterms:description "{body}";
+    rdfs:label "[[EVD]] - example published evd - [[@someSource]]";
+    foaf:page <https://roamresearch.com/#/app/roamjs-dev/page/pfW74_4-F> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:1234-1234-1234-1234;
+    <https://credit.niso.org/contributor-roles/conceptualization> "John Doe";
+    <https://credit.niso.org/contributor-roles/data-curation> "Jane Smith";
+    <https://credit.niso.org/contributor-roles/formal-analysis> "John Doe";
+    <https://credit.niso.org/contributor-roles/funding-acquisition> "Jane Smith";
+    <https://credit.niso.org/contributor-roles/investigation> "Mark Johnson";
+    <https://credit.niso.org/contributor-roles/supervision> "John Doe" .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo2NYLBcZmpOkjgqLiT7hMxzRaK5KhYYHxxN2gCAMfmOaulAxAzPUNBJLIXjX3yQeIj6rAH4haWNAEUGPdiua/D+Pmu/Hrva3mK29lsWW9ajyZr0e12erDdaBw+3XfxMkKCZkLJjina6mi0W80e7Wa3+dsrypMDVl3CFYVvLsXu4lIMYqI2aVvbKyqCv6hUaWlGUip+2f84LQx/RSZGGwbBjwzKqe/Cs7frCW/lNlvsAkkst+IyFMcekEW875+rnsXP3phcP9Q1Ocu8wbnYYAu5lZPL19YFDSso2Qc5TpkXK3rawDYH36rOX8f0zBzdcbZAPx9btSCgXyqMpP8U4TCwIDAQAB";
+    npx:hasSignature "dgfec6nC6JRhspAmV3TCdpa/q145+Egs1gf4ExRg6SlARF8sNFFXEoZBSKZBw9hqqcBIVytOG/bqc4M/HyY5gfy0PcX6EwjK5tvG2yAxbqUycbtnm5wuIN+vxXVRVONGCJjPk7DCnaB5iNpOBKWVnC/gwYCmPkqCAiKd1eRX4mN4SNGIWox+kdCih2sAcILe3szrnWmOQVpP/BAKb1PQHUOkRssuAvTQeADQyLqMAjz3Qd2IKojv2bBmdF+t/oWZr9vEVr8/cjKYkZ2VuxLY8koUjESqCl9xy4/l9j7OFw2dyUgBIVikD1/giuj88B2ccv6woi/mRQHLqmQmXM3xQA==";
+    npx:hasSignatureTarget this: .
+  
+  this: dcterms:created "2024-09-05T01:15:17.672Z"^^xsd:dateTime;
+    dcterms:creator orcid:1234-1234-1234-1234;
+    npx:introduces sub:evidence .
+}
+

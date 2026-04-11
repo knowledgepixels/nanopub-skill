@@ -1,0 +1,60 @@
+@prefix this: <https://w3id.org/np/RAPaIr9pZqUYhzOF5l77CSYIkZZlGjz7o2xwDVMbSikDI> .
+@prefix sub: <https://w3id.org/np/RAPaIr9pZqUYhzOF5l77CSYIkZZlGjz7o2xwDVMbSikDI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:coauthors-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RAPzA6INPpTqOfq6Q7UX2owT-RTLapITvrCIk-D-rSs-U/coauthors-view-kind>;
+    dct:title "👥 My co-authors";
+    rdfs:label "View of co-authors of given user";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/IndividualAgent>;
+    <https://w3id.org/kpxl/gen/terms/hasDisplayWidth> <https://w3id.org/kpxl/gen/terms/ColumnWidth06of12>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.4.2.coauthors";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAl03y0LpJBz11POZW9MkV9scYfzfCSeaMVh3-nLphkL0/get-coauthors>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "author" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-03-20T14:26:00.517Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:coauthors-view;
+    npx:introduces <https://w3id.org/np/RAPzA6INPpTqOfq6Q7UX2owT-RTLapITvrCIk-D-rSs-U/coauthors-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAFCEgFG_nWT32d-_0on-0rVi5plh8KXqLI6BBBwINSNk>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "IXZtaLdIBvg3FcA0Sh+Djp2rkUZjOATU8J1yzdKsk/AS8Ev6usvdVzYFhMWCIaBCZv8M32JeymAy8/XUhBKvF2IP3xufcav+VfUzpt0/ZMEKpFdsKk4dDmssRaAmv5Dgsq5dXcBXRtLNdVU5Q6Cz6PdUp0lu0YrcwoHcq0776nY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAl03y0LpJBz11POZW9MkV9scYfzfCSeaMVh3-nLphkL0/get-coauthors>
+    nt:hasLabelFromApi "Get co-authors - This query returns the co-authors of a given author." .
+}
+

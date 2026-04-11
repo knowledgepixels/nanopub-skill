@@ -1,0 +1,85 @@
+@prefix this: <https://w3id.org/np/RAhbj9bJBxRYbGPbluKkf4yDMKM5nZ29w0dMjaGq7XfNU> .
+@prefix sub: <https://w3id.org/np/RAhbj9bJBxRYbGPbluKkf4yDMKM5nZ29w0dMjaGq7XfNU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-filtered-nanopub-list a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns a filtered list of nanopublications.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get filtered nanopub list (new version)";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/meta>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+
+select ?np ?label ?date (group_concat(distinct ?t; separator=' ') as ?types) (?__pubkeys_multi as ?pubkey) where {
+  graph npa:graph {
+
+    values ?__pubkeys_multi {}
+
+    ?np npa:hasValidSignatureForPublicKeyHash ?__pubkeys_multi .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?__pubkeys_multi . }
+
+    values ?__types_multi_iri {}
+    ?np npx:hasNanopubType ?__types_multi_iri .
+
+    ?np npx:hasNanopubType ?t .
+
+    ?np dct:created ?date .
+    
+    bind(coalesce(?__endtime, \"9999\") as ?endtime)
+    filter(?endtime > str(?date))
+    
+    bind(coalesce(?__starttime, \"0000\") as ?starttime)
+    filter(?starttime < str(?date))
+
+    optional { ?np rdfs:label ?label }
+  }
+}
+group by ?np ?label ?date ?__pubkeys_multi
+order by desc(?date)
+limit 100""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-02-02T13:15:10.969Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-filtered-nanopub-list;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAbq1a1FwRFAZPDde3Sy4GqNUQ2TmaKOWLydJPOyCKc0w>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "GO/+bz41nLyrT/GdbhKWghDOMwdFsV6rizrhEsHjLHP34DrPaPdPKu53kTOXlkGCEzCwbPs58Isg5frQQtKmraqVrWO1q/gB9xOa6rS8Q8+l9ySiHCn/IapfO3eGc6WNPxIpsyAt1htEvHI5RWuDUNtzf7d0V0q1dwjocRzRfW8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

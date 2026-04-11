@@ -1,0 +1,90 @@
+@prefix this: <https://w3id.org/np/RAFHrr_CR0c0B3NmyPpqa2V7oDSC4ntd1fEku2HFxPY_I> .
+@prefix sub: <https://w3id.org/np/RAFHrr_CR0c0B3NmyPpqa2V7oDSC4ntd1fEku2HFxPY_I/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-classes-of-ontology-version a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns all properties that are part of a given version of an ontology.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the properties of an ontology version";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select distinct ?property ?property_label (?definition as ?description) (?termNp as ?np) (\"^\" as ?np_label)where {
+  graph npa:graph {
+    ?_ontologyVersionNp_iri npx:introduces ?ontologyVersion .
+    ?_ontologyVersionNp_iri np:hasAssertion ?ontologyVersionNpA .
+  }
+  graph ?ontologyVersionNpA {
+    ?ontologyVersion a owl:Ontology .
+    ?ontologyVersion gen:hasContentIndex ?contentIndex .
+  }
+  graph npa:graph {
+    ?contentIndex np:hasAssertion ?contentIndexA .
+  }
+  graph ?contentIndexA {
+    ?contentIndex npx:includesElement ?termNp .
+  }
+  graph npa:graph {
+  }
+  graph npa:graph {
+    ?termNp dct:created ?date .
+    ?termNp npx:introduces ?property .
+    ?termNp np:hasAssertion ?termNpA .
+  }
+  graph ?termNpA {
+    ?property a rdf:Property .
+    optional { ?property rdfs:label ?property_label . }
+    optional { ?property skos:definition ?definition . }
+  }
+}
+order by ?property_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-02-27T13:14:49.335Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-classes-of-ontology-version;
+    npx:supersedes <https://w3id.org/np/RAv8xmGEyzHpWSx7YQtWg6wrTpE1U78o-lq2mDClYQfoI>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "6xQtgEDi85W5GmoUwHqhiVDPWmnEKrBtCn9PmaGXZHBLBYtzrqiwJFL+PsgFzzFyz2njbYUWZAuvDq3LfBHpXy7i7oG9R0iRXi2//XeSGWnz4Wxi+EvPpJVZVQBfdmtJB5RBLwqxDkXI/moLAip+0nj8nYQ/zS4mNFaZv9FyKEw=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

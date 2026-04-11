@@ -1,0 +1,237 @@
+@prefix this: <https://w3id.org/np/RAw3XdUhxQJfKBaU-cQhV6c7au4rLd5CSUdbMKTS_FB8g> .
+@prefix sub: <https://w3id.org/np/RAw3XdUhxQJfKBaU-cQhV6c7au4rLd5CSUdbMKTS_FB8g/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://schema.org/endDate> rdfs:label "was completed on" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Declare a replication study outcome according to FORRT with machine-readable evidence from TIB Knowledge Loom: links to dtreg JSON-LD analysis proofs, statistical analysis types, and key numerical results. Combines FORRT's validation framework with Knowledge Loom's reproducible research infrastructure.";
+    rdfs:label "Declaring a replication study outcome according to FORRT with Knowledge Loom evidence";
+    nt:hasStatement sub:st-kl-analysis-type, sub:st-kl-key-result, sub:st-kl-proof, sub:st01,
+      sub:st01.1, sub:st02, sub:st03, sub:st04, sub:st05, sub:st07, sub:st08, sub:st09,
+      sub:st10;
+    nt:hasTag "FORRT" .
+  
+  sub:conclusion a nt:LongLiteralPlaceholder;
+    rdfs:label "describe the overall conclusion about the original claim" .
+  
+  sub:confidenceLevel a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose confidence level";
+    nt:possibleValue <https://w3id.org/sciencelive/o/terms/HighConfidence>, <https://w3id.org/sciencelive/o/terms/LowConfidence>,
+      <https://w3id.org/sciencelive/o/terms/Moderate>, <https://w3id.org/sciencelive/o/terms/VeryHighConfidence>,
+      <https://w3id.org/sciencelive/o/terms/VeryLowConfidence> .
+  
+  sub:date a nt:LiteralPlaceholder;
+    rdfs:label "choose completion date";
+    nt:hasDatatype xsd:date .
+  
+  sub:evidence a nt:LongLiteralPlaceholder;
+    rdfs:label "describe the evidence that supports your conclusion" .
+  
+  sub:kl-analysis-type a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose the statistical analysis type";
+    nt:possibleValue <https://w3id.org/sciencelive/o/terms/dtreg-AlgorithmEvaluation>,
+      <https://w3id.org/sciencelive/o/terms/dtreg-ClassDiscovery>, <https://w3id.org/sciencelive/o/terms/dtreg-ClassPrediction>,
+      <https://w3id.org/sciencelive/o/terms/dtreg-CorrelationAnalysis>, <https://w3id.org/sciencelive/o/terms/dtreg-DataAnalysis>,
+      <https://w3id.org/sciencelive/o/terms/dtreg-DataPreprocessing>, <https://w3id.org/sciencelive/o/terms/dtreg-DescriptiveStatistics>,
+      <https://w3id.org/sciencelive/o/terms/dtreg-FactorAnalysis>, <https://w3id.org/sciencelive/o/terms/dtreg-GroupComparison>,
+      <https://w3id.org/sciencelive/o/terms/dtreg-MultilevelAnalysis>, <https://w3id.org/sciencelive/o/terms/dtreg-RegressionAnalysis> .
+  
+  sub:kl-key-result a nt:LongLiteralPlaceholder;
+    rdfs:label "Key numerical result (e.g. F=7.285, p<0.001)" .
+  
+  sub:kl-proof a nt:ExternalUriPlaceholder;
+    rdfs:label "Machine-readable proof URL (dtreg JSON-LD file in the Loom record)" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "plain-text label for the outcome" .
+  
+  sub:limitations a nt:LongLiteralPlaceholder;
+    rdfs:label "describe what limits the conclusions of the study" .
+  
+  sub:outcome a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short URI suffix for outcome ID" .
+  
+  sub:repo a nt:ExternalUriPlaceholder;
+    rdfs:label "repository URL" .
+  
+  sub:st-kl-analysis-type a nt:OptionalStatement;
+    rdf:object sub:kl-analysis-type;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasAnalysisType>;
+    rdf:subject sub:outcome .
+  
+  sub:st-kl-key-result a nt:OptionalStatement;
+    rdf:object sub:kl-key-result;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasKeyResult>;
+    rdf:subject sub:outcome .
+  
+  sub:st-kl-proof a nt:OptionalStatement;
+    rdf:object sub:kl-proof;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasMachineReadableProof>;
+    rdf:subject sub:outcome .
+  
+  sub:st01 rdf:object <https://w3id.org/sciencelive/o/terms/FORRT-Replication-Outcome>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:outcome .
+  
+  sub:st01.1 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:outcome .
+  
+  sub:st02 rdf:object sub:study;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/isOutcomeOf>;
+    rdf:subject sub:outcome .
+  
+  sub:st03 rdf:object sub:repo;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasOutcomeRepository>;
+    rdf:subject sub:outcome .
+  
+  sub:st04 rdf:object sub:date;
+    rdf:predicate <http://schema.org/endDate>;
+    rdf:subject sub:outcome .
+  
+  sub:st05 rdf:object sub:validationStatus;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasValidationStatus>;
+    rdf:subject sub:outcome .
+  
+  sub:st07 rdf:object sub:conclusion;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasConclusionDescription>;
+    rdf:subject sub:outcome .
+  
+  sub:st08 rdf:object sub:evidence;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasEvidenceDescription>;
+    rdf:subject sub:outcome .
+  
+  sub:st09 rdf:object sub:confidenceLevel;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasConfidenceLevel>;
+    rdf:subject sub:outcome .
+  
+  sub:st10 a nt:OptionalStatement;
+    rdf:object sub:limitations;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasLimitationsDescription>;
+    rdf:subject sub:outcome .
+  
+  sub:study a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose study";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https://w3id.org/sciencelive/o/terms/FORRT-Replication-Study&searchterm=" .
+  
+  sub:validationStatus a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose validation status";
+    nt:possibleValue <https://w3id.org/sciencelive/o/terms/Contradicted>, <https://w3id.org/sciencelive/o/terms/Inconclusive>,
+      <https://w3id.org/sciencelive/o/terms/NotTested>, <https://w3id.org/sciencelive/o/terms/PartiallySupported>,
+      <https://w3id.org/sciencelive/o/terms/Validated> .
+  
+  <https://w3id.org/sciencelive/o/terms/Contradicted> rdfs:label "contradicted" .
+  
+  <https://w3id.org/sciencelive/o/terms/FORRT-Replication-Outcome> rdfs:label "FORRT Replication Outcome" .
+  
+  <https://w3id.org/sciencelive/o/terms/HighConfidence> rdfs:label "high - Strong evidence, mostly agrees with original" .
+  
+  <https://w3id.org/sciencelive/o/terms/Inconclusive> rdfs:label "inconclusive" .
+  
+  <https://w3id.org/sciencelive/o/terms/LowConfidence> rdfs:label "low - Limited evidence, significant disagreement" .
+  
+  <https://w3id.org/sciencelive/o/terms/Moderate> rdfs:label "moderate - Adequate evidence, partial agreement" .
+  
+  <https://w3id.org/sciencelive/o/terms/NotTested> rdfs:label "not tested" .
+  
+  <https://w3id.org/sciencelive/o/terms/PartiallySupported> rdfs:label "partially supported" .
+  
+  <https://w3id.org/sciencelive/o/terms/Validated> rdfs:label "validated" .
+  
+  <https://w3id.org/sciencelive/o/terms/VeryHighConfidence> rdfs:label "very high - Extensive evidence, high agreement with original" .
+  
+  <https://w3id.org/sciencelive/o/terms/VeryLowConfidence> rdfs:label "very low - Minimal evidence, major disagreement" .
+  
+  <https://w3id.org/sciencelive/o/terms/dtreg-AlgorithmEvaluation> rdfs:label "Algorithm Evaluation" .
+  
+  <https://w3id.org/sciencelive/o/terms/dtreg-ClassDiscovery> rdfs:label "Class Discovery (clustering)" .
+  
+  <https://w3id.org/sciencelive/o/terms/dtreg-ClassPrediction> rdfs:label "Class Prediction" .
+  
+  <https://w3id.org/sciencelive/o/terms/dtreg-CorrelationAnalysis> rdfs:label "Correlation Analysis" .
+  
+  <https://w3id.org/sciencelive/o/terms/dtreg-DataAnalysis> rdfs:label "Data Analysis" .
+  
+  <https://w3id.org/sciencelive/o/terms/dtreg-DataPreprocessing> rdfs:label "Data Preprocessing" .
+  
+  <https://w3id.org/sciencelive/o/terms/dtreg-DescriptiveStatistics> rdfs:label "Descriptive Statistics" .
+  
+  <https://w3id.org/sciencelive/o/terms/dtreg-FactorAnalysis> rdfs:label "Factor Analysis" .
+  
+  <https://w3id.org/sciencelive/o/terms/dtreg-GroupComparison> rdfs:label "Group Comparison (t-test, ANOVA, etc.)" .
+  
+  <https://w3id.org/sciencelive/o/terms/dtreg-MultilevelAnalysis> rdfs:label "Multilevel Analysis (mixed/hierarchical models)" .
+  
+  <https://w3id.org/sciencelive/o/terms/dtreg-RegressionAnalysis> rdfs:label "Regression Analysis" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasAnalysisType> rdfs:label "has the analysis type" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasConclusionDescription> rdfs:label "has the conclusion" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasConfidenceLevel> rdfs:label "has the confidence level" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasEvidenceDescription> rdfs:label "has the evidence" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasKeyResult> rdfs:label "has the key result" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasLimitationsDescription> rdfs:label "has the limitations" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasMachineReadableProof> rdfs:label "has the machine-readable proof" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasOutcomeRepository> rdfs:label "has the repository" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasValidationStatus> rdfs:label "has the validation status" .
+  
+  <https://w3id.org/sciencelive/o/terms/isOutcomeOf> rdfs:label "is an outcome of" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234, orcid:0000-0002-1784-2920 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0002-1784-2920 foaf:name "Anne Fouilloux" .
+  
+  this: dct:created "2026-04-02T15:05:07.968Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0002-1784-2920;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Declaring a replication study outcome according to FORRT with Knowledge Loom evidence";
+    prov:wasDerivedFrom <https://w3id.org/np/RA2zljn0Nw9SadppOyxZoh-_Rxosslrq-vYG-p9SttnJE>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAQIZQdqa_kqYfFSnboJOHst-BTcR7_PPG_ywE5EMUEMI> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDWv2pJnmDsBOq8OlT1aSvYXSuWT34WOp4FYqEzdnn2F0kqzcFevBqWGZDxJWC0lqCrDEuNfp2QFyPe/+nES9dlHGYIhqPi68fwK6ZiNUotRFxXou+rjFznVvUxtCL8Ede79EBHwWN61QtwSIcU12bLoZsNPFlqQASQ93BJuKlihwIDAQAB";
+    npx:hasSignature "gFRhMxhYBcbqD1J46Vz+dfONZD0yN0SL9MMBvf72GRhvzMjIBuT4RTK0rxuK/DImPuQPsvYAoUNd4bxN5CcvepWFFENaew8YBWI13cjMoTmClKCrAHvQEogJNoMFs+ldET8h2FBMTYD2V9WLTdFp5oiluYUy6Y8CITL9IL+9rmk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1784-2920 .
+}
+

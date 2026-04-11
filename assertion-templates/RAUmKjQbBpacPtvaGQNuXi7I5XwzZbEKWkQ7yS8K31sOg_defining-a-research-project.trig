@@ -1,0 +1,103 @@
+@prefix this: <https://w3id.org/np/RAUmKjQbBpacPtvaGQNuXi7I5XwzZbEKWkQ7yS8K31sOg> .
+@prefix sub: <https://w3id.org/np/RAUmKjQbBpacPtvaGQNuXi7I5XwzZbEKWkQ7yS8K31sOg#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "is called" .
+  
+  rdfs:seeAlso rdfs:label "has the website" .
+  
+  <https://schema.org/ResearchProject> rdfs:label "research project" .
+  
+  <https://w3id.org/fair/fip/terms/has-research-domain> rdfs:label "has the research domain" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Template for defining a research project";
+    rdfs:label "Defining a research project";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4;
+    nt:hasTag "Projects";
+    nt:hasTargetNanopubType <https://schema.org/ResearchProject> .
+  
+  sub:description a nt:LiteralPlaceholder;
+    rdfs:label "description of the research project" .
+  
+  sub:domain a nt:RestrictedChoicePlaceholder;
+    nt:possibleValuesFrom ns1:RACXDZHEowTYDAzZvdmD0qIGpXZwY5ghMRBBlt6N8Iu5s .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of your research project" .
+  
+  sub:researchproject a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short URI suffix or full URI" .
+  
+  sub:st0 rdf:object <https://schema.org/ResearchProject>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:researchproject .
+  
+  sub:st1 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:researchproject .
+  
+  sub:st2 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:researchproject .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:website;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:researchproject .
+  
+  sub:st4 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:domain;
+    rdf:predicate <https://w3id.org/fair/fip/terms/has-research-domain>;
+    rdf:subject sub:researchproject .
+  
+  sub:website a nt:UriPlaceholder;
+    rdfs:label "a link to the research project's website" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "pYxlr6TPInmiKJPlD6r/fNMPLBPw0eTHR1M+ohUEo6x6bjvi5xnwH5iOy6xRRuBZ669E6fWy3vvraPFjmHiwam+wTZPDtwEBW1AbOoWYfNjPCPL3rtVzkJbKG22DnQhhav61flH8ewkMJjQUwxSzw4tf3HBV6mO90hF39n6toTg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-08-14T12:59:53.902Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Defining a research project";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALtjkZX1lYrTL2eCZp4VTW6vGGxiDZ-aaU-s1Z0Fcs2I> .
+}
+

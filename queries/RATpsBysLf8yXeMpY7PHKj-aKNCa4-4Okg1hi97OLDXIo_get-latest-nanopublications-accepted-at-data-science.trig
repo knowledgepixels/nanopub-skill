@@ -1,0 +1,82 @@
+@prefix this: <https://w3id.org/np/RATpsBysLf8yXeMpY7PHKj-aKNCa4-4Okg1hi97OLDXIo> .
+@prefix sub: <https://w3id.org/np/RATpsBysLf8yXeMpY7PHKj-aKNCa4-4Okg1hi97OLDXIo#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-latest-accepted-ds a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the latest accepted nanopublications at the Data Science journal.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get latest nanopublications accepted at Data Science";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/26df80496b38ffcad72b10e137bc78dbc6087e9eb171c09b10f2c9bf4240abc6>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix bibo: <http://purl.org/ontology/bibo/>
+
+select ?np ?label ?firstAuthor ?date where {
+
+values ?pubkey { \"1162349fdeaf431e71ab55898cb2a425b971d466150c2aa5b3c1beb498045a37\" \"cfe248c38933693b1ddeb62e17976a4d2396b0c738af5356bfffbe559d1a3de0\" \"170211c91a70e67992d52c760de3f0052c8c7271bd3c225ef0347245e8517ff6\" }
+
+  graph npa:graph {
+    ?np dct:created ?date .
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    ?np rdfs:label ?label .
+    ?np np:hasPublicationInfo ?i .
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+  }
+  graph ?i {
+    ?np bibo:authorList ?authorList .
+    ?authorList rdf:_1 ?firstAuthor .
+  }
+
+}
+order by desc(?date)
+limit 100""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "bCFA75dNMoP1mlZqRYIA6bqXr0Kn9zhRScrkxzQTSBgrCv0YEwIxC61QQkQ2r+FQ5Ds1mHrEqYLOqqPrZbNd9+wXj7y7XWsYxLD+Wr6vYlLY7JXqXPCPi/buYxryhF996iZqdkFfUGbkVAP+bF4fS25AanBPNmU6GXUYM4CimLk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-10-02T09:30:11.399Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-latest-accepted-ds;
+    npx:supersedes <https://w3id.org/np/RAeUxNk2UNB44Fj6G2uGKuq5QaXGCP1gRkRS4AW790YBU>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+}
+

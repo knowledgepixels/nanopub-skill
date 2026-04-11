@@ -1,0 +1,59 @@
+@prefix this: <https://w3id.org/np/RASwkaMWjrBb7GNyN-5_bekeMgo0KG2LGETl47cBKTkOE> .
+@prefix sub: <https://w3id.org/np/RASwkaMWjrBb7GNyN-5_bekeMgo0KG2LGETl47cBKTkOE#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    rdfs:label "testing SPARQL auto-complete";
+    nt:hasStatement sub:st1 .
+  
+  sub:obj a nt:GuidedChoicePlaceholder;
+    nt:possibleValuesFromApi "https://vocab.nerc.ac.uk/sparql/sparql?query=prefix%20skos%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2004%2F02%2Fskos%2Fcore%23%3E%0A%0Aselect%20%3Furi%20%3Flabel%20where%20%7B%0A%20%20%3Furi%20a%20skos%3AConcept%20.%0A%20%20%3Furi%20skos%3AprefLabel%20%3Flabel%20.%0A%20%20filter%28contains%28str%28%3Flabel%29%2C%20%22 %22%29%29%0A%7D%20limit%2010" .
+  
+  sub:st1 rdf:object sub:obj;
+    rdf:predicate sub:pred;
+    rdf:subject sub:subj .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "wmhRo0rgW6iw+LIyMV/AVLq8VOQ/ExdSnQ87tVI1N9zTpJMdxGKvHwp84fA9emE/iknnt7IxEWwa+dBdHFgDKEOqK2BILPH3C06GgVfMrzR+BCSU8CtX1+CzMG9GDprZjMiuisIZcJDo4rUh2TDdanxtPu7U9SYZSpFTtL4uWwE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-05-31T08:30:27.027Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA000YelUkruXCT2JOlco0rOI6LY4dPV6P6cyckCt-i7w>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: testing SPARQL auto-complete";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

@@ -1,0 +1,71 @@
+@prefix this: <https://w3id.org/np/RAdXcYDJK7AWVlk1SpIvMpiyzH8xg95dwWiC020RNHgK0> .
+@prefix sub: <https://w3id.org/np/RAdXcYDJK7AWVlk1SpIvMpiyzH8xg95dwWiC020RNHgK0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-research-programmes a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns all research programmes";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get Research Programmes";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+
+select ?thing ?label ?np ?date where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+    ?np dct:created ?date .
+    ?np np:hasAssertion ?a .
+  }
+  graph ?a {
+    ?thing <https://w3id.org/fdof/ontology#hasInformationObjectType> <https://w3id.org/gff/rao/terms/Research-Programme> .
+    ?thing rdfs:label ?label .
+    filter(contains(?label, ?_searchterm))
+  }
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0004-2188-0817 .
+}
+
+sub:pubinfo {
+  orcid:0009-0004-2188-0817 foaf:name "Max van den Boom" .
+  
+  this: dct:created "2025-07-01T12:03:19.049Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0004-2188-0817;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-research-programmes;
+    npx:supersedes <https://w3id.org/np/RAftNfZvbT8TkoJNnA3bR7v0y6YkTsgjP82RpbRuLovB0>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwNmDuHNCGRTNccDpvK2x9Hdbgac9Z2e7nF9KxqArfCGNMkK5UcEBeNv6Lx1mgUVXAL6cZERLL1Fssu7cLZEdaAUiPTkCLSNWWLbBNTTlVWR9+2dP00VrRToaqDYhZBo3E6Psc+GfOyDNJJ7n7r2vVsDiLMsUmQCHeLiX4pXukfwIDAQAB";
+    npx:hasSignature "IR2ayE0KmmUDfWgU7KfkLryKdo2aaMSo9e3Tx85cSOZucwtrmuwPN4WSBPVTxZQRBUP3dUEJd/f0obQbfVXC8jnkdBaKFZz6KtihlA7tu31DAzchRYYDRsv0v06vnoAUKr1vZJeQvmdVUz/xxYoN/2ZYzQQYufL0OB8OzgH4KTA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0004-2188-0817 .
+}
+

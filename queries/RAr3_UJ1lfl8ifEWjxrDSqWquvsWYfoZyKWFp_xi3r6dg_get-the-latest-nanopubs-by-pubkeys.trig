@@ -1,0 +1,70 @@
+@prefix this: <https://w3id.org/np/RAr3_UJ1lfl8ifEWjxrDSqWquvsWYfoZyKWFp_xi3r6dg> .
+@prefix sub: <https://w3id.org/np/RAr3_UJ1lfl8ifEWjxrDSqWquvsWYfoZyKWFp_xi3r6dg/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-latest-nanopubs-by-pubkey a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the latest nanopublications by pubkey hashes.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the latest nanopubs by pubkeys";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/last30d>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+
+select distinct ?np ?label ?date where {
+  graph npa:graph {
+    values ?_memberHash_multi {}
+    ?np npa:hasValidSignatureForPublicKeyHash ?_memberHash_multi .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?_memberHash_multi . }
+    ?np dct:created ?date .
+    optional { ?np rdfs:label ?label . }
+    filter not exists { ?np npx:hasNanopubType npx:retracts . }
+  }
+} order by desc(?date) limit 100""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-09-26T13:49:18.187+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-latest-nanopubs-by-pubkey;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAYNg6rfvXIVvJY2u8oS0EEjxnVvimLLVZG1rOar_nWIY>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ksQl1p7iIBsPiY/G1hC82MmSFuwV/E/rpwxDA7RLNAM5GjxaxTNR0UoRY+/iKcks7dxPrqo3gj3bwpkkCxNl4+CLDsZVUAG+PN5Ljaa827AgMwg0UQQg4NvxsHJ/feIVSeCVSnt+z7T+dc5XVnKko8N8dRIhV/wBaErih4ELK4w=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

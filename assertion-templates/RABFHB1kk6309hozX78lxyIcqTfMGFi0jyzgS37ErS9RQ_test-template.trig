@@ -1,0 +1,137 @@
+@prefix ns1: <http://purl.org/np/> .
+@prefix this: <http://purl.org/np/RABFHB1kk6309hozX78lxyIcqTfMGFi0jyzgS37ErS9RQ> .
+@prefix sub: <http://purl.org/np/RABFHB1kk6309hozX78lxyIcqTfMGFi0jyzgS37ErS9RQ#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.obolibrary.org/obo/RO_0002303> rdfs:label "has habitat" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Such a nanopublication expresses an association between an organism taxon (e.g. a species) and an environment, for example expressing that the organisms of the given species inhabit the specified environment.";
+    rdfs:label "Test template";
+    nt:hasDefaultProvenance ns1:RA2VjRiJ5AsNnPHDXuOqvsEJwTwqtj5rBb-OFkpPOzd9s;
+    nt:hasNanopubLabelPattern "${taxonname} - ${relation} - ${environment}";
+    nt:hasStatement sub:st00, sub:st05, sub:st10, sub:st11, sub:st12, sub:st20, sub:st40,
+      sub:st60;
+    nt:hasTag "Biodiversity" .
+  
+  sub:association a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this association" .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "short explanation related to the above statement" .
+  
+  sub:environment a nt:GuidedChoicePlaceholder;
+    rdfs:label "the environment to be associated with the taxon";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=envo&fieldList=iri,label,description&q=" .
+  
+  sub:lifecyclestage a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the life cycle stage";
+    nt:possibleValuesFrom ns1:RAVZS2MV-siFEqsgFTtgSoKA5qJkp7r1nM_n-MqPkvgdE .
+  
+  sub:relation a nt:GuidedChoicePlaceholder;
+    rdfs:label "the type of relation between the taxon and the environment";
+    nt:possibleValue <http://purl.obolibrary.org/obo/RO_0002303>;
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=ro&fieldList=iri,label,description&q=" .
+  
+  sub:st00 rdf:object <https://w3id.org/biolink/vocab/OrganismTaxonToEnvironmentAssociation>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:association .
+  
+  sub:st05 rdf:object sub:relation;
+    rdf:predicate <https://w3id.org/biolink/vocab/predicate>;
+    rdf:subject sub:association .
+  
+  sub:st10 rdf:object sub:taxon;
+    rdf:predicate <https://w3id.org/biolink/vocab/subject>;
+    rdf:subject sub:association .
+  
+  sub:st11 rdf:object sub:taxonname;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonName>;
+    rdf:subject sub:taxon .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:taxondef;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition>;
+    rdf:subject sub:taxon .
+  
+  sub:st20 a nt:OptionalStatement;
+    rdf:object sub:lifecyclestage;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasSubjectLifeCycleStage>;
+    rdf:subject sub:association .
+  
+  sub:st40 rdf:object sub:environment;
+    rdf:predicate <https://w3id.org/biolink/vocab/object>;
+    rdf:subject sub:association .
+  
+  sub:st60 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:association .
+  
+  sub:taxon a nt:LocalResource;
+    rdfs:label "the taxon concept" .
+  
+  sub:taxondef a nt:ExternalUriPlaceholder;
+    rdfs:label "publication DOI (https://doi.org/...) or taxon treatment ID (https://treatment.plazi.org/id/...)";
+    nt:hasRegex "(https://doi.org/|https://treatment.plazi.org/id/).+" .
+  
+  sub:taxonname a nt:GuidedChoicePlaceholder;
+    rdfs:label "search and select from list (if not found, you may paste URL from IPNI, MycoBank, Index Fungorum, or ZooBank)";
+    nt:possibleValuesFromApi "https://vodex.petapico.org/nidx/query?rows=100&q=label:" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has the free-text comment" .
+  
+  <https://w3id.org/biolink/vocab/OrganismTaxonToEnvironmentAssociation> rdfs:label
+      "association of an organism taxon to an environment" .
+  
+  <https://w3id.org/biolink/vocab/object> rdfs:label "links the taxon to the environment" .
+  
+  <https://w3id.org/biolink/vocab/predicate> rdfs:label "refers to the relation (between taxon and environment)" .
+  
+  <https://w3id.org/biolink/vocab/subject> rdfs:label "refers to" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasSubjectLifeCycleStage> rdfs:label "refers to the taxon's life cycle stage" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition> rdfs:label "is used as defined in" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonName> rdfs:label "has the name - links a taxon usage to a taxon name" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Go0guwSZRrs5OwptTjDC+JRx6oP0zpdBxuD46qCcCdseysLBDGF8i1MekXQanhv2Gx3HF3DWexdx1wEBrudIB6Onhioua9iRcFRgTgMOZRVywwgrlzgT/gS2jOzHm0f5zp7b+svNwqxdiLHS5rK1fjBTqWKkv6mpXnWehcwoCN8=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-07T14:15:55.982+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    prov:wasDerivedFrom ns1:RA_n4o8K7_nugKBshrWd5hMYgn24Wqu_Oim9-o8FkP8H4;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA, ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90;
+    nt:wasCreatedFromTemplate ns1:RAdH_JLHymepagUMpHInBlfO9tisUcls2WdK4Iv8mc0xw .
+}
+

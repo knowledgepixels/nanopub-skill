@@ -1,0 +1,68 @@
+@prefix this: <https://w3id.org/np/RAQj7UGqhY3MsIWMNZc0WdPrzGcLWyYKksj7mUUsbqlzQ> .
+@prefix sub: <https://w3id.org/np/RAQj7UGqhY3MsIWMNZc0WdPrzGcLWyYKksj7mUUsbqlzQ/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Just for testing literals with date or dateTime datatype";
+    rdfs:label "Literals with date or dateTime datatype";
+    nt:hasStatement sub:st1, sub:st5 .
+  
+  sub:literal1 a nt:LiteralPlaceholder;
+    nt:hasDatatype xsd:dateTime .
+  
+  sub:st1 rdf:object sub:literal1;
+    rdf:predicate <https://example.org/pred1>;
+    rdf:subject <https://example.org/subj> .
+  
+  sub:st5 rdf:object sub:literal1;
+    rdf:predicate <https://example.org/pred5>;
+    rdf:subject <https://example.org/subj> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: a npx:ExampleNanopub;
+    dct:created "2025-09-26T12:43:35.373+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0000-0000-0001, orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Literals with date or dateTime datatype";
+    prov:wasDerivedFrom <https://w3id.org/np/RA4tAK_kiFzq5so9wz6_TOwGxhA-eT8EjSZiRk2XmvsdM>,
+      <https://w3id.org/np/RAWMq5ryR9pz2Nupqfjx_V9lbpCwmeuoLG0gC6mh4qRAo>, <https://w3id.org/np/RAjab0HHFtDtv1h93tF-NCe8VrRFH6KBl_rWbaFqXvEWo>,
+      <https://w3id.org/np/RApkGsJ5WsWCKq2x1ssDb-boPBydjcsP2b4-pmJlJKTiE>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAXflINqt3smqxV5Aq7E9lzje4uLdkKIOefa6Bp8oJ8CY,
+      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>, <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAa6LjyInPU_tA7FDZAdVLraBgpd5BIBK59Pmftnc6sYA> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkNNOi9cVOlK5QugYHZkiNbpczmZgj1IhK/iosibdcR5VrVAW4WQ7liD4XmdkzEOUo5mbgCbBqU+4Ak16ige0iZgWYt5Ns0ARQ0On9nupGQ/VXro8thhl70vksalah2BXsD0cj2MQRF5aRvNE9KA/Dfsa+xwlbt0g48ws5kFAqXod89/COMHtp/O33eAMj6kp8V0JIzSUbm2bNcYL2pNp5AWEneDzE/Abw3/uxelvLflWygWRWWY9VCZkSzB7qZIl/UiFSRhdIxQkZe+R2WXJVbUYMkQatYwnkmhdBsXHLVqAYr2wohzlNeagKIYtVQg6f+ig/jUAGN6NYifUvUfqsQIDAQAB";
+    npx:hasSignature "TY/cA3S2nig95uvcYUnD6mvpSYF4yZfIWGNvZ/qzsGwEvxvjIMeJbp1rI8EYo34HyYzKzyqKZyxEqzqXSjkph717NyuJdVSj4U2o6IFYRr/vhmLShDbWVLSk09UQJ6HK9Eq6wS7cqSd5eItN7mqFoJ4L2rSytL+pNJfRKhA8OccttreSAJ/5gJwVjMnepdWRP9hh1aW6EEDgVluML6SI+SgyMaq0b4pshchHBtSYSXisw9xd99ahFrD3//DVMpuWJnxTzRsOhqW53PHK2H95XhZre1OsHPS1kdVdNf5eqNbKaezaIfk/dZ2iahB1HRTvHa6ZoBSutUPalBS3alMo1g==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0000-0000-0001 .
+}
+

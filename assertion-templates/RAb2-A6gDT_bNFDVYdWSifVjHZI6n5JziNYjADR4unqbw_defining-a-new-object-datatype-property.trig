@@ -1,0 +1,123 @@
+@prefix this: <https://w3id.org/np/RAb2-A6gDT_bNFDVYdWSifVjHZI6n5JziNYjADR4unqbw> .
+@prefix sub: <https://w3id.org/np/RAb2-A6gDT_bNFDVYdWSifVjHZI6n5JziNYjADR4unqbw#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:Property rdfs:label "property" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:domain rdfs:label "has its subject values from the class (domain)" .
+  
+  rdfs:label rdfs:label "is read as" .
+  
+  rdfs:range rdfs:label "has its object values from the class (range)" .
+  
+  <http://www.w3.org/2002/07/owl#DatatypeProperty> rdfs:label "datatype property - a relation between an object (any entity) and a literal (a text or number)" .
+  
+  <http://www.w3.org/2002/07/owl#ObjectProperty> rdfs:label "object property - a relation between two objects (any kinds of entities)" .
+  
+  <http://www.w3.org/2004/02/skos/core#definition> rdfs:label "is defined as follows:" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template helps to define object properties and datatype properties with domains and ranges from diverse sources.";
+    rdfs:label "Defining a new object/datatype property";
+    nt:hasNanopubLabelPattern "Property: ${label}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5;
+    nt:hasTag "Terms" .
+  
+  sub:definition a nt:LongLiteralPlaceholder;
+    rdfs:label "definition of the property" .
+  
+  sub:domain a nt:UriPlaceholder;
+    rdfs:label "URI of the domain class";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "how the property is read, e.g. 'contains' or 'is used by'" .
+  
+  sub:property a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix" .
+  
+  sub:propertytype a nt:RestrictedChoicePlaceholder;
+    rdfs:label "type of property (object or datatype property)";
+    nt:possibleValue <http://www.w3.org/2002/07/owl#DatatypeProperty>, <http://www.w3.org/2002/07/owl#ObjectProperty> .
+  
+  sub:range a nt:UriPlaceholder;
+    rdfs:label "URI of the range class";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:st0 rdf:object rdf:Property;
+    rdf:predicate rdf:type;
+    rdf:subject sub:property .
+  
+  sub:st1 a nt:OptionalStatement;
+    rdf:object sub:propertytype;
+    rdf:predicate rdf:type;
+    rdf:subject sub:property .
+  
+  sub:st2 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:property .
+  
+  sub:st3 rdf:object sub:definition;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#definition>;
+    rdf:subject sub:property .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:domain;
+    rdf:predicate rdfs:domain;
+    rdf:subject sub:property .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:range;
+    rdf:predicate rdfs:range;
+    rdf:subject sub:property .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFntPrMZqvg2kVhCNArNnEn37ddXGwZ/0r4C8CS4lDry7C7YkYgng9yb0UMZQUHiTVkR/5A4m/xjE+Vy+AnwcWUeB75SfGZjE5ylI6VeHjTHi9+2hh2PHYIWnkhU4WHl3COEnxSSa/VouvPzZ2BIWLH6fTrq7NNL3RF5hGegGG0QIDAQAB";
+    npx:hasSignature "Jdg82YtGf7qAWKpmmnLmambdfFJ6hkLSD9S3cu1lQ8X9Bl6xivSosYCVZrNB//J9aN7JfvkAAAa1uIwf7L0TAg1t6kgPkaBnMwjl/Z/UTVdSM/691WeiecNzT2yuNpwn2SwOuFnal01Udp7FwnZeOXGLzKey3dy6VMcIsXrDyxc=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+  
+  this: dct:created "2024-08-15T21:15:55.583Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAPB4hmCHhIntg8_MFB5HYyCxgF-xsdCUZw6U5h2kSZGM>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Template: Defining a new object/datatype property";
+    prov:wasDerivedFrom ns1:RA9bHqTRDDookF7TA4Rp4wmYbiunco0kBgUnV1nlSHedc;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM, ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALtjkZX1lYrTL2eCZp4VTW6vGGxiDZ-aaU-s1Z0Fcs2I> .
+}
+

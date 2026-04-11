@@ -1,0 +1,91 @@
+@prefix this: <https://w3id.org/np/RAWQh-LyuyLNzKKyaOY4wFAcyjbFCgAlmrALfCtz-PmxM> .
+@prefix sub: <https://w3id.org/np/RAWQh-LyuyLNzKKyaOY4wFAcyjbFCgAlmrALfCtz-PmxM#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  <https://w3id.org/fair/fip/terms/FAIR-Declaration> rdfs:label "FAIR Declaration" .
+  
+  <https://w3id.org/fair/fip/terms/declared-by> rdfs:label "declared by" .
+  
+  <https://w3id.org/fair/fip/terms/declares-current-use-of> rdfs:label "declares current use of" .
+  
+  <https://w3id.org/fair/fip/terms/declares-planned-use-of> rdfs:label "declares planned use of" .
+  
+  sub:FIC a nt:GuidedChoicePlaceholder;
+    rdfs:label "FAIR Implementation Community";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FFAIR-Implementation-Community&searchterm=" .
+  
+  sub:FSR a nt:GuidedChoicePlaceholder;
+    rdfs:label "FAIR Supporting Resource";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FFAIR-Enabling-Resource&searchterm=",
+      "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FFAIR-Supporting-Resource&searchterm=" .
+  
+  sub:UsageType a nt:RestrictedChoicePlaceholder;
+    rdfs:label "usage type";
+    nt:possibleValue <https://w3id.org/fair/fip/terms/declares-current-use-of>, <https://w3id.org/fair/fip/terms/declares-planned-use-of> .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "This nanopublication defines an template for the declaration of the use of a FAIR Supporting Resource by a FAIR Implementation Community";
+    rdfs:label "Defining a FAIR declaration template";
+    nt:hasStatement sub:st01, sub:st02, sub:st03;
+    nt:hasTag "FAIR" .
+  
+  sub:st01 rdf:object <https://w3id.org/fair/fip/terms/FAIR-Declaration>;
+    rdf:predicate rdf:type;
+    rdf:subject nt:ASSERTION .
+  
+  sub:st02 rdf:object sub:FSR;
+    rdf:predicate sub:UsageType;
+    rdf:subject nt:ASSERTION .
+  
+  sub:st03 rdf:object sub:FIC;
+    rdf:predicate <https://w3id.org/fair/fip/terms/declared-by>;
+    rdf:subject nt:ASSERTION .
+  
+  nt:ASSERTION rdfs:label "declaration" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "uvdZm+Mwy5TJ3ofzLK2gKvvueqMMjocu9Db92gs7GJxtnWljBLFZTetlo0RBrVckmJzVz7d7ylXiPLQux6sokc5igWVTbfrpcDZE2f6NHDiZ+hA6/AU2ULFo0c9tlAHhHpZndxPVDCGemvp88Pkmo8RL+JboH6TdRNU1Vwz0D6E=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-04-23T04:43:58.642Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Defining a FAIR declaration template";
+    prov:wasDerivedFrom <https://w3id.org/np/RAo_S-S6NWy124dgagUg_rGkVhMngs8hZ_FD9OPPnjzVY>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA, ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

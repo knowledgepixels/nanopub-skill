@@ -1,0 +1,70 @@
+@prefix this: <https://w3id.org/np/RAeEsrZwCB0ATX5987C5ePdLM-8PwxJ27XsSQCthIq1aM> .
+@prefix sub: <https://w3id.org/np/RAeEsrZwCB0ATX5987C5ePdLM-8PwxJ27XsSQCthIq1aM#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdfs:comment rdfs:label "has my comment - connects an identifier (left) to a human-readable comment (right)" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Commenting on something";
+    nt:hasNanopubLabelPattern "Comment on: ${thing}";
+    nt:hasStatement sub:st1, sub:st2;
+    nt:hasTag "Comments" .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "your comment" .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:thing .
+  
+  sub:st2 a rdf:Statement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:local .
+  
+  sub:thing a nt:UriPlaceholder;
+    rdfs:label "The URL/URI of the thing you want to comment on" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0009-6638-993X .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCu47nLrTOi6qQtcI+G8XFuwnbpFrfOuMVBzn21rUE7yhR5TLaRdINobYpvVkpz58fkQmLNnTzEY+wb3QUPUK1lCs6VgrArmHLkjYGqvNxybZGRzE/so5/eBJe4/w4VGyQe5Tcljqa8cfW4ayhj2NkCGHiO7304md8BcmdTlJEJkQIDAQAB";
+    npx:hasSignature "gqaimKBAKl/wavTYBDQ92azwDGLhp8rEchne0D/NRYtJ47ks2W+h6iV+24DVLexf2pYjyCmRzXYvjj/gsQvtvbWAen3F77lJkLFKuCh1UyEdltAr6DxYnjiOwqCUn/Tr87UOA6E9GonjMDUomUDJR3DgtrRVe1BbGJ67jwOXl1E=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0009-6638-993X .
+  
+  this: dct:created "2024-12-01T19:55:52.807Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0009-0009-6638-993X;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Template: Commenting on something";
+    prov:wasDerivedFrom ns1:RA3gQDMnYbKCTiQeiUYJYBaH6HUhz8f3HIg71itlsZDgA;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAGBEisKAxwcQTdfR7ALwCeQBrUVeU23F8uFvFmO-H6F0> .
+}
+

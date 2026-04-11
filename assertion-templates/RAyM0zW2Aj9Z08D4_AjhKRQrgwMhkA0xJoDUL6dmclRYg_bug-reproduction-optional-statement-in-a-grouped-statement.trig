@@ -1,0 +1,68 @@
+@prefix this: <https://w3id.org/np/RAyM0zW2Aj9Z08D4_AjhKRQrgwMhkA0xJoDUL6dmclRYg> .
+@prefix sub: <https://w3id.org/np/RAyM0zW2Aj9Z08D4_AjhKRQrgwMhkA0xJoDUL6dmclRYg#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    rdfs:label "Bug reproduction: optional statement in a grouped statement";
+    nt:hasStatement sub:group .
+  
+  sub:commentValue a nt:LongLiteralPlaceholder .
+  
+  sub:group a nt:GroupedStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:nestedOptional, sub:nestedSimple .
+  
+  sub:labelValue a nt:LiteralPlaceholder .
+  
+  sub:nestedOptional a nt:OptionalStatement;
+    rdf:object sub:commentValue;
+    rdf:predicate rdfs:comment;
+    rdf:subject nt:ASSERTION .
+  
+  sub:nestedSimple a rdf:Statement;
+    rdf:object sub:labelValue;
+    rdf:predicate rdfs:label;
+    rdf:subject nt:ASSERTION .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-2543-9461 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-2543-9461 foaf:name "Piotr Sowiński" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTHgk4F1Fuj1WT3rb97R451KIDLjCwb0dyVD4BQEii7FqUMNjVsfH2oU19Tvkopmt/OVaOI/7khWR/NtiIhXJTekIZYh9Ccop527GwZVlwtvJT4LGtMrcXNK8E6/6i7HCR2UEMbM1AhzEdo9FOwXyjAgw+qWjo1XNpkXIGfqHEeQIDAQAB";
+    npx:hasSignature "HJjKBej+p4P0iRRasXHnIJ3EjkS0KGMFhRJMNux+7cvPt3e5xeJmgId+hUACALHyIpD5AXusY9eVlU71SEMXxE64+r/+/Uynss3fEmhOeDVJjgN57EdqZIPfo68p2KlC5oWDNoZefdHTMVU3pkZVw6LFeLWqR/BGW5jngCNezfc=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-2543-9461 .
+  
+  this: dct:created "2024-08-15T16:25:18.864Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-2543-9461;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Template: Bug reproduction: optional statement in a grouped statement";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALtjkZX1lYrTL2eCZp4VTW6vGGxiDZ-aaU-s1Z0Fcs2I> .
+}
+

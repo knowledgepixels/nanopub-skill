@@ -1,0 +1,164 @@
+@prefix dcmitype: <http://purl.org/dc/dcmitype/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix ntemplate: <https://w3id.org/np/o/ntemplate/> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <https://schema.org/> .
+@prefix sub: <https://w3id.org/np/RAsmNjwvzjYfc8Hson0gyjSL6Oov3nZZEfRy7TOFtO5I8/> .
+@prefix this: <https://w3id.org/np/RAsmNjwvzjYfc8Hson0gyjSL6Oov3nZZEfRy7TOFtO5I8> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://edamontology.org/format_2331> rdfs:label "HTML" .
+  
+  <http://edamontology.org/format_2332> rdfs:label "XML" .
+  
+  <http://edamontology.org/format_3508> rdfs:label "PDF" .
+  
+  dcmitype:Collection rdfs:label "workflow report" .
+  
+  dcterms:description rdfs:label "has the description" .
+  
+  dcterms:license rdfs:label "has license" .
+  
+  dcterms:title rdfs:label "has the title" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  prov:hadPrimarySource rdfs:label "has primary source workflow" .
+  
+  schema:DataCatalog rdfs:label "data catalog" .
+  
+  schema:archivedAt rdfs:label "is archived at" .
+  
+  schema:datePublished rdfs:label "was published on" .
+  
+  schema:expires rdfs:label "will be no longer after from" .
+  
+  schema:maintainer rdfs:label "has repository" .
+  
+  schema:result rdfs:label "results from" .
+  
+  schema:sourceOrganization rdfs:label "has source" .
+  
+  sub:archive a ntemplate:ValuePlaceholder;
+    rdfs:label "URI of institution/organization where report is archived" .
+  
+  sub:assertion a ntemplate:AssertionTemplate;
+    dcterms:description "Template for describing a workflow report";
+    rdfs:label "Describing a workflow report";
+    ntemplate:hasNanopubLabelPattern "Report: ${title}";
+    ntemplate:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06,
+      sub:st07, sub:st08, sub:st09, sub:st10, sub:st11;
+    ntemplate:hasTag "Computational Workflow";
+    ntemplate:hasTargetNanopubType dcmitype:Collection .
+  
+  sub:description a ntemplate:LiteralPlaceholder;
+    rdfs:label "description of the report" .
+  
+  sub:expiredate a ntemplate:LiteralPlaceholder;
+    rdfs:label "date when report availability expires (YYYY-MM-DD)" .
+  
+  sub:license a ntemplate:RestrictedChoicePlaceholder;
+    rdfs:label "license of the published report";
+    ntemplate:possibleValue <https://creativecommons.org/licenses/by/4.0/>, <https://spdx.org/licenses/Apache-2.0.html>,
+      <https://spdx.org/licenses/BSD-3-Clause.html>, <https://spdx.org/licenses/GPL-3.0.html>,
+      <https://spdx.org/licenses/MIT.html> .
+  
+  sub:organization a ntemplate:UriPlaceholder;
+    rdfs:label "URI, ROR of insitution/organization where report was produced" .
+  
+  sub:project a ntemplate:UriPlaceholder;
+    rdfs:label "URI of research project in which report was produced" .
+  
+  sub:publishdate a ntemplate:LiteralPlaceholder;
+    rdfs:label "date when made publicly available (YYYY-MM-DD)" .
+  
+  sub:report a ntemplate:UriPlaceholder;
+    rdfs:label "short URI suffix or full URI" .
+  
+  sub:repository a ntemplate:UriPlaceholder;
+    rdfs:label "URI of repository where report is published" .
+  
+  sub:st01 rdf:object dcmitype:Collection;
+    rdf:predicate rdf:type;
+    rdf:subject sub:report .
+  
+  sub:st02 rdf:object sub:title;
+    rdf:predicate dcterms:title;
+    rdf:subject sub:report .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate dcterms:description;
+    rdf:subject sub:report .
+  
+  sub:st04 a ntemplate:OptionalStatement;
+    rdf:object sub:organization;
+    rdf:predicate schema:sourceOrganization;
+    rdf:subject sub:report .
+  
+  sub:st05 rdf:object sub:license;
+    rdf:predicate dcterms:license;
+    rdf:subject sub:report .
+  
+  sub:st06 rdf:object sub:repository;
+    rdf:predicate schema:maintainer;
+    rdf:subject sub:report .
+  
+  sub:st07 a ntemplate:OptionalStatement;
+    rdf:object sub:project;
+    rdf:predicate schema:result;
+    rdf:subject sub:report .
+  
+  sub:st08 rdf:object sub:workflow;
+    rdf:predicate prov:hadPrimarySource;
+    rdf:subject sub:report .
+  
+  sub:st09 a ntemplate:OptionalStatement, ntemplate:RepeatableStatement;
+    rdf:object sub:archive;
+    rdf:predicate schema:archivedAt;
+    rdf:subject sub:report .
+  
+  sub:st10 rdf:object sub:publishdate;
+    rdf:predicate schema:datePublished;
+    rdf:subject sub:report .
+  
+  sub:st11 a ntemplate:OptionalStatement;
+    rdf:object sub:expiredate;
+    rdf:predicate schema:expires;
+    rdf:subject sub:report .
+  
+  sub:title a ntemplate:LiteralPlaceholder;
+    rdfs:label "title of the report" .
+  
+  sub:workflow a ntemplate:UriPlaceholder;
+    rdfs:label "URI of workflow nanopub that is the primary source of this report" .
+}
+
+sub:provenance {
+  sub:assertion prov:generatedAtTime "2026-03-06T18:45:53.083386"^^xsd:dateTime;
+    prov:wasAttributedTo orcid:0000-0002-4930-2662 .
+}
+
+sub:pubinfo {
+  this: prov:generatedAtTime "2026-03-06T18:45:53.083386"^^xsd:dateTime;
+    prov:wasAttributedTo orcid:0000-0003-2408-7588 .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkOFUnnRCp/k9/0ugvx8zQJ+Qc675W1Ug6F839+xvJ2QsSBu4iOJ1O2kJCmb3tALp3gJOt8sffRot3VrfY1hbgXxL7BVtDsfHHmXVff4YCeg5Ycdn5cDpLawDpAdYwMhK0LwIkZ3fwH9/o9JniYKXLV/jpF9bMKyiw/6tqlCHaMW1r8gzZzoxVIAakwvlABoY0iNoToLTlBRXEI4mLUNjDMnMwQgfh1KXMxMruNjW3wJyeDEIfa2ooAt0E4CRM9pkrEb37NzD9Jz8aSUFFY6BvIxF4ixK7rm6IUDvQ76LqXkEmgSeRv1kw7gnCe9wV/wHd0ZeW4heoBXmLHX3MvHfjwIDAQAB";
+    npx:hasSignature "cB0DeFshdm+2t5ECjdumnPCih9TPM+IYC9xeHC06cLDOo2QXcNbNrPAoxDxMkDbBu2qDHjTtYSv00GrpRHuisS7fyrKIq5I5nSVO1BP+26SRXlTbjFnLiHPdb9JSm2E8q//MTEg9eWQ6F04K12VF09fuRrQ2Ox1/lLW583aDXphvtoZcWaUHux1eHJboeNsgwJvF3iw5fMNW527lZ6KhUmgSP/OhZFQ7//AhP/Q1oCw2RnGFkVgnJHGu1x/i9enk3+XNDjxbGLEgPhACP8kS0intIBdZdDe3U35ybeGRXHwqkMFfEgaS9LWtZ5LiV25pffg8Y9lBaKbSuMiitFgZQw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2408-7588 .
+}
+

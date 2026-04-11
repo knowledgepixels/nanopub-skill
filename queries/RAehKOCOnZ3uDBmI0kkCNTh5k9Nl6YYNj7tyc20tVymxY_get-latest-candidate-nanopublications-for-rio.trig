@@ -1,0 +1,83 @@
+@prefix this: <https://w3id.org/np/RAehKOCOnZ3uDBmI0kkCNTh5k9Nl6YYNj7tyc20tVymxY> .
+@prefix sub: <https://w3id.org/np/RAehKOCOnZ3uDBmI0kkCNTh5k9Nl6YYNj7tyc20tVymxY#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-latest-rio-candidates a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns candidate nanopublications for submission at the RIO Journal.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get latest candidate nanopublications for RIO";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/meta>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix biolink: <https://w3id.org/biolink/vocab/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+prefix biodiv: <https://w3id.org/kpxl/biodiv/terms/>
+prefix prov: <http://www.w3.org/ns/prov#>
+
+select distinct ?np ?label ?pubkey ?date where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    ?np rdfs:label ?label .
+    values ?type {
+      <https://w3id.org/kpxl/rel/terms/hasRelationTo>
+      <https://w3id.org/kpxl/rel/terms/tendsToHaveRelationTo>
+      <https://w3id.org/linkflows/superpattern/terms/SuperPatternInstance>
+      <http://purl.org/petapico/o/hycl#AIDA-Sentence>
+      <https://w3id.org/biolink/vocab/related_to>
+      <http://www.w3.org/2004/02/skos/core#relatedMatch>
+    }
+    ?np npx:hasNanopubType ?type .
+    ?np dct:creator ?__creator_iri .
+    ?np dct:created ?date .
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+  }
+}
+order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "7ZnJP2CoepjKj0rmkbYOSvVHEjXRRdlfiyU1ZEuORaRyCBTda5qbEU/4a+Xr5A/Cbc5KDUlaVnQI4GPSDsrPsPptYPNJIm3dagDufoMaoUmBmfw8dz05s3KMgwTYXrht+doQgmB+vFeAZ9/lpxrGm6/d3N0oF6rBlEZdqaYDv6o=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-10-25T08:30:12.151Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-latest-rio-candidates;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+}
+

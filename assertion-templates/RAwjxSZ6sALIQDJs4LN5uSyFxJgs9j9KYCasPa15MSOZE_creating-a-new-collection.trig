@@ -1,0 +1,92 @@
+@prefix this: <https://w3id.org/np/RAwjxSZ6sALIQDJs4LN5uSyFxJgs9j9KYCasPa15MSOZE> .
+@prefix sub: <https://w3id.org/np/RAwjxSZ6sALIQDJs4LN5uSyFxJgs9j9KYCasPa15MSOZE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.org/dc/dcmitype/Collection> rdfs:label "collection" .
+  
+  dct:description rdfs:label "has the description" .
+  
+  dct:isPartOf rdfs:label "is part of" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Creating a new collection";
+    nt:hasStatement sub:st0, sub:st2, sub:st3, sub:st4;
+    nt:hasTag "Collections" .
+  
+  sub:collection a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "URI suffix or full URI of collection" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the collection" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "label for the collection" .
+  
+  sub:resource a nt:ExternalUriPlaceholder;
+    rdfs:label "containing resource" .
+  
+  sub:st0 rdf:object <http://purl.org/dc/dcmitype/Collection>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:collection .
+  
+  sub:st2 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:collection .
+  
+  sub:st3 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:collection .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:resource;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:collection .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-12-17T16:51:05.042+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAkgSKXTiRv6NuNMohsBldYa4kvnmBGbVSxKgZgerWx5E>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Creating a new collection";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "UUm9rqTwn2rGS/Vf0iyMdnGuRLWGNBGfSGFNEFMPAbwghaSq44G2t+of7LvNQNZjTAuhOriXiyifiMovlETrs059Be52Ei/mjNUOGrKnv18ocXPSv1WE0HwUaRNhIhMGMtT3dmSfOP+x7X5PXS5q+RKJF2v7ZwzH9REssQu5BOI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

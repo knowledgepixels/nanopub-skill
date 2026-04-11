@@ -1,0 +1,171 @@
+@prefix this: <https://w3id.org/np/RAtsQsnujkDn-ytomeY8RvbOSGrIOmepExa0KfmDrfVfY> .
+@prefix sub: <https://w3id.org/np/RAtsQsnujkDn-ytomeY8RvbOSGrIOmepExa0KfmDrfVfY#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:contributor rdfs:label "has contributor" .
+  
+  dct:creator rdfs:label "has creator" .
+  
+  dct:date rdfs:label "has date" .
+  
+  dct:description rdfs:label "has description" .
+  
+  dct:publisher rdfs:label "has publisher" .
+  
+  dct:subject rdfs:label "has subject" .
+  
+  dct:title rdfs:label "has title" .
+  
+  dct:type rdfs:label "has datatype" .
+  
+  ns1:RAh4d0kYgEqvQG9mFX7Fdf77l6_7UyxmtETNUMRuQvfVU rdfs:label "image" .
+  
+  <http://www.w3.org/ns/dcat#accessURL> rdfs:label "has access URI" .
+  
+  <http://www.w3.org/ns/dcat#contactPoint> rdfs:label "has contact point" .
+  
+  <https://schema.org/variableMeasured> rdfs:label "has variable" .
+  
+  <https://w3id.org/np/RAX6NErJpmZtB9hbKcKNcOCYEfyCVr2UZVsstelI47iOA> rdfs:label "file" .
+  
+  sub:access a nt:UriPlaceholder;
+    rdfs:label "access URI" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "test template only";
+    rdfs:label "Describing dataset metadata based on DCAT";
+    nt:hasNanopubLabelPattern "Metadata: Dataset";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st09, sub:st10, sub:st11;
+    nt:hasTag "metadata";
+    nt:hasTargetNanopubType <http://purl.org/spar/fabio/ScholarlyWork> .
+  
+  sub:contact-point a nt:UriPlaceholder;
+    rdfs:label "ORCID of contact point" .
+  
+  sub:contributor a nt:UriPlaceholder;
+    rdfs:label "ORCID of contributor" .
+  
+  sub:creator a nt:UriPlaceholder;
+    rdfs:label "ORCID of creator" .
+  
+  sub:dataset a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "dataset" .
+  
+  sub:date a nt:LiteralPlaceholder;
+    rdfs:label "publication date (e.g. 2023-12-31)" .
+  
+  sub:description a nt:LiteralPlaceholder;
+    rdfs:label "description" .
+  
+  sub:publisher a nt:UriPlaceholder;
+    rdfs:label "ROR of publisher" .
+  
+  sub:st01 rdf:object sub:type;
+    rdf:predicate dct:type;
+    rdf:subject sub:dataset .
+  
+  sub:st02 rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:dataset .
+  
+  sub:st03 rdf:object sub:publisher;
+    rdf:predicate dct:publisher;
+    rdf:subject sub:dataset .
+  
+  sub:st04 rdf:object sub:date;
+    rdf:predicate dct:date;
+    rdf:subject sub:dataset .
+  
+  sub:st05 a nt:RepeatableStatement;
+    rdf:object sub:creator;
+    rdf:predicate dct:creator;
+    rdf:subject sub:dataset .
+  
+  sub:st06 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:contributor;
+    rdf:predicate dct:contributor;
+    rdf:subject sub:dataset .
+  
+  sub:st07 rdf:object sub:contact-point;
+    rdf:predicate <http://www.w3.org/ns/dcat#contactPoint>;
+    rdf:subject sub:dataset .
+  
+  sub:st08 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:dataset .
+  
+  sub:st09 a nt:RepeatableStatement;
+    rdf:object sub:subject;
+    rdf:predicate dct:subject;
+    rdf:subject sub:dataset .
+  
+  sub:st10 a nt:RepeatableStatement;
+    rdf:object sub:variable;
+    rdf:predicate <https://schema.org/variableMeasured>;
+    rdf:subject sub:dataset .
+  
+  sub:st11 rdf:object sub:access;
+    rdf:predicate <http://www.w3.org/ns/dcat#accessURL>;
+    rdf:subject sub:dataset .
+  
+  sub:subject a nt:RestrictedChoicePlaceholder;
+    rdfs:label "subject";
+    nt:possibleValuesFrom ns1:RACXDZHEowTYDAzZvdmD0qIGpXZwY5ghMRBBlt6N8Iu5s .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title" .
+  
+  sub:type a nt:RestrictedChoicePlaceholder;
+    rdfs:label "data type";
+    nt:possibleValue ns1:RAh4d0kYgEqvQG9mFX7Fdf77l6_7UyxmtETNUMRuQvfVU, <https://w3id.org/np/RAX6NErJpmZtB9hbKcKNcOCYEfyCVr2UZVsstelI47iOA>,
+      <https://w3id.org/np/RAwvNqa0ia4lY5Jetmcyh1sgfpRowZntd8WgMb8xEfmaY> .
+  
+  sub:variable a nt:RestrictedChoicePlaceholder;
+    rdfs:label "variable";
+    nt:possibleValuesFrom ns1:RApnw0CS0so_FXmFWg-DXi5Z7-jzZT3t57Mt97TSqINEI .
+  
+  <https://w3id.org/np/RAwvNqa0ia4lY5Jetmcyh1sgfpRowZntd8WgMb8xEfmaY> rdfs:label "record" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFntPrMZqvg2kVhCNArNnEn37ddXGwZ/0r4C8CS4lDry7C7YkYgng9yb0UMZQUHiTVkR/5A4m/xjE+Vy+AnwcWUeB75SfGZjE5ylI6VeHjTHi9+2hh2PHYIWnkhU4WHl3COEnxSSa/VouvPzZ2BIWLH6fTrq7NNL3RF5hGegGG0QIDAQAB";
+    npx:hasSignature "B7nrPq+2ede9sEwL9Cd/62lSmG6cXIjoUlHYaZCefHgew6sVUrXlF0VIq0QuIhgmGm0OQ4P4LYOXWkgczS7tCMQdWLJoR4ibcrSKc+VTmnql0pZihMC6NHI3znX8Bs45DxfR+Q3UDd5BwkWj6OtvuII/ImSCQI6n5kWguctnv1g=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-12-21T22:59:19.050Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAC48VjzDNr_yVQKZfcy1myeFA5i3hPNMUrOW0kM9ASzc>;
+    rdfs:label "Template: Describing dataset metadata based on DCAT";
+    prov:wasDerivedFrom <https://w3id.org/np/RAhPFxesdOZq-w6Z8VBfc1aV9hfN6c5FnJ7XjR0dAMn_I>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM, ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

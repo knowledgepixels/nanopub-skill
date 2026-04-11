@@ -1,0 +1,141 @@
+@prefix this: <https://w3id.org/np/RAvpTchF2wgYZHyjgqmbwauq7uiZ8hb3890hFBegplrF8> .
+@prefix sub: <https://w3id.org/np/RAvpTchF2wgYZHyjgqmbwauq7uiZ8hb3890hFBegplrF8#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-head-np-info a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns some basic info - creator, author, label, etc. - on the head version of a nanopublication, i.e. the user-generated original version or - if available - a publisher-accepted version at a journal.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get info on the head version of a nanopublication";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+prefix bibo: <http://purl.org/ontology/bibo/>
+prefix pav: <http://purl.org/pav/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix prov: <http://www.w3.org/ns/prov#>
+
+select ?head_version_np ?author_version_np ?publisher_version_np ?np_type ?journal_name ?main_author_or_creator ?creator ?main_author ?author_count ?label ?date ?author_version_date {
+
+{ select ?given_np ?head_version_np ?author_version_np_pre ?publisher_version_np ?np_type ?journal_name ?author_version_date where {
+
+graph npa:graph {
+  bind(replace(str(?_np_iri), \"^.*[^a-zA-Z0-9-_](RA[a-zA-Z0-9-_]{43})$\", \"$1\") as ?ac)
+  ?given_np npa:artifactCode ?ac .
+}
+
+optional {
+
+  values (?np_type ?journal_name ?pubkeys) {
+    (<https://w3id.org/kpxl/pensoft/rio/terms/RIOJournalNanopub> \"RIO Journal\" \"1162349fdeaf431e71ab55898cb2a425b971d466150c2aa5b3c1beb498045a37 cfe248c38933693b1ddeb62e17976a4d2396b0c738af5356bfffbe559d1a3de0 170211c91a70e67992d52c760de3f0052c8c7271bd3c225ef0347245e8517ff6\")
+    (<https://w3id.org/kpxl/pensoft/bdj/terms/BiodiversityDataJournalNanopub> \"Biodiversity Data Journal\" \"1162349fdeaf431e71ab55898cb2a425b971d466150c2aa5b3c1beb498045a37 cfe248c38933693b1ddeb62e17976a4d2396b0c738af5356bfffbe559d1a3de0 170211c91a70e67992d52c760de3f0052c8c7271bd3c225ef0347245e8517ff6\")
+    (<https://w3id.org/kpxl/ios/ds/terms/DataScienceNanopub> \"Data Science\" \"1162349fdeaf431e71ab55898cb2a425b971d466150c2aa5b3c1beb498045a37 cfe248c38933693b1ddeb62e17976a4d2396b0c738af5356bfffbe559d1a3de0 170211c91a70e67992d52c760de3f0052c8c7271bd3c225ef0347245e8517ff6\")
+  }
+  
+  bind(uri(concat(\"https://w3id.org/np/l/nanopub-query-1.1/repo/type/\", sha256(str(?np_type)))) as ?service)
+  service ?service {
+    graph npa:graph {
+      ?publisher_version_np npa:hasValidSignatureForPublicKey ?pubkey .
+      ?publisher_version_np np:hasPublicationInfo ?i .
+      filter not exists { ?publisher_version_np npx:hasNanopubType npx:ExampleNanopub . }
+      filter not exists { ?npx npx:invalidates ?publisher_version_np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+      filter(contains(?pubkeys, sha256(?pubkey)))
+    }
+    { graph ?i {
+      ?publisher_version_np prov:wasDerivedFrom ?given_np .
+      bind(?given_np as ?author_version_np_pre)
+    } } union { graph ?i {
+      filter(?publisher_version_np = ?given_np)
+      ?publisher_version_np prov:wasDerivedFrom ?author_version_np_pre .
+    } }
+  }
+}
+
+} }
+
+bind(coalesce(?author_version_np_pre, ?given_np) as ?author_version_np)
+
+graph npa:graph {
+  ?author_version_np dct:created ?author_version_date .
+}
+
+bind(coalesce(?publisher_version_np, ?author_version_np) as ?head_version_np)
+bind(?head_version_np as ?np)
+
+{ select distinct ?np (coalesce(?signer, min(?declaredCreator)) as ?creator) (coalesce(?firstAuthor, min(?author), min(?creator)) as ?main_author) (if(count(distinct ?author)>0,count(distinct ?author),count(distinct ?creator)) as ?author_count) ?label ?date where {
+  graph npa:graph {
+    ?np dct:created ?date .
+    ?np rdfs:label ?label .
+    ?np np:hasPublicationInfo ?i .
+    ?np dct:creator ?declaredCreator .
+    optional { ?np npx:signedBy ?signer . }
+  }
+  optional {
+    graph ?i { ?np pav:authoredBy ?author . }
+  }
+  optional {
+    graph ?i {
+      ?np bibo:authorList ?authorList .
+      ?authorList ?hasElement ?author .
+      filter(strstarts(str(?hasElement), str(rdf:_)))
+    }
+  }
+  optional {
+    graph ?i {
+      ?np bibo:authorList ?authorList .
+      ?authorList rdf:_1 ?firstAuthor .
+    }
+  }
+} group by ?np ?signer ?introducedThing ?label ?date ?firstAuthor }
+
+bind(coalesce(?main_author, ?creator) as ?main_author_or_creator)
+
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "s7gvG7puhpSmtzfKQZeydpu6rI7luJ9WyZhewBRKbgE7fpJ6RJkOcbWhdgvUX5aev2JYd6gI/R3g7Lqem1rzRxOt7tRfTaRqmlotkLqIV9TqKZUaSWRnRw64UaZ8MH6/Yj/lYwf78FUvxHJ6AGW3sDHpuw8CzT+tKjFz2dEpD7o=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-09-11T11:34:59.392Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-head-np-info;
+    npx:supersedes <https://w3id.org/np/RAxWWWgQQnk7BY_wrYijrsUyElm0hY3Rl4KqUpvY6tixI>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+}
+

@@ -1,0 +1,112 @@
+@prefix ns1: <http://purl.org/np/> .
+@prefix this: <http://purl.org/np/RARqJ85w4C2gTsopAfPe1sb0frvELIwtComl9PNR0VlwA> .
+@prefix sub: <http://purl.org/np/RARqJ85w4C2gTsopAfPe1sb0frvELIwtComl9PNR0VlwA#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "can be described as follows:" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Defining a new class by a property restriction";
+    nt:hasNanopubLabelPattern "Class: ${name}";
+    nt:hasStatement sub:st0a, sub:st0b, sub:st1, sub:st2, sub:st3, sub:st4;
+    nt:hasTag "Terms" .
+  
+  sub:class a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of existing class";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:description a nt:LiteralPlaceholder;
+    rdfs:label "description of the class" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the class" .
+  
+  sub:newclass a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID of new class" .
+  
+  sub:property a nt:GuidedChoicePlaceholder;
+    rdfs:label "the property on which the restriction is applied";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23Property&searchterm=" .
+  
+  sub:restrictiontype a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select type of restriction";
+    nt:possibleValue <http://www.w3.org/2002/07/owl#allValuesFrom>, <http://www.w3.org/2002/07/owl#someValuesFrom> .
+  
+  sub:st0a rdf:object <http://www.w3.org/2002/07/owl#Class>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:newclass .
+  
+  sub:st0b rdf:object <http://www.w3.org/2002/07/owl#Restriction>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:newclass .
+  
+  sub:st1 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:newclass .
+  
+  sub:st2 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:newclass .
+  
+  sub:st3 rdf:object sub:property;
+    rdf:predicate <http://www.w3.org/2002/07/owl#onProperty>;
+    rdf:subject sub:newclass .
+  
+  sub:st4 rdf:object sub:class;
+    rdf:predicate sub:restrictiontype;
+    rdf:subject sub:newclass .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "is called" .
+  
+  <http://www.w3.org/2002/07/owl#Class> rdfs:label "class" .
+  
+  <http://www.w3.org/2002/07/owl#Restriction> rdfs:label "defined by a property restriction" .
+  
+  <http://www.w3.org/2002/07/owl#allValuesFrom> rdfs:label "has all values from" .
+  
+  <http://www.w3.org/2002/07/owl#onProperty> rdfs:label "has a restriction on the property" .
+  
+  <http://www.w3.org/2002/07/owl#someValuesFrom> rdfs:label "has some values from" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "MyELdg2d7Vf0EK5VqHo5V8LpkIIRuJayZT23HzgVqPhb5sfSIFp/pYs1MKjG5GYkAiXN1y8A0qZaJK1k/enXRebH3TxZetZxwoNd6Chq4xRMhSpUVj/L23kzxJQrTcwd5JsCU21UNm6s9Ml7Y+PCGqXPcirHnEcrt8uin1wrn3k=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-15T15:12:52.698+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes ns1:RA_g5C6MHxUVnnm9FLEcF5HEQMjvNufmEkQp-If6F96OU;
+    rdfs:label "Template: Defining a new class by a property restriction";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RANjqEfLnGSzLuq0heRSXN0psYWW0oX4v3W8w7osb3xfs .
+}
+

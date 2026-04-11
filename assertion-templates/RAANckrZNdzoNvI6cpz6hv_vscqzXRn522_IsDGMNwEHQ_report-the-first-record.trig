@@ -1,0 +1,187 @@
+@prefix this: <https://w3id.org/np/RAANckrZNdzoNvI6cpz6hv_vscqzXRn522_IsDGMNwEHQ> .
+@prefix sub: <https://w3id.org/np/RAANckrZNdzoNvI6cpz6hv_vscqzXRn522_IsDGMNwEHQ/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.obolibrary.org/obo/RO_0002303> rdfs:label "has habitat" .
+  
+  rdf:type rdfs:label "is an instance of" .
+  
+  rdfs:comment rdfs:label "has the free-text comment" .
+  
+  <http://www.w3.org/2002/07/owl#sameAs> rdfs:label "is the same as" .
+  
+  <https://w3id.org/biolink/vocab/object> rdfs:label "links the organism to the environment" .
+  
+  <https://w3id.org/biolink/vocab/predicate> rdfs:label "refers to the relation" .
+  
+  <https://w3id.org/biolink/vocab/subject> rdfs:label "refers to - links an association to its subject" .
+  
+  <https://w3id.org/biolink/vocab/timepoint> rdfs:label "has the time stamp - points to the date and time associated with this relation or organism (e.g. date of collection); if occurrence URI is given, this is redundant and does not need to be filled in" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/OrganismToEnvironmentAssociation> rdfs:label "an association of an organism to an environment" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasLifeCycleStage> rdfs:label "has the life cycle stage" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasLocationCoordinates> rdfs:label "has the location coordinates - points to the location coordinates associated with this relation or organism (e.g. place of collection); if occurrence URI is given, this is redundant and does not need to be filled in" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasOccurrence> rdfs:label "has the occurrence - links an organism to a record of a specific occurrence of it" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition> rdfs:label "is used as defined in" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonName> rdfs:label "has the name - links a taxon usage to a taxon name" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "<p>Such a nanopublication expresses an association between an organism instance and an environment, expressing that the given organism was observed in the specified type of environment.</p>";
+    rdfs:label "Report the first record";
+    nt:hasDefaultProvenance ns1:RA2VjRiJ5AsNnPHDXuOqvsEJwTwqtj5rBb-OFkpPOzd9s;
+    nt:hasNanopubLabelPattern "Organism of ${taxonname} - ${relation} - ${environment}";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06,
+      sub:st07, sub:st08, sub:st09, sub:st10, sub:st11, sub:st12;
+    nt:hasTag "Biodiversity";
+    nt:hasTargetNanopubType <https://w3id.org/kpxl/biodiv/terms/BiodivNanopub> .
+  
+  sub:association a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this association" .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "short explanation related to the above statement" .
+  
+  sub:coordinates a nt:LiteralPlaceholder;
+    rdfs:label "lat/long coordinates in format like '+47.37+8.54' or with altitude '+47.37+8.54+410.5'";
+    nt:hasRegex "[+-][0-9]+(\\.[0-9]+)?[+-][0-9]+(\\.[0-9]+)?([+-][0-9]+(\\.[0-9]+)?)?" .
+  
+  sub:environment a nt:GuidedChoicePlaceholder;
+    rdfs:label "the environment to be associated with the organism";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=envo&fieldList=iri,label,description&q=" .
+  
+  sub:lifecyclestage a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select the life cycle stage of the organism; leave blank if unknown";
+    nt:possibleValuesFrom ns1:RAVZS2MV-siFEqsgFTtgSoKA5qJkp7r1nM_n-MqPkvgdE .
+  
+  sub:occurrence a nt:ExternalUriPlaceholder;
+    rdfs:label "occurrence URI from GBIF (https://www.gbif.org/occurrence/...) or iDigBio, BOLD, PlutoF, etc." .
+  
+  sub:organism a nt:LocalResource;
+    rdfs:label "the organism" .
+  
+  sub:organismAlt a nt:ExternalUriPlaceholder;
+    rdfs:label "any existing URI identifier of organism (e.g. of digital collection specimen or observation in nature)" .
+  
+  sub:relation a nt:GuidedChoicePlaceholder;
+    rdfs:label "the relation between the organism and the environment";
+    nt:possibleValue <http://purl.obolibrary.org/obo/RO_0002303>;
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=ro&fieldList=iri,label,description&q=" .
+  
+  sub:st00 rdf:object <https://w3id.org/kpxl/biodiv/terms/OrganismToEnvironmentAssociation>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:association .
+  
+  sub:st01 rdf:object sub:relation;
+    rdf:predicate <https://w3id.org/biolink/vocab/predicate>;
+    rdf:subject sub:association .
+  
+  sub:st02 rdf:object sub:organism;
+    rdf:predicate <https://w3id.org/biolink/vocab/subject>;
+    rdf:subject sub:association .
+  
+  sub:st03 rdf:object sub:taxon;
+    rdf:predicate rdf:type;
+    rdf:subject sub:organism .
+  
+  sub:st04 rdf:object sub:taxonname;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonName>;
+    rdf:subject sub:taxon .
+  
+  sub:st05 rdf:object sub:taxondef;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition>;
+    rdf:subject sub:taxon .
+  
+  sub:st06 rdf:object sub:lifecyclestage;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasLifeCycleStage>;
+    rdf:subject sub:organism .
+  
+  sub:st07 rdf:object sub:occurrence;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasOccurrence>;
+    rdf:subject sub:organism .
+  
+  sub:st08 rdf:object sub:organismAlt;
+    rdf:predicate <http://www.w3.org/2002/07/owl#sameAs>;
+    rdf:subject sub:organism .
+  
+  sub:st09 rdf:object sub:coordinates;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasLocationCoordinates>;
+    rdf:subject sub:association .
+  
+  sub:st10 rdf:object sub:timepoint;
+    rdf:predicate <https://w3id.org/biolink/vocab/timepoint>;
+    rdf:subject sub:association .
+  
+  sub:st11 rdf:object sub:environment;
+    rdf:predicate <https://w3id.org/biolink/vocab/object>;
+    rdf:subject sub:association .
+  
+  sub:st12 rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject nt:ASSERTION .
+  
+  sub:taxon a nt:LocalResource;
+    rdfs:label "the taxon concept" .
+  
+  sub:taxondef a nt:ExternalUriPlaceholder;
+    rdfs:label "publication DOI (https://doi.org/...) or taxon treatment ID (https://treatment.plazi.org/id/...)";
+    nt:hasRegex "(https://doi.org/|https://treatment.plazi.org/id/).+" .
+  
+  sub:taxonname a nt:GuidedChoicePlaceholder;
+    rdfs:label "search and select from list (if not found, paste identifying URI from IPNI, MycoBank, Index Fungorum, or Zoobank)";
+    nt:possibleValuesFromApi "https://vodex.petapico.org/nidx/query?rows=100&q=label:" .
+  
+  sub:timepoint a nt:LiteralPlaceholder;
+    rdfs:label "time expressed in XSD DateTime format, e.g. '2023-03-30T22:17:11Z'";
+    nt:hasRegex "-?([1-9]\\d\\d\\d+|0\\d\\d\\d)-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T(([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(\\.\\d+)?|24:00:00(\\.0+)?)(Z|[+-](0\\d|1[0-4]):[0-5]\\d)?" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0000-0689-041X .
+}
+
+sub:pubinfo {
+  orcid:0009-0000-0689-041X foaf:name "Riki Sato" .
+  
+  this: a npx:ExampleNanopub;
+    dct:created "2025-10-17T09:28:07.395Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0000-0689-041X;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Report the first record";
+    prov:wasDerivedFrom ns1:RAMwUIw3VZ2ghf1HS6lOhuIs-vp0GAXbw8YtmQfni2ea8;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAXflINqt3smqxV5Aq7E9lzje4uLdkKIOefa6Bp8oJ8CY,
+      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkwLw/a8v44f5YJQMT9lJ+px4WMNi31U+WnHjCGkQy0r145gwkzQPJYbIvef+wYgS4meUZq1hS3aiEsLL09JYBqitMu/aJXau2zovUl6GI0krJjN+0m+udCEbjQMoMuzuudxuftqG3kZPUlrdmWgSDQ1tWlM55kFNnuJ+jf9ImJfpA9rymJAg+LuRes9DpmWVTMPYFAWoPo3ycZC6eRgzIyyaRvwY0R7Hzmk5SpfjUQe3DCtdVYyWX/uL0Z1FxWpddFkljOZl1P2ED0MZ887fXQMGB4YRizP21Mu7w/WjhcSEakf7OOFvYFv8FsF/qUNjQ1j/Z2gORsa5NeOOet7XgQIDAQAB";
+    npx:hasSignature "ErTz89q0QzOsjUjv95WHgT59npQEjBJyLIGLXaIx1YnlBVAI2J68ePaqSQPzCNRJyAUDJHCkuCQYiSyGPaF3X1cCyGZtaa5bYhaN2nml0E/nssDu/brre2Vu1ndTnZAf9cqBR+29R75hm6dzQMsKLMg+4LPrHEzinX/EkO0z7fNOOJw9rbXmuJvLYjWDV5IehI2S9gMae0mxZXuWc8xomrt2U6H8uVpyEGAwLRhI/NafN+N23XQzhe95pMOHYT17O0yNU0OH2IuINpJI6jCsZmWPzw0btdtrnMBNq580onoSur5ZeUyRh6gocim74Je5QvWylkGqKS/6+EXkVdv00w==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0000-0689-041X .
+}
+

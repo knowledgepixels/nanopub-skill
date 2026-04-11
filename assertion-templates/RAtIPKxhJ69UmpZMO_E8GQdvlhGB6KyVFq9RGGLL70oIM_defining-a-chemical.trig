@@ -1,0 +1,92 @@
+@prefix this: <https://w3id.org/np/RAtIPKxhJ69UmpZMO_E8GQdvlhGB6KyVFq9RGGLL70oIM> .
+@prefix sub: <https://w3id.org/np/RAtIPKxhJ69UmpZMO_E8GQdvlhGB6KyVFq9RGGLL70oIM/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:isPartOf rdfs:label "is part of" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <http://www.w3.org/2002/07/owl#sameAs> rdfs:label "is the same as" .
+  
+  sub:alternativeId a nt:ExternalUriPlaceholder;
+    rdfs:label "alternative URI" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Defining a chemical";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st4;
+    nt:hasTag "Chemicals" .
+  
+  sub:chemical a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "URI of chemical" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "label for the chemical" .
+  
+  sub:ontology a nt:ExternalUriPlaceholder;
+    rdfs:label "ontology URI" .
+  
+  sub:st1 rdf:object <https://w3id.org/spaces/knowledgepixels/incubator/project1/r/TestOntology/Chemical>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:chemical .
+  
+  sub:st2 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:chemical .
+  
+  sub:st3 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:alternativeId;
+    rdf:predicate <http://www.w3.org/2002/07/owl#sameAs>;
+    rdf:subject sub:chemical .
+  
+  sub:st4 rdf:object sub:ontology;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:chemical .
+  
+  <https://w3id.org/spaces/knowledgepixels/incubator/project1/r/TestOntology/Chemical>
+    rdfs:label "chemical" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-11-19T13:40:11.153Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RASbBPalmc91NFOv4rNs8qiWSCpzWhfUy896fWd6F2iJw>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Defining a chemical";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "S1TGTsi5hvxcIJ32IldB6C/xw86fYiITT1SxbF8UNRpjKhFg1HU6bMiOLtjoLe2T3jrQ18I/r3UqP9Qmys1ciurdjBI9LUXsp7gH0UTB6Y2PPT/gX9zWXR9M5qi8iIQ8CgcwiDCfykBsaJCISfBH7XUUrhyZ7J05TEJ49NqZ9Zg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

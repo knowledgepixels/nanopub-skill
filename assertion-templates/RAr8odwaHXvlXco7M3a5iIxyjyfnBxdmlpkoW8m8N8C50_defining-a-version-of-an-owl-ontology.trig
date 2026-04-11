@@ -1,0 +1,97 @@
+@prefix this: <https://w3id.org/np/RAr8odwaHXvlXco7M3a5iIxyjyfnBxdmlpkoW8m8N8C50> .
+@prefix sub: <https://w3id.org/np/RAr8odwaHXvlXco7M3a5iIxyjyfnBxdmlpkoW8m8N8C50/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:isVersionOf rdfs:label "is a version of" .
+  
+  rdf:type rdfs:label "is an" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <http://www.w3.org/2002/07/owl#Ontology> rdfs:label "OWL ontology" .
+  
+  <https://w3id.org/kpxl/gen/terms/OntologyVersion> rdfs:label "ontology version" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasContentIndex> rdfs:label "has the content index" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Defining a version of an OWL ontology";
+    nt:hasStatement sub:st0, sub:st0b, sub:st2, sub:st4, sub:st5;
+    nt:hasTag "Ontologies" .
+  
+  sub:contentIndex a nt:ExternalUriPlaceholder;
+    rdfs:label "choose content index" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "label of the ontology" .
+  
+  sub:ontology a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the ontology across its versions" .
+  
+  sub:ontologyVersion a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "ontology version URI" .
+  
+  sub:st0 rdf:object <http://www.w3.org/2002/07/owl#Ontology>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:ontologyVersion .
+  
+  sub:st0b rdf:object <https://w3id.org/kpxl/gen/terms/OntologyVersion>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:ontologyVersion .
+  
+  sub:st2 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:ontologyVersion .
+  
+  sub:st4 rdf:object sub:ontology;
+    rdf:predicate dct:isVersionOf;
+    rdf:subject sub:ontologyVersion .
+  
+  sub:st5 rdf:object sub:contentIndex;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasContentIndex>;
+    rdf:subject sub:ontologyVersion .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-12-03T12:06:40.733Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAu-Z3O5lkF5mS1LKrdD4Q6bXAuQgpy029w9kZ_b8UJiQ>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Defining a version of an OWL ontology";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "RKay9ZoREWwPeAZy7ci49nbIhNd5RFqo4BPOiKc9lQW8kjL+K54ZNrtVX8Yx4rXnuDWqIE1boUrT4QSxepQb8gzx/Ejo59vSBlpjlel9C7KjCqGyMW7MWHNW1mmStc5xx9s0t1AUhRnU/x5cUMtI5UaTB46Da0WqvaewdzXs08E=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

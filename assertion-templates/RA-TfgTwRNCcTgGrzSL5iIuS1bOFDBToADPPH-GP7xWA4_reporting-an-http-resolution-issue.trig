@@ -1,0 +1,130 @@
+@prefix this: <https://w3id.org/np/RA-TfgTwRNCcTgGrzSL5iIuS1bOFDBToADPPH-GP7xWA4> .
+@prefix sub: <https://w3id.org/np/RA-TfgTwRNCcTgGrzSL5iIuS1bOFDBToADPPH-GP7xWA4/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:date rdfs:label "has the date" .
+  
+  dct:description rdfs:label "has the description" .
+  
+  <http://schema.org/about> rdfs:label "is about" .
+  
+  rdf:type rdfs:label "is an" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  rdfs:seeAlso rdfs:label "has more info at" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Reporting an HTTP resolution issue";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st2b, sub:st2c, sub:st3, sub:st4, sub:st5;
+    nt:hasTag "Issues" .
+  
+  sub:date a nt:LiteralPlaceholder;
+    rdfs:label "date (and time) of issue";
+    nt:hasDatatype xsd:dateTime .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "free-text description" .
+  
+  sub:issue a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "This issue" .
+  
+  sub:issueResource a nt:ExternalUriPlaceholder;
+    rdfs:label "the resource this issue is about" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "label of the issue" .
+  
+  sub:observer a nt:AgentPlaceholder;
+    rdfs:label "observer of the issue" .
+  
+  sub:seeAlsoResource a nt:ExternalUriPlaceholder;
+    rdfs:label "a pointer to a resource with more info" .
+  
+  sub:st0 rdf:object <https://w3id.org/pko#IssueOccurrence>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:issue .
+  
+  sub:st1 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:issue .
+  
+  sub:st2 rdf:object <https://w3id.org/np/RAk62Oy3S-MZCQgCX55DDPZxbYNZ10Qb91HAK9rof4XYQ/HttpResolutionError>;
+    rdf:predicate <https://w3id.org/pko#hasEncounteredError>;
+    rdf:subject sub:issue .
+  
+  sub:st2b rdf:object sub:issueResource;
+    rdf:predicate <http://schema.org/about>;
+    rdf:subject sub:issue .
+  
+  sub:st2c a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:seeAlsoResource;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:issue .
+  
+  sub:st3 a nt:RepeatableStatement;
+    rdf:object sub:observer;
+    rdf:predicate <https://w3id.org/pko#wasEncounteredBy>;
+    rdf:subject sub:issue .
+  
+  sub:st4 rdf:object sub:date;
+    rdf:predicate dct:date;
+    rdf:subject sub:issue .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:issue .
+  
+  <https://w3id.org/np/RAk62Oy3S-MZCQgCX55DDPZxbYNZ10Qb91HAK9rof4XYQ/HttpResolutionError>
+    rdfs:label "HTTP Resolution Error" .
+  
+  <https://w3id.org/pko#IssueOccurrence> rdfs:label "issue occurrence" .
+  
+  <https://w3id.org/pko#hasEncounteredError> rdfs:label "has the encountered error" .
+  
+  <https://w3id.org/pko#wasEncounteredBy> rdfs:label "was encountered by" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-09-10T16:28:33.821+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAIjDeL5m1lY0nOLEwCUb2FHQuQp9v3AuNEXAN_Ql07pc>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Reporting an HTTP resolution issue";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "oQG6ReNSKetBMIiLmtw9rwB99uw1m7k9O2ZGNxl27sCmzlzzY6YendAqUVslNKEHanA1B9m60OFmLm7nLvuPIrYYooPhqoUoBYN0MNFhfuXpEV6TbYl5LmfbtLGlrdjH3VNSzkrLx0CaGZI08fMON4p5FlY9F5MXBxxVNCo/CKM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

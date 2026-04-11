@@ -1,0 +1,154 @@
+@prefix this: <https://w3id.org/np/RAMaGaVsF9pdwlMZ6YGhucEvAPEPGMisJI_-yvpIMevJM> .
+@prefix sub: <https://w3id.org/np/RAMaGaVsF9pdwlMZ6YGhucEvAPEPGMisJI_-yvpIMevJM#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  npx:qualifies rdfs:label "qualifies" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  <https://schema.org/isBasedOn> rdfs:label "is based on" .
+  
+  <https://schema.org/issuedBy> rdfs:label "is issued by" .
+  
+  <https://w3id.org/fair/3pff/3PFF-Facilitator> rdfs:label "3PFF Facilitator" .
+  
+  <https://w3id.org/fair/3pff/3PFF-Qualification> rdfs:label "3PFF Qualification" .
+  
+  <https://w3id.org/fair/3pff/3PFF-Trainer> rdfs:label "3PFF Trainer" .
+  
+  <https://w3id.org/fair/3pff/FIP-Facilitator> rdfs:label "FIP Facilitator" .
+  
+  <https://w3id.org/fair/3pff/FIP-Implementer> rdfs:label "FIP implementer" .
+  
+  <https://w3id.org/fair/3pff/M4M-Facilitator> rdfs:label "M4M facilitator" .
+  
+  <https://w3id.org/fair/3pff/M4M-Implementer> rdfs:label "M4M implementer" .
+  
+  <https://w3id.org/fair/3pff/has-event-sponsor> rdfs:label "sponsored by" .
+  
+  <https://w3id.org/fair/3pff/issued-to> rdfs:label "is issued to" .
+  
+  sub:DeclarationURI a nt:UriPlaceholder;
+    rdfs:label "URI of the declaration of training completion nanopub" .
+  
+  sub:GFFProgrammeURI a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the training programme" .
+  
+  sub:ORCID a nt:AgentPlaceholder;
+    rdfs:label "ORCID of the participant" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "3PFF Qualification";
+    nt:hasStatement sub:st01, sub:st02, sub:st02a, sub:st03, sub:st03a, sub:st03b, sub:st03c,
+      sub:st04, sub:st05;
+    nt:hasTag "3PFF" .
+  
+  sub:end-date a nt:LiteralPlaceholder;
+    rdfs:label "date (e.g. 2020-12-31)";
+    nt:hasRegex "[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]" .
+  
+  sub:organization a nt:ExternalUriPlaceholder;
+    rdfs:label "organizer of the training (ROR, URL)" .
+  
+  sub:qualificationType a nt:RestrictedChoicePlaceholder;
+    rdfs:label "qualification type";
+    nt:possibleValue <https://w3id.org/fair/3pff/3PFF-Facilitator>, <https://w3id.org/fair/3pff/3PFF-Trainer>,
+      <https://w3id.org/fair/3pff/FIP-Facilitator>, <https://w3id.org/fair/3pff/FIP-Implementer>,
+      <https://w3id.org/fair/3pff/M4M-Facilitator>, <https://w3id.org/fair/3pff/M4M-Implementer> .
+  
+  sub:sponsor a nt:ExternalUriPlaceholder;
+    rdfs:label "sponsor of the training (ROR, URL)" .
+  
+  sub:st01 rdf:object <https://w3id.org/fair/3pff/3PFF-Qualification>;
+    rdf:predicate rdf:type;
+    rdf:subject nt:NANOPUB .
+  
+  sub:st02 rdf:object sub:qualificationType;
+    rdf:predicate npx:qualifies;
+    rdf:subject nt:NANOPUB .
+  
+  sub:st02a rdf:object sub:GFFProgrammeURI;
+    rdf:predicate <https://schema.org/isBasedOn>;
+    rdf:subject nt:NANOPUB .
+  
+  sub:st03 rdf:object sub:organization;
+    rdf:predicate <https://schema.org/issuedBy>;
+    rdf:subject nt:NANOPUB .
+  
+  sub:st03a rdf:object sub:ORCID;
+    rdf:predicate <https://w3id.org/fair/3pff/issued-to>;
+    rdf:subject nt:NANOPUB .
+  
+  sub:st03b a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:sponsor;
+    rdf:predicate <https://w3id.org/fair/3pff/has-event-sponsor>;
+    rdf:subject nt:NANOPUB .
+  
+  sub:st03c rdf:object sub:DeclarationURI;
+    rdf:predicate <https://schema.org/isBasedOn>;
+    rdf:subject nt:NANOPUB .
+  
+  sub:st04 rdf:object sub:start-date;
+    rdf:predicate <https://www.w3.org/ns/dcat#startDate>;
+    rdf:subject nt:NANOPUB .
+  
+  sub:st05 rdf:object sub:end-date;
+    rdf:predicate <https://www.w3.org/ns/dcat#endDate>;
+    rdf:subject nt:NANOPUB .
+  
+  sub:start-date a nt:LiteralPlaceholder;
+    rdfs:label "date (e.g. 2023-12-31)";
+    nt:hasRegex "[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]" .
+  
+  <https://www.w3.org/ns/dcat#endDate> rdfs:label "valid to" .
+  
+  <https://www.w3.org/ns/dcat#startDate> rdfs:label "valid from" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8888-635X, orcid:0000-0003-2195-3997,
+      <https://ror.org/056j50v04> .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFntPrMZqvg2kVhCNArNnEn37ddXGwZ/0r4C8CS4lDry7C7YkYgng9yb0UMZQUHiTVkR/5A4m/xjE+Vy+AnwcWUeB75SfGZjE5ylI6VeHjTHi9+2hh2PHYIWnkhU4WHl3COEnxSSa/VouvPzZ2BIWLH6fTrq7NNL3RF5hGegGG0QIDAQAB";
+    npx:hasSignature "AMW+uJb8WTtoB5nJrGYRrB3XpzGYEo/NVkrbyqJheCrHZijzMXXGBNSPr2/fUdYV/UU7p+QFNEmyESVBmn2vKJM4ClrtiKa+F20rQAJvHgX7MFwYevKSPD6sbNGV6G1B2HB4sStLOCrZ8OHgdH4398g8CNawZBECptQiotIR4Qk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+  
+  this: dct:created "2025-01-31T09:22:46.260Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAZJRRqbBJ74_7Fk3W9KuyBl68t1eCcn7FDg4bdGTJ91w>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Template: 3PFF Qualification";
+    prov:wasDerivedFrom ns1:RA5QXHAruIptCO2ZGZEb3frAHdZQnTCixIlDns0xgdcEo, ns1:RAJsudG1v68PR6B_nR4S6HmfjrRTjyqP4ooejqCQdT3IM,
+      <https://w3id.org/np/RAp2mS5UHS6u7xguJbPXOqKqsmEbKFQrBlnjdmOZDS0_g>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANUBzTXWga5sX6dA3MhSVb4M8bdc74zvsfN_z6I5Ka1I;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA, <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAGBEisKAxwcQTdfR7ALwCeQBrUVeU23F8uFvFmO-H6F0> .
+}
+

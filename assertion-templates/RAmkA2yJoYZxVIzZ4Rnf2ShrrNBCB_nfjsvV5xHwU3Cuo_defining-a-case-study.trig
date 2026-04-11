@@ -1,0 +1,214 @@
+@prefix this: <https://w3id.org/np/RAmkA2yJoYZxVIzZ4Rnf2ShrrNBCB_nfjsvV5xHwU3Cuo> .
+@prefix sub: <https://w3id.org/np/RAmkA2yJoYZxVIzZ4Rnf2ShrrNBCB_nfjsvV5xHwU3Cuo/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has the description" .
+  
+  rdfs:label rdfs:label "has title" .
+  
+  rdfs:seeAlso rdfs:label "further described on", "is further described by" .
+  
+  <https://schema.org/spatialCoverage> rdfs:label "covered area" .
+  
+  <https://schema.org/temporalCoverage> rdfs:label "time period covered" .
+  
+  <https://w3id.org/fair/fip/terms/has-description-source> rdfs:label "has description source" .
+  
+  sub:area a nt:ExternalUriPlaceholder;
+    rdfs:label "geographical area (NUTS)" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Template for defining a Case Study";
+    rdfs:label "Defining a Case study";
+    nt:hasRequiredPubinfoElement ns1:RA_R5w4lZ-6xuZyylG8qSlMhmWBaTE41-zlhiBVUQblCc;
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st07a, sub:st11, sub:st12, sub:st13, sub:st14, sub:st15, sub:st16, sub:st17;
+    nt:hasTag "FAIR" .
+  
+  sub:case a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "case study" .
+  
+  sub:caseInfo a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of case study website" .
+  
+  sub:challenge a nt:LiteralPlaceholder;
+    rdfs:label "challenge" .
+  
+  sub:contact a nt:AgentPlaceholder;
+    rdfs:label "contact person (ORCID)" .
+  
+  sub:description a nt:LiteralPlaceholder;
+    rdfs:label "description" .
+  
+  sub:domain a nt:RestrictedChoicePlaceholder;
+    rdfs:label "research domain";
+    nt:possibleValuesFromApi "http://purl.org/np/RACXDZHEowTYDAzZvdmD0qIGpXZwY5ghMRBBlt6N8Iu5s" .
+  
+  sub:duration a nt:LiteralPlaceholder;
+    rdfs:label "duration period" .
+  
+  sub:goal a nt:LiteralPlaceholder;
+    rdfs:label "goal" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "title" .
+  
+  sub:organisation a nt:ExternalUriPlaceholder;
+    rdfs:label "organisation" .
+  
+  sub:project a nt:ExternalUriPlaceholder;
+    rdfs:label "project" .
+  
+  sub:projectname a nt:LiteralPlaceholder;
+    rdfs:label "the name of the project" .
+  
+  sub:source a nt:ExternalUriPlaceholder;
+    rdfs:label "source of description" .
+  
+  sub:st01 rdf:object <https://w3id/fff/req/Case-Study>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:case .
+  
+  sub:st02 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:case .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:case .
+  
+  sub:st04 rdf:object sub:source;
+    rdf:predicate <https://w3id.org/fair/fip/terms/has-description-source>;
+    rdf:subject sub:case .
+  
+  sub:st05 rdf:object sub:contact;
+    rdf:predicate <https://www.w3.org/ns/dcat#contactPoint>;
+    rdf:subject sub:case .
+  
+  sub:st06 rdf:object sub:organisation;
+    rdf:predicate <https://w3id/fff/req/coordinated-by>;
+    rdf:subject sub:case .
+  
+  sub:st07 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:organisation;
+    rdf:predicate <https://w3id/fff/req/has-member>;
+    rdf:subject sub:case .
+  
+  sub:st07a a nt:GroupedStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st08, sub:st10 .
+  
+  sub:st08 rdf:object sub:projectname;
+    rdf:predicate <https://w3id/fff/req/part-of-project>;
+    rdf:subject sub:case .
+  
+  sub:st10 rdf:object sub:website;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:project .
+  
+  sub:st11 a nt:RepeatableStatement;
+    rdf:object sub:domain;
+    rdf:predicate <https://w3id/fff/req/covers-domain>;
+    rdf:subject sub:case .
+  
+  sub:st12 a nt:RepeatableStatement;
+    rdf:object sub:area;
+    rdf:predicate <https://schema.org/spatialCoverage>;
+    rdf:subject sub:case .
+  
+  sub:st13 rdf:object sub:duration;
+    rdf:predicate <https://schema.org/temporalCoverage>;
+    rdf:subject sub:case .
+  
+  sub:st14 a nt:RepeatableStatement;
+    rdf:object sub:challenge;
+    rdf:predicate <https://w3id/fff/req/has-challenge>;
+    rdf:subject sub:case .
+  
+  sub:st15 a nt:RepeatableStatement;
+    rdf:object sub:goal;
+    rdf:predicate <https://w3id/fff/req/has-goal>;
+    rdf:subject sub:case .
+  
+  sub:st16 rdf:object sub:caseInfo;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:case .
+  
+  sub:st17 a nt:RepeatableStatement;
+    rdf:object sub:story;
+    rdf:predicate <https://w3id/fff/req/has-user-story>;
+    rdf:subject sub:case .
+  
+  sub:story a nt:GuidedChoicePlaceholder;
+    rdfs:label "user story";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https://w3id.org/fff/req/User-Story" .
+  
+  sub:website a nt:ExternalUriPlaceholder;
+    rdfs:label "website" .
+  
+  <https://w3id/fff/req/Case-Study> rdfs:label "case study" .
+  
+  <https://w3id/fff/req/coordinated-by> rdfs:label "is coordinated by" .
+  
+  <https://w3id/fff/req/covers-domain> rdfs:label "covers domain" .
+  
+  <https://w3id/fff/req/has-challenge> rdfs:label "has challenge" .
+  
+  <https://w3id/fff/req/has-goal> rdfs:label "has goal" .
+  
+  <https://w3id/fff/req/has-member> rdfs:label "has member" .
+  
+  <https://w3id/fff/req/has-user-story> rdfs:label "has user story" .
+  
+  <https://w3id/fff/req/part-of-project> rdfs:label "is part of project" .
+  
+  <https://www.w3.org/ns/dcat#contactPoint> rdfs:label "has contact point" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  this: dct:created "2026-01-07T12:51:26.107Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RATy32c9u_cy-oNMKTOZJ4OCbUih7qI04R09S6B9gstPs>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Defining a Case study";
+    prov:wasDerivedFrom ns1:RAntWwY-oLQ5QTSviLZrZ6GD6dniz-_skWtO-4_8031zU, ns1:RAtG8zeo_0OYP63K60rrot8vFOkHNOg_1_zu618NbL4pI,
+      <https://w3id.org/np/RA2FzWT-kYUWZae1lP-dcHbpDzXgprPS9NTbeIJ3feEGs>, <https://w3id.org/np/RAHvFJa5qmcA7pokZ39ZYXYq7HUp43shYjr8CyUe0aRWY>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCM0tu3I/KK6A/qPha/6pfngQZ4LBQpLnKAcIUuZLnSEb0epJ2IoY3zh/4N42us/6LpCHgZZZtSOTm5/KVo+OTDIqo294PpEZAO70u5DcMcGMC5OufzxGKs3Dwdo6XqPiDHxXuiaKCTO7/ABWAi7CtFoMrqJAHfeyqe82dAiH2IiwIDAQAB";
+    npx:hasSignature "OZDjeRilGnkjKbzwkEIsHumia1RfRfuRO2kPRHhZ1PZBuK0+CQt59VH/8D5gFebEBtvmiJlBJYjKMW6J1NhCsCxFfG0DNY2C/qI66lqozdlL9Ec9mRxUludQOUihBoGfd021xvdpswYASNWcM13ACRyjkvglogRNDsj7QXz29GU=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+}
+

@@ -1,0 +1,62 @@
+@prefix this: <https://w3id.org/np/RAWV2vOCOfJ2qoeejTujjpx5SzT9uT7shWeKkvGDp92Tc> .
+@prefix sub: <https://w3id.org/np/RAWV2vOCOfJ2qoeejTujjpx5SzT9uT7shWeKkvGDp92Tc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://www.wikidata.org/entity/P1344> rdfs:label "participated in - Connects a person (left) an event (right) he/she is a participant in." .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Declaring the participation in the Nano Session #24";
+    nt:hasNanopubLabelPattern "Participation in the Nano Session #24";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Events" .
+  
+  sub:st1 rdf:object <https://w3id.org/spaces/nanopub/nanosessions/session24>;
+    rdf:predicate <http://www.wikidata.org/entity/P1344>;
+    rdf:subject nt:CREATOR .
+  
+  <https://w3id.org/spaces/nanopub/nanosessions/session24> rdfs:label "the Nano Session #24" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-09-23T11:43:43.529+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAvNiRmGggM4GCv1iu4i66uKWdxdQh2T2G0H6s6T5cZqc>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Declaring the participation in the Nano Session #24";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "nwVos4WUIwiDdcm9kILwjn5V21OsP/We5JRlKABKTH05euSN/CsRCXM3iwkewb5H1F6XOZAL0r2UdaFNxXniLOPDe3Cu117gqr7R+a2IODza2fTc2HeeTO9ByD4A+Zbgj5gEtn/B1Gb5DIrtOr+6iy7KQbhDCWpZpPo9sXUJdmE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

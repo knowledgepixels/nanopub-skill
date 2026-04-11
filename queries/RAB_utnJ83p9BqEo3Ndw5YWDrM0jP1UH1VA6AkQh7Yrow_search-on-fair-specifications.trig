@@ -1,0 +1,79 @@
+@prefix this: <https://w3id.org/np/RAB_utnJ83p9BqEo3Ndw5YWDrM0jP1UH1VA6AkQh7Yrow> .
+@prefix sub: <https://w3id.org/np/RAB_utnJ83p9BqEo3Ndw5YWDrM0jP1UH1VA6AkQh7Yrow/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:find-fair-specifications a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query performs a full-text search on FAIR Specifications.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Search on FAIR Specifications";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/text>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+prefix search: <http://www.openrdf.org/contrib/lucenesail#>
+
+select distinct ?thing ?label ?description ?np ?pubkey ?date where {
+  graph npa:graph {
+    values ?type { fip:FAIR-Specification fip:Metadata-schema fip:Semantic-model fip:Structured-vocabulary fip:Provenance-model }
+    ?np npx:hasNanopubType ?type .
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+    ?np dct:created ?date .
+    ?np npx:introduces|npx:describes ?thing .
+    ?np rdfs:label ?label .
+    optional { ?np dct:description ?description . }
+    ?np np:hasAssertion ?a .
+  }
+  ?np search:matches [
+    search:query ?_query ;
+    search:property rdfs:label ;
+    search:score ?score ;
+    search:snippet ?snippet ] .
+}
+limit 10""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-04-24T14:16:14.567Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:find-fair-specifications;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "ettqN8pX9Fi9SJ/eNpDUZfOeNrR5+kx9fWgjBEjW2tzaW8VjMeSEFqzusMVOLC50yLiMpEFIdjji46DndT6qVuE5qmIthid/6Tp6FBbZ87vMrfl4PXvuSsN0otp1CYagbask1khPVZ86kX1U3rhRcqpUYnSX/D+bllQ5R0BpW0s=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,88 @@
+@prefix this: <https://w3id.org/np/RAHsZvw0XhKfpWReXCk8ZsvdBzxX1aFJtRbXkgcj8rrS8> .
+@prefix sub: <https://w3id.org/np/RAHsZvw0XhKfpWReXCk8ZsvdBzxX1aFJtRbXkgcj8rrS8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:source rdfs:label "has the original source" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Declaring an original claim according to FORRT (deprecated)";
+    nt:hasStatement sub:st01, sub:st02, sub:st03;
+    nt:hasTag "FORRT" .
+  
+  sub:claim a nt:GuidedChoicePlaceholder, nt:IntroducedResource;
+    rdfs:label "AIDA sentence URI of claim";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fpurl.org%2Fpetapico%2Fo%2Fhycl%23AIDA-Sentence&searchterm=" .
+  
+  sub:forrtType a nt:RestrictedChoicePlaceholder;
+    rdfs:label "Type of FORRT claim";
+    nt:possibleValue <https://w3id.org/sciencelive/o/terms/computational_performance-FORRT-Claim>,
+      <https://w3id.org/sciencelive/o/terms/scalability-FORRT-Claim> .
+  
+  sub:source a nt:ExternalUriPlaceholder;
+    rdfs:label "source URI" .
+  
+  sub:st01 rdf:object <https://w3id.org/sciencelive/o/terms/FORRT-Claim>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:claim .
+  
+  sub:st02 rdf:object sub:forrtType;
+    rdf:predicate rdf:type;
+    rdf:subject sub:claim .
+  
+  sub:st03 a nt:OptionalStatement;
+    rdf:object sub:source;
+    rdf:predicate dct:source;
+    rdf:subject sub:claim .
+  
+  <https://w3id.org/sciencelive/o/terms/FORRT-Claim> rdfs:label "FORRT claim" .
+  
+  <https://w3id.org/sciencelive/o/terms/computational_performance-FORRT-Claim> rdfs:label
+      "computational performance (Computational & Performance)" .
+  
+  <https://w3id.org/sciencelive/o/terms/scalability-FORRT-Claim> rdfs:label "scalability (Computational & Performance)" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-02-26T07:47:33.685Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAmw2sp_oDePsdYg-7C8GCTMSzqAG2LFDe6NdRK0FwnQE>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Declaring an original claim according to FORRT (deprecated)";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "aqZqe+Ca4AYt2lgf14+lNJV6R32Mx+k0aC2lMpDB2/bB3l7KPJE5xi/xmLfyhmfNrBpsIMFiPfCDftY+N+TExGVl/bZAYxFKC4D12CFp3nVpd6wem8nD85U1+gtMSETmFMTPOzHKqxBdm+kPhmBBu6SE2cAOnAcgoB1MhbArwb4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

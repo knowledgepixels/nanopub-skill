@@ -1,0 +1,143 @@
+@prefix this: <http://purl.org/np/RA1ekjkshpkdtjNKNnCbdHlGRfT65IkN6sttki16dzvvw> .
+@prefix sub: <http://purl.org/np/RA1ekjkshpkdtjNKNnCbdHlGRfT65IkN6sttki16dzvvw#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    rdfs:label "Expressing a sample metabolite annotation";
+    nt:hasStatement sub:st010, sub:st020, sub:st030, sub:st040, sub:st050, sub:st060 .
+  
+  sub:extract a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "an extract" .
+  
+  sub:feature a nt:LocalResource;
+    rdfs:label "a feature" .
+  
+  sub:feature-list a nt:LocalResource;
+    rdfs:label "a feature list" .
+  
+  sub:inchikey2d a nt:ExternalUriPlaceholder;
+    rdfs:label "InChIKey2D";
+    nt:hasPrefix "https://enpkg.commons-lab.org/kg/";
+    nt:hasPrefixLabel "the InChIkey2D" .
+  
+  sub:lcms-analysis a nt:LocalResource;
+    rdfs:label "an LCMS analysis" .
+  
+  sub:sample a nt:LocalResource;
+    rdfs:label "a sample" .
+  
+  sub:sample-label a nt:LiteralPlaceholder;
+    rdfs:label "the label of the sample" .
+  
+  sub:sirius-adduct a nt:LiteralPlaceholder;
+    rdfs:label "the sirius adduct value" .
+  
+  sub:sirius-annotation a nt:LocalResource;
+    rdfs:label "a sirius annotation" .
+  
+  sub:sirius-score a nt:LiteralPlaceholder;
+    rdfs:label "the sirius score value" .
+  
+  sub:st010 rdf:object sub:sample;
+    rdf:predicate <https://enpkg.commons-lab.org/kg/has_lab_process>;
+    rdf:subject sub:extract .
+  
+  sub:st020 rdf:object sub:taxon;
+    rdf:predicate <https://enpkg.commons-lab.org/kg/submitted_taxon>;
+    rdf:subject sub:extract .
+  
+  sub:st030 rdf:object sub:sample-label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:sample .
+  
+  sub:st040 rdf:object sub:lcms-analysis;
+    rdf:predicate <https://enpkg.commons-lab.org/kg/has_LCMS>;
+    rdf:subject sub:sample .
+  
+  sub:st050 rdf:object sub:feature-list;
+    rdf:predicate <https://enpkg.commons-lab.org/kg/has_lcms_feature_list>;
+    rdf:subject sub:lcms-analysis .
+  
+  sub:st060 a nt:GroupedStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st061, sub:st062, sub:st063, sub:st064, sub:st065 .
+  
+  sub:st061 rdf:object sub:feature;
+    rdf:predicate <https://enpkg.commons-lab.org/kg/has_lcms_feature>;
+    rdf:subject sub:feature-list .
+  
+  sub:st062 rdf:object sub:sirius-annotation;
+    rdf:predicate <https://enpkg.commons-lab.org/kg/enpkg:has_sirius_annotation>;
+    rdf:subject sub:feature .
+  
+  sub:st063 rdf:object sub:inchikey2d;
+    rdf:predicate <https://enpkg.commons-lab.org/kg/has_InChIkey2D>;
+    rdf:subject sub:sirius-annotation .
+  
+  sub:st064 rdf:object sub:sirius-score;
+    rdf:predicate <https://enpkg.commons-lab.org/kg/has_sirius_score>;
+    rdf:subject sub:sirius-annotation .
+  
+  sub:st065 rdf:object sub:sirius-adduct;
+    rdf:predicate <https://enpkg.commons-lab.org/kg/has_sirius_adduct>;
+    rdf:subject sub:sirius-annotation .
+  
+  sub:taxon a nt:GuidedChoicePlaceholder;
+    rdfs:label "the taxon (e.g. species)";
+    nt:possibleValuesFromApi "https://vodex.petapico.org/nidx/query?rows=100&q=label:" .
+  
+  rdfs:label rdfs:label "has the label - connects a thing (left) to its human-readable label (right)" .
+  
+  <https://enpkg.commons-lab.org/kg/enpkg:has_sirius_annotation> rdfs:label "has the annotation" .
+  
+  <https://enpkg.commons-lab.org/kg/has_InChIkey2D> rdfs:label "is identified by" .
+  
+  <https://enpkg.commons-lab.org/kg/has_LCMS> rdfs:label "has the analysis" .
+  
+  <https://enpkg.commons-lab.org/kg/has_lab_process> rdfs:label "has as lab process" .
+  
+  <https://enpkg.commons-lab.org/kg/has_lcms_feature> rdfs:label "has as LCMS feature" .
+  
+  <https://enpkg.commons-lab.org/kg/has_lcms_feature_list> rdfs:label "has as feature list" .
+  
+  <https://enpkg.commons-lab.org/kg/has_sirius_adduct> rdfs:label "has the sirius adduct" .
+  
+  <https://enpkg.commons-lab.org/kg/has_sirius_score> rdfs:label "has the sirius score" .
+  
+  <https://enpkg.commons-lab.org/kg/submitted_taxon> rdfs:label "has the taxon" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "Ywx38YNbPFLGHkzNjfvIKKn86eMOwuiOl5nirF4AGLAUEZjSXnJyIaMw05Jjt63mgHJ0jtGps2YmtBu6v493rPlMEKn8UbuWdt/7bT0k3ewhKgACCYrPWnrrHnbSOb8XVjVTLlz5OwWdxb5ged/oqfRwhm8ujSlm9Keq0Y3553o=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-05-31T14:39:44.443Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    npx:supersedes <http://purl.org/np/RASgECbnmR7ONVJpdUqyD8ERmPKwvuaw3sxzaxy-XIeek>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RAkONP_jLqAbok3FgtutnKcLs4IHr9KiAuslQNnfEJIwY> .
+}
+

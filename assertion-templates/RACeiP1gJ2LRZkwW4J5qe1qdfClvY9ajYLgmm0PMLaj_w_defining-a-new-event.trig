@@ -1,0 +1,102 @@
+@prefix this: <https://w3id.org/np/RACeiP1gJ2LRZkwW4J5qe1qdfClvY9ajYLgmm0PMLaj_w> .
+@prefix sub: <https://w3id.org/np/RACeiP1gJ2LRZkwW4J5qe1qdfClvY9ajYLgmm0PMLaj_w/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://example.org/Event> rdfs:label "event" .
+  
+  dct:description rdfs:label "can be described as follows: - gives a thing (left) a human-readable description (right)" .
+  
+  rdf:type rdfs:label "is a - asserts that the given thing (left) belongs to the given class (right)" .
+  
+  rdfs:label rdfs:label "is called - connects an identifier to a human-readable name for it" .
+  
+  rdfs:seeAlso rdfs:label "is further explained at - connects an identifier to a link with further information about it" .
+  
+  <http://www.w3.org/2002/07/owl#NamedIndividual> rdfs:label "named individual - a concrete or abstract thing that is given an identifier and a name" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "With this template we can define events.";
+    rdfs:label "Defining a new event";
+    nt:hasNanopubLabelPattern "Event: ${name}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4;
+    nt:hasTag "Terms" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the individual" .
+  
+  sub:individual a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix - the formal identifier of the individual" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the individual" .
+  
+  sub:seeAlsoLink a nt:ExternalUriPlaceholder;
+    rdfs:label "a URL where more information about this individual can be found" .
+  
+  sub:st0 rdf:object <http://www.w3.org/2002/07/owl#NamedIndividual>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:individual .
+  
+  sub:st1 rdf:object <http://example.org/Event>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:individual .
+  
+  sub:st2 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:individual .
+  
+  sub:st3 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:individual .
+  
+  sub:st4 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:seeAlsoLink;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:individual .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: a npx:ExampleNanopub;
+    dct:created "2025-06-02T10:08:11.893Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Defining a new event";
+    prov:wasDerivedFrom ns1:RAnxJvccrJq_S63P6KP5ujwaLND5mV15iVke03AqVVF-o;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAXflINqt3smqxV5Aq7E9lzje4uLdkKIOefa6Bp8oJ8CY,
+      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA5reLVXOCPQFWr2UiCJb19ES7NwOpQRmudb17e2iB0c4> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "1hW79kfoieFCsy17dqLsTRYxxjNY7hFKVfnowkXP1GmB/m4oG03HaPAd9SS3K0p9moADfiMiC87I/wtvZixCThJxBMWjdsMj1CG8GqxtmtypxMyslj2oO2KlKeLQCMDJPERWijvik5gzt/2R7MeWoiyZzMFsBB71ScA66Afy7o4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

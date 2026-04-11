@@ -1,0 +1,138 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix dce: <http://purl.org/dc/elements/1.1/> .
+@prefix this: <http://purl.org/np/RA4bMi0lycKaR8OUuNCEgcQuf4WnllLxfe888Ae3zRDIE> .
+@prefix sub: <http://purl.org/np/RA4bMi0lycKaR8OUuNCEgcQuf4WnllLxfe888Ae3zRDIE#> .
+@prefix doco: <http://purl.org/spar/doco/> .
+@prefix ncit: <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix orcid: <https://orcid.org/> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+sub:Pub_Head_1 {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:Pub_Assertion_1;
+    np:hasProvenance sub:Pub_Provenance_1;
+    np:hasPublicationInfo sub:Pub_Pubinfo_1 .
+}
+
+sub:Pub_Assertion_1 {
+  ncit:C169076 rdfs:label "SARS Coronavirus 2 (COVID-19)" .
+  
+  dce:identifier rdfs:label "has a DOI" .
+  
+  dce:title rdfs:label "has a title" .
+  
+  dcterms:BibliographicResource rdfs:label "this publication" .
+  
+  dcterms:Publisher rdfs:label "was published by" .
+  
+  dcterms:subject rdfs:label "discussed a topic about" .
+  
+  sub:Pub_Assertion_1 a nt:AssertionTemplate;
+    rdfs:label "Commenting a publication about COVID-19";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6, sub:st7 .
+  
+  sub:abstract a nt:LiteralPlaceholder;
+    rdfs:label "add the abstract of the publication here" .
+  
+  sub:authors a nt:LiteralPlaceholder;
+    rdfs:label "add the authors of the publication here (separate by ',' )" .
+  
+  sub:comment a nt:LiteralPlaceholder;
+    rdfs:label "add your comments to the publication here" .
+  
+  sub:doi a nt:LiteralPlaceholder;
+    rdfs:label "add the DOI of the publication starting with '10.'" .
+  
+  sub:publication a nt:LocalResource;
+    rdfs:label "This publication" .
+  
+  sub:publishdate a nt:LiteralPlaceholder;
+    rdfs:label "add the publish date of the publication here (dd-mm-yyyy)" .
+  
+  sub:publisher a nt:LiteralPlaceholder;
+    rdfs:label "add the publisher of the publication here" .
+  
+  sub:st0 a rdf:Statement;
+    rdf:object ncit:C169076;
+    rdf:predicate dcterms:subject;
+    rdf:subject dcterms:BibliographicResource;
+    nt:statementOrder "0"^^xsd:integer .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:title;
+    rdf:predicate dce:title;
+    rdf:subject sub:publication;
+    nt:statementOrder "1"^^xsd:integer .
+  
+  sub:st2 a rdf:Statement;
+    rdf:object sub:doi;
+    rdf:predicate dce:identifier;
+    rdf:subject sub:publication;
+    nt:statementOrder "2"^^xsd:integer .
+  
+  sub:st3 a rdf:Statement;
+    rdf:object sub:authors;
+    rdf:predicate pav:authoredBy;
+    rdf:subject sub:publication;
+    nt:statementOrder "3"^^xsd:integer .
+  
+  sub:st4 a rdf:Statement;
+    rdf:object sub:abstract;
+    rdf:predicate doco:Abstract;
+    rdf:subject sub:publication;
+    nt:statementOrder "4"^^xsd:integer .
+  
+  sub:st5 a rdf:Statement;
+    rdf:object sub:publishdate;
+    rdf:predicate pav:createdOn;
+    rdf:subject sub:publication;
+    nt:statementOrder "5"^^xsd:integer .
+  
+  sub:st6 a rdf:Statement;
+    rdf:object sub:publisher;
+    rdf:predicate dcterms:Publisher;
+    rdf:subject sub:publication;
+    nt:statementOrder "6"^^xsd:integer .
+  
+  sub:st7 a rdf:Statement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:publication;
+    nt:statementOrder "7"^^xsd:integer .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "add the title of the publication here" .
+  
+  pav:authoredBy rdfs:label "was written by" .
+  
+  pav:createdOn rdfs:label "was published on " .
+  
+  doco:Abstract rdfs:label "has an abstract" .
+  
+  rdfs:comment rdfs:label "has my comment" .
+}
+
+sub:Pub_Provenance_1 {
+  sub:Pub_Assertion_1 prov:wasAttributedTo orcid:0000-0001-8325-8848 .
+}
+
+sub:Pub_Pubinfo_1 {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCXYA/ZaH6tFeN1Kl/PqqImwvcFqm/ifOGR0fXnbu5G/nPmP8OIHjnjjfdVvG4z1fa4FD/a+fzXXgko3xBLg6I/zypVHdYyXVCvZdlmmQ4YUOuxqJz0L44whJgwRdz8ahYHPCTchTj6xJ2KMUKP4l69NhkMAKRr0LR6qYReOSYr8QIDAQAB";
+    npx:hasSignature "jT7gAPKij8tJwW92tnaJctMeyWdKXCRoCPUItWSa9TqAlSN/8Cw1awbarDJbLWB/SrpuC0DyVHpT0LMHfFp4ggbvpBH13D1IDkVhxxKiOk/m6QXmzG2LjxSbCXaZyRaqH93H3cwR927iGW8WLXWk5RmvOpOktSPnX1yNvz/POZ8=";
+    npx:hasSignatureTarget this: .
+  
+  this: dcterms:contributor orcid:0000-0002-1501-1082;
+    dcterms:created "2020-04-16T23:00:44.817+01:00"^^xsd:dateTime;
+    dcterms:creator orcid:0000-0001-8325-8848;
+    dcterms:modified "2020-04-17T10:20:24.716+01:00"^^xsd:dateTime;
+    npx:supersedes <http://purl.org/np/RARw8SJDgZdipsA_sJyn1naeGZsJEfDo0e-_fzJsxkTvQ> .
+}
+

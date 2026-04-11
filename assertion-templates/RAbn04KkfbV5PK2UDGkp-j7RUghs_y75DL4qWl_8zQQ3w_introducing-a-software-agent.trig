@@ -1,0 +1,148 @@
+@prefix this: <https://w3id.org/np/RAbn04KkfbV5PK2UDGkp-j7RUghs_y75DL4qWl_8zQQ3w> .
+@prefix sub: <https://w3id.org/np/RAbn04KkfbV5PK2UDGkp-j7RUghs_y75DL4qWl_8zQQ3w/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  npx:Bot rdfs:label "bot - a software agent that acts/publishes autonomously" .
+  
+  npx:SoftwareAgent rdfs:label "software agent" .
+  
+  npx:SoftwareTool rdfs:label "software tool - a software agent that acts/publishes with direct human interaction" .
+  
+  npx:declaredBy rdfs:label "is declared by" .
+  
+  npx:hasAlgorithm rdfs:label "has algorithm" .
+  
+  npx:hasKeyLocation rdfs:label "has key location" .
+  
+  npx:hasPublicKey rdfs:label "has public key" .
+  
+  <http://purl.org/vocab/frbr/core#owner> rdfs:label "has the owner" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  foaf:name rdfs:label "has the name" .
+  
+  sub:agent a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "full URI or short suffix as agent ID" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Introducing a software agent";
+    nt:hasNanopubLabelPattern "${name}";
+    nt:hasStatement sub:st0, sub:st0.1, sub:st0.2, sub:st1, sub:st1.1, sub:st2, sub:st3;
+    nt:hasTag "Meta";
+    nt:hasTargetNanopubType npx:declaredBy .
+  
+  sub:coreType a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose whether this is a bot or a tool";
+    nt:possibleValue npx:Bot, npx:SoftwareTool .
+  
+  sub:extraType a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose additional type, if applicable";
+    nt:possibleValue <https://w3id.org/spaces/genaikg/r/ontology/GenAI-Agent> .
+  
+  sub:key-declaration a nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short id of key declaration";
+    nt:hasDefaultValue sub:decl .
+  
+  sub:key-declaration-ref a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue sub:key-declaration .
+  
+  sub:key-location a nt:UriPlaceholder;
+    rdfs:label "URL where the private key is stored" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "name of the software agent" .
+  
+  sub:owner a nt:AgentPlaceholder;
+    rdfs:label "choose owner" .
+  
+  sub:public-key a nt:LongLiteralPlaceholder;
+    rdfs:label "public key" .
+  
+  sub:st0 rdf:object npx:SoftwareAgent;
+    rdf:predicate rdf:type;
+    rdf:subject sub:agent .
+  
+  sub:st0.1 rdf:object sub:coreType;
+    rdf:predicate rdf:type;
+    rdf:subject sub:agent .
+  
+  sub:st0.2 a nt:OptionalStatement;
+    rdf:object sub:extraType;
+    rdf:predicate rdf:type;
+    rdf:subject sub:agent .
+  
+  sub:st1 rdf:object sub:name;
+    rdf:predicate foaf:name;
+    rdf:subject sub:agent .
+  
+  sub:st1.1 rdf:object sub:owner;
+    rdf:predicate <http://purl.org/vocab/frbr/core#owner>;
+    rdf:subject sub:agent .
+  
+  sub:st2 a nt:GroupedStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st2a, sub:st2b, sub:st2c .
+  
+  sub:st2a rdf:object sub:agent;
+    rdf:predicate npx:declaredBy;
+    rdf:subject sub:key-declaration .
+  
+  sub:st2b rdf:object "RSA";
+    rdf:predicate npx:hasAlgorithm;
+    rdf:subject sub:key-declaration .
+  
+  sub:st2c rdf:object sub:public-key;
+    rdf:predicate npx:hasPublicKey;
+    rdf:subject sub:key-declaration .
+  
+  sub:st3 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:key-location;
+    rdf:predicate npx:hasKeyLocation;
+    rdf:subject sub:key-declaration-ref .
+  
+  <https://w3id.org/spaces/genaikg/r/ontology/GenAI-Agent> rdfs:label "GenAI agent" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-01-29T08:47:46.735Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAyMwS3Bj9tETdNvFSd8yPI-RZuRzPmlynPCj2zHDRefs>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Introducing a software agent";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "0leo1mK5ReJslnlid80FGsQ7e5eygHVqahd96cI/fSobD6DF8m07wghbiHuyW1risabHzfLEnk6MmUTx0iX1DcpxzqPqlVtSAHLP8TsVlscmBVFXK5ZbhYz4QUvH9FLs65R8QT23j+GNKV6/J3ycX4xFOFVuIMZrvgdupOKEN9k=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

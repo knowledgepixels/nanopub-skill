@@ -1,0 +1,261 @@
+@prefix this: <https://w3id.org/np/RA1zOcTAv-a0nG6IBhaQbiwHQWLdyQ3CPWAatxRjQeq7s> .
+@prefix sub: <https://w3id.org/np/RA1zOcTAv-a0nG6IBhaQbiwHQWLdyQ3CPWAatxRjQeq7s/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://schema.org/url> rdfs:label "is accessible via" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has the description" .
+  
+  rdfs:label rdfs:label "is called" .
+  
+  rdfs:seeAlso rdfs:label "is further described by" .
+  
+  <http://www.w3.org/2004/02/skos/core#broadMatch> rdfs:label "has parent resource" .
+  
+  <http://www.w3.org/2004/02/skos/core#closeMatch> rdfs:label "can in some situations be considered the same as" .
+  
+  <http://www.w3.org/2004/02/skos/core#exactMatch> rdfs:label "is (almost) exactly the same as" .
+  
+  <http://www.w3.org/2004/02/skos/core#relatedMatch> rdfs:label "is related to" .
+  
+  <https://w3id.org/fair/fip/terms/Available-FAIR-Enabling-Resource> rdfs:label "available FAIR Enabling Resource" .
+  
+  <https://w3id.org/fair/fip/terms/Domain-Specific-Registry> rdfs:label "domain specific registry" .
+  
+  <https://w3id.org/fair/fip/terms/FAIR-Enabling-Resource-to-be-Developed> rdfs:label
+      "FAIR Enabling Resource to be developed" .
+  
+  <https://w3id.org/fair/fip/terms/Generalist-Registry> rdfs:label "generalist registry" .
+  
+  <https://w3id.org/fair/fip/terms/depends-on> rdfs:label "depends on" .
+  
+  <https://w3id.org/fair/fip/terms/has-MPP> rdfs:label "has metadata preservation policy" .
+  
+  <https://w3id.org/fair/fip/terms/has-persistency-policy> rdfs:label "has persistency policy" .
+  
+  <https://w3id.org/fair/fip/terms/implements> rdfs:label "implements" .
+  
+  <https://w3id.org/fair/fip/terms/targets> rdfs:label "targets a digital object type" .
+  
+  <https://w3id.org/fair/fip/terms/uses-AAS> rdfs:label "uses authentication and authorization service" .
+  
+  <https://w3id.org/fair/fip/terms/uses-identifier-service> rdfs:label "uses identifier service" .
+  
+  <https://w3id.org/gff/rao/terms/Data> rdfs:label "data" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Template for defining a registry of digital objects.";
+    rdfs:label "Defining a Registry";
+    nt:hasRequiredPubinfoElement ns1:RA_R5w4lZ-6xuZyylG8qSlMhmWBaTE41-zlhiBVUQblCc;
+    nt:hasStatement sub:st02, sub:st1, sub:st2, sub:st2a, sub:st3, sub:st3a, sub:st4,
+      sub:st5, sub:st6, sub:st7, sub:st8, sub:st8a, sub:st9, sub:st9a, sub:st9b, sub:st9c,
+      sub:st9d, sub:st9e;
+    nt:hasTag "FAIR";
+    nt:hasTargetNanopubType <https://w3id.org/fair/fip/terms/FAIR-Enabling-Resource>,
+      <https://w3id.org/fair/fip/terms/FAIR-Supporting-Resource> .
+  
+  sub:authentAuthorizsationService a nt:GuidedChoicePlaceholder;
+    rdfs:label "authentication and authorization service";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FAuthentication-and-authorization-service&searchterm=" .
+  
+  sub:comment a nt:LiteralPlaceholder;
+    rdfs:label "description of the registry" .
+  
+  sub:communication-protocol a nt:GuidedChoicePlaceholder;
+    rdfs:label "communication protocol";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FCommunication-protocol&searchterm=" .
+  
+  sub:identifier-service a nt:GuidedChoicePlaceholder;
+    rdfs:label "identifier service";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FIdentifier-service&searchterm=" .
+  
+  sub:mappedResource a nt:ExternalUriPlaceholder;
+    rdfs:label "the identifier of the related resource" .
+  
+  sub:mappingPredicate a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue <http://www.w3.org/2004/02/skos/core#broadMatch>, <http://www.w3.org/2004/02/skos/core#closeMatch>,
+      <http://www.w3.org/2004/02/skos/core#exactMatch>, <http://www.w3.org/2004/02/skos/core#relatedMatch> .
+  
+  sub:metadataPreservationPolicy a nt:GuidedChoicePlaceholder;
+    rdfs:label "metadata preservation policy";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FMetadata-preservation-policy&searchterm=" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the registry" .
+  
+  sub:persistence a nt:GuidedChoicePlaceholder;
+    rdfs:label "persistency policy";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FPersistency-Policy&searchterm=" .
+  
+  sub:registry a nt:GuidedChoicePlaceholder;
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FRegistry&searchterm=" .
+  
+  sub:resource a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix" .
+  
+  sub:resource-type1 a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue <https://w3id.org/fair/fip/terms/Available-FAIR-Enabling-Resource>,
+      <https://w3id.org/fair/fip/terms/FAIR-Enabling-Resource-to-be-Developed> .
+  
+  sub:resource-type2 a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue <https://w3id.org/fair/fip/terms/Domain-Specific-Registry>, <https://w3id.org/fair/fip/terms/Generalist-Registry> .
+  
+  sub:software a nt:GuidedChoicePlaceholder;
+    rdfs:label "FAIR Supporting software";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FFAIR-Supporting-Software&searchterm=" .
+  
+  sub:source a nt:ExternalUriPlaceholder;
+    rdfs:label "source of description" .
+  
+  sub:specification a nt:GuidedChoicePlaceholder;
+    rdfs:label "a specification that this registry implements";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAB_utnJ83p9BqEo3Ndw5YWDrM0jP1UH1VA6AkQh7Yrow/find-fair-specifications?query=" .
+  
+  sub:st02 rdf:object <https://w3id.org/fair/fip/terms/Registry>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st1 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:resource .
+  
+  sub:st2 rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:resource .
+  
+  sub:st2a a nt:OptionalStatement;
+    rdf:object sub:source;
+    rdf:predicate <https://w3id.org/fair/fip/terms/has-description-source>;
+    rdf:subject sub:resource .
+  
+  sub:st3 rdf:object sub:resource-type1;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st3a a nt:OptionalStatement;
+    rdf:object sub:resource-type2;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st4 a nt:RepeatableStatement;
+    rdf:object sub:target;
+    rdf:predicate <https://w3id.org/fair/fip/terms/targets>;
+    rdf:subject sub:resource .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:website;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:resource .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:url;
+    rdf:predicate <http://schema.org/url>;
+    rdf:subject sub:resource .
+  
+  sub:st7 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:communication-protocol;
+    rdf:predicate <https://w3id.org/fair/fip/terms/implements>;
+    rdf:subject sub:resource .
+  
+  sub:st8 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:identifier-service;
+    rdf:predicate <https://w3id.org/fair/fip/terms/uses-identifier-service>;
+    rdf:subject sub:resource .
+  
+  sub:st8a a nt:OptionalStatement;
+    rdf:object sub:persistence;
+    rdf:predicate <https://w3id.org/fair/fip/terms/has-persistency-policy>;
+    rdf:subject sub:resource .
+  
+  sub:st9 a nt:OptionalStatement;
+    rdf:object sub:metadataPreservationPolicy;
+    rdf:predicate <https://w3id.org/fair/fip/terms/has-MPP>;
+    rdf:subject sub:resource .
+  
+  sub:st9a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:authentAuthorizsationService;
+    rdf:predicate <https://w3id.org/fair/fip/terms/uses-AAS>;
+    rdf:subject sub:resource .
+  
+  sub:st9b a nt:OptionalStatement;
+    rdf:object sub:software;
+    rdf:predicate <https://w3id.org/fair/fip/terms/depends-on>;
+    rdf:subject sub:resource .
+  
+  sub:st9c a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:specification;
+    rdf:predicate <https://w3id.org/fair/fip/terms/implements>;
+    rdf:subject sub:resource .
+  
+  sub:st9d a nt:OptionalStatement;
+    rdf:object sub:registry;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#broadMatch>;
+    rdf:subject sub:resource .
+  
+  sub:st9e a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:mappedResource;
+    rdf:predicate sub:mappingPredicate;
+    rdf:subject sub:resource .
+  
+  sub:target a nt:GuidedChoicePlaceholder;
+    rdfs:label "digital object type";
+    nt:possibleValue <https://w3id.org/gff/rao/terms/Data>;
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FDigital-Object-Type&searchterm=" .
+  
+  sub:url a nt:ExternalUriPlaceholder;
+    rdfs:label "URL" .
+  
+  sub:website a nt:ExternalUriPlaceholder;
+    rdfs:label "a link to a website with further information" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  this: dct:created "2025-04-28T08:08:57.587Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Template: Defining a Registry";
+    prov:wasDerivedFrom ns1:RACoUdA6qFNrGSxO4tjeQg40HqhJwX9ykca7qVKoCWvpI, ns1:RAFsPaNlnZ7jDSaGvD8rYJ-Q97gkHc5R-zyYgfwIvJRC0,
+      ns1:RAOsTY-06ZXZY64rsZGuxUayLL_vljTv7QXNOhCfi0NCU, ns1:RAtG8zeo_0OYP63K60rrot8vFOkHNOg_1_zu618NbL4pI,
+      ns1:RAwK9qak-SuC_ViGqQpNOkd69EuI6zQY2Vqt9MhKnDiRE, <https://w3id.org/np/RAL6eDYjMSi6JwRupWEBxeVmLC07CxAvVYfBZRplBSVHo>,
+      <https://w3id.org/np/RAMDWPmsuPXZ17HbxJMzEKXVavW87UaUvT5ETaRFE0VAM>, <https://w3id.org/np/RAchYstA-whkWr9QkD4RtlxrFK84bKW-8Rrc0ifTyrtX0>,
+      <https://w3id.org/np/RAzl06zK9IqXQ__3KY6STZGE9SGY-t2utR5M0qnKI6nc4>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAGBEisKAxwcQTdfR7ALwCeQBrUVeU23F8uFvFmO-H6F0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFntPrMZqvg2kVhCNArNnEn37ddXGwZ/0r4C8CS4lDry7C7YkYgng9yb0UMZQUHiTVkR/5A4m/xjE+Vy+AnwcWUeB75SfGZjE5ylI6VeHjTHi9+2hh2PHYIWnkhU4WHl3COEnxSSa/VouvPzZ2BIWLH6fTrq7NNL3RF5hGegGG0QIDAQAB";
+    npx:hasSignature "Nn+cvAxnz/8i4Uj6IoMVYWBVCcgMA8mU6Wnc/FxSFArZGwLDDArusOpE6uBTvvboHFPR7gDgEAwwqraDmiL6HN0GRsTjzy0oZnR4DJU3bj9E45VdipKuP85ghHDAEILVk1hvVQQCvcMt7ek2XvlzxzGA05VjAlRXS5OX4Gkuld4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+}
+

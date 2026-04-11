@@ -1,0 +1,91 @@
+@prefix this: <https://w3id.org/np/RA7S19ZWuSQbru-KRRvOX2URTWRvUimOI739BdOypOGHU> .
+@prefix sub: <https://w3id.org/np/RA7S19ZWuSQbru-KRRvOX2URTWRvUimOI739BdOypOGHU#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix orcid: <https://orcid.org/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dcterms:description rdfs:label "has the description" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  rdfs:seeAlso rdfs:label "has more info at" .
+  
+  <https://w3id.org/kpxl/gen/terms/Evidence> rdfs:label "evidence" .
+  
+  <https://w3id.org/kpxl/gen/terms/supports> rdfs:label "supports" .
+  
+  sub:assertion a <https://w3id.org/np/o/ntemplate/AssertionTemplate>, <https://w3id.org/np/o/ntemplate/UnlistedTemplate>;
+    rdfs:label "Publishing an evidence";
+    <https://w3id.org/np/o/ntemplate/hasStatement> sub:st1, sub:st2, sub:st3, sub:st4,
+      sub:st5;
+    <https://w3id.org/np/o/ntemplate/hasTargetNanopubType> <https://w3id.org/kpxl/gen/terms/ClaimsAndEvidences> .
+  
+  sub:claim a <https://w3id.org/np/o/ntemplate/GuidedChoicePlaceholder>;
+    rdfs:label "[[EVD]] - example published evd - [[@someSource]]";
+    <https://w3id.org/np/o/ntemplate/possibleValuesFromApi> "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Fkpxl%2Fgen%2Fterms%2FClaim&searchterm=" .
+  
+  sub:description a <https://w3id.org/np/o/ntemplate/LongLiteralPlaceholder>;
+    rdfs:label "description of the result" .
+  
+  sub:label a <https://w3id.org/np/o/ntemplate/LiteralPlaceholder>;
+    rdfs:label "label for the result" .
+  
+  sub:link a <https://w3id.org/np/o/ntemplate/ExternalUriPlaceholder>;
+    rdfs:label "link with further info" .
+  
+  sub:result a <https://w3id.org/np/o/ntemplate/IntroducedResource>, <https://w3id.org/np/o/ntemplate/LocalResource>;
+    rdfs:label "this result" .
+  
+  sub:st1 rdf:object <https://w3id.org/kpxl/gen/terms/Evidence>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:result .
+  
+  sub:st2 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:result .
+  
+  sub:st3 a <https://w3id.org/np/o/ntemplate/OptionalStatement>;
+    rdf:object sub:description;
+    rdf:predicate dcterms:description;
+    rdf:subject sub:result .
+  
+  sub:st4 a <https://w3id.org/np/o/ntemplate/OptionalStatement>, <https://w3id.org/np/o/ntemplate/RepeatableStatement>;
+    rdf:object sub:link;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:result .
+  
+  sub:st5 a <https://w3id.org/np/o/ntemplate/OptionalStatement>, <https://w3id.org/np/o/ntemplate/RepeatableStatement>;
+    rdf:object sub:claim;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/supports>;
+    rdf:subject sub:result .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:1234-1234-1234-1234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAo2NYLBcZmpOkjgqLiT7hMxzRaK5KhYYHxxN2gCAMfmOaulAxAzPUNBJLIXjX3yQeIj6rAH4haWNAEUGPdiua/D+Pmu/Hrva3mK29lsWW9ajyZr0e12erDdaBw+3XfxMkKCZkLJjina6mi0W80e7Wa3+dsrypMDVl3CFYVvLsXu4lIMYqI2aVvbKyqCv6hUaWlGUip+2f84LQx/RSZGGwbBjwzKqe/Cs7frCW/lNlvsAkkst+IyFMcekEW875+rnsXP3phcP9Q1Ocu8wbnYYAu5lZPL19YFDSso2Qc5TpkXK3rawDYH36rOX8f0zBzdcbZAPx9btSCgXyqMpP8U4TCwIDAQAB";
+    npx:hasSignature "jhzBTi05FdJukcYmalz+CKH6K5R1ENRND5NeqZ42nWw7RfYrRNun4wZrwmugvLqpnWj/VUduBAjZxDAEiclRuISqpz4jiYpcehekpaZhI8NYQSpT6erUTsDpHPmAivDPGPaVsJAJWm3oJqiyXYi+ZDNH9lWGD/mpNdvhuaMzYuVoM4eYiUo/VNe7yBIn7aYi2N5cKVxVlPIbGroJluxgAchHEsPTGXVWbr2Ufdn5F4Kevs3K4lojJknZwt/xbqeGKs6zHtc1ise068aylSJYucCyrtOEFXFBptYREqrUbXNc4RyeRpOk0tu4jbvGnxOa1B6V5pPOBIefz/72YW0opA==";
+    npx:hasSignatureTarget this: .
+  
+  this: dcterms:created "2024-09-05T00:47:39.995Z"^^xsd:dateTime;
+    dcterms:creator orcid:0000-0000-0000-0000 .
+}
+

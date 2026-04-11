@@ -1,0 +1,64 @@
+@prefix this: <https://w3id.org/np/RAiPm1EFNIu-DP4hJkVXvbUiyEFIPI1W5Fj8mXSRaoEQQ> .
+@prefix sub: <https://w3id.org/np/RAiPm1EFNIu-DP4hJkVXvbUiyEFIPI1W5Fj8mXSRaoEQQ/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.obolibrary.org/obo/SEPIO_0000101> rdfs:label "contradicts" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication expresses a contradiction.";
+    rdfs:label "Expressing a contradiction";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Contradiction" .
+  
+  sub:st1 rdf:object sub:statement2;
+    rdf:predicate <http://purl.obolibrary.org/obo/SEPIO_0000101>;
+    rdf:subject sub:statement1 .
+  
+  sub:statement1 a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the initial statement that is contradicted by another statement" .
+  
+  sub:statement2 a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the statement that contradicts the initial statement" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-9488-1870 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-9488-1870 foaf:name "Daniel Mietchen" .
+  
+  this: dct:created "2026-02-05T15:59:17.705Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-9488-1870;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Expressing a contradiction";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCW+VopfbAsAusLtasUe5QnVQL4ovdEXZRd7/44ZfSOuSYBr9BOFBxBoxBpfdCij85m1UHz3Dvb9YLSfx8oSyhdGhBFO4m6zimJ1hpnHQe5jA1cvF6PRYznWgQAhwC4RaYhZJ4MkzVMxXmWTI+8hYRn4oC2+qsg7DJjiS+cttD3tQIDAQAB";
+    npx:hasSignature "Cf5zFKbODsRPfjlc9s1+vChMrgWgHBt/YbVPg2sJdEvR4elPaknXvVRwb58W8kpRHfKZhX6VdmRnq9qAX4oZ871M0Z4hXM2rju9N+q/OrhmB8BLzi982UZ1nNjSLGoBkVOUIWhSnRaK+6oh9QrWBXCOSLkrrLADBwUcL/9H1g4w=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-9488-1870 .
+}
+

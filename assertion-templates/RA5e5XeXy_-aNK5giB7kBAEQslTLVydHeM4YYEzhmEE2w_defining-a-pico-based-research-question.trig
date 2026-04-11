@@ -1,0 +1,165 @@
+@prefix this: <https://w3id.org/np/RA5e5XeXy_-aNK5giB7kBAEQslTLVydHeM4YYEzhmEE2w> .
+@prefix sub: <https://w3id.org/np/RA5e5XeXy_-aNK5giB7kBAEQslTLVydHeM4YYEzhmEE2w/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://data.cochrane.org/ontologies/pico/PICO> rdfs:label "PICO-based research question" .
+  
+  <http://data.cochrane.org/ontologies/pico/comparatorGroup> rdfs:label "has" .
+  
+  <http://data.cochrane.org/ontologies/pico/interventionGroup> rdfs:label "has" .
+  
+  <http://data.cochrane.org/ontologies/pico/outcomeGroup> rdfs:label "has" .
+  
+  <http://data.cochrane.org/ontologies/pico/population> rdfs:label "has" .
+  
+  dct:description rdfs:label "has the description" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Defining a PICO-based research question";
+    nt:hasStatement sub:st1, sub:st1b, sub:st2, sub:st3, sub:st4a, sub:st4b, sub:st5a,
+      sub:st5b, sub:st6a, sub:st6b, sub:st7a, sub:st7b .
+  
+  sub:comparatorGroup a nt:LocalResource;
+    rdfs:label "a comparator group" .
+  
+  sub:comparatorGroupDescription a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the comparator group" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the research question" .
+  
+  sub:interventionGroup a nt:LocalResource;
+    rdfs:label "an intervention group" .
+  
+  sub:interventionGroupDescription a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the intervention group" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "label for the research question" .
+  
+  sub:outcomeGroup a nt:LocalResource;
+    rdfs:label "an outcome group" .
+  
+  sub:outcomeGroupDescription a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the outcome group" .
+  
+  sub:pico a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID used as URI suffix" .
+  
+  sub:population a nt:LocalResource;
+    rdfs:label "a population" .
+  
+  sub:populationDescription a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the population" .
+  
+  sub:st1 rdf:object <http://data.cochrane.org/ontologies/pico/PICO>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:pico .
+  
+  sub:st1b rdf:object sub:type;
+    rdf:predicate rdf:type;
+    rdf:subject sub:pico .
+  
+  sub:st2 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:pico .
+  
+  sub:st3 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:pico .
+  
+  sub:st4a rdf:object sub:population;
+    rdf:predicate <http://data.cochrane.org/ontologies/pico/population>;
+    rdf:subject sub:pico .
+  
+  sub:st4b rdf:object sub:populationDescription;
+    rdf:predicate dct:description;
+    rdf:subject sub:population .
+  
+  sub:st5a rdf:object sub:interventionGroup;
+    rdf:predicate <http://data.cochrane.org/ontologies/pico/interventionGroup>;
+    rdf:subject sub:pico .
+  
+  sub:st5b rdf:object sub:interventionGroupDescription;
+    rdf:predicate dct:description;
+    rdf:subject sub:interventionGroup .
+  
+  sub:st6a rdf:object sub:comparatorGroup;
+    rdf:predicate <http://data.cochrane.org/ontologies/pico/comparatorGroup>;
+    rdf:subject sub:pico .
+  
+  sub:st6b rdf:object sub:comparatorGroupDescription;
+    rdf:predicate dct:description;
+    rdf:subject sub:comparatorGroup .
+  
+  sub:st7a rdf:object sub:outcomeGroup;
+    rdf:predicate <http://data.cochrane.org/ontologies/pico/outcomeGroup>;
+    rdf:subject sub:pico .
+  
+  sub:st7b rdf:object sub:outcomeGroupDescription;
+    rdf:predicate dct:description;
+    rdf:subject sub:outcomeGroup .
+  
+  sub:type a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose the type of research question";
+    nt:possibleValue <https://w3id.org/sciencelive/o/terms/CausationResearchQuestion>,
+      <https://w3id.org/sciencelive/o/terms/DescriptiveResearchQuestion>, <https://w3id.org/sciencelive/o/terms/EffectivenessResearchQuestions>,
+      <https://w3id.org/sciencelive/o/terms/ExperienceResearchQuestions>, <https://w3id.org/sciencelive/o/terms/PredictionResearchQuestions> .
+  
+  <https://w3id.org/sciencelive/o/terms/CausationResearchQuestion> rdfs:label "causation research question - (Does factor X cause outcome Y?)" .
+  
+  <https://w3id.org/sciencelive/o/terms/DescriptiveResearchQuestion> rdfs:label "descriptive research question - (What are the characteristics of X?)" .
+  
+  <https://w3id.org/sciencelive/o/terms/EffectivenessResearchQuestions> rdfs:label "effectiveness research question - (Does approach X work better than Y?)" .
+  
+  <https://w3id.org/sciencelive/o/terms/ExperienceResearchQuestions> rdfs:label "experience research question - (How do people experience phenomenon X?)" .
+  
+  <https://w3id.org/sciencelive/o/terms/PredictionResearchQuestions> rdfs:label "prediction research question - (What outcomes can we expect from X?)" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-11-14T09:07:31.703Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAb2Ga3ljDl0h07h2zqs6KcFfkKoNOV1mpFdYdJhtOs9o>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Defining a PICO-based research question";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "0DJ+PaD/gMmGCAyohI6KMOr6KSHHsxEH9ajLLSt0BgWUxlgfDRaohgpD2p41fQuJhEsuvmg0WuCrcvyVUx1luuWMdjDlkF+yzeLRfWU+t5lqgfw7s8GaKybAhuEuPSuAfgMFLgauSchUMesyZGubcqlYwYPHkutsHSVx/NkCF/E=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

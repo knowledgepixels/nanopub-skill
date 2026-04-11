@@ -1,0 +1,251 @@
+@prefix this: <https://w3id.org/np/RA3MNdcfOwPpTdX3rhG-07i9dwQnQIZ3k4pRSSEjJZ1nc> .
+@prefix sub: <https://w3id.org/np/RA3MNdcfOwPpTdX3rhG-07i9dwQnQIZ3k4pRSSEjJZ1nc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.obolibrary.org/obo/BTO_0000487> rdfs:label "fruit body" .
+  
+  <http://purl.obolibrary.org/obo/BTO_0001171> rdfs:label "spore" .
+  
+  rdf:type rdfs:label "is an instance of" .
+  
+  rdfs:comment rdfs:label "has the free-text comment" .
+  
+  <http://www.w3.org/2002/07/owl#sameAs> rdfs:label "is the same as" .
+  
+  <http://www.w3.org/2003/01/geo/wgs84_pos#location> rdfs:label "has the location" .
+  
+  <https://w3id.org/biolink/vocab/object> rdfs:label "links the organism to the nucleotide sequence" .
+  
+  <https://w3id.org/biolink/vocab/predicate> rdfs:label "refers to the relation" .
+  
+  <https://w3id.org/biolink/vocab/subject> rdfs:label "refers to" .
+  
+  <https://w3id.org/biolink/vocab/timepoint> rdfs:label "has the time stamp - points to the date and time associated with this relation or organism (e.g. date of collection); if occurrence URI is given, this is redundant and does not need to be filled in" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/OrganismToNucleotideSequenceAssociation> rdfs:label
+      "an association of an organism to a nucleotide sequence" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasAssembledNucleotideSequence> rdfs:label "assembled nucleotide sequence" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasIsolationProtocol> rdfs:label "has the isolation protocol" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasLifeCycleStage> rdfs:label "has the life cycle stage" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasLocationCoordinates> rdfs:label "has the location coordinates - points to the location coordinates associated with this relation or organism (e.g. place of collection); if occurrence URI is given, this is redundant and does not need to be filled in" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasObservedNucleotideSequence> rdfs:label "observed nucleotide sequence" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasOccurrence> rdfs:label "has the occurrence - links an organism to a record of a specific occurrence of it" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasSampleType> rdfs:label "has the sample type" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasSequencedNucleotideSequence> rdfs:label "sequenced nucleotide sequence" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasStrainID> rdfs:label "has the strain ID" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition> rdfs:label "is used as defined in" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonName> rdfs:label "has the name - links a taxon usage to a taxon name" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/isIdentifiedByNuceotideSequence> rdfs:label "identified by nucleotide sequence" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "<p>Such a nanopublication expresses an association between an organism (normally identified as belonging to a certain taxon concept) and a nucleotide sequence (that can correspond to a full genome sequence, a gene, or a subunit of a gene), for example expressing that Sequence ID (INSDC / Genbank accession number or BOLD Process ID) identifies Organism X as belonging to a Taxon Concept Y.</p>";
+    rdfs:label "Expressing an association between an organism and a nucleotide sequence (extended)";
+    nt:hasDefaultProvenance ns1:RAYfEAP8KAu9qhBkCtyq_hshOvTAJOcdfIvGhiGwUqB-M;
+    nt:hasNanopubLabelPattern "Organism of ${taxonname} - ${relation} - ${nucleotidesequence}";
+    nt:hasStatement sub:st00, sub:st05, sub:st09, sub:st10, sub:st11, sub:st12, sub:st20,
+      sub:st25, sub:st30, sub:st80, sub:st81, sub:st82, sub:st83, sub:st85, sub:st86, sub:st87,
+      sub:st90;
+    nt:hasTag "Biodiversity";
+    nt:hasTargetNanopubType <https://w3id.org/kpxl/biodiv/terms/BiodivNanopub> .
+  
+  sub:association a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this association" .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "short explanation related to the above statement" .
+  
+  sub:coordinates a nt:LiteralPlaceholder;
+    rdfs:label "lat/long e.g. '+47.37+8.54' or with altitude '+47.37+8.54+410.5'";
+    nt:hasRegex "[+-][0-9]+(\\.[0-9]+)?[+-][0-9]+(\\.[0-9]+)?([+-][0-9]+(\\.[0-9]+)?)?" .
+  
+  sub:isolationProtocol a nt:ExternalUriPlaceholder;
+    rdfs:label "DOI of isolation protocol document";
+    nt:hasRegex "https://doi\\.org/.+" .
+  
+  sub:lifecyclestage a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select the life cycle stage of the organism; leave blank if unknown";
+    nt:possibleValue <http://purl.obolibrary.org/obo/BTO_0000487>, <http://purl.obolibrary.org/obo/BTO_0001171>;
+    nt:possibleValuesFrom ns1:RAVZS2MV-siFEqsgFTtgSoKA5qJkp7r1nM_n-MqPkvgdE .
+  
+  sub:location a nt:ExternalUriPlaceholder;
+    rdfs:label "GeoNames location ID (https://sws.geonames.org/.../)";
+    nt:hasRegex "https://sws\\.geonames\\.org/[0-9]+/" .
+  
+  sub:nucleotidesequence a nt:ExternalUriPlaceholder;
+    rdfs:label "INSDC/Genbank # (e.g. https://www.ncbi.nlm.nih.gov/nuccore/...)" .
+  
+  sub:occurrence a nt:ExternalUriPlaceholder;
+    rdfs:label "occurrence URI from GBIF (https://www.gbif.org/occurrence/...) or iDigBio, BOLD, PlutoF, etc." .
+  
+  sub:organism a nt:LocalResource;
+    rdfs:label "the organism" .
+  
+  sub:organismAlt a nt:ExternalUriPlaceholder;
+    rdfs:label "any existing URI identifier of organism (e.g. of digital collection specimen or observation in nature)" .
+  
+  sub:relation a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the relation between the organism and the nucleotide sequence";
+    nt:hasDefaultValue <https://w3id.org/kpxl/biodiv/terms/hasObservedNucleotideSequence>;
+    nt:possibleValue <https://w3id.org/kpxl/biodiv/terms/hasAssembledNucleotideSequence>,
+      <https://w3id.org/kpxl/biodiv/terms/hasObservedNucleotideSequence>, <https://w3id.org/kpxl/biodiv/terms/hasSequencedNucleotideSequence>,
+      <https://w3id.org/kpxl/biodiv/terms/isIdentifiedByNuceotideSequence> .
+  
+  sub:sampleType a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the type of sample";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=uberon&q=" .
+  
+  sub:st00 rdf:object <https://w3id.org/kpxl/biodiv/terms/OrganismToNucleotideSequenceAssociation>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:association .
+  
+  sub:st05 rdf:object sub:relation;
+    rdf:predicate <https://w3id.org/biolink/vocab/predicate>;
+    rdf:subject sub:association .
+  
+  sub:st09 rdf:object sub:organism;
+    rdf:predicate <https://w3id.org/biolink/vocab/subject>;
+    rdf:subject sub:association .
+  
+  sub:st10 rdf:object sub:taxon;
+    rdf:predicate rdf:type;
+    rdf:subject sub:organism .
+  
+  sub:st11 rdf:object sub:taxonname;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonName>;
+    rdf:subject sub:taxon .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:taxondef;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition>;
+    rdf:subject sub:taxon .
+  
+  sub:st20 a nt:OptionalStatement;
+    rdf:object sub:lifecyclestage;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasLifeCycleStage>;
+    rdf:subject sub:organism .
+  
+  sub:st25 a nt:OptionalStatement;
+    rdf:object sub:occurrence;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasOccurrence>;
+    rdf:subject sub:organism .
+  
+  sub:st30 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:organismAlt;
+    rdf:predicate <http://www.w3.org/2002/07/owl#sameAs>;
+    rdf:subject sub:organism .
+  
+  sub:st80 a nt:OptionalStatement;
+    rdf:object sub:location;
+    rdf:predicate <http://www.w3.org/2003/01/geo/wgs84_pos#location>;
+    rdf:subject sub:association .
+  
+  sub:st81 a nt:OptionalStatement;
+    rdf:object sub:coordinates;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasLocationCoordinates>;
+    rdf:subject sub:association .
+  
+  sub:st82 a nt:OptionalStatement;
+    rdf:object sub:timepoint;
+    rdf:predicate <https://w3id.org/biolink/vocab/timepoint>;
+    rdf:subject sub:association .
+  
+  sub:st83 a nt:OptionalStatement;
+    rdf:object sub:sampleType;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasSampleType>;
+    rdf:subject sub:association .
+  
+  sub:st85 rdf:object sub:nucleotidesequence;
+    rdf:predicate <https://w3id.org/biolink/vocab/object>;
+    rdf:subject sub:association .
+  
+  sub:st86 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:strainid;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasStrainID>;
+    rdf:subject sub:association .
+  
+  sub:st87 a nt:OptionalStatement;
+    rdf:object sub:isolationProtocol;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasIsolationProtocol>;
+    rdf:subject sub:association .
+  
+  sub:st90 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject nt:ASSERTION .
+  
+  sub:strainid a nt:LiteralPlaceholder;
+    rdfs:label "Strain ID string (e.g. DSMZ, ATCC)" .
+  
+  sub:taxon a nt:LocalResource;
+    rdfs:label "the taxon concept" .
+  
+  sub:taxondef a nt:ExternalUriPlaceholder;
+    rdfs:label "DOI (https://doi.org/...) or treatment ID (https://treatment.plazi.org/id/...)";
+    nt:hasRegex "(https://doi\\.org/|https://treatment\\.plazi\\.org/id/).+" .
+  
+  sub:taxonname a nt:GuidedChoicePlaceholder;
+    rdfs:label "search and select from list (if not found, paste identifying URI from IPNI, MycoBank, Index Fungorum, or Zoobank)";
+    nt:possibleValuesFromApi "https://vodex.petapico.org/nidx/query?rows=100&q=label:" .
+  
+  sub:timepoint a nt:LiteralPlaceholder;
+    rdfs:label "time expressed in XSD DateTime format, e.g. '2023-03-30T22:17:11Z'";
+    nt:hasRegex "-?([1-9]\\d\\d\\d+|0\\d\\d\\d)-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T(([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(\\.\\d+)?|24:00:00(\\.0+)?)(Z|[+-](0\\d|1[0-4]):[0-5]\\d)?" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-12-15T08:30:23.393Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAInHt3ngomYe6YObDAZwqYKtWdi12RFuaaJ5I8G6DM5U>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Expressing an association between an organism and a nucleotide sequence (extended)";
+    prov:wasDerivedFrom ns1:RACPgaoRptG1W-IZpNk6r-MBSMgcdZlaMrAtli9GkmKaE;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "DNw6VUk2xJTKXmtbMBXfN2TIze8KYkzzUoiNY2rGgEvaGRMqMgF/k8oB9KEOrzR3hHSTnrSDtlBzej3lhSAqrxoJeioxhcdr98KBXTC7lsYaIPyncX4UbyRUPBjwyv4f1i7m9sb+zPyvdZWqJ5KBmPJ5aStJeDDFzq14XJbAq3U=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

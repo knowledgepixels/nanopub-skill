@@ -1,0 +1,103 @@
+@prefix this: <http://purl.org/np/RACyYqNqIDVQaygXRcuS0hVlk-dmXpDU8Aeu48wBiDVZs> .
+@prefix sub: <http://purl.org/np/RACyYqNqIDVQaygXRcuS0hVlk-dmXpDU8Aeu48wBiDVZs#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:date rdfs:label "has date" .
+  
+  <http://purl.org/np/RA1Y-4tZgvmATmwtajkHweNyZccG14vyamk71QXwkk4Kc#M4M-governance>
+    rdfs:label "M4M governance workshop" .
+  
+  <http://purl.org/np/RA95gK2_lNH6m4TwbUwTeAvQDd6p6_n12KfVsBtEetSDA#M4M-variable> rdfs:label
+      "M4M variable workshop" .
+  
+  <http://purl.org/np/RA9OR6rvnIkC4zlan6jGUakmlD_jwvGRtu1ZiwwNc-hjQ#M4M-vocabulary>
+    rdfs:label "M4M vocabulary workshop" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    rdfs:label "Defining an M4M workshop";
+    nt:hasNanopubLabelPattern "M4M workshop: ${name}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03;
+    nt:hasTag "FAIR";
+    nt:hasTargetNanopubType <http://purl.org/np/RAvjdig0-pHxEJwZKevpfVUp8HuGlByc-IEfratOKVwPU#M4M-workshop> .
+  
+  sub:date a nt:LiteralPlaceholder;
+    rdfs:label "date of the workshop (e.g. 2020-12-01)";
+    nt:hasRegex "[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the workshop" .
+  
+  sub:st01 rdf:object sub:workshoptype;
+    rdf:predicate rdf:type;
+    rdf:subject sub:workshop .
+  
+  sub:st02 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:workshop .
+  
+  sub:st03 rdf:object sub:date;
+    rdf:predicate dct:date;
+    rdf:subject sub:workshop .
+  
+  sub:workshop a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID of workshop" .
+  
+  sub:workshoptype a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose the type of the workshop";
+    nt:possibleValue <http://purl.org/np/RA1Y-4tZgvmATmwtajkHweNyZccG14vyamk71QXwkk4Kc#M4M-governance>,
+      <http://purl.org/np/RA95gK2_lNH6m4TwbUwTeAvQDd6p6_n12KfVsBtEetSDA#M4M-variable>, <http://purl.org/np/RA9OR6rvnIkC4zlan6jGUakmlD_jwvGRtu1ZiwwNc-hjQ#M4M-vocabulary>,
+      <http://purl.org/np/RATiP6PDcy6K2wSSn2c5GD0gZi_WweYWb8c63KhqfDTu0#M4M-infrastructure>,
+      <http://purl.org/np/RAXCoG8Ja10WX-hksXxjVV5RZ1cYJPY20P4n-cJuNUWRE#M4M-metadata>, <http://purl.org/np/RAh_65pnS5nZib8XI1-VsttG0o6Tt3gsX3ppEifhH-46g#R4RM4M> .
+  
+  <http://purl.org/np/RATiP6PDcy6K2wSSn2c5GD0gZi_WweYWb8c63KhqfDTu0#M4M-infrastructure>
+    rdfs:label "M4M infrastructure workshop" .
+  
+  <http://purl.org/np/RAXCoG8Ja10WX-hksXxjVV5RZ1cYJPY20P4n-cJuNUWRE#M4M-metadata> rdfs:label
+      "M4M metadata workshop" .
+  
+  <http://purl.org/np/RAh_65pnS5nZib8XI1-VsttG0o6Tt3gsX3ppEifhH-46g#R4RM4M> rdfs:label
+      "R4RM4M workshop" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has name" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8888-635X, orcid:0000-0002-1267-0234,
+      orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "rbihpTTZOYulT2DwhARoL82SeEQM55ezcj6oIzz6jGdAiBxsgX9hEXf1/qFCtAlQYism68cJVX+cFgHRmBKZ6BYoIa9bvsWU4w7jR3aUfBuEewoYB6kjgiqEufOwb1ouh962YWvvNEYcyCgGmYKVg20ToTgiINWJJhnbjcntVLE=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-09-11T11:28:18.032+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <http://purl.org/np/RA3BI3auazhE7aPGuw322SHz0WJ3tdM5RYEPw0qjzZlmc>;
+    rdfs:label "Template: Defining an M4M workshop";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RAi6zZAwhaJ23Hzg4lIjlPir6Take3ZQp-lS9skfBEwfQ>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so> .
+}
+

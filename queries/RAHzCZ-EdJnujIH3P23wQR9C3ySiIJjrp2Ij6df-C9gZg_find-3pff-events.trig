@@ -1,0 +1,91 @@
+@prefix this: <https://w3id.org/np/RAHzCZ-EdJnujIH3P23wQR9C3ySiIJjrp2Ij6df-C9gZg> .
+@prefix sub: <https://w3id.org/np/RAHzCZ-EdJnujIH3P23wQR9C3ySiIJjrp2Ij6df-C9gZg#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:find-3pff-events a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query performs a full-text search on the labels for the 3PFF events.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Find 3PFF events";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/text>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix search: <http://www.openrdf.org/contrib/lucenesail#>
+
+select distinct ?thing ?label ?description ?np ?pubkey ?date where {
+  graph npa:graph {
+    ?np npx:hasNanopubType <https://w3id.org/fair/3pff/3PFF-event> .
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+    ?np dct:created ?date .
+    ?np npx:introduces|npx:describes ?thing .
+    ?np rdfs:label ?label .
+    optional { ?np dct:description ?description . }
+    ?np np:hasAssertion ?a .
+  }
+  ?np search:matches [
+    search:query ?_query ;
+    search:property rdfs:label ;
+    search:score ?score ;
+    search:snippet ?snippet ] .
+  filter not exists { service <https://w3id.org/np/l/nanopub-query-1.1/repo/type/39692876d0a7881c82e9a2cb6dc8859fb16fa69fb41cea2ace2f8fa70bc52aed> {  # (http://purl.org/nanopub/x/disapprovesOf)
+    graph npa:graph {
+      ?disapproval_np np:hasAssertion ?da ;
+        npa:hasValidSignatureForPublicKey ?dpubkey .
+      filter not exists { ?disapproval_npx npx:invalidates ?disapproval_np ; npa:hasValidSignatureForPublicKey ?dpubkey . }
+    }
+    graph <https://w3id.org/np/RA5PyVZnfPpd5ozkVjzQQbWyfLXCmeApLfhsyl8Rgnmh8#assertion> {
+      ?qpubkeys npx:hasPublicKey ?dpubkey .
+    }
+    graph ?da {
+      ?disapprover npx:disapprovesOf ?np .
+    }
+  } }
+}
+limit 10""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "3vifeJYM2v37ASF6uFteFNn45ppdn09YvPrB+LWlTgrb9pxm3vbJUKDMYsarIhA7KQKIWVrLJYJWxYPl2saxPhWbqEIA5hDOHub88lvtT+tE4cHncOcoM21RVJc5EE0zUwmDtVUCGFj2Q2PUfVt08HjF82dZoeJrXHneC/YJW/Q=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-11-12T08:22:08.144Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:find-3pff-events;
+    npx:supersedes <https://w3id.org/np/RAlyVhhkNYiUslb-IcJj3mft0T4YFG7Zm9n_WYR4-YSK0>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+}
+

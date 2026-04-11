@@ -1,0 +1,87 @@
+@prefix this: <http://purl.org/np/RAn0gvGnriPVVIes27pRmyCzVVQk5cKbjiQNu9phlpCjE> .
+@prefix sub: <http://purl.org/np/RAn0gvGnriPVVIes27pRmyCzVVQk5cKbjiQNu9phlpCjE#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has as description" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Introducing a new idea";
+    nt:hasNanopubLabelPattern "Idea: ${name}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3;
+    nt:hasTag "General" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "a description of the idea" .
+  
+  sub:idea a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "a name given to the idea" .
+  
+  sub:seeAlsoLink a nt:UriPlaceholder;
+    rdfs:label "a link where more information can be found" .
+  
+  sub:st0 rdf:object <https://www.wikidata.org/entity/Q131841>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:idea .
+  
+  sub:st1 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:idea .
+  
+  sub:st2 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:idea .
+  
+  sub:st3 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:seeAlsoLink;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:idea .
+  
+  rdf:type rdfs:label "is an" .
+  
+  rdfs:label rdfs:label "has the name" .
+  
+  rdfs:seeAlso rdfs:label "has further information at" .
+  
+  <https://www.wikidata.org/entity/Q131841> rdfs:label "idea" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "cZTLljbXY6GwI8jWlBhTy3E25HCi2ggB8CxUzjuJNhFoaoKiBQzFmhvOKfg+j1A0Y8iNPSmg0k+pgJeAXMLMJRedfBgmHnhcnssXwpV1UQCdjGfh5mChLcMFQkxII6eCjO8z1KOruGbdTvvFlaEdNcVSfap2SSoDvMTlqpXwC5w=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-16T11:27:59.633+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <http://purl.org/np/RANAdNn4wWTp0SUBfMcGjzA3w2WFv-k2JUPcJucfK8h6o>;
+    rdfs:label "Template: Introducing a new idea";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RANjqEfLnGSzLuq0heRSXN0psYWW0oX4v3W8w7osb3xfs> .
+}
+

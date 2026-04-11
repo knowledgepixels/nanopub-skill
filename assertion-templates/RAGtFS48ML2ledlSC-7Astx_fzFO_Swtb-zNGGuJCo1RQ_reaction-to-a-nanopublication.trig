@@ -1,0 +1,60 @@
+@prefix this: <https://w3id.org/np/RAGtFS48ML2ledlSC-7Astx_fzFO_Swtb-zNGGuJCo1RQ> .
+@prefix sub: <https://w3id.org/np/RAGtFS48ML2ledlSC-7Astx_fzFO_Swtb-zNGGuJCo1RQ#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Reaction to a NanoPublication";
+    nt:hasNanopubLabelPattern "React to: ${thing}";
+    nt:hasStatement sub:s1;
+    nt:hasTag "Reacts" .
+  
+  sub:reaction a nt:LiteralPlaceholder;
+    nt:hasRegex ".{1}" .
+  
+  sub:s1 a rdf:Statement;
+    rdf:object sub:reaction;
+    rdf:predicate <http://rdfs.org/sioc/ns#has_reply>;
+    rdf:subject sub:thing .
+  
+  sub:thing a nt:UriPlaceholder .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0009-6638-993X .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDKdy5SRZoxEXjMbZeKicMqoUVPUxBT20voqY0RoyvDrMYZ8d6Q6/eUPkDLIlijjzgW0PmrBs7Yf1gkYt5j8g4xiPX9kWVwgoH7fplNxgyyhilc6IOkKAtSnPQPYdNJ7TethtMSnAH40A6Fs2C2mAmMEPpeSLv49SK1aA+HY2X8TQIDAQAB";
+    npx:hasSignature "n+RRUAJ/rinYLioZVbNCtE8dsK8+dD9W7owE3cRi1e4yVnRJcMmYpMxUna16faUulomhb8f+EOXA+PXsya1NI8E87QhDGbYGCbQRhXbQnDqsZ9sv5begyVvK3r+tjyaAV4GqDxGwjUzUZc4DZx7CWzzyU5Ajzh32BYCN5HVeoJk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0009-6638-993X .
+  
+  this: dct:created "2024-12-07T19:26:46.272Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0009-6638-993X;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAqb9pl0DXKSB3vlBd7TBiHlKcn6_m_SduUbP8eqQcbys>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Reaction to a NanoPublication";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAGBEisKAxwcQTdfR7ALwCeQBrUVeU23F8uFvFmO-H6F0> .
+}
+

@@ -1,0 +1,120 @@
+@prefix this: <https://w3id.org/np/RAocWvicpvlSbJdpuN7BUrPk94Qo6kp4seggMtX1pmScE> .
+@prefix sub: <https://w3id.org/np/RAocWvicpvlSbJdpuN7BUrPk94Qo6kp4seggMtX1pmScE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  <https://schema.org/about> rdfs:label "is for" .
+  
+  <https://schema.org/issuedBy> rdfs:label "is issued by" .
+  
+  <https://w3id.org/fair/3pff/issued-to> rdfs:label "is issued to" .
+  
+  sub:ORCID a nt:AgentPlaceholder;
+    rdfs:label "ORCID of the participant" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template creates a certificate of attendance to some event, issued by a specific organization, to a person. You should create the event as a nanopublication before issuing certificates for it.";
+    rdfs:label "Creating a certificate of attendance to an event";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st05a;
+    nt:hasTag "Events" .
+  
+  sub:end-date a nt:LiteralPlaceholder;
+    rdfs:label "date (e.g. 2020-12-31)";
+    nt:hasRegex "[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]" .
+  
+  sub:event a nt:ValuePlaceholder;
+    rdfs:label "event this certification is for (e.g. URL)" .
+  
+  sub:organization a nt:ExternalUriPlaceholder;
+    rdfs:label "organizer of the training (ROR, URL)" .
+  
+  sub:st01 rdf:object <https://www.wikidata.org/wiki/Q5065100>;
+    rdf:predicate rdf:type;
+    rdf:subject nt:NANOPUB;
+    nt:statementOrder "1" .
+  
+  sub:st02 rdf:object sub:event;
+    rdf:predicate <https://schema.org/about>;
+    rdf:subject nt:NANOPUB;
+    nt:statementOrder "2" .
+  
+  sub:st03 rdf:object sub:organization;
+    rdf:predicate <https://schema.org/issuedBy>;
+    rdf:subject nt:NANOPUB;
+    nt:statementOrder "3" .
+  
+  sub:st04 rdf:object sub:ORCID;
+    rdf:predicate <https://w3id.org/fair/3pff/issued-to>;
+    rdf:subject nt:NANOPUB;
+    nt:statementOrder "4" .
+  
+  sub:st05 rdf:object sub:start-date;
+    rdf:predicate <https://www.w3.org/ns/dcat#startDate>;
+    rdf:subject nt:NANOPUB;
+    nt:statementOrder "5" .
+  
+  sub:st05a a nt:OptionalStatement;
+    rdf:object sub:end-date;
+    rdf:predicate <https://www.w3.org/ns/dcat#endDate>;
+    rdf:subject nt:NANOPUB;
+    nt:statementOrder "6" .
+  
+  sub:start-date a nt:LiteralPlaceholder;
+    rdfs:label "date (e.g. 2023-12-31)";
+    nt:hasRegex "[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]" .
+  
+  <https://www.w3.org/ns/dcat#endDate> rdfs:label "valid to" .
+  
+  <https://www.w3.org/ns/dcat#startDate> rdfs:label "valid from" .
+  
+  <https://www.wikidata.org/wiki/Q5065100> rdfs:label "certificate of attendance" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2568-5694 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  orcid:0000-0003-2568-5694 foaf:name "Luca Visentin" .
+  
+  this: dct:created "2025-06-23T10:15:32.542Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0003-2195-3997, orcid:0000-0003-2568-5694;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Template: Creating a certificate of attendance to an event";
+    prov:wasDerivedFrom ns1:RA5QXHAruIptCO2ZGZEb3frAHdZQnTCixIlDns0xgdcEo, ns1:RAJsudG1v68PR6B_nR4S6HmfjrRTjyqP4ooejqCQdT3IM,
+      <https://w3id.org/np/RAMaGaVsF9pdwlMZ6YGhucEvAPEPGMisJI_-yvpIMevJM>, <https://w3id.org/np/RAp2mS5UHS6u7xguJbPXOqKqsmEbKFQrBlnjdmOZDS0_g>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA5reLVXOCPQFWr2UiCJb19ES7NwOpQRmudb17e2iB0c4> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCHBRilR44On98FuFlP7tFcHh2ZZvWecrA+or74gS7eEFYJ/2CYs8Nt1z18qqdTjcEAj2LfUHehgujyxVzQFcfDzq28iPD6p18dN41wzpTyDU0TNY/B1Fx2YC0VOCCGy6qenwdZnFwbycatI1v3rQ2V12WSSwqkzPjiMJgOXvDIXQIDAQAB";
+    npx:hasSignature "JXe0dKL8I3fKB8L2xm0lQwh+GMACTdyKXndWXWks4XqGweGIFUzZoiwBxzlannBvaej1uh47t7pWzQMDwuI4EWDfML6i9pdLLnDWgwhWtXag7n6Gz6mbW6krnMEfIbd/cpi27k6UVmTc4P3XwtDBCoLn8tJIuch/m2DaOFRL/7Y=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2568-5694 .
+}
+

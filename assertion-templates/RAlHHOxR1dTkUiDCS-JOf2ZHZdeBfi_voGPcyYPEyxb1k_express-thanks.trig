@@ -1,0 +1,99 @@
+@prefix this: <https://w3id.org/np/RAlHHOxR1dTkUiDCS-JOf2ZHZdeBfi_voGPcyYPEyxb1k> .
+@prefix sub: <https://w3id.org/np/RAlHHOxR1dTkUiDCS-JOf2ZHZdeBfi_voGPcyYPEyxb1k/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has the comment" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Express thanks";
+    nt:hasNanopubLabelPattern "${thanker} thanks ${thanked}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05 .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "plain-text comment" .
+  
+  sub:st01 rdf:object <https://w3id.org/spaces/nanopub/r/thank/Thanks>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:thanks .
+  
+  sub:st02 rdf:object sub:thanker;
+    rdf:predicate <https://w3id.org/spaces/nanopub/r/thank/hasThanker>;
+    rdf:subject sub:thanks .
+  
+  sub:st03 rdf:object sub:thanked;
+    rdf:predicate <https://w3id.org/spaces/nanopub/r/thank/hasThanked>;
+    rdf:subject sub:thanks .
+  
+  sub:st04 rdf:object sub:thanksReason;
+    rdf:predicate <https://w3id.org/spaces/nanopub/r/thank/thanksFor>;
+    rdf:subject sub:thanks .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:thanks .
+  
+  sub:thanked a nt:AgentPlaceholder;
+    rdfs:label "choose who receives the thank you" .
+  
+  sub:thanker a nt:AgentPlaceholder;
+    rdfs:label "choose who gives the thank you" .
+  
+  sub:thanks a nt:LocalResource;
+    rdfs:label "this" .
+  
+  sub:thanksReason a nt:ExternalUriPlaceholder;
+    rdfs:label "enter the reason URI" .
+  
+  <https://w3id.org/spaces/nanopub/r/thank/Thanks> rdfs:label "thanks" .
+  
+  <https://w3id.org/spaces/nanopub/r/thank/hasThanked> rdfs:label "is giving thanks to" .
+  
+  <https://w3id.org/spaces/nanopub/r/thank/hasThanker> rdfs:label "is from" .
+  
+  <https://w3id.org/spaces/nanopub/r/thank/thanksFor> rdfs:label "thanks for" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-01-09T13:35:36.018Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Express thanks";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "YyvK+RgjR+ke9Z/fWlFEGKw44GBIKjrYCPg216NEpuZo+LQ8c4HaHzh/gYY9vlLU0/3MlNWcEeY4Ym5MEP+5vmQ6p8O3iv1YzbTK4HT31V0aKK7veeQV373l9fmP9Y/Av5clpzF2F0wiQZKiLJinFcJ6zJ1Oqu80Y8DBYng+ZGY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

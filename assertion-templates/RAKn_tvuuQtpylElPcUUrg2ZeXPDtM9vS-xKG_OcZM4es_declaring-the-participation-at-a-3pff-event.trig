@@ -1,0 +1,82 @@
+@prefix this: <https://w3id.org/np/RAKn_tvuuQtpylElPcUUrg2ZeXPDtM9vS-xKG_OcZM4es> .
+@prefix sub: <https://w3id.org/np/RAKn_tvuuQtpylElPcUUrg2ZeXPDtM9vS-xKG_OcZM4es#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <https://w3id.org/fair/3pff/participatedAsFacilitatorAspirantIn> rdfs:label "participated as facilitator aspirant in" .
+  
+  <https://w3id.org/fair/3pff/participatedAsFacilitatorAssistantIn> rdfs:label "participated as facilitator assistant in" .
+  
+  <https://w3id.org/fair/3pff/participatedAsFacilitatorIn> rdfs:label "participated as facilitator in" .
+  
+  <https://w3id.org/fair/3pff/participatedAsParticipantIn> rdfs:label "participated as participant in" .
+  
+  <https://w3id.org/fair/3pff/participatedAsTrainerAssistantIn> rdfs:label "participated as trainer assistant in" .
+  
+  <https://w3id.org/fair/3pff/participatedAsTrainerIn> rdfs:label "participated as trainer in" .
+  
+  sub:3PFFevent a nt:GuidedChoicePlaceholder;
+    rdfs:label "3PFF event";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAHzCZ-EdJnujIH3P23wQR9C3ySiIJjrp2Ij6df-C9gZg/find-3pff-events" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    rdfs:label "Declaring the participation at a 3PFF event";
+    nt:hasStatement sub:st02;
+    nt:hasTag "FAIR" .
+  
+  sub:participated a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue <https://w3id.org/fair/3pff/participatedAsFacilitatorAspirantIn>,
+      <https://w3id.org/fair/3pff/participatedAsFacilitatorAssistantIn>, <https://w3id.org/fair/3pff/participatedAsFacilitatorIn>,
+      <https://w3id.org/fair/3pff/participatedAsParticipantIn>, <https://w3id.org/fair/3pff/participatedAsTrainerAssistantIn>,
+      <https://w3id.org/fair/3pff/participatedAsTrainerIn> .
+  
+  sub:st02 rdf:object sub:3PFFevent;
+    rdf:predicate sub:participated;
+    rdf:subject nt:CREATOR .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8888-635X, orcid:0000-0002-1267-0234,
+      orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "Y5xXvPEcvkN4l66kj+P540S6Zx7oJee+9Lps6Thx1IvyL1Supj2aPaBACMnIRiY4qADTcV/cf7IKzsqypbzPjewN72p5UZobp78KxAANmFH5gQxEt4Wj0ooBe8j/Bxwy8xNqDN7OpNgA5mJHd3FkupOjDaKLJBGmDajNqPwDsUU=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-11-12T08:23:34.260Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAqNsx9PDxr0rYGlF1_r0algtN7YoioG1WmgfacEeuTf0>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Declaring the participation at a 3PFF event";
+    prov:wasDerivedFrom ns1:RAs5lERrJU4dEmnHXa4UYHD_Fruox1yydqMlss8WPNI40;
+    nt:wasCreatedFromProvenanceTemplate ns1:RAi6zZAwhaJ23Hzg4lIjlPir6Take3ZQp-lS9skfBEwfQ;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA, ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90,
+      ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALtjkZX1lYrTL2eCZp4VTW6vGGxiDZ-aaU-s1Z0Fcs2I> .
+}
+

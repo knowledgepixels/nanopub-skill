@@ -1,0 +1,74 @@
+@prefix this: <http://purl.org/np/RAQP3NJvnLA2Z-2DrYAN0nTC-RFp67td1t4-pQqQ_ZKmo> .
+@prefix sub: <http://purl.org/np/RAQP3NJvnLA2Z-2DrYAN0nTC-RFp67td1t4-pQqQ_ZKmo/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  npx:retracts rdfs:label "retracts" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Retracting a nanopublication that I published";
+    nt:hasNanopubLabelPattern "Retraction of ${nanopubToBeRetracted}";
+    nt:hasStatement sub:st1, sub:st2;
+    nt:hasTag "Meta";
+    nt:hasTargetNanopubType npx:retracts .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "optional comment for the retraction" .
+  
+  sub:nanopubToBeRetracted a nt:TrustyUriPlaceholder;
+    rdfs:label "The URI of the nanopublication to be retracted" .
+  
+  sub:st1 rdf:object sub:nanopubToBeRetracted;
+    rdf:predicate npx:retracts;
+    rdf:subject nt:CREATOR .
+  
+  sub:st2 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject nt:ASSERTION .
+  
+  rdfs:comment rdfs:label "has the comment" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2025-10-07T07:05:42.585+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes ns1:RA_fYtKwFVA-fVS72uKV77LDucqrpNn0cbICKicCm-0wM;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Retracting a nanopublication that I published";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "j8IUfscibhawQ17LBym7ChcTZxLF2Hizop8tdQ2mvGdQGu5Aiu6zUQ+mTeYI/lAy+R9n7Al84kHMf5cTUPF0bULT85vOgYdSUdn7aManWwcl7iv4N4UnetF8d/jKyqrvJiwXYQOUlIn918nimDqADV0Q1WdYTtjtdY/iXD9Lmzk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+}
+

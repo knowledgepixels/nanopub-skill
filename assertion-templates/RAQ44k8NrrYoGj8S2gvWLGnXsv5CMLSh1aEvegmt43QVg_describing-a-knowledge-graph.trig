@@ -1,0 +1,220 @@
+@prefix ns1: <http://purl.org/np/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix this: <http://purl.org/np/RAQ44k8NrrYoGj8S2gvWLGnXsv5CMLSh1aEvegmt43QVg> .
+@prefix sub: <http://purl.org/np/RAQ44k8NrrYoGj8S2gvWLGnXsv5CMLSh1aEvegmt43QVg#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:accessRights rdfs:label "has access right" .
+  
+  dct:description rdfs:label "has the description" .
+  
+  dct:issued rdfs:label "was published on" .
+  
+  dct:language rdfs:label "has language" .
+  
+  dct:license rdfs:label "has the license" .
+  
+  dct:title rdfs:label "has the title" .
+  
+  sub:accessrights a nt:GuidedChoicePlaceholder;
+    rdfs:label "access rights URI";
+    nt:possibleValue <https://schema.org/conditionsOfAccess>, <https://schema.org/publicAccess> .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Describing a knowledge graph";
+    nt:hasNanopubLabelPattern "Knowledge graph: ${title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st05, sub:st06, sub:st08, sub:st09,
+      sub:st10, sub:st11, sub:st12, sub:st13, sub:st14, sub:st15, sub:st16, sub:st17, sub:st18;
+    nt:hasTag "Datasets";
+    nt:hasTargetNanopubType <https://www.wikidata.org/entity/Q33002955> .
+  
+  sub:description a nt:LongLiteralPlaceholder .
+  
+  sub:distribution a nt:UriPlaceholder;
+    rdfs:label "URL of distribution" .
+  
+  sub:endpoint a nt:UriPlaceholder;
+    rdfs:label "SPARQL endpoint URL" .
+  
+  sub:homepageurl a nt:UriPlaceholder;
+    rdfs:label "page providing minimal information" .
+  
+  sub:keyword a nt:LiteralPlaceholder;
+    rdfs:label "keyword" .
+  
+  sub:kg a nt:UriPlaceholder;
+    rdfs:label "URI of the knowledge graph" .
+  
+  sub:language a nt:LiteralPlaceholder;
+    rdfs:label "language" .
+  
+  sub:license a nt:GuidedChoicePlaceholder;
+    rdfs:label "the license";
+    nt:possibleValue <https://creativecommons.org/licenses/by-nc-sa/4.0/>, <https://creativecommons.org/licenses/by-nc/4.0/>,
+      <https://creativecommons.org/licenses/by-sa/4.0/>, <https://creativecommons.org/licenses/by/4.0/> .
+  
+  sub:metagraphimage a nt:UriPlaceholder;
+    rdfs:label "illustration of the graph connectivity" .
+  
+  sub:publication a nt:UriPlaceholder .
+  
+  sub:publisheddate a nt:LiteralPlaceholder;
+    rdfs:label "date of publication" .
+  
+  sub:st01 rdf:object <https://www.wikidata.org/entity/Q33002955>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:kg .
+  
+  sub:st02 a nt:RepeatableStatement;
+    rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:kg .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:kg .
+  
+  sub:st05 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:homepageurl;
+    rdf:predicate foaf:page;
+    rdf:subject sub:kg .
+  
+  sub:st06 a nt:OptionalStatement;
+    rdf:object sub:publication;
+    rdf:predicate <https://schema.org/publication>;
+    rdf:subject sub:kg .
+  
+  sub:st08 a nt:OptionalStatement;
+    rdf:object sub:endpoint;
+    rdf:predicate <http://www.w3.org/ns/sparql-service-description#endpoint>;
+    rdf:subject sub:kg .
+  
+  sub:st09 a nt:OptionalStatement;
+    rdf:object sub:license;
+    rdf:predicate dct:license;
+    rdf:subject sub:kg .
+  
+  sub:st10 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:topic;
+    rdf:predicate <http://www.w3.org/ns/dcat#theme>;
+    rdf:subject sub:kg .
+  
+  sub:st11 rdf:object sub:publisheddate;
+    rdf:predicate dct:issued;
+    rdf:subject sub:kg .
+  
+  sub:st12 a nt:RepeatableStatement;
+    rdf:object sub:vocabulary;
+    rdf:predicate <http://rdfs.org/ns/void#vocabulary>;
+    rdf:subject sub:kg .
+  
+  sub:st13 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:metagraphimage;
+    rdf:predicate foaf:depiction;
+    rdf:subject sub:kg .
+  
+  sub:st14 a nt:RepeatableStatement;
+    rdf:object sub:distribution;
+    rdf:predicate <http://www.w3.org/ns/dcat#distribution>;
+    rdf:subject sub:kg .
+  
+  sub:st15 rdf:object sub:version;
+    rdf:predicate pav:version;
+    rdf:subject sub:kg .
+  
+  sub:st16 a nt:RepeatableStatement;
+    rdf:object sub:keyword;
+    rdf:predicate <http://www.w3.org/ns/dcat#keyword>;
+    rdf:subject sub:kg .
+  
+  sub:st17 a nt:RepeatableStatement;
+    rdf:object sub:language;
+    rdf:predicate dct:language;
+    rdf:subject sub:kg .
+  
+  sub:st18 rdf:object sub:accessrights;
+    rdf:predicate dct:accessRights;
+    rdf:subject sub:kg .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title of the knowledge graph" .
+  
+  sub:topic a nt:GuidedChoicePlaceholder;
+    rdfs:label "the topic";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:version a nt:LiteralPlaceholder;
+    rdfs:label "version of the knowledge graph" .
+  
+  sub:vocabulary a nt:UriPlaceholder;
+    rdfs:label "used vocabulary" .
+  
+  pav:version rdfs:label "has version" .
+  
+  <http://rdfs.org/ns/void#vocabulary> rdfs:label "uses vocabulary" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  <http://www.w3.org/ns/dcat#distribution> rdfs:label "has distribution" .
+  
+  <http://www.w3.org/ns/dcat#keyword> rdfs:label "has keyword" .
+  
+  <http://www.w3.org/ns/dcat#theme> rdfs:label "has theme" .
+  
+  <http://www.w3.org/ns/sparql-service-description#endpoint> rdfs:label "has SPARQL endpoint" .
+  
+  foaf:depiction rdfs:label "has meta graph" .
+  
+  foaf:page rdfs:label "has the homepage URL" .
+  
+  <https://creativecommons.org/licenses/by-nc-sa/4.0/> rdfs:label "CC BY-NC-SA 4.0" .
+  
+  <https://creativecommons.org/licenses/by-nc/4.0/> rdfs:label "CC BY-NC 4.0" .
+  
+  <https://creativecommons.org/licenses/by-sa/4.0/> rdfs:label "CC BY-SA 4.0" .
+  
+  <https://creativecommons.org/licenses/by/4.0/> rdfs:label "CC BY 4.0" .
+  
+  <https://schema.org/publication> rdfs:label "has publication" .
+  
+  <https://www.wikidata.org/entity/Q33002955> rdfs:label "knowledge graph" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "YEDyR7Ya69y8L/I4YWwUPB2NYT/lRNYCKNDojAKQHxM1VtgKMFS7H4ieGZ/FAiWOqvHS+rV5pbNIA2iFK5n8ff0XuNyubvZdDHeBjwJDo/yW4AnKHXANwoM9m8/ni+vx0NC181I9BWK3/NjT8OZsAwERpQuz7koHparQ+BvS3nw=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-16T12:32:46.546+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes ns1:RA9M5jS_Wk2bFn-Q1yWrgPIxE_bHWyO5a9VeUpJv_9_iA;
+    rdfs:label "Template: Describing a knowledge graph";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RANjqEfLnGSzLuq0heRSXN0psYWW0oX4v3W8w7osb3xfs .
+}
+

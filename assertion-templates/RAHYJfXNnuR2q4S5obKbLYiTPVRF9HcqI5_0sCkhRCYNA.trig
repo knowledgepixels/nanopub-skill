@@ -1,0 +1,54 @@
+@prefix this: <https://w3id.org/np/RAHYJfXNnuR2q4S5obKbLYiTPVRF9HcqI5_0sCkhRCYNA> .
+@prefix sub: <https://w3id.org/np/RAHYJfXNnuR2q4S5obKbLYiTPVRF9HcqI5_0sCkhRCYNA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:Q-FDO-Preprocessing-01 a <https://w3id.org/fdoc/o/terms/FdoProfile>, <https://w3id.org/fdof/ontology#FAIRDigitalObject>;
+    dct:conformsTo <https://w3id.org/np/RAprU0T8cWWRNseTC15oQn5oaoiIIgpPx9QMmBZNPsehg/basic-fdo-profile-profile>;
+    rdfs:label "Q-FDO example";
+    <https://w3id.org/fdoc/o/terms/hasShape> sub:nodeShape .
+  
+  sub:nanopub <http://www.w3.org/ns/shacl#path> <https://w3id.org/np/RASbaw0snel_-Al0KXWQ9VtrAgkMddF95j80XnopwA1g8> .
+  
+  sub:nodeShape a <http://www.w3.org/ns/shacl#NodeShape>;
+    <http://www.w3.org/ns/shacl#property> sub:nanopub;
+    <http://www.w3.org/ns/shacl#targetClass> <https://w3id.org/fdof/ontology#FAIRDigitalObject> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0005-6435-3563 .
+}
+
+sub:pubinfo {
+  this: dct:created "2025-09-14T21:14:15.285Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0005-6435-3563;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:hasNanopubType nt:AssertionTemplate;
+    npx:introduces sub:Q-FDO-Preprocessing-01;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALwVLnRJ4Y6ZkRC-fDiU0E8QB0XfWBRS0ntWyDMh1l8I> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv8eNOA9vVUjMBsEAIjYOrHMjqOB/R2RYo9c071LsExMRLZSjAdOtkP8DEks0FIJlW0Xm+xWPaWO8ntjGrACLvdlhX2nEaQ/WSA6KPN21uoi0iBKW2LiZIhDmYnJ/zXmtIzE9YDafDayLgj8EgFPMWUuiA0KEpIBI+y8fU1oKN+2J1QM4hYz5v/IXiVaGKLS85ZoLZIwAFzex063ATkgezKCQijToYUhJK2vFFY81dxlqjTCBX/1GtX+I9VxEPNoGNpCvn9Djfl4XJEvpV0YWEDsepTD46fPXK9EeX6mV0vbG5kbobn/0jb3NTpJWWFeCS6P5BnXvWwEt7uzk7ynxGwIDAQAB";
+    npx:hasSignature "Yj9SSXrGNjhKRgUXxMlB2ZRfVkrHPd7vMhokJzqIkm2G8Ks3akGGqALS+c+HlY90DhCN3ztS0Yc5jSFIpAdMM7l8g83ZM1vEKBHXt+Gm6yWdnoTdQvtWh4ZJA0tCTkJNXt3eNig1rXF+CQ8G42Xly1GzU6ZArrJXwsHmS8IN8iJ/suyFTtqV+X5EQbk7jzmkR3HXLfx6+pO9UYdZlXM7iuptWkoP04SSIzjPMqM1Q7pzqbYXOGKg8anUU4Ni4QlD5oYoNA64IBh0R65fwKnwVYSp49a5kRy/CNgIvmbYDHijFTH4216N/cl5ruHW8Q1xsUbN++OTPNGXfNG0XcSlXg==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0005-6435-3563 .
+}
+

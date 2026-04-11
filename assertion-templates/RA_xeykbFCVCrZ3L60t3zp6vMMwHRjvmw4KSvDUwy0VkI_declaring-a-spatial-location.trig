@@ -1,0 +1,82 @@
+@prefix this: <https://w3id.org/np/RA_xeykbFCVCrZ3L60t3zp6vMMwHRjvmw4KSvDUwy0VkI> .
+@prefix sub: <https://w3id.org/np/RA_xeykbFCVCrZ3L60t3zp6vMMwHRjvmw4KSvDUwy0VkI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:Location rdfs:label "location" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <http://www.w3.org/ns/dcat#bbox> rdfs:label "has the bounding box" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template is for nanopublications to introduce a spatial location by bounding box.";
+    rdfs:label "Declaring a spatial location";
+    nt:hasStatement sub:st01, sub:st02, sub:st03;
+    nt:hasTag "Location" .
+  
+  sub:bbox a nt:LongLiteralPlaceholder;
+    rdfs:label "bounding box definition in WKT format" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "human-readable name of the location" .
+  
+  sub:location a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID used as URI suffix" .
+  
+  sub:st01 rdf:object dct:Location;
+    rdf:predicate rdf:type;
+    rdf:subject sub:location .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:location .
+  
+  sub:st03 rdf:object sub:bbox;
+    rdf:predicate <http://www.w3.org/ns/dcat#bbox>;
+    rdf:subject sub:location .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-05-19T11:39:22.584Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAVJEwRSSVWzlRrJfHuw_RIFAD47nckCpMdO-C8Ep4A3I>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Declaring a spatial location";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAGBEisKAxwcQTdfR7ALwCeQBrUVeU23F8uFvFmO-H6F0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "F9WEsIgz/yiLckUUTBM1y44zAbZupSbm3UhBfFASta5xZpV5GRSQknDP+VAJy8EvT6uepB107m20dxhWxvPPiYQP0MzCMiTEbwC/jden17RSvsjWmzyXeLaPrHq9roy+eU/cgsQqXgRhV/E/IHg/2gi/gMEX+5wHADW+X7Cq05A=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

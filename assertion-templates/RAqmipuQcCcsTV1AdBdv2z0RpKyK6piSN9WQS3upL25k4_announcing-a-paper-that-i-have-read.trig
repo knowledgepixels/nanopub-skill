@@ -1,0 +1,80 @@
+@prefix this: <http://purl.org/np/RAqmipuQcCcsTV1AdBdv2z0RpKyK6piSN9WQS3upL25k4> .
+@prefix sub: <http://purl.org/np/RAqmipuQcCcsTV1AdBdv2z0RpKyK6piSN9WQS3upL25k4/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Announcing a paper that I have read";
+    nt:hasNanopubLabelPattern "Have read: ${paper}";
+    nt:hasStatement sub:st1, sub:st2;
+    nt:hasTag "Social";
+    nt:hasTargetNanopubType <http://purl.org/petapico/o/paperclub#hasRead> .
+  
+  sub:comment a nt:LiteralPlaceholder;
+    rdfs:label "comment text" .
+  
+  sub:paper a nt:UriPlaceholder;
+    rdfs:label "DOI for the paper starting with '10.'";
+    nt:hasPrefix "https://doi.org/";
+    nt:hasPrefixLabel "the paper with DOI";
+    nt:hasRegex "10.(\\d)+/(\\S)+" .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:paper;
+    rdf:predicate <http://purl.org/petapico/o/paperclub#hasRead>;
+    rdf:subject nt:CREATOR;
+    nt:statementOrder "1" .
+  
+  sub:st2 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:paper;
+    nt:statementOrder "2" .
+  
+  <http://purl.org/petapico/o/paperclub#hasRead> rdfs:label "have read" .
+  
+  rdfs:comment rdfs:label "has my comment" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2025-05-23T19:42:48.888Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes ns1:RAoC846Gja_1XiOQq06mqaqE6U3GsmI2IW1Wbufn_e6rc;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Template: Announcing a paper that I have read";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA5reLVXOCPQFWr2UiCJb19ES7NwOpQRmudb17e2iB0c4> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "X0DoM8p7VFd9dPSvrt03Fjx+NhCXcCpN7WCqFRkgGoe1LMKKyA0rMgKM7RVP1i1Qb6gM0AZqKCmSl7BUHb+sTxGqjblGZO0rnAfjLU+RIfasIWAa0Uir0LiRzciAlLQyOkyJXErSE1ZAvEbFIfg0x0SCchwbYM2pixpOG8h+O10=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+}
+

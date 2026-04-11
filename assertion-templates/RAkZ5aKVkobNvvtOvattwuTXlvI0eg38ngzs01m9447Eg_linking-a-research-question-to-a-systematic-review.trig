@@ -1,0 +1,66 @@
+@prefix this: <https://w3id.org/np/RAkZ5aKVkobNvvtOvattwuTXlvI0eg38ngzs01m9447Eg> .
+@prefix sub: <https://w3id.org/np/RAkZ5aKVkobNvvtOvattwuTXlvI0eg38ngzs01m9447Eg/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Linking a research question to a systematic review";
+    nt:hasNanopubLabelPattern "${systematicReview} targets ${researchQuestion}";
+    nt:hasStatement sub:st01 .
+  
+  sub:researchQuestion a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the research question";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http://data.cochrane.org/ontologies/pico/PICO&searchterm=" .
+  
+  sub:st01 a nt:RepeatableStatement;
+    rdf:object sub:researchQuestion;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/targetsResearchQuestion>;
+    rdf:subject sub:systematicReview .
+  
+  sub:systematicReview a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the systematic review" .
+  
+  <https://w3id.org/sciencelive/o/terms/targetsResearchQuestion> rdfs:label "targets the research question" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-11-18T10:10:38.892Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAxDa1-m7wABSP0HgrjIcW1MnxZQDBFl3qlE7aL3KFVZ8>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Linking a research question to a systematic review";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "SnF3t71E7PlXuVw8zf5Di98131SdCCuq1GObEeS1yUm2OsBv4UfL/+4N5azBLLbmjo6PwizYoE1vtpT8jiPdEeWmRMQbAyolTiKzU2rkIEnZYGbPJGAO77ondWVMJIBMDxRue1AOIgHxGpSx4BpfT+Wjb+fD/NfDP0OSfHk/J+c=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

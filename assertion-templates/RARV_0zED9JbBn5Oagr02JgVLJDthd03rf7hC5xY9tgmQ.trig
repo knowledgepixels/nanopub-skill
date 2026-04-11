@@ -1,0 +1,139 @@
+@prefix this: <https://w3id.org/np/RARV_0zED9JbBn5Oagr02JgVLJDthd03rf7hC5xY9tgmQ> .
+@prefix sub: <https://w3id.org/np/RARV_0zED9JbBn5Oagr02JgVLJDthd03rf7hC5xY9tgmQ/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:01_conformsTo <http://www.w3.org/ns/shacl#hasValue> <https://w3id.org/np/RAiaTcfF9nRdXc-XYEIRjPYSFQ8vREcr8vJZSgYgNCnxc/tumor-formula-data-entry>;
+    <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#minCount> "1";
+    <http://www.w3.org/ns/shacl#path> dct:conformsTo .
+  
+  sub:03_label <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#minCount> "1";
+    <http://www.w3.org/ns/shacl#path> rdfs:label .
+  
+  sub:04_description <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> dct:description .
+  
+  sub:05_creator <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#minCount> "1";
+    <http://www.w3.org/ns/shacl#path> dct:creator .
+  
+  sub:06_created <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> dct:created .
+  
+  sub:07_license <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> dct:license .
+  
+  sub:11_tumor-diameter <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> <https://w3id.org/np/RAdt6SuLPHvcIWWKUcvx0Q25S-46q4MOOmZdH0WOdtbFs/tumor-diameter> .
+  
+  sub:12_affected-lymph-node-number <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> <https://w3id.org/np/RA8LOx389HeXaFI-DO7JsfxeUUSo-_PlkBp3Z1jNVn1NQ/affected-lymph-node-number> .
+  
+  sub:13_histological-grading-score <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> <https://w3id.org/np/RA1rAd8cKy7HQGFD14f4qhlRvCbtSVee1aQctfBv2PPjA/histological-grading-score> .
+  
+  sub:14_estrogen-receptor-status <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> <https://w3id.org/np/RA1OQM57rdPx-znb32GVsQ8wHEKwxPAkx7KxYYoK9RXYw/estrogen-receptor-status> .
+  
+  sub:15_progesterone-receptor-status <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> <https://w3id.org/np/RAEz0ghunszLRbJshBUVPcnko3UJI7UasJRaVjtFwvXmQ/progesterone-receptor-status> .
+  
+  sub:16_her2neu-expression <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> <https://w3id.org/np/RAhFw9wKFMRlP6WK8SOekG5t5Cu-YiOsQE3bZWAXWvJas/HER2_neu-expression> .
+  
+  sub:17_proliferation_marker_ki67 <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> <https://w3id.org/np/RAqFAS-X4S6p_NDBB0HugdS70Y1LyIkc4UYnQMD3eo6gE/proliferation-marker-Ki-67> .
+  
+  sub:21_image <http://www.w3.org/ns/shacl#path> <https://w3id.org/np/RA-ohLdXoctQ18-0C17nf6sF3W0dGXkobC_7ZMELcdhpQ/has-image> .
+  
+  sub:nodeShape a <http://www.w3.org/ns/shacl#NodeShape>;
+    <http://www.w3.org/ns/shacl#property> sub:01_conformsTo, sub:03_label, sub:04_description,
+      sub:05_creator, sub:06_created, sub:07_license, sub:11_tumor-diameter, sub:12_affected-lymph-node-number,
+      sub:13_histological-grading-score, sub:14_estrogen-receptor-status, sub:15_progesterone-receptor-status,
+      sub:16_her2neu-expression, sub:17_proliferation_marker_ki67, sub:21_image;
+    <http://www.w3.org/ns/shacl#targetClass> <https://w3id.org/fdof/ontology#FAIRDigitalObject> .
+  
+  <https://w3id.org/np/RAiaTcfF9nRdXc-XYEIRjPYSFQ8vREcr8vJZSgYgNCnxc/tumor-formula-data-entry>
+    a <https://w3id.org/fdoc/o/terms/FdoProfile>, <https://w3id.org/fdof/ontology#FAIRDigitalObject>;
+    dct:conformsTo <https://w3id.org/np/RAprU0T8cWWRNseTC15oQn5oaoiIIgpPx9QMmBZNPsehg/basic-fdo-profile-profile>;
+    rdfs:label "Tumor formula data entry";
+    <https://w3id.org/fdoc/o/terms/hasShape> sub:nodeShape .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  dct:created nt:hasLabelFromApi "was created on - Date of creation of the resource." .
+  
+  dct:creator nt:hasLabelFromApi "was created by - Refers to the person/agent who created the resource." .
+  
+  dct:description nt:hasLabelFromApi "has the description - A (free-text) description of the given resource." .
+  
+  dct:license nt:hasLabelFromApi "has the license - Refers to the legal document that is defining what is allowed to be done with..." .
+  
+  rdfs:label nt:hasLabelFromApi "has the label - A human-readable name for the subject." .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RA-ohLdXoctQ18-0C17nf6sF3W0dGXkobC_7ZMELcdhpQ/has-image> nt:hasLabelFromApi
+      "has image - Refers to an image that belongs to the given FDO." .
+  
+  <https://w3id.org/np/RA1OQM57rdPx-znb32GVsQ8wHEKwxPAkx7KxYYoK9RXYw/estrogen-receptor-status>
+    nt:hasLabelFromApi "has the estrogen receptor status - Refers to the value representing the estrogen receptor status." .
+  
+  <https://w3id.org/np/RA1rAd8cKy7HQGFD14f4qhlRvCbtSVee1aQctfBv2PPjA/histological-grading-score>
+    nt:hasLabelFromApi "has the histological grading score - Refers to the value representing the histological grading score." .
+  
+  <https://w3id.org/np/RA8LOx389HeXaFI-DO7JsfxeUUSo-_PlkBp3Z1jNVn1NQ/affected-lymph-node-number>
+    nt:hasLabelFromApi "has the number of affected lymph nodes - Refers to the value representing the number of affected lymph nodes." .
+  
+  <https://w3id.org/np/RAEz0ghunszLRbJshBUVPcnko3UJI7UasJRaVjtFwvXmQ/progesterone-receptor-status>
+    nt:hasLabelFromApi "has the progesterone receptor status - Refers to the value representing the progesterone receptor status." .
+  
+  this: dct:created "2025-09-01T09:33:39.863Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:hasNanopubType nt:AssertionTemplate;
+    npx:introduces <https://w3id.org/np/RAiaTcfF9nRdXc-XYEIRjPYSFQ8vREcr8vJZSgYgNCnxc/tumor-formula-data-entry>;
+    npx:supersedes <https://w3id.org/np/RAV8SSK-CdebAn6Z6Io4RQeO9QxTbrKNTUCy9uu_Yy_VA>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALwVLnRJ4Y6ZkRC-fDiU0E8QB0XfWBRS0ntWyDMh1l8I> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "58Yr0rH1Zggfb4iy4+xrA0A2cbuzBjYR5a2EJvPuLrm9Mt87ysRrpka9aWR/tgzdCF9VAOF6V8AEeuI0UtDQJOSchKTNsepfbHZSlY1Ojnm/nFKfBrxoFDD8I7hWr+HPAAlaDvK5FnLIwLuTpR0fYizTodkxB2YP8NTLoo9Ihu4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAdt6SuLPHvcIWWKUcvx0Q25S-46q4MOOmZdH0WOdtbFs/tumor-diameter>
+    nt:hasLabelFromApi "has the tumor diameter in cm - Refers to the value representing the tumor diameter in cm." .
+  
+  <https://w3id.org/np/RAhFw9wKFMRlP6WK8SOekG5t5Cu-YiOsQE3bZWAXWvJas/HER2_neu-expression>
+    nt:hasLabelFromApi "has HER2/neu expression score - Refers to the value representing the HER2/neu expression score." .
+  
+  <https://w3id.org/np/RAqFAS-X4S6p_NDBB0HugdS70Y1LyIkc4UYnQMD3eo6gE/proliferation-marker-Ki-67>
+    nt:hasLabelFromApi "has the proliferation marker Ki-67 - Refers to the value representing the score for the proliferation marker Ki-67." .
+}
+

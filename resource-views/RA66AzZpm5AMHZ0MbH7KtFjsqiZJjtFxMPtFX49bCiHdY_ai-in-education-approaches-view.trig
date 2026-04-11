@@ -1,0 +1,72 @@
+@prefix this: <https://w3id.org/np/RA66AzZpm5AMHZ0MbH7KtFjsqiZJjtFxMPtFX49bCiHdY> .
+@prefix sub: <https://w3id.org/np/RA66AzZpm5AMHZ0MbH7KtFjsqiZJjtFxMPtFX49bCiHdY/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    rdfs:label "add...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RA88tb2ths5RVTsT7cajUFPL1ONBbyfjk3THDe79FymQA>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "void" .
+  
+  sub:get-ai-in-edu-approaches-view a <https://w3id.org/kpxl/gen/terms/ResourceView>,
+      <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RAEHhtq-Umfwtcl18DLZM58jumI6CUSzKILyHkNLvvZgg/get-ai-in-edu-approaches-view-kind>;
+    dct:title "🎓 AI in Education Approaches";
+    rdfs:label "AI in Education approaches view";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/MaintainedResource>,
+      <https://w3id.org/kpxl/gen/terms/Space>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.2.ai-in-edu-approaches";
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:addAction;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAgqMGG_scv6O5on_jTJgjyeO4IuEbfuKWleeLXcGj5CU/get-ai-in-edu-approaches>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-03-20T14:22:31.149Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-ai-in-edu-approaches-view;
+    npx:introduces <https://w3id.org/np/RAEHhtq-Umfwtcl18DLZM58jumI6CUSzKILyHkNLvvZgg/get-ai-in-edu-approaches-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAEHhtq-Umfwtcl18DLZM58jumI6CUSzKILyHkNLvvZgg>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "hQ9JZTDgBewcpR9phKfMi6NsQF54ERzjJi8Dl+tmmbcEHo+v7B2magjoD09WDyCJ6H86ZCZ12TT0/PwWP5bLdcokhKVCgIc7fbYidZ3nu5+rNzeuY+oyC7TByRWVAAcOavZLMNUJn2uZVZLGy01hFYjObyOwQFDr984P+7hpH+o=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RA88tb2ths5RVTsT7cajUFPL1ONBbyfjk3THDe79FymQA> nt:hasLabelFromApi
+      "Describing an AI in Education approach" .
+  
+  <https://w3id.org/np/RAgqMGG_scv6O5on_jTJgjyeO4IuEbfuKWleeLXcGj5CU/get-ai-in-edu-approaches>
+    nt:hasLabelFromApi "Get AI in Education approaches - This query returns all approaches in AI for Education" .
+}
+

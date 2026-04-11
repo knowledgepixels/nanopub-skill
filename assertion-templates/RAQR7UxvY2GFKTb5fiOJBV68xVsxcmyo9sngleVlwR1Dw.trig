@@ -1,0 +1,60 @@
+@prefix this: <https://w3id.org/np/RAQR7UxvY2GFKTb5fiOJBV68xVsxcmyo9sngleVlwR1Dw> .
+@prefix sub: <https://w3id.org/np/RAQR7UxvY2GFKTb5fiOJBV68xVsxcmyo9sngleVlwR1Dw/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dpp-odp: <http://w3id.org/dppo/ontology/dpp-odp/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix dpp-info: <http://w3id.org/dppo/ontology/dpp-info/> .
+@prefix dpp-prov: <http://w3id.org/dppo/ontology/dpp-prov/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:_1 sh:class dpp-info:DPPInformation;
+    sh:minCount "1"^^xsd:integer;
+    sh:path dpp-info:containsInformation .
+  
+  sub:_2 sh:class dpp-odp:Product;
+    sh:maxCount "1"^^xsd:integer;
+    sh:minCount "1"^^xsd:integer;
+    sh:path dpp-odp:describes .
+  
+  sub:_3 sh:class dpp-odp:DPP;
+    sh:path dpp-odp:hasPart .
+  
+  sub:_4 sh:maxCount "1"^^xsd:integer;
+    sh:path dpp-prov:invalidAtTimeStamp .
+  
+  sub:_5 sh:maxCount "1"^^xsd:integer;
+    sh:minCount "1"^^xsd:integer;
+    sh:path dpp-prov:creationTimeStamp .
+  
+  sub:shape a sh:NodeShape;
+    sh:property sub:_1, sub:_2, sub:_3, sub:_4, sub:_5;
+    sh:targetClass dpp-odp:DPP .
+}
+
+sub:provenance {
+  sub:assertion prov:hadPrimarySource <https://orcid.org/0000-0002-1267-0234> .
+}
+
+sub:pubinfo {
+  this: dct:created "2025-07-04T16:19:12.117+02:00"^^xsd:dateTime;
+    dct:creator <https://orcid.org/0000-0002-1267-0234>;
+    npx:hasNanopubType <https://w3id.org/np/o/ntemplate/AssertionTemplate>;
+    npx:introduces sub:shape .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "obtAmZCZ4sE4BPkXTmo6/znIOKies4N6TrK/FujdTAA8XCV32IBWON2C/1Jjb7uDM0H//Vz+L4cWVW+oNOlZEAnD+/B1kjlcL0MxOV9uNTuCarLED4OBnXADa89osHWFBiDdecaUSJFvpVKT0ldpeLD3wBnF7jRvVEJeZxYpHPY=";
+    npx:hasSignatureTarget this: .
+}
+

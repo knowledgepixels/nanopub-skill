@@ -1,0 +1,269 @@
+@prefix this: <https://w3id.org/np/RAYRjIrbLSDIX5Mp1cb6MK4vRV0Vd5o0TZ8NTIEHwCPOI> .
+@prefix sub: <https://w3id.org/np/RAYRjIrbLSDIX5Mp1cb6MK4vRV0Vd5o0TZ8NTIEHwCPOI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:abstract rdfs:label "has the abstract" .
+  
+  dct:date rdfs:label "has the publication date" .
+  
+  dct:hasPart rdfs:label "includes - links a thing to a part it includes" .
+  
+  dct:isPartOf rdfs:label "is part of" .
+  
+  dct:title rdfs:label "has the title" .
+  
+  <http://purl.org/ontology/bibo/authorList> rdfs:label "has" .
+  
+  <http://purl.org/ontology/bibo/issue> rdfs:label "is in journal issue" .
+  
+  <http://purl.org/ontology/bibo/pageEnd> rdfs:label "has end page" .
+  
+  <http://purl.org/ontology/bibo/pageStart> rdfs:label "has start page" .
+  
+  <http://purl.org/ontology/bibo/volume> rdfs:label "is in journal volume" .
+  
+  <http://purl.org/spar/fabio/BookChapter> rdfs:label "book chapter - A defined chapter of a book, usually with a separate title or number." .
+  
+  <http://purl.org/spar/fabio/InUsePaper> rdfs:label "in-use paper - A scholarly work that describes applied and validated solutions such as software tools, systems or architectures that benefit from the use of the technology of a particular scholarly domain." .
+  
+  <http://purl.org/spar/fabio/JournalEditorial> rdfs:label "journal editorial - An editorial published in an issue of a journal." .
+  
+  <http://purl.org/spar/fabio/MethodsPaper> rdfs:label "methods paper - A scholarly work detailing a method, procedure or experimental protocol employed in a particular scholarly domain." .
+  
+  <http://purl.org/spar/fabio/PositionPaper> rdfs:label "position paper - A scholarly work that reports a particular intellectual position or viewpoint regarding a particular scholarly topic." .
+  
+  <http://purl.org/spar/fabio/ResearchPaper> rdfs:label "research paper - A scholarly work that reports original research contributions addressing theoretical, analytical or experimental aspects of a particular scholarly domain." .
+  
+  <http://purl.org/spar/fabio/ResourcePaper> rdfs:label "resource paper - A scholarly work that describes resources developed to provide experimental materials or facilities, support a research hypothesis, to provide answers to a research question, or that have contributed to the generation of novel scientific work." .
+  
+  <http://purl.org/spar/fabio/ReviewPaper> rdfs:label "review paper - A scholarly work that surveys the state of the art of topics central to a particular subject or relating to a specific domain (e.g. the scope of a certain journal or conference)." .
+  
+  <http://purl.org/spar/fabio/ScholarlyWork> rdfs:label "scholarly work - A general term that includes all other listed types" .
+  
+  <http://schema.org/affiliation> rdfs:label "has the affiliation" .
+  
+  <http://schema.org/email> rdfs:label "has the email address" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  foaf:name rdfs:label "has the name" .
+  
+  sub:abstract a nt:LongLiteralPlaceholder;
+    rdfs:label "the abstract of the article" .
+  
+  sub:affiliation-organization a nt:RestrictedChoicePlaceholder;
+    rdfs:label "Select organization from above";
+    nt:possibleValue sub:organization .
+  
+  sub:affiliation-person a nt:RestrictedChoicePlaceholder;
+    rdfs:label "Select author from above";
+    nt:possibleValue sub:author .
+  
+  sub:article a nt:ExternalUriPlaceholder, nt:IntroducedResource;
+    rdfs:label "DOI of the article (starting with https://doi.org/10...)";
+    nt:hasRegex "https://doi\\.org/10.+" .
+  
+  sub:article-type a nt:RestrictedChoicePlaceholder;
+    rdfs:label "The type of the article";
+    nt:hasDefaultValue <http://purl.org/spar/fabio/ResearchPaper>;
+    nt:possibleValue <http://purl.org/spar/fabio/BookChapter>, <http://purl.org/spar/fabio/InUsePaper>,
+      <http://purl.org/spar/fabio/JournalEditorial>, <http://purl.org/spar/fabio/MethodsPaper>,
+      <http://purl.org/spar/fabio/PositionPaper>, <http://purl.org/spar/fabio/ResearchPaper>,
+      <http://purl.org/spar/fabio/ResourcePaper>, <http://purl.org/spar/fabio/ReviewPaper>,
+      <http://purl.org/spar/fabio/ScholarlyWork> .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication contains the main high-level metadata about a scholarly article, including title, authors, and links to other nanopublications.";
+    rdfs:label "Describing core article metadata";
+    nt:hasNanopubLabelPattern "Article: ${title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07a,
+      sub:st07b, sub:st07c, sub:st07d, sub:st08, sub:st10a, sub:st10b, sub:st21, sub:st32,
+      sub:st41;
+    nt:hasTag "Journals";
+    nt:hasTargetNanopubType <http://purl.org/spar/fabio/ScholarlyWork> .
+  
+  sub:author a nt:AgentPlaceholder;
+    rdfs:label "ORCID ID of the author (starting with https://orcid.org/...)";
+    nt:hasRegex "https://orcid\\.org/[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]" .
+  
+  sub:author-email a nt:LiteralPlaceholder;
+    rdfs:label "email address of author";
+    nt:hasRegex "[A-Za-z0-9._+\\-\\']+@[A-Za-z0-9.\\-]+\\.[A-Za-z]{2,}" .
+  
+  sub:author-list a nt:LocalResource;
+    rdfs:label "this author list" .
+  
+  sub:author-name a nt:LiteralPlaceholder;
+    rdfs:label "full name of author" .
+  
+  sub:author-with-email a nt:RestrictedChoicePlaceholder;
+    rdfs:label "Select author to specify an email address for";
+    nt:possibleValue sub:author .
+  
+  sub:date a nt:LiteralPlaceholder;
+    rdfs:label "date, e.g. \"2023-07-21\", \"2023-07\", or \"2023\"";
+    nt:hasRegex "(1[0-9][0-9][0-9]|20[0-2][0-9])(-(1[0-2]|0[1-9])(-(3[0-1]|[1-2][0-9]|0[1-9]))?)?" .
+  
+  sub:issue a nt:LiteralPlaceholder;
+    rdfs:label "issue number" .
+  
+  sub:journal a nt:ExternalUriPlaceholder;
+    rdfs:label "ISSN of the journal (e.g. \"2451-8492\")";
+    nt:hasPrefix "http://id.crossref.org/issn/";
+    nt:hasPrefixLabel "the journal with ISSN" .
+  
+  sub:journal-title a nt:LiteralPlaceholder;
+    rdfs:label "Title of the journal" .
+  
+  sub:membership-property a nt:SequenceElementPlaceholder;
+    rdfs:label "has at position ${number}";
+    nt:hasPrefix "http://www.w3.org/1999/02/22-rdf-syntax-ns#_";
+    nt:hasPrefixLabel "includes as element number";
+    nt:hasRegex "[1-9][0-9]*" .
+  
+  sub:organization a nt:UriPlaceholder;
+    rdfs:label "ROR identifier (https://ror.org/...) or short local URI suffix (e.g. \"stanford\")";
+    nt:hasRegex "(https://ror\\.org/[0-9a-z]+|[a-zA-Z0-9_\\-]+)" .
+  
+  sub:organization-name a nt:LiteralPlaceholder;
+    rdfs:label "The name of the organization" .
+  
+  sub:pageEnd a nt:LiteralPlaceholder;
+    rdfs:label "end page number" .
+  
+  sub:pageStart a nt:LiteralPlaceholder;
+    rdfs:label "start page number" .
+  
+  sub:part a nt:ExternalUriPlaceholder;
+    rdfs:label "a part belonging to this article, e.g. a nanopublication" .
+  
+  sub:st01 rdf:object sub:article-type;
+    rdf:predicate rdf:type;
+    rdf:subject sub:article .
+  
+  sub:st02 rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:article .
+  
+  sub:st03 a nt:OptionalStatement;
+    rdf:object sub:abstract;
+    rdf:predicate dct:abstract;
+    rdf:subject sub:article .
+  
+  sub:st04 rdf:object sub:date;
+    rdf:predicate dct:date;
+    rdf:subject sub:article .
+  
+  sub:st05 rdf:object sub:journal;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:article .
+  
+  sub:st06 rdf:object sub:journal-title;
+    rdf:predicate dct:title;
+    rdf:subject sub:journal .
+  
+  sub:st07a a nt:OptionalStatement;
+    rdf:object sub:volume;
+    rdf:predicate <http://purl.org/ontology/bibo/volume>;
+    rdf:subject sub:article .
+  
+  sub:st07b a nt:OptionalStatement;
+    rdf:object sub:issue;
+    rdf:predicate <http://purl.org/ontology/bibo/issue>;
+    rdf:subject sub:article .
+  
+  sub:st07c a nt:OptionalStatement;
+    rdf:object sub:pageStart;
+    rdf:predicate <http://purl.org/ontology/bibo/pageStart>;
+    rdf:subject sub:article .
+  
+  sub:st07d a nt:OptionalStatement;
+    rdf:object sub:pageEnd;
+    rdf:predicate <http://purl.org/ontology/bibo/pageEnd>;
+    rdf:subject sub:article .
+  
+  sub:st08 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:part;
+    rdf:predicate dct:hasPart;
+    rdf:subject sub:article .
+  
+  sub:st10a rdf:object sub:author-list;
+    rdf:predicate <http://purl.org/ontology/bibo/authorList>;
+    rdf:subject sub:article .
+  
+  sub:st10b a nt:GroupedStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st11, sub:st13 .
+  
+  sub:st11 rdf:object sub:author;
+    rdf:predicate sub:membership-property;
+    rdf:subject sub:author-list .
+  
+  sub:st13 rdf:object sub:author-name;
+    rdf:predicate foaf:name;
+    rdf:subject sub:author .
+  
+  sub:st21 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:author-email;
+    rdf:predicate <http://schema.org/email>;
+    rdf:subject sub:author-with-email .
+  
+  sub:st32 a nt:RepeatableStatement;
+    rdf:object sub:organization-name;
+    rdf:predicate foaf:name;
+    rdf:subject sub:organization .
+  
+  sub:st41 a nt:RepeatableStatement;
+    rdf:object sub:affiliation-organization;
+    rdf:predicate <http://schema.org/affiliation>;
+    rdf:subject sub:affiliation-person .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "The title of the article" .
+  
+  sub:volume a nt:LiteralPlaceholder;
+    rdfs:label "volume number" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-04-10T07:32:45.543Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAftDRkBMpVO1tNQArB4D5gDxUDFkqUBOvgk6AonoS_sA>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Describing core article metadata";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "cui3jdCG1TUmd6yK2FNaSQjal9K+CJEO904SvZObBPMse7pQF99tA3HJECqNrzeTbs1cO2MtyTQpfpYuy5eRVjV5VVJarrJA6zlyDlfprKALQXrSW83AU3oMr6ojyCitfdUpCA1l1KvklMe7iAjFejSucVwkQ7AJi0gWyY9TouM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

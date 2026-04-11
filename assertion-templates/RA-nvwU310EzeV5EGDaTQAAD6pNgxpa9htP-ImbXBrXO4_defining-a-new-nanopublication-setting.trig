@@ -1,0 +1,124 @@
+@prefix this: <http://purl.org/np/RA-nvwU310EzeV5EGDaTQAAD6pNgxpa9htP-ImbXBrXO4> .
+@prefix sub: <http://purl.org/np/RA-nvwU310EzeV5EGDaTQAAD6pNgxpa9htP-ImbXBrXO4#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  npx:FixedTrust rdfs:label "Fixed Trust" .
+  
+  npx:ManualUpdatesOnly rdfs:label "Manual Updates Only" .
+  
+  npx:NanopubSetting rdfs:label "nanopublication setting" .
+  
+  npx:TransitiveTrust rdfs:label "Transitive Trust" .
+  
+  npx:UpdatesByCreator rdfs:label "Updates By Creator" .
+  
+  npx:hasAgents rdfs:label "has agents" .
+  
+  npx:hasBootstrapService rdfs:label "has bootstrap service" .
+  
+  npx:hasServices rdfs:label "has services" .
+  
+  npx:hasTrustRangeAlgorithm rdfs:label "has trust range algorithm" .
+  
+  npx:hasUpdateStrategy rdfs:label "has update strategy" .
+  
+  sub:agents a nt:TrustyUriPlaceholder;
+    rdfs:label "nanopublication index URI of authoritative agents" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Defining a new nanopublication setting";
+    nt:hasNanopubLabelPattern "Nanopublication setting: ${label}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6, sub:st7;
+    nt:hasTag "Meta" .
+  
+  sub:bootstrap-service a nt:UriPlaceholder;
+    rdfs:label "URL of bootstrap service" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the name of this nanopublication setting" .
+  
+  sub:services a nt:TrustyUriPlaceholder;
+    rdfs:label "nanopublication index URI of authoritative services" .
+  
+  sub:setting a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix" .
+  
+  sub:st1 rdf:object npx:NanopubSetting;
+    rdf:predicate rdf:type;
+    rdf:subject sub:setting .
+  
+  sub:st2 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:setting .
+  
+  sub:st3 rdf:object sub:agents;
+    rdf:predicate npx:hasAgents;
+    rdf:subject sub:setting .
+  
+  sub:st4 rdf:object sub:services;
+    rdf:predicate npx:hasServices;
+    rdf:subject sub:setting .
+  
+  sub:st5 a nt:RepeatableStatement;
+    rdf:object sub:bootstrap-service;
+    rdf:predicate npx:hasBootstrapService;
+    rdf:subject sub:setting .
+  
+  sub:st6 rdf:object sub:trust-range-algorithm;
+    rdf:predicate npx:hasTrustRangeAlgorithm;
+    rdf:subject sub:setting .
+  
+  sub:st7 rdf:object sub:update-strategy;
+    rdf:predicate npx:hasUpdateStrategy;
+    rdf:subject sub:setting .
+  
+  sub:trust-range-algorithm a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of the trust range algorithm";
+    nt:possibleValue npx:FixedTrust, npx:TransitiveTrust .
+  
+  sub:update-strategy a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of the update strategy";
+    nt:possibleValue npx:ManualUpdatesOnly, npx:UpdatesByCreator .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "is called" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "MgKsp34WzDSfDSxS8GF+dLSIK61o5twLG7lA5Fh4Gij5gcZJsB7LVV8lpYJnD3e3f8u1j0nAJb3rb1tn9ZqVRdnnv/Vbncwa2/XJAEsCJM8bFe4HrwwhV3pIJhrdVbnWB96NgqbSjugNvfVPde0VOqNHGfn6f8aBo48af2EHLcw=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-15T13:53:30.479+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <http://purl.org/np/RAQGvAyjYbX_1J3_JbWlEZkth8q6BU8Ij3tkb1ooT-Skc>;
+    rdfs:label "Template: Defining a new nanopublication setting";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RANjqEfLnGSzLuq0heRSXN0psYWW0oX4v3W8w7osb3xfs> .
+}
+

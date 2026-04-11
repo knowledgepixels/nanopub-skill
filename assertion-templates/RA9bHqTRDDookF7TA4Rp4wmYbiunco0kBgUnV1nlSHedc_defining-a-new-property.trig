@@ -1,0 +1,114 @@
+@prefix this: <http://purl.org/np/RA9bHqTRDDookF7TA4Rp4wmYbiunco0kBgUnV1nlSHedc> .
+@prefix sub: <http://purl.org/np/RA9bHqTRDDookF7TA4Rp4wmYbiunco0kBgUnV1nlSHedc#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Defining a new property";
+    nt:hasNanopubLabelPattern "Property: ${label}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5;
+    nt:hasTag "Terms" .
+  
+  sub:definition a nt:LongLiteralPlaceholder;
+    rdfs:label "definition of the property" .
+  
+  sub:domain a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of the domain class";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "how the property is read, e.g. 'contains' or 'is used by'" .
+  
+  sub:property a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix" .
+  
+  sub:propertytype a nt:RestrictedChoicePlaceholder;
+    rdfs:label "type of property (object or datatype property)";
+    nt:possibleValue <http://www.w3.org/2002/07/owl#DatatypeProperty>, <http://www.w3.org/2002/07/owl#ObjectProperty> .
+  
+  sub:range a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of the range class";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:st0 rdf:object rdf:Property;
+    rdf:predicate rdf:type;
+    rdf:subject sub:property .
+  
+  sub:st1 a nt:OptionalStatement;
+    rdf:object sub:propertytype;
+    rdf:predicate rdf:type;
+    rdf:subject sub:property .
+  
+  sub:st2 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:property .
+  
+  sub:st3 rdf:object sub:definition;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#definition>;
+    rdf:subject sub:property .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:domain;
+    rdf:predicate rdfs:domain;
+    rdf:subject sub:property .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:range;
+    rdf:predicate rdfs:range;
+    rdf:subject sub:property .
+  
+  rdf:Property rdfs:label "property" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:domain rdfs:label "has its subject values from the class (domain)" .
+  
+  rdfs:label rdfs:label "is read as" .
+  
+  rdfs:range rdfs:label "has its object values from the class (range)" .
+  
+  <http://www.w3.org/2002/07/owl#DatatypeProperty> rdfs:label "datatype property - a relation between an object (any entity) and a literal (a text or number)" .
+  
+  <http://www.w3.org/2002/07/owl#ObjectProperty> rdfs:label "object property - a relation between two objects (any kinds of entities)" .
+  
+  <http://www.w3.org/2004/02/skos/core#definition> rdfs:label "is defined as follows:" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Uo/xPUm5So5pn7imOTypoN5FzskuxSs0M7IjYrb9qV3nv8ZazKT5FuFwl7TuZCCbB9sLNvdm/91eHKo5nUs2z5+JU58trCXn353UKDDEvRLYEQIVfd5yISjU0dVF8k5qd/JJvZPC8euqTHeQrCTT6IabwdJ7qnFhNbTn8iX9aV4=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-15T15:10:26.294+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <http://purl.org/np/RAMTyPDQyS434cj3Wwgy8JmJyhQRi2Sh9VbCY2Eq1kBlE>;
+    rdfs:label "Template: Defining a new property";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RANjqEfLnGSzLuq0heRSXN0psYWW0oX4v3W8w7osb3xfs> .
+}
+

@@ -1,0 +1,90 @@
+@prefix this: <https://w3id.org/np/RAl03y0LpJBz11POZW9MkV9scYfzfCSeaMVh3-nLphkL0> .
+@prefix sub: <https://w3id.org/np/RAl03y0LpJBz11POZW9MkV9scYfzfCSeaMVh3-nLphkL0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-coauthors a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the co-authors of a given author.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get co-authors";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix fabio: <http://purl.org/spar/fabio/>
+prefix bibo: <http://purl.org/ontology/bibo/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?coauthor ?coauthor_label (count(distinct ?paper) as ?paper_count) where {
+  values ?_author_multi_iri {}
+  graph npa:graph {
+    ?np npx:hasNanopubType fabio:ScholarlyWork .
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np dct:created ?date .
+    ?np np:hasAssertion ?a .
+    ?np npx:introduces ?paper .
+  }
+  graph ?a {
+    ?paper dct:title ?paper_label .
+    ?paper bibo:authorList ?author_list .
+    ?paper dct:date ?publication_date .
+    ?author_list ?rdfseqpred1 ?_author_multi_iri .
+    filter(strstarts(str(?rdfseqpred1), \"http://www.w3.org/1999/02/22-rdf-syntax-ns#_\"))
+    ?author_list ?rdfseqpred2 ?coauthor_id .
+    filter(strstarts(str(?rdfseqpred2), \"http://www.w3.org/1999/02/22-rdf-syntax-ns#_\"))
+    ?coauthor_id foaf:name ?coauthor_label .
+    bind(if(strstarts(str(?coauthor_id), \"https://orcid.org/\"), ?coauthor_id, ?coauthor_label) as ?coauthor)
+    filter(?coauthor_id != ?_author_multi_iri)
+    optional {
+      ?paper dct:isPartOf ?journal .
+      ?journal dct:title ?journal_label .
+    }
+  }
+}
+group by ?coauthor ?coauthor_label
+order by desc(?paper_count)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-02-23T19:24:13.497Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-coauthors;
+    npx:supersedes <https://w3id.org/np/RAcxYeOSy5QcLHW4GF_3_BfqJsUfUHUo3IKXh73Oa11TE>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "nsgvhpRVZl5sW7OkI1GSJSzTS2ib4TR14wHgtFC4faFfirxYIbVm9lx2nmp57xklP5c7I45bmJR9Ah+pfoUNwbfwBAH7Hd4KJFSKQtO+/xx//gY/BDTXWPgjoMHsckqQjTuI3+c7jO6O8CAHDuPSMRcfkA8A/mBbaUgZS4f0LVc=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

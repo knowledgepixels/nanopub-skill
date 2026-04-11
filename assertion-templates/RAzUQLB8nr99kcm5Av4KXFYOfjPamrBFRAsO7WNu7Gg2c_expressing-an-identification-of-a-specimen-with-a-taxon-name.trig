@@ -1,0 +1,96 @@
+@prefix this: <https://w3id.org/np/RAzUQLB8nr99kcm5Av4KXFYOfjPamrBFRAsO7WNu7Gg2c> .
+@prefix sub: <https://w3id.org/np/RAzUQLB8nr99kcm5Av4KXFYOfjPamrBFRAsO7WNu7Gg2c#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is an instance of - indicates that the individual to the left is an instance of the class to the right" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition> rdfs:label "is used as defined in" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonName> rdfs:label "has the name - links a taxon concept to a taxon name" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/represents> rdfs:label "represents - indicates that the individual to the left is a representative instance of the class to the right" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication expresses an identification of a given specimen, thereby assigning it to a taxon name.";
+    rdfs:label "Expressing an identification of a specimen with a taxon name";
+    nt:hasDefaultProvenance ns1:RALfxe37qzq5rEk6tLLcsSeKtKQZ1FcoHZdf2nYVfU66w;
+    nt:hasNanopubLabelPattern "${specimen} is identified as ${taxonname}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03;
+    nt:hasTag "Biodiversity";
+    nt:hasTargetNanopubType <https://w3id.org/kpxl/biodiv/terms/BiodivNanopub> .
+  
+  sub:rel a nt:RestrictedChoicePlaceholder;
+    nt:hasDefaultValue <https://w3id.org/kpxl/biodiv/terms/represents>;
+    nt:possibleValue rdf:type, <https://w3id.org/kpxl/biodiv/terms/represents> .
+  
+  sub:specimen a nt:ExternalUriPlaceholder;
+    rdfs:label "DOI (https://doi.org/10...) or other URL of the specimen" .
+  
+  sub:st01 rdf:object sub:taxonconcept;
+    rdf:predicate sub:rel;
+    rdf:subject sub:specimen .
+  
+  sub:st02 rdf:object sub:taxonname;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonName>;
+    rdf:subject sub:taxonconcept .
+  
+  sub:st03 a nt:OptionalStatement;
+    rdf:object sub:taxondef;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition>;
+    rdf:subject sub:taxonconcept .
+  
+  sub:taxonconcept a nt:LocalResource;
+    rdfs:label "the taxon concept" .
+  
+  sub:taxondef a nt:ExternalUriPlaceholder;
+    rdfs:label "publication DOI (https://doi.org/...) or taxon treatment ID (https://treatment.plazi.org/id/...)";
+    nt:hasRegex "(https://doi.org/|https://treatment.plazi.org/id/).+" .
+  
+  sub:taxonname a nt:GuidedChoicePlaceholder;
+    rdfs:label "search and select from list (if not found, paste identifying URI from IPNI, MycoBank, Index Fungorum, or Zoobank)";
+    nt:possibleValuesFromApi "https://vodex.petapico.org/nidx/query?rows=100&q=label:" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "PgLXD8dboXOkbnnY8ZNx9e36of/rAMA+7CvCEfm1QycZElrys5hJY5Z887lrww7z62muvBQyeAiB5JNEgKSJSjepsP04vBg6RCoSrMTEzRD4mFhIgJUTf7W01AG2C8AzrYcRpYIRJnR+B8rfEZ4VtyGYOLxAGmQEK+MH0jVfQG4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-04-25T06:28:04.072Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAZuQ0kJ_vnuto1iU1Vj8I59IK_C9pVwLaI080HgGqqzU>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Expressing an identification of a specimen with a taxon name";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

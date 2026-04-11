@@ -1,0 +1,73 @@
+@prefix this: <https://w3id.org/np/RAFmIDts27rRMUzK1HVdrVQTig4bJyr8mqzgzR5ulB2T0> .
+@prefix sub: <https://w3id.org/np/RAFmIDts27rRMUzK1HVdrVQTig4bJyr8mqzgzR5ulB2T0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <https://creativecommons.org/licenses/by-sa/4.0/> rdfs:label "Attribution-ShareAlike 4.0 International (CC BY-SA 4.0)" .
+  
+  <https://creativecommons.org/licenses/by/4.0/> rdfs:label "Attribution 4.0 International (CC BY 4.0)" .
+  
+  <https://creativecommons.org/publicdomain/zero/1.0/> rdfs:label "CC0 1.0 Universal (CC0 1.0) Public Domain Dedication" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasDefaultLicense> rdfs:label "has the default license" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template is used to set the default license with which the nanopublications of a User are published.";
+    rdfs:label "Set the default license of a User";
+    nt:hasStatement sub:st .
+  
+  sub:license a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select the license here";
+    nt:hasDefaultValue <https://creativecommons.org/licenses/by/4.0/>;
+    nt:possibleValue <https://creativecommons.org/licenses/by-sa/4.0/>, <https://creativecommons.org/licenses/by/4.0/>,
+      <https://creativecommons.org/publicdomain/zero/1.0/> .
+  
+  sub:st rdf:object sub:license;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasDefaultLicense>;
+    rdf:subject sub:user .
+  
+  sub:user a nt:AgentPlaceholder;
+    nt:hasDefaultValue nt:CREATOR .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-03-11T19:01:15.846Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAsbRB10T4F11shUx13g7EON1xcOiRUTzC809S8rVVI98>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Set the default license of a User";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAQIZQdqa_kqYfFSnboJOHst-BTcR7_PPG_ywE5EMUEMI> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCaQXE2B2hJ6QdWxaWerU4F/XOtCQdj2OkdrIYd1kpMY9hIUh8boxaO3uOBeqvvqKLf5HjpRF4DT1eghOSsa2Dhd5HRTM/XIamvwWkHpN4oB3Ml19pAAzjTqczYmFLfgG67mGL5+vSA8VEdHtKQCrvP4SpTibMBP1qaxt3k1tqD6wIDAQAB";
+    npx:hasSignature "VHTfaUSdcsMmJ8/WIJuSigqebqGCe2CSRPPuonbnE7nsgaDIG/Ue1pSo44EhHXJu93fbpk/OSJL/nXTL2acwv20PyfyWdyML69J7vB8cKKCUHWJ8YjAqgvau+EHqS/HvyymA8adZVIIiRN430eINKxzMfpqYHme1wGX3gxIUzdk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

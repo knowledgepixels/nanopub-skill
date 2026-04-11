@@ -1,0 +1,83 @@
+@prefix this: <https://w3id.org/np/RATltV_HfIkO1xPPS1iT8e9gS1ac4QgC9qXB90-3ZJH8w> .
+@prefix sub: <https://w3id.org/np/RATltV_HfIkO1xPPS1iT8e9gS1ac4QgC9qXB90-3ZJH8w/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  <https://schema.org/isPartOf> rdfs:label "is part of" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Publish a paragraph item to a Space";
+    nt:hasNanopubLabelPattern "${title}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3 .
+  
+  sub:content a nt:LongLiteralPlaceholder;
+    rdfs:label "has the content" .
+  
+  sub:paragraph a nt:IntroducedResource .
+  
+  sub:space a nt:GuidedChoicePlaceholder;
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st0 rdf:object sub:title;
+    rdf:predicate <https://schema.org/title>;
+    rdf:subject sub:paragraph .
+  
+  sub:st1 rdf:object sub:content;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasContent>;
+    rdf:subject sub:paragraph .
+  
+  sub:st2 rdf:object sub:space;
+    rdf:predicate <https://schema.org/isPartOf>;
+    rdf:subject sub:paragraph .
+  
+  sub:st3 rdf:object <https://w3id.org/kpxl/gen/terms/Paragraph>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:paragraph .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "has the title" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2025-12-15T16:28:49.292Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAIIvK1NNUp42sZNbEjwIUv5FsxSgsn7pZn0QGxGxb2WM>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Publish a paragraph item to a Space";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCaQXE2B2hJ6QdWxaWerU4F/XOtCQdj2OkdrIYd1kpMY9hIUh8boxaO3uOBeqvvqKLf5HjpRF4DT1eghOSsa2Dhd5HRTM/XIamvwWkHpN4oB3Ml19pAAzjTqczYmFLfgG67mGL5+vSA8VEdHtKQCrvP4SpTibMBP1qaxt3k1tqD6wIDAQAB";
+    npx:hasSignature "ag2JlY2BwQZWTYp0rZhvUCL+KUhfFfm5pspVVKpadwj8/y+f5+MhLcCT6r71qovt3NVwS1iz+GB3Gw7QNT61QXjTkLWNlKnTUhHvxYXL4Evn8S/zYSafyLyDlvu4r51ozH6Lf+o7TTfQL7Gje1L65ILb/ssL0jVGr9IadyFcG98=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

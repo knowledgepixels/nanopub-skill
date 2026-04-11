@@ -1,0 +1,116 @@
+@prefix this: <https://w3id.org/np/RA3U23LL3xbNwsu92fAqsKb0kagOud4f9TlRQq3evNJck> .
+@prefix sub: <https://w3id.org/np/RA3U23LL3xbNwsu92fAqsKb0kagOud4f9TlRQq3evNJck#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-user-stats-from-userid a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns some general user statistics in the form of number of valid/invalidated/accepted nanopublications published.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get some general user statistics";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/meta>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+prefix bibo: <http://purl.org/ontology/bibo/>
+prefix pav: <http://purl.org/pav/>
+
+select ?key ?value where {
+{
+select ?key (count(?np) as ?value) where {
+
+    graph npa:graph {
+      ?np npa:hasValidSignatureForPublicKey ?pubkey .
+      ?np dct:creator ?_userid_iri .
+      bind( exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . } as ?invalidated )
+    }
+
+bind(if(?invalidated,\"invalidatedNpCount\",\"validNpCount\") as ?key)
+values ?key { \"invalidatedNpCount\" \"validNpCount\" }
+
+}
+group by ?key ?invalidated
+}
+union
+{
+select ?key (sum(?npcount) as ?value) where {
+
+bind(\"acceptedNpCount\" as ?key)
+
+optional { <x:> <x:> ?_userid_iri }  # ensure grlc is picking up the placeholder
+
+values ?npType {
+  <https://w3id.org/kpxl/pensoft/rio/terms/RIOJournalNanopub>
+  <https://w3id.org/kpxl/pensoft/bdj/terms/BiodiversityDataJournalNanopub>
+  <https://w3id.org/kpxl/ios/ds/terms/DataScienceNanopub>
+}
+bind(uri(concat(\"https://w3id.org/np/l/nanopub-query-1.1/repo/type/\", sha256(str(?npType)))) as ?service)
+
+service ?service { select (count(distinct ?np) as ?npcount) where { optional {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    ?np np:hasPublicationInfo ?i .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+  }
+  { {
+    graph ?i { ?np pav:authoredBy ?_userid_iri . }
+  } union {
+    graph ?i {
+      ?np bibo:authorList ?authorList .
+      ?authorList ?hasElement ?_userid_iri .
+      filter(strstarts(str(?hasElement), str(rdf:_)))
+    }
+  } }
+} }
+group by ?np
+} }
+group by ?key
+}
+}
+order by ?key""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "L3waFYv2e7v7nZnJKEFDlsffil2ZWMRK8MUmuk9nvfR+gn2pu3lUWeXjzZs+UTS6Dl9KR5lXh3oc1UFRDNrCdGjqYGa/OUMw+FTjCNCcP3eqkXW8EcY73qsarHSVh0q4IPnTRJ4QDAiMdVhA6MOKnUUewD3YeD1nG3/5huDZK6Y=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-09-23T10:32:50.049Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-user-stats-from-userid;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+}
+

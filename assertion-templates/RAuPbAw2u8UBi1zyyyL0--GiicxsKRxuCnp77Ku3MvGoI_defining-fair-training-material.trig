@@ -1,0 +1,139 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix schema: <http://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix this: <http://purl.org/np/RAuPbAw2u8UBi1zyyyL0--GiicxsKRxuCnp77Ku3MvGoI> .
+@prefix sub: <http://purl.org/np/RAuPbAw2u8UBi1zyyyL0--GiicxsKRxuCnp77Ku3MvGoI#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dcterms:MediaType rdfs:label "has media type" .
+  
+  dcterms:created rdfs:label "created on" .
+  
+  dcterms:creator rdfs:label "author" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Defining FAIR Training Material";
+    nt:hasRequiredPubinfoElement <http://purl.org/np/RA_R5w4lZ-6xuZyylG8qSlMhmWBaTE41-zlhiBVUQblCc>;
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st6, sub:st6b, sub:st7,
+      sub:st7b;
+    nt:hasTag "FAIR" .
+  
+  sub:author a nt:UriPlaceholder;
+    rdfs:label "(e.g. ORCID)" .
+  
+  sub:comment a nt:LiteralPlaceholder;
+    rdfs:label "description of the FAIR-enabling resource" .
+  
+  sub:created a nt:LiteralPlaceholder;
+    rdfs:label "creation date (e.g. ISO)" .
+  
+  sub:domain a nt:RestrictedChoicePlaceholder;
+    rdfs:label "research domain";
+    nt:possibleValuesFrom <http://purl.org/np/RACXDZHEowTYDAzZvdmD0qIGpXZwY5ghMRBBlt6N8Iu5s> .
+  
+  sub:media-type a nt:ValuePlaceholder;
+    rdfs:label "Media Type (e.g. MIME)" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the FAIR-enabling resource" .
+  
+  sub:resource a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix" .
+  
+  sub:st0 rdf:object <https://w3id.org/fair/connect/FAIR-Training-Material>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st1 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:resource .
+  
+  sub:st2 rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:resource .
+  
+  sub:st3 rdf:object sub:media-type;
+    rdf:predicate dcterms:MediaType;
+    rdf:subject sub:resource .
+  
+  sub:st4 a nt:RepeatableStatement;
+    rdf:object sub:domain;
+    rdf:predicate skos:related;
+    rdf:subject sub:resource .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:website;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:resource .
+  
+  sub:st6b a nt:OptionalStatement;
+    rdf:object sub:url;
+    rdf:predicate schema:url;
+    rdf:subject sub:resource .
+  
+  sub:st7 a nt:RepeatableStatement;
+    rdf:object sub:author;
+    rdf:predicate dcterms:creator;
+    rdf:subject sub:resource .
+  
+  sub:st7b a nt:OptionalStatement;
+    rdf:object sub:created;
+    rdf:predicate dcterms:created;
+    rdf:subject sub:resource .
+  
+  sub:url a nt:UriPlaceholder;
+    rdfs:label "URL" .
+  
+  sub:website a nt:UriPlaceholder;
+    rdfs:label "a link to a website with further information" .
+  
+  schema:url rdfs:label "is accessible via" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has the description" .
+  
+  rdfs:label rdfs:label "is called" .
+  
+  rdfs:seeAlso rdfs:label "is further described by" .
+  
+  skos:related rdfs:label "is related to" .
+  
+  <https://w3id.org/fair/connect/FAIR-Training-Material> rdfs:label "FAIR Training Material" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-6514-0173 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDf2pIMH+lWdxLr57z5pnARHiHLKo2J0kCw/tfj//WpFcdEs9c95kowA8R2uR/fSbL9wYS/OZAz0CV1tAeynxbGoyvYQAEUIAXkqC88NBR4uQeyF0rEwCujGHs8HGQLFuRpdWjf2OsyH3hc+6PNHmWksgD2g8AJU7ujPoksI7T9MwIDAQAB";
+    npx:hasSignature "PzqHZ1McvWoWaQ3Hwpr0Nebd6E6nTsUPXurerpAYpODiluST8rNvavcMNm41sl3AODpfokc/qTyN4SxRkyQTNTOWfD6n7Vdz7vcd3uINe4jsCr6CVva0N6IVA9AlGbsd+ylLx09a143lV/waCquZjIhGsNGz5Jd7p1k5x2jJ7Mc=";
+    npx:hasSignatureTarget this: .
+  
+  this: dcterms:created "2023-03-30T22:17:11.849Z"^^xsd:dateTime;
+    dcterms:creator orcid:0000-0002-1267-0234, orcid:0000-0002-6514-0173;
+    npx:supersedes <http://purl.org/np/RAMLyf1nJrc_YZqIZMHJEm-gC6_duo2-W9LZIvTk734ks>;
+    prov:wasDerivedFrom <http://purl.org/np/RA73A2rqz2UboeQIbEkbWHihiV8P_7B2eu2mqDAJ3wpMk>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A>,
+      <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RA6mo9EIIcGA9jewFh6Ql7uiEIy4HpOefEr21rs_qURdQ> .
+}
+

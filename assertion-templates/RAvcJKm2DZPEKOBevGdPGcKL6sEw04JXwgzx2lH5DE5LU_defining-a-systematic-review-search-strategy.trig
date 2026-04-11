@@ -1,0 +1,156 @@
+@prefix this: <https://w3id.org/np/RAvcJKm2DZPEKOBevGdPGcKL6sEw04JXwgzx2lH5DE5LU> .
+@prefix sub: <https://w3id.org/np/RAvcJKm2DZPEKOBevGdPGcKL6sEw04JXwgzx2lH5DE5LU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:isPartOf rdfs:label "is part of" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <http://www.w3.org/ns/dcat#temporalEndDate> rdfs:label "has the end date" .
+  
+  <http://www.w3.org/ns/dcat#temporalStartDate> rdfs:label "has the start date" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template allows researchers to document their systematic review search strategy following PRISMA 2020 guidelines. It captures search terms, databases, date ranges, and expected results using Dublin Core Terms and RDFS vocabularies. Corresponds to PRISMA 2020 Item 7 (Search) and supports transparent, reproducible literature searches.";
+    rdfs:label "Defining a systematic review search strategy";
+    nt:hasStatement sub:st00, sub:st01, sub:st01b, sub:st02, sub:st03, sub:st04, sub:st04a,
+      sub:st04b, sub:st05, sub:st06;
+    nt:hasTag "PRISMA" .
+  
+  sub:databases a nt:UriPlaceholder;
+    rdfs:label "Database URI (PubMed, scopus, etc.)" .
+  
+  sub:end-date a nt:LiteralPlaceholder;
+    rdfs:label "End date for literature search";
+    nt:hasDatatype xsd:date .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "label for the search strategy" .
+  
+  sub:language a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose language";
+    nt:possibleValuesFrom <https://w3id.org/np/RAK7AaDLgm5kPaqsPp7Mh6yrnrC2Tr0RsGQVAKYrK07ps> .
+  
+  sub:methodology-notes a nt:LongLiteralPlaceholder;
+    rdfs:label "Metholodogy notes" .
+  
+  sub:search-terms a nt:UriPlaceholder;
+    rdfs:label "URI of the concept used for the literature search" .
+  
+  sub:searchStrategy a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "This search strategy" .
+  
+  sub:st00 rdf:object <https://w3id.org/sciencelive/o/terms/SystematicReviewSearchStrategy>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:searchStrategy .
+  
+  sub:st01 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:searchStrategy .
+  
+  sub:st01b rdf:object sub:systematicReview;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:searchStrategy .
+  
+  sub:st02 a nt:RepeatableStatement;
+    rdf:object sub:search-terms;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasSearchTerms>;
+    rdf:subject sub:searchStrategy .
+  
+  sub:st03 a nt:RepeatableStatement;
+    rdf:object sub:databases;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasSearchDatabase>;
+    rdf:subject sub:searchStrategy .
+  
+  sub:st04 rdf:object sub:timePeriod;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/coversTimePeriod>;
+    rdf:subject sub:searchStrategy .
+  
+  sub:st04a rdf:object sub:start-date;
+    rdf:predicate <http://www.w3.org/ns/dcat#temporalStartDate>;
+    rdf:subject sub:timePeriod .
+  
+  sub:st04b rdf:object sub:end-date;
+    rdf:predicate <http://www.w3.org/ns/dcat#temporalEndDate>;
+    rdf:subject sub:timePeriod .
+  
+  sub:st05 a nt:RepeatableStatement;
+    rdf:object sub:language;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/coversLanguage>;
+    rdf:subject sub:searchStrategy .
+  
+  sub:st06 rdf:object sub:methodology-notes;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasMethodologyNotes>;
+    rdf:subject sub:searchStrategy .
+  
+  sub:start-date a nt:LiteralPlaceholder;
+    rdfs:label "Start date for literature search";
+    nt:hasDatatype xsd:date .
+  
+  sub:systematicReview a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of systematic review" .
+  
+  sub:timePeriod a nt:LocalResource;
+    rdfs:label "a time period" .
+  
+  <https://w3id.org/sciencelive/o/terms/SystematicReviewSearchStrategy> rdfs:label "systematic review search strategy" .
+  
+  <https://w3id.org/sciencelive/o/terms/coversLanguage> rdfs:label "covers the language" .
+  
+  <https://w3id.org/sciencelive/o/terms/coversTimePeriod> rdfs:label "covers" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasMethodologyNotes> rdfs:label "includes as methodology notes" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasSearchDatabase> rdfs:label "searches the database" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasSearchTerms> rdfs:label "uses the search terms" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1784-2920 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0002-1784-2920 foaf:name "Anne Fouilloux" .
+  
+  this: dct:created "2025-11-18T11:54:04.717Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0002-1784-2920;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAklYvchwEL2OMfFyHRoqwJizzBwIGmVr0QKfoWMSUKvU>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Defining a systematic review search strategy";
+    prov:wasDerivedFrom <https://w3id.org/np/RAF79ytpSuemKnx4BP_51YC14PWouYcM6Ha4DNbb2nmOE>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "rA5+vRLOOv11rLhjL2PkhxBhih4FlwC3si/oG4RcOF9IC+KLvcxXOsb+eDSitqp7G9apr7Tkvvi+SRRk6aknxqd0H7bIcFMpulyB7qM/UTR71J6pLLAxO+u83I2CsEI7/dh9xYaqRjjLNi9wYhknWKrzaax0BjzLKhsJzuV1b3M=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,326 @@
+@prefix this: <https://w3id.org/np/RAsnyFmX6Dc2n4Oxwau33nXJSaXIaU-iGQKVz_FdVqpaU> .
+@prefix sub: <https://w3id.org/np/RAsnyFmX6Dc2n4Oxwau33nXJSaXIaU-iGQKVz_FdVqpaU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:seeAlso rdfs:label "is further explained at" .
+  
+  <http://www.w3.org/2002/07/owl#NamedIndividual> rdfs:label "named individual" .
+  
+  <http://www.w3.org/2004/02/skos/core#altLabel> rdfs:label "has alternative label" .
+  
+  <http://www.w3.org/2004/02/skos/core#definition> rdfs:label "is described as follows:" .
+  
+  <http://www.w3.org/2004/02/skos/core#prefLabel> rdfs:label "has preferred label" .
+  
+  <https://w3id.org/iadopt/ont/Constraint> rdfs:label "I-ADOPT Constraint" .
+  
+  <https://w3id.org/iadopt/ont/Variable> rdfs:label "I-ADOPT Variable" .
+  
+  <https://w3id.org/iadopt/ont/hasConstraint> rdfs:label "has constraint" .
+  
+  <https://w3id.org/iadopt/ont/hasContextObject> rdfs:label "has context object" .
+  
+  <https://w3id.org/iadopt/ont/hasMatrix> rdfs:label "has matrix" .
+  
+  <https://w3id.org/iadopt/ont/hasObjectOfInterest> rdfs:label "has object of interest" .
+  
+  <https://w3id.org/iadopt/ont/hasProperty> rdfs:label "has property" .
+  
+  <https://w3id.org/iadopt/ont/hasStatisticalModifier> rdfs:label "has statistical modifier" .
+  
+  sub:CO a nt:ValuePlaceholder;
+    rdfs:label "label or URI of an entity" .
+  
+  sub:OoI1 a nt:ValuePlaceholder;
+    rdfs:label "label or URI of an system entity 1" .
+  
+  sub:OoI2 a nt:ValuePlaceholder;
+    rdfs:label "label or URI of an system entity 2" .
+  
+  sub:OoIEnt a nt:ValuePlaceholder;
+    rdfs:label "label or URI of an entity" .
+  
+  sub:OoISys a nt:ValuePlaceholder;
+    rdfs:label "because it is a blank node, type \"b0\"";
+    nt:hasPrefix "_:";
+    nt:hasPrefixLabel "_:" .
+  
+  sub:SysType a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose system type";
+    nt:possibleValue <https://w3id.org/iadopt/ont/AsymmetricSystem>, <https://w3id.org/iadopt/ont/SymmetricSystem> .
+  
+  sub:alternativename a nt:LongLiteralPlaceholder;
+    rdfs:label "alternative label" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Defining a new variable aligned with the I-ADOPT Framework";
+    rdfs:label "I-ADOPT variable (testing)";
+    nt:hasDefaultProvenance ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:hasRequiredPubinfoElement ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM;
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st09, sub:st12, sub:st13, sub:st16, sub:st17, sub:st21;
+    nt:hasTag "I-ADOPT" .
+  
+  sub:conceptclass a nt:ValuePlaceholder;
+    rdfs:label "URI of concept for the constraint" .
+  
+  sub:constraint a nt:ValuePlaceholder;
+    rdfs:label "because it is a blank node, type \"d0\"";
+    nt:hasPrefix "_:";
+    nt:hasPrefixLabel "_:" .
+  
+  sub:definition a nt:LongLiteralPlaceholder;
+    rdfs:label "definition of the variable" .
+  
+  sub:entity a nt:ValuePlaceholder;
+    rdfs:label "label or URI of an entity" .
+  
+  sub:matrix1 a nt:ValuePlaceholder;
+    rdfs:label "label or URI of an system entity 1" .
+  
+  sub:matrix2 a nt:ValuePlaceholder;
+    rdfs:label "label or URI of an system entity 2" .
+  
+  sub:matrixEnt a nt:ValuePlaceholder;
+    rdfs:label "label or URI of an entity" .
+  
+  sub:matrixSys a nt:ValuePlaceholder;
+    rdfs:label "because it is a blank node, type \"c0\"";
+    nt:hasPrefix "_:";
+    nt:hasPrefixLabel "_:" .
+  
+  sub:name a nt:LongLiteralPlaceholder;
+    rdfs:label "preferred label" .
+  
+  sub:property a nt:ValuePlaceholder;
+    rdfs:label "label or URI of a property" .
+  
+  sub:seeAlsoLink a nt:UriPlaceholder;
+    rdfs:label "a URL where more information about this variable can be found" .
+  
+  sub:st01 rdf:object <http://www.w3.org/2002/07/owl#NamedIndividual>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:variable .
+  
+  sub:st02 rdf:object <https://w3id.org/iadopt/ont/Variable>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:variable .
+  
+  sub:st03 rdf:object sub:name;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#prefLabel>;
+    rdf:subject sub:variable .
+  
+  sub:st04 a nt:OptionalStatement;
+    rdf:object sub:alternativename;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#altLabel>;
+    rdf:subject sub:variable .
+  
+  sub:st05 rdf:object sub:definition;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#definition>;
+    rdf:subject sub:variable .
+  
+  sub:st06 a nt:GroupedStatement;
+    nt:hasStatement sub:st06a, sub:st06b .
+  
+  sub:st06a rdf:object sub:property;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasProperty>;
+    rdf:subject sub:variable .
+  
+  sub:st06b rdf:object <https://w3id.org/iadopt/ont/Property>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:property .
+  
+  sub:st07 a nt:GroupedStatement, nt:OptionalStatement;
+    nt:hasStatement sub:st07a, sub:st07b .
+  
+  sub:st07a rdf:object sub:statMod;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasStatisticalModifier>;
+    rdf:subject sub:variable .
+  
+  sub:st07b rdf:object <https://w3id.org/iadopt/ont/StatisticalModifier>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:statMod .
+  
+  sub:st08 a nt:GroupedStatement, nt:OptionalStatement;
+    nt:hasStatement sub:st09a, sub:st09b, sub:st10, sub:st10a, sub:st11, sub:st11a .
+  
+  sub:st08a rdf:object sub:OoIEnt;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasObjectOfInterest>;
+    rdf:subject sub:variable .
+  
+  sub:st08b rdf:object <https://w3id.org/iadopt/ont/Entity>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:OoIEnt .
+  
+  sub:st09 a nt:GroupedStatement, nt:OptionalStatement;
+    nt:hasStatement sub:st08a, sub:st08b .
+  
+  sub:st09a rdf:object sub:OoISys;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasObjectOfInterest>;
+    rdf:subject sub:variable .
+  
+  sub:st09b rdf:object sub:SysType;
+    rdf:predicate rdf:type;
+    rdf:subject sub:OoISys .
+  
+  sub:st10 a nt:OptionalStatement;
+    rdf:object sub:OoI1;
+    rdf:predicate sub:systempredOoI1;
+    rdf:subject sub:OoISys .
+  
+  sub:st10a a nt:OptionalStatement;
+    rdf:object <https://w3id.org/iadopt/ont/Entity>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:OoI1 .
+  
+  sub:st11 a nt:OptionalStatement;
+    rdf:object sub:OoI2;
+    rdf:predicate sub:systempredOoI2;
+    rdf:subject sub:OoISys .
+  
+  sub:st11a a nt:OptionalStatement;
+    rdf:object <https://w3id.org/iadopt/ont/Entity>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:OoI2 .
+  
+  sub:st12 a nt:GroupedStatement, nt:OptionalStatement;
+    nt:hasStatement sub:st13a, sub:st13b, sub:st14, sub:st14a, sub:st15, sub:st15a .
+  
+  sub:st12a rdf:object sub:matrixEnt;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasMatrix>;
+    rdf:subject sub:variable .
+  
+  sub:st12b rdf:object <https://w3id.org/iadopt/ont/Entity>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:matrixEnt .
+  
+  sub:st13 a nt:GroupedStatement, nt:OptionalStatement;
+    nt:hasStatement sub:st12a, sub:st12b .
+  
+  sub:st13a a nt:RepeatableStatement;
+    rdf:object sub:matrixSys;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasMatrix>;
+    rdf:subject sub:variable .
+  
+  sub:st13b rdf:object <https://w3id.org/iadopt/ont/AsymmetricSystem>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:matrixSys .
+  
+  sub:st14 rdf:object sub:matrix1;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasSource>;
+    rdf:subject sub:matrixSys .
+  
+  sub:st14a rdf:object <https://w3id.org/iadopt/ont/Entity>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:matrix1 .
+  
+  sub:st15 rdf:object sub:matrix2;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasTarget>;
+    rdf:subject sub:matrixSys .
+  
+  sub:st15a rdf:object <https://w3id.org/iadopt/ont/Entity>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:matrix2 .
+  
+  sub:st16 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st16a, sub:st16b .
+  
+  sub:st16a rdf:object sub:CO;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasContextObject>;
+    rdf:subject sub:variable .
+  
+  sub:st16b rdf:object <https://w3id.org/iadopt/ont/Entity>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:CO .
+  
+  sub:st17 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st17a, sub:st18, sub:st19, sub:st20 .
+  
+  sub:st17a rdf:object sub:constraint;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasConstraint>;
+    rdf:subject sub:variable .
+  
+  sub:st18 rdf:object <https://w3id.org/iadopt/ont/Constraint>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:constraint .
+  
+  sub:st19 rdf:object sub:conceptclass;
+    rdf:predicate rdf:type;
+    rdf:subject sub:constraint .
+  
+  sub:st20 rdf:object sub:entity;
+    rdf:predicate <https://w3id.org/iadopt/ont/constrains>;
+    rdf:subject sub:constraint .
+  
+  sub:st21 a nt:OptionalStatement;
+    rdf:object sub:seeAlsoLink;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:variable .
+  
+  sub:statMod a nt:ValuePlaceholder;
+    rdfs:label "statistical modifier" .
+  
+  sub:systempredOoI1 a nt:RestrictedChoicePlaceholder;
+    rdfs:label "if symmetric choose part";
+    nt:possibleValue <https://w3id.org/iadopt/ont/hasNumerator>, <https://w3id.org/iadopt/ont/hasPart> .
+  
+  sub:systempredOoI2 a nt:RestrictedChoicePlaceholder;
+    rdfs:label "if symmetric choose part";
+    nt:possibleValue <https://w3id.org/iadopt/ont/hasDenominator>, <https://w3id.org/iadopt/ont/hasPart> .
+  
+  sub:variable a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix";
+    nt:hasPrefix "https://w3id.org/iadopt/variable/";
+    nt:hasPrefixLabel "https://w3id.org/iadopt/variable/" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  this: dct:created "2026-01-05T20:14:23.118Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "I-ADOPT variable (testing)";
+    prov:wasDerivedFrom ns1:RA5oI_nRWvSLBzSIMgm1ZQDjI6bKhYzoIlmj8ZZsJfRck, ns1:RAZR0ieT8ynmPI28fdQheCRDbL8znCeN_udhiSbQHXBS8,
+      <https://w3id.org/np/RAaERq7gLTCKlQt2Nh1l2Lw5y-jgyWe1AydlrCL0PCDaA>, <https://w3id.org/np/RAkcfj9W_lJjlq26paIFmTY4mZoaY27BnZCjcsL34EPIA>,
+      <https://w3id.org/np/RAsUAavGxFuIwSTtKJLaAHXX2HZ5_lexJW5_j9mKIquIA>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "uJMGbeFAJUsGK0p7SKmg5nzkJmahaRzv3cj5CwvmTCBa7HILw/YAq3ffaDdC8yNXBppLYau2MMX3HzWWC5kNcqFUB3pG3CYr6ssq7AuXA8XwM9JaA4Md2ka4EitHL06K2ITOgafkIrgWtU/quDupHD1+lsvzWiyVXmHm3Td41KU=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

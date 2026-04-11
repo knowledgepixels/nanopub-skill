@@ -1,0 +1,116 @@
+@prefix this: <https://w3id.org/np/RArWFTbHHUx26Edcki6GOFR7PTWuudXqdX-1eUrjVGSP8> .
+@prefix sub: <https://w3id.org/np/RArWFTbHHUx26Edcki6GOFR7PTWuudXqdX-1eUrjVGSP8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-all-space-membership-instances a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns all instances of Space membership instances.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get all Space membership instances";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix schema: <http://schema.org/>
+
+select (?__agent_multi_iri as ?agent) ?role ?roleName ?property ?inverse (?__space_multi_iri as ?space) where {
+  values ?__space_multi_iri {}
+  values ?__agent_multi_iri {}
+  {
+    {
+      graph npa:graph {
+        ?spaceRole_np npx:hasNanopubType gen:SpaceMemberRole .
+        ?spaceRole_np npa:hasValidSignatureForPublicKeyHash ?spaceRole_pubkey .
+        filter not exists { ?spaceRole_npx npx:invalidates ?spaceRole_np ; npa:hasValidSignatureForPublicKeyHash ?spaceRole_pubkey . }
+        ?spaceRole_np np:hasAssertion ?spaceRole_a .
+      }
+      graph ?spaceRole_a {
+        ?__space_multi_iri gen:hasRole ?role .
+      }
+    } union {
+      bind(<https://w3id.org/np/RA_eEJjQbxzSqYSwPzfjzOZi5sMPpUmHskFNsgJYSws8I/adminRole> as ?role)
+    }
+  }
+  graph ?role_a {
+    ?role a gen:SpaceMemberRole .
+    ?role rdfs:label ?roleLabel .
+    ?role dct:title ?roleTitle .
+    ?role schema:name ?roleName .
+  }
+  graph npa:graph {
+    ?role_np npx:embeds ?role .
+    ?role_np np:hasAssertion ?role_a .
+  }
+  {
+    {
+      graph ?role_a {
+        ?role gen:hasRegularProperty ?reg .
+      }
+      graph ?link_a {
+        ?__agent_multi_iri ?reg ?__space_multi_iri .
+      }
+      bind(?reg as ?property)
+      bind(false as ?inverse)
+    } union {
+      graph ?role_a {
+       ?role gen:hasInverseProperty ?inv .
+      }
+      graph ?link_a {
+        ?__space_multi_iri ?inv ?__agent_multi_iri .
+      }
+      bind(?inv as ?property)
+      bind(true as ?inverse)
+    }
+  }
+  graph npa:graph {
+    ?link_np np:hasAssertion ?link_a .
+    ?link_np npa:hasValidSignatureForPublicKeyHash ?link_pubkey .
+    filter not exists { ?link_npx npx:invalidates ?link_np ; npa:hasValidSignatureForPublicKeyHash ?link_pubkey . }
+  }
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-12-01T15:04:41.943Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-all-space-membership-instances;
+    npx:supersedes <https://w3id.org/np/RAOxtN3EpQ6hKhXnz87mDxLbsBG_tod1TMHIwouixBLm8>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "gpHAyXJD2saRDLiqJUWmWvtPk/3x5Vy8mZkN/JQaLx3BWh+BQOgfjM6SaBVxqAcGNfVp9KXku+saaX4V/YIyG9wuS5TM7/QhpclJOzJiufFUTV4J3rMwfm6Z5ru1nnFTKmc5CgcApr63W9L6m2wNTy654ypNvVDj5Jqgoy4JEsk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

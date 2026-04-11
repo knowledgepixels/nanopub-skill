@@ -1,0 +1,97 @@
+@prefix this: <https://w3id.org/np/RAYpDxlvfo1aQjF5n0M_A4LtNouxNmgNGtspf2uT9ewm8> .
+@prefix sub: <https://w3id.org/np/RAYpDxlvfo1aQjF5n0M_A4LtNouxNmgNGtspf2uT9ewm8#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-nanopubs-for-paper a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns all the nanopublications that refer to (e.g. annotate) a given paper.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get nanopublications refering to a given paper";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix oa: <http://www.w3.org/ns/oa#>
+
+select distinct ?np ?user ?type ?subj ?subjLabel ?rel ?relLabel ?text ?selection ?date where {
+  graph npa:graph {
+    ?np np:hasAssertion ?a .
+    ?np np:hasPublicationInfo ?i.
+    ?np dct:created ?date .
+    ?np dct:creator ?user .
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+  }
+  graph ?a {
+    ?subj ?rel ?_paper_iri .
+  }
+  optional { ?a rdfs:comment ?textPre . bind(str(?textPre) as ?text) }
+  optional { graph <http://purl.org/np/RA6d0qLmlRdXd-ubre83LxP22auJdJjXGzaW3W3qH4Neo#assertion> {
+    ?rel rdfs:label ?relLabelPre .
+    bind(\"cito\" as ?typePre)
+  } }
+  optional { graph ?a {
+    ?annotation oa:hasTarget ?annotationtarget ;
+      oa:hasBody ?annotationbody .
+    ?annotationbody rdf:value ?annotationtext .
+    ?annotationtarget oa:hasSource ?_paper_iri ;
+      oa:hasSelector ?annotationSelector .
+    optional { ?annotationSelector oa:prefix ?annotatedprefix . }
+    ?annotationSelector oa:exact ?annotatedtext .
+    optional { ?annotationSelector oa:suffix ?annotatedsuffix . }
+    bind(\"oa\" as ?typePre)
+    bind(str(?annotationtext) as ?text)
+    bind(concat(?annotatedprefix, \"<h>\", ?annotatedtext, \"</h>\", ?annotatedsuffix) as ?selection)
+  } }
+  bind(replace(str(?subj), '^.*?([a-zA-Z0-9\\\\-\\\\_]+)$', '$1') as ?subjLabel).
+  bind(coalesce(str(?relLabelPre), replace(str(?rel), '^.*?([a-zA-Z0-9\\\\-\\\\_]+)$', '$1')) as ?relLabel).
+  bind(coalesce(?typePre, \"other\") as ?type).
+}
+order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "h4LjxtypkOrJRG1qcA+7G9alD3R894bKc9vwQVxiUovcyepKMThnKH9ITH/I9LcKuh/6+05RVcqGnNxOble/nVaCpa5Nx5iiXqxqrFq8ZS68TtM/kI7+yI69xWAjRmnuJP/srG01CaacxzOtrm0/bXWcK0tXk2GW09j0gG1LkyY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-09-11T13:03:35.823Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-nanopubs-for-paper;
+    npx:supersedes <https://w3id.org/np/RAOoo7tLouxu6ebXs0YbbH_eg2W697pa98sR1_otinlP8>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+}
+

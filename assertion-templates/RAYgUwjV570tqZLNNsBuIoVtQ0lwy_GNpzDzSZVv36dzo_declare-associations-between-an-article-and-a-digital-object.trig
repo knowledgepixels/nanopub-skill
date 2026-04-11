@@ -1,0 +1,71 @@
+@prefix this: <https://w3id.org/np/RAYgUwjV570tqZLNNsBuIoVtQ0lwy_GNpzDzSZVv36dzo> .
+@prefix sub: <https://w3id.org/np/RAYgUwjV570tqZLNNsBuIoVtQ0lwy_GNpzDzSZVv36dzo#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.org/spar/cito/cites> rdfs:label "cites" .
+  
+  sub:article a nt:ExternalUriPlaceholder;
+    rdfs:label "DOI (https://doi.org/10...) or other URL of the citing article" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Demo for MAC: Such a nanopublication expresses citation relations of a given article based on the CiTO relation types.";
+    rdfs:label "Declare associations between an article and a digital object";
+    nt:hasNanopubLabelPattern "Citations for: ${article}";
+    nt:hasStatement sub:st02;
+    nt:hasTag "MAC" .
+  
+  sub:cited a nt:ExternalUriPlaceholder;
+    rdfs:label "DOI (https://doi.org/10...) or other URL of the cited digital object" .
+  
+  sub:st02 rdf:object sub:cited;
+    rdf:predicate <http://purl.org/spar/cito/cites>;
+    rdf:subject sub:article .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCM0tu3I/KK6A/qPha/6pfngQZ4LBQpLnKAcIUuZLnSEb0epJ2IoY3zh/4N42us/6LpCHgZZZtSOTm5/KVo+OTDIqo294PpEZAO70u5DcMcGMC5OufzxGKs3Dwdo6XqPiDHxXuiaKCTO7/ABWAi7CtFoMrqJAHfeyqe82dAiH2IiwIDAQAB";
+    npx:hasSignature "ZVbmtN3Sxs5k1+qImtjC5zXr+pLd0+i4jyYc+RBMShRyoHXUXTJOi2KwnaC7yTu8adQACe2CxSlZDChiWEYMWSI961wpm7E9F67WWSHL0ghM7v7AojLettjOArD65/xKxHL+kh7dGYz1bqaWNwQYMOa3WwaPCBvGxyLSy6xtGNM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+  
+  this: dct:created "2025-01-17T07:32:25.973Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA2uNeTcOf5cASRdMKoRhVUw7YNIlfjncRlUs74HoiVys>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Declare associations between an article and a digital object";
+    prov:wasDerivedFrom <https://w3id.org/np/RAX_4tWTyjFpO6nz63s14ucuejd64t2mK3IBlkwZ7jjLo>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAGBEisKAxwcQTdfR7ALwCeQBrUVeU23F8uFvFmO-H6F0> .
+}
+

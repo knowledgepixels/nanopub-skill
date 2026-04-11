@@ -1,0 +1,88 @@
+@prefix this: <https://w3id.org/np/RAZ47_4JquvEXk30HYnVeSgFRcQqHtpdibcfBOeqHI2j4> .
+@prefix sub: <https://w3id.org/np/RAZ47_4JquvEXk30HYnVeSgFRcQqHtpdibcfBOeqHI2j4/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  <https://w3id.org/kpxl/gen/terms/DeactivatedViewDisplay> rdfs:label "deactivated view display" .
+  
+  <https://w3id.org/kpxl/gen/terms/ViewDisplay> rdfs:label "view display" .
+  
+  <https://w3id.org/kpxl/gen/terms/isDisplayFor> rdfs:label "is a display for" .
+  
+  <https://w3id.org/kpxl/gen/terms/isDisplayOfView> rdfs:label "is a display of the view" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Deactivating a view display for a user";
+    nt:hasNanopubLabelPattern "${resource} deactivates view: ${view}";
+    nt:hasStatement sub:st10, sub:st12, sub:st20, sub:st30;
+    nt:hasTag "Spaces" .
+  
+  sub:display a nt:EmbeddedResource, nt:LocalResource;
+    rdfs:label "this" .
+  
+  sub:resource a nt:AgentPlaceholder;
+    rdfs:label "choose the user" .
+  
+  sub:st10 rdf:object <https://w3id.org/kpxl/gen/terms/ViewDisplay>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:display .
+  
+  sub:st12 rdf:object <https://w3id.org/kpxl/gen/terms/DeactivatedViewDisplay>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:display .
+  
+  sub:st20 rdf:object sub:view;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/isDisplayOfView>;
+    rdf:subject sub:display .
+  
+  sub:st30 rdf:object sub:resource;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/isDisplayFor>;
+    rdf:subject sub:display .
+  
+  sub:view a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the view";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAs7Q2IMbb7C2WzFa98bVwlDMhN3kJ0rrF9cSEybtvLaA/find-embedded-things?type=https://w3id.org/kpxl/gen/terms/ResourceView" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-03-13T08:44:24.288+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Deactivating a view display for a user";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "hAcLE5etKILcu/uFcXe83DgR6wCjVWDA3gyJZujbLGjYhaIxAHIaEoi3+x+8MH8UnG0dSJpqXrJ/3qQNGCkqidIJAlW6H8RHg0XvOrnlD1Pstz1X25wft0Z2njM3fCX/uBmoEfVmMYmx3AJAEu6frB2enDXhsy4JtIKaSe6GU74=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

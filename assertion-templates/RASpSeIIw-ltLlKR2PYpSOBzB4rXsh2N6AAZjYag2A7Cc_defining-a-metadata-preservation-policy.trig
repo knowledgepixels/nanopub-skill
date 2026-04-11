@@ -1,0 +1,136 @@
+@prefix this: <https://w3id.org/np/RASpSeIIw-ltLlKR2PYpSOBzB4rXsh2N6AAZjYag2A7Cc> .
+@prefix sub: <https://w3id.org/np/RASpSeIIw-ltLlKR2PYpSOBzB4rXsh2N6AAZjYag2A7Cc#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has the description" .
+  
+  rdfs:label rdfs:label "is called" .
+  
+  rdfs:seeAlso rdfs:label "has data policy document at" .
+  
+  <http://www.w3.org/2004/02/skos/core#closeMatch> rdfs:label "can in some situations be considered the same as" .
+  
+  <http://www.w3.org/2004/02/skos/core#exactMatch> rdfs:label "is (almost) exactly the same as" .
+  
+  <http://www.w3.org/2004/02/skos/core#relatedMatch> rdfs:label "is related to" .
+  
+  <https://w3id.org/fair/fip/terms/Available-FAIR-Enabling-Resource> rdfs:label "available FAIR Enabling Resource" .
+  
+  <https://w3id.org/fair/fip/terms/FAIR-Enabling-Resource-to-be-Developed> rdfs:label
+      "FAIR Enabling Resource to be developed" .
+  
+  <https://w3id.org/fair/fip/terms/Metadata-preservation-policy> rdfs:label "Metadata preservation policy" .
+  
+  <https://w3id.org/fair/fip/terms/metadata-availability-in-years> rdfs:label "declares minimum metadata preservation in years as" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Defining a metadata preservation policy";
+    nt:hasRequiredPubinfoElement ns1:RA_R5w4lZ-6xuZyylG8qSlMhmWBaTE41-zlhiBVUQblCc;
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6;
+    nt:hasTag "FAIR" .
+  
+  sub:available-or-to-be-developed a nt:RestrictedChoicePlaceholder;
+    rdfs:label "FAIR Enabling Resource that is available or to be developed";
+    nt:possibleValue <https://w3id.org/fair/fip/terms/Available-FAIR-Enabling-Resource>,
+      <https://w3id.org/fair/fip/terms/FAIR-Enabling-Resource-to-be-Developed> .
+  
+  sub:comment a nt:LiteralPlaceholder;
+    rdfs:label "description of the metadata preservation policy" .
+  
+  sub:datapolicy-doc a nt:UriPlaceholder;
+    rdfs:label "link to data policy document" .
+  
+  sub:mappedResource a nt:ExternalUriPlaceholder;
+    rdfs:label "the identifier of the related resource" .
+  
+  sub:mappingPredicate a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select equivalence relation";
+    nt:possibleValue <http://www.w3.org/2004/02/skos/core#closeMatch>, <http://www.w3.org/2004/02/skos/core#exactMatch>,
+      <http://www.w3.org/2004/02/skos/core#relatedMatch> .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the metadata preservation policy" .
+  
+  sub:resource a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix" .
+  
+  sub:st0 rdf:object <https://w3id.org/fair/fip/terms/Metadata-preservation-policy>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st1 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:resource .
+  
+  sub:st2 rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:resource .
+  
+  sub:st3 rdf:object sub:available-or-to-be-developed;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st4 rdf:object sub:years;
+    rdf:predicate <https://w3id.org/fair/fip/terms/metadata-availability-in-years>;
+    rdf:subject sub:resource .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:datapolicy-doc;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:resource .
+  
+  sub:st6 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:mappedResource;
+    rdf:predicate sub:mappingPredicate;
+    rdf:subject sub:resource .
+  
+  sub:years a nt:LiteralPlaceholder;
+    rdfs:label "number of years";
+    nt:hasRegex "[0-9]+" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "iXQLojFHQAf2TApPMO081qlhpFJr1d0sdSp01omiEB2eBuXtf8FrvrierAsmmXCiJO8sKiBkfDRlAyD81ZCMMrxMoiOKgCCc6HqMVYzmv8VUTppSKHkDAm9o3Um9FTkKq7JDdfkIlUHPNT0N+gaRXAvDdSR0qte5BpMePJpFj3w=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-05-02T09:08:07.113Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAEJrDrLxhoTRjyOWrD-GRVfQa_bgsIq2wAs6WiQRQt94>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Template: Defining a metadata preservation policy";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

@@ -1,0 +1,97 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix this: <http://purl.org/np/RAElCw9ovOL_5uZbshcX5H5_fMKNudQ6OC-saJlMKhHQY> .
+@prefix sub: <http://purl.org/np/RAElCw9ovOL_5uZbshcX5H5_fMKNudQ6OC-saJlMKhHQY#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  npx:approvesOf rdfs:label "approve of" .
+  
+  npx:disapprovesOf rdfs:label "disapprove of" .
+  
+  sub:approveOrDisapprove a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue npx:approvesOf, npx:disapprovesOf .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    rdfs:label "Approving or disapproving of a triple in an external knowledge graph";
+    nt:hasStatement sub:st1, sub:triple, sub:tripleObject, sub:triplePredicate, sub:tripleSubject;
+    nt:hasTag "TWOC" .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:triple;
+    rdf:predicate sub:approveOrDisapprove;
+    rdf:subject nt:CREATOR;
+    nt:statementOrder "1" .
+  
+  sub:triple a nt:IntroducedResource;
+    rdf:object rdf:Statement;
+    rdf:predicate rdf:type;
+    rdf:subject sub:triple;
+    rdfs:label "triple" .
+  
+  sub:tripleObject rdf:object sub:tripleObjectValue;
+    rdf:predicate rdf:object;
+    rdf:subject sub:triple;
+    nt:statementOrder "4" .
+  
+  sub:tripleObjectValue a nt:ExternalUriPlaceholder;
+    rdfs:label "triple object" .
+  
+  sub:triplePredicate rdf:object sub:triplePredicateValue;
+    rdf:predicate rdf:predicate;
+    rdf:subject sub:triple;
+    nt:statementOrder "3" .
+  
+  sub:triplePredicateValue a nt:ExternalUriPlaceholder;
+    rdfs:label "triple predicate" .
+  
+  sub:tripleSubject rdf:object sub:tripleSubjectValue;
+    rdf:predicate rdf:subject;
+    rdf:subject sub:triple;
+    nt:statementOrder "2" .
+  
+  sub:tripleSubjectValue a nt:ExternalUriPlaceholder;
+    rdfs:label "triple subject" .
+  
+  rdf:object rdfs:label "has object" .
+  
+  rdf:predicate rdfs:label "has predicate" .
+  
+  rdf:subject rdfs:label "has subject" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-5437-779X .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCbVC8/yj8gj6AYkPPvmEbXJBX3MV66meoIETTs+NGpao1YgPrf6nuimwnadudIWCVfBHfpx8GDEh00Saq54VGRppG0kKdKUObbdVlwfOwYIZg7HMINY++vy1nhgMEfAEx1u/9fzXAHFDHxLAycFC6idLuVkFPsD/HLpF92P93JVQIDAQAB";
+    npx:hasSignature "AMIfMvrK+81PZuRKgb1laehfNz/o5uSJBhjTLq3sbSxDCbeZKkLEcAgV0SkSvxhCw1AWXdGvfvQYMg1SDHXc0SSAEt+sQ9GPggUC9IzAgzhNXU2XRvv9PqQkyokuLX+KZNmKU8qhUClQv+3Id22+6UlBMhOv1cqQTRP4RMPc1tg=";
+    npx:hasSignatureTarget this: .
+  
+  this: dcterms:created "2023-06-20T08:57:59.325Z"^^xsd:dateTime;
+    dcterms:creator orcid:0000-0002-1267-0234, orcid:0000-0002-5437-779X;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <http://purl.org/np/RAxvBLQK0undYIwqVaAXTmKHzrAJwRS42F0NQ_9igiyXk>;
+    prov:wasDerivedFrom <http://purl.org/np/RAIpxpjHMkgL-m9NAwnMH9C5IhKEdTtDnPy5DHQ0Cmsec>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A>,
+      <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>, <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>,
+      <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RA5awHTBKJwv0iGa1au6zAor35CtkO-ZQDglzUuq8AT88> .
+}
+

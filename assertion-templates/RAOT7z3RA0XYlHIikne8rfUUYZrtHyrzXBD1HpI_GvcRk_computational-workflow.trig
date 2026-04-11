@@ -1,0 +1,240 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix ntemplate: <https://w3id.org/np/o/ntemplate/> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <https://schema.org/> .
+@prefix sub: <https://w3id.org/np/RAOT7z3RA0XYlHIikne8rfUUYZrtHyrzXBD1HpI_GvcRk/> .
+@prefix this: <https://w3id.org/np/RAOT7z3RA0XYlHIikne8rfUUYZrtHyrzXBD1HpI_GvcRk> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://edamontology.org/format_1929> rdfs:label "FASTA" .
+  
+  <http://edamontology.org/format_1930> rdfs:label "FASTQ" .
+  
+  <http://edamontology.org/format_1934> rdfs:label "fitch program" .
+  
+  <http://edamontology.org/format_1935> rdfs:label "GCG" .
+  
+  <http://edamontology.org/format_1936> rdfs:label "GenBank format" .
+  
+  <http://edamontology.org/format_1937> rdfs:label "genpept" .
+  
+  <http://edamontology.org/format_1938> rdfs:label "GFF2-seq" .
+  
+  <http://edamontology.org/format_1939> rdfs:label "GFF3-seq" .
+  
+  <http://edamontology.org/format_1940> rdfs:label "giFASTA format" .
+  
+  <http://edamontology.org/format_1950> rdfs:label "pdbatom" .
+  
+  dcterms:creator rdfs:label "created by" .
+  
+  dcterms:description rdfs:label "has description" .
+  
+  dcterms:format rdfs:label "needs or produces data format" .
+  
+  dcterms:license rdfs:label "has license" .
+  
+  dcterms:title rdfs:label "has title" .
+  
+  prov:wasDerivedFrom rdfs:label "improves upon method" .
+  
+  <https://creativecommons.org/licenses/by/4.0/> rdfs:label "CC-BY-4.0" .
+  
+  schema:applicationCategory rdfs:label "serves purpose" .
+  
+  schema:applicationSubCategory rdfs:label "applies to domains" .
+  
+  schema:codeRepository rdfs:label "has source repository" .
+  
+  schema:keywords rdfs:label "has keywords" .
+  
+  schema:learningResourceType rdfs:label "uses computational approach" .
+  
+  schema:url rdfs:label "is accessible via" .
+  
+  <https://spdx.org/licenses/Apache-2.0.html> rdfs:label "Apache 2.0" .
+  
+  <https://spdx.org/licenses/BSD-3-Clause.html> rdfs:label "BSD 3 Clause" .
+  
+  <https://spdx.org/licenses/GPL-3.0.html> rdfs:label "GPL 3.0" .
+  
+  <https://spdx.org/licenses/MIT.html> rdfs:label "MIT" .
+  
+  sub:applicable-domains a ntemplate:GuidedChoicePlaceholder;
+    rdfs:label "applicable research domains";
+    ntemplate:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:application-category a ntemplate:GuidedChoicePlaceholder;
+    rdfs:label "primary computational purpose";
+    ntemplate:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:assertion a ntemplate:AssertionTemplate;
+    dcterms:description "Template for describing a computational workflow implemented for and supported by a Workflow Management System";
+    rdfs:label "Computational Workflow";
+    ntemplate:hasNanopubLabelPattern "Method: ${title}";
+    ntemplate:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06,
+      sub:st07, sub:st08, sub:st09, sub:st10, sub:st11, sub:st12, sub:st13, sub:st14;
+    ntemplate:hasTag "Computational Workflow" .
+  
+  sub:base-method a ntemplate:UriPlaceholder;
+    rdfs:label "method this improves upon (DOI or URI)" .
+  
+  sub:computational-approach a ntemplate:GuidedChoicePlaceholder;
+    rdfs:label "computational approach used";
+    ntemplate:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:computational-workflow a ntemplate:UriPlaceholder;
+    rdfs:label "URI of the workflow repository" .
+  
+  sub:creator a ntemplate:UriPlaceholder;
+    rdfs:label "ORCID of creator";
+    ntemplate:hasPrefix "https://orcid.org/";
+    ntemplate:hasPrefixLabel "ORCID (just the 16-digit ID)";
+    ntemplate:hasRegex "0000-\\d{4}-\\d{4}-\\d{4}" .
+  
+  sub:description a ntemplate:LongLiteralPlaceholder;
+    rdfs:label "description of what the method does";
+    ntemplate:hasRegex "[\\s\\S]{10,1000}" .
+  
+  sub:doi a ntemplate:UriPlaceholder;
+    rdfs:label "DOI URL";
+    ntemplate:hasPrefix "https://doi.org/";
+    ntemplate:hasPrefixLabel "DOI (starting with '10.')";
+    ntemplate:hasRegex "10.(\\d)+/(\\S)+" .
+  
+  sub:github-repo a ntemplate:UriPlaceholder;
+    rdfs:label "GitHub repository URL" .
+  
+  sub:input-format a ntemplate:RestrictedChoicePlaceholder;
+    rdfs:label "expected input data format";
+    ntemplate:hasPrefix "input:";
+    ntemplate:hasPrefixLabel "Input:";
+    ntemplate:possibleValue <http://edamontology.org/format_1929>, <http://edamontology.org/format_1930>,
+      <http://edamontology.org/format_1934>, <http://edamontology.org/format_1935>, <http://edamontology.org/format_1936>,
+      <http://edamontology.org/format_1937>, <http://edamontology.org/format_1938>, <http://edamontology.org/format_1939>,
+      <http://edamontology.org/format_1940>, <http://edamontology.org/format_1950> .
+  
+  sub:keywords a ntemplate:GuidedChoicePlaceholder;
+    rdfs:label "research keywords from Wikidata";
+    ntemplate:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:license a ntemplate:RestrictedChoicePlaceholder;
+    rdfs:label "software license";
+    ntemplate:possibleValue <https://creativecommons.org/licenses/by/4.0/>, <https://spdx.org/licenses/Apache-2.0.html>,
+      <https://spdx.org/licenses/BSD-3-Clause.html>, <https://spdx.org/licenses/GPL-3.0.html>,
+      <https://spdx.org/licenses/MIT.html> .
+  
+  sub:st01 rdf:object schema:SoftwareSourceCode;
+    rdf:predicate rdf:type;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st02 rdf:object sub:title;
+    rdf:predicate dcterms:title;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate dcterms:description;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st04 rdf:object sub:doi;
+    rdf:predicate schema:url;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st05 a ntemplate:RepeatableStatement;
+    rdf:object sub:github-repo;
+    rdf:predicate schema:codeRepository;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st06 a ntemplate:RepeatableStatement;
+    rdf:object sub:creator;
+    rdf:predicate dcterms:creator;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st07 rdf:object sub:workflow-management-system;
+    rdf:predicate <https://www.wikidata.org/wiki/Q2808660>;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st08 rdf:object sub:application-category;
+    rdf:predicate schema:applicationCategory;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st09 a ntemplate:OptionalStatement, ntemplate:RepeatableStatement;
+    rdf:object sub:keywords;
+    rdf:predicate schema:keywords;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st10 a ntemplate:OptionalStatement, ntemplate:RepeatableStatement;
+    rdf:object sub:input-format;
+    rdf:predicate dcterms:format;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st11 a ntemplate:OptionalStatement, ntemplate:RepeatableStatement;
+    rdf:object sub:license;
+    rdf:predicate dcterms:license;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st12 a ntemplate:OptionalStatement;
+    rdf:object sub:base-method;
+    rdf:predicate prov:wasDerivedFrom;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st13 a ntemplate:OptionalStatement, ntemplate:RepeatableStatement;
+    rdf:object sub:computational-approach;
+    rdf:predicate schema:learningResourceType;
+    rdf:subject sub:computational-workflow .
+  
+  sub:st14 a ntemplate:OptionalStatement, ntemplate:RepeatableStatement;
+    rdf:object sub:applicable-domains;
+    rdf:predicate schema:applicationSubCategory;
+    rdf:subject sub:computational-workflow .
+  
+  sub:title a ntemplate:LiteralPlaceholder;
+    rdfs:label "title of the Workflow";
+    ntemplate:hasRegex "[\\s\\S]{5,200}" .
+  
+  sub:workflow-management-system a ntemplate:RestrictedChoicePlaceholder;
+    rdfs:label "Workflow Management System", "uses workflow management system";
+    ntemplate:possibleValue <https://www.wikidata.org/wiki/Q106286298>, <https://www.wikidata.org/wiki/Q2808660>,
+      <https://www.wikidata.org/wiki/Q51293717>, <https://www.wikidata.org/wiki/Q5518091>,
+      <https://www.wikidata.org/wiki/Q56291707> .
+  
+  <https://www.wikidata.org/wiki/Q106286298> rdfs:label "Snakemake" .
+  
+  <https://www.wikidata.org/wiki/Q2808660> rdfs:label "Workflow Management System" .
+  
+  <https://www.wikidata.org/wiki/Q51293717> rdfs:label "Nextflow" .
+  
+  <https://www.wikidata.org/wiki/Q5518091> rdfs:label "Galaxy" .
+  
+  <https://www.wikidata.org/wiki/Q56291707> rdfs:label "CWL" .
+}
+
+sub:provenance {
+  sub:assertion prov:generatedAtTime "2026-03-01T20:03:06.980766"^^xsd:dateTime;
+    prov:wasAttributedTo orcid:0000-0003-2408-7588 .
+}
+
+sub:pubinfo {
+  this: prov:generatedAtTime "2026-03-01T20:03:06.980766"^^xsd:dateTime;
+    prov:wasAttributedTo orcid:0000-0003-2408-7588 .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkOFUnnRCp/k9/0ugvx8zQJ+Qc675W1Ug6F839+xvJ2QsSBu4iOJ1O2kJCmb3tALp3gJOt8sffRot3VrfY1hbgXxL7BVtDsfHHmXVff4YCeg5Ycdn5cDpLawDpAdYwMhK0LwIkZ3fwH9/o9JniYKXLV/jpF9bMKyiw/6tqlCHaMW1r8gzZzoxVIAakwvlABoY0iNoToLTlBRXEI4mLUNjDMnMwQgfh1KXMxMruNjW3wJyeDEIfa2ooAt0E4CRM9pkrEb37NzD9Jz8aSUFFY6BvIxF4ixK7rm6IUDvQ76LqXkEmgSeRv1kw7gnCe9wV/wHd0ZeW4heoBXmLHX3MvHfjwIDAQAB";
+    npx:hasSignature "bHINI7ZPhlzSInHEaYwnbUfyIHIRqVlZeps3estAum1JQyRxE8kkzVfB0MMfR4WjQOgsTlGiA0dQ5r8YB3IMgorfTDrYA0jRMz1sM4TRO4mRLzyKFm5DiAaVuRqf1ihcjKatcpnatDmqPTMJ5rapZrlmttIHS56GkikxbEaXwCROnv0pOL4W5pYIFDqcq3/rckMz0x0NmaLNzciWCxuZGcjINoZjPj8qveeqQrLxcdeiTifRExcfmpEzM1nkjSHix66TA4NZmTT78bwWE8XokkWx1NIZS3Y4P4jrnAUDnDXePxLM+z1u11PvdzmWNZdDc9rFZ3QmVymy/o/TNYSe4A==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2408-7588 .
+}
+

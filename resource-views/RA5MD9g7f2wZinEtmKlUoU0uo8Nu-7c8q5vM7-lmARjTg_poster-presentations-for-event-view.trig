@@ -1,0 +1,69 @@
+@prefix this: <https://w3id.org/np/RA5MD9g7f2wZinEtmKlUoU0uo8Nu-7c8q5vM7-lmARjTg> .
+@prefix sub: <https://w3id.org/np/RA5MD9g7f2wZinEtmKlUoU0uo8Nu-7c8q5vM7-lmARjTg/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a gen:ViewResultAction;
+    rdfs:label "add...";
+    gen:hasActionTemplate <https://w3id.org/np/RAySQ-S4Q7JJZ5jJ2bprDo6YwVL8T8SYWGLLHuAvFtqVc>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "event" .
+  
+  sub:poster-presentations-for-event-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:poster-presentations-for-event-view-kind;
+    dct:title "📋 Poster Presentations";
+    rdfs:label "Poster presentations for event view";
+    gen:appliesToInstancesOf gen:Space;
+    gen:hasStructuralPosition "4.5.poster-presentations";
+    gen:hasViewAction sub:addAction;
+    gen:hasViewQuery <https://w3id.org/np/RAaKXYMunUKMkbYpgc4PmTji21pS0Ox1hsiVLiV-AfiUU/get-poster-presentations-for-event>;
+    gen:hasViewQueryTargetField "event" .
+  
+  sub:poster-presentations-for-event-view-kind a gen:ResourceView .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-03-23T20:52:14Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:poster-presentations-for-event-view;
+    npx:introduces sub:poster-presentations-for-event-view-kind;
+    npx:supersedes <https://w3id.org/np/RAPZeNyQ-WwLIBP_vsBh2IvuUjrDob43CtHryQfb23v_A>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "FxWFYN34XXGUd8ZKqg5KaKjLrDrX861M8BBOGspUzMcn97Fo0tafker8Uf2FNp/9SjUj0rkT4wJvHAEG8/2v/5rVKiif3XSmiQt5k2VvUujnietG72aXxhUiC64kp8mJ9AW+7Tv7zQPC2qHXC7cCNXlIVlyZejhM9qWvf+aQY7k=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAaKXYMunUKMkbYpgc4PmTji21pS0Ox1hsiVLiV-AfiUU/get-poster-presentations-for-event>
+    nt:hasLabelFromApi "Get poster presentations for event - Returns all poster presentations for a given event, with title, date, authors, and nanopub link." .
+}
+

@@ -1,0 +1,186 @@
+@prefix this: <https://w3id.org/np/RAZOLy6mZTZQS_i1r1DHpnSQTcoADI1aUENeb1PVEwWDc> .
+@prefix sub: <https://w3id.org/np/RAZOLy6mZTZQS_i1r1DHpnSQTcoADI1aUENeb1PVEwWDc#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C63853> rdfs:label "relaxivity" .
+  
+  <http://purl.bioontology.org/ontology/npo#NPO_1302> rdfs:label "zeta potential of iron oxide nanoparticles" .
+  
+  <http://purl.bioontology.org/ontology/npo#NPO_1808> rdfs:label "nanoparticle core composition" .
+  
+  <http://purl.obolibrary.org/obo/OBI_0000272> rdfs:label "has used protocol" .
+  
+  <http://purl.obolibrary.org/obo/PATO_0000117> rdfs:label "the size of the nanoparticle" .
+  
+  <http://purl.org/dc/dcmitype/Dataset> rdfs:label "dataset" .
+  
+  dct:description rdfs:label "has the description" .
+  
+  dct:identifier rdfs:label "has index" .
+  
+  dct:license rdfs:label "has license" .
+  
+  dct:publisher rdfs:label "is published by" .
+  
+  dct:references rdfs:label "has reference" .
+  
+  dct:title rdfs:label "has the title" .
+  
+  <http://sweetontology.net/propRotation/Spin> rdfs:label "spin" .
+  
+  <http://www.semanticweb.org/osnathakimi/ontologies/deb#Lattice> rdfs:label "lattice" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template can be used to describe datasets cataloguing the physicochemical properties of iron oxide nanoparticles. It provides information on the data and metadata produced as part of the CompSafeNano project.";
+    rdfs:label "Describing a dataset cataloguing the physicochemical properties of iron oxide nanoparticles at summary level";
+    nt:hasNanopubLabelPattern "Dataset: ${title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st10, sub:st11, sub:st12, sub:st13, sub:st14, sub:st15, sub:st16;
+    nt:hasTag "Datasets";
+    nt:hasTargetNanopubType <http://purl.org/dc/dcmitype/Dataset> .
+  
+  sub:dataset a nt:UriPlaceholder;
+    rdfs:label "URI of the dataset" .
+  
+  sub:description a nt:LiteralPlaceholder;
+    rdfs:label "description of the dataset" .
+  
+  sub:index a nt:ValuePlaceholder;
+    rdfs:label "unique identifier of the assessed NP" .
+  
+  sub:license a nt:ExternalUriPlaceholder;
+    rdfs:label "the license of the dataset" .
+  
+  sub:protocol a nt:ExternalUriPlaceholder;
+    rdfs:label "the URI of the protocol used" .
+  
+  sub:publisher a nt:UriPlaceholder;
+    rdfs:label "URI of the publisher of the dataset (e.g., ORCID)" .
+  
+  sub:reference a nt:ExternalUriPlaceholder;
+    rdfs:label "DOI or URI of the reference" .
+  
+  sub:st01 a rdf:Statement;
+    rdf:object <http://purl.org/dc/dcmitype/Dataset>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:dataset .
+  
+  sub:st02 a rdf:Statement;
+    rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:dataset .
+  
+  sub:st03 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:dataset .
+  
+  sub:st04 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:publisher;
+    rdf:predicate dct:publisher;
+    rdf:subject sub:dataset .
+  
+  sub:st05 a rdf:Statement, nt:RepeatableStatement;
+    rdf:object sub:index;
+    rdf:predicate dct:identifier;
+    rdf:subject sub:dataset .
+  
+  sub:st06 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:protocol;
+    rdf:predicate <http://purl.obolibrary.org/obo/OBI_0000272>;
+    rdf:subject sub:dataset .
+  
+  sub:st07 a rdf:Statement;
+    rdf:object <http://purl.bioontology.org/ontology/npo#NPO_1302>;
+    rdf:predicate nt:hasStatement;
+    rdf:subject sub:dataset .
+  
+  sub:st10 a rdf:Statement;
+    rdf:object <http://purl.bioontology.org/ontology/npo#NPO_1808>;
+    rdf:predicate nt:hasStatement;
+    rdf:subject sub:dataset .
+  
+  sub:st11 a rdf:Statement;
+    rdf:object <http://purl.obolibrary.org/obo/PATO_0000117>;
+    rdf:predicate nt:hasStatement;
+    rdf:subject sub:dataset .
+  
+  sub:st12 a rdf:Statement;
+    rdf:object <http://sweetontology.net/propRotation/Spin>;
+    rdf:predicate nt:hasStatement;
+    rdf:subject sub:dataset .
+  
+  sub:st13 a rdf:Statement;
+    rdf:object <http://www.semanticweb.org/osnathakimi/ontologies/deb#Lattice>;
+    rdf:predicate nt:hasStatement;
+    rdf:subject sub:dataset .
+  
+  sub:st14 a rdf:Statement;
+    rdf:object <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C63853>;
+    rdf:predicate nt:hasStatement;
+    rdf:subject sub:dataset .
+  
+  sub:st15 a rdf:Statement;
+    rdf:object sub:license;
+    rdf:predicate dct:license;
+    rdf:subject sub:dataset .
+  
+  sub:st16 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:reference;
+    rdf:predicate dct:references;
+    rdf:subject sub:dataset .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title of the dataset" .
+  
+  nt:hasStatement rdfs:label "includes" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1297-3104 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1297-3104 foaf:name "Anastasios Papadiamantis" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCmuNEj4ElDZJ16VEbGLAt860vRLkkabjqt+pGDygqoGhpc8HLMY+brE+YUb23iDU7Y0ItXlnf7jtd4TL4s2gcSagJ/9Kh5nlrFHDmt3Qah7GxjEvnojLxGzkWHtNCgwsQ8xdvWjMXtnXSxLE5D/T3eXWWj180rTrgy2CSsQC6iEQIDAQAB";
+    npx:hasSignature "lVt5+2j6V1SoJVcqJuVdi7Wz7pyyss2O42dluEz7QhdG1XSLqKcFLXtA3eF2rt3FcSOIbBkOQIsTfG5LuaR4rXr2xqiuBiftb8N3AZxwnyL01/hAQrFxgXHs4YphU2QAlzC/zsKt25aIaEJ6Y+WE+L/Jy9wskJSVl8afU+EC3jM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1297-3104 .
+  
+  this: dct:created "2024-07-03T09:36:04.427Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0002-1297-3104;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RASqYUwAj6vF-szmrpKCn5bIB0vXjg5AD1rz2Bpjc6Zxo>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Template: Describing a dataset cataloguing the physicochemical properties of iron oxide nanoparticles at su...";
+    prov:wasDerivedFrom ns1:RAdvwtp0LfbKYtdCSVhZ2f52fdXqToOXv55TJY5NZcl8I, <https://w3id.org/np/RA0Ll3jUDSH362ZkAsjC7hYaAf0Fbi-Glg7ksYeYkWNJ8>,
+      <https://w3id.org/np/RAB2Y0fy92y7AnSw9dkWhhIU3_oSuN4cuu6na_V8L3qGY>, <https://w3id.org/np/RADYyvLbvKQQGrwYGCeiqM9WuTMee_2DtUokAs2M8r5MY>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM, ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALtjkZX1lYrTL2eCZp4VTW6vGGxiDZ-aaU-s1Z0Fcs2I> .
+}
+

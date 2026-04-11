@@ -1,0 +1,91 @@
+@prefix this: <https://w3id.org/np/RAN5Mdzqj_aO88RRAS4FC5NiPOCWf8l6zV7v-XJ4raUZk> .
+@prefix sub: <https://w3id.org/np/RAN5Mdzqj_aO88RRAS4FC5NiPOCWf8l6zV7v-XJ4raUZk#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:title rdfs:label "has the title" .
+  
+  <http://purl.org/spar/fabio/ScholarlyWork> rdfs:label "scholarly manuscript" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  <https://w3id.org/kpxl/ri/hasFirstAuthor> rdfs:label "has as first author" .
+  
+  <https://w3id.org/kpxl/ri/wasConductedAt> rdfs:label "was conducted at" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Making a manuscript declaration";
+    nt:hasNanopubLabelPattern "Declaration of ${manuscript}: ${title}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3;
+    nt:hasTag "Journals";
+    nt:hasTargetNanopubType <https://w3id.org/kpxl/ri/ManuscriptDeclaration> .
+  
+  sub:manuscript a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "short ID of manuscript (e.g. 'alpha-paper') or URI/DOI" .
+  
+  sub:org a nt:GuidedChoicePlaceholder;
+    rdfs:label "select the organization where this work was conducted";
+    nt:possibleValuesFromApi "https://api.ror.org/organizations?query.advanced=name:" .
+  
+  sub:st0 rdf:object <http://purl.org/spar/fabio/ScholarlyWork>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:manuscript .
+  
+  sub:st1 rdf:object nt:CREATOR;
+    rdf:predicate <https://w3id.org/kpxl/ri/hasFirstAuthor>;
+    rdf:subject sub:manuscript .
+  
+  sub:st2 rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:manuscript .
+  
+  sub:st3 rdf:object sub:org;
+    rdf:predicate <https://w3id.org/kpxl/ri/wasConductedAt>;
+    rdf:subject sub:manuscript .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "the title of the manuscript" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "hlItvowP8dZUvj7a4kkxqEUMMarsXvBkUh44RQC2FUBAl8M5OSAn39qcsX5A5XO0oEh3UV79x1WvcxH3UCXm7CTSm73u0zbomyBfFza9VGOyayxXjF5rjfTRTuzrQ5UtnmUVhOpkVawwI2EmnzbAGZ/7ZJpeW13FHMgKjFafjsA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-02-15T14:54:47.548Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAwyVdPBa2Be3Xlto-3kJ4NDQrbAA2vK5ii16yF9kQeSw>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Template: Making a manuscript declaration";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

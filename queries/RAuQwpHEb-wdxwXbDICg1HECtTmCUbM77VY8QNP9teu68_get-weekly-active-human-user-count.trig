@@ -1,0 +1,82 @@
+@prefix this: <https://w3id.org/np/RAuQwpHEb-wdxwXbDICg1HECtTmCUbM77VY8QNP9teu68> .
+@prefix sub: <https://w3id.org/np/RAuQwpHEb-wdxwXbDICg1HECtTmCUbM77VY8QNP9teu68/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-weekly-active-human-user-count a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns the number of active human users (with ORCID) per week (Mon-Sun).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get weekly active human user count";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?week (substr(str(min(?date)), 0, 11) as ?firstday) (count(distinct ?userid) as ?usercount) where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    ?np npx:signedBy ?userid .
+    ?np dct:created ?date .
+  }
+  filter(strstarts(str(?userid), \"https://orcid.org/\"))
+  filter(?userid != <https://orcid.org/0000-0000-0000-0000>)
+  filter(?userid != <https://orcid.org/1234-1234-1234-1234>)
+
+  bind(if(month(?date) <= 2, year(?date) - 1, year(?date)) as ?y)
+  bind(if(month(?date) <= 2, month(?date) + 9, month(?date) - 3) as ?m)
+  bind(365*?y + xsd:integer(?y/4) - xsd:integer(?y/100) + xsd:integer(?y/400) + xsd:integer((153*?m + 2)/5) + day(?date) as ?daynum)
+  bind(?daynum + 1 - xsd:integer((?daynum + 1) / 7) * 7 as ?dow)
+  bind(xsd:integer((?daynum - ?dow) / 7) as ?week)
+}
+group by ?week
+order by desc(?week)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-03-19T09:36:53.791Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-weekly-active-human-user-count;
+    npx:supersedes <https://w3id.org/np/RAWuL4-SNVJ3J0M-A45D0wOwMgdZjOCUMeJGnzTWlmZv0>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAqLNf0-hUqFK9oAURrkWtF_AU27-u4unk5LJObU-U04s>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "5104QmILa1BwuWYgHczhtksgJaKmDu633jicJcs1r7ep8WkvIf7nlQksMd6jlxouDLb6GqIs4Bq3AaIUmVl8Q7AbtR/LT9kCobRBbDOemqSekqV4NOd3EUE+Q8Vk77rNVy7DAroELbldsg72GMW8VemGuLXM3Igun31PJqH/JKM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

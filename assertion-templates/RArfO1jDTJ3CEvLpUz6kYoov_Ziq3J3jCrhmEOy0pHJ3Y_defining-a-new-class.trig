@@ -1,0 +1,144 @@
+@prefix this: <https://w3id.org/np/RArfO1jDTJ3CEvLpUz6kYoov_Ziq3J3jCrhmEOy0pHJ3Y> .
+@prefix sub: <https://w3id.org/np/RArfO1jDTJ3CEvLpUz6kYoov_Ziq3J3jCrhmEOy0pHJ3Y/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:partOf rdfs:label "is a part of" .
+  
+  rdf:type rdfs:label "is a - asserts that the thing on the left belongs to the class on the right" .
+  
+  rdfs:label rdfs:label "is called - connects a formal identifier (left) to an informal human-readable name (right)" .
+  
+  rdfs:subClassOf rdfs:label "is a subclass of - states that all instances of the class to the left are also instances of the class to the right" .
+  
+  <http://www.w3.org/2002/07/owl#Class> rdfs:label "class - a class represents a set of concrete or abstract things" .
+  
+  <http://www.w3.org/2002/07/owl#DeprecatedClass> rdfs:label "deprecated class" .
+  
+  <http://www.w3.org/2002/07/owl#sameAs> rdfs:label "is exactly the same as" .
+  
+  <http://www.w3.org/2004/02/skos/core#definition> rdfs:label "is defined as follows: - connects an identifier (left) to a human-readable definition (right)" .
+  
+  <http://www.w3.org/2004/02/skos/core#relatedMatch> rdfs:label "is related to - connects two classes that are somehow related" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description """<p>Such a nanopublication defines a new class. Classes represent sets of concrete or abstract things, and are by convention named with singular nouns (or noun phrases) like 'human', 'cardiovascular disease', or 'approach'.</p>
+
+<p>If the term you want to define does not refer to a set of things but a single instance, such as the planet Mars or Marie Curie, define them with the template for individuals instead.</p>""";
+    rdfs:label "Defining a new class";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st2b, sub:st3, sub:st4, sub:st5, sub:st6;
+    nt:hasTag "Terms" .
+  
+  sub:class a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix" .
+  
+  sub:definition a nt:LongLiteralPlaceholder;
+    rdfs:label "definition of the class" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the class" .
+  
+  sub:relatedentity a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of a related class or other entity";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:sameentity a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of a class that should be treated as fully synonymous" .
+  
+  sub:st0 a rdf:Statement;
+    rdf:object <http://www.w3.org/2002/07/owl#Class>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:class .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:class .
+  
+  sub:st2 a rdf:Statement;
+    rdf:object sub:definition;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#definition>;
+    rdf:subject sub:class .
+  
+  sub:st2b a nt:OptionalStatement;
+    rdf:object sub:type;
+    rdf:predicate rdf:type;
+    rdf:subject sub:class .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:superclass;
+    rdf:predicate rdfs:subClassOf;
+    rdf:subject sub:class .
+  
+  sub:st4 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:relatedentity;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#relatedMatch>;
+    rdf:subject sub:class .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:sameentity;
+    rdf:predicate <http://www.w3.org/2002/07/owl#sameAs>;
+    rdf:subject sub:class .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:vocabulary;
+    rdf:predicate dct:partOf;
+    rdf:subject sub:class .
+  
+  sub:superclass a nt:GuidedChoicePlaceholder;
+    rdfs:label "the URI of the superclass";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:type a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select class type, if appropriate";
+    nt:possibleValue <http://www.w3.org/2002/07/owl#DeprecatedClass> .
+  
+  sub:vocabulary a nt:GuidedChoicePlaceholder;
+    rdfs:label "vocabulary / ontology";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http://www.w3.org/2002/07/owl%23Ontology&searchterm=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-12-05T12:45:41.635+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAAK7zq9m5XHQaPZSfWxIS8coE-FJn9PWn43Qa8_sv6Tk>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Defining a new class";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "PkBOPiN4WWqxBwlHZb7cuHb9UDlx4YoCjU4Bvo/lre6JNPkd2tpCXkzAEhTUCSnvXpKU2rbkJdaOGjvTI6F2sO6WXf2jDpSw5O1Ut22ff+XZSo4O8SR4dhqWuVxdikubp6pdLzJh9eBEYy8UcTBBaNjJ3LORCKO5dZF2+7v8xmU=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

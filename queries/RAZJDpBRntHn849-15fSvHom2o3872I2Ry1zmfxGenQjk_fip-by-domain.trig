@@ -1,0 +1,99 @@
+@prefix this: <https://w3id.org/np/RAZJDpBRntHn849-15fSvHom2o3872I2Ry1zmfxGenQjk> .
+@prefix sub: <https://w3id.org/np/RAZJDpBRntHn849-15fSvHom2o3872I2Ry1zmfxGenQjk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:fips-by-domain a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the FAIR Implementation Profiles (FIPs) per scientific domain.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "FIP by domain";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/6a09747868afc83837e38d1bac79362fbcc3e2032cff2f2d244f4e24cbd085c6>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+prefix search: <http://www.openrdf.org/contrib/lucenesail#>
+
+select distinct ?fipnp ?fip ?fip_label ?community (min(?communitylabel) as ?community_label) (group_concat(distinct ?domain; separator=\" \") as ?domains) where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey ;
+      dct:created ?date ;
+      npx:hasNanopubType fip:FAIR-Implementation-Community ;
+      np:hasAssertion ?a .
+    ?np npx:introduces|npx:describes ?community .
+    ?np dct:created ?date . filter(str(?date) > \"2022\")
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+  }
+  graph ?a {
+    ?community a fip:FAIR-Implementation-Community ;
+      rdfs:label ?communitylabel ;
+      fip:has-research-domain ?domain .
+    ?community fip:has-research-domain ?domainx .
+  }
+  graph <http://purl.org/np/RArRAOwj4QOppEPCR8WVvOBmrX7oRKOrPi-asX-7AY66I#assertion> {
+    ?domainx rdfs:subClassOf* ?_domain_iri .
+  }
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/type/92efd7a0ea4be4e01ec0817ccec87f975203b30addcc3166a204498ffed73b66> {  # (https://w3id.org/fair/fip/terms/FAIR-Implementation-Profile)
+    select ?fipnp ?fip ?fip_label ?community {
+      graph npa:graph {
+        ?fipnp np:hasAssertion ?fa .
+        optional { ?fipnp rdfs:label ?fip_label . }
+        ?fipnp npx:introduces|npx:describes ?fip .
+        ?fipnp npa:hasValidSignatureForPublicKey ?fpubkey .
+        ?fipnp npx:hasNanopubType fip:FAIR-Implementation-Profile .
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists { ?fipnpx npx:invalidates ?fipnp ; npa:hasValidSignatureForPublicKey ?fpubkey . }
+      }
+      graph ?fa {
+        ?fip fip:declared-by ?community .
+      }
+    }
+  }
+}
+group by ?fipnp ?fip ?fip_label ?community""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-11-11T09:08:41.932Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:fips-by-domain;
+    npx:supersedes <https://w3id.org/np/RAp0C1zguxY8PuykpxIGa6_dqPsvFs5yCP0QJuvzCG8M0>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "1thl/Z91+Xyi37Bsb//nDp2wIjVgINfCZzcmGgBkpLfjkYC52Yb9Wata02SpmavK5kT6LNZl8ndVlS416exg6vT2eDPuw+31Vm0hRSbTY4ZXdqy2Npi2bdnGdsNKuVYNtUTzh6NsvEN56ClVJdhd+Vmxh6Kp4d5Pvjk49zsYSQY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

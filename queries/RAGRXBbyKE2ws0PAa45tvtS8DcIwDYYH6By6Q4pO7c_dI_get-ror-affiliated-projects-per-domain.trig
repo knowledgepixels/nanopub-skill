@@ -1,0 +1,98 @@
+@prefix this: <https://w3id.org/np/RAGRXBbyKE2ws0PAa45tvtS8DcIwDYYH6By6Q4pO7c_dI> .
+@prefix sub: <https://w3id.org/np/RAGRXBbyKE2ws0PAa45tvtS8DcIwDYYH6By6Q4pO7c_dI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-RORaffiliated-projectDomains a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns all projects affiliated with a ROR-registered research organization with domains.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get ROR-affiliated projects per domain";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX schema: <https://schema.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX np: <http://www.nanopub.org/nschema#>
+PREFIX npa: <http://purl.org/nanopub/admin/>
+PREFIX npx: <http://purl.org/nanopub/x/>
+PREFIX w3: <http://www.w3.org/>
+PREFIX w3idf: <https://w3id.org/fair/fip/terms/>
+
+
+SELECT DISTINCT ?project ?project_label ?domain #?domain_label
+WHERE {
+  GRAPH npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    FILTER NOT EXISTS {
+      ?npx npx:invalidates ?np ;
+           npa:hasValidSignatureForPublicKey ?pubkey .
+    }
+    ?np dct:created ?date .
+    ?np np:hasAssertion ?a .
+    ?np np:hasProvenance ?p .
+  }
+
+  GRAPH ?a {
+    ?project a <https://schema.org/ResearchProject> .
+    OPTIONAL { ?project rdfs:label ?project_label . }
+   # OPTIONAL { ?project	schema:startDate ?start_date . }
+    OPTIONAL { ?project w3idf:has-research-domain ?domain . }
+  }
+
+ # GRAPH <http://purl.org/np/RACXDZHEowTYDAzZvdmD0qIGpXZwY5ghMRBBlt6N8Iu5s#assertion> {
+   # OPTIONAL { ?domain rdfs:label ?domain_label . }
+#  }
+  
+  GRAPH ?p {
+   # ?a prov:wasAttributedTo ?orcid_id .
+    ?a prov:wasAttributedTo ?ror .
+    FILTER(STRSTARTS(STR(?ror), \"https://ror.org/\"))
+  }
+}
+ORDER BY DESC(?start_date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0002-4930-2662 foaf:name "Alessa An Gambardella" .
+  
+  this: dct:created "2025-06-06T21:03:38.208Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0002-4930-2662;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-RORaffiliated-projectDomains;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAXnHN7_jfxCpSp10_fK5ku5Uf5l6bCRRUfbmiue418Ek>,
+      <https://w3id.org/np/RAvM6Ot2ZWTRCFJsGUlNwjDhnj40UFP-2FtkuImGQmrZ0>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCEJGVv2xFV8o+Ojt3f0N2LgtZTt4+24Lxp8esEZiFYKryDGBYaR0Ef4ajadqtlSpvUHlwNlVIF7XRWiGd64P8drVnqPtpRtxJ+SOl0UNvxuHzUjeWlOYKpKZ/UgrGwVSSR3LvwqXOM9qUkWqy0IQ2KsFbJHHwzgNbcEZuZOD+/WQIDAQAB";
+    npx:hasSignature "fZjprQxL9TU3Wce6l1/5OMZMGowaCIo3+gXQDTiCVKz0fOWQSXpny2BQkBhft+lL0oIaXXhQwB3KFQ6zSmkZLuTqkLGsVF5tE2QTqzUo8/jwkaoZt1a+l+UmtXyXWhPl177en7+Jyz8+PIm/R9gPVIDHOwxFEjY8DKBYApFLvNM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-4930-2662 .
+}
+

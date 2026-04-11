@@ -1,0 +1,83 @@
+@prefix this: <https://w3id.org/np/RAR5V5LYhAR0bOOXHosAG_laJNhi09xNvJ7jvOU_k_Wcw> .
+@prefix sub: <https://w3id.org/np/RAR5V5LYhAR0bOOXHosAG_laJNhi09xNvJ7jvOU_k_Wcw/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-fair2adapt-nanopubs a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Search for FAIR2Adapt in nt:hasLabelFromApi in the publication info graph";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get FAIR2Adapt nanopubs";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+
+select * where {
+  # Search for nanopublications
+  GRAPH npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    FILTER NOT EXISTS { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+    ?np dct:created ?date .
+    ?np np:hasPublicationInfo ?pubinfo .
+    
+   
+    # Get publication info details
+    OPTIONAL { ?pubinfo dct:creator ?creator }
+    OPTIONAL { ?pubinfo <http://xmlns.com/foaf/0.1/name> ?creatorName }
+    OPTIONAL { ?pubinfo dct:license ?license }
+    OPTIONAL { 
+      ?pubinfo npx:hasSignature ?signature .
+      ?pubinfo npx:signedBy ?creator .
+    }
+  }
+  
+  # Search for FAIR2Adapt in nt:hasLabelFromApi in the publication info graph
+  GRAPH ?pubinfo {
+    ?subject nt:hasLabelFromApi ?object .
+    FILTER (CONTAINS(LCASE(STR(?object)), \"fair2adapt\"))
+  }
+} order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1784-2920 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1784-2920 foaf:name "Anne Fouilloux" .
+  
+  this: dct:created "2025-05-06T16:13:14.247Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1784-2920;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-fair2adapt-nanopubs;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDWv2pJnmDsBOq8OlT1aSvYXSuWT34WOp4FYqEzdnn2F0kqzcFevBqWGZDxJWC0lqCrDEuNfp2QFyPe/+nES9dlHGYIhqPi68fwK6ZiNUotRFxXou+rjFznVvUxtCL8Ede79EBHwWN61QtwSIcU12bLoZsNPFlqQASQ93BJuKlihwIDAQAB";
+    npx:hasSignature "VsyHFmrbTikY4DBUG92ksPCan7ZVkbk9QkDVja4ctk6KnfYSTSrbFwxFwLYRJ8Elf2t8jiqLIe46Bn4bvANWqbE2VuXu4XkMy4pWq98JDvsBJpdAUw5TUC+WgQxXbZ/3SjmKr26hv94a85YwHVMmJjO+89NFNnJPr3spPEyuluI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1784-2920 .
+}
+

@@ -1,0 +1,59 @@
+@prefix this: <https://w3id.org/np/RAcEqPZ1PVR7xow-lUP2_JQ5PX4LKQ6yOuFHfT8ga7150> .
+@prefix sub: <https://w3id.org/np/RAcEqPZ1PVR7xow-lUP2_JQ5PX4LKQ6yOuFHfT8ga7150/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-all-rocrate-nanopubs a grlc:grlc-query;
+    dct:description "This query returns all RO-Crate nanopubs.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get all RO-Crate Nanopubs";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/a94355158beda26c5d1533e079a7f76e827b9037dc594fac440e0cf3a2a153d1>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+
+select distinct ?rocrate ?date ?np where {
+  graph npa:graph {
+    ?np npx:hasNanopubType npx:RoCrateNanopub .
+    filter not exists { ?npx npx:invalidates ?np }
+    ?np dct:created ?date .
+    ?np npx:introduces ?rocrate .
+  }
+}
+order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0008-3635-347X .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-03-09T13:04:10.000Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0008-3635-347X;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-all-rocrate-nanopubs;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAvsAJkaWPEoV2AfCEcz4YKiPYnz7hIKWaU64/JLJ4IyzvCnL3JEbW3Q2TzZM7fSR4GeWhs+u/2rpsxurjhDN8rF2NbKU5zkf8+//9lCqX1goC+F+EH7gx+vv14lB5XCYtVMUhHiviARnvAI2qK3YoKLaw27uBfrwQ08St2BQ4bbu3qW4uq2Af6ENu0tcMRXykoioP9eii+Cog2eMBJzjHRgObZm0AuHQ9VEl7HWMZIVyB15vjVjbQTfqg8HPYsArCzXOzjY97kj0diMzp6/1U6ZZAxQ7D+2jwVWGC/mQUzARzIPNeZ5299+/+xHMY7vufj5B2PAvO18BUz0Pw4NX9CQIDAQAB";
+    npx:hasSignature "Z40s4NLwTtcw/wFItdnNVyWa46qdPD76YjcXLnrnTbDCNSRpCFMdw30MkAfVKN59EMJtAkP/F37u0eLCWkR09oOhq0EZ933wJodDrzj9EP1MF7P0nlSpx4cTEAPls6gHjKhbU5HtOVzgSLkCGl+9vr3p+WiFctXMFHcULVdbMxEQxsiGpfl5oHXQPayyoc9oRmXnA+T/zjVNVTmN30Y21GwxiSTLBBbm2b+91OwKeKSzDposA54W6yq3w0DqVI3MwM2Bc01NU88lI73m9AofxxWYBAmJBuCDWFx5531Z10Jk6xhrXgFUwM/eSDUDUU4Y5nhDjrFYWN+cUMSquNAwtQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0008-3635-347X .
+}
+

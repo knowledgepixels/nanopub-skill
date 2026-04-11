@@ -1,0 +1,79 @@
+@prefix this: <https://w3id.org/np/RA-46AJ9o1Nxal80CEsWhOjXwr2G3Ox5wPT6z3KxGbS7o> .
+@prefix sub: <https://w3id.org/np/RA-46AJ9o1Nxal80CEsWhOjXwr2G3Ox5wPT6z3KxGbS7o#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Making a statement with Wikidata vocabulary";
+    nt:hasNanopubLabelPattern "${subj} - ${property} - ${obj}";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Claims";
+    nt:hasTargetNanopubType <https://www.wikidata.org/entity/Q18616576> .
+  
+  sub:obj a nt:GuidedChoicePlaceholder;
+    rdfs:label "the object entity from Wikidata";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:property a nt:GuidedChoicePlaceholder;
+    rdfs:label "the property from Wikidata";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&type=property&language=en&format=json&limit=5&search=" .
+  
+  sub:sentiment a nt:LongLiteralPlaceholder .
+  
+  sub:st1 a nt:RepeatableStatement;
+    rdf:object sub:obj;
+    rdf:predicate sub:property;
+    rdf:subject sub:subj .
+  
+  sub:st2 rdf:object sub:sentiment;
+    rdf:predicate <http://is-a>;
+    rdf:subject <http://washingtonstate> .
+  
+  sub:subj a nt:GuidedChoicePlaceholder;
+    rdfs:label "the subject entity from Wikidata";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0001-1060-6917 .
+}
+
+sub:pubinfo {
+  orcid:0009-0001-1060-6917 foaf:name "Paul Weidner" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCkIfkDipYB8H4zMRgLwLvGVH/Z6bw3Pv9U60dgEDX11C2p8c63y9xn+MpLayutal09Bw2fSZ3smtRq13CRs5OlLxKqMajPwwV3qqBKj9Trr5iK57R7K1dwW8IqJPwwUyfUI/huxXif4R9xAVRAk9YLzle14SROrh/OpP+NA9NvRwIDAQAB";
+    npx:hasSignature "L1SaDml6xuSxqtpTl7ROwQtHsIik5ksepZ14IHsKMaL7BPtkEvKhocyuix+m9rz6TBDkPGQWgoHYsaFEGdvXKyizswijn0TDO2okPuDA1bnMDXuxbtb47Af+Px4UP2md9JRFJ4TfRnJctAxe+7SB0bgoTiDwy4X8lMq77Fn8A54=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0001-1060-6917 .
+  
+  this: dct:created "2024-04-17T18:38:06.484Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0009-0001-1060-6917;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>, <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Making a statement with Wikidata vocabulary";
+    prov:wasDerivedFrom ns1:RA95PFSIiN6-B5qh-a89s78Rmna22y2Yy7rGHEI9R6Vws;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM, ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

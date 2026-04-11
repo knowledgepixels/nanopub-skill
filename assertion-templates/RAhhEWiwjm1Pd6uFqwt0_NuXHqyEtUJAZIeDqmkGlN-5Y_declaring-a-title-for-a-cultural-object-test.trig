@@ -1,0 +1,62 @@
+@prefix this: <http://purl.org/np/RAhhEWiwjm1Pd6uFqwt0_NuXHqyEtUJAZIeDqmkGlN-5Y> .
+@prefix sub: <http://purl.org/np/RAhhEWiwjm1Pd6uFqwt0_NuXHqyEtUJAZIeDqmkGlN-5Y#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:title rdfs:label "has the title - connects the cultural object to a title describing it" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Declaring a title for a cultural object (test)";
+    nt:hasNanopubLabelPattern "Title for ${object}: ${title}";
+    nt:hasRequiredPubinfoElement <http://purl.org/np/RA5gNHxO43rlquxhEeAvFs5OCms5eaumzn--jqUu6g5HA>;
+    nt:hasStatement sub:st1;
+    nt:hasTag "Cultural Heritage";
+    nt:hasTargetNanopubType <https://www.wikidata.org/entity/Q210272> .
+  
+  sub:object a nt:ExternalUriPlaceholder;
+    rdfs:label "The URL/URI of the cultural object" .
+  
+  sub:st1 rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:object .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "the title of the object" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "Ac0HELUyFpgK8ksFUteI1hx8GGE+zH8ypxMcl3eV7CkByQjfb0V1+RwEDkN6+fMGZv37vpYYpGw9uvJJxpYvj7BAFWZ8dOAoKGaDrbPNbdV/4mYLE17KrC4Dn92CtR/eUCGXbc7s7L6yMmHxGtx6fna8Mcy8jenfnlFWnWQC5Qg=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-16T13:40:36.295Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <http://purl.org/np/RAYbyQh1QvwyZYRqvI6Hy5nV599n6060sxy7XaFAGx9RE>;
+    rdfs:label "Template: Declaring a title for a cultural object (test)";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RANjqEfLnGSzLuq0heRSXN0psYWW0oX4v3W8w7osb3xfs> .
+}
+

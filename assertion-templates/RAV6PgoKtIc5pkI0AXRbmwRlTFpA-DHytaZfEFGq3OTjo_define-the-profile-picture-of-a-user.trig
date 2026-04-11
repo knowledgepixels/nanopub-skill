@@ -1,0 +1,62 @@
+@prefix this: <https://w3id.org/np/RAV6PgoKtIc5pkI0AXRbmwRlTFpA-DHytaZfEFGq3OTjo> .
+@prefix sub: <https://w3id.org/np/RAV6PgoKtIc5pkI0AXRbmwRlTFpA-DHytaZfEFGq3OTjo/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <https://schema.org/image> rdfs:label "has the profile picture" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template is used to define the profile picture of a User";
+    rdfs:label "Define the profile picture of a User";
+    nt:hasStatement sub:st .
+  
+  sub:imageUrl a nt:ExternalUriPlaceholder .
+  
+  sub:st rdf:object sub:imageUrl;
+    rdf:predicate <https://schema.org/image>;
+    rdf:subject sub:user .
+  
+  sub:user a nt:AgentPlaceholder .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-03-05T12:19:18.248Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAp4vKXDExutySJu77t34Uu1BKRCPuQaCVbpxerERCkIw>;
+    npx:wasCreatedAt <https://nanodash.net/>;
+    rdfs:label "Define the profile picture of a User";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAQIZQdqa_kqYfFSnboJOHst-BTcR7_PPG_ywE5EMUEMI> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5UOkzo9Q9GboI8qZcCcp80YE+VXXGmFXjpgjAS2EqCyqmikYselt4Dvfz6sTSPcqz05O9r9OkyfKG9W4Hr0HrWe1Ahn6Zlr/kjh07I2J1PQyrbNf2sG5ecJSpGlDQ8YiboTOuRxKsvBTcpzWSRQn1V4uKorWRp74AoHr84N8ijrDp2buFNJR9nREhfmycE/UdNfxoksRvTfmsJlPdXyN+uQnS1AT9doxOurSVa/sPDY6E36EtxwzLEeeLCvrTIQhD+j/H1JwA4L7xKSoNlzzpb5zr4RheGWDnlqAFnDd3DhDFKKJ0wf4x9ppE01Fc0ODh+jlRDcqOg1kE1Fvp2TRAQIDAQAB";
+    npx:hasSignature "2Oe9Q74l3Y/jKbJxp8eAri7371V+2qBXmPv5dtLbvnGHAXbe4Ay8wBGPJd/ffdxDaEwbviZLpIXoXZqMqhrLqTkCX8jWsZqqXV1/BnGHSJwqheOV/U306u+R094qa+xI1U/UBoH8IJyQ16E5flAnQfK5n3k0AfJOULxk7PHriaQdGbpQ6NycFWfNttulILdvy5QESyb9K8YjTVpv0g/Y481CbgQdln/ASqrpPNYoH1hlq0hFHEZDDmjcK8DVpUcWHUdAjgxl6iAhYxQLMiS12IW6ep3zPnyU3CoHFwEKBKAuwDD9oSQqjPMyh7b/Ysf9Oe6am1fSTpESKpbDioRXtQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

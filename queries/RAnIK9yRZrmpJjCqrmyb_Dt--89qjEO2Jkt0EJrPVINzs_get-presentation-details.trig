@@ -1,0 +1,96 @@
+@prefix this: <https://w3id.org/np/RAnIK9yRZrmpJjCqrmyb_Dt--89qjEO2Jkt0EJrPVINzs> .
+@prefix sub: <https://w3id.org/np/RAnIK9yRZrmpJjCqrmyb_Dt--89qjEO2Jkt0EJrPVINzs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-presentation-details a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns the properties of an introduced presentation or poster, with human-readable labels for recognized predicates. Known properties are shown first.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get presentation details";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix wd: <http://www.wikidata.org/entity/>
+prefix schema: <https://schema.org/>
+
+select ?property ?property_label ?value ?value_label where {
+  bind(?_resourceNp_iri as ?np)
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np np:hasAssertion ?a .
+    ?np npx:introduces ?_resource_iri .
+  }
+  graph ?a {
+    ?_resource_iri ?pred ?value .
+    optional { ?value rdfs:label ?value_label_raw . }
+  }
+  bind(?pred as ?property)
+  bind(
+    if(?pred = rdf:type && ?value = wd:Q604733, \"Presentation\",
+    if(?pred = rdf:type && ?value = <https://w3id.org/kpxl/gen/terms/PosterPresentation>, \"Poster presentation\",
+    ?value_label_raw)) as ?value_label)
+  bind(
+    if(?pred = rdf:type, \"Type\",
+    if(?pred = rdfs:label, \"Title\",
+    if(?pred = dct:date, \"Date\",
+    if(?pred = wd:P823, \"Speaker\",
+    if(?pred = dct:creator, \"Author\",
+    if(?pred = dct:isPartOf, \"Part of\",
+    if(?pred = dct:description, \"Description\",
+    if(?pred = rdfs:seeAlso, \"Link\",
+    if(?pred = schema:about, \"Topic\",
+    str(?pred)))))))))) as ?property_label)
+  bind(
+    if(?pred = rdf:type, 0,
+    if(?pred = rdfs:label, 1,
+    if(?pred = dct:date, 2,
+    if(?pred = wd:P823, 3,
+    if(?pred = dct:creator, 4,
+    if(?pred = dct:isPartOf, 5,
+    if(?pred = dct:description, 6,
+    if(?pred = rdfs:seeAlso, 7,
+    if(?pred = schema:about, 8,
+    99))))))))) as ?sort)
+} order by ?sort""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-03-23T19:27:32Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-presentation-details;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "mwqyZmoXvOkrbBiWrIuWvIFY0D9PhGlyw5JOBEujO88h43UvuMmnKCQYie/zDuae37RpvG6Zb2X1BeXNrBqAXB/xPeTWyhjqE59dPV4p2Vu3R8GsyYZIz4xZXT7PY4OI4WMFzVhG4O+2Qy/D9pcdgcUp7jD4wmCPL2zYi4dKYnw=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

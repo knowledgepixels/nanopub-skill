@@ -1,0 +1,81 @@
+@prefix this: <https://w3id.org/np/RAdgYHClSdVIQJonpuJtFIFLATvowyaMLyJAMofdOh9pc> .
+@prefix sub: <https://w3id.org/np/RAdgYHClSdVIQJonpuJtFIFLATvowyaMLyJAMofdOh9pc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-methods a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns all methods.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get methods";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX np: <http://www.nanopub.org/nschema#>
+PREFIX npa: <http://purl.org/nanopub/admin/>
+PREFIX npx: <http://purl.org/nanopub/x/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+
+SELECT ?n1 ?label ?thing ?date where {
+GRAPH npa:graph {
+  ?n1 npx:introduces ?thing .
+    ?n1 npx:hasNanopubType <https://w3id.org/fair/ff/terms/Method> .
+    ?n1 npa:hasValidSignatureForPublicKey ?pubkey .
+    filter not exists {
+      ?np2 npx:invalidates ?n1 ;
+            npa:hasValidSignatureForPublicKey ?pubkey .
+    }
+    ?n1 dct:created ?date .
+    ?n1 rdfs:label ?label .
+    filter(contains(lcase(?label), lcase(?_searchterm)) )
+  }
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  this: dct:created "2025-07-11T07:36:45.844Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-methods;
+    npx:supersedes <https://w3id.org/np/RAIiY-4nfwuDnC3qZcyIYLT1ZojASjjamMB0jbtdZ8tdk>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RA-wg1Vld3y6GGHexjTfsSeAI-Zi5fPmPveve4rWaPyD8>,
+      <https://w3id.org/np/RAAjjgaL7wYF510LC7ndmPnzKdDHb3xoU43BAkKsK0se4>, <https://w3id.org/np/RAGIS_dBT0qNpZr2s0wISRQ_2I7WPCCQJIWNEPZ-9nc78>,
+      <https://w3id.org/np/RAKP-52IahDfYz_1jcfFw6tAq3RGfFVprw1pGICF3C7cc>, <https://w3id.org/np/RAj7uvn0h1g7NFfSH4fpV0TX61Y61MfepcWSMHU9EJtAU>,
+      <https://w3id.org/np/RAwjzYfozlA0aGAWMQIIGrlMvaobWFiXnJ_pIH4zzDdgo>, <https://w3id.org/np/RAzPQt99DLv81cTH9lfftA5P3WkOfD98jvkBYIfP4mX04>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCM0tu3I/KK6A/qPha/6pfngQZ4LBQpLnKAcIUuZLnSEb0epJ2IoY3zh/4N42us/6LpCHgZZZtSOTm5/KVo+OTDIqo294PpEZAO70u5DcMcGMC5OufzxGKs3Dwdo6XqPiDHxXuiaKCTO7/ABWAi7CtFoMrqJAHfeyqe82dAiH2IiwIDAQAB";
+    npx:hasSignature "cxwJV7z3ZdGRaIfVo/ta90uoyd1d7dwNfTxkOPefu21unq+A7bBFxnkAtVK+NjsbUmg0qVTSZK0FVpdu8xRrZmQ6/H93TLc9l5HtvSLCNpMvViqg8xKqvsgxWcWvJMdp6fZ5ILkRWuW19AYC7WG06OSJf2gWK0QuaXLUQ2HtS6k=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+}
+

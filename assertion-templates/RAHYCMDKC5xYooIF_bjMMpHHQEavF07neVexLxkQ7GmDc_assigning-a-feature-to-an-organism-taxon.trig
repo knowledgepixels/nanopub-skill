@@ -1,0 +1,66 @@
+@prefix this: <https://w3id.org/np/RAHYCMDKC5xYooIF_bjMMpHHQEavF07neVexLxkQ7GmDc> .
+@prefix sub: <https://w3id.org/np/RAHYCMDKC5xYooIF_bjMMpHHQEavF07neVexLxkQ7GmDc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Assigning a feature to an organism taxon";
+    nt:hasNanopubLabelPattern "${taxon} has the feature ${feature}";
+    nt:hasStatement sub:st .
+  
+  sub:feature a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose biological feature";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:st rdf:object sub:feature;
+    rdf:predicate <https://w3id.org/spaces/carabid-beetles/r/ontology/hasFeature>;
+    rdf:subject sub:taxon .
+  
+  sub:taxon a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose taxon";
+    nt:possibleValuesFromApi "https://vodex.petapico.org/nidx/query?rows=100&q=label:" .
+  
+  <https://w3id.org/spaces/carabid-beetles/r/ontology/hasFeature> rdfs:label "has the feature" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-02-23T17:11:27.070Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RABp-2aghuESWx5OuwhhT2AVsJEosFmq3_JIXEwgp7NCA>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Assigning a feature to an organism taxon";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAQIZQdqa_kqYfFSnboJOHst-BTcR7_PPG_ywE5EMUEMI> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "ZZ+/zmUgMtQYAluppwS2L+Ier4rN24ohMwCMT/i/ksjH9AJWuR1yq3cgLK0VivorgRYMfbQgPzAK3tLRopuRqM9dH4YcRItWHEA8uhMhKkga11WSANpJMZiFUEyx6MppvW4ybCtI+KtxJsLFvquQmteBtGgv+dbj/3j+Qd2xM8E=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,158 @@
+@prefix this: <https://w3id.org/np/RAoQ_6P_j-BsC2hdHobUB3Wb8aywuedLaouJZjqObVRrM> .
+@prefix sub: <https://w3id.org/np/RAoQ_6P_j-BsC2hdHobUB3Wb8aywuedLaouJZjqObVRrM/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://schema.org/url> rdfs:label "is accessible via" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has the description" .
+  
+  rdfs:label rdfs:label "is called" .
+  
+  rdfs:seeAlso rdfs:label "is further described by" .
+  
+  <http://www.w3.org/2004/02/skos/core#closeMatch> rdfs:label "can in some situations be considered the same as" .
+  
+  <http://www.w3.org/2004/02/skos/core#exactMatch> rdfs:label "is (almost) exactly the same as" .
+  
+  <http://www.w3.org/2004/02/skos/core#relatedMatch> rdfs:label "is related to" .
+  
+  <https://w3id.org/fair/fip/terms/Available-FAIR-Supporting-Resource> rdfs:label "available FAIR-Supporting Resource" .
+  
+  <https://w3id.org/fair/fip/terms/FAIR-Supporting-Resource-to-be-Developed> rdfs:label
+      "FAIR-Supporting resource to be developed" .
+  
+  <https://w3id.org/fair/fip/terms/implements> rdfs:label "implements" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Defining a Provenance tracking service";
+    nt:hasRequiredPubinfoElement ns1:RA_R5w4lZ-6xuZyylG8qSlMhmWBaTE41-zlhiBVUQblCc;
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st3a, sub:st4, sub:st5, sub:st6, sub:st7,
+      sub:st8;
+    nt:hasTag "FAIR";
+    nt:hasTargetNanopubType <https://w3id.org/fair/fip/terms/FAIR-Supporting-Resource>,
+      <https://w3id.org/fair/fip/terms/FAIR-Supporting-Service> .
+  
+  sub:comment a nt:LiteralPlaceholder;
+    rdfs:label "description of the FAIR-Supporting Resource" .
+  
+  sub:mappedResource a nt:ExternalUriPlaceholder;
+    rdfs:label "the identifier of the related resource" .
+  
+  sub:mappingPredicate a nt:RestrictedChoicePlaceholder;
+    rdfs:label "exact/close/related match";
+    nt:possibleValue <http://www.w3.org/2004/02/skos/core#closeMatch>, <http://www.w3.org/2004/02/skos/core#exactMatch>,
+      <http://www.w3.org/2004/02/skos/core#relatedMatch> .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the FAIR-Supporting Resource" .
+  
+  sub:resource a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix" .
+  
+  sub:resource-type1 a nt:RestrictedChoicePlaceholder;
+    rdfs:label "available or to be developed FSR";
+    nt:possibleValue <https://w3id.org/fair/fip/terms/Available-FAIR-Supporting-Resource>,
+      <https://w3id.org/fair/fip/terms/FAIR-Supporting-Resource-to-be-Developed> .
+  
+  sub:source a nt:ExternalUriPlaceholder;
+    rdfs:label "source of description" .
+  
+  sub:specification a nt:GuidedChoicePlaceholder;
+    rdfs:label "specification that this resource implements";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAB_utnJ83p9BqEo3Ndw5YWDrM0jP1UH1VA6AkQh7Yrow/find-fair-specifications?query=" .
+  
+  sub:st1 rdf:object <https://w3id.org/fair/fip/terms/Provenance-tracking-service>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st2 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:resource .
+  
+  sub:st3 rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:resource .
+  
+  sub:st3a a nt:OptionalStatement;
+    rdf:object sub:source;
+    rdf:predicate <https://w3id.org/fair/fip/terms/has-description-source>;
+    rdf:subject sub:resource .
+  
+  sub:st4 rdf:object sub:resource-type1;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:website;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:resource .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:url;
+    rdf:predicate <http://schema.org/url>;
+    rdf:subject sub:resource .
+  
+  sub:st7 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:specification;
+    rdf:predicate <https://w3id.org/fair/fip/terms/implements>;
+    rdf:subject sub:resource .
+  
+  sub:st8 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:mappedResource;
+    rdf:predicate sub:mappingPredicate;
+    rdf:subject sub:resource .
+  
+  sub:url a nt:ExternalUriPlaceholder;
+    rdfs:label "URL" .
+  
+  sub:website a nt:ExternalUriPlaceholder;
+    rdfs:label "a link to a website with further information" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  this: dct:created "2025-04-26T13:01:23.954Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAt9NjZpG9MVjPUkY_3ai1UF1FJR2fWFco7pt9M9Ibeew>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Template: Defining a Provenance tracking service";
+    prov:wasDerivedFrom ns1:RArgcuvrAWJci8DMOMcFtzME5-U30_Wxu7scSK7fIZuMU, ns1:RAtG8zeo_0OYP63K60rrot8vFOkHNOg_1_zu618NbL4pI;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA, <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAGBEisKAxwcQTdfR7ALwCeQBrUVeU23F8uFvFmO-H6F0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFntPrMZqvg2kVhCNArNnEn37ddXGwZ/0r4C8CS4lDry7C7YkYgng9yb0UMZQUHiTVkR/5A4m/xjE+Vy+AnwcWUeB75SfGZjE5ylI6VeHjTHi9+2hh2PHYIWnkhU4WHl3COEnxSSa/VouvPzZ2BIWLH6fTrq7NNL3RF5hGegGG0QIDAQAB";
+    npx:hasSignature "J5vmh2Hb3rYy8D1VY8JgFMpGCC3hiitKq/FwBrlOPa6JwDQU5OFSpD9ru8+G3SOyhzZuhXl617XYMdr/n1znvBCH/sj0imgI4Rs6nf3NpR/hmZH61X9K1isEfg6wG4pC8DYmDWmxyx+SkBoM7lX8OoZI44rCgyL518J0HsNi+fU=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+}
+

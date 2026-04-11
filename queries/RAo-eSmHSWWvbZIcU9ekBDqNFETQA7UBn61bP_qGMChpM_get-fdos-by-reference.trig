@@ -1,0 +1,81 @@
+@prefix this: <https://w3id.org/np/RAo-eSmHSWWvbZIcU9ekBDqNFETQA7UBn61bP_qGMChpM> .
+@prefix sub: <https://w3id.org/np/RAo-eSmHSWWvbZIcU9ekBDqNFETQA7UBn61bP_qGMChpM/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:find-fdos-by-ref a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the FDOs whose records refer to the given ID.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get FDOs by reference";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/f82fa5e467e6ba40c5d14402c3590f2ad8ed9a13e982133ab26ef1a889b34ebd>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+
+select distinct ?fdo ?np ?label ?creator ?date where {
+  optional { <x:> <x:> ?_refid }  # for grlc to pick up the placeholder
+  bind(if(strstarts(?_refid, \"https://\") || strstarts(?_refid, \"http://\"), iri(?_refid), iri(concat(\"https://hdl.handle.net/\", str(?_refid)))) as ?ref)
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+    ?np dct:created ?date .
+    ?np npx:hasNanopubType <https://w3id.org/fdof/ontology#FAIRDigitalObject> .
+    ?np npx:introduces ?fdo .
+    ?np np:hasAssertion ?a .
+    optional { ?np rdfs:label ?label }
+    optional { ?np npx:signedBy ?creator }
+  }
+  optional { graph ?a {
+    ?subj ?ref ?obj .
+    bind(true as ?inpred)
+  } }
+  optional { graph ?a {
+    ?subj ?pred ?ref .
+    bind(true as ?inobj)
+  } }
+  filter(?inpred || ?inobj)
+} order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-07-16T10:50:54.905Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:find-fdos-by-ref;
+    npx:supersedes <https://w3id.org/np/RAQiQjx3OiO9ra9ImWl9kpuDpT8d3EiBSrftckOAAwGKc>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "gyYrnJIcsI4aLbLUjZX/wcDS4mP5dolL+rWNmDYf7/TQ59w1KMaj9wlOKqNTIF4ylamVoyEog0VE5gyinHUOvQd1IEBiLklkvNF1ekzDTGdBDgPbEXnyYVDLjHofxQqSVUZz+GCogg7f6zXaZAyO8x7pLSK9cZUmTW5iH13iMiY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

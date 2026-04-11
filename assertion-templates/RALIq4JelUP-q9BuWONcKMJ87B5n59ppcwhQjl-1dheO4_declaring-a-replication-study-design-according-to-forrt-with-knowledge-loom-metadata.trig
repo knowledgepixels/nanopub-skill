@@ -1,0 +1,224 @@
+@prefix this: <https://w3id.org/np/RALIq4JelUP-q9BuWONcKMJ87B5n59ppcwhQjl-1dheO4> .
+@prefix sub: <https://w3id.org/np/RALIq4JelUP-q9BuWONcKMJ87B5n59ppcwhQjl-1dheO4/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <http://www.w3.org/2004/02/skos/core#related> rdfs:label "is related to" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Declare a replication study design according to FORRT with structured computational metadata from the Knowledge Loom: software methods,  packages, runtime environment, input data sources, analysis scripts, and links to machine-readable analysis proofs (dtreg JSON-LD). Combines FORRT's replication framework with Knowledge Loom's reproducible research infrastructure.";
+    rdfs:label "Declaring a replication study design according to FORRT with Knowledge Loom metadata";
+    nt:hasStatement sub:st-kl-input-desc, sub:st-kl-input-source, sub:st-kl-loom-record,
+      sub:st-kl-method, sub:st-kl-package, sub:st-kl-runtime, sub:st-kl-script, sub:st1,
+      sub:st2, sub:st3, sub:st3.2, sub:st4, sub:st5, sub:st6, sub:st7, sub:st8;
+    nt:hasTag "FORRT" .
+  
+  sub:claim a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose FORRT claim";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https://w3id.org/sciencelive/o/terms/FORRT-Claim&searchterm=" .
+  
+  sub:deviation a nt:LongLiteralPlaceholder;
+    rdfs:label "Describe any deviations from original methodology." .
+  
+  sub:discipline a nt:GuidedChoicePlaceholder;
+    rdfs:label "Choose the scientific discipline";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:keyword a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose terms as related keywords";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:kl-input-desc a nt:LiteralPlaceholder;
+    rdfs:label "Input data description (e.g. 229 rows x 8 columns)" .
+  
+  sub:kl-input-source a nt:ExternalUriPlaceholder;
+    rdfs:label "Input data source URL" .
+  
+  sub:kl-loom-record a nt:ExternalUriPlaceholder;
+    rdfs:label "Knowledge Loom record URL (GitLab/Github repo)" .
+  
+  sub:kl-method a nt:LiteralPlaceholder;
+    rdfs:label "Software method / function used (e.g. stats::aov())" .
+  
+  sub:kl-package a nt:LiteralPlaceholder;
+    rdfs:label "Software package and version (e.g. lme4 1.1-35.5)" .
+  
+  sub:kl-runtime a nt:LiteralPlaceholder;
+    rdfs:label "Runtime environment and version (e.g. R 4.4.1)" .
+  
+  sub:kl-script a nt:ExternalUriPlaceholder;
+    rdfs:label "Analysis script URL (R/Python script)" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "label/name of replication study" .
+  
+  sub:methodology a nt:LongLiteralPlaceholder;
+    rdfs:label "Describe how the claim is reproduced/replicated." .
+  
+  sub:scope a nt:LongLiteralPlaceholder;
+    rdfs:label "Describe what part of the claim is reproduced/replicated." .
+  
+  sub:st-kl-input-desc a nt:OptionalStatement;
+    rdf:object sub:kl-input-desc;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasInputDataDescription>;
+    rdf:subject sub:study .
+  
+  sub:st-kl-input-source a nt:OptionalStatement;
+    rdf:object sub:kl-input-source;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasInputDataSource>;
+    rdf:subject sub:study .
+  
+  sub:st-kl-loom-record a nt:OptionalStatement;
+    rdf:object sub:kl-loom-record;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasLoomRecord>;
+    rdf:subject sub:study .
+  
+  sub:st-kl-method a nt:OptionalStatement;
+    rdf:object sub:kl-method;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/executesMethod>;
+    rdf:subject sub:study .
+  
+  sub:st-kl-package a nt:OptionalStatement;
+    rdf:object sub:kl-package;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/usesSoftwarePackage>;
+    rdf:subject sub:study .
+  
+  sub:st-kl-runtime a nt:OptionalStatement;
+    rdf:object sub:kl-runtime;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasRuntimeEnvironment>;
+    rdf:subject sub:study .
+  
+  sub:st-kl-script a nt:OptionalStatement;
+    rdf:object sub:kl-script;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasAnalysisScript>;
+    rdf:subject sub:study .
+  
+  sub:st1 rdf:object <https://w3id.org/sciencelive/o/terms/FORRT-Replication-Study>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:study .
+  
+  sub:st2 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:study .
+  
+  sub:st3 rdf:object sub:type;
+    rdf:predicate rdf:type;
+    rdf:subject sub:study .
+  
+  sub:st3.2 rdf:object sub:claim;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/targetsClaim>;
+    rdf:subject sub:study .
+  
+  sub:st4 rdf:object sub:scope;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasScopeDescription>;
+    rdf:subject sub:study .
+  
+  sub:st5 rdf:object sub:methodology;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasMethodologyDescription>;
+    rdf:subject sub:study .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:deviation;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasDeviationDescription>;
+    rdf:subject sub:study .
+  
+  sub:st7 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:keyword;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#related>;
+    rdf:subject sub:study .
+  
+  sub:st8 a nt:OptionalStatement;
+    rdf:object sub:discipline;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasDiscipline>;
+    rdf:subject sub:study .
+  
+  sub:study a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short URI suffix for study ID" .
+  
+  sub:type a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose the study type";
+    nt:hasDefaultValue <https://w3id.org/sciencelive/o/terms/Reproduction-Study>;
+    nt:possibleValue <https://w3id.org/sciencelive/o/terms/Replication-Study>, <https://w3id.org/sciencelive/o/terms/Reproduction-Replication-Study>,
+      <https://w3id.org/sciencelive/o/terms/Reproduction-Study> .
+  
+  <https://w3id.org/sciencelive/o/terms/FORRT-Replication-Study> rdfs:label "FORRT Replication Study" .
+  
+  <https://w3id.org/sciencelive/o/terms/Replication-Study> rdfs:label "Replication Study - replication with different methodology or conditions" .
+  
+  <https://w3id.org/sciencelive/o/terms/Reproduction-Replication-Study> rdfs:label "Reproduction/Replication Study - study that is both, reproduction and replication" .
+  
+  <https://w3id.org/sciencelive/o/terms/Reproduction-Study> rdfs:label "Reproduction Study - direct reproduction: same methodology, same tools" .
+  
+  <https://w3id.org/sciencelive/o/terms/executesMethod> rdfs:label "executes the software method" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasAnalysisScript> rdfs:label "has the analysis script" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasDeviationDescription> rdfs:label "has the deviation" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasDiscipline> rdfs:label "has the discipline" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasInputDataDescription> rdfs:label "has the input data description" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasInputDataSource> rdfs:label "has the input data source" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasLoomRecord> rdfs:label "has the Knowledge Loom record" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasMethodologyDescription> rdfs:label "has the methodology" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasRuntimeEnvironment> rdfs:label "has the runtime environment" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasScopeDescription> rdfs:label "has the scope" .
+  
+  <https://w3id.org/sciencelive/o/terms/targetsClaim> rdfs:label "targets the claim" .
+  
+  <https://w3id.org/sciencelive/o/terms/usesSoftwarePackage> rdfs:label "uses the software package" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234, orcid:0000-0002-1784-2920 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0002-1784-2920 foaf:name "Anne Fouilloux" .
+  
+  this: dct:created "2026-04-02T14:39:20.508Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0002-1784-2920;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Declaring a replication study design according to FORRT with Knowledge Loom metadata";
+    prov:wasDerivedFrom <https://w3id.org/np/RAuLEjPp-4dTvPwMkfHggTto1CgjIftiGRAgHlyeEonjQ>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAQIZQdqa_kqYfFSnboJOHst-BTcR7_PPG_ywE5EMUEMI> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDWv2pJnmDsBOq8OlT1aSvYXSuWT34WOp4FYqEzdnn2F0kqzcFevBqWGZDxJWC0lqCrDEuNfp2QFyPe/+nES9dlHGYIhqPi68fwK6ZiNUotRFxXou+rjFznVvUxtCL8Ede79EBHwWN61QtwSIcU12bLoZsNPFlqQASQ93BJuKlihwIDAQAB";
+    npx:hasSignature "W3RoED/sFUmoJopTWEy6EluZoKlnDqXb9p6XSgOkBQJ+p90mTiPxx4z0VvRDm0RDWMcWLAq2p9TTotJteC6zfaj5AEVDh2dds60P+9Pn+4nxLLXJKA2F6ZaejbyUGep6brMGwoyK9+s/Ank8nADhxcltpz7W9YJYcTw3TFqEnsw=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1784-2920 .
+}
+

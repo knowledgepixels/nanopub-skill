@@ -1,0 +1,269 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix hycl: <http://purl.org/petapico/o/hycl#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rosetta: <https://w3id.org/rosetta/> .
+@prefix schema1: <http://schema.org/> .
+@prefix sub: <http://purl.org/np/RAQL814VkQgU8kYgoKONnxSKP2LWk8PJtcv9VC9StbMDA#> .
+@prefix this: <http://purl.org/np/RAQL814VkQgU8kYgoKONnxSKP2LWk8PJtcv9VC9StbMDA> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dcterms:created rdfs:label "created - timestamp of creation" .
+  
+  dcterms:creator rdfs:label "creator - person who created this statement" .
+  
+  <http://purl.org/nanopub/temp/npanchorStatement> a nt:LocalResource;
+    rdfs:label "Anchor statement for versioning" .
+  
+  <http://purl.org/nanopub/temp/npconfidenceLevel> a nt:LiteralPlaceholder;
+    rdfs:label "Confidence level (0.0-1.0)";
+    nt:hasDatatype xsd:decimal;
+    nt:hasRegex "^(0(\\.\\d+)?|1(\\.0+)?)$" .
+  
+  <http://purl.org/nanopub/temp/npcontext> a nt:ExternalUriPlaceholder;
+    rdfs:label "Context (e.g., DOI of scholarly publication)" .
+  
+  <http://purl.org/nanopub/temp/npdynamicLabelTemplate> a nt:LiteralPlaceholder;
+    rdfs:label "Dynamic label template (e.g., 'SUBJECT has QUALITY of VALUE UNIT')";
+    nt:hasRegex ".{10,200}" .
+  
+  <http://purl.org/nanopub/temp/npisNegation> a nt:RestrictedChoicePlaceholder;
+    rdfs:label "Is this statement negated?";
+    nt:possibleValue "false", "true" .
+  
+  <http://purl.org/nanopub/temp/npobject1Type> a nt:RestrictedChoicePlaceholder;
+    rdfs:label "Constraint for first object position";
+    nt:possibleValue "boolean", "date", "literal", "number", "resource", "text" .
+  
+  <http://purl.org/nanopub/temp/npobject2Type> a nt:RestrictedChoicePlaceholder;
+    rdfs:label "Constraint for second object position";
+    nt:possibleValue "boolean", "date", "literal", "number", "resource", "text" .
+  
+  <http://purl.org/nanopub/temp/npobject3Type> a nt:RestrictedChoicePlaceholder;
+    rdfs:label "Constraint for third object position";
+    nt:possibleValue "boolean", "date", "literal", "number", "resource", "text" .
+  
+  <http://purl.org/nanopub/temp/npobject4Type> a nt:RestrictedChoicePlaceholder;
+    rdfs:label "Constraint for fourth object position";
+    nt:possibleValue "boolean", "date", "literal", "number", "resource", "text" .
+  
+  <http://purl.org/nanopub/temp/npobjectPosition1> a nt:ExternalUriPlaceholder;
+    rdfs:label "First object (required or optional)" .
+  
+  <http://purl.org/nanopub/temp/npobjectPosition2> a nt:ExternalUriPlaceholder;
+    rdfs:label "Second object (optional)" .
+  
+  <http://purl.org/nanopub/temp/npobjectPosition3> a nt:ExternalUriPlaceholder;
+    rdfs:label "Third object (optional)" .
+  
+  <http://purl.org/nanopub/temp/npobjectPosition4> a nt:ExternalUriPlaceholder;
+    rdfs:label "Fourth object (optional)" .
+  
+  <http://purl.org/nanopub/temp/npsourceReference> a nt:ExternalUriPlaceholder;
+    rdfs:label "Source reference supporting this statement" .
+  
+  <http://purl.org/nanopub/temp/npst01> rdf:object rosetta:RosettaStatement;
+    rdf:predicate rdf:type;
+    rdf:subject <http://purl.org/nanopub/temp/npstatementInstance> .
+  
+  <http://purl.org/nanopub/temp/npst02> rdf:object <http://purl.org/nanopub/temp/npstatementType>;
+    rdf:predicate rosetta:hasStatementType;
+    rdf:subject <http://purl.org/nanopub/temp/npstatementInstance> .
+  
+  <http://purl.org/nanopub/temp/npst03> a nt:OptionalStatement;
+    rdf:object <http://purl.org/nanopub/temp/npdynamicLabelTemplate>;
+    rdf:predicate rosetta:hasDynamicLabel;
+    rdf:subject <http://purl.org/nanopub/temp/npstatementInstance> .
+  
+  <http://purl.org/nanopub/temp/npst04> rdf:object <http://purl.org/nanopub/temp/npsubjectResource>;
+    rdf:predicate rosetta:subject;
+    rdf:subject <http://purl.org/nanopub/temp/npstatementInstance> .
+  
+  <http://purl.org/nanopub/temp/npst05> a nt:OptionalStatement;
+    rdf:object <http://purl.org/nanopub/temp/npsubjectLabel>;
+    rdf:predicate rdfs:label;
+    rdf:subject <http://purl.org/nanopub/temp/npsubjectResource> .
+  
+  <http://purl.org/nanopub/temp/npst06> rdf:object <http://purl.org/nanopub/temp/npobjectPosition1>;
+    rdf:predicate rosetta:requiredObjectPosition1;
+    rdf:subject <http://purl.org/nanopub/temp/npstatementInstance> .
+  
+  <http://purl.org/nanopub/temp/npst07> a nt:OptionalStatement;
+    rdf:object <http://purl.org/nanopub/temp/npobjectPosition2>;
+    rdf:predicate rosetta:optionalObjectPosition1;
+    rdf:subject <http://purl.org/nanopub/temp/npstatementInstance> .
+  
+  <http://purl.org/nanopub/temp/npst08> a nt:OptionalStatement;
+    rdf:object <http://purl.org/nanopub/temp/npobjectPosition3>;
+    rdf:predicate rosetta:optionalObjectPosition2;
+    rdf:subject <http://purl.org/nanopub/temp/npstatementInstance> .
+  
+  <http://purl.org/nanopub/temp/npst09> a nt:OptionalStatement;
+    rdf:object <http://purl.org/nanopub/temp/npobjectPosition4>;
+    rdf:predicate rosetta:optionalObjectPosition3;
+    rdf:subject <http://purl.org/nanopub/temp/npstatementInstance> .
+  
+  <http://purl.org/nanopub/temp/npst10> a nt:OptionalStatement;
+    rdf:object <http://purl.org/nanopub/temp/npconfidenceLevel>;
+    rdf:predicate rosetta:hasConfidenceLevel;
+    rdf:subject <http://purl.org/nanopub/temp/npstatementInstance> .
+  
+  <http://purl.org/nanopub/temp/npst11> a nt:OptionalStatement;
+    rdf:object <http://purl.org/nanopub/temp/npcontext>;
+    rdf:predicate rosetta:hasContext;
+    rdf:subject <http://purl.org/nanopub/temp/npstatementInstance> .
+  
+  <http://purl.org/nanopub/temp/npst12> a nt:OptionalStatement;
+    rdf:object <http://purl.org/nanopub/temp/npisNegation>;
+    rdf:predicate rosetta:isNegation;
+    rdf:subject <http://purl.org/nanopub/temp/npstatementInstance> .
+  
+  <http://purl.org/nanopub/temp/npst13> a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object <http://purl.org/nanopub/temp/npsourceReference>;
+    rdf:predicate rosetta:hasSourceReference;
+    rdf:subject <http://purl.org/nanopub/temp/npstatementInstance> .
+  
+  <http://purl.org/nanopub/temp/npst14> a nt:OptionalStatement;
+    rdf:object <http://purl.org/nanopub/temp/npversion>;
+    rdf:predicate rosetta:hasVersion;
+    rdf:subject <http://purl.org/nanopub/temp/npstatementInstance> .
+  
+  <http://purl.org/nanopub/temp/npst15> a nt:OptionalStatement;
+    rdf:object <http://purl.org/nanopub/temp/npstatementInstance>;
+    rdf:predicate rosetta:hasVersion;
+    rdf:subject <http://purl.org/nanopub/temp/npanchorStatement> .
+  
+  <http://purl.org/nanopub/temp/npstatementInstance> a nt:IntroducedResource;
+    rdfs:label "The Rosetta Statement instance" .
+  
+  <http://purl.org/nanopub/temp/npstatementType> a nt:GuidedChoicePlaceholder;
+    rdfs:label "Type of Rosetta Statement (predicate-based classification)";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/find-things?type=https://w3id.org/rosetta/RosettaStatementClass" .
+  
+  <http://purl.org/nanopub/temp/npsubjectLabel> a nt:LiteralPlaceholder;
+    rdfs:label "Human-readable label for subject";
+    nt:hasRegex ".{1,100}" .
+  
+  <http://purl.org/nanopub/temp/npsubjectResource> a nt:ExternalUriPlaceholder;
+    rdfs:label "Subject resource (Wikidata URI or ontology term)" .
+  
+  <http://purl.org/nanopub/temp/npversion> a nt:LiteralPlaceholder;
+    rdfs:label "Version identifier";
+    nt:hasRegex ".{1,50}" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dcterms:description """<p>This template allows you to create Rosetta Statements following the metamodel described in \"Rosetta Statements: Simplifying FAIR Knowledge Graph Construction with a User-Centered Approach\".</p>
+
+<p><strong>Rosetta Statements</strong> model the structure of simple English natural language statements rather than attempting to represent a mind-independent reality. They prioritize:</p>
+<ul>
+<li><strong>Cognitive Interoperability:</strong> Easy to understand for domain experts</li>
+<li><strong>Findability:</strong> Supports search without requiring SPARQL knowledge</li>
+<li><strong>Semantic Interoperability:</strong> Standardized patterns for each statement type</li>
+<li><strong>User-Centered Design:</strong> Reflects natural language structure</li>
+</ul>
+
+<p><strong>Key Features:</strong></p>
+<ul>
+<li><strong>N-ary Support:</strong> Handle statements with multiple objects (not just binary relations)</li>
+<li><strong>Dynamic Labels:</strong> Display as natural language sentences in user interfaces</li>
+<li><strong>Versioning Support:</strong> Track changes and editing history</li>
+<li><strong>Metadata Rich:</strong> Include confidence levels, negation, context, and provenance</li>
+<li><strong>Wikidata Integration:</strong> Use Wikidata terms for immediate usability</li>
+</ul>
+
+<p><strong>Statement Structure:</strong></p>
+<ul>
+<li><strong>Subject:</strong> The main entity the statement is about</li>
+<li><strong>Predicate:</strong> Captured by the statement type/class</li>
+<li><strong>Objects:</strong> Up to 4 object positions (resources or literals)</li>
+<li><strong>Constraints:</strong> Type restrictions for each position</li>
+</ul>
+
+<p><strong>Example:</strong> \"This apple has a weight of 241.68 grams\" becomes a 'has-measurement' statement type with subject=apple, object1=weight (quality), object2=241.68 (value), object3=gram (unit).</p>
+
+<p>This approach significantly lowers the barrier for domain experts to create FAIR knowledge graphs without requiring expertise in semantics, RDF, or ontology engineering.</p>""";
+    rdfs:label "Creating a Rosetta Statement following the natural language statement metamodel";
+    nt:hasNanopubLabelPattern "Rosetta Statement: ${dynamicLabelTemplate}";
+    nt:hasStatement <http://purl.org/nanopub/temp/npst01>, <http://purl.org/nanopub/temp/npst02>,
+      <http://purl.org/nanopub/temp/npst03>, <http://purl.org/nanopub/temp/npst04>, <http://purl.org/nanopub/temp/npst05>,
+      <http://purl.org/nanopub/temp/npst06>, <http://purl.org/nanopub/temp/npst07>, <http://purl.org/nanopub/temp/npst08>,
+      <http://purl.org/nanopub/temp/npst09>, <http://purl.org/nanopub/temp/npst10>, <http://purl.org/nanopub/temp/npst11>,
+      <http://purl.org/nanopub/temp/npst12>, <http://purl.org/nanopub/temp/npst13>, <http://purl.org/nanopub/temp/npst14>,
+      <http://purl.org/nanopub/temp/npst15>, <http://purl.org/nanopub/temp/npst16>, <http://purl.org/nanopub/temp/npst17>,
+      <http://purl.org/nanopub/temp/npst18>, <http://purl.org/nanopub/temp/npst19>, <http://purl.org/nanopub/temp/npst20>;
+    nt:hasTag "Cognitive Interoperability", "FAIR", "Knowledge Graphs", "Natural Language",
+      "Rosetta Statements", "Semantic Modeling";
+    nt:hasTargetNanopubType schema1:Statement, rosetta:RosettaStatement .
+  
+  hycl:AIDA-Sentence rdfs:label "AIDA sentence - Atomic, Independent, Declarative, Absolute sentence" .
+  
+  rdf:type rdfs:label "is a - connects to class/type" .
+  
+  prov:wasAttributedTo rdfs:label "was attributed to - attribution of statement" .
+  
+  rosetta:RosettaStatement rdfs:label "Rosetta Statement - a natural language statement modeled semantically" .
+  
+  rosetta:anchorStatement rdfs:label "anchor statement - version-independent statement identity" .
+  
+  rosetta:hasConfidenceLevel rdfs:label "has confidence level - degree of certainty (0-1)" .
+  
+  rosetta:hasContext rdfs:label "has context - scholarly publication or broader context" .
+  
+  rosetta:hasDynamicLabel rdfs:label "has dynamic label - template for natural language display" .
+  
+  rosetta:hasSourceReference rdfs:label "has source reference - supporting evidence" .
+  
+  rosetta:hasStatementType rdfs:label "has statement type - connects to Rosetta Statement class" .
+  
+  rosetta:hasVersion rdfs:label "has version - links to statement version" .
+  
+  rosetta:isNegation rdfs:label "is negation - whether this statement is negated" .
+  
+  rosetta:optionalLiteralObjectPosition1 rdfs:label "optional literal object position 1 - first optional literal" .
+  
+  rosetta:optionalObjectPosition1 rdfs:label "optional object position 1 - first optional object" .
+  
+  rosetta:optionalObjectPosition2 rdfs:label "optional object position 2 - second optional object" .
+  
+  rosetta:optionalObjectPosition3 rdfs:label "optional object position 3 - third optional object" .
+  
+  rosetta:requiredLiteralObjectPosition1 rdfs:label "required literal object position 1 - first mandatory literal" .
+  
+  rosetta:requiredObjectPosition1 rdfs:label "required object position 1 - first mandatory object" .
+  
+  rosetta:requiredObjectPosition2 rdfs:label "required object position 2 - second mandatory object" .
+  
+  rosetta:subject rdfs:label "has subject - connects statement to its subject resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:generatedAtTime "2025-06-30T13:57:31.233894"^^xsd:dateTime;
+    prov:wasAttributedTo orcid:0000-0002-1784-2920 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAngoOA/rRAsZjhvKXIKTBioRLIWrNqRibaZ5DfBfLeHjFMzScBeQPU0m70cgF/EllYlunnSgmRG6nxu/Wbj7B7kgly+Lu4Knu2/xKBIYMsU+6YtqB5EhwRS6Xh/TY00soR/9jbwV46/1YjEJQFnOuVI3bD00Q6nqMe3zL96Ezm8LT9tPpJNCllCeQIzAAeCr3ZDZrNddJOZ5xskuA7pY88zrXrMMmjNjHF6J5Qb6wKWCkw/xHn1xwD4L6cqAwtlAHvbYM6fL6r+L5KMbmzmPeYdwozn96SahNxg+1gZ/P+vsqVaiXHRXCw4jYKkIISc5/gerazXNvDTgiNt2IALSxJwIDAQAB";
+    npx:hasSignature "QHRM7AjGaovusRETQDby7kKq/SuOcrRRfKKHCO/okd84PbbkNIyMqZD366CK3fHoQTCkqLZY1XHPZUNy9IZfFoeezRkP85EFb8PZ/S4to7XNarA0z0PBo67b6gmuGs3fs+CeJ7Nqd6ilNlknLshxhMEXyIaiiQLtUTgNuqmoZTOLrCoW1zvnRoSKBUMVinUka/nAmlMALWK1FUGgy7qrmjLDZQmzcVUbOk+WKajCuBxG9/DIi4AKtySqf/YXFhhQ88FIfFdsIscoc2Oj/3ttjjkVlYW++NOWTTYsIMjNCW/beW5+QArOXi0DhOdZrtUiQSsenLhyOCMJbN0/iVkNOg==";
+    npx:hasSignatureTarget this: .
+  
+  this: prov:generatedAtTime "2025-06-30T13:57:31.233894"^^xsd:dateTime;
+    prov:wasAttributedTo orcid:0000-0002-1784-2920 .
+  
+  orcid:0000-0002-1784-2920 foaf:name "Anne Fouilloux" .
+}
+

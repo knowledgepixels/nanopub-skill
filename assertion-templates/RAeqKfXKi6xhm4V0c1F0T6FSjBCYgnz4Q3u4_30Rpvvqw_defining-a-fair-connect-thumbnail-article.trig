@@ -1,0 +1,140 @@
+@prefix this: <http://purl.org/np/RAeqKfXKi6xhm4V0c1F0T6FSjBCYgnz4Q3u4_30Rpvvqw> .
+@prefix sub: <http://purl.org/np/RAeqKfXKi6xhm4V0c1F0T6FSjBCYgnz4Q3u4_30Rpvvqw#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:abstract rdfs:label "has abstract" .
+  
+  dct:title rdfs:label "has title" .
+  
+  sub:FSRID a nt:UriPlaceholder;
+    rdfs:label "identifier for the FAIR Supporting Resource" .
+  
+  sub:abstract a nt:LongLiteralPlaceholder;
+    rdfs:label "abstract" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Defining a FAIR Connect Thumbnail Article";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6;
+    nt:hasTag "FAIR" .
+  
+  sub:author a nt:UriPlaceholder;
+    rdfs:label "author ORCID (full URI)" .
+  
+  sub:funder a nt:UriPlaceholder;
+    rdfs:label "funder identifier" .
+  
+  sub:isAuthoredBy a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose contribution role here";
+    nt:possibleValue <https://w3id.org/fair/connect/conceptualizedBy>, <https://w3id.org/fair/connect/editedBy>,
+      <https://w3id.org/fair/connect/investigatedBy>, <https://w3id.org/fair/connect/vizualizedBy>,
+      <https://w3id.org/fair/connect/writtenBy> .
+  
+  sub:resource a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID as URI suffix" .
+  
+  sub:resource-type1 a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose article type here";
+    nt:possibleValue <https://w3id.org/fair/connect/Commentary>, <https://w3id.org/fair/connect/FSR-Description-Article> .
+  
+  sub:st0 a rdf:Statement;
+    rdf:object <https://w3id.org/fair/connect/Thumbnail-Article>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource;
+    nt:statementOrder "0" .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:resource;
+    nt:statementOrder "1" .
+  
+  sub:st2 a rdf:Statement;
+    rdf:object sub:abstract;
+    rdf:predicate dct:abstract;
+    rdf:subject sub:resource;
+    nt:statementOrder "2" .
+  
+  sub:st3 a rdf:Statement;
+    rdf:object sub:resource-type1;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource;
+    nt:statementOrder "3" .
+  
+  sub:st4 a nt:RepeatableStatement;
+    rdf:object sub:author;
+    rdf:predicate sub:isAuthoredBy;
+    rdf:subject sub:resource;
+    nt:statementOrder "4" .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:funder;
+    rdf:predicate <https://w3id.org/fair/connect/fundedBy>;
+    rdf:subject sub:resource;
+    nt:statementOrder "5" .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:FSRID;
+    rdf:predicate <https://schema.org/about>;
+    rdf:subject sub:resource;
+    nt:statementOrder "6" .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "has title" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  <https://schema.org/about> rdfs:label "about" .
+  
+  <https://w3id.org/fair/connect/Commentary> rdfs:label "commentary" .
+  
+  <https://w3id.org/fair/connect/FSR-Description-Article> rdfs:label "FAIR Supporting Description Article" .
+  
+  <https://w3id.org/fair/connect/conceptualizedBy> rdfs:label "conceptualized by" .
+  
+  <https://w3id.org/fair/connect/editedBy> rdfs:label "edited by" .
+  
+  <https://w3id.org/fair/connect/fundedBy> rdfs:label "funded by" .
+  
+  <https://w3id.org/fair/connect/investigatedBy> rdfs:label "investigated by" .
+  
+  <https://w3id.org/fair/connect/vizualizedBy> rdfs:label "visualized" .
+  
+  <https://w3id.org/fair/connect/writtenBy> rdfs:label "written by" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCtpcftn7kbe6toJbOTDQaCcCssEFSWqt6J4rZ02w+TfY7/eIOgJZYOlpL6G3AzO2RNmVYWRPSlMiykaFuaRuBitvk1GKfGdprfZbvXwmeOxpqCTRBQX9EnFyQyd+Ra/ajfw/UsG8skeu1xnUEpnQbpgbQYc/fvhJNN0UwEc77mOwIDAQAB";
+    npx:hasSignature "ZywqFaT8SXcHOBihVWRAieqkukdZV3gxOD1VIQirB4sS+dY30pCCVfPkYzpCYUlNmDN3/rGfUTMLWAs4ZtX3tV4NFsdrh3QJrj/hZkrvPxNnadWSabg/lX3aYTwHJWHUMBneA/LPaD0wtQeOCpcnOJ15qhcg55P+lVe3o7mtz/8=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-01-10T15:07:49.629+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    npx:supersedes <http://purl.org/np/RAt6HNVxi0iB4Ko4C1H-X7zzzC8YSKUV5rAZHdFYG8CW0>;
+    prov:wasDerivedFrom <http://purl.org/np/RA2plcfAUD4e70cc8dx-8fIuFZUZKp0P6aAIUfJCi0s7Y>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A>,
+      <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RARMBqX_-9lnhkaqk4BuxfLcC6H5cqTlzdtDzeDIwuKdU> .
+}
+

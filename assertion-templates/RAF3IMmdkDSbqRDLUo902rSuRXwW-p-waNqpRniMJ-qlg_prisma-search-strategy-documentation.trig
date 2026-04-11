@@ -1,0 +1,140 @@
+@prefix this: <https://w3id.org/np/RAF3IMmdkDSbqRDLUo902rSuRXwW-p-waNqpRniMJ-qlg> .
+@prefix sub: <https://w3id.org/np/RAF3IMmdkDSbqRDLUo902rSuRXwW-p-waNqpRniMJ-qlg/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:language rdfs:label "restricts to language" .
+  
+  dct:relation rdfs:label "relates to research question (PICO framework)" .
+  
+  dct:source rdfs:label "searches database" .
+  
+  dct:subject rdfs:label "uses search terms" .
+  
+  rdfs:comment rdfs:label "includes methodology notes" .
+  
+  <http://www.w3.org/ns/dcat#temporalEndDate> rdfs:label "ends searching at" .
+  
+  <http://www.w3.org/ns/dcat#temporalStartDate> rdfs:label "starts searching from" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "This template allows researchers to document their systematic review search strategy following PRISMA 2020 guidelines. It captures search terms, databases, date ranges, and expected results using Dublin Core Terms and RDFS vocabularies. Corresponds to PRISMA 2020 Item 7 (Search) and supports transparent, reproducible literature searches.";
+    rdfs:label "PRISMA Search Strategy Documentation";
+    nt:hasNanopubLabelPattern "PRISMA Search Strategy: ${search-terms}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04a, sub:st04b, sub:st05, sub:st06,
+      sub:st07;
+    nt:hasTag "PRISMA" .
+  
+  sub:databases a nt:UriPlaceholder;
+    rdfs:label "Database URI (PubMed, scopus, etc.)" .
+  
+  sub:end-date a nt:LiteralPlaceholder;
+    rdfs:label "End date for literature search (YYYY-MM-DD)";
+    nt:hasRegex "\\d{4}-\\d{2}-\\d{2}" .
+  
+  sub:language a nt:UriPlaceholder;
+    rdfs:label "Language code (from https://id.loc.gov/vocabulary/iso639-1.html)";
+    nt:hasPrefix "http://id.loc.gov/vocabulary/iso639-1/";
+    nt:hasPrefixLabel "Language code (from http://id.loc.gov/vocabulary/iso639-1/)" .
+  
+  sub:methodology-notes a nt:LongLiteralPlaceholder;
+    rdfs:label "Metholodogy notes" .
+  
+  sub:research-question-ref a nt:UriPlaceholder;
+    rdfs:label "Related PICO research question (optional)" .
+  
+  sub:search-terms a nt:UriPlaceholder;
+    rdfs:label "URI of the concept used for the literature search" .
+  
+  sub:st01 rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:systematic-review .
+  
+  sub:st02 a nt:RepeatableStatement;
+    rdf:object sub:search-terms;
+    rdf:predicate dct:subject;
+    rdf:subject sub:systematic-review .
+  
+  sub:st03 a nt:RepeatableStatement;
+    rdf:object sub:databases;
+    rdf:predicate dct:source;
+    rdf:subject sub:systematic-review .
+  
+  sub:st04a rdf:object sub:start-date;
+    rdf:predicate <http://www.w3.org/ns/dcat#temporalStartDate>;
+    rdf:subject sub:systematic-review .
+  
+  sub:st04b rdf:object sub:end-date;
+    rdf:predicate <http://www.w3.org/ns/dcat#temporalEndDate>;
+    rdf:subject sub:systematic-review .
+  
+  sub:st05 a nt:RepeatableStatement;
+    rdf:object sub:language;
+    rdf:predicate dct:language;
+    rdf:subject sub:systematic-review .
+  
+  sub:st06 rdf:object sub:methodology-notes;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:systematic-review .
+  
+  sub:st07 a nt:OptionalStatement;
+    rdf:object sub:research-question-ref;
+    rdf:predicate dct:relation;
+    rdf:subject sub:systematic-review .
+  
+  sub:start-date a nt:LiteralPlaceholder;
+    rdfs:label "Start date for literature search (YYYY-MM-DD)";
+    nt:hasRegex "\\d{4}-\\d{2}-\\d{2}" .
+  
+  sub:systematic-review a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "Systematic Review" .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "Title of the systematic review";
+    nt:hasRegex "[\\s\\S]{5,200}" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1784-2920 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0002-1784-2920 foaf:name "Anne Fouilloux" .
+  
+  this: dct:created "2025-08-27T13:01:03.101Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0002-1784-2920;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "PRISMA Search Strategy Documentation";
+    prov:wasDerivedFrom <https://w3id.org/np/RA5J6qcOXSdu1g3vOZy2tmChUYiu66HGzPpw5r_c__7nM>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "GbcVal+ja/rsl6rZMizjdxktLWuMkV0v7WnzzCbE29MgqXuYILlfrZ2p1wKWYlSW8oEOIFJ0iZn/3B5AqMULskFGebEXUK98j+aiNQ3mtvSvyIE9CepqDb2wmSgA7F5UO12CUdbji3JcEfcEchYZAvO2VOkYyU5RHKvzBwxmWWA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

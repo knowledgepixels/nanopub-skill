@@ -1,0 +1,104 @@
+@prefix this: <https://w3id.org/np/RA-dNJd-PbNCZPaF1cu-et0piotpnOfpMpNSNtLWXLXzM> .
+@prefix sub: <https://w3id.org/np/RA-dNJd-PbNCZPaF1cu-et0piotpnOfpMpNSNtLWXLXzM/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <https://neverblink.eu/ontologies/llm-kg/categories#KGEnhancedLLMInference> rdfs:label
+      "KG-enhanced LLM inference" .
+  
+  <https://neverblink.eu/ontologies/llm-kg/categories#KGEnhancedLLMInterpretability>
+    rdfs:label "KG-enhanced LLM interpretability" .
+  
+  <https://neverblink.eu/ontologies/llm-kg/categories#KGEnhancedLLMPretraining> rdfs:label
+      "KG-enhanced LLM pre-training" .
+  
+  <https://neverblink.eu/ontologies/llm-kg/categories#LLMAugmentedKGCompletion> rdfs:label
+      "LLM-augmented KG completion" .
+  
+  <https://neverblink.eu/ontologies/llm-kg/categories#LLMAugmentedKGConstruction> rdfs:label
+      "LLM-augmented KG construction" .
+  
+  <https://neverblink.eu/ontologies/llm-kg/categories#LLMAugmentedKGEmbedding> rdfs:label
+      "LLM-augmented KG embedding" .
+  
+  <https://neverblink.eu/ontologies/llm-kg/categories#LLMAugmentedKGQuestionAnswering>
+    rdfs:label "LLM-augmented KG question answering" .
+  
+  <https://neverblink.eu/ontologies/llm-kg/categories#LLMAugmentedKGToTextGeneration>
+    rdfs:label "LLM-augmented KG to text generation" .
+  
+  <https://neverblink.eu/ontologies/llm-kg/categories#SynergizedKnowledgeRepresentation>
+    rdfs:label "Synergized Knowledge Representation" .
+  
+  <https://neverblink.eu/ontologies/llm-kg/categories#SynergizedReasoning> rdfs:label
+      "Synergized Reasoning" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template allows you to annotate research papers with large language models(LLMs) and knowledge graphs(KGs) integration categories based on the Pan et al. (2024) roadmap (DOI: https://doi.org/10.48550/arXiv.2306.08302). This template includes the paper's DOI, its specific integration category, and the contributor who made the categorization.";
+    rdfs:label "Annotating paper with LLMs+KGs integration category";
+    nt:hasNanopubLabelPattern "LLMs+KGs integration category: ${category} for ${paper}";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Annotations" .
+  
+  sub:category a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue <https://neverblink.eu/ontologies/llm-kg/categories#KGEnhancedLLMInference>,
+      <https://neverblink.eu/ontologies/llm-kg/categories#KGEnhancedLLMInterpretability>,
+      <https://neverblink.eu/ontologies/llm-kg/categories#KGEnhancedLLMPretraining>, <https://neverblink.eu/ontologies/llm-kg/categories#LLMAugmentedKGCompletion>,
+      <https://neverblink.eu/ontologies/llm-kg/categories#LLMAugmentedKGConstruction>, <https://neverblink.eu/ontologies/llm-kg/categories#LLMAugmentedKGEmbedding>,
+      <https://neverblink.eu/ontologies/llm-kg/categories#LLMAugmentedKGQuestionAnswering>,
+      <https://neverblink.eu/ontologies/llm-kg/categories#LLMAugmentedKGToTextGeneration>,
+      <https://neverblink.eu/ontologies/llm-kg/categories#SynergizedKnowledgeRepresentation>,
+      <https://neverblink.eu/ontologies/llm-kg/categories#SynergizedReasoning> .
+  
+  sub:paper a nt:UriPlaceholder;
+    nt:hasPrefix "https://doi.org/";
+    nt:hasPrefixLabel "the paper with DOI";
+    nt:hasRegex "10.(\\d)+/(\\S)+" .
+  
+  sub:st1 a nt:RepeatableStatement;
+    rdf:object sub:category;
+    rdf:predicate dct:subject;
+    rdf:subject sub:paper .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-3080-0303 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-3080-0303 foaf:name "Anastasiya Danilenka" .
+  
+  this: dct:created "2026-01-20T08:52:03.299Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-3080-0303;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAXa2041ZMbvivCrsodh48mvlTdN1IFboAxWG8p_l37n0>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Annotating paper with LLMs+KGs integration category";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnosJSn16QpO5H1VxOxrwMH/H/b4lqyVo+/w5ri059ZaXR4GFN2l7rDusHTzgbyZ3Ifq2eEntFfnS3XrygI+AoIxoEob8jM1lEJstaCpSi3Kv+v9uD+s61HWL/4J7DyaVgycDcDFG7mOyemtUIU94hV9x5z2kXdFPfoffAlF8BRxKymOBMaCx/uOouxS/CCR4brlG6gXfU2d+13y/4PbiM3SxXdSKVAYaeSEA83ohAgJFhH3oZtZeuPhyENllRGxT5PVzqx59YVr10UV1VudiGIkqKjkcvGbfOoifZB38+uNN5DVBnLN4NcnoqqCAweoODWYUFOsjHTpobqA0+Ss0VwIDAQAB";
+    npx:hasSignature "SSwYy/3RqFhwaKLhsXe1Rffi/8rStPQOdU0LYXEqTfMflQkn0fjN1GEtfdfMg4sWcNlum+Ql0BcQqKd6ccHYMCF6xzK2MsQO3NimP+vwd2d4T/2D4HZS57Q8TDTqwGDuUCGMPaTO+1WZMxzZVsE047khyA37aMhjWkt9MNanzV/ybkSiioFwBvlSS67w3FPj6134BxuiHqCaMbrsUMEu5euz7T4LQcWKp5UUjHPd26G7zneUOGwz9ppbBzGtLyH1VdU0eu7oxe359S5O5o+ggppn8E3QbIua9rumw+nJHi3K/nH74RxxumpyY7D5yfYUR+l+VkHy81h2Q/u2E0OHYA==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-3080-0303 .
+}
+

@@ -1,0 +1,137 @@
+@prefix this: <https://w3id.org/np/RAJbduMbW71ekYhULtjXdE6qeM0-WUt-WAB3HHA1vYPgE> .
+@prefix sub: <https://w3id.org/np/RAJbduMbW71ekYhULtjXdE6qeM0-WUt-WAB3HHA1vYPgE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:01_conformsTo <http://www.w3.org/ns/shacl#hasValue> <https://w3id.org/np/RAjRKM0io64hYvuSUoaQbhPWpjLu4Pb_fCPp1D19bOoM4/dataset-fdo>;
+    <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#minCount> "1";
+    <http://www.w3.org/ns/shacl#path> dct:conformsTo .
+  
+  sub:03_label <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#minCount> "1";
+    <http://www.w3.org/ns/shacl#path> rdfs:label .
+  
+  sub:04_description <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> dct:description .
+  
+  sub:05_publisher <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> dct:publisher .
+  
+  sub:06_creator <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> dct:creator .
+  
+  sub:07_created <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> dct:created .
+  
+  sub:07_subject <http://www.w3.org/ns/shacl#path> dct:subject .
+  
+  sub:08_language <http://www.w3.org/ns/shacl#path> dct:language .
+  
+  sub:08_license <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> dct:license .
+  
+  sub:21_elementProfile <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> <https://w3id.org/np/RAFJAwIOez5R5fDMGSE10WYjMEoe36m0bYf1pxYq0cJLw/hasElementsOfProfile> .
+  
+  sub:22_elementCount <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> <https://w3id.org/np/RAijixZ7fryFY-jAyf_cfOecqYlDgkm1tNIIp2n8lmGZ8/hasElementCount> .
+  
+  sub:23_elementRecordIndex <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> <https://w3id.org/np/RAkPwS00ntxouUriC3VbGfAvxr2j-K4DWqQfR5j2c3tzQ/hasElementRecordIndex> .
+  
+  sub:25_file <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> <https://w3id.org/fdof/ontology#isMaterializedBy> .
+  
+  sub:31_legalFramework <http://www.w3.org/ns/shacl#path> <https://w3id.org/np/RAUxhPNH1YRk7XlPQ5mMmWSG9poIs6H-IEQt3Tsyyogzc/legal-framework> .
+  
+  sub:32_legalComplianceReport <http://www.w3.org/ns/shacl#path> <https://w3id.org/np/RA_j7PJrpR5q8su_si3-RXYh_qz1LJ390OyLkserhBFTw/hasLegalComplianceReport> .
+  
+  sub:nodeShape a <http://www.w3.org/ns/shacl#NodeShape>;
+    <http://www.w3.org/ns/shacl#property> sub:01_conformsTo, sub:03_label, sub:04_description,
+      sub:05_publisher, sub:06_creator, sub:07_created, sub:07_subject, sub:08_language,
+      sub:08_license, sub:21_elementProfile, sub:22_elementCount, sub:23_elementRecordIndex,
+      sub:25_file, sub:31_legalFramework, sub:32_legalComplianceReport;
+    <http://www.w3.org/ns/shacl#targetClass> <https://w3id.org/fdof/ontology#FAIRDigitalObject> .
+  
+  <https://w3id.org/np/RAjRKM0io64hYvuSUoaQbhPWpjLu4Pb_fCPp1D19bOoM4/dataset-fdo> a
+      <https://w3id.org/fdoc/o/terms/FdoProfile>, <https://w3id.org/fdof/ontology#FAIRDigitalObject>;
+    dct:conformsTo <https://w3id.org/np/RAprU0T8cWWRNseTC15oQn5oaoiIIgpPx9QMmBZNPsehg/basic-fdo-profile-profile>;
+    rdfs:label "Dataset FDO";
+    <https://w3id.org/fdoc/o/terms/hasShape> sub:nodeShape .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  dct:created nt:hasLabelFromApi "was created on - Date of creation of the resource." .
+  
+  dct:creator nt:hasLabelFromApi "was created by - Refers to the person/agent who created the resource." .
+  
+  dct:description nt:hasLabelFromApi "has the description - A (free-text) description of the given resource." .
+  
+  dct:language nt:hasLabelFromApi "has the language - Refers to the language of the resource, e.g. \"de\" or \"en-US\"." .
+  
+  dct:license nt:hasLabelFromApi "has the license - Refers to the legal document that is defining what is allowed to be done with..." .
+  
+  dct:publisher nt:hasLabelFromApi "has publisher - Refers to the entity responsible for making the resource available." .
+  
+  dct:subject nt:hasLabelFromApi "has the subject - Refers to a topic of the resource." .
+  
+  rdfs:label nt:hasLabelFromApi "has the label - A human-readable name for the subject." .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/fdof/ontology#isMaterializedBy> nt:hasLabelFromApi "is materialized by - This relation points from an FDO to the file/bitstream that it has as materal..." .
+  
+  <https://w3id.org/np/RAFJAwIOez5R5fDMGSE10WYjMEoe36m0bYf1pxYq0cJLw/hasElementsOfProfile>
+    nt:hasLabelFromApi "has elements of profile - Refers to the FDO profile that the elements of the given resource (e.g. the d..." .
+  
+  this: dct:created "2025-09-03T12:38:03.491Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:hasNanopubType nt:AssertionTemplate;
+    npx:introduces <https://w3id.org/np/RAjRKM0io64hYvuSUoaQbhPWpjLu4Pb_fCPp1D19bOoM4/dataset-fdo>;
+    npx:supersedes <https://w3id.org/np/RAUFSVf9jFrjuug5tuoD1MluwC2D3xvDgUmMhP1Q4GCiQ>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALwVLnRJ4Y6ZkRC-fDiU0E8QB0XfWBRS0ntWyDMh1l8I> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "Do3ZHQ1HfFH4PeKzlcoTkwEYukolwgmOLps83tEuPy9Aerj6+c1Y+Dv3HCjX7z/8gPdUv/D7oLMnzGXtqJbLGfBIXCjjOBCnsnYAsjq0VQKsUep6Xw50FCu2xZRNEuz0dMj/07DYnruB3b5iJYo86OBvqwdsbjZ8pCEEn9sS9kQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAUxhPNH1YRk7XlPQ5mMmWSG9poIs6H-IEQt3Tsyyogzc/legal-framework>
+    nt:hasLabelFromApi "has the legal framework - Refers to the legal framework that applies to the resource." .
+  
+  <https://w3id.org/np/RA_j7PJrpR5q8su_si3-RXYh_qz1LJ390OyLkserhBFTw/hasLegalComplianceReport>
+    nt:hasLabelFromApi "has the legal compliance report - Refers to a report that assesses the legal compliance of the given resource" .
+  
+  <https://w3id.org/np/RAijixZ7fryFY-jAyf_cfOecqYlDgkm1tNIIp2n8lmGZ8/hasElementCount>
+    nt:hasLabelFromApi "has element count - Expresses the number of elements the given resource has (e.g. the number of d..." .
+  
+  <https://w3id.org/np/RAkPwS00ntxouUriC3VbGfAvxr2j-K4DWqQfR5j2c3tzQ/hasElementRecordIndex>
+    nt:hasLabelFromApi "has element record index - Refers to an index listing all FDO records of the elements of the given resou..." .
+}
+

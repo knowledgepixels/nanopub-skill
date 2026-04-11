@@ -1,0 +1,64 @@
+@prefix this: <http://purl.org/np/RA95PFSIiN6-B5qh-a89s78Rmna22y2Yy7rGHEI9R6Vws> .
+@prefix sub: <http://purl.org/np/RA95PFSIiN6-B5qh-a89s78Rmna22y2Yy7rGHEI9R6Vws#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Making a statement with Wikidata vocabulary";
+    nt:hasNanopubLabelPattern "${subj} - ${property} - ${obj}";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Claims";
+    nt:hasTargetNanopubType <https://www.wikidata.org/entity/Q18616576> .
+  
+  sub:obj a nt:GuidedChoicePlaceholder;
+    rdfs:label "the object entity from Wikidata";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:property a nt:GuidedChoicePlaceholder;
+    rdfs:label "the property from Wikidata";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&type=property&language=en&format=json&limit=5&search=" .
+  
+  sub:st1 rdf:object sub:obj;
+    rdf:predicate sub:property;
+    rdf:subject sub:subj .
+  
+  sub:subj a nt:GuidedChoicePlaceholder;
+    rdfs:label "the subject entity from Wikidata";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "S8XKUTmZ2WP06Tab9yi2SPC/yt0AE/lCyQ8ou6ZkKNemXC4MhuJ1ABSaKj0X+PmqakSFnZSYBVRX1GFiiaF7uYaqopO7GnuNApA4l+PpxpOa6TxPOMFiEiH4r8wCvBpa5H5czQlAJsFvFuAKU1PyOtg5T4nONNrFvZPKpj7TGIo=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-10-02T13:44:15.300Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    rdfs:label "Template: Making a statement with Wikidata vocabulary";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so> .
+}
+

@@ -1,0 +1,95 @@
+@prefix this: <https://w3id.org/np/RAYZbhJo8MLTu67DxfBXcf8yXs75IrRfwbajjrQVYCScI> .
+@prefix sub: <https://w3id.org/np/RAYZbhJo8MLTu67DxfBXcf8yXs75IrRfwbajjrQVYCScI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:title rdfs:label "has the title" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  <https://w3id.org/kpxl/gen/terms/SpaceQueryView> rdfs:label "Space query view" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasViewQuery> rdfs:label "has the query" .
+  
+  <https://w3id.org/kpxl/gen/terms/isViewForSpace> rdfs:label "is for the Space" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Declare a view that should be shown for a given Space, based on a query.";
+    rdfs:label "Declare a view for a Space (deprecated)";
+    nt:hasNanopubLabelPattern "${space} has view for query: ${query}";
+    nt:hasStatement sub:st10, sub:st20, sub:st30, sub:st40;
+    nt:hasTag "Spaces";
+    nt:hasTargetNanopubType <https://w3id.org/kpxl/gen/terms/hasView> .
+  
+  sub:query a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the query";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/grlc/grlc-query" .
+  
+  sub:space a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the Space";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st10 rdf:object <https://w3id.org/kpxl/gen/terms/SpaceQueryView>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:view .
+  
+  sub:st20 rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:view .
+  
+  sub:st30 rdf:object sub:query;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasViewQuery>;
+    rdf:subject sub:view .
+  
+  sub:st40 rdf:object sub:space;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/isViewForSpace>;
+    rdf:subject sub:view .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title for the view" .
+  
+  sub:view a nt:EmbeddedResource, nt:LocalResource;
+    rdfs:label "this view" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-10-23T09:24:21.706+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAKKxyVdBLv-T1o5psQBtmGQvy1XBmh4LaJf7KxLmwszk>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Declare a view for a Space (deprecated)";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "D+OkA+ID8FOu+7Fn/If7dr8hePAGWnac+IN4aUGSlp8kCB+4+LM1CILzbCLfMyAbCCqsPJwlKNvBQkdcwQom9nhRp2XoEAcXGNqtyxwgRABJ9GStjjEb9c3DNYByauWSU4knTqBa+dR1S58nlAnuFWLTJgVyjbP9ffqjSoXhuC8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

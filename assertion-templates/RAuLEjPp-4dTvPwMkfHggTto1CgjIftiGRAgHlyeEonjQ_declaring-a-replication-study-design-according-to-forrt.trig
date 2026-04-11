@@ -1,0 +1,149 @@
+@prefix this: <https://w3id.org/np/RAuLEjPp-4dTvPwMkfHggTto1CgjIftiGRAgHlyeEonjQ> .
+@prefix sub: <https://w3id.org/np/RAuLEjPp-4dTvPwMkfHggTto1CgjIftiGRAgHlyeEonjQ/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <http://www.w3.org/2004/02/skos/core#related> rdfs:label "is related to" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Declaring a replication study design according to FORRT";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st3.2, sub:st4, sub:st5, sub:st6, sub:st7,
+      sub:st8;
+    nt:hasTag "FORRT" .
+  
+  sub:claim a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose FORRT claim";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https://w3id.org/sciencelive/o/terms/FORRT-Claim&searchterm=" .
+  
+  sub:deviation a nt:LongLiteralPlaceholder;
+    rdfs:label "Describe any deviations from original methodology." .
+  
+  sub:discipline a nt:GuidedChoicePlaceholder;
+    rdfs:label "Choose the scientific discipline";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:keyword a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose terms as related keywords";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "label/name of replication study" .
+  
+  sub:methodology a nt:LongLiteralPlaceholder;
+    rdfs:label "Describe how the claim is reproduced/replicated." .
+  
+  sub:scope a nt:LongLiteralPlaceholder;
+    rdfs:label "Describe what part of the claim is reproduced/replicated." .
+  
+  sub:st1 rdf:object <https://w3id.org/sciencelive/o/terms/FORRT-Replication-Study>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:study .
+  
+  sub:st2 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:study .
+  
+  sub:st3 rdf:object sub:type;
+    rdf:predicate rdf:type;
+    rdf:subject sub:study .
+  
+  sub:st3.2 rdf:object sub:claim;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/targetsClaim>;
+    rdf:subject sub:study .
+  
+  sub:st4 rdf:object sub:scope;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasScopeDescription>;
+    rdf:subject sub:study .
+  
+  sub:st5 rdf:object sub:methodology;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasMethodologyDescription>;
+    rdf:subject sub:study .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:deviation;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasDeviationDescription>;
+    rdf:subject sub:study .
+  
+  sub:st7 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:keyword;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#related>;
+    rdf:subject sub:study .
+  
+  sub:st8 a nt:OptionalStatement;
+    rdf:object sub:discipline;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasDiscipline>;
+    rdf:subject sub:study .
+  
+  sub:study a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short URI suffix for study ID" .
+  
+  sub:type a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose the study type";
+    nt:hasDefaultValue <https://w3id.org/sciencelive/o/terms/Reproduction-Study>;
+    nt:possibleValue <https://w3id.org/sciencelive/o/terms/Replication-Study>, <https://w3id.org/sciencelive/o/terms/Reproduction-Replication-Study>,
+      <https://w3id.org/sciencelive/o/terms/Reproduction-Study> .
+  
+  <https://w3id.org/sciencelive/o/terms/FORRT-Replication-Study> rdfs:label "FORRT Replication Study" .
+  
+  <https://w3id.org/sciencelive/o/terms/Replication-Study> rdfs:label "Replication Study - replication with different methodology or conditions" .
+  
+  <https://w3id.org/sciencelive/o/terms/Reproduction-Replication-Study> rdfs:label "Reproduction/Replication Study - study that is both, reproduction and replication" .
+  
+  <https://w3id.org/sciencelive/o/terms/Reproduction-Study> rdfs:label "Reproduction Study - direct reproduction: same methodology, same tools" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasDeviationDescription> rdfs:label "has the deviation" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasDiscipline> rdfs:label "has the discipline" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasMethodologyDescription> rdfs:label "has the methodology" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasScopeDescription> rdfs:label "has the scope" .
+  
+  <https://w3id.org/sciencelive/o/terms/targetsClaim> rdfs:label "targets the claim" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-02-27T08:09:36.458Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RArtGIjoFPHB1qumjOhXqDMFYhhzp0JhxjoVb3nB6CiBg>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Declaring a replication study design according to FORRT";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAQIZQdqa_kqYfFSnboJOHst-BTcR7_PPG_ywE5EMUEMI> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "Kh/2V1XjwtDYpnme5O/O5/pIYWrGbIUywhg/KZldEGV7uYlbLxV3mn4wd5IrDz418RtHVwht4/ceeueLO3XKdjpLgy/TWVYkWjMd8+50O4btv+VkAKdeYo0ucHr4Um1IFpQCb42ts9o02JY86n+4VwBccGXOO2K5QePjwqguMUM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

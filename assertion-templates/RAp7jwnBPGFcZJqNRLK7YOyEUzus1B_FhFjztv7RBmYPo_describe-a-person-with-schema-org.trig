@@ -1,0 +1,72 @@
+@prefix this: <https://w3id.org/np/RAp7jwnBPGFcZJqNRLK7YOyEUzus1B_FhFjztv7RBmYPo> .
+@prefix sub: <https://w3id.org/np/RAp7jwnBPGFcZJqNRLK7YOyEUzus1B_FhFjztv7RBmYPo/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://schema.org/Person> rdfs:label "person" .
+  
+  <http://schema.org/givenName> rdfs:label "has the given name" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template describes a person based on schema.org vocabulary.";
+    rdfs:label "Describe a person with schema.org";
+    nt:hasStatement sub:st1, sub:st2 .
+  
+  sub:givenName a nt:LiteralPlaceholder;
+    rdfs:label "given name of the person" .
+  
+  sub:person a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID suffix for person" .
+  
+  sub:st1 rdf:object <http://schema.org/Person>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:person .
+  
+  sub:st2 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:givenName;
+    rdf:predicate <http://schema.org/givenName>;
+    rdf:subject sub:person .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-05-14T08:35:09.682Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Describe a person with schema.org";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAGBEisKAxwcQTdfR7ALwCeQBrUVeU23F8uFvFmO-H6F0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "7BAwJYSAz1WX4LozBPGOx943ssoOWc/hYtieS1L7aZCfgH/PYGHwHqew7QwFYXgXnZdwAxBjNtpa/6kvJm9YGAB/VUuLrbHu649XLAGE5bWaTMIK5eP3VlDOq5Ry6meR24e2Fb1X5ZwMrM4wghmVsgnWqoq5viGwXieMRvz1m3g=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

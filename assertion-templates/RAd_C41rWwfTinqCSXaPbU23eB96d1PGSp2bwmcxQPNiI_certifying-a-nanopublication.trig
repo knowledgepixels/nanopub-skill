@@ -1,0 +1,63 @@
+@prefix ns1: <http://purl.org/np/> .
+@prefix this: <http://purl.org/np/RAd_C41rWwfTinqCSXaPbU23eB96d1PGSp2bwmcxQPNiI> .
+@prefix sub: <http://purl.org/np/RAd_C41rWwfTinqCSXaPbU23eB96d1PGSp2bwmcxQPNiI#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  npx:certifies rdfs:label "certifies" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Certifying a nanopublication";
+    nt:hasNanopubLabelPattern "Certification of: ${nanopub}";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Certification" .
+  
+  sub:certifier a nt:UriPlaceholder;
+    rdfs:label "URI of certifier (individual or organization)" .
+  
+  sub:nanopub a nt:TrustyUriPlaceholder;
+    rdfs:label "nanopublication URI" .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:nanopub;
+    rdf:predicate npx:certifies;
+    rdf:subject sub:certifier;
+    nt:statementOrder "1" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "epE2RsG2XIO+au05PNTwIVNAye6NdY5GU9LbMk5/A08y4GMMUgMmY+XidCWHNSI4ryD9NXh4sIOLviTSx8qpt2ZOwMR3n1zjH8AaDFtlXIGXlPUV/AfWa62AwlWoa7ivOiTiWY/LUUgWvyXkRRylUQ12XkGTqmrmLADZrlf2f4c=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-16T12:36:47.779+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes ns1:RA-gqAyl4a9MVt_tr1qx3iyo1TjfyIoBxMHEd2qqlYBew;
+    rdfs:label "Template: Certifying a nanopublication";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RANjqEfLnGSzLuq0heRSXN0psYWW0oX4v3W8w7osb3xfs .
+}
+

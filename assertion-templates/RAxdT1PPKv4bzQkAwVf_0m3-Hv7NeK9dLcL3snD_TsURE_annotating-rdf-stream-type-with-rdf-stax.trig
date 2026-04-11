@@ -1,0 +1,141 @@
+@prefix this: <https://w3id.org/np/RAxdT1PPKv4bzQkAwVf_0m3-Hv7NeK9dLcL3snD_TsURE> .
+@prefix sub: <https://w3id.org/np/RAxdT1PPKv4bzQkAwVf_0m3-Hv7NeK9dLcL3snD_TsURE#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:additional a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:additionalValue;
+    rdf:predicate sub:additionalPredicate;
+    rdf:subject nt:ASSERTION;
+    nt:statementOrder "100" .
+  
+  sub:additional2 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:additional2Object;
+    rdf:predicate sub:additional2Predicate;
+    rdf:subject sub:additional2Subject;
+    nt:statementOrder "101" .
+  
+  sub:additional2Object a nt:ValuePlaceholder;
+    rdfs:label "literal / URI" .
+  
+  sub:additional2Predicate a nt:UriPlaceholder;
+    rdfs:label "URI" .
+  
+  sub:additional2Subject a nt:UriPlaceholder;
+    rdfs:label "URI" .
+  
+  sub:additionalPredicate a nt:UriPlaceholder;
+    rdfs:label "any additional property" .
+  
+  sub:additionalValue a nt:ValuePlaceholder;
+    rdfs:label "literal / URI" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description """This template allows you to make annotate external resources (e.g., papers, software, published datasets) with their RDF stream type, according to RDF-STaX. The assertion is subjective and it includes information on who made it (you) and how was it derived from the source material.
+
+More information about RDF-STaX: https://w3id.org/stax""";
+    rdfs:label "Annotating RDF stream type with RDF-STaX";
+    nt:hasNanopubLabelPattern "${streamTypeValue} is used in ${targetValue}";
+    nt:hasStatement sub:additional, sub:additional2, sub:citoRelation, sub:class, sub:comment,
+      sub:creator, sub:streamType, sub:target;
+    nt:hasTag "RDF streams";
+    nt:hasTargetNanopubType <https://w3id.org/stax/ontology#RdfStreamTypeUsage> .
+  
+  sub:citoRelation a nt:OptionalStatement;
+    rdf:object sub:targetValue;
+    rdf:predicate sub:citoRelationPredicate;
+    rdf:subject nt:ASSERTION;
+    nt:statementOrder "4" .
+  
+  sub:citoRelationPredicate a nt:RestrictedChoicePlaceholder;
+    rdfs:label "CiTO relation to specify how the stream type assertion was derived from the target (optional)";
+    nt:possibleValuesFrom <https://w3id.org/np/RAJb-zZdFrNzgwxmMzFstFeKTZAJImhMGNL-IzEJY4kx8> .
+  
+  sub:class a rdf:Statement;
+    rdf:object <https://w3id.org/stax/ontology#RdfStreamTypeUsage>;
+    rdf:predicate rdf:type;
+    rdf:subject nt:ASSERTION;
+    nt:statementOrder "2" .
+  
+  sub:comment a nt:OptionalStatement;
+    rdf:object sub:commentValue;
+    rdf:predicate rdfs:comment;
+    rdf:subject nt:ASSERTION;
+    nt:statementOrder "6" .
+  
+  sub:commentValue a nt:LongLiteralPlaceholder;
+    rdfs:label "comment – anything relevant to explain the assertion" .
+  
+  sub:creator rdf:object nt:CREATOR;
+    rdf:predicate dct:creator;
+    rdf:subject nt:ASSERTION;
+    nt:statementOrder "1" .
+  
+  sub:streamType a nt:RepeatableStatement;
+    rdf:object sub:streamTypeValue;
+    rdf:predicate <https://w3id.org/stax/ontology#hasStreamType>;
+    rdf:subject nt:ASSERTION;
+    nt:statementOrder "5" .
+  
+  sub:streamTypeValue a nt:RestrictedChoicePlaceholder;
+    rdfs:label "RDF stream type";
+    nt:possibleValuesFrom <https://w3id.org/np/RAQ6rmwxjcMOS3Msq0A6_GsUyyWz5Sd0w5iFxVyzGwxvk> .
+  
+  sub:target a rdf:Statement;
+    rdf:object sub:targetValue;
+    rdf:predicate <https://w3id.org/stax/ontology#isUsageOf>;
+    rdf:subject nt:ASSERTION;
+    nt:statementOrder "3" .
+  
+  sub:targetValue a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the annotated thing" .
+  
+  <https://w3id.org/stax/ontology#RdfStreamTypeUsage> rdfs:label "RDF stream type usage" .
+  
+  <https://w3id.org/stax/ontology#hasStreamType> rdfs:label "has stream type" .
+  
+  <https://w3id.org/stax/ontology#isUsageOf> rdfs:label "is stream type usage of" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-2543-9461 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-2543-9461 foaf:name "Piotr Sowiński" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCTHgk4F1Fuj1WT3rb97R451KIDLjCwb0dyVD4BQEii7FqUMNjVsfH2oU19Tvkopmt/OVaOI/7khWR/NtiIhXJTekIZYh9Ccop527GwZVlwtvJT4LGtMrcXNK8E6/6i7HCR2UEMbM1AhzEdo9FOwXyjAgw+qWjo1XNpkXIGfqHEeQIDAQAB";
+    npx:hasSignature "VEI+Knjmj/DnoualTVrxmkQmiCSi3iHv4uZnyNwe3ECtsgxhp9rFf6ns8kztQhhsXdqymxg+0ZCGBm2dz+ouYLkjox0UowFN+ztgDpwInNe5WU0rkcMWLVI0W2Ob5Vh0eHjA0UlWW3LdNSzpd0XcG/YspG/xA9I1sXr8qjs6fQY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-2543-9461 .
+  
+  this: dct:created "2024-08-27T18:06:44.575Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-2543-9461;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA91Mpsm7Ki1kdxPmxlucIyDDNv80Qp42KPpwcVSKr3n0>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Template: Annotating RDF stream type with RDF-STaX";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALtjkZX1lYrTL2eCZp4VTW6vGGxiDZ-aaU-s1Z0Fcs2I> .
+}
+

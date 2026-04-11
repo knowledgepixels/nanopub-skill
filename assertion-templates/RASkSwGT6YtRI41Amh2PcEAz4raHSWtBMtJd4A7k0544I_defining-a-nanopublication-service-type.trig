@@ -1,0 +1,96 @@
+@prefix this: <https://w3id.org/np/RASkSwGT6YtRI41Amh2PcEAz4raHSWtBMtJd4A7k0544I> .
+@prefix sub: <https://w3id.org/np/RASkSwGT6YtRI41Amh2PcEAz4raHSWtBMtJd4A7k0544I#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description - attaches a human-readable description (right) to a formal identifier of a thing (left)" .
+  
+  dct:isVersionOf rdfs:label "is version of" .
+  
+  npx:NanopubService rdfs:label "nanopublication service" .
+  
+  rdfs:label rdfs:label "has the name - attaches a human-readable name (right) to a formal identifier of a thing (left)" .
+  
+  rdfs:subClassOf rdfs:label "is a subclass of" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Defining a nanopublication service type";
+    nt:hasNanopubLabelPattern "Nanopublication service type: ${servicetype}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st5;
+    nt:hasTag "Infrastructure" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "a textual description of the service type" .
+  
+  sub:higherlevel a nt:ExternalUriPlaceholder;
+    rdfs:label "the higher-level entity of which this is a more specific version of" .
+  
+  sub:name a nt:LiteralPlaceholder .
+  
+  sub:servicetype a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "short ID of service type - this is the identifier of the service type";
+    nt:hasPrefix "https://w3id.org/np/o/service/terms/";
+    nt:hasPrefixLabel "the nanopublication service type";
+    nt:hasRegex "[A-Za-z0-9\\-_.]{3,20}" .
+  
+  sub:st1 rdf:object npx:NanopubService;
+    rdf:predicate rdfs:subClassOf;
+    rdf:subject sub:servicetype .
+  
+  sub:st2 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:servicetype .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:servicetype .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:higherlevel;
+    rdf:predicate dct:isVersionOf;
+    rdf:subject sub:servicetype .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "grnL6Iv969RjC9sqHtQMcjAGn74VPMN3qlBRLGkd1y7x/F6jWoURv9TKnsZTum728UzBD1zn4Gcw/jEbAU82yZWVAamavPXhRSYUdlmjP+K+z8FQLUwlsGD06uvn6HA0vrdbR2sWA1UV3IcK2U19xQ39hhNYz4glQb+CgQ5vXAc=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-03-26T19:16:13.712Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAh3TEr_jWM4T0yuM83vdT1FNh6rISpaAIA_I9uB-lCDg>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Template: Defining a nanopublication service type";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

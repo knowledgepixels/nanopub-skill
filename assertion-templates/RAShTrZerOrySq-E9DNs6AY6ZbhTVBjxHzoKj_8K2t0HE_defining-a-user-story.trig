@@ -1,0 +1,206 @@
+@prefix this: <https://w3id.org/np/RAShTrZerOrySq-E9DNs6AY6ZbhTVBjxHzoKj_8K2t0HE> .
+@prefix sub: <https://w3id.org/np/RAShTrZerOrySq-E9DNs6AY6ZbhTVBjxHzoKj_8K2t0HE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.org/wf4ever/wfdesc#hasInput> rdfs:label "has input digital object" .
+  
+  <http://purl.org/wf4ever/wfdesc#hasOutput> rdfs:label "has output digital object" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has additional requirements" .
+  
+  rdfs:label rdfs:label "has title" .
+  
+  prov:wasInformedBy rdfs:label "user story that this one builds upon" .
+  
+  sub:DO a nt:GuidedChoicePlaceholder;
+    rdfs:label "digital object analysis";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https://w3id.org/fff/req/Digital-Object-Analysis" .
+  
+  sub:action a nt:GuidedChoicePlaceholder;
+    rdfs:label "action (controlled)";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAxVOx3ISzwLFMRkvS722val27USqRH1Z-vnddpf2Y0Tk/find-concepts-in-skos-scheme?scheme=https://w3id.org/spaces/fip-group/r/reqvoc&searchterm=" .
+  
+  sub:activity a nt:LiteralPlaceholder;
+    rdfs:label "action (free text)" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Template for defining a User Story";
+    rdfs:label "Defining a User Story";
+    nt:hasRequiredPubinfoElement ns1:RA_R5w4lZ-6xuZyylG8qSlMhmWBaTE41-zlhiBVUQblCc;
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st08a, sub:st09, sub:st10, sub:st11, sub:st12, sub:st13, sub:st14;
+    nt:hasTag "FAIR" .
+  
+  sub:benefit a nt:LiteralPlaceholder;
+    rdfs:label "purpose (free text)" .
+  
+  sub:description a nt:LiteralPlaceholder;
+    rdfs:label "additional requirements" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "title" .
+  
+  sub:path a nt:GuidedChoicePlaceholder;
+    rdfs:label "solution path";
+    nt:possibleValuesFrom <https://w3id.org/np/RAeYIh9Tn9aLio3Qf_XRgPyggbsholZg_5pviOiAFNyfY> .
+  
+  sub:plan a nt:GuidedChoicePlaceholder;
+    rdfs:label "action plan" .
+  
+  sub:purpose a nt:GuidedChoicePlaceholder;
+    rdfs:label "purpose (controlled)";
+    nt:possibleValuesFrom <https://w3id.org/np/RAFDFXmA2qKnebfTKUSon85IpW2tL5iA4eI0vopWZ7kdQ> .
+  
+  sub:role a nt:GuidedChoicePlaceholder;
+    rdfs:label "role (controlled)";
+    nt:possibleValuesFrom <https://w3id.org/np/RAlpZ7JYSdscP_FpXqZKSR2DIisZDJ-ObB-Wdv9z69PJY> .
+  
+  sub:solution a nt:ExternalUriPlaceholder;
+    rdfs:label "FAIR solution" .
+  
+  sub:st01 rdf:object <https://w3id/fff/req/User-Story>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:story .
+  
+  sub:st02 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:story .
+  
+  sub:st03 rdf:object sub:user;
+    rdf:predicate <https://w3id/fff/req/as-a>;
+    rdf:subject sub:story .
+  
+  sub:st04 rdf:object sub:role;
+    rdf:predicate <https://w3id/fff/req/has-role>;
+    rdf:subject sub:story .
+  
+  sub:st05 rdf:object sub:activity;
+    rdf:predicate <https://w3id/fff/req/i-want-to>;
+    rdf:subject sub:story .
+  
+  sub:st06 rdf:object sub:action;
+    rdf:predicate <https://w3id/fff/req/has-action>;
+    rdf:subject sub:story .
+  
+  sub:st07 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:DO;
+    rdf:predicate <http://purl.org/wf4ever/wfdesc#hasInput>;
+    rdf:subject sub:story .
+  
+  sub:st08 rdf:object sub:benefit;
+    rdf:predicate <https://w3id/fff/req/so-that>;
+    rdf:subject sub:story .
+  
+  sub:st08a a nt:OptionalStatement;
+    rdf:object sub:DO;
+    rdf:predicate <http://purl.org/wf4ever/wfdesc#hasOutput>;
+    rdf:subject sub:story .
+  
+  sub:st09 rdf:object sub:description;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:story .
+  
+  sub:st10 rdf:object sub:purpose;
+    rdf:predicate <https://w3id/fff/req/has-purpose>;
+    rdf:subject sub:story .
+  
+  sub:st11 a nt:RepeatableStatement;
+    rdf:object sub:path;
+    rdf:predicate <https://w3id/fff/req/has-solution-path>;
+    rdf:subject sub:story .
+  
+  sub:st12 rdf:object sub:plan;
+    rdf:predicate <https://w3id/fff/req/has-action-plan>;
+    rdf:subject sub:story .
+  
+  sub:st13 rdf:object sub:solution;
+    rdf:predicate <https://w3id/fff/req/has-solution>;
+    rdf:subject sub:story .
+  
+  sub:st14 a nt:OptionalStatement;
+    rdf:object sub:us;
+    rdf:predicate prov:wasInformedBy;
+    rdf:subject sub:story .
+  
+  sub:story a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "user story" .
+  
+  sub:us a nt:GuidedChoicePlaceholder;
+    rdfs:label "user story";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https://w3id.org/fff/req/User-Story" .
+  
+  sub:user a nt:LiteralPlaceholder;
+    rdfs:label "user" .
+  
+  <https://w3id/fff/req/User-Story> rdfs:label "user story" .
+  
+  <https://w3id/fff/req/as-a> rdfs:label "AS A" .
+  
+  <https://w3id/fff/req/has-action> rdfs:label "has action" .
+  
+  <https://w3id/fff/req/has-action-plan> rdfs:label "has action plan" .
+  
+  <https://w3id/fff/req/has-purpose> rdfs:label "has purpose" .
+  
+  <https://w3id/fff/req/has-role> rdfs:label "has role" .
+  
+  <https://w3id/fff/req/has-solution> rdfs:label "has FAIR solution" .
+  
+  <https://w3id/fff/req/has-solution-path> rdfs:label "has solution path" .
+  
+  <https://w3id/fff/req/i-want-to> rdfs:label "I WANT TO" .
+  
+  <https://w3id/fff/req/so-that> rdfs:label "SO THAT" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  this: dct:created "2026-01-12T12:05:28.146Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Defining a User Story";
+    prov:wasDerivedFrom ns1:RAntWwY-oLQ5QTSviLZrZ6GD6dniz-_skWtO-4_8031zU, ns1:RAtG8zeo_0OYP63K60rrot8vFOkHNOg_1_zu618NbL4pI,
+      <https://w3id.org/np/RA2FzWT-kYUWZae1lP-dcHbpDzXgprPS9NTbeIJ3feEGs>, <https://w3id.org/np/RADad7dDql-G5p_ahdVHYKgtfzALcdFeG8JZG-s9f_o9g>,
+      <https://w3id.org/np/RAHvFJa5qmcA7pokZ39ZYXYq7HUp43shYjr8CyUe0aRWY>, <https://w3id.org/np/RAPG8eHxvbsoy2ykHc_HwfSfJLhe-E2AlkOBeNKEbaa3Y>,
+      <https://w3id.org/np/RApxTdf4fpu4piXkCosKyz43YVFYr3JGWoiAEO65qDCSU>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "x6YDL0rRYXsLmeHr8/HcRTDykII/aZh0u80n68mY9a6RDVblo6sUeZTRfVCd4s+/KlMT+XrNYmtct1Lq/KAK63aD9fREXrTH9YkdYVR2ktbSq18HuOPbBm9+YaWhFPTkE+92+tKuxL0fuWEKnogQ7J+k6btXRA7cNJV76/nUhzA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

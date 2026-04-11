@@ -1,0 +1,172 @@
+@prefix this: <https://w3id.org/np/RAxZ8oT8CuDFBHelrkt-f2jpkSPWHqUwbs10cAx8B5yck> .
+@prefix sub: <https://w3id.org/np/RAxZ8oT8CuDFBHelrkt-f2jpkSPWHqUwbs10cAx8B5yck/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has description" .
+  
+  dct:isPartOf rdfs:label "is a part of" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "is called" .
+  
+  rdfs:seeAlso rdfs:label "has website" .
+  
+  <http://www.w3.org/2004/02/skos/core#related> rdfs:label "is related to" .
+  
+  <https://schema.org/ResearchProject> rdfs:label "research project" .
+  
+  <https://schema.org/endDate> rdfs:label "ends on" .
+  
+  <https://schema.org/funder> rdfs:label "is funded by" .
+  
+  <https://schema.org/startDate> rdfs:label "starts on" .
+  
+  <https://w3id.org/fair/fip/terms/has-research-domain> rdfs:label "has research domain" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Template for defining a research project";
+    rdfs:label "Defining a research project";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st07,
+      sub:st08, sub:st09, sub:st10, sub:st11;
+    nt:hasTag "Projects";
+    nt:hasTargetNanopubType <https://schema.org/ResearchProject> .
+  
+  sub:description a nt:LiteralPlaceholder;
+    rdfs:label "description (if copied, with reference URL)" .
+  
+  sub:domain a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose domain";
+    nt:possibleValuesFrom ns1:RACXDZHEowTYDAzZvdmD0qIGpXZwY5ghMRBBlt6N8Iu5s .
+  
+  sub:enddate a nt:LiteralPlaceholder;
+    rdfs:label "YYYY, YYYY-MM, or YYYY-MM-DD";
+    nt:hasRegex "[0-9][0-9][0-9][0-9](-[01][0-9](-[0-3][0-9])?)?" .
+  
+  sub:funderID a nt:ValuePlaceholder;
+    rdfs:label "funder URI or name (between \" \") if no URI exists" .
+  
+  sub:largerproject a nt:GuidedChoicePlaceholder, nt:UriPlaceholder;
+    rdfs:label "URI of larger research project";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAz6f1v82BCG0SjYMfHUe-m927VTVKdwvsuq1X7j1qcA8/find-things?type=https://schema.org/ResearchProject" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "name of research project" .
+  
+  sub:otherproject a nt:GuidedChoicePlaceholder, nt:UriPlaceholder;
+    rdfs:label "URIs of related research projects";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAz6f1v82BCG0SjYMfHUe-m927VTVKdwvsuq1X7j1qcA8/find-things?type=https://schema.org/ResearchProject" .
+  
+  sub:projectID a nt:ValuePlaceholder;
+    rdfs:label "research project URI from funder or number (between \" \") if no URI exists" .
+  
+  sub:researchproject a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "This research project" .
+  
+  sub:st00 rdf:object <https://schema.org/ResearchProject>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:researchproject .
+  
+  sub:st01 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:researchproject .
+  
+  sub:st02 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:researchproject .
+  
+  sub:st03 a nt:OptionalStatement;
+    rdf:object sub:website;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:researchproject .
+  
+  sub:st04 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:domain;
+    rdf:predicate <https://w3id.org/fair/fip/terms/has-research-domain>;
+    rdf:subject sub:researchproject .
+  
+  sub:st05 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:funderID;
+    rdf:predicate <https://schema.org/funder>;
+    rdf:subject sub:researchproject .
+  
+  sub:st07 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:projectID;
+    rdf:predicate <https://www.w3.org/TR/owl-ref/#sameAs-def>;
+    rdf:subject sub:researchproject .
+  
+  sub:st08 rdf:object sub:startdate;
+    rdf:predicate <https://schema.org/startDate>;
+    rdf:subject sub:researchproject .
+  
+  sub:st09 a nt:OptionalStatement;
+    rdf:object sub:enddate;
+    rdf:predicate <https://schema.org/endDate>;
+    rdf:subject sub:researchproject .
+  
+  sub:st10 a nt:OptionalStatement;
+    rdf:object sub:largerproject;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:researchproject .
+  
+  sub:st11 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:otherproject;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#related>;
+    rdf:subject sub:researchproject .
+  
+  sub:startdate a nt:LiteralPlaceholder;
+    rdfs:label "YYYY, YYYY-MM, or YYYY-MM-DD";
+    nt:hasRegex "[0-9][0-9][0-9][0-9](-[01][0-9](-[0-3][0-9])?)?" .
+  
+  sub:website a nt:UriPlaceholder;
+    rdfs:label "a link to research project's website" .
+  
+  <https://www.w3.org/TR/owl-ref/#sameAs-def> rdfs:label "has funder-provided identifier" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-4930-2662 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-4930-2662 foaf:name "Alessa An Gambardella" .
+  
+  this: dct:created "2025-06-09T15:36:08.515Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-4930-2662;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:hasNanopubType <https://schema.org/ResearchProject>;
+    npx:supersedes <https://w3id.org/np/RAjjEIHOf3bSqO3FHWUqK6lalQoNLDSm-8Qpb1dcd5-5M>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Defining a research project";
+    prov:wasDerivedFrom <https://w3id.org/np/RAUmKjQbBpacPtvaGQNuXi7I5XwzZbEKWkQ7yS8K31sOg>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA,
+      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>, <https://w3id.org/np/RA5R_qv3VsZIrDKd8Mr37x3HoKCsKkwN5tJVqgQsKhjTE>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA5reLVXOCPQFWr2UiCJb19ES7NwOpQRmudb17e2iB0c4> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCEJGVv2xFV8o+Ojt3f0N2LgtZTt4+24Lxp8esEZiFYKryDGBYaR0Ef4ajadqtlSpvUHlwNlVIF7XRWiGd64P8drVnqPtpRtxJ+SOl0UNvxuHzUjeWlOYKpKZ/UgrGwVSSR3LvwqXOM9qUkWqy0IQ2KsFbJHHwzgNbcEZuZOD+/WQIDAQAB";
+    npx:hasSignature "b+I1F8yab6Ij8tfvkYgyKy4YJ5DTDGXa/xsX3JKZivFRc+yOw88ML6jSW0R+Ocw+Hb1fJU3Cia3bE+ZtZVralEWCMp1Sp4BMmotHc5YvpGfGZNfYRXvq3k4HAI/R3Eo7M06eZWodhiEmbpmxgqWWUkP1Cr8RoMiNpbMqPmgzFDo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-4930-2662 .
+}
+

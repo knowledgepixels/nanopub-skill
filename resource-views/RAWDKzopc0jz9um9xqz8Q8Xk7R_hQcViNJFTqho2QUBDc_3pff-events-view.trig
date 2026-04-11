@@ -1,0 +1,70 @@
+@prefix this: <https://w3id.org/np/RAWDKzopc0jz9um9xqz8Q8Xk7R_hQcViNJFTqho2QUBDc> .
+@prefix sub: <https://w3id.org/np/RAWDKzopc0jz9um9xqz8Q8Xk7R_hQcViNJFTqho2QUBDc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:3pff-events-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RARPjSJjMsu-gQKMvsFZA6JStHB5__NFM2GVwTxK12BqM/3pff-events-view-kind>;
+    dct:title "🎓 My 3PFF event participation";
+    rdfs:label "3PFF events view";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/IndividualAgent>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.5.3pff.3.events";
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:addAction;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RA0z2ybDd78hG_Y7UNnDmrUTJS0zHKrdOI_NqrNkhzrxw/get-3pff-events-for-user>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "user" .
+  
+  sub:addAction a <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    rdfs:label "add...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RAIMCeC10xyu9Ou2ZWHkcE-TeIknD2HoJCCDc0gP_ozPw>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RA0z2ybDd78hG_Y7UNnDmrUTJS0zHKrdOI_NqrNkhzrxw/get-3pff-events-for-user>
+    nt:hasLabelFromApi "Get 3PFF events for user - Returns all 3PFF events for a given user, including the role they had in each..." .
+  
+  <https://w3id.org/np/RAIMCeC10xyu9Ou2ZWHkcE-TeIknD2HoJCCDc0gP_ozPw> nt:hasLabelFromApi
+      "Declaring the participation in a 3PFF event" .
+  
+  this: dct:created "2026-04-07T16:28:02.182+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:3pff-events-view;
+    npx:introduces <https://w3id.org/np/RARPjSJjMsu-gQKMvsFZA6JStHB5__NFM2GVwTxK12BqM/3pff-events-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAku6uPWIOt5wBIb7IICwg-rpteEJIM5O82W-bP8Xz3sQ>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Qxz5QuQpVsnGS8PLht+mGF/2ZrF9BHtCW8213Hskbpk7vrBoJ0YxYrbj4SOb12XfpNKHqYIVR5n5+TuVHszxWb/WPy9cfqvuMOSWMflTGf5/RlyfsTCPEU73OIO+4nzt3I84l2x95y1qB1j/jex6xzEC+ULLsbHZLSLcE7vrJoM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

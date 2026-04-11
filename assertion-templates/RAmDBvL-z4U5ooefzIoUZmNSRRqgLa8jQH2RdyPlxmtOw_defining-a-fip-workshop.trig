@@ -1,0 +1,80 @@
+@prefix this: <http://purl.org/np/RAmDBvL-z4U5ooefzIoUZmNSRRqgLa8jQH2RdyPlxmtOw> .
+@prefix sub: <http://purl.org/np/RAmDBvL-z4U5ooefzIoUZmNSRRqgLa8jQH2RdyPlxmtOw#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:date rdfs:label "has date" .
+  
+  <http://purl.org/np/RA10i1RaflgVcHrtqBT0gysVmUbhido3JCKK831FmPyBY#FIP-workshop> rdfs:label
+      "FIP workshop" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    rdfs:label "Defining a FIP workshop";
+    nt:hasNanopubLabelPattern "FIP workshop: ${name}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03;
+    nt:hasTag "FAIR" .
+  
+  sub:date a nt:LiteralPlaceholder;
+    rdfs:label "date of the workshop (e.g. 2020-12-01)";
+    nt:hasRegex "[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the workshop" .
+  
+  sub:st01 rdf:object <http://purl.org/np/RA10i1RaflgVcHrtqBT0gysVmUbhido3JCKK831FmPyBY#FIP-workshop>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:workshop .
+  
+  sub:st02 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:workshop .
+  
+  sub:st03 rdf:object sub:date;
+    rdf:predicate dct:date;
+    rdf:subject sub:workshop .
+  
+  sub:workshop a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID of workshop" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has name" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8888-635X, orcid:0000-0002-1267-0234,
+      orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Vtwemft+8AI3q4t8U2gcFaMFYNL0U7wr1eleYJIpzMCISYYvurlDlwCIS95kutaGbh58tP7ApJYkCW8/LvwuS8S0iiCZZti1tKWKUES5bekv1+jwMebYcyv10WvKTFcK8PPnEJKCkURkILNI8xRiR+4UBCHT2J5YIixv4EBD30g=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-09-11T11:27:55.777+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <http://purl.org/np/RAq0Oivd_x_bM4C_WTAN0BdGVKWcxOV01ZbmmtnC7GuW4>;
+    rdfs:label "Template: Defining a FIP workshop";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RAi6zZAwhaJ23Hzg4lIjlPir6Take3ZQp-lS9skfBEwfQ>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so> .
+}
+

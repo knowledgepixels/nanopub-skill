@@ -1,0 +1,68 @@
+@prefix this: <http://purl.org/np/RA3tjLi29G9_Ee0A8ahPpZw4EEyotE4Z4KM6UAPfW7Ws4> .
+@prefix sub: <http://purl.org/np/RA3tjLi29G9_Ee0A8ahPpZw4EEyotE4Z4KM6UAPfW7Ws4#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description """<p><strong>This just a preliminary template for testing...</strong></p>
+
+<p>The subject is a taxon as retrieved from GBIF.</p>
+
+<p>The predicate is from the Relation Ontology.</p>
+
+<p>The object is a habitat according to the ENVO ontology.</p>""";
+    rdfs:label "Linking a taxon to a habitat";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Biodiversity" .
+  
+  sub:habitat a nt:GuidedChoicePlaceholder;
+    rdfs:label "habitat related to taxon";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=envo&fieldList=iri,label,description&q=" .
+  
+  sub:relation a nt:GuidedChoicePlaceholder;
+    rdfs:label "identifier of relation";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=ro&fieldList=iri,label,description&q=" .
+  
+  sub:st1 rdf:object sub:habitat;
+    rdf:predicate sub:relation;
+    rdf:subject sub:taxon .
+  
+  sub:taxon a nt:GuidedChoicePlaceholder;
+    rdfs:label "identifier of taxon";
+    nt:possibleValuesFromApi "https://api.gbif.org/v1/species/suggest?q=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "RUgpwfypI/jIFDW2A1N1rg6OLqJHVzAbmcda0MZhHOg9rIcqdo/8GwfUThQBZBw8+FaY9zxkC+idFD3fP49Kzw9uIcKG3ZRA6ZOqTOtsVLg97aGIXIbJnkPV2DHXJjrDNaKgnXxoypORYu2Wey5/BqsOoArew/xxMyA+8rHolL4=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-04-26T11:30:47.259Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    npx:supersedes <http://purl.org/np/RANHLihwROJfyQM2TFwZVDCH9sN24zVT3QtsI6zyp_RXI>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RAkONP_jLqAbok3FgtutnKcLs4IHr9KiAuslQNnfEJIwY> .
+}
+

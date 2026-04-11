@@ -1,0 +1,125 @@
+@prefix this: <https://w3id.org/np/RAXlCm_XRuG2l913r3roDUjbFuKwOxF3srpfGjvddgpj8> .
+@prefix sub: <https://w3id.org/np/RAXlCm_XRuG2l913r3roDUjbFuKwOxF3srpfGjvddgpj8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  <http://www.w3.org/ns/shacl#NodeShape> rdfs:label "node shape" .
+  
+  <http://www.w3.org/ns/shacl#maxCount> rdfs:label "has max count" .
+  
+  <http://www.w3.org/ns/shacl#minCount> rdfs:label "has min count" .
+  
+  <http://www.w3.org/ns/shacl#path> rdfs:label "has the path" .
+  
+  <http://www.w3.org/ns/shacl#property> rdfs:label "has the property" .
+  
+  <http://www.w3.org/ns/shacl#targetClass> rdfs:label "has the target class" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template defines a simple SHACL node shape.";
+    rdfs:label "Defining a simple SHACL node shape";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06;
+    nt:hasTag "Validation" .
+  
+  sub:maxCount a nt:LiteralPlaceholder;
+    rdfs:label "maximum property count" .
+  
+  sub:maxCountPropertyShape a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select property shape";
+    nt:possibleValue sub:propertyShape .
+  
+  sub:minCount a nt:LiteralPlaceholder;
+    rdfs:label "mimum property count" .
+  
+  sub:minCountPropertyShape a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select property shape";
+    nt:possibleValue sub:propertyShape .
+  
+  sub:nodeShape a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID suffix of node shape" .
+  
+  sub:pathPredicate a nt:ExternalUriPlaceholder;
+    rdfs:label "path predicate URI" .
+  
+  sub:pathPropertyShape a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select property shape";
+    nt:possibleValue sub:propertyShape .
+  
+  sub:propertyShape a nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID suffix for property shape" .
+  
+  sub:st01 rdf:object <http://www.w3.org/ns/shacl#NodeShape>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:nodeShape .
+  
+  sub:st02 rdf:object sub:targetClass;
+    rdf:predicate <http://www.w3.org/ns/shacl#targetClass>;
+    rdf:subject sub:nodeShape .
+  
+  sub:st03 a nt:RepeatableStatement;
+    rdf:object sub:propertyShape;
+    rdf:predicate <http://www.w3.org/ns/shacl#property>;
+    rdf:subject sub:nodeShape .
+  
+  sub:st04 a nt:RepeatableStatement;
+    rdf:object sub:pathPredicate;
+    rdf:predicate <http://www.w3.org/ns/shacl#path>;
+    rdf:subject sub:pathPropertyShape .
+  
+  sub:st05 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:maxCount;
+    rdf:predicate <http://www.w3.org/ns/shacl#maxCount>;
+    rdf:subject sub:maxCountPropertyShape .
+  
+  sub:st06 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:minCount;
+    rdf:predicate <http://www.w3.org/ns/shacl#minCount>;
+    rdf:subject sub:minCountPropertyShape .
+  
+  sub:targetClass a nt:ExternalUriPlaceholder;
+    rdfs:label "target class URI" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-05-14T08:27:44.674Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAhkJuWYv0nn9DvjtVLdiFYQKve0pSL9JB-U4wUL8Uxjw>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Defining a simple SHACL node shape";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAGBEisKAxwcQTdfR7ALwCeQBrUVeU23F8uFvFmO-H6F0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "SFzAlqzN+M4XEE6DpuMQhk1qBrmxWPkWfO2boE5ZaHBa/tGynzk9truHjuWw8nAZEWIXC7Kw/sOAzqIUf5Kg0Jl1F+6rf+V++TP+Tngad0O5/sNHhe/DZxMTP8XOlYvTxs8rKQBebQdWLfiw23nRpJAdbf4tNksq1ImH8vdAETo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

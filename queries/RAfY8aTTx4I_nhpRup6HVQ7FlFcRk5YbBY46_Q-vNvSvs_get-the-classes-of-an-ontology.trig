@@ -1,0 +1,77 @@
+@prefix this: <https://w3id.org/np/RAfY8aTTx4I_nhpRup6HVQ7FlFcRk5YbBY46_Q-vNvSvs> .
+@prefix sub: <https://w3id.org/np/RAfY8aTTx4I_nhpRup6HVQ7FlFcRk5YbBY46_Q-vNvSvs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-classes-of-ontology a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns all classes that specify to be part of a given ontology.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the classes of an ontology";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/e8cc5bb29ec5597303f8f101c65c545dc124ee0df68ce733764b03adc3237184>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+select ?class ?class_label (?definition as ?description) ?np where {
+  values ?_ontology_multi_iri {}
+  graph npa:graph {
+    ?np npx:hasNanopubType owl:Class .
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np dct:created ?date .
+    ?np npx:introduces ?class .
+    ?np np:hasAssertion ?a .
+  }
+  graph ?a {
+    ?class dct:partOf ?_ontology_multi_iri .
+    optional { ?class rdfs:label ?class_label . }
+    optional { ?class skos:definition ?definition . }
+  }
+}
+order by ?class_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-12-04T09:39:37.132Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-classes-of-ontology;
+    npx:supersedes <https://w3id.org/np/RA_u-LypNo_RN5cM3AO9cPNI1b9CSdO2KiReAIgvlxnDg>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "z0XOBU+y617GHWhQaGF09EKN1LtU0HYpNzg1izWmi2QWClNL9eMNUQPknqTWbJosPsphOs64VrH/4vhykC6K8H58c0zR14EHy6KI9f1XD7/E2Aua3RBgpQCROSPGYjyEmo3MgR1zYS1ntAol/Bw7ifmCTsfzCneUivPQ6ySvrKs=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

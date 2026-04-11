@@ -1,0 +1,188 @@
+@prefix this: <https://w3id.org/np/RAE2V0veJ0uKHqlyqod94-MHr2cgGgmsPQSoCqnl5llpk> .
+@prefix sub: <https://w3id.org/np/RAE2V0veJ0uKHqlyqod94-MHr2cgGgmsPQSoCqnl5llpk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://schema.org/url> rdfs:label "is accessible via" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has the description" .
+  
+  rdfs:label rdfs:label "is called" .
+  
+  rdfs:seeAlso rdfs:label "is further described by" .
+  
+  <http://www.w3.org/2004/02/skos/core#broadMatch> rdfs:label "has parent resource" .
+  
+  <http://www.w3.org/2004/02/skos/core#closeMatch> rdfs:label "can in some situations be considered the same as" .
+  
+  <http://www.w3.org/2004/02/skos/core#exactMatch> rdfs:label "is (almost) exactly the same as" .
+  
+  <http://www.w3.org/2004/02/skos/core#relatedMatch> rdfs:label "is related to" .
+  
+  <https://w3id.org/fair/fip/has-persistency-policy> rdfs:label "has policy" .
+  
+  <https://w3id.org/fair/fip/terms/Available-FAIR-Supporting-Resource> rdfs:label "available FAIR Supporing Resource" .
+  
+  <https://w3id.org/fair/fip/terms/FAIR-Supporting-Resource-to-be-Developed> rdfs:label
+      "FAIR Supporting Resource to be developed" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Template for defining an identifier service.";
+    rdfs:label "Defining an Identifier Service";
+    nt:hasRequiredPubinfoElement ns1:RA_R5w4lZ-6xuZyylG8qSlMhmWBaTE41-zlhiBVUQblCc;
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st2a, sub:st3, sub:st4, sub:st5, sub:st6,
+      sub:st6a, sub:st6b, sub:st6c, sub:st7;
+    nt:hasTag "FAIR";
+    nt:hasTargetNanopubType <https://w3id.org/fair/fip/terms/FAIR-Enabling-Resource>,
+      <https://w3id.org/fair/fip/terms/FAIR-Supporting-Resource>, <https://w3id.org/fair/fip/terms/FAIR-Supporting-Service> .
+  
+  sub:comment a nt:LiteralPlaceholder;
+    rdfs:label "description of the resource" .
+  
+  sub:identifierservice a nt:GuidedChoicePlaceholder;
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FIdentifier-service&searchterm=" .
+  
+  sub:mappedResource a nt:ExternalUriPlaceholder;
+    rdfs:label "the identifier of the related resource" .
+  
+  sub:mappingPredicate a nt:RestrictedChoicePlaceholder;
+    rdfs:label "exact/close/related match";
+    nt:possibleValue <http://www.w3.org/2004/02/skos/core#closeMatch>, <http://www.w3.org/2004/02/skos/core#exactMatch>,
+      <http://www.w3.org/2004/02/skos/core#relatedMatch> .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the resource" .
+  
+  sub:organization a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the organization providing the service" .
+  
+  sub:persistencePolicy a nt:GuidedChoicePlaceholder;
+    rdfs:label "URL of the persistence policy that the service implements";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FPersistency-Policy&searchterm=" .
+  
+  sub:resource a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix" .
+  
+  sub:resource-type1 a nt:RestrictedChoicePlaceholder;
+    rdfs:label "available or to be developed FSR";
+    nt:possibleValue <https://w3id.org/fair/fip/terms/Available-FAIR-Supporting-Resource>,
+      <https://w3id.org/fair/fip/terms/FAIR-Supporting-Resource-to-be-Developed> .
+  
+  sub:source a nt:ExternalUriPlaceholder;
+    rdfs:label "source of description" .
+  
+  sub:specification a nt:GuidedChoicePlaceholder;
+    rdfs:label "a specification that this servic implements";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAB_utnJ83p9BqEo3Ndw5YWDrM0jP1UH1VA6AkQh7Yrow/find-fair-specifications?query=" .
+  
+  sub:st0 rdf:object <https://w3id.org/fair/fip/terms/Identifier-service>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st1 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:resource .
+  
+  sub:st2 rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:resource .
+  
+  sub:st2a a nt:OptionalStatement;
+    rdf:object sub:source;
+    rdf:predicate <https://w3id.org/fair/fip/terms/has-description-source>;
+    rdf:subject sub:resource .
+  
+  sub:st3 rdf:object sub:resource-type1;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st4 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:website;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:resource .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:url;
+    rdf:predicate <http://schema.org/url>;
+    rdf:subject sub:resource .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:persistencePolicy;
+    rdf:predicate <https://w3id.org/fair/fip/has-persistency-policy>;
+    rdf:subject sub:resource .
+  
+  sub:st6a a nt:OptionalStatement;
+    rdf:object sub:organization;
+    rdf:predicate <http://w3id.org/roh#isProvidedBy>;
+    rdf:subject sub:resource .
+  
+  sub:st6b a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:specification;
+    rdf:predicate <https://w3id.org/fair/fip/terms/implements>;
+    rdf:subject sub:resource .
+  
+  sub:st6c a nt:OptionalStatement;
+    rdf:object sub:identifierservice;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#broadMatch>;
+    rdf:subject sub:resource .
+  
+  sub:st7 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:mappedResource;
+    rdf:predicate sub:mappingPredicate;
+    rdf:subject sub:resource .
+  
+  sub:url a nt:ExternalUriPlaceholder;
+    rdfs:label "URL" .
+  
+  sub:website a nt:ExternalUriPlaceholder;
+    rdfs:label "a link to a website with further information" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  this: dct:created "2025-04-25T11:38:04.902Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA4YS6EQf1i3gNnZYFn6GN6lxvM642G-8mG024q0TURXw>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Template: Defining an Identifier Service";
+    prov:wasDerivedFrom ns1:RA4f7z-0UWJrtN3wgb45BPHVbCT6AB7BCE-JhL8g7XmFA, ns1:RAtG8zeo_0OYP63K60rrot8vFOkHNOg_1_zu618NbL4pI,
+      <https://w3id.org/np/RAZEl1PNw9sZ2J0AzmqMG3YDgVZpTbz67e8Z47oQzFTJM>, <https://w3id.org/np/RAe7egpsyw3gekj2rcVJUSWLyOiT0DJyXFIG6TDGClFk8>,
+      <https://w3id.org/np/RAxVTI6EAlA55oEu-iKhRqax7TMlcELFnzx9FTEPPq8lI>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAGBEisKAxwcQTdfR7ALwCeQBrUVeU23F8uFvFmO-H6F0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFntPrMZqvg2kVhCNArNnEn37ddXGwZ/0r4C8CS4lDry7C7YkYgng9yb0UMZQUHiTVkR/5A4m/xjE+Vy+AnwcWUeB75SfGZjE5ylI6VeHjTHi9+2hh2PHYIWnkhU4WHl3COEnxSSa/VouvPzZ2BIWLH6fTrq7NNL3RF5hGegGG0QIDAQAB";
+    npx:hasSignature "NDVVwXb8oVkNnQjLYQCbwG8XTUYAgLHjiy07Di95rJtcLfedjvJrtl4cJe2En97+XGljiYvitfPlEDlZUCVmuZmcLUGuUmXzm5qm1YNxU7A6/aCx66zt6t5V1Wt39J4SPq9JDlf923texaVT/hsAMjCDrn1bnGh+3fuJCBnKBEk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+}
+

@@ -1,0 +1,101 @@
+@prefix this: <https://w3id.org/np/RAdxrv0Rie-65L6gdURjpy8nTt7YagghQfX20Zw4pR7t0> .
+@prefix sub: <https://w3id.org/np/RAdxrv0Rie-65L6gdURjpy8nTt7YagghQfX20Zw4pR7t0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://schema.org/about> rdfs:label "is about" .
+  
+  <http://schema.org/title> rdfs:label "has the title" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  <https://w3id.org/kpxl/gen/terms/Paragraph> rdfs:label "paragraph" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasContent> rdfs:label "has the content" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasPositionString> rdfs:label "has the position string" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Create a paragraph item";
+    nt:hasNanopubLabelPattern "${title}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4 .
+  
+  sub:content a nt:LongLiteralPlaceholder;
+    rdfs:label "the full text of the paragraph" .
+  
+  sub:entity a nt:ExternalUriPlaceholder;
+    rdfs:label "entity this is part of" .
+  
+  sub:paragraph a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short URI suffix";
+    nt:hasDefaultValue sub:paragraph .
+  
+  sub:position a nt:LiteralPlaceholder;
+    rdfs:label "string determining the order of the paragraphs" .
+  
+  sub:st0 rdf:object <https://w3id.org/kpxl/gen/terms/Paragraph>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:paragraph .
+  
+  sub:st1 rdf:object sub:title;
+    rdf:predicate <http://schema.org/title>;
+    rdf:subject sub:paragraph .
+  
+  sub:st2 rdf:object sub:content;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasContent>;
+    rdf:subject sub:paragraph .
+  
+  sub:st3 rdf:object sub:entity;
+    rdf:predicate <http://schema.org/about>;
+    rdf:subject sub:paragraph .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:position;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasPositionString>;
+    rdf:subject sub:paragraph .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title of the paragraph" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-04-07T13:22:07.739Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAGrW0Tis22VzqJTOc-cpfsMnrkgsLGmP1ltPoTtENVW4>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Create a paragraph item";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "Ln9xIy/gFw1ikA/nJkSjNH015qse5llbIya23PLkDSXisu7RW5V9voNwkOclqwgiU+tIH3n55tv1+VNqsuk6dDJGFK0a0VXuts0kiqD/TsPfl5qllZLdSKXnV+FkkSgngCTDsSrV5Q7TlKL3p4a8THDDiPtWdkMaU16KYea0ezk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

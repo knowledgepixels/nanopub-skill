@@ -1,0 +1,57 @@
+@prefix dc1: <http://purl.org/dc/terms/> .
+@prefix this: <http://purl.org/np/RAA_NBQUJhVgp2BQ11vhHMbFIpSmEuwsRAi1e6sHGkkr8> .
+@prefix sub: <http://purl.org/np/RAA_NBQUJhVgp2BQ11vhHMbFIpSmEuwsRAi1e6sHGkkr8#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  npx:certifies rdfs:label "certifies" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    rdfs:label "Having a nanopublication certified by the GO FAIR Foundation";
+    nt:hasStatement sub:st1 .
+  
+  sub:nanopub a nt:TrustyUriPlaceholder;
+    rdfs:label "nanopublication URI" .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:nanopub;
+    rdf:predicate npx:certifies;
+    rdf:subject <https://w3id.org/fair/gofair/terms/GO-FAIR-Foundation>;
+    nt:statementOrder "1" .
+  
+  <https://w3id.org/fair/gofair/terms/GO-FAIR-Foundation> rdfs:label "the GO FAIR Foundation" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "q3kzom4hZvvPrHwFtzUfq0rNNXNLH7rxB9/oJIPXmeh1YMFReLO+6PqhlCzlfxk6Cbkt/Hht46sbDiAmMv7TEiG1qbjxy5xDG/dYEoay49PZgJ/aGz3hzDHVlo7FCIl6hx+T/ZmfVhTGIKNsD+IxFQqYInCNTODLnf26K0D9WT4=";
+    npx:hasSignatureTarget this: .
+  
+  this: dc1:created "2021-04-26T15:46:41.132+02:00"^^xsd:dateTime;
+    dc1:creator orcid:0000-0002-1267-0234;
+    npx:supersedes <http://purl.org/np/RAVNHqWkzGS8lEyzTUek7tmIXHgDEbaTsMb1nbOZy7FKs>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RA4AFpgoOYnD9kSKeGDCGBaNr6jXK-207-XJ-Ri08_Auo> .
+}
+

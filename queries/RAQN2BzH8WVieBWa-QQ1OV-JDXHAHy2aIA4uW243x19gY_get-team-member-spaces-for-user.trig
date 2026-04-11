@@ -1,0 +1,78 @@
+@prefix this: <https://w3id.org/np/RAQN2BzH8WVieBWa-QQ1OV-JDXHAHy2aIA4uW243x19gY> .
+@prefix sub: <https://w3id.org/np/RAQN2BzH8WVieBWa-QQ1OV-JDXHAHy2aIA4uW243x19gY/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-team-member-spaces a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns all the spaces where the given user has the team member role.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get team member spaces for user";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select distinct ?space ?space_label ?np (\"^\" as ?np_label) where {
+  graph npa:graph {
+    ?np np:hasAssertion ?a .
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+  }
+  graph ?a {
+    ?space gen:hasTeamMember ?_user_iri .
+  }
+  graph npa:graph {
+    ?space_np npx:introduces ?space .
+    ?space_np npa:hasValidSignatureForPublicKeyHash ?space_pubkey .
+    filter not exists { ?space_npx npx:invalidates ?space_np ; npa:hasValidSignatureForPublicKeyHash ?space_pubkey . }
+    ?space_np np:hasAssertion ?space_a .
+  }
+  graph ?space_a {
+    ?space rdfs:label ?space_label .
+  }
+}
+order by ?space_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-03-19T09:05:32Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-team-member-spaces;
+    rdfs:label "Get team member spaces for user";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "r9zf585va3OlLra2LjbHxAfde3X/HoJzuMMkB0TLtNr6RuB7En65NvZQ5k1+kmfAzk6IYcG4OMBiVfG6AK2euTB9IHc8Fm9KQ95pinmJbOoQaNthgDoM66C7kXzw+azNOPpr9+XUTFn9NrRW9zv3VkveK0zBRFw9NgvztgZb8m4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

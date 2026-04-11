@@ -1,0 +1,98 @@
+@prefix this: <https://w3id.org/np/RAU0jUrzNYI94ypHwHTz_ergyrEV30eqgLVgGjxocgUc0> .
+@prefix sub: <https://w3id.org/np/RAU0jUrzNYI94ypHwHTz_ergyrEV30eqgLVgGjxocgUc0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-reads-by-reader a grlc:grlc-query;
+    dct:description "This query returns the items a given user has read, covering both schema:ReadAction and paperclub:hasRead nanopubs.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get reads by reader";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/0545e3be5c488e5c1735567ae3ed698812cc1f6c5dce0aee5a3e0113b136670a>;
+    grlc:sparql """prefix schema: <http://schema.org/>
+prefix pc: <http://purl.org/petapico/o/paperclub#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+select distinct ?item ?item_label ?date ?comment ?np (\"^\" as ?np_label) where {
+  {
+    graph npa:graph {
+      ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+      filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+      ?np np:hasAssertion ?a .
+      ?np dct:created ?created .
+    }
+    graph ?a {
+      ?ra a schema:ReadAction ;
+        schema:agent ?_reader_iri ;
+        schema:object ?item .
+      optional { ?item rdfs:label ?item_label }
+      optional { ?ra schema:endTime ?d }
+      optional { ?ra rdfs:comment ?comment }
+    }
+    bind(coalesce(?d, substr(str(?created), 1, 10)) as ?date)
+  }
+  union
+  {
+    bind(iri(concat(\"https://w3id.org/np/l/nanopub-query-1.1/repo/type/\", sha256(str(pc:hasRead)))) as ?hasread_repo)
+    service ?hasread_repo {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+        filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+        ?np np:hasAssertion ?a .
+        ?np npx:signedBy ?_reader_iri .
+        ?np dct:created ?created .
+      }
+      graph ?a {
+        ?_reader_iri pc:hasRead ?item .
+        optional { ?item rdfs:comment ?comment }
+      }
+    }
+    bind(substr(str(?created), 1, 10) as ?date)
+  }
+} order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-04-07T17:08:49Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-reads-by-reader;
+    npx:supersedes <https://w3id.org/np/RAbpBQTBhH5kjO0wSM57X9NWCRc4u_Q18wGDVUpX69XIM>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "nk7IVfgUEms8cg8QZAAqNuPk6jSZeoEYRDJEySmYVZvK58CShYeZ7KINYANUSpBdSsTxlzT7WbiFUl0jyTcUG0E9qxmlQFKDXautX7ARncO7ulvZWw+bGhUSKpPhHm8Llzc6AxPK23YE5kcZwZODEO+JmxdhxKLyCsxI1Nk0mn8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

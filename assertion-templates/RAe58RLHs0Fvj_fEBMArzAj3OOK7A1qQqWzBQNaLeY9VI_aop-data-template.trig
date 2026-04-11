@@ -1,0 +1,276 @@
+@prefix this: <https://w3id.org/np/RAe58RLHs0Fvj_fEBMArzAj3OOK7A1qQqWzBQNaLeY9VI> .
+@prefix sub: <https://w3id.org/np/RAe58RLHs0Fvj_fEBMArzAj3OOK7A1qQqWzBQNaLeY9VI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:Abstract a nt:LongLiteralPlaceholder .
+  
+  sub:Adjacency a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue sub:adjacent, sub:non-adjacent .
+  
+  sub:Author a nt:ValuePlaceholder .
+  
+  sub:Context a nt:LongLiteralPlaceholder .
+  
+  sub:DOI a nt:LiteralPlaceholder .
+  
+  sub:EventID a nt:LiteralPlaceholder .
+  
+  sub:ID a nt:LiteralPlaceholder .
+  
+  sub:LifeStage a nt:LiteralPlaceholder .
+  
+  sub:LifeStageApplicabilityEvidence a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue sub:High, sub:Moderate .
+  
+  sub:Name a nt:LiteralPlaceholder .
+  
+  sub:OverallAssessment a nt:LongLiteralPlaceholder .
+  
+  sub:QuantitativeUnderstanding a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue sub:High, sub:Moderate .
+  
+  sub:RelationshipsEvidence a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue sub:High, sub:Moderate .
+  
+  sub:ScientificTerm a nt:LiteralPlaceholder .
+  
+  sub:Sex a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue sub:Female, sub:Male .
+  
+  sub:SexApplicabilityEvidence a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue sub:High, sub:Moderate .
+  
+  sub:ShortName a nt:LiteralPlaceholder .
+  
+  sub:Strategy a nt:LongLiteralPlaceholder .
+  
+  sub:TaxonomicApplicabilityEvidence a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue sub:High, sub:Moderate .
+  
+  sub:Term a nt:LiteralPlaceholder .
+  
+  sub:Title a nt:LiteralPlaceholder .
+  
+  sub:Type a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue sub:AO, sub:KE, sub:MIE .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Template used to populate the information of an AOP following the FAIR guidelines";
+    rdfs:label "AOP Data Template";
+    nt:hasStatement sub:st-1, sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st5a,
+      sub:st5b, sub:st5c, sub:st5d, sub:st5e, sub:st5f, sub:st6, sub:st7;
+    nt:hasTag "AOPs Elements" .
+  
+  sub:st-1 a rdf:Statement;
+    rdf:object sub:ID;
+    rdf:predicate sub:hasID;
+    rdf:subject sub:AOP .
+  
+  sub:st0 a rdf:Statement;
+    rdf:object sub:Title;
+    rdf:predicate sub:hasTitle;
+    rdf:subject sub:AOP .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:ShortName;
+    rdf:predicate sub:hasShortName;
+    rdf:subject sub:AOP .
+  
+  sub:st2 a nt:RepeatableStatement;
+    rdf:object sub:Author;
+    rdf:predicate sub:hasAuthor;
+    rdf:subject sub:AOP .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:Abstract;
+    rdf:predicate sub:hasAbstract;
+    rdf:subject sub:AOP .
+  
+  sub:st4 a nt:GroupedStatement, nt:OptionalStatement;
+    rdf:object sub:DevelopmentStrategy;
+    rdf:predicate sub:hasDevelopmentStrategy;
+    rdf:subject sub:AOP;
+    nt:hasStatement sub:st4a, sub:st4b .
+  
+  sub:st4a a nt:OptionalStatement;
+    rdf:object sub:Context;
+    rdf:predicate sub:hasContext;
+    rdf:subject sub:DevelopmentStrategy .
+  
+  sub:st4b a nt:OptionalStatement;
+    rdf:object sub:Strategy;
+    rdf:predicate sub:hasStrategy;
+    rdf:subject sub:DevelopmentStrategy .
+  
+  sub:st5 a nt:GroupedStatement;
+    rdf:object sub:Summary;
+    rdf:predicate sub:hasSummary;
+    rdf:subject sub:AOP;
+    nt:hasStatement sub:st5a, sub:st5b, sub:st5c, sub:st5d, sub:st5e, sub:st5f .
+  
+  sub:st5a a nt:GroupedStatement, nt:RepeatableStatement;
+    rdf:object sub:Events;
+    rdf:predicate sub:hasEvents;
+    rdf:subject sub:Summary;
+    nt:hasStatement sub:st5a1, sub:st5a2, sub:st5a3, sub:st5a4 .
+  
+  sub:st5a1 a nt:OptionalStatement;
+    rdf:object sub:Type;
+    rdf:predicate sub:hasType;
+    rdf:subject sub:Events .
+  
+  sub:st5a2 a nt:OptionalStatement;
+    rdf:object sub:EventID;
+    rdf:predicate sub:hasEventID;
+    rdf:subject sub:Events .
+  
+  sub:st5a3 rdf:object sub:Title;
+    rdf:predicate sub:hasTitle;
+    rdf:subject sub:Events .
+  
+  sub:st5a4 rdf:object sub:ShortName;
+    rdf:predicate sub:hasShortName;
+    rdf:subject sub:Events .
+  
+  sub:st5b a nt:GroupedStatement, nt:RepeatableStatement;
+    rdf:object sub:Relationships;
+    rdf:predicate sub:hasRelationships;
+    rdf:subject sub:Summary;
+    nt:hasStatement sub:st5b1, sub:st5b2, sub:st5b3, sub:st5b4 .
+  
+  sub:st5b1 rdf:object sub:Title;
+    rdf:predicate sub:hasTitle;
+    rdf:subject sub:Relationships .
+  
+  sub:st5b2 rdf:object sub:Adjacency;
+    rdf:predicate sub:hasAdjacency;
+    rdf:subject sub:Relationships .
+  
+  sub:st5b3 rdf:object sub:RelationshipsEvidence;
+    rdf:predicate sub:hasEvidence;
+    rdf:subject sub:Relationships .
+  
+  sub:st5b4 rdf:object sub:QuantitativeUnderstanding;
+    rdf:predicate sub:hasQuantitativeUnderstanding;
+    rdf:subject sub:Relationships .
+  
+  sub:st5c a nt:GroupedStatement, nt:RepeatableStatement;
+    rdf:object sub:PrototypicalStressors;
+    rdf:predicate sub:hasPrototypicalStressors;
+    rdf:subject sub:Summary;
+    nt:hasStatement sub:st5c1 .
+  
+  sub:st5c1 rdf:object sub:Name;
+    rdf:predicate sub:hasName;
+    rdf:subject sub:PrototypicalStressors .
+  
+  sub:st5d a nt:GroupedStatement, nt:RepeatableStatement;
+    rdf:object sub:LifeStageApplicability;
+    rdf:predicate sub:hasLifeStageApplicability;
+    rdf:subject sub:Summary;
+    nt:hasStatement sub:st5d1, sub:st5d2 .
+  
+  sub:st5d1 rdf:object sub:LifeStage;
+    rdf:predicate sub:hasLifeStage;
+    rdf:subject sub:LifeStageApplicability .
+  
+  sub:st5d2 rdf:object sub:LifeStageApplicabilityEvidence;
+    rdf:predicate sub:hasEvidence;
+    rdf:subject sub:LifeStageApplicability .
+  
+  sub:st5e a nt:GroupedStatement, nt:RepeatableStatement;
+    rdf:object sub:TaxonomicApplicability;
+    rdf:predicate sub:hasTaxonmicApplicability;
+    rdf:subject sub:Summary;
+    nt:hasStatement sub:st5e1, sub:st5e2, sub:st5e3 .
+  
+  sub:st5e1 rdf:object sub:Term;
+    rdf:predicate sub:hasTerm;
+    rdf:subject sub:TaxonomicApplicability .
+  
+  sub:st5e2 rdf:object sub:ScientificTerm;
+    rdf:predicate sub:hasScientificTerm;
+    rdf:subject sub:TaxonomicApplicability .
+  
+  sub:st5e3 rdf:object sub:TaxonomicApplicabilityEvidence;
+    rdf:predicate sub:hasEvidence;
+    rdf:subject sub:TaxonomicApplicability .
+  
+  sub:st5f a nt:GroupedStatement, nt:RepeatableStatement;
+    rdf:object sub:SexApplicability;
+    rdf:predicate sub:hasSexApplicability;
+    rdf:subject sub:Summary;
+    nt:hasStatement sub:st5f1, sub:st5f2 .
+  
+  sub:st5f1 rdf:object sub:Sex;
+    rdf:predicate sub:hasSex;
+    rdf:subject sub:SexApplicability .
+  
+  sub:st5f2 a nt:OptionalStatement;
+    rdf:object sub:SexApplicabilityEvidence;
+    rdf:predicate sub:hasEvidence;
+    rdf:subject sub:SexApplicability .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:OverallAssessment;
+    rdf:predicate sub:hasOverallAssessment;
+    rdf:subject sub:AOP .
+  
+  sub:st7 a nt:GroupedStatement, nt:RepeatableStatement;
+    rdf:object sub:References;
+    rdf:predicate sub:hasReferences;
+    rdf:subject sub:AOP;
+    nt:hasStatement sub:st7a, sub:st7b .
+  
+  sub:st7a rdf:object sub:Title;
+    rdf:predicate sub:hasTitle;
+    rdf:subject sub:References .
+  
+  sub:st7b rdf:object sub:DOI;
+    rdf:predicate sub:hasDOI;
+    rdf:subject sub:References .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-0593-2598 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-0593-2598 foaf:name "Saurav Kumar" .
+  
+  this: dct:created "2025-09-19T13:44:41.514Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0003-0593-2598;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAz8CeroJjTyxCu08b8aNB23u67v4KuZSuXqQ3BQNgOn8>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "AOP Data Template";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCB7V9ZswxMNiTLUYtX1XGYMme8mjymikJ6AWyXqvhDymE3ISX75oWz2KbMUwg6t73nUJA7tJK2PNpXTd4irxzgaAUCOU4BoT3Z8mNsEPIQziQcDHChK0zhnajIqRpEdZcrSoj98oJrutKQUVrHug8M139ItLJm3IdVlb9+PIYQoQIDAQAB";
+    npx:hasSignature "LBM9TlUIq1Cj020w/BCv6whgTdwNM53sM5YmGLcHjSFwaVFtu5kZDSs3DtLCByeS8fkJvAKB/vbyesa3yz9H9rvP6jFrK/ustt0wq8vG3SiZ2amfM/xNro1vnlY0iJOCT0rv40zIh78ohQ03yHpG4jmwHCrCCLhpeIWco4aVWRQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-0593-2598 .
+}
+

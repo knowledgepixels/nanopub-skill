@@ -1,0 +1,85 @@
+@prefix this: <https://w3id.org/np/RAV9R6K6Az0HuVFS1wcQBn3tvxyj3cLhDSQkjwHVuqlBA> .
+@prefix sub: <https://w3id.org/np/RAV9R6K6Az0HuVFS1wcQBn3tvxyj3cLhDSQkjwHVuqlBA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-org-to-ns-associations a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns all organism-to-nucleotide-sequence associations.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get Organism to Nucleotide Sequence Associations";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/dc3636ccda207965f3ac58e3a54c80d1a9db39ba097848e5b41bf3fec7d66e44>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix biodiv: <https://w3id.org/kpxl/biodiv/terms/>
+prefix biolink: <https://w3id.org/biolink/vocab/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+
+select ?taxonName ?taxonName_label ?relation ?nucleotideSequence ?creator ?date ?np where {
+  graph npa:graph {
+    ?np npx:hasNanopubType biodiv:OrganismToNucleotideSequenceAssociation .
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np dct:created ?date .
+    ?np np:hasAssertion ?a .
+    ?np np:hasPublicationInfo ?i .
+    ?np npx:introduces ?association .
+    optional { ?np npx:signedBy ?creator . }
+  }
+  graph ?a {
+    ?association a biodiv:OrganismToNucleotideSequenceAssociation .
+    ?association biolink:predicate ?relation .
+    ?association biolink:subject ?organism .
+    ?organism a ?taxonConcept .
+    ?taxonConcept biodiv:hasTaxonName ?taxonName .
+    ?association biolink:object ?nucleotideSequence .
+  }
+  graph ?i {
+    optional { ?taxonName nt:hasLabelFromApi ?taxonName_label }
+  }
+}
+order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-12-15T08:52:14.164Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-org-to-ns-associations;
+    npx:supersedes <https://w3id.org/np/RA5ftKN-kmUkkclAhBSD8SFFXjC_NWiNy4NiP-O79Ncpc>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "l7bnuiqIrYgr6Ti+aGES6xOJXWzyM46bt7X3PvIvrtOepovGDRhSBkvmy7H5TQWCtY0MmGCauVuNCI84GRoPLoRmZ1tHORJQj2wEK2HoJRP2WsMHDFe4BU7DoGwpdWdjNVp01hLFoF0W8pwU3aj/4ONLfANOjQQMrlb9o10sR3Q=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

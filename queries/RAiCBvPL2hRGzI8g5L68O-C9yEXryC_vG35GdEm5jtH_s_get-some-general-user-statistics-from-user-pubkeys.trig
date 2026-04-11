@@ -1,0 +1,133 @@
+@prefix this: <https://w3id.org/np/RAiCBvPL2hRGzI8g5L68O-C9yEXryC_vG35GdEm5jtH_s> .
+@prefix sub: <https://w3id.org/np/RAiCBvPL2hRGzI8g5L68O-C9yEXryC_vG35GdEm5jtH_s#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-user-stats-from-pubkeys a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns some general user statistics from the given pubkey hashes in the form of number of valid/invalidated/accepted nanopublications published.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get some general user statistics from user pubkeys";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/meta>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+prefix bibo: <http://purl.org/ontology/bibo/>
+prefix pav: <http://purl.org/pav/>
+
+select ?key ?value where {
+{
+select ?key (count(?np) as ?value) where {
+
+  #==================== MULTI-VALUE PLACEHOLDER =====================#------ config: ------
+  { select ?pkh {                                                    # <- VAR pkh
+    bind(?_pubkeyhashes as ?vs)         # <- VAR _pubkeyhashes
+    {select*{optional{<x:> <x:> <x:>}}} # (for some Virtuoso ver.)   #
+    values ?x {0 1 2 3 4 5 6 7 8 9} values ?y {0 1 2 3 4 5 6 7 8 9}  #
+    bind((10*?x)+?y as ?n) # (works up to a maximum of 100 values)   #
+    bind(\" \" as ?sep) # (separator as single regex-compatible char)  # <- CONST sep
+    bind(concat(\"^([^\",?sep,\"]*\",?sep,\"){\",str(?n),\"}\") as ?p)       #
+    bind(concat(?sep,\".*\") as ?p0)                                   #
+    filter(if(?n=0,true,regex(?vs,?p))) # (?n=0 check for Viruoso)   #
+    bind(replace(if(?n=0,?vs,replace(?vs,?p,\"\")),?p0,\"\") as ?pkh)    # <- VAR pkh
+    filter(!bound(?pkh) || exists {?any_np npa:hasValidSignatureForPublicKeyHash ?pkh })  # Filter out the hashes for which no repo exists; try to do this better with future versions of Nanopub Query
+  } }                                                                #
+  #==================================================================#---------------------
+  bind(uri(concat(\"https://w3id.org/np/l/nanopub-query-1.1/repo/pubkey/\", ?pkh)) as ?pubkeyservice)
+  
+  service ?pubkeyservice { select distinct ?np ?invalidated { optional {
+    graph npa:graph {
+      ?np npa:hasValidSignatureForPublicKey ?pubkey .
+      ?np dct:creator ?_userid_iri .
+      bind( exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . } as ?invalidated )
+    }
+  } } }
+
+bind(if(?invalidated,\"invalidatedNpCount\",\"validNpCount\") as ?key)
+values ?key { \"invalidatedNpCount\" \"validNpCount\" }
+
+}
+group by ?key ?invalidated
+}
+union
+{
+select ?key (sum(?npcount) as ?value) where {
+
+bind(\"acceptedNpCount\" as ?key)
+
+values ?npType {
+  <https://w3id.org/kpxl/pensoft/rio/terms/RIOJournalNanopub>
+  <https://w3id.org/kpxl/pensoft/bdj/terms/BiodiversityDataJournalNanopub>
+  <https://w3id.org/kpxl/ios/ds/terms/DataScienceNanopub>
+}
+bind(uri(concat(\"https://w3id.org/np/l/nanopub-query-1.1/repo/type/\", sha256(str(?npType)))) as ?service)
+
+service ?service { select (count(distinct ?np) as ?npcount) where { optional {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    ?np np:hasPublicationInfo ?i .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+  }
+  { {
+    graph ?i { ?np pav:authoredBy ?_userid_iri . }
+  } union {
+    graph ?i {
+      ?np bibo:authorList ?authorList .
+      ?authorList ?hasElement ?_userid_iri .
+      filter(strstarts(str(?hasElement), str(rdf:_)))
+    }
+  } }
+} }
+group by ?np
+} }
+group by ?key
+}
+}
+order by ?key""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "r56k9uk5A6z/0OlGGD/jOdNv8vmYcnwPo5y5gn0rfc37cEQqnL1THFdQyM0VG6jZc7W7IpfCkzEGdG56PY1Y+CetJoLZ3DS4DYoBmnTJcmbKcGe5Zzp2CKmZSV78RxlM4Dofg0V/3AUSC/72g7z/Vz34TQkALeobhLve/X3bQx0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-09-23T17:57:56.841Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-user-stats-from-pubkeys;
+    npx:supersedes <https://w3id.org/np/RAYx5vIObDu1ZQuEV5kShGlnRrLvEFBvC3buF_YLtl8T8>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+}
+

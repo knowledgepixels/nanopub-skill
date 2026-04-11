@@ -1,0 +1,115 @@
+@prefix this: <https://w3id.org/np/RAE98XsERuzJNczFlZk-uIVRbnCuJMH1ifl1wMLk8_7Pc> .
+@prefix sub: <https://w3id.org/np/RAE98XsERuzJNczFlZk-uIVRbnCuJMH1ifl1wMLk8_7Pc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.org/dc/dcmitype/Dataset> rdfs:label "dataset" .
+  
+  dct:license rdfs:label "has license" .
+  
+  dct:title rdfs:label "has title" .
+  
+  <http://purl.org/spar/cito/supports> rdfs:label "supports" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  <https://schema.org/maintainer> rdfs:label "has repository" .
+  
+  <https://schema.org/result> rdfs:label "results from" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Template for describing a dataset at summary level and linking to its relevant project.";
+    rdfs:label "Describing a dataset at summary level - simple";
+    nt:hasNanopubLabelPattern "Dataset: ${title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06;
+    nt:hasTag "Datasets";
+    nt:hasTargetNanopubType <http://purl.org/dc/dcmitype/Dataset> .
+  
+  sub:dataset a nt:UriPlaceholder;
+    rdfs:label "URI of published dataset" .
+  
+  sub:license a nt:UriPlaceholder;
+    rdfs:label "URI of license of published dataset" .
+  
+  sub:project a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of nanopublication for research project that produced dataset";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAz6f1v82BCG0SjYMfHUe-m927VTVKdwvsuq1X7j1qcA8/find-things?type=https://schema.org/ResearchProject" .
+  
+  sub:repository a nt:UriPlaceholder;
+    rdfs:label "URI of repository where dataset is published" .
+  
+  sub:researchoutput a nt:UriPlaceholder;
+    rdfs:label "URI of related scholarly work (e.g. publication)" .
+  
+  sub:st01 rdf:object <http://purl.org/dc/dcmitype/Dataset>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:dataset .
+  
+  sub:st02 rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:dataset .
+  
+  sub:st03 rdf:object sub:repository;
+    rdf:predicate <https://schema.org/maintainer>;
+    rdf:subject sub:dataset .
+  
+  sub:st04 rdf:object sub:project;
+    rdf:predicate <https://schema.org/result>;
+    rdf:subject sub:dataset .
+  
+  sub:st05 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:researchoutput;
+    rdf:predicate <http://purl.org/spar/cito/supports>;
+    rdf:subject sub:dataset .
+  
+  sub:st06 a nt:OptionalStatement;
+    rdf:object sub:license;
+    rdf:predicate dct:license;
+    rdf:subject sub:dataset .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title of published dataset" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-4930-2662 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-4930-2662 foaf:name "Alessa An Gambardella" .
+  
+  this: dct:created "2025-06-06T17:10:08.851Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-4930-2662;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAC9s3GhJvxB94UY6nVc17e7cnF16tlR-pMQ6dhfZmtjU>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Describing a dataset at summary level - simple";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA5reLVXOCPQFWr2UiCJb19ES7NwOpQRmudb17e2iB0c4> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCEJGVv2xFV8o+Ojt3f0N2LgtZTt4+24Lxp8esEZiFYKryDGBYaR0Ef4ajadqtlSpvUHlwNlVIF7XRWiGd64P8drVnqPtpRtxJ+SOl0UNvxuHzUjeWlOYKpKZ/UgrGwVSSR3LvwqXOM9qUkWqy0IQ2KsFbJHHwzgNbcEZuZOD+/WQIDAQAB";
+    npx:hasSignature "auB6x7EyBloaFlOqy9Re84yg/tDly9EemAC3q7+wCAzeUWk2XLHxPi66SJPtNgteOfMsWfBc+7gQiKqo+x7cSEepshtG6wJkAKw/5naqKou0LaqUUeCgpejjmC3UxYp+J+cwU6DjBvM1Qasz4MGnwJyCE0dz+tuycq8Bz8TxWIw=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-4930-2662 .
+}
+

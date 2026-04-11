@@ -1,0 +1,71 @@
+@prefix this: <https://w3id.org/np/RAqhMx-zobpt4ctFeiiib5oA21lvaDYMOMUWcKlLT0uqE> .
+@prefix sub: <https://w3id.org/np/RAqhMx-zobpt4ctFeiiib5oA21lvaDYMOMUWcKlLT0uqE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-participataion a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "get particiation-link";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "get particiation-link";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/last30d>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+
+select * where {
+## Info about this repo:
+  npa:thisRepo ?pred ?obj .
+## Search for nanopublications:
+# graph npa:graph {
+#   ?np npa:hasValidSignatureForPublicKey ?pubkey .
+#   filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+#   ?np dct:created ?date .
+#   ?np np:hasAssertion ?a .
+#   optional { ?np rdfs:label ?label }
+# }
+} limit 10""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8325-8848 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8325-8848 foaf:name "Chang Sun" .
+  
+  this: a npx:ExampleNanopub;
+    dct:created "2025-06-02T12:47:23.510Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8325-8848;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-participataion;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAXflINqt3smqxV5Aq7E9lzje4uLdkKIOefa6Bp8oJ8CY,
+      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEApQN4+tRG4nElX6qjyt4o3ptY6DYclkAYZSzlXM3oVNjMmZtCIYEugK5xXRpUpOcevJo0xaDIUn3pyXIP2+5zAPfx6nAYZ/NTa/ekywklO5p3yDEFwSIf7rCmn6yPwKhExB+UgBTcamBTTgtYJKIgw7zSsfJekFigvNN89wLLXyDDuww19kcLWB8SW8MQx4yZS4EDSiol6Dl1flnY/H8PxWLrq9pFWi9tgtlhEal3++ObvQWoO1b1uCFs4V/hdCmsV7ODTlEFhQn8qTBkty+mw4Hy33PQwnjsu8Zvcjd9Un/QAneH6SC2MTM4yZgv38fiEyMjt1v2czDSz93sQVvpqwIDAQAB";
+    npx:hasSignature "D/eVlP4smZVE40sovUX0rtYtBXBbz5O8psZP0RFuWdrtcYSi9H5nW+lEPtQs3bajLj0niW4VkdN/VgoB75lZGsq2gmxzjjuqFUAx0NR8w7IbiOI2lATcEU/BimUvHoWdotjJ1ifhvYGjUF158GK+G6BUnsbKNuDcTnqWIvyKzOiD0qchHKpWxN4kh0g3dKU6JQI7nTzq+jCITN5P6LWMOLUhyLtWP8Zb0QoUIh6T2SpgP9XO6Up2OoBMTxQWNG3F9D4pG4m0MvHtaLvS7CKX5pP9D8fndmDhuFumA9XXKkjhxTVwhDM4U41lLn/v5WBvkabFUAZMms1Nbz4PTkY1tg==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8325-8848 .
+}
+

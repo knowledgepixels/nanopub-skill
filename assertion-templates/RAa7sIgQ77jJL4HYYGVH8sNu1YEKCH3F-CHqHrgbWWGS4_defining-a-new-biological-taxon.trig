@@ -1,0 +1,114 @@
+@prefix this: <https://w3id.org/np/RAa7sIgQ77jJL4HYYGVH8sNu1YEKCH3F-CHqHrgbWWGS4> .
+@prefix sub: <https://w3id.org/np/RAa7sIgQ77jJL4HYYGVH8sNu1YEKCH3F-CHqHrgbWWGS4#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a - asserts that the thing on the left belongs to the class on the right" .
+  
+  rdfs:label rdfs:label "has the name - connects a formal identifier (left) to an informal human-readable name (right)" .
+  
+  rdfs:subClassOf rdfs:label "is a sub-taxon of - states that all instances of the taxon to the left are also instances of the taxon to the right" .
+  
+  <http://www.w3.org/2004/02/skos/core#definition> rdfs:label "is defined as follows: - connects an identifier (left) to a human-readable definition (right)" .
+  
+  <http://www.w3.org/2004/02/skos/core#relatedMatch> rdfs:label "is related to - connects two taxons that are somehow related" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication defines a new biological taxon, such as a species or a family.";
+    rdfs:label "Defining a new biological taxon";
+    nt:hasDefaultProvenance ns1:RALfxe37qzq5rEk6tLLcsSeKtKQZ1FcoHZdf2nYVfU66w;
+    nt:hasNanopubLabelPattern "New ${taxonType}: ${name}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4;
+    nt:hasTag "Biodiversity";
+    nt:hasTargetNanopubType <http://purl.obolibrary.org/obo/NCIT_C40098>, <https://w3id.org/kpxl/biodiv/terms/BiodivNanopub> .
+  
+  sub:definition a nt:LongLiteralPlaceholder;
+    rdfs:label "free-text definition of the taxon" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the taxon" .
+  
+  sub:relatedentity a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of a related entity";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://vodex.petapico.org/nidx/query?rows=100&q=label:", "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:st0 a rdf:Statement;
+    rdf:object sub:taxonType;
+    rdf:predicate rdf:type;
+    rdf:subject sub:taxon .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:taxon .
+  
+  sub:st2 a rdf:Statement;
+    rdf:object sub:definition;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#definition>;
+    rdf:subject sub:taxon .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:supertaxon;
+    rdf:predicate rdfs:subClassOf;
+    rdf:subject sub:taxon .
+  
+  sub:st4 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:relatedentity;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#relatedMatch>;
+    rdf:subject sub:taxon .
+  
+  sub:supertaxon a nt:GuidedChoicePlaceholder;
+    rdfs:label "the URI of the supertaxon";
+    nt:possibleValuesFromApi "https://vodex.petapico.org/nidx/query?rows=100&q=label:" .
+  
+  sub:taxon a nt:ExternalUriPlaceholder, nt:IntroducedResource;
+    rdfs:label "existing taxon identifier, e.g. from ZooBank" .
+  
+  sub:taxonType a nt:RestrictedChoicePlaceholder;
+    nt:hasDefaultValue <http://purl.obolibrary.org/obo/NCIT_C45293>;
+    nt:possibleValuesFrom <https://w3id.org/np/RAuDzWoXFV_PkLWD_u3wzAiALvsAJFAmHSagjBlemiDOE> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "kznqMgXyhoyNgQ9rig6WRs3mS0nrdz0+h2c0KUMbl4Gr/jklBsGYKloyL6O4v5VSSYNNmzM9mpWzsSzCjT7sojdLbDob+Hx+AANyzHqzd4dgubp3jEVos5XqNJ/L+HwkdadfYkOOYxoMxLm7xUwou5mqENEamz7kEIFVxFj95jY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-07-09T08:57:38.602Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAJFszcsH6q1veVX09Mq4b-r1yBqL6eOzgADk5Tij2HeA>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Defining a new biological taxon";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALtjkZX1lYrTL2eCZp4VTW6vGGxiDZ-aaU-s1Z0Fcs2I> .
+}
+

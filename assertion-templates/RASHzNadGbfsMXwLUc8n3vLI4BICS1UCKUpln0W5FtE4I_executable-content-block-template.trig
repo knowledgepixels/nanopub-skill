@@ -1,0 +1,170 @@
+@prefix this: <https://w3id.org/np/RASHzNadGbfsMXwLUc8n3vLI4BICS1UCKUpln0W5FtE4I> .
+@prefix sub: <https://w3id.org/np/RASHzNadGbfsMXwLUc8n3vLI4BICS1UCKUpln0W5FtE4I/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:format rdfs:label "needs or produces data format" .
+  
+  dct:title rdfs:label "has title" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  <http://www.wikidata.org/entity/Q189248> rdfs:label "GNU Bash" .
+  
+  <http://www.wikidata.org/entity/Q2005> rdfs:label "JavaScript" .
+  
+  <http://www.wikidata.org/entity/Q206904> rdfs:label "R" .
+  
+  <http://www.wikidata.org/entity/Q28865> rdfs:label "Python" .
+  
+  <http://www.wikidata.org/entity/Q47607> rdfs:label "SQL" .
+  
+  <http://www.wikidata.org/entity/Q5310> rdfs:label "LaTeX" .
+  
+  <http://www.wikidata.org/entity/Q8811> rdfs:label "HTML" .
+  
+  <https://schema.org/applicationCategory> rdfs:label "serves computational function" .
+  
+  <https://schema.org/description> rdfs:label "has description" .
+  
+  <https://schema.org/runtimePlatform> rdfs:label "can be run via runtime platform" .
+  
+  <https://schema.org/softwareRequirements> rdfs:label "has software requirements" .
+  
+  <https://schema.org/text> rdfs:label "has content" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Template for creating nanopublications with executable content blocks like code cells, mathematical equations, markdown, HTML, etc. with their runtime environment and dependencies for computational reproducibility.";
+    rdfs:label "Executable Content Block Template";
+    nt:hasNanopubLabelPattern "Executable Content: ${content-type} - ${block-title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st09;
+    nt:hasTag "computational" .
+  
+  sub:block-description a nt:LongLiteralPlaceholder;
+    rdfs:label "Content block description (optional)" .
+  
+  sub:block-title a nt:LiteralPlaceholder;
+    rdfs:label "Content block title" .
+  
+  sub:code-content a nt:LongLiteralPlaceholder;
+    rdfs:label "Enter your executable content here" .
+  
+  sub:content-block a nt:LocalResource;
+    rdfs:label "Executable content block" .
+  
+  sub:content-type a nt:RestrictedChoicePlaceholder;
+    rdfs:label "Content type (Markdown, Python, LaTeX, etc.)";
+    nt:possibleValue <http://www.wikidata.org/entity/Q189248>, <http://www.wikidata.org/entity/Q2005>,
+      <http://www.wikidata.org/entity/Q206904>, <http://www.wikidata.org/entity/Q28865>,
+      <http://www.wikidata.org/entity/Q47607>, <http://www.wikidata.org/entity/Q5310>, <http://www.wikidata.org/entity/Q8811>,
+      <https://www.wikidata.org/wiki/Q1193600>, <https://www.wikidata.org/wiki/Q2613697> .
+  
+  sub:dependency a nt:LiteralPlaceholder;
+    rdfs:label "Software dependency (e.g., pandas==1.5.0, ggplot2>=3.4.0)" .
+  
+  sub:function-type a nt:GuidedChoicePlaceholder;
+    rdfs:label "computational function (e.g., data loading, visualization, analysis)";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:input-spec a nt:LiteralPlaceholder;
+    rdfs:label "input data format (e.g., CSV file, pandas DataFrame)";
+    nt:hasPrefix "input:";
+    nt:hasPrefixLabel "Input:" .
+  
+  sub:output-spec a nt:LiteralPlaceholder;
+    rdfs:label "output data format (e.g., PNG image, JSON file)";
+    nt:hasPrefix "output:";
+    nt:hasPrefixLabel "Output:" .
+  
+  sub:runtime-platform a nt:UriPlaceholder;
+    rdfs:label "Runtime platform (executable link, container image, or environment description)" .
+  
+  sub:st01 rdf:object sub:content-type;
+    rdf:predicate rdf:type;
+    rdf:subject sub:content-block .
+  
+  sub:st02 rdf:object sub:code-content;
+    rdf:predicate <https://schema.org/text>;
+    rdf:subject sub:content-block .
+  
+  sub:st03 rdf:object sub:runtime-platform;
+    rdf:predicate <https://schema.org/runtimePlatform>;
+    rdf:subject sub:content-block .
+  
+  sub:st04 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:dependency;
+    rdf:predicate <https://schema.org/softwareRequirements>;
+    rdf:subject sub:content-block .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:block-title;
+    rdf:predicate dct:title;
+    rdf:subject sub:content-block .
+  
+  sub:st06 a nt:OptionalStatement;
+    rdf:object sub:block-description;
+    rdf:predicate <https://schema.org/description>;
+    rdf:subject sub:content-block .
+  
+  sub:st07 a nt:OptionalStatement;
+    rdf:object sub:function-type;
+    rdf:predicate <https://schema.org/applicationCategory>;
+    rdf:subject sub:content-block .
+  
+  sub:st08 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:input-spec;
+    rdf:predicate dct:format;
+    rdf:subject sub:content-block .
+  
+  sub:st09 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:output-spec;
+    rdf:predicate dct:format;
+    rdf:subject sub:content-block .
+  
+  <https://www.wikidata.org/wiki/Q1193600> rdfs:label "Markdown" .
+  
+  <https://www.wikidata.org/wiki/Q2613697> rdfs:label "Julia" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1784-2920 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1784-2920 foaf:name "Anne Fouilloux" .
+  
+  this: dct:created "2025-08-15T16:29:17.982Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1784-2920;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RADbZPi1Q5jU14S5gwnL1iCVJ8df20HPCA6-2JS2EtkgY>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Executable Content Block Template";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA5reLVXOCPQFWr2UiCJb19ES7NwOpQRmudb17e2iB0c4> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDWv2pJnmDsBOq8OlT1aSvYXSuWT34WOp4FYqEzdnn2F0kqzcFevBqWGZDxJWC0lqCrDEuNfp2QFyPe/+nES9dlHGYIhqPi68fwK6ZiNUotRFxXou+rjFznVvUxtCL8Ede79EBHwWN61QtwSIcU12bLoZsNPFlqQASQ93BJuKlihwIDAQAB";
+    npx:hasSignature "Ws2uPivHD4GiCaNp2WwHVTEuoEhl1CR2qfk/icqQV7FoW4CQnc8sxDIBymLhdRxVD76t9Uib14MaBsbCzfsdttZO6lVSnEcemvwt8K+YBivjgCAnd9qc/ooCJ+E7OrkQAT4D2OEu3Ngs1dwEWfiJ9KMlBltUFpbO24knSa7wkeU=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1784-2920 .
+}
+

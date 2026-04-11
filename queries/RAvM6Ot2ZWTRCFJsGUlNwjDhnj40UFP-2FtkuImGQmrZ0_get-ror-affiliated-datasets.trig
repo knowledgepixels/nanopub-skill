@@ -1,0 +1,89 @@
+@prefix this: <https://w3id.org/np/RAvM6Ot2ZWTRCFJsGUlNwjDhnj40UFP-2FtkuImGQmrZ0> .
+@prefix sub: <https://w3id.org/np/RAvM6Ot2ZWTRCFJsGUlNwjDhnj40UFP-2FtkuImGQmrZ0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-RORaffiliated-datasets a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns all datasets affiliated with a ROR-registered research organization.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get ROR-affiliated datasets";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """PREFIX prov: <http://www.w3.org/ns/prov#>
+PREFIX schema: <https://schema.org/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX np: <http://www.nanopub.org/nschema#>
+PREFIX npa: <http://purl.org/nanopub/admin/>
+PREFIX npx: <http://purl.org/nanopub/x/>
+
+SELECT DISTINCT ?dataset ?dataset_label ?repository ?ror_id
+WHERE {
+  GRAPH npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    FILTER NOT EXISTS {
+      ?npx npx:invalidates ?np ;
+           npa:hasValidSignatureForPublicKey ?pubkey .
+    }
+    ?np dct:created ?date .
+    ?np np:hasAssertion ?a .
+    ?np np:hasProvenance ?p .
+  }
+
+  GRAPH ?a {
+    ?dataset a <http://purl.org/dc/dcmitype/Dataset> .
+    OPTIONAL { ?dataset dct:title ?dataset_label . }
+    OPTIONAL { ?dataset schema:maintainer ?repository . }
+  }
+
+  GRAPH ?p {
+    ?a prov:wasAttributedTo ?ror_id .
+    FILTER(STRSTARTS(STR(?ror_id), \"https://ror.org/\"))
+  }
+}
+ORDER BY DESC(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0002-4930-2662 foaf:name "Alessa An Gambardella" .
+  
+  this: dct:created "2025-06-06T19:22:53.827Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0002-4930-2662;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-RORaffiliated-datasets;
+    npx:supersedes <https://w3id.org/np/RA9tGGD4TgOWMSYuUROvntJtJ9eDgWyfYqo7dv7QkRJkM>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAXnHN7_jfxCpSp10_fK5ku5Uf5l6bCRRUfbmiue418Ek>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCEJGVv2xFV8o+Ojt3f0N2LgtZTt4+24Lxp8esEZiFYKryDGBYaR0Ef4ajadqtlSpvUHlwNlVIF7XRWiGd64P8drVnqPtpRtxJ+SOl0UNvxuHzUjeWlOYKpKZ/UgrGwVSSR3LvwqXOM9qUkWqy0IQ2KsFbJHHwzgNbcEZuZOD+/WQIDAQAB";
+    npx:hasSignature "PHvh9oLC/ov2z05NMEoC+7aXdpHAYb7BOSrxsqAKyS6BeUl5nqm4AmomqvY2ll0KVUGVn/cC08l1eXazbYxNuNdHSxGuZSj9YoSVN4C8c2E097IMOAHFMaZT5wGSxLlr0zaQSDTPZQWMa6pinzZUH/7mr9/vpPcGJaM7MTknnJM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-4930-2662 .
+}
+

@@ -1,0 +1,73 @@
+@prefix this: <https://w3id.org/np/RAPK3IA9rOxFS2n0e7W1JIGH-GWQxdsJIi6kt-DQRBCoo> .
+@prefix sub: <https://w3id.org/np/RAPK3IA9rOxFS2n0e7W1JIGH-GWQxdsJIi6kt-DQRBCoo/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has label" .
+  
+  <https://example.com/MyKindOfThing> rdfs:label "My Kind of Thing" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Introduces a new thing with a given namespace.";
+    rdfs:label "Example template to introduce thing with namespace";
+    nt:hasStatement sub:st01, sub:st02 .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "enter a label here" .
+  
+  sub:st01 rdf:object <https://example.com/MyKindOfThing>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:thing .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:thing .
+  
+  sub:thing a nt:ExternalUriPlaceholder, nt:IntroducedResource;
+    rdfs:label "enter a short ID suffix here";
+    nt:hasPrefix "https://example.com/mynamespace/";
+    nt:hasPrefixLabel "mynamespace:" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-08-08T09:34:31.139Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Example template to introduce thing with namespace";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA5reLVXOCPQFWr2UiCJb19ES7NwOpQRmudb17e2iB0c4> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "WbO7R/oW/e0YBzT+6kMdaMjCx7ph4nqoix6207UZ0vj5EFr+r5BDSIxCAO7R7Kn9BBV/mo/VvBMRk/KVTxgVR7956jqttUCtVXvzcT3+W8TPqQ7XW6A1pPO4eySilM/5fr+CL/FrrpLXUfxZvV9TI3vRPaCRwEI7wmsyM2Ju5t8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

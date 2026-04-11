@@ -1,0 +1,64 @@
+@prefix this: <http://purl.org/np/RAQSsQVscfAon7UqdDsU4yCxlp0NlJGI9WqAXqT3NNIek> .
+@prefix sub: <http://purl.org/np/RAQSsQVscfAon7UqdDsU4yCxlp0NlJGI9WqAXqT3NNIek/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Expressing that you know somebody";
+    nt:hasNanopubLabelPattern "Knowing ${person}";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Social" .
+  
+  sub:person a nt:AgentPlaceholder;
+    rdfs:label "the person you know" .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:person;
+    rdf:predicate foaf:knows;
+    rdf:subject nt:CREATOR .
+  
+  foaf:knows rdfs:label "know" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2025-07-18T08:41:53.976Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes ns1:RAHiYX3s11x1Uc-kG5S8dDE5Vb2JWSA-piCw8_h1r1yF4;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Template: Expressing that you know somebody";
+    nt:wasCreatedFromProvenanceTemplate ns1:RAcm8OurwUk15WOgBM9wySo-T3a5h6as4K8YR5MBrrxUc;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA5reLVXOCPQFWr2UiCJb19ES7NwOpQRmudb17e2iB0c4> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "QzkcXumaUsimLTjgo5N/g6T0I8IhY8aaTKb6id9AOov9BiCDsVbuabmJ55yR07290HzuSZKs7IKpooH919CVkpR5D8YGih5w0TTJYaQcF47Vo6ecokuNQmQ4/jxsb7DcEIHuLsv0IOREIZW8LvJ0eSf+pQ7yhuFhTcyB03zka6U=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+}
+

@@ -1,0 +1,240 @@
+@prefix this: <https://w3id.org/np/RAKHABTLD7H0IFxTfTnmJFSNPv7Xar16Mqb-fnHXp4itM> .
+@prefix sub: <https://w3id.org/np/RAKHABTLD7H0IFxTfTnmJFSNPv7Xar16Mqb-fnHXp4itM#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://ontology.ethereal.cz/irao/hasFollowedProtocol> rdfs:label "has followed benchmark protocol" .
+  
+  <http://ontology.ethereal.cz/irao/hasMeasuringSystem> rdfs:label "has benchmark code" .
+  
+  <http://ontology.ethereal.cz/irao/hasProducedDataset> rdfs:label "has produced dataset" .
+  
+  <http://purl.org/spar/cito/citesAsDataSource> rdfs:label "cites as data source" .
+  
+  rdf:type rdfs:label "has type" .
+  
+  rdfs:comment rdfs:label "has comment" .
+  
+  rdfs:label rdfs:label "has label" .
+  
+  <http://www.w3.org/ns/dcat#version> rdfs:label "has version tag" .
+  
+  sub:additional a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:additionalObj;
+    rdf:predicate sub:additionalProp;
+    rdf:subject nt:ASSERTION;
+    nt:statementOrder "100" .
+  
+  sub:additionalObj a nt:ValuePlaceholder;
+    rdfs:label "any custom value" .
+  
+  sub:additionalProp a nt:ExternalUriPlaceholder;
+    rdfs:label "any custom property" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description """This template allows for describing the benchmark procedure and other metadata of benchmarks performed with RiverBench tasks and datasets.
+
+Please refer to RiverBench profiles and tasks using their permanent URLs (PURLs) with a specified version (not dev!). For example: https://w3id.org/riverbench/v/2.0.1/profiles/flat-mixed https://w3id.org/riverbench/v/2.0.1/tasks/flat-compression
+
+In the benchmark metrics field, use the names of the metrics specified in the task definition that you have used.
+
+If possible, link to the paper that reported this benchmark using the \"cites as data source\" field. This way, a citation of this paper will appear on RiverBench's website.""";
+    rdfs:label "Describing a benchmark performed with RiverBench";
+    nt:hasNanopubLabelPattern "RiverBench results for task ${protocolTaskValue} with profile ${protocolProfileValue}";
+    nt:hasStatement sub:additional, sub:benchmarkCode, sub:class, sub:class2, sub:comment,
+      sub:paper, sub:produced, sub:protocol, sub:protocolAdditional, sub:protocolClass,
+      sub:protocolClass2, sub:protocolMetric, sub:protocolProfile, sub:protocolTask, sub:systemUnderTestValue;
+    nt:hasTag "RDF streams";
+    nt:hasTargetNanopubType <https://w3id.org/riverbench/schema/metadata#PerformedBenchmark> .
+  
+  sub:benchmarkCode a nt:OptionalStatement;
+    rdf:object sub:benchmarkCodeValue;
+    rdf:predicate <http://ontology.ethereal.cz/irao/hasMeasuringSystem>;
+    rdf:subject nt:ASSERTION;
+    nt:statementOrder "5" .
+  
+  sub:benchmarkCodeValue a nt:ExternalUriPlaceholder;
+    rdfs:label "link to benchmark code, if available (DOI preferable)" .
+  
+  sub:class a rdf:Statement;
+    rdf:object <https://w3id.org/riverbench/schema/metadata#PerformedBenchmark>;
+    rdf:predicate rdf:type;
+    rdf:subject nt:ASSERTION;
+    nt:statementOrder "1" .
+  
+  sub:class2 a rdf:Statement;
+    rdf:object <http://ontology.ethereal.cz/irao/Benchmark>;
+    rdf:predicate rdf:type;
+    rdf:subject nt:ASSERTION;
+    nt:statementOrder "2" .
+  
+  sub:comment a nt:OptionalStatement;
+    rdf:object sub:commentValue;
+    rdf:predicate rdfs:comment;
+    rdf:subject nt:ASSERTION;
+    nt:statementOrder "3" .
+  
+  sub:commentValue a nt:LongLiteralPlaceholder;
+    rdfs:label "comment – any relevant information about the performed benchmark" .
+  
+  sub:paper a nt:OptionalStatement;
+    rdf:object sub:paperValue;
+    rdf:predicate <http://purl.org/spar/cito/citesAsDataSource>;
+    rdf:subject nt:ASSERTION;
+    nt:statementOrder "4" .
+  
+  sub:paperValue a nt:UriPlaceholder;
+    rdfs:label "DOI link to the benchmark paper: https://doi.org/[DOI]" .
+  
+  sub:produced a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:producedValue;
+    rdf:predicate <http://ontology.ethereal.cz/irao/hasProducedDataset>;
+    rdf:subject nt:ASSERTION;
+    nt:statementOrder "6" .
+  
+  sub:producedValue a nt:ExternalUriPlaceholder;
+    rdfs:label "link to dataset with benchmark results, if available (DOI preferable)" .
+  
+  sub:protocol a rdf:Statement, nt:LocalResource;
+    rdf:object sub:protocol;
+    rdf:predicate <http://ontology.ethereal.cz/irao/hasFollowedProtocol>;
+    rdf:subject nt:ASSERTION;
+    rdfs:label "benchmark protocol";
+    nt:statementOrder "20" .
+  
+  sub:protocolAdditional a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:protocolAdditionalObj;
+    rdf:predicate sub:protocolAdditionalProp;
+    rdf:subject sub:protocol;
+    nt:statementOrder "101" .
+  
+  sub:protocolAdditionalObj a nt:ValuePlaceholder;
+    rdfs:label "any custom value" .
+  
+  sub:protocolAdditionalProp a nt:ExternalUriPlaceholder;
+    rdfs:label "any custom property" .
+  
+  sub:protocolClass a rdf:Statement;
+    rdf:object <https://w3id.org/riverbench/schema/metadata#BenchmarkProtocol>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:protocol;
+    nt:statementOrder "21" .
+  
+  sub:protocolClass2 a rdf:Statement;
+    rdf:object <http://ontology.ethereal.cz/irao/Protocol>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:protocol;
+    nt:statementOrder "22" .
+  
+  sub:protocolMetric a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:protocolMetricValue;
+    rdf:predicate <https://w3id.org/riverbench/schema/metadata#usesMetric>;
+    rdf:subject sub:protocol;
+    nt:statementOrder "25" .
+  
+  sub:protocolMetricValue a nt:LiteralPlaceholder;
+    rdfs:label "metric from the benchmark task, e.g., \"Load time\"" .
+  
+  sub:protocolProfile a rdf:Statement;
+    rdf:object sub:protocolProfileValue;
+    rdf:predicate <https://w3id.org/riverbench/schema/metadata#usesProfile>;
+    rdf:subject sub:protocol;
+    nt:statementOrder "24" .
+  
+  sub:protocolProfileValue a nt:ExternalUriPlaceholder;
+    rdfs:label "PURL of the used RiverBench profile, e.g., https://w3id.org/riverbench/v/2.0.1/profiles/flat-mixed" .
+  
+  sub:protocolSut a rdf:Statement;
+    rdf:object sub:systemUnderTest;
+    rdf:predicate <https://w3id.org/riverbench/schema/metadata#usesSystemUnderTest>;
+    rdf:subject sub:protocol .
+  
+  sub:protocolTask a rdf:Statement;
+    rdf:object sub:protocolTaskValue;
+    rdf:predicate <https://w3id.org/riverbench/schema/metadata#usesTask>;
+    rdf:subject sub:protocol;
+    nt:statementOrder "23" .
+  
+  sub:protocolTaskValue a nt:ExternalUriPlaceholder;
+    rdfs:label "PURL of the used RiverBench task, e.g., https://w3id.org/riverbench/v/2.0.1/tasks/flat-compression" .
+  
+  sub:sutLabelValue a nt:LiteralPlaceholder;
+    rdfs:label "name of the tested system, e.g., \"Apache Jena TDB2\"" .
+  
+  sub:sutVersionValue a nt:LiteralPlaceholder;
+    rdfs:label "version tag of the tested system, e.g., \"5.0.0\"" .
+  
+  sub:systemUnderTest a nt:LocalResource .
+  
+  sub:systemUnderTestClass rdf:object <https://w3id.org/riverbench/schema/metadata#SystemUnderTest>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:systemUnderTest .
+  
+  sub:systemUnderTestLabel rdf:object sub:sutLabelValue;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:systemUnderTest .
+  
+  sub:systemUnderTestValue a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:protocolSut, sub:systemUnderTestClass, sub:systemUnderTestLabel,
+      sub:systemUnderTestVersion;
+    nt:statementOrder "30" .
+  
+  sub:systemUnderTestVersion rdf:object sub:sutVersionValue;
+    rdf:predicate <http://www.w3.org/ns/dcat#version>;
+    rdf:subject sub:systemUnderTest .
+  
+  nt:ASSERTION rdfs:label "This benchmark" .
+  
+  <https://w3id.org/riverbench/schema/metadata#usesMetric> rdfs:label "uses benchmark metric" .
+  
+  <https://w3id.org/riverbench/schema/metadata#usesProfile> rdfs:label "uses RiverBench profile" .
+  
+  <https://w3id.org/riverbench/schema/metadata#usesSystemUnderTest> rdfs:label "uses system under test" .
+  
+  <https://w3id.org/riverbench/schema/metadata#usesTask> rdfs:label "uses RiverBench task" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-2543-9461 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-2543-9461 foaf:name "Piotr Sowiński" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCNMXM2Ib2J9WEfG5lOmfIi9CoT6BURjAtQK8vpbdXJLC+WXTu3p/7U08mq24zKpiZNVa0DNRj8vhdG+j50Mfy3g6gIkmyXetZfQJXMMCJ8vxJ/kdZjBY7XTQinCaxYgv2r1dtOZNGG8x1e4fMZVaI3GqD8qvBac2n/OBITCNPFwwIDAQAB";
+    npx:hasSignature "JxNIOkMshLl8xyQ3vRE7/o8KG0GBHDP13Tqs4ONwT0SMP42dkShB5n66DWTyCJzBQqIRIo7BiIaD6qFNmTgdj1i9Mn29WlDJR5C9Z6sLadJffnNWKEp9Khzws8UvO2n2puYqvsFTDzhsgmxm/XuQFDzAsvOjQodsoP0T++//xL0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-2543-9461 .
+  
+  this: dct:created "2024-09-23T08:28:04.344Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-2543-9461;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAuH8cdAJiFYj8WgiflflK8xwt0T6r4c791KFE2aEnI9o>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Describing a benchmark performed with RiverBench";
+    prov:wasDerivedFrom <https://w3id.org/np/RARL9HnpZmlPQECZiDGWI3pABNi42TIhXvftX8KN9ytV4>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA, ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90,
+      ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALtjkZX1lYrTL2eCZp4VTW6vGGxiDZ-aaU-s1Z0Fcs2I> .
+}
+

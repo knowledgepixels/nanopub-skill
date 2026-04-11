@@ -1,0 +1,106 @@
+@prefix this: <https://w3id.org/np/RA8YNLP1gwzeBgEcRo5fQl9AeM334XMd89zbbnOGYYIyw> .
+@prefix sub: <https://w3id.org/np/RA8YNLP1gwzeBgEcRo5fQl9AeM334XMd89zbbnOGYYIyw#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  rdfs:seeAlso rdfs:label "has more info at" .
+  
+  <https://w3id.org/kpxl/gen/terms/Evidence> rdfs:label "evidence" .
+  
+  <https://w3id.org/kpxl/gen/terms/supports> rdfs:label "supports" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    rdfs:label "Publishing an evidence";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st4, sub:st5;
+    nt:hasTargetNanopubType <https://w3id.org/kpxl/gen/terms/ClaimsAndEvidences> .
+  
+  sub:claim a nt:GuidedChoicePlaceholder;
+    rdfs:label "a claim this piece of evidence supports";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Fkpxl%2Fgen%2Fterms%2FClaim&searchterm=" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the result" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "label for the result" .
+  
+  sub:link a nt:ExternalUriPlaceholder;
+    rdfs:label "link with further info" .
+  
+  sub:result a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this result" .
+  
+  sub:st1 rdf:object <https://w3id.org/kpxl/gen/terms/Evidence>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:result .
+  
+  sub:st2 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:result .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:result .
+  
+  sub:st4 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:link;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:result .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:claim;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/supports>;
+    rdf:subject sub:result .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "+CzB4Hq98JCAw2aEXLPqJzkQtiTroJYBFypePs4O7fEWiBdxXx3PWE91/AKHohta4WDZtBgi8xqrJh7KnT0FAFGoYDUcOeyk6yTQCKZUN+tP19Dzi7sft54AlXlUK5yy4zlXW/4Ionw8n1jkfwItmIw6QJE3tPt/PzUYdmuIkq4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-05-10T11:26:29.765Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAK8FZDeBVHUoJGrcj1ksww6BUyLCYozJ2b0qVbMas4Kg>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Publishing an evidence";
+    prov:wasDerivedFrom <https://w3id.org/np/RAO24kk-IVqe-Lbp0DYScuttBqXgLBvbAbsHcvaezrrzM>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA, ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90,
+      ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

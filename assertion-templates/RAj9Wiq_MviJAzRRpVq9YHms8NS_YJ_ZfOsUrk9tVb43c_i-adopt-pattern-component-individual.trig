@@ -1,0 +1,98 @@
+@prefix this: <https://w3id.org/np/RAj9Wiq_MviJAzRRpVq9YHms8NS_YJ_ZfOsUrk9tVb43c> .
+@prefix sub: <https://w3id.org/np/RAj9Wiq_MviJAzRRpVq9YHms8NS_YJ_ZfOsUrk9tVb43c#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "can be described as follows: - gives a thing (left) a human-readable description (right)" .
+  
+  rdf:type rdfs:label "is a - asserts that the given thing (left) belongs to the given class (right)" .
+  
+  rdfs:label rdfs:label "is called - connects an identifier to a human-readable name for it" .
+  
+  <http://www.w3.org/2002/07/owl#NamedIndividual> rdfs:label "named individual - a concrete or abstract thing that is given an identifier and a name" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Defining a new individual for I-ADOPT pattern";
+    rdfs:label "I-ADOPT pattern component individual";
+    nt:hasNanopubLabelPattern "${name}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3;
+    nt:hasTag "I-ADOPT" .
+  
+  sub:class a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the URI of the class this individual belongs to";
+    nt:possibleValue <https://w3id.org/iadopt/pattern/Constraint>, <https://w3id.org/iadopt/pattern/Matrix>,
+      <https://w3id.org/iadopt/pattern/ObjectOfInterest>, <https://w3id.org/iadopt/pattern/Property> .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the individual" .
+  
+  sub:individual a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix - the formal identifier of the individual";
+    nt:hasPrefix "https://w3id.org/iadopt/terms/";
+    nt:hasPrefixLabel "I-ADOPT term" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the individual" .
+  
+  sub:st0 rdf:object <http://www.w3.org/2002/07/owl#NamedIndividual>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:individual .
+  
+  sub:st1 rdf:object sub:class;
+    rdf:predicate rdf:type;
+    rdf:subject sub:individual .
+  
+  sub:st2 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:individual .
+  
+  sub:st3 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:individual .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFntPrMZqvg2kVhCNArNnEn37ddXGwZ/0r4C8CS4lDry7C7YkYgng9yb0UMZQUHiTVkR/5A4m/xjE+Vy+AnwcWUeB75SfGZjE5ylI6VeHjTHi9+2hh2PHYIWnkhU4WHl3COEnxSSa/VouvPzZ2BIWLH6fTrq7NNL3RF5hGegGG0QIDAQAB";
+    npx:hasSignature "JoUGbDAIfCD3qMVszKZr1jP7Anhw8bgkno+CgJ1Pn2VtUbFXoy/zYPQd3aKHEU0e8RyBiJGLXr4ZkxIZNw89zzxHP6GM5qQE4FCbF+acuVWD65dZzsUgagU4TM9n40DBczkpZu8Aax4avFfQvHgrkORSLydmTOIlAYJIOWMK2UI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+  
+  this: dct:created "2025-04-10T21:22:52.510Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Template: I-ADOPT pattern component individual";
+    prov:wasDerivedFrom ns1:RAnxJvccrJq_S63P6KP5ujwaLND5mV15iVke03AqVVF-o;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAGBEisKAxwcQTdfR7ALwCeQBrUVeU23F8uFvFmO-H6F0> .
+}
+

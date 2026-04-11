@@ -1,0 +1,72 @@
+@prefix this: <http://purl.org/np/RAiBrF-il77MccafOpqR5pZgdlBFOreh9TAeKBga-Gxsk> .
+@prefix sub: <http://purl.org/np/RAiBrF-il77MccafOpqR5pZgdlBFOreh9TAeKBga-Gxsk#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication expresses that two given identifiers are equivalent or closely related.";
+    rdfs:label "Mapping two equivalent or related resource identifiers";
+    nt:hasNanopubLabelPattern "${resource1} - ${mappingPredicate} - ${resource2}";
+    nt:hasStatement sub:st0;
+    nt:hasTag "General";
+    nt:hasTargetNanopubType <http://www.w3.org/2004/02/skos/core#relatedMatch> .
+  
+  sub:mappingPredicate a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue <http://www.w3.org/2004/02/skos/core#closeMatch>, <http://www.w3.org/2004/02/skos/core#exactMatch>,
+      <http://www.w3.org/2004/02/skos/core#relatedMatch> .
+  
+  sub:resource1 a nt:UriPlaceholder;
+    rdfs:label "the first resource identifier" .
+  
+  sub:resource2 a nt:UriPlaceholder;
+    rdfs:label "the second resource identifier" .
+  
+  sub:st0 a rdf:Statement;
+    rdf:object sub:resource2;
+    rdf:predicate sub:mappingPredicate;
+    rdf:subject sub:resource1;
+    nt:statementOrder "0" .
+  
+  <http://www.w3.org/2004/02/skos/core#closeMatch> rdfs:label "can in some situations be considered the same as" .
+  
+  <http://www.w3.org/2004/02/skos/core#exactMatch> rdfs:label "is (almost) exactly the same as" .
+  
+  <http://www.w3.org/2004/02/skos/core#relatedMatch> rdfs:label "is related to" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "o0bhYBpG+UG3lNwbns+DDyX0OEMEIxhe8gbd11T1/O3xI3vFs2RyYy+hQb7QJP3kA0WAzWnsSERKUfPSfZ6W5hP9HG4yEumzaNkQ0IYoDL7VVU8fPAzqCFyW/yNOwrzXQc4/L1MmF/MfUVsg2225A0UhFVwShAqLZwMNlu9rVEU=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-28T11:36:57.382+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <http://purl.org/np/RA_HQBugwEbRD4oClCPjyOJhbau84xnhrrr-lzE4seKDI>;
+    rdfs:label "Template: Mapping two equivalent or related resource identifiers";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so> .
+}
+

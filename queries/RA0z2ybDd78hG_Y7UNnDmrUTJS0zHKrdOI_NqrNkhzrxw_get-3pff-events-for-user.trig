@@ -1,0 +1,122 @@
+@prefix this: <https://w3id.org/np/RA0z2ybDd78hG_Y7UNnDmrUTJS0zHKrdOI_NqrNkhzrxw> .
+@prefix sub: <https://w3id.org/np/RA0z2ybDd78hG_Y7UNnDmrUTJS0zHKrdOI_NqrNkhzrxw/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-3pff-events-for-user a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns all 3PFF events for a given user, including the role they had in each event.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get 3PFF events for user";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix tpff: <https://w3id.org/fair/3pff/>
+prefix schema: <http://schema.org/>
+
+select ?event ?event_label (sample(?ev_name) as ?event_name) (sample(?ev_date) as ?event_date) ?roles_multi_iri ?roles_label_multi ?np_multi_iri ?np_label_multi where {
+  {
+    select ?event (replace(str(?event), \"^.*/\", \"\") as ?event_label) (group_concat(str(?role); separator=\" \") as ?roles_multi_iri) (group_concat(?role_label; separator=\"\\n\") as ?roles_label_multi) (group_concat(str(?latest_np); separator=\" \") as ?np_multi_iri) (group_concat(\"^\"; separator=\"\\n\") as ?np_label_multi) where {
+      {
+        select ?event ?role ?role_label (sample(?np) as ?latest_np) where {
+          values (?role ?role_label) {
+            (tpff:participatedAsParticipantIn \"Participant\")
+            (tpff:participatedAsFacilitatorIn \"Facilitator\")
+            (tpff:participatedAsTrainerIn \"Trainer\")
+            (tpff:participatedAsFacilitatorAssistantIn \"Facilitator Assistant\")
+            (tpff:participatedAsTrainerAssistantIn \"Trainer Assistant\")
+            (tpff:participatedAsImplementerIn \"Implementer\")
+            (tpff:participatedAsImplementerAspirantIn \"Implementer Aspirant\")
+          }
+          graph npa:graph {
+            ?np npx:hasNanopubType ?role .
+            ?np dct:creator ?_user_iri .
+            ?np npa:hasValidSignatureForPublicKeyHash ?pk .
+            filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+            ?np np:hasAssertion ?a .
+            ?np dct:created ?date .
+          }
+          graph ?a {
+            ?_user_iri ?role ?event .
+          }
+          filter not exists {
+            graph npa:graph {
+              ?np2 npx:hasNanopubType ?role .
+              ?np2 dct:creator ?_user_iri .
+              ?np2 npa:hasValidSignatureForPublicKeyHash ?pk2 .
+              filter not exists { ?npx2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pk2 . }
+              ?np2 np:hasAssertion ?a2 .
+              ?np2 dct:created ?date2 .
+              filter(?date2 > ?date)
+            }
+            graph ?a2 {
+              ?_user_iri ?role ?event .
+            }
+          }
+        }
+        group by ?event ?role ?role_label
+      }
+    }
+    group by ?event
+  }
+  graph npa:graph {
+    ?enp npx:introduces ?event .
+    ?enp npa:hasValidSignatureForPublicKeyHash ?epk .
+    filter not exists { ?enpx npx:invalidates ?enp ; npa:hasValidSignatureForPublicKeyHash ?epk . }
+    ?enp np:hasAssertion ?ea .
+  }
+  graph ?ea {
+    ?event a tpff:3PFF-event .
+    ?event rdfs:label ?ename .
+    optional { ?event dct:date ?dateDct . }
+    optional { ?event schema:startDate ?dateSchema . }
+  }
+  bind(coalesce(?dateDct, strBefore(str(?dateSchema), \"T\")) as ?ev_date)
+  bind(replace(?ename, \"^[^|]*\\\\| ?\", \"\") as ?ev_name)
+}
+group by ?event ?event_label ?roles_multi_iri ?roles_label_multi ?np_multi_iri ?np_label_multi
+order by desc(sample(?ev_date))""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-04-07T16:27:22.879+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-3pff-events-for-user;
+    npx:supersedes <https://w3id.org/np/RA4J4IoZuEBRPiNqT-LHuu0U3p5Hwzrw7i-10okl_6uzE>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Rv23ka6Iap2ZlUrqxYkpBJsJ7LlYxqIOsgD9FeOMBuQXvGolJgdJZ53PVuEQ04xzA/YMVT1p6ClhShdBiC3agelhbW421GsrQ6lXK4BGcOi2U8bV/p6Fv1GghYa44q/AK4O7KLq3y4rvO2xpycAEHuEbb+jK89CMzMUz5i7OHe8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,82 @@
+@prefix this: <http://purl.org/np/RA1SDxcrg2NHv6OwxmIHiFPAytj9-h3imSb1yHDOI89fM> .
+@prefix sub: <http://purl.org/np/RA1SDxcrg2NHv6OwxmIHiFPAytj9-h3imSb1yHDOI89fM#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  npx:appendsIndex rdfs:label "is an index that appends" .
+  
+  npx:includesElement rdfs:label "is an index that includes as element" .
+  
+  npx:includesSubindex rdfs:label "is an index that includes as sub-index" .
+  
+  sub:appended a nt:TrustyUriPlaceholder;
+    rdfs:label "nanopublication URI of the index to be appended" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication defines a collection of other nanopublications by directly or indirectly linking to them. Such collections can have the size from just a few to up to millions and more.";
+    rdfs:label "Defining a nanopublication index";
+    nt:hasRequiredPubinfoElement <http://purl.org/np/RAN-ZBYAJc5sLMwKQGo3-fYCbRcAMdGfmJCx0yVMOzfo8>;
+    nt:hasStatement sub:st1, sub:st2, sub:st3;
+    nt:hasTag "Meta" .
+  
+  sub:element a nt:TrustyUriPlaceholder;
+    rdfs:label "nanopublication URI of the element to be included" .
+  
+  sub:st1 a nt:OptionalStatement;
+    rdf:object sub:appended;
+    rdf:predicate npx:appendsIndex;
+    rdf:subject nt:NANOPUB;
+    nt:statementOrder "1" .
+  
+  sub:st2 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:element;
+    rdf:predicate npx:includesElement;
+    rdf:subject nt:NANOPUB;
+    nt:statementOrder "2" .
+  
+  sub:st3 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:sub;
+    rdf:predicate npx:includesSubindex;
+    rdf:subject nt:NANOPUB;
+    nt:statementOrder "3" .
+  
+  sub:sub a nt:TrustyUriPlaceholder;
+    rdfs:label "nanopublication URI of the index to be included as sub-index" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "AW7kNeXlaMq+KIibYEfxLuSRn2VkI35r46Y8hRo3neFEvuhoKNPGNNlH49EPBsWsEODrdRZGSkWOoqTN+ujZ9cma374bY3I6YyI4Sr9EuIIEPnnHOhMMOmMAL+sA3sk/xIQC+QYKsHaLNr+6AsBOm3rkAbXMI+mjiUmlgwT968o=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-21T16:27:12.303+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <http://purl.org/np/RAEkNgR79O3q4gOX1NZuRyXB7KUT8qOFZsukSIxzR-Ja8>;
+    rdfs:label "Template: Defining a nanopublication index";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RANjqEfLnGSzLuq0heRSXN0psYWW0oX4v3W8w7osb3xfs> .
+}
+

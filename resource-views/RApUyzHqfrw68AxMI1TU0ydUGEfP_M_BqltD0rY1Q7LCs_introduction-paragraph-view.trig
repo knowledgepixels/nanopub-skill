@@ -1,0 +1,74 @@
+@prefix this: <https://w3id.org/np/RApUyzHqfrw68AxMI1TU0ydUGEfP_M_BqltD0rY1Q7LCs> .
+@prefix sub: <https://w3id.org/np/RApUyzHqfrw68AxMI1TU0ydUGEfP_M_BqltD0rY1Q7LCs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    rdfs:label "add...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RAO7K93c47_f0DoGP6Kuy8fC7tKyGTpa0NkA8DM7OLlQM>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "space" .
+  
+  sub:intro-paragraphs-view a <https://w3id.org/kpxl/gen/terms/PlainParagraphView>,
+      <https://w3id.org/kpxl/gen/terms/ResourceView>;
+    dct:isVersionOf <https://w3id.org/np/RAAk9DOKjMuj5bB_kYyz9RX-DO90Dpzs1ZjiSsvj772ks/intro-paragraphs-view-kind>;
+    dct:title "📜 Introduction";
+    rdfs:label "Introduction paragraph view";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/IndividualAgent>,
+      <https://w3id.org/kpxl/gen/terms/MaintainedResource>, <https://w3id.org/kpxl/gen/terms/Space>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "3.1.intro";
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:addAction;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAQaFR0db7azwmRmqgZRavqvZS_Fgy3oUcvu85kCXWAFA/get-paragraphs>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RAO7K93c47_f0DoGP6Kuy8fC7tKyGTpa0NkA8DM7OLlQM> nt:hasLabelFromApi
+      "Publish a paragraph item to a Space" .
+  
+  <https://w3id.org/np/RAQaFR0db7azwmRmqgZRavqvZS_Fgy3oUcvu85kCXWAFA/get-paragraphs>
+    nt:hasLabelFromApi "Get paragraphs of an entity - This query returns the paragraphs of an entity (e.g. a space) with their titl..." .
+  
+  this: dct:created "2026-04-07T12:47:03.193+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:intro-paragraphs-view;
+    npx:introduces <https://w3id.org/np/RAAk9DOKjMuj5bB_kYyz9RX-DO90Dpzs1ZjiSsvj772ks/intro-paragraphs-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAYAt2Jo7BKKOSLV2EY5JKEbxbhW0GbgZRotbNr86T1_g>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAhF_JLep4YHJ5fI3ZUhb5j0zHELYmInWsWbMHhPBaM-U>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "b2xwmBnPmKDuU9ugvHt/VOGmq5id6pZpY8XMnaMyKn8AfBn4lKU5JombKBzw5y9Wc5MnDp1xYiGUJFpMYzx2IaoSA5zoe8ujKff9cpy5h+H049wwUCYh8SRUuKCod63oMHT8MQ8KzvlBCyFWQX5n0LOr1Jp5uVy0b+/BaVlgA5A=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

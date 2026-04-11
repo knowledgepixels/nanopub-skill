@@ -1,0 +1,74 @@
+@prefix this: <https://w3id.org/np/RA6UsUFyh9JUoZHPYSnMiynlUuznP-6svxbjulZRr9L3Q> .
+@prefix sub: <https://w3id.org/np/RA6UsUFyh9JUoZHPYSnMiynlUuznP-6svxbjulZRr9L3Q/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.org/spar/cito/likes> rdfs:label "has as favorite" .
+  
+  rdfs:comment rdfs:label "has the comment" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Declaring a favorited resource";
+    nt:hasNanopubLabelPattern "Favorite: ${favoritedThing}";
+    nt:hasStatement sub:st1, sub:st2;
+    nt:hasTag "Social";
+    nt:hasTargetNanopubType <http://purl.org/spar/cito/likes> .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "comment text" .
+  
+  sub:favoritedThing a nt:ExternalUriPlaceholder;
+    rdfs:label "URL/URI of the favorited thing" .
+  
+  sub:st1 rdf:object sub:favoritedThing;
+    rdf:predicate <http://purl.org/spar/cito/likes>;
+    rdf:subject nt:CREATOR .
+  
+  sub:st2 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:favoritedThing .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-01-21T16:01:16.390Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAsTMXTyHwjyTstpsvqeOV1ibebDSFS9rftJ5qoja01yg>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Declaring a favorited resource";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "2F03bRF5eEVbDVsioQsGXSr0s+tuIbzTfmKCA7FUl9ZdhIaNUX5hTfkCYUh/szC25FY1HKlD7nNGGemr0nkOiW3y91MLhgFOHHulD67pVAAjSC2xH3kvLBnWyFFB5DjiQLKqCZAjvnQ7ZIHTKE0b5bE4S+cWf/bWX8Zu+zza2jc=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

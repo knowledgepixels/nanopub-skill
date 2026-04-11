@@ -1,0 +1,77 @@
+@prefix this: <https://w3id.org/np/RAkVaxm_xPxkZsOGEWQ0NhJPr8HouSjT9VRkkVkb_r7Ko> .
+@prefix sub: <https://w3id.org/np/RAkVaxm_xPxkZsOGEWQ0NhJPr8HouSjT9VRkkVkb_r7Ko#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-fer-pref-ids-extra-available a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the preferred IDs of FAIR-Enabling Resources (FERs) as an extra list to the get-fer-pref-ids list, adding the ones that are *only* tagged as fip:Available-FAIR-Enabling-Resource.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get FER preferred IDs (extra available FERs)";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/ab9afe2ff44e1c42e9f93092c0d6978a4d519b04fb0abecbc360603af23a34c2>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+
+select distinct ?resource_pref_id ?res ?reslabel ?res_np_date ?resourcetype ?res_np ?np_pre ?pubkey_hash ?np_pre_pubkey_hash where {
+  graph npa:graph {
+    ?res_np npa:hasValidSignatureForPublicKey ?pubkey .
+    filter not exists { ?npx npx:invalidates ?res_np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+    bind(sha256(?pubkey) as ?pubkey_hash)  ## workaround due to https://github.com/knowledgepixels/nanopub-query/issues/14
+    ?res_np npx:hasNanopubType fip:Available-FAIR-Enabling-Resource .
+    filter not exists { ?res_np npx:hasNanopubType fip:FAIR-Enabling-Resource . }
+    ?res_np (npx:introduces|npx:describes) ?resource_pref_id .
+    bind(replace(str(?resource_pref_id), \"^.*?(#|/)([^/#]*/?[^/#]*)/?$\", \"$2\") as ?res)
+    ?res_np dct:created ?res_np_date .
+    ?res_np rdfs:label ?reslabel .
+    bind(fip:Available-FAIR-Enabling-Resource as ?resourcetype)
+  }
+  optional { select * { graph npa:networkGraph {
+    ?res_np npx:supersedes* ?np_pre_x .
+  } } }
+  bind(coalesce(?np_pre_x, ?res_np) as ?np_pre)
+  bind(concat(str(?np_pre), \" \", ?pubkey_hash) as ?np_pre_pubkey_hash)
+} order by ?resource_pref_id ?res_np""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "2g6y4NqeUq99jIJB9Jtykzzg1CN6eMfALod1yoeJvbGmbeuK8+M4KxdMoXq0Jcm/Xy348xI65O2rAwvJmG5X4C7o5VDg+5kLK7HcNi8LzmBszyUPtLGzJRBjTpQmV3H40pKj0+goWBC12duAaOszHok9E4wIIHkaFvrRQXyLUcg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2025-03-10T14:23:45.486Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-fer-pref-ids-extra-available;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+}
+

@@ -1,0 +1,61 @@
+@prefix this: <https://w3id.org/np/RAFmPla1nJVWx7X3xa4c88sIpDR61-BsfdVxQzAfJBHhs> .
+@prefix sub: <https://w3id.org/np/RAFmPla1nJVWx7X3xa4c88sIpDR61-BsfdVxQzAfJBHhs/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:presentation-details-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:presentation-details-view-kind;
+    dct:title "Details";
+    rdfs:label "Presentation details view";
+    gen:appliesToInstancesOf wd:Q604733, gen:PosterPresentation;
+    gen:hasStructuralPosition "2.5.details";
+    gen:hasViewQuery <https://w3id.org/np/RAnIK9yRZrmpJjCqrmyb_Dt--89qjEO2Jkt0EJrPVINzs/get-presentation-details>;
+    gen:hasViewQueryTargetField "resource" .
+  
+  sub:presentation-details-view-kind a gen:ResourceView .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-03-23T20:50:39Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:presentation-details-view;
+    npx:introduces sub:presentation-details-view-kind;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "YZCev9do1UO1c2HJVMQOi0LQqs+0HR7Srq2NVkOrgl7m0L9QHHavTKaDQ8sXqjq/4sp0R6gPvZ4ri6ewJrlGBG3qSE+XaNc7Bi1iyoxHeOXgRo7N3BOggnnCFnEHvHN7RrSYV7iIVd2vURJ3kI5xiC9X5+m0fULO6PKdpBshmYE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAnIK9yRZrmpJjCqrmyb_Dt--89qjEO2Jkt0EJrPVINzs/get-presentation-details>
+    nt:hasLabelFromApi "Get presentation details - Returns the properties of an introduced presentation or poster, with human-readable labels for recognized predicates." .
+}
+

@@ -1,0 +1,104 @@
+@prefix this: <https://w3id.org/np/RAfexVUj1ak9WOFyq1ofDhkYFdyWifOl0Q4hZw4wt4mVA> .
+@prefix sub: <https://w3id.org/np/RAfexVUj1ak9WOFyq1ofDhkYFdyWifOl0Q4hZw4wt4mVA#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:creator rdfs:label "is written by - connects an agent (left) to a thing the agent created (right)" .
+  
+  rdfs:comment rdfs:label "has the text - states a comment (right) about a thing (left)" .
+  
+  sub:Keyword a nt:LiteralPlaceholder;
+    rdfs:label "Relevant keyword for this assertion";
+    nt:hasRegex "[\\s\\S]{0,20}" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication includes a text that refers to an existing resource, which could be a paper, another document, or any URL, such as stating an agreement or a correction. The reference to the existing paper is based on the <a href=\"https://sparontologies.github.io/cito/current/cito.html\" target=\"_blank\">Citation Typing Ontology (CiTO)</a>., bibo and CSm ontology.";
+    rdfs:label "Semantic social posting with CSm v0";
+    nt:hasNanopubLabelPattern "${relation} ${paper}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st4, sub:st5;
+    nt:hasTag "Comments";
+    nt:hasTargetNanopubType <https://sense-nets.xyz/cosmo--common-sensemaking-ontology> .
+  
+  sub:doi a nt:ValuePlaceholder;
+    rdfs:label "has DOI - DOI if resource is an article";
+    nt:hasRegex "[\\s\\S]{0,20}" .
+  
+  sub:relation a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose relation";
+    nt:possibleValuesFrom <https://w3id.org/np/RAvfmLjVKDoV756L_eq-_Un3Fq0LuyIXy6DAzzDDEEpi8> .
+  
+  sub:resource a nt:UriPlaceholder;
+    rdfs:label "URL of resource" .
+  
+  sub:st1 rdf:object nt:CREATOR;
+    rdf:predicate dct:creator;
+    rdf:subject nt:ASSERTION .
+  
+  sub:st2 a nt:RepeatableStatement;
+    rdf:object sub:resource;
+    rdf:predicate sub:relation;
+    rdf:subject nt:ASSERTION .
+  
+  sub:st3 rdf:object sub:text;
+    rdf:predicate rdfs:comment;
+    rdf:subject nt:ASSERTION .
+  
+  sub:st4 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:Keyword;
+    rdf:predicate <http://pcp-on-web.de/ontology#hasKeyword>;
+    rdf:subject nt:ASSERTION .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:doi;
+    rdf:predicate <http://purl.org/ontology/bibo/doi>;
+    rdf:subject sub:resource .
+  
+  sub:text a nt:LongLiteralPlaceholder;
+    rdfs:label "your text (max. 500 characters)";
+    nt:hasRegex "[\\s\\S]{0,500}" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0006-8801-650X .
+}
+
+sub:pubinfo {
+  orcid:0009-0006-8801-650X foaf:name "Shahar Oriel Kagan" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCDBbAQ2ftjOcRyg81w+qvXIOHx0RzUyDw7rY1TLH1wOj5UOWH/dSmImH/t89C/V/OuUC5Z5YfTFa8lbicL3RgYA3+pqiKpowAarwnDhyn/TismWjbaau7jwGrg70CFyA6EC3BtmV7CqRyNrJl08iD0BzoPVpOl8BYVzqogDDyJjwIDAQAB";
+    npx:hasSignature "JK3Y4NFrsVCBuPP04IZ5IWRQNDhiVW93xTXaJSmn8rI5yz+q/CxxtzfBA7e51jZLo+PFSplX4UG16UFvda0IhgFoEcrj+MkSRwQcp1uOP6rlNKnnFsM68zLz+3UIBg3C6ND1knTyqRcjyw7166ay2d5MK6cQLvPy1SILDgUFSaI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0006-8801-650X .
+  
+  this: dct:created "2024-02-14T19:48:59.868Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0009-0006-8801-650X;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAVgZCeLL45B0Y5tTRYhF889kDuemchig3VSd8qq95I9U>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Template: Semantic social posting with CSm v0";
+    prov:wasDerivedFrom ns1:RAVEpTdLrX5XrhNl_gnvTaBcjRRSDu_hhZix8gu2HO7jI;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM, ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

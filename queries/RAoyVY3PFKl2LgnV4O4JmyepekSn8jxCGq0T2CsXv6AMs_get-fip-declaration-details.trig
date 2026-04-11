@@ -1,0 +1,93 @@
+@prefix this: <https://w3id.org/np/RAoyVY3PFKl2LgnV4O4JmyepekSn8jxCGq0T2CsXv6AMs> .
+@prefix sub: <https://w3id.org/np/RAoyVY3PFKl2LgnV4O4JmyepekSn8jxCGq0T2CsXv6AMs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-fip-decl-details a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the details of all FIP declarations, including schema:version for R-FIP declarations.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get FIP declaration details";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/4ad845e860a6db3a69160adb7aec894e622280ff9881e41a600756ad1abcfa23>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix dce: <http://purl.org/dc/elements/1.1/>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix dcat: <https://www.w3.org/ns/dcat#>
+prefix schema: <https://schema.org/>
+
+select ?decl_np ?community ?c ?question ?q ?sort ?nochoice ?decl ?rel ?resource_id_used ?startdate ?enddate ?date ?version where {
+  graph npa:graph {
+    ?decl_np npa:hasValidSignatureForPublicKey ?pubkey .
+    filter not exists { ?decl_np_x npx:invalidates ?decl_np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+    ?decl_np npx:hasNanopubType fip:FIP-Declaration .
+    ?decl_np dct:created ?date .
+    ?decl_np np:hasAssertion ?assertion .
+  }
+  graph ?assertion {
+    ?decl a fip:FIP-Declaration .
+    ?decl fip:refers-to-question ?question .
+    {
+      { ?decl fip:declares-current-use-of ?resource_id_used . bind(fip:declares-current-use-of as ?rel) }
+      union
+      { ?decl fip:declares-planned-use-of ?resource_id_used . bind(fip:declares-planned-use-of as ?rel) }
+      union
+      { ?decl fip:declares-planned-replacement-of ?resource_id_used . bind(fip:declares-planned-replacement-of as ?rel) }
+      union
+      { ?decl fip:declares-replacement-from ?resource_id_used . bind(fip:declares-replacement-from as ?rel) }
+      union
+      { ?decl fip:declares-replacement-to ?resource_id_used . bind(fip:declares-replacement-to as ?rel) }
+    }
+    # grlc gives an error for some reason if these two optional statements are at the end of the graph block:
+    optional { ?decl dcat:startDate ?startdate . }
+    optional { ?decl dcat:endDate ?enddate . }
+    ?decl fip:declared-by ?community .
+    optional { ?decl schema:version ?version . }
+  }
+  bind (replace(str(?community), \".*#\", \"\") as ?c)
+  bind (replace(str(?supercommunity), \".*#\", \"\") as ?sc)
+  bind (replace(str(?question), \"^.*-([^-MD]+(-[MD]+)?)$\", \"$1\") as ?q)
+  bind (concat(replace(?q, \"F|M\", \"0\"), \"x\") as ?sort)
+  bind (\"\" as ?nochoice)
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-04-10T12:26:03Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-fip-decl-details;
+    npx:supersedes <https://w3id.org/np/RAJJY0gSdHbzFc1q2sLIPs4ZKSnSFMq_IxxLjixKn80XU>;
+    rdfs:label "Get FIP declaration details";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "BcRW0Tu8mZnJ2Ad90Ev4PQJyPbSBEchmYKAeVRR+UJvQ8gnGLzBsra2RLzsAvb6/5q6zSPn8fAZkOxZJIp6KwGekLbLO/OMrrRHGYM004UXwaS8iWqYSbba+BoCdEVfhLZgnnKcdcdS2tOKrb5qSF7BDIjWiKYThqNyQTARfMKc=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

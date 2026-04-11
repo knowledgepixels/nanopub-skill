@@ -1,0 +1,285 @@
+@prefix this: <https://w3id.org/np/RAHTVJAieimxE4zUFYeSHu7cbgUUkbsmZ6Vba4dkJoQ2Q> .
+@prefix sub: <https://w3id.org/np/RAHTVJAieimxE4zUFYeSHu7cbgUUkbsmZ6Vba4dkJoQ2Q/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:contributor rdfs:label "has contributor" .
+  
+  dct:creator rdfs:label "has creator" .
+  
+  dct:hasVersion rdfs:label "has version" .
+  
+  dct:issued rdfs:label "has publication date" .
+  
+  dct:language rdfs:label "uses language" .
+  
+  dct:license rdfs:label "data usage license", "has data usage license" .
+  
+  dct:publisher rdfs:label "has publisher" .
+  
+  dct:subject rdfs:label "has domain" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has description" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <https://schema.org/funder> rdfs:label "has funder" .
+  
+  <https://w3id.org/dcso/ns/core#hasProject> rdfs:label "has project" .
+  
+  <https://w3id.org/fair/fip/terms/implements> rdfs:label "implements" .
+  
+  <https://w3id.org/fdof/ontology#FAIRDigitalObject> rdfs:label "FAIR Digital Object (FDO)" .
+  
+  <https://w3id.org/fdof/ontology#hasEncodingFormat> rdfs:label "has the format" .
+  
+  <https://w3id.org/fdof/ontology#hasMetadata> rdfs:label "has its metadata in" .
+  
+  <https://w3id.org/fdof/ontology#materializes> rdfs:label "is a concrete materialization of" .
+  
+  sub:URL a nt:ExternalUriPlaceholder;
+    rdfs:label "access URL" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This nanopublication defines a research software development plan template.";
+    rdfs:label "Declaring a Research Software Development Plan";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st2b, sub:st3, sub:st4, sub:st5, sub:st6,
+      sub:st7, sub:st8, sub:st9, sub:st91, sub:st92, sub:st94, sub:st95, sub:st96, sub:st97,
+      sub:st98, sub:st99;
+    nt:hasTag "Research Software" .
+  
+  sub:class a nt:ExternalUriPlaceholder;
+    rdfs:label "class URI";
+    nt:hasDefaultValue <https://w3id.org/fair/ff/terms/Research-Software-Development-Plan> .
+  
+  sub:contact a nt:LiteralPlaceholder;
+    rdfs:label "contact email" .
+  
+  sub:contributor a nt:AgentPlaceholder;
+    rdfs:label "ORCID of contributor" .
+  
+  sub:creator a nt:AgentPlaceholder;
+    rdfs:label "ORCID of creator" .
+  
+  sub:date a nt:LiteralPlaceholder;
+    rdfs:label "publication date" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description" .
+  
+  sub:domain a nt:RestrictedChoicePlaceholder;
+    rdfs:label "domain";
+    nt:possibleValuesFrom ns1:RACXDZHEowTYDAzZvdmD0qIGpXZwY5ghMRBBlt6N8Iu5s .
+  
+  sub:earlierversionnp a nt:ExternalUriPlaceholder;
+    rdfs:label "URI to earlier version (nanopublication)" .
+  
+  sub:enddate a nt:LiteralPlaceholder;
+    rdfs:label "end date", "has end date" .
+  
+  sub:fdo a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "full URI (e.g. handle.net) or short suffix" .
+  
+  sub:fip a nt:GuidedChoicePlaceholder;
+    rdfs:label "FAIR Implementation Profile";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FFAIR-Implementation-Profile&searchterm=" .
+  
+  sub:format a nt:RestrictedChoicePlaceholder;
+    rdfs:label "MIME type, such as \"text/csv\" or \"application/trig\"";
+    nt:possibleValuesFrom <https://w3id.org/np/RAHiMahG_NWtiAmqll6OiAc5zkfYoGFzsmieNFR8jtWuQ> .
+  
+  sub:funder a nt:ExternalUriPlaceholder;
+    rdfs:label "ROR of funder institution" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "label or name for this FDO" .
+  
+  sub:language a nt:RestrictedChoicePlaceholder;
+    rdfs:label "language";
+    nt:possibleValuesFrom <https://w3id.org/np/RAp57dn-l397dngANPG5jQQAX-Pc2cUgEIjXsyGOKyJLY> .
+  
+  sub:license a nt:GuidedChoicePlaceholder;
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FData-usage-license&searchterm=" .
+  
+  sub:materialization a nt:ExternalUriPlaceholder;
+    rdfs:label "materialization URI" .
+  
+  sub:project a nt:GuidedChoicePlaceholder;
+    rdfs:label "project";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAFTZ8GqPOOJQOBcEo5IB8lg5vZCFiIyr_RVLKZDQBHMk/get-projects?searchterm=" .
+  
+  sub:publisher a nt:ExternalUriPlaceholder;
+    rdfs:label "the ROR of the publishing entity" .
+  
+  sub:st0 rdf:object <https://w3id.org/fdof/ontology#FAIRDigitalObject>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:fdo .
+  
+  sub:st1 a nt:OptionalStatement;
+    rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:fdo .
+  
+  sub:st2 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:fdo .
+  
+  sub:st2b a nt:OptionalStatement;
+    rdf:object sub:earlierversionnp;
+    rdf:predicate <https://w3id.org/np/o/ntemplate/latest/hasDefaultProvenance>;
+    rdf:subject sub:fdo .
+  
+  sub:st3 rdf:object sub:class;
+    rdf:predicate rdf:type;
+    rdf:subject sub:fdo .
+  
+  sub:st4 rdf:object nt:NANOPUB;
+    rdf:predicate <https://w3id.org/fdof/ontology#hasMetadata>;
+    rdf:subject sub:fdo .
+  
+  sub:st5 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st5a, sub:st5b, sub:st5c, sub:st5d, sub:st93 .
+  
+  sub:st5a rdf:object sub:fdo;
+    rdf:predicate <https://w3id.org/fdof/ontology#materializes>;
+    rdf:subject sub:materialization .
+  
+  sub:st5b rdf:object sub:format;
+    rdf:predicate <https://w3id.org/fdof/ontology#hasEncodingFormat>;
+    rdf:subject sub:materialization .
+  
+  sub:st5c rdf:object sub:license;
+    rdf:predicate dct:license;
+    rdf:subject sub:materialization .
+  
+  sub:st5d rdf:object sub:URL;
+    rdf:predicate <https://www.w3.org/ns/dcat#accessURL>;
+    rdf:subject sub:materialization .
+  
+  sub:st6 a nt:RepeatableStatement;
+    rdf:object sub:creator;
+    rdf:predicate dct:creator;
+    rdf:subject sub:fdo .
+  
+  sub:st7 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:contributor;
+    rdf:predicate dct:contributor;
+    rdf:subject sub:fdo .
+  
+  sub:st8 rdf:object sub:contact;
+    rdf:predicate <https://www.w3.org/ns/dcat#contactPoint>;
+    rdf:subject sub:fdo .
+  
+  sub:st9 a nt:OptionalStatement;
+    rdf:object sub:language;
+    rdf:predicate dct:language;
+    rdf:subject sub:fdo .
+  
+  sub:st91 a nt:OptionalStatement;
+    rdf:object sub:domain;
+    rdf:predicate dct:subject;
+    rdf:subject sub:fdo .
+  
+  sub:st92 rdf:object sub:publisher;
+    rdf:predicate dct:publisher;
+    rdf:subject sub:fdo .
+  
+  sub:st93 rdf:object sub:date;
+    rdf:predicate dct:issued;
+    rdf:subject sub:materialization .
+  
+  sub:st94 rdf:object sub:version;
+    rdf:predicate dct:hasVersion;
+    rdf:subject sub:fdo .
+  
+  sub:st95 a nt:OptionalStatement;
+    rdf:object sub:fip;
+    rdf:predicate <https://w3id.org/fair/fip/terms/implements>;
+    rdf:subject sub:fdo .
+  
+  sub:st96 rdf:object sub:startdate;
+    rdf:predicate <https://www.w3.org/ns/dcat#startDate>;
+    rdf:subject sub:fdo .
+  
+  sub:st97 rdf:object sub:enddate;
+    rdf:predicate <https://www.w3.org/ns/dcat#endDate>;
+    rdf:subject sub:fdo .
+  
+  sub:st98 a nt:OptionalStatement;
+    rdf:object sub:funder;
+    rdf:predicate <https://schema.org/funder>;
+    rdf:subject sub:fdo .
+  
+  sub:st99 a nt:OptionalStatement;
+    rdf:object sub:project;
+    rdf:predicate <https://w3id.org/dcso/ns/core#hasProject>;
+    rdf:subject sub:fdo .
+  
+  sub:startdate a nt:LiteralPlaceholder;
+    rdfs:label "start date" .
+  
+  sub:version a nt:LiteralPlaceholder;
+    rdfs:label "version" .
+  
+  <https://www.w3.org/ns/dcat#accessURL> rdfs:label "has access URL" .
+  
+  <https://www.w3.org/ns/dcat#contactPoint> rdfs:label "has contact point" .
+  
+  <https://www.w3.org/ns/dcat#endDate> rdfs:label "has end date" .
+  
+  <https://www.w3.org/ns/dcat#startDate> rdfs:label "has start date" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-7038-1457 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0002-7038-1457 foaf:name "Saranjeet Kaur Bhogal" .
+  
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  this: dct:created "2026-04-11T08:25:22.506Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0002-7038-1457, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAxDynu01So9enFEEpMJZ7n_TR9oAtb4dmxnJ0JXHkFT0>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Declaring a Research Software Development Plan";
+    prov:wasDerivedFrom <https://w3id.org/np/RADTamCLFyVFKNCDWG_gkK45_gGwKO_y--faVrgyr2MCw>,
+      <https://w3id.org/np/RAJjrhBCrS7kfuH9w1ikT5tif8EVnO1I4U_Jx8QeWXS0w>, <https://w3id.org/np/RAcxlB1yK_mSQ_b9ICHVinnpKz-2gWw_Uthp5YRVzpPLM>,
+      <https://w3id.org/np/RAfG70EL5Jk5ZK5VvPskNkOe8jcPq1AmO3nevclMlBCEM>, <https://w3id.org/np/RAu6at0gGoRR49TXoTlvHUouq4I_hCctW5R947_SIw3J4>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAppdsQYDPbR1UJtt/udBMTGOFz+m/gNir1lG9GPsTu8Akxp/wdRxR5ysj8Ax1Vigq1zx8l4oq8cmivawV2cxjGyDXsmTt7X5lAi7zmZAWyN18egLS/brgO99SbevuUUJsJCZUjX7z9nU4oHvYwT895mhd2iAgxZGNGiQpGP1BwqjY5Ggqmg2dgEOmjkARu6UZGhLWSTDQP0sz4HsCIhdNKgNV89nhm/bAygc1MAbAs0wb5jMfOnwfcdXAgyeJelI5zPhS/6UI7S4CjuF4ItyCNghnfc6exwAHLND3IodYb6fGtpDCMNo7/Zkw9M8QVa6DpfbF/H/DlphouztiCmxjNQIDAQAB";
+    npx:hasSignature "oD7EbTlkSz49Hbr7BJ5PGR2XM+r2aYMQjgOfn26tuyXUbJ4AHWoGSh42eKCc1JBaYldic/s9mS6RhhpfOQKlmJFaewzTKEE5FrHQcAs+1Tq7WUsXaoqncZvHFCDf3wFhx31AKPX7GLQqvfN8/rpBSMQVXqUBrNowlHfzHpGfm1hWAXauWYc0NRES2MOCqnSnv/DYHZIOYGqmWvhoNAOQP8L3nErvQM/nO20a6oElMYECgG8ILI9SnZn68iT0TzX6TpHXDQggvfZcBrX44Z+l+8bc5f+m4qGR2xsshY1fWtgklGFZILk0lEGGlcEgtXe41xJdw7fhbtl4PAAgLs7KGg==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-7038-1457 .
+}
+

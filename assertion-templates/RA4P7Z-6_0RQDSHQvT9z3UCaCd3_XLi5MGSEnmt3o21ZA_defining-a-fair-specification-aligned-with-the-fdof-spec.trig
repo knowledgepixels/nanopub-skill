@@ -1,0 +1,232 @@
+@prefix this: <https://w3id.org/np/RA4P7Z-6_0RQDSHQvT9z3UCaCd3_XLi5MGSEnmt3o21ZA> .
+@prefix sub: <https://w3id.org/np/RA4P7Z-6_0RQDSHQvT9z3UCaCd3_XLi5MGSEnmt3o21ZA#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:creator rdfs:label "created by" .
+  
+  <http://usefulinc.com/ns/doap#implements> rdfs:label "implements" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has the description" .
+  
+  rdfs:label rdfs:label "is called" .
+  
+  rdfs:seeAlso rdfs:label "is further described by" .
+  
+  <http://www.w3.org/2004/02/skos/core#closeMatch> rdfs:label "can in some situations be considered the same as" .
+  
+  <http://www.w3.org/2004/02/skos/core#exactMatch> rdfs:label "is (almost) exactly the same as" .
+  
+  <http://www.w3.org/2004/02/skos/core#relatedMatch> rdfs:label "is related to" .
+  
+  <https://w3id.org/fair/fip/terms/Available-FAIR-Enabling-Resource> rdfs:label "available FAIR Enabling Resource" .
+  
+  <https://w3id.org/fair/fip/terms/Communication-protocol> rdfs:label "communication protocol" .
+  
+  <https://w3id.org/fair/fip/terms/FAIR-Enabling-Resource-to-be-Developed> rdfs:label
+      "FAIR Enabling Resource to be developed" .
+  
+  <https://w3id.org/fair/fip/terms/Knowledge-representation-language> rdfs:label "knowledge representation language" .
+  
+  <https://w3id.org/fair/fip/terms/Metadata-data-linking-schema> rdfs:label "metadata-data linking schema" .
+  
+  <https://w3id.org/fair/fip/terms/Metadata-schema> rdfs:label "metadata schema" .
+  
+  <https://w3id.org/fair/fip/terms/Provenance-model> rdfs:label "provenance model" .
+  
+  <https://w3id.org/fair/fip/terms/Semantic-model> rdfs:label "semantic model" .
+  
+  <https://w3id.org/fair/fip/terms/Structured-vocabulary> rdfs:label "structured vocabulary" .
+  
+  <https://w3id.org/fdof/ontology#hasEncodingFormat> rdfs:label "has the format" .
+  
+  <https://w3id.org/fdof/ontology#hasInformationObjectType> rdfs:label "is of type of" .
+  
+  <https://w3id.org/fdof/ontology#hasMetadata> rdfs:label "has its metadata in" .
+  
+  <https://w3id.org/fdof/ontology#isMaterializedBy> rdfs:label "is accessible via" .
+  
+  <https://w3id.org/gff/fip/terms/registered-on> rdfs:label "registered on" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Template for defining a FAIR specification for the following subtypes: metadata schema, metadata-data linking schema, communication protocol, knowledge representation language, structured vocabulary, semantic model and provenance model.";
+    rdfs:label "Defining a FAIR Specification aligned with the FDOF spec";
+    nt:hasRequiredPubinfoElement ns1:RA_R5w4lZ-6xuZyylG8qSlMhmWBaTE41-zlhiBVUQblCc;
+    nt:hasStatement sub:st02, sub:st1, sub:st2, sub:st3, sub:st3a, sub:st4, sub:st5, sub:st6,
+      sub:st6a, sub:st6e, sub:st7, sub:st8, sub:st9;
+    nt:hasTag "FDO";
+    nt:hasTargetNanopubType <https://w3id.org/fair/fip/terms/FAIR-Enabling-Resource>,
+      <https://w3id.org/fair/fip/terms/FAIR-Supporting-Resource> .
+  
+  sub:comment a nt:LiteralPlaceholder;
+    rdfs:label "description of the resource" .
+  
+  sub:creator a nt:GuidedChoicePlaceholder;
+    rdfs:label "FAIR Implementation Community that created the resource";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FFAIR-Implementation-Community&searchterm=" .
+  
+  sub:format a nt:ExternalUriPlaceholder;
+    rdfs:label "MIME type, such as \"text/csv\" or \"application/trig\"";
+    nt:hasPrefix "https://iana.org/assignments/media-types/";
+    nt:hasPrefixLabel "the MIME type" .
+  
+  sub:mappedResource a nt:ExternalUriPlaceholder;
+    rdfs:label "the identifier of the related resource" .
+  
+  sub:mappingPredicate a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose the relation type";
+    nt:possibleValue <http://www.w3.org/2004/02/skos/core#closeMatch>, <http://www.w3.org/2004/02/skos/core#exactMatch>,
+      <http://www.w3.org/2004/02/skos/core#relatedMatch> .
+  
+  sub:media-object a nt:ExternalUriPlaceholder;
+    rdfs:label "URL of specification file" .
+  
+  sub:metadataURI a nt:ExternalUriPlaceholder;
+    rdfs:label "GUPRI of file metadata" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the resource" .
+  
+  sub:registry a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the registry";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FRegistry&searchterm=" .
+  
+  sub:resource a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix" .
+  
+  sub:resource-type1 a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose resource availability";
+    nt:possibleValue <https://w3id.org/fair/fip/terms/Available-FAIR-Enabling-Resource>,
+      <https://w3id.org/fair/fip/terms/FAIR-Enabling-Resource-to-be-Developed> .
+  
+  sub:resource-type2 a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose resource type(s)";
+    nt:possibleValue <https://w3id.org/fair/fip/terms/Communication-protocol>, <https://w3id.org/fair/fip/terms/Knowledge-representation-language>,
+      <https://w3id.org/fair/fip/terms/Metadata-data-linking-schema>, <https://w3id.org/fair/fip/terms/Metadata-schema>,
+      <https://w3id.org/fair/fip/terms/Provenance-model>, <https://w3id.org/fair/fip/terms/Semantic-model>,
+      <https://w3id.org/fair/fip/terms/Structured-vocabulary> .
+  
+  sub:specification a nt:ExternalUriPlaceholder;
+    rdfs:label "link to a specification that this resource implements" .
+  
+  sub:st02 rdf:object <https://w3id.org/fair/fip/terms/FAIR-Specification>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st1 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:resource .
+  
+  sub:st2 rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:resource .
+  
+  sub:st3 rdf:object sub:resource-type1;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st3a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:resource-type2;
+    rdf:predicate <https://w3id.org/fdof/ontology#hasInformationObjectType>;
+    rdf:subject sub:resource .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:creator;
+    rdf:predicate dct:creator;
+    rdf:subject sub:resource .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:registry;
+    rdf:predicate <https://w3id.org/gff/fip/terms/registered-on>;
+    rdf:subject sub:resource .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:website;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:resource .
+  
+  sub:st6a a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st6b, sub:st6c, sub:st6d .
+  
+  sub:st6b rdf:object sub:media-object;
+    rdf:predicate <https://w3id.org/fdof/ontology#isMaterializedBy>;
+    rdf:subject sub:resource .
+  
+  sub:st6c rdf:object sub:format;
+    rdf:predicate <https://w3id.org/fdof/ontology#hasEncodingFormat>;
+    rdf:subject sub:media-object .
+  
+  sub:st6d rdf:object sub:metadataURI;
+    rdf:predicate <https://w3id.org/fdof/ontology#hasMetadata>;
+    rdf:subject sub:media-object .
+  
+  sub:st6e a nt:OptionalStatement;
+    rdf:object sub:specification;
+    rdf:predicate <http://usefulinc.com/ns/doap#implements>;
+    rdf:subject sub:resource .
+  
+  sub:st7 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:mappedResource;
+    rdf:predicate sub:mappingPredicate;
+    rdf:subject sub:resource .
+  
+  sub:st8 rdf:object <https://w3id.org/fdof/ontology#FAIRDigitalInformationObject>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st9 rdf:object nt:NANOPUB;
+    rdf:predicate <https://w3id.org/fdof/ontology#hasMetadata>;
+    rdf:subject sub:resource .
+  
+  sub:website a nt:UriPlaceholder;
+    rdfs:label "a link to a website with further information" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCM0tu3I/KK6A/qPha/6pfngQZ4LBQpLnKAcIUuZLnSEb0epJ2IoY3zh/4N42us/6LpCHgZZZtSOTm5/KVo+OTDIqo294PpEZAO70u5DcMcGMC5OufzxGKs3Dwdo6XqPiDHxXuiaKCTO7/ABWAi7CtFoMrqJAHfeyqe82dAiH2IiwIDAQAB";
+    npx:hasSignature "RaLE/3G5XGRznrWIXCrIy7Cf7ZYQV4xcOo1Ld08E74S3Y365FKNH5uG5Eb45AUwpoOj2gI8w4Y9bfv5Zlm4CR8g3LcVgTxxHVULJ08p2isj4Q2CMm3KK/5GkMW3DX83uGND4RVTyWDqXEwjzWCi7XQugt5TA4ulPdkCjBk56b7s=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+  
+  this: dct:created "2024-11-16T16:43:22.365Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAgtyrSb4TTffyfB24uOo2x9lnPcd2DGRzUUyjE5iuC6g>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Defining a FAIR Specification aligned with the FDOF spec";
+    prov:wasDerivedFrom ns1:RAntWwY-oLQ5QTSviLZrZ6GD6dniz-_skWtO-4_8031zU, ns1:RAtG8zeo_0OYP63K60rrot8vFOkHNOg_1_zu618NbL4pI,
+      <https://w3id.org/np/RA2FzWT-kYUWZae1lP-dcHbpDzXgprPS9NTbeIJ3feEGs>, <https://w3id.org/np/RAFvNgxUbK2Fpwha2zCnIZ3AO3hPYoQhu9C63oLxbL1WI>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM, ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA,
+      ns1:RAfvIvxTx8LRS2646kVkqvcrSf8fbIyxVjMe_vewrqQHM, ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90,
+      ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAGBEisKAxwcQTdfR7ALwCeQBrUVeU23F8uFvFmO-H6F0> .
+}
+

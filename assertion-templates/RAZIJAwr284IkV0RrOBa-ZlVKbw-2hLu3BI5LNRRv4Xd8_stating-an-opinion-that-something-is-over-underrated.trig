@@ -1,0 +1,75 @@
+@prefix this: <https://w3id.org/np/RAZIJAwr284IkV0RrOBa-ZlVKbw-2hLu3BI5LNRRv4Xd8> .
+@prefix sub: <https://w3id.org/np/RAZIJAwr284IkV0RrOBa-ZlVKbw-2hLu3BI5LNRRv4Xd8#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://www.wikidata.org/entity/Q115564437> rdfs:label "ChatGPT - artificial intelligence chatbot developed by OpenAI" .
+  
+  <http://www.wikidata.org/entity/Q309901> rdfs:label "open data - data that is openly accessible and usable to others" .
+  
+  <http://www.wikidata.org/entity/Q590076> rdfs:label "Pizza Hawaii -  pizza variety, usually topped with pineapple pieces and ham" .
+  
+  <http://www.wikidata.org/entity/Q72> rdfs:label "Zürich - capital of the canton of Zürich, Switzerland" .
+  
+  <https://w3id.org/kpxl/opo/terms/thinksIsOverrated> rdfs:label "think this is overrated:" .
+  
+  <https://w3id.org/kpxl/opo/terms/thinksIsUnderrated> rdfs:label "think this is underrated:" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication expresses that its creator thinks the given thing is either overrated or underrated. This thing can be anything, such as an approach, a website, or a city.";
+    rdfs:label "Stating an opinion that something is over-/underrated";
+    nt:hasNanopubLabelPattern "${isOverUnderrated} ${thing}";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Social" .
+  
+  sub:isOverUnderrated a nt:RestrictedChoicePlaceholder;
+    nt:hasDefaultValue <https://w3id.org/kpxl/opo/terms/thinksIsOverrated>;
+    nt:possibleValue <https://w3id.org/kpxl/opo/terms/thinksIsOverrated>, <https://w3id.org/kpxl/opo/terms/thinksIsUnderrated> .
+  
+  sub:st1 rdf:object sub:thing;
+    rdf:predicate sub:isOverUnderrated;
+    rdf:subject nt:CREATOR .
+  
+  sub:thing a nt:GuidedChoicePlaceholder;
+    rdfs:label "the thing you think is over- or underrated";
+    nt:possibleValue <http://www.wikidata.org/entity/Q115564437>, <http://www.wikidata.org/entity/Q309901>,
+      <http://www.wikidata.org/entity/Q590076>, <http://www.wikidata.org/entity/Q72>;
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "D9f6EmTQ9bteoUr/YP8tCsirkFN8eSGOlt0Oqp/bRfZ9+n2sttClGB0vKlga7P1SQES76qs0zL2HG+Ka5JUSU/dXJLul8PvpyayowwHk2EEK5B6Hvi76BFZSrA5mnXItl2snuR1nuxFIw/RRAoFOt7yhDIYPOg617OfW/2l1Too=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-10-03T20:11:57.843Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <http://purl.org/np/RAZl6zoPE0fsmao_xKl5h1rNR2u6vib0EdBWH1FPvi11U>;
+    rdfs:label "Template: Stating an opinion that something is over-/underrated";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so> .
+}
+

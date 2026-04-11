@@ -1,0 +1,129 @@
+@prefix this: <https://w3id.org/np/RAIpUGQSPK-jb-1hJwlAMJmze-VdnOUzHYZ4de7qpUkMQ> .
+@prefix sub: <https://w3id.org/np/RAIpUGQSPK-jb-1hJwlAMJmze-VdnOUzHYZ4de7qpUkMQ/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:object rdfs:label "has the object" .
+  
+  rdf:predicate rdfs:label "has the predicate" .
+  
+  rdf:subject rdfs:label "has the subject" .
+  
+  rdf:type rdfs:label "is a - connects a thing (left) to the class (right) it belongs to" .
+  
+  <http://www.w3.org/ns/oa#Annotation> rdfs:label "web annotation - a web annotation of a document or other thing" .
+  
+  <http://www.w3.org/ns/oa#hasBody> rdfs:label "has as body" .
+  
+  <http://www.w3.org/ns/oa#hasTarget> rdfs:label "has as target - connects an annotation to its target" .
+  
+  <http://www.w3.org/ns/oa#highlighting> rdfs:label "highlighting" .
+  
+  <http://www.w3.org/ns/oa#motivatedBy> rdfs:label "has the purpose of" .
+  
+  <https://w3id.org/kpxl/gen/terms/ImpliedRelation> rdfs:label "implied relation" .
+  
+  sub:annotation a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this annotation" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication represents an annotation of a text according to the <a href=\"https://www.w3.org/ns/oa\">Web Annotation Vocabulary</a> in order to highlight an implied relation.";
+    rdfs:label "Highlighting an implied relation from a resource";
+    nt:hasNanopubLabelPattern "${target} implies: ${relationSubj} ${relationPred} ${relationObj}";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st11, sub:st20, sub:st21, sub:st22,
+      sub:st23;
+    nt:hasTag "Annotations" .
+  
+  sub:relation a nt:LocalResource;
+    rdfs:label "a relation" .
+  
+  sub:relationObj a nt:ValuePlaceholder;
+    rdfs:label "the object URI or literal" .
+  
+  sub:relationPred a nt:ExternalUriPlaceholder;
+    rdfs:label "the predicate URI";
+    nt:hasDefaultValue rdfs:label .
+  
+  sub:relationSubj a nt:ExternalUriPlaceholder;
+    rdfs:label "the subject URI" .
+  
+  sub:st00 rdf:object <http://www.w3.org/ns/oa#Annotation>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:annotation .
+  
+  sub:st01 rdf:object <http://www.w3.org/ns/oa#highlighting>;
+    rdf:predicate <http://www.w3.org/ns/oa#motivatedBy>;
+    rdf:subject sub:annotation .
+  
+  sub:st02 rdf:object sub:target;
+    rdf:predicate <http://www.w3.org/ns/oa#hasTarget>;
+    rdf:subject sub:annotation .
+  
+  sub:st11 rdf:object sub:relation;
+    rdf:predicate <http://www.w3.org/ns/oa#hasBody>;
+    rdf:subject sub:annotation .
+  
+  sub:st20 rdf:object <https://w3id.org/kpxl/gen/terms/ImpliedRelation>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:relation .
+  
+  sub:st21 rdf:object sub:relationSubj;
+    rdf:predicate rdf:subject;
+    rdf:subject sub:relation .
+  
+  sub:st22 rdf:object sub:relationPred;
+    rdf:predicate rdf:predicate;
+    rdf:subject sub:relation .
+  
+  sub:st23 rdf:object sub:relationObj;
+    rdf:predicate rdf:object;
+    rdf:subject sub:relation .
+  
+  sub:target a nt:ExternalUriPlaceholder;
+    rdfs:label "the URI/URL of the resource that is being annotated" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-10-15T08:28:17.503Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAivw2Xkkrep8m1rdWneBuiz7xcxKw__wSv5Eti-ujXd8>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Highlighting an implied relation from a resource";
+    prov:wasDerivedFrom <https://w3id.org/np/RAXMEZuzjwwx83dyTZp4KB5hyo2kC_nDgsSD9aMWxMYhI>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "YH6tw+jsTtbswt7tspqQoUQMXrUJR9Id1oHEqnEYviaMx3zd/3xcEyOznh2iJVfEdDQgpBd5r9ymq27g6ZNUj+hBFDU+z039qOWStA2vmAHbUp1LttmSQL+NkJfTvQKp0MuMJFP1MUxTxm+zXCnPauQrqJBK89+77su7Y8ka5Ao=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

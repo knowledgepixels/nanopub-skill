@@ -1,0 +1,159 @@
+@prefix this: <https://w3id.org/np/RAoqRhQumpvUFzlm5XNqyHYbgsGEeAmVWAb_vWw6V1x1o> .
+@prefix sub: <https://w3id.org/np/RAoqRhQumpvUFzlm5XNqyHYbgsGEeAmVWAb_vWw6V1x1o#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "is described as follows" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "is called" .
+  
+  <https://w3id.org/iadopt/ont/hasConstraint> rdfs:label "has constraint" .
+  
+  <https://w3id.org/iadopt/ont/hasMatrix> rdfs:label "has matrix" .
+  
+  <https://w3id.org/iadopt/ont/hasObjectOfInterest> rdfs:label "has object of interest" .
+  
+  <https://w3id.org/iadopt/ont/hasProperty> rdfs:label "has property" .
+  
+  <https://w3id.org/iadopt/pattern/Constraint> rdfs:label "Pattern Constraint" .
+  
+  <https://w3id.org/iadopt/pattern/hasShacl> rdfs:label "has SHACL" .
+  
+  sub:Component a nt:ValuePlaceholder;
+    rdfs:label "pattern component" .
+  
+  sub:PatConstraint a nt:ValuePlaceholder;
+    rdfs:label "pattern constraint" .
+  
+  sub:PatMatrix a nt:ValuePlaceholder;
+    rdfs:label "pattern matrix" .
+  
+  sub:PatObjectOfInterest a nt:ValuePlaceholder;
+    rdfs:label "pattern object of interest" .
+  
+  sub:PatProperty a nt:ValuePlaceholder;
+    rdfs:label "pattern property" .
+  
+  sub:Shacl a nt:ValuePlaceholder;
+    rdfs:label "SHACL" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Defining a new pattern I-ADOPT aligned variables";
+    rdfs:label "I-ADOPT pattern";
+    nt:hasDefaultProvenance ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:hasRequiredPubinfoElement ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM;
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st9, sub:st91;
+    nt:hasTag "I-ADOPT" .
+  
+  sub:constraintPredicate a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue <https://w3id.org/iadopt/pattern/conditionSpecificConstrains>, <https://w3id.org/iadopt/pattern/datumSpecificConstrains>,
+      <https://w3id.org/iadopt/pattern/dueTo>, <https://w3id.org/iadopt/pattern/freeOf>,
+      <https://w3id.org/iadopt/pattern/impactedBy>, <https://w3id.org/iadopt/pattern/locationSpecificConstrains>,
+      <https://w3id.org/iadopt/pattern/perUnit>, <https://w3id.org/iadopt/pattern/qualitySpecificConstrains>,
+      <https://w3id.org/iadopt/pattern/sizeSpecificConstrains>, <https://w3id.org/iadopt/pattern/temperatureSpecificConstrains>,
+      <https://w3id.org/iadopt/pattern/timeSpecificConstrains>, <https://w3id.org/iadopt/pattern/typeSpecificConstrains> .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the pattern" .
+  
+  sub:name a nt:LongLiteralPlaceholder;
+    rdfs:label "preferred label" .
+  
+  sub:pattern a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix";
+    nt:hasPrefix "https://w3id.org/iadopt/pattern/";
+    nt:hasPrefixLabel "I-ADOPT pattern" .
+  
+  sub:st0 rdf:object <https://w3id.org/iadopt/pattern/Pattern>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:pattern .
+  
+  sub:st1 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:pattern .
+  
+  sub:st2 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:pattern .
+  
+  sub:st3 rdf:object sub:PatProperty;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasProperty>;
+    rdf:subject sub:pattern .
+  
+  sub:st4 rdf:object sub:PatObjectOfInterest;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasObjectOfInterest>;
+    rdf:subject sub:pattern .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:PatMatrix;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasMatrix>;
+    rdf:subject sub:pattern .
+  
+  sub:st6 rdf:object sub:PatConstraint;
+    rdf:predicate <https://w3id.org/iadopt/ont/hasConstraint>;
+    rdf:subject sub:pattern .
+  
+  sub:st7 rdf:object <https://w3id.org/iadopt/pattern/Constraint>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:PatConstraint .
+  
+  sub:st8 rdf:object sub:Component;
+    rdf:predicate sub:constraintPredicate;
+    rdf:subject sub:PatConstraint .
+  
+  sub:st9 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st6, sub:st7, sub:st8 .
+  
+  sub:st91 a nt:OptionalStatement;
+    rdf:object sub:Shacl;
+    rdf:predicate <https://w3id.org/iadopt/pattern/hasShacl>;
+    rdf:subject sub:pattern .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCM0tu3I/KK6A/qPha/6pfngQZ4LBQpLnKAcIUuZLnSEb0epJ2IoY3zh/4N42us/6LpCHgZZZtSOTm5/KVo+OTDIqo294PpEZAO70u5DcMcGMC5OufzxGKs3Dwdo6XqPiDHxXuiaKCTO7/ABWAi7CtFoMrqJAHfeyqe82dAiH2IiwIDAQAB";
+    npx:hasSignature "TbauBwavxpyYgD1xVIyGvEpQvpUG+W3Zq1Wug6BAG/Mq3p3ErC9yyA7kAtjkaC2UREP8DTy/rtmKwJmaHgtrs/yz6L4NzO9TlTZ/XHai/h3MXlL0HMkYfdzyOP2dXbbxgqK0qprFjM5vAjUCACOhlW34hfcoc9G++51QC9kvxQQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+  
+  this: dct:created "2025-04-10T20:39:33.918Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAnsBG2NPqjeBSgoWYkS_vMm6-CLeNvXANe2Enjzwdx4Q>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: I-ADOPT pattern";
+    prov:wasDerivedFrom ns1:RA5oI_nRWvSLBzSIMgm1ZQDjI6bKhYzoIlmj8ZZsJfRck, ns1:RAZR0ieT8ynmPI28fdQheCRDbL8znCeN_udhiSbQHXBS8,
+      <https://w3id.org/np/RAEVOkutry7FzqygKEpSX84xsFHX1kB6Vp9yUHEG1LSe8>, <https://w3id.org/np/RAXXHE2l2ftL7gxLKqurZpk-2o3pqm-Z1r8GMNXQB6Ea0>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAGBEisKAxwcQTdfR7ALwCeQBrUVeU23F8uFvFmO-H6F0> .
+}
+

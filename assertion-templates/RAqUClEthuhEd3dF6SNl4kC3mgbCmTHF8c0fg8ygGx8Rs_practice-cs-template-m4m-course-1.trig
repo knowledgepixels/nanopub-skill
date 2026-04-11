@@ -1,0 +1,132 @@
+@prefix this: <https://w3id.org/np/RAqUClEthuhEd3dF6SNl4kC3mgbCmTHF8c0fg8ygGx8Rs> .
+@prefix sub: <https://w3id.org/np/RAqUClEthuhEd3dF6SNl4kC3mgbCmTHF8c0fg8ygGx8Rs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:identifier rdfs:label "has identifier" .
+  
+  rdfs:comment rdfs:label "has description" .
+  
+  rdfs:label rdfs:label "has label" .
+  
+  <https://w3id.org/fair/fip/terms/has-research-domain> rdfs:label "has research domain" .
+  
+  sub:CS a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "Case Study" .
+  
+  sub:Domain a nt:RestrictedChoicePlaceholder;
+    nt:possibleValuesFrom ns1:RACXDZHEowTYDAzZvdmD0qIGpXZwY5ghMRBBlt6N8Iu5s .
+  
+  sub:LeadInstitutionName a nt:LiteralPlaceholder;
+    rdfs:label "Lead Institution Name" .
+  
+  sub:ORCID a nt:ExternalUriPlaceholder .
+  
+  sub:OtherPartners a nt:LiteralPlaceholder;
+    rdfs:label "Other Partners" .
+  
+  sub:ROR a nt:ExternalUriPlaceholder .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Template for defining a Case study";
+    rdfs:label "Practice CS template M4M course 1";
+    nt:hasStatement sub:st1, sub:st10, sub:st11, sub:st2, sub:st9 .
+  
+  sub:comment a nt:LiteralPlaceholder .
+  
+  sub:name a nt:LiteralPlaceholder .
+  
+  sub:st1 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:CS .
+  
+  sub:st10 a nt:GroupedStatement;
+    nt:hasStatement sub:st3, sub:st4, sub:st5 .
+  
+  sub:st11 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st6, sub:st7, sub:st8 .
+  
+  sub:st2 rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:CS .
+  
+  sub:st3 rdf:object sub:LeadInstitutionName;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:CS .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:ROR;
+    rdf:predicate dct:identifier;
+    rdf:subject sub:CS .
+  
+  sub:st5 rdf:object sub:ORCID;
+    rdf:predicate <https://www.w3.org/ns/dcat#contactPoint>;
+    rdf:subject sub:CS .
+  
+  sub:st6 rdf:object sub:OtherPartners;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:CS .
+  
+  sub:st7 a nt:OptionalStatement;
+    rdf:object sub:ROR;
+    rdf:predicate dct:identifier;
+    rdf:subject sub:CS .
+  
+  sub:st8 rdf:object sub:ORCID;
+    rdf:predicate <https://www.w3.org/ns/dcat#contactPoint>;
+    rdf:subject sub:CS .
+  
+  sub:st9 a nt:RepeatableStatement;
+    rdf:object sub:Domain;
+    rdf:predicate <https://w3id.org/fair/fip/terms/has-research-domain>;
+    rdf:subject sub:CS .
+  
+  <https://www.w3.org/ns/dcat#contactPoint> rdfs:label "has contact point" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo <https://ror.org/056j50v04> .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-0319-6542 foaf:name "Dario Bijker" .
+  
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  this: dct:created "2025-06-03T12:42:32.705Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-0319-6542, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Practice CS template M4M course 1";
+    prov:wasDerivedFrom ns1:RA1Pkti0rTP9IwyB7fOMQKY38XAQ18PdqCPupchHjzSKM, ns1:RA2bW2ZPpBR2wSx-lrfXZE7CBqJKqg2x7wYhnIPg5NttI,
+      <https://w3id.org/np/RAICeBp_BCYUenyUlMhwFin6SXqmKhHuRAA7GLgXmfA4Q>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANUBzTXWga5sX6dA3MhSVb4M8bdc74zvsfN_z6I5Ka1I;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA5reLVXOCPQFWr2UiCJb19ES7NwOpQRmudb17e2iB0c4> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCfUo0FLu1y2EeueL40lqkVdm9fTJa6WhF6MhyjhKAagbuaWe1wwyk453ot8KAQ3aHtL3B8Ze/aLf+wHrBhS0nz4wS6urc8ksIzlLCoa9KIfa0JuQunBLFptV0U9fTR8kDlPoB+klNrUfzeCXmkdgnnUiiwBoN+j1eN87XMSHKI3wIDAQAB";
+    npx:hasSignature "e/Ax753Fn//KBKDXR65RXFSUAwPx6od8GYJ4M+SqI2nI4I9KN/z8w6o11mzK0CsBbfAS/RPf6RoC2WLzRTpelYNLHSejylbFfdDBKTDEQh0lWNWwJiMouHK1inqEJVl8TruqqR/Y341Y1LzOHaMakAyZvFkW5Zq22gWiVRoIR/U=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-0319-6542 .
+}
+

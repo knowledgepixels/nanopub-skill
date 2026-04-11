@@ -1,0 +1,115 @@
+@prefix this: <https://w3id.org/np/RA9gIRwHxnN_YmLyYwwtAu7Uh4vUvvg_7YTfkOwfp6hVQ> .
+@prefix sub: <https://w3id.org/np/RA9gIRwHxnN_YmLyYwwtAu7Uh4vUvvg_7YTfkOwfp6hVQ/> .
+@prefix schema: <http://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  schema:ReadAction rdfs:label "read action" .
+  
+  schema:agent rdfs:label "has reader" .
+  
+  schema:endTime rdfs:label "has read date" .
+  
+  schema:object rdfs:label "has the read item" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has comment" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "The creator of such a nanopublication declares to have read a specific item (paper, book, article, etc.).";
+    rdfs:label "Declaring to have read something";
+    nt:hasNanopubLabelPattern "Read: ${label}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6;
+    nt:hasTag "Reading";
+    nt:hasTargetNanopubType schema:ReadAction .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "comment or note about the reading" .
+  
+  sub:item a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the read item (e.g. DOI URL)" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "short label (e.g. 'Doe et al. 2024')" .
+  
+  sub:readDate a nt:LiteralPlaceholder;
+    rdfs:label "date read (YYYY, YYYY-MM, or YYYY-MM-DD)";
+    nt:hasRegex "[0-9]{4}(-[0-9]{2}(-[0-9]{2})?)?" .
+  
+  sub:readaction a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this" .
+  
+  sub:reader a nt:AgentPlaceholder;
+    rdfs:label "who read it";
+    nt:hasDefaultValue nt:CREATOR .
+  
+  sub:st1 rdf:object schema:ReadAction;
+    rdf:predicate rdf:type;
+    rdf:subject sub:readaction .
+  
+  sub:st2 rdf:object sub:item;
+    rdf:predicate schema:object;
+    rdf:subject sub:readaction .
+  
+  sub:st3 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:item .
+  
+  sub:st4 rdf:object sub:reader;
+    rdf:predicate schema:agent;
+    rdf:subject sub:readaction .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:readDate;
+    rdf:predicate schema:endTime;
+    rdf:subject sub:readaction .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:readaction .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-04-07T16:05:07Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RABlU0fGwHEsWeb0LQEUP3nNGqoLo_wSOqveZ4sGTyN-s>;
+    rdfs:label "Declaring to have read something";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "MQET15MuZqAPNVHjDQrGTWJuP4B44yeIFPcE07gV8pyAq50WyGOqurLoZ88IyhnolIC5PA735LQFYQUR4+oPCz/GXH+IU5NpedWNqeBLzEbVSaDAgGlBqTx/w68jUVh68gV7/bAMc3AC2mSNEMmx+mZ6PK/zJETcMxrluPNBH30=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

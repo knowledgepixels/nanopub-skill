@@ -1,0 +1,162 @@
+@prefix this: <http://purl.org/np/RA62Ozy4T4_9_JXRCUQOPBkysmvxYOWNjzErxGY5c7zyk> .
+@prefix sub: <http://purl.org/np/RA62Ozy4T4_9_JXRCUQOPBkysmvxYOWNjzErxGY5c7zyk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:annotation a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this annotation" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication represents an annotation of a text according to the <a href=\"https://www.w3.org/ns/oa\">Web Annotation Vocabulary</a>.";
+    rdfs:label "Annotating a text";
+    nt:hasNanopubLabelPattern "Annotation of ${source}: '${body-text}'";
+    nt:hasStatement sub:st0, sub:st1, sub:st1.1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6,
+      sub:st7, sub:st8, sub:st9;
+    nt:hasTag "Annotations" .
+  
+  sub:body a nt:LocalResource;
+    rdfs:label "an annotation body" .
+  
+  sub:body-text a nt:LongLiteralPlaceholder;
+    rdfs:label "write your annotation text here" .
+  
+  sub:motivation a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose motivation";
+    nt:possibleValuesFrom <https://w3id.org/np/RACsOf8k6zeAMnUDOjv2IkCKgQmom-2VRNTKKt70kc57k> .
+  
+  sub:quote a nt:LiteralPlaceholder;
+    rdfs:label "the copy of the text being selected" .
+  
+  sub:quote-prefix a nt:LiteralPlaceholder;
+    rdfs:label "a snippet of text immediately before the selected text" .
+  
+  sub:quote-suffix a nt:LiteralPlaceholder;
+    rdfs:label "a snippet of text immediately after the selected text" .
+  
+  sub:selector a nt:LocalResource;
+    rdfs:label "a selector" .
+  
+  sub:source a nt:ExternalUriPlaceholder;
+    rdfs:label "the URI/URL of the source that is being annotated" .
+  
+  sub:st0 rdf:object <http://www.w3.org/ns/oa#Annotation>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:annotation .
+  
+  sub:st1 a nt:AdvancedStatement;
+    rdf:object sub:body;
+    rdf:predicate <http://www.w3.org/ns/oa#hasBody>;
+    rdf:subject sub:annotation .
+  
+  sub:st1.1 rdf:object sub:body-text;
+    rdf:predicate rdf:value;
+    rdf:subject sub:body .
+  
+  sub:st2 a nt:AdvancedStatement;
+    rdf:object sub:target;
+    rdf:predicate <http://www.w3.org/ns/oa#hasTarget>;
+    rdf:subject sub:annotation .
+  
+  sub:st3 rdf:object sub:source;
+    rdf:predicate <http://www.w3.org/ns/oa#hasSource>;
+    rdf:subject sub:target .
+  
+  sub:st4 a nt:AdvancedStatement;
+    rdf:object sub:selector;
+    rdf:predicate <http://www.w3.org/ns/oa#hasSelector>;
+    rdf:subject sub:target .
+  
+  sub:st5 a nt:AdvancedStatement;
+    rdf:object <http://www.w3.org/ns/oa#TextQuoteSelector>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:selector .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:quote-prefix;
+    rdf:predicate <http://www.w3.org/ns/oa#prefix>;
+    rdf:subject sub:selector .
+  
+  sub:st7 rdf:object sub:quote;
+    rdf:predicate <http://www.w3.org/ns/oa#exact>;
+    rdf:subject sub:selector .
+  
+  sub:st8 a nt:OptionalStatement;
+    rdf:object sub:quote-suffix;
+    rdf:predicate <http://www.w3.org/ns/oa#suffix>;
+    rdf:subject sub:selector .
+  
+  sub:st9 a nt:OptionalStatement;
+    rdf:object sub:motivation;
+    rdf:predicate <http://www.w3.org/ns/oa#motivatedBy>;
+    rdf:subject sub:annotation .
+  
+  sub:target a nt:LocalResource;
+    rdfs:label "a target" .
+  
+  rdf:type rdfs:label "is a - connects a thing (left) to the class (right) it belongs to" .
+  
+  rdf:value rdfs:label "has the value - links an identifier to its (textual) value" .
+  
+  <http://www.w3.org/ns/oa#Annotation> rdfs:label "web annotation - a web annotation of a document or other thing" .
+  
+  <http://www.w3.org/ns/oa#TextQuoteSelector> rdfs:label "text quote selector - a text quote selector describes a range of text by copying it, and including some of the text immediately before (a prefix) and after (a suffix)" .
+  
+  <http://www.w3.org/ns/oa#exact> rdfs:label "refers to the text - refers to a copy of the text which is being selected" .
+  
+  <http://www.w3.org/ns/oa#hasBody> rdfs:label "has as body - connects an annotation to its body element" .
+  
+  <http://www.w3.org/ns/oa#hasSelector> rdfs:label "has as selector - connects an annotation to its selector" .
+  
+  <http://www.w3.org/ns/oa#hasSource> rdfs:label "has the source - links to the source that is being annotated" .
+  
+  <http://www.w3.org/ns/oa#hasTarget> rdfs:label "has as target - connects an annotation to its target" .
+  
+  <http://www.w3.org/ns/oa#motivatedBy> rdfs:label "is motivated by" .
+  
+  <http://www.w3.org/ns/oa#prefix> rdfs:label "refers to the text right after - refers to a snippet of content that occurs immediately before the content which is being selected" .
+  
+  <http://www.w3.org/ns/oa#suffix> rdfs:label "refers to the text right before - refers to a snippet of content that occurs immediately after the content which is being selected" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-01-29T06:20:22.771Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes ns1:RATeQA78LiUPqoagZD9Kp3_PyDyoDBeXMK1jvQS8wLSLI;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Annotating a text";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "iTb7X63XGnJ1qAXLCfIyACW6t3KcvTSw86baxvzFXbXynhjpSQ3NtHMlwvCxsPt7oUWpeKU9IqUlb1z792zuASy8sZjKY4TnpOVHdB387YJxAFom1tTknYvY3BuKh/PcoKEIH9e7hRAdhaJ9Z5dHveON/CFn09AA6tWs5yB0xgM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+}
+

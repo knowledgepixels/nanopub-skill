@@ -1,0 +1,120 @@
+@prefix this: <http://purl.org/np/RA6dYllajv4g_mnP05N4ZKUZJCfg4sBLcWqGLXnJjaQ8I> .
+@prefix sub: <http://purl.org/np/RA6dYllajv4g_mnP05N4ZKUZJCfg4sBLcWqGLXnJjaQ8I#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "can be described as follows: - gives a thing (left) a human-readable description (right)" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description """<p>Such nanopublications define a new named individual. Such a named individual represets a single concrete or abstract thing that is in some way relevant. Examples are the planet Mars, Marie Curie, or the Universal Declaration of Human Rights.</p>
+
+<p>Such individuals do <strong>not</strong> represent sets of things, like humans, diseases, or ideas. Such concepts representing sets should be defined with the template for classes.</p>""";
+    rdfs:label "Defining a new individual in the namespace of the journal Data Science";
+    nt:hasNanopubLabelPattern "${name}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5;
+    nt:hasTag "Terms";
+    nt:hasTargetNamespace <https://w3id.org/kpxl/ios/ds/np/> .
+  
+  sub:class a nt:GuidedChoicePlaceholder;
+    rdfs:label "the URI of the class this individual belongs to";
+    nt:possibleValue <http://www.w3.org/2002/07/owl#Thing>;
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the individual" .
+  
+  sub:individual a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "URI starting with 'https://w3id.org/kpxl/ios/ds/terms/' - the formal identifier of the individual";
+    nt:hasRegex "https://w3id\\.org/kpxl/ios/ds/terms/.*" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the individual" .
+  
+  sub:sameindividual a nt:ExternalUriPlaceholder;
+    rdfs:label "another URI of exactly the same individual" .
+  
+  sub:seeAlsoLink a nt:UriPlaceholder;
+    rdfs:label "a URL where more information about this individual can be found" .
+  
+  sub:st0 rdf:object <http://www.w3.org/2002/07/owl#NamedIndividual>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:individual .
+  
+  sub:st1 rdf:object sub:class;
+    rdf:predicate rdf:type;
+    rdf:subject sub:individual .
+  
+  sub:st2 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:individual .
+  
+  sub:st3 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:individual .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:seeAlsoLink;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:individual .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:sameindividual;
+    rdf:predicate <http://www.w3.org/2002/07/owl#sameAs>;
+    rdf:subject sub:individual .
+  
+  rdf:type rdfs:label "is a - asserts that the given thing (left) belongs to the given class (right)" .
+  
+  rdfs:label rdfs:label "is called - connects an identifier to a human-readable name for it" .
+  
+  rdfs:seeAlso rdfs:label "is further explained at - connects an identifier to a link with further information about it" .
+  
+  <http://www.w3.org/2002/07/owl#NamedIndividual> rdfs:label "named invididual - a concrete or abstract thing that is given an identifier and a name" .
+  
+  <http://www.w3.org/2002/07/owl#Thing> rdfs:label "thing - the class representing everything" .
+  
+  <http://www.w3.org/2002/07/owl#sameAs> rdfs:label "is exactly the same as" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "KQlOEi9KanVhf8ROglBeG1Ew3NnqlrLcz0g31dkP4ZHpfg6Rlmy9OHC/nhY3rkaJ61GoEmLHpWPpZWuCmN3wi1nqqJnzNIw0ktvAOHMmW+DOlL19r3U7ZeaNIeAFxM6F57RIBjZFcTJGVirOu4/uvighp+oi3jEzzWWhfyJJJnM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-08-16T14:39:37.487Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes ns1:RAps7lFiOhOnQ-tMWteyUopg6YN6aXVtNq2WAuNqCTBOg;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Template: Defining a new individual in the namespace of the journal Data Science";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALtjkZX1lYrTL2eCZp4VTW6vGGxiDZ-aaU-s1Z0Fcs2I> .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+}
+

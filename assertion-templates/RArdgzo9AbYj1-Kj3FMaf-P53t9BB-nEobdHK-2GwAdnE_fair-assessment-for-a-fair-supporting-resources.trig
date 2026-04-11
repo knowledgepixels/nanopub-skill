@@ -1,0 +1,80 @@
+@prefix this: <https://w3id.org/np/RArdgzo9AbYj1-Kj3FMaf-P53t9BB-nEobdHK-2GwAdnE> .
+@prefix sub: <https://w3id.org/np/RArdgzo9AbYj1-Kj3FMaf-P53t9BB-nEobdHK-2GwAdnE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "FAIR assessment for a FAIR Supporting Resources";
+    nt:hasDefaultProvenance <https://w3id.org/np/RAtITn5jr8HALUQtIwxt7b-UN1c969mWlcB0S2oubTmY4>;
+    nt:hasNanopubLabelPattern "Qualification of: ${nanopub}";
+    nt:hasStatement sub:st1, sub:st2;
+    nt:hasTag "3PFF" .
+  
+  sub:assessment a nt:ExternalUriPlaceholder;
+    rdfs:label "assessment report" .
+  
+  sub:level a nt:RestrictedChoicePlaceholder;
+    rdfs:label "FAIRness assessment level";
+    nt:possibleValue <https://w3id.org/fair/fip/terms/1-of-5-Levels>, <https://w3id.org/fair/fip/terms/2-of-5-Levels>,
+      <https://w3id.org/fair/fip/terms/3-of-5-Levels>, <https://w3id.org/fair/fip/terms/4-of-5-Levels>,
+      <https://w3id.org/fair/fip/terms/5-of-5-Levels> .
+  
+  sub:resource a nt:ExternalUriPlaceholder, nt:LocalResource .
+  
+  sub:st1 rdf:object sub:level;
+    rdf:predicate <https://w3id.org/fair/fip/terms/has-FAIR-assessment>;
+    rdf:subject sub:resource;
+    nt:statementOrder "1" .
+  
+  sub:st2 a nt:OptionalStatement;
+    rdf:object sub:assessment;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:resource;
+    nt:statementOrder "2" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  this: dct:created "2025-11-17T12:06:51.405Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAtsO-sNBpucQaGZ2mz-octfYPOqzdTteLf_hqpH6nGMg>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "FAIR assessment for a FAIR Supporting Resources";
+    prov:wasDerivedFrom ns1:RApxf5GV2WVTdth-m-9z5CwCQv-XhyglBx4drl-x1ufX0, <https://w3id.org/np/RA9K9Yjc5LQvR3f0IYnJe5xuJvimSucLcLo9O5HAMLfGg>,
+      <https://w3id.org/np/RAK2lveJFqY1DqRy7ArtpkpqhJ1Lo4XlkRzqqphWN-2Z0>, <https://w3id.org/np/RApEyTXPOt_h81Ao0WpzRhigcgvqrbnNBCo8fEpsZ6CxU>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCM0tu3I/KK6A/qPha/6pfngQZ4LBQpLnKAcIUuZLnSEb0epJ2IoY3zh/4N42us/6LpCHgZZZtSOTm5/KVo+OTDIqo294PpEZAO70u5DcMcGMC5OufzxGKs3Dwdo6XqPiDHxXuiaKCTO7/ABWAi7CtFoMrqJAHfeyqe82dAiH2IiwIDAQAB";
+    npx:hasSignature "Zs6M/RPMLZwTKap2Np8wFp+F3ZfCPalp9uUP/9wz043bvHli8j/nrZ65xQbV4jSLpgfF9fIHtN5BaNbq8UqrXcKbnqT7FiVHrNDfzo/ZF2ebEELgZDunKxYQpmGKiSXe8r2/4mfj3ADPIrvgV+YOuNzBMpWBrNnpSKTvCNc0rcY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+}
+

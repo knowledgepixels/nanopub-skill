@@ -1,0 +1,88 @@
+@prefix this: <http://purl.org/np/RAeBnqUIuBrrVgosVEBhrys1jiWzVRdINrw4wk7jiTLxg> .
+@prefix sub: <http://purl.org/np/RAeBnqUIuBrrVgosVEBhrys1jiWzVRdINrw4wk7jiTLxg#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has comment for decision" .
+  
+  sub:DOI a nt:UriPlaceholder;
+    rdfs:label "DOI of FAIR Connect Thumbnail Article" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Accepting or rejecting a thumbnail article to the FAIR Connect journal";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04;
+    nt:hasTag "Journals" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "write a comment for the decision here" .
+  
+  sub:nanopub a nt:TrustyUriPlaceholder;
+    rdfs:label "add the URI of the nanopublication here" .
+  
+  sub:st01 rdf:object <https://content.iospress.com/journals/fair-connect/1/1>;
+    rdf:predicate <http://purl.org/vocab/frbr/core#partOf>;
+    rdf:subject sub:nanopub .
+  
+  sub:st02 rdf:object sub:status;
+    rdf:predicate <http://purl.org/spar/pso/withStatus>;
+    rdf:subject sub:nanopub .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:nanopub .
+  
+  sub:st04 rdf:object sub:DOI;
+    rdf:predicate <https://w3id.org/fair/connect/hasDOI>;
+    rdf:subject sub:nanopub .
+  
+  sub:status a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue <http://purl.org/spar/pso/accepted-for-publication>, <http://purl.org/spar/pso/rejected-for-publication> .
+  
+  <http://purl.org/spar/pso/accepted-for-publication> rdfs:label "accepted for publication" .
+  
+  <http://purl.org/spar/pso/rejected-for-publication> rdfs:label "rejected for publication" .
+  
+  <http://purl.org/spar/pso/withStatus> rdfs:label "has the status" .
+  
+  <http://purl.org/vocab/frbr/core#partOf> rdfs:label "is submitted as part of" .
+  
+  <https://content.iospress.com/journals/fair-connect/1/1> rdfs:label "FAIR Connect Articles" .
+  
+  <https://w3id.org/fair/connect/hasDOI> rdfs:label "has DOI" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234, orcid:0000-0002-7114-6459 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCtpcftn7kbe6toJbOTDQaCcCssEFSWqt6J4rZ02w+TfY7/eIOgJZYOlpL6G3AzO2RNmVYWRPSlMiykaFuaRuBitvk1GKfGdprfZbvXwmeOxpqCTRBQX9EnFyQyd+Ra/ajfw/UsG8skeu1xnUEpnQbpgbQYc/fvhJNN0UwEc77mOwIDAQAB";
+    npx:hasSignature "PGsMc3ErxZ4IodicvlO/Wc8M6kJ7s8woS/xYt6UO8h6UJ++1cHouG/ioy4Tc8n1b+/Q3uKhN6aBidM6u26VkfLbBQ4wWpHLLsRvSqr2oF4UmaVTM84nUBJMwkYHcDIN4gPsVVthrdsXMdVGZYLfRbzJ1RFE8vxwBOLAQlDQF0So=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-01-10T17:27:05.654+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    npx:supersedes <http://purl.org/np/RA-ukPE6U8ksG5nDuZY7LH3kZ9b-_V3DxXgcqC1oek1Vw>;
+    prov:wasDerivedFrom <http://purl.org/np/RArWRTHdx1bU_ci6qn19UJbSAYh0QPLHOYtYTrfbEfGyA>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RAi6zZAwhaJ23Hzg4lIjlPir6Take3ZQp-lS9skfBEwfQ>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A>,
+      <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RARMBqX_-9lnhkaqk4BuxfLcC6H5cqTlzdtDzeDIwuKdU> .
+}
+

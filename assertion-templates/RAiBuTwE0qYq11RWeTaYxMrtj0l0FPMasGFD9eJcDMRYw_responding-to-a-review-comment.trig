@@ -1,0 +1,116 @@
+@prefix this: <http://purl.org/np/RAiBuTwE0qYq11RWeTaYxMrtj0l0FPMasGFD9eJcDMRYw> .
+@prefix sub: <http://purl.org/np/RAiBuTwE0qYq11RWeTaYxMrtj0l0FPMasGFD9eJcDMRYw#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:AgreementClass a nt:RestrictedChoicePlaceholder;
+    rdfs:label "specify whether you agree with the point made";
+    nt:possibleValue <https://w3id.org/linkflows/reviews/AgreementComment>, <https://w3id.org/linkflows/reviews/DisagreementComment>,
+      <https://w3id.org/linkflows/reviews/PartialAgreementComment> .
+  
+  sub:OtherComment a nt:UriPlaceholder;
+    rdfs:label "the comment that this comment is responding to" .
+  
+  sub:ReferredObject a nt:UriPlaceholder;
+    rdfs:label "the object where this response is implemented" .
+  
+  sub:ResponseActionClass a nt:RestrictedChoicePlaceholder;
+    rdfs:label "specify whether the point has been addressed";
+    nt:possibleValue <https://w3id.org/linkflows/reviews/PointAddressedComment>, <https://w3id.org/linkflows/reviews/PointNotAddressedComment>,
+      <https://w3id.org/linkflows/reviews/PointPartiallyAddressedComment> .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Responding to a review comment";
+    nt:hasNanopubLabelPattern "Response to ${OtherComment}: '${commentText}'";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st10, sub:st11, sub:st20;
+    nt:hasTag "Reviews" .
+  
+  sub:comment a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "This comment" .
+  
+  sub:commentText a nt:LiteralPlaceholder, nt:LongLiteralPlaceholder;
+    rdfs:label "The content of this comment as free text" .
+  
+  sub:st00 rdf:object <https://w3id.org/linkflows/reviews/ResponseComment>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:comment .
+  
+  sub:st01 rdf:object sub:OtherComment;
+    rdf:predicate <https://w3id.org/linkflows/reviews/isResponseTo>;
+    rdf:subject sub:comment .
+  
+  sub:st02 rdf:object sub:ReferredObject;
+    rdf:predicate <https://w3id.org/linkflows/reviews/refersTo>;
+    rdf:subject sub:comment .
+  
+  sub:st10 rdf:object sub:ResponseActionClass;
+    rdf:predicate rdf:type;
+    rdf:subject sub:comment .
+  
+  sub:st11 rdf:object sub:AgreementClass;
+    rdf:predicate rdf:type;
+    rdf:subject sub:comment .
+  
+  sub:st20 rdf:object sub:commentText;
+    rdf:predicate <https://w3id.org/linkflows/reviews/hasCommentText>;
+    rdf:subject sub:comment .
+  
+  rdf:type rdfs:label "is a" .
+  
+  <https://w3id.org/linkflows/reviews/AgreementComment> rdfs:label "comment expressing agreement" .
+  
+  <https://w3id.org/linkflows/reviews/DisagreementComment> rdfs:label "comment expressing disagreement" .
+  
+  <https://w3id.org/linkflows/reviews/PartialAgreementComment> rdfs:label "comment expressing partial agreement" .
+  
+  <https://w3id.org/linkflows/reviews/PointAddressedComment> rdfs:label "comment that declares that the point has been addressed" .
+  
+  <https://w3id.org/linkflows/reviews/PointNotAddressedComment> rdfs:label "comment that declares that the point has not been addressed" .
+  
+  <https://w3id.org/linkflows/reviews/PointPartiallyAddressedComment> rdfs:label "comment that declares that the point has been partially addressed" .
+  
+  <https://w3id.org/linkflows/reviews/ResponseComment> rdfs:label "response comment" .
+  
+  <https://w3id.org/linkflows/reviews/hasCommentText> rdfs:label "has the comment text" .
+  
+  <https://w3id.org/linkflows/reviews/isResponseTo> rdfs:label "is a response to the comment" .
+  
+  <https://w3id.org/linkflows/reviews/refersTo> rdfs:label "refers to" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Q/cLJaXVBd4nOHC+QBOHWvAWZzRJZq21zniZRmTRqiRHgjouqGltvNAIA+t1J1o4XJkzvv0H6A1uip6bJog61+guFkmsBhsn5zBAzK7isu/5U1gduhtjlwwmkoHblapB0YACjFfduf7XIB23YdMeONFv97TREgw6LPngTcDZtyc=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-16T13:04:32.221+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <http://purl.org/np/RAlX8iHShAa2Wpf1c5NSgEG2Ev7DibaKkWcBn0egQ3KYM>;
+    rdfs:label "Template: Responding to a review comment";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RANjqEfLnGSzLuq0heRSXN0psYWW0oX4v3W8w7osb3xfs> .
+}
+

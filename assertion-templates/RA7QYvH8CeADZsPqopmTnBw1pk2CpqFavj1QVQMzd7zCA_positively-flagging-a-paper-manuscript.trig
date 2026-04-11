@@ -1,0 +1,76 @@
+@prefix this: <https://w3id.org/np/RA7QYvH8CeADZsPqopmTnBw1pk2CpqFavj1QVQMzd7zCA> .
+@prefix sub: <https://w3id.org/np/RA7QYvH8CeADZsPqopmTnBw1pk2CpqFavj1QVQMzd7zCA#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  <https://w3id.org/kpxl/ri/GenuinelyWrittenPaper> rdfs:label "genuinely written paper" .
+  
+  <https://w3id.org/kpxl/ri/PaperWithConfirmedFirstAuthor> rdfs:label "paper with confirmed first author" .
+  
+  <https://w3id.org/kpxl/ri/PaperWithoutObviousSignsOfMisconduct> rdfs:label "paper without obvious signs of misconduct" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Positively flagging a paper/manuscript";
+    nt:hasNanopubLabelPattern "${paper} is a ${class} (...)";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Journals";
+    nt:hasTargetNanopubType <https://w3id.org/kpxl/ri/PaperFlagging> .
+  
+  sub:class a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select the appropriate class for the paper";
+    nt:possibleValue <https://w3id.org/kpxl/ri/GenuinelyWrittenPaper>, <https://w3id.org/kpxl/ri/PaperWithConfirmedFirstAuthor>,
+      <https://w3id.org/kpxl/ri/PaperWithoutObviousSignsOfMisconduct> .
+  
+  sub:paper a nt:UriPlaceholder;
+    rdfs:label "URL/DOI of the paper" .
+  
+  sub:st1 a nt:RepeatableStatement;
+    rdf:object sub:class;
+    rdf:predicate rdf:type;
+    rdf:subject sub:paper .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "bgCE/My/oH5DSorlXUp9lre+htzo+zmnLDQkxTLl7E4AJQi0wMToOJXl0b0TDyN7pxI5XioLTfRZ84q0sVCL9y+Z8+ITxkCzS/GPJbh3SUDdlLwYsSfmzeYLRXPBaoLOQbYgEIXvas1Pyxflf6Aw65e7bGJZh2RBUc6Tuvs7VdU=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-02-15T12:52:37.069Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAaCJU7pkR0lN9QIlhbc0rV8UOkuoEm2aIA6_hxTG_6Ec>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Positively flagging a paper/manuscript";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

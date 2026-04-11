@@ -1,0 +1,148 @@
+@prefix this: <https://w3id.org/np/RAXgQy0yT9SwecUPSymm9IVnpsRr_Ptrak4MPhJIcUi6g> .
+@prefix sub: <https://w3id.org/np/RAXgQy0yT9SwecUPSymm9IVnpsRr_Ptrak4MPhJIcUi6g/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix oa: <http://www.w3.org/ns/oa#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix mb: <https://w3id.org/spaces/marine-biodiversity/r/ontology/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:conformsTo rdfs:label "conforms to" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdf:value rdfs:label "has value" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  oa:FragmentSelector rdfs:label "fragment selector" .
+  
+  oa:SpecificResource rdfs:label "specific resource (image with region)" .
+  
+  oa:hasSelector rdfs:label "has selector" .
+  
+  oa:hasSource rdfs:label "has source image" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template describes a morphological character used for identifying a taxon, optionally linking to image evidence with region annotations or direct image URLs.";
+    rdfs:label "Describing a morphological identification character";
+    nt:hasNanopubLabelPattern "${characterLabel}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4;
+    nt:hasTag "Biodiversity" .
+  
+  sub:character a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name for the character, used as URI suffix" .
+  
+  sub:characterLabel a nt:LiteralPlaceholder;
+    rdfs:label "human-readable description of the morphological character" .
+  
+  sub:directImageUrl a nt:UriPlaceholder;
+    rdfs:label "URL of the image" .
+  
+  sub:fragmentSelector a nt:LocalResource;
+    rdfs:label "a selector" .
+  
+  sub:imageSource a nt:UriPlaceholder;
+    rdfs:label "URL of the source image (e.g. a Zenodo file URL)" .
+  
+  sub:mediaFragment a nt:LiteralPlaceholder;
+    rdfs:label "media fragment selector (e.g. xywh=150,200,80,60)" .
+  
+  sub:specificResource a nt:LocalResource;
+    rdfs:label "an image region" .
+  
+  sub:st0 rdf:object sub:character;
+    rdf:predicate mb:hasIdentificationCharacter;
+    rdf:subject sub:taxon .
+  
+  sub:st1 rdf:object mb:MorphologicalCharacter;
+    rdf:predicate rdf:type;
+    rdf:subject sub:character .
+  
+  sub:st2 rdf:object sub:characterLabel;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:character .
+  
+  sub:st3 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st3a, sub:st3b, sub:st3c, sub:st3d, sub:st3e, sub:st3f, sub:st3g .
+  
+  sub:st3a rdf:object sub:specificResource;
+    rdf:predicate mb:isRepresentedInImage;
+    rdf:subject sub:character .
+  
+  sub:st3b rdf:object oa:SpecificResource;
+    rdf:predicate rdf:type;
+    rdf:subject sub:specificResource .
+  
+  sub:st3c rdf:object sub:imageSource;
+    rdf:predicate oa:hasSource;
+    rdf:subject sub:specificResource .
+  
+  sub:st3d rdf:object sub:fragmentSelector;
+    rdf:predicate oa:hasSelector;
+    rdf:subject sub:specificResource .
+  
+  sub:st3e rdf:object oa:FragmentSelector;
+    rdf:predicate rdf:type;
+    rdf:subject sub:fragmentSelector .
+  
+  sub:st3f rdf:object <http://www.w3.org/TR/media-frags/>;
+    rdf:predicate dct:conformsTo;
+    rdf:subject sub:fragmentSelector .
+  
+  sub:st3g rdf:object sub:mediaFragment;
+    rdf:predicate rdf:value;
+    rdf:subject sub:fragmentSelector .
+  
+  sub:st4 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:directImageUrl;
+    rdf:predicate mb:isRepresentedInImage;
+    rdf:subject sub:character .
+  
+  sub:taxon a nt:GuidedChoicePlaceholder;
+    rdfs:label "the organism taxon, e.g. a species";
+    nt:possibleValuesFromApi "https://vodex.petapico.org/nidx/query?rows=100&q=label:" .
+  
+  mb:MorphologicalCharacter rdfs:label "morphological character" .
+  
+  mb:hasIdentificationCharacter rdfs:label "has identification character" .
+  
+  mb:isRepresentedInImage rdfs:label "is represented in image" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-03-31T10:23:49Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:assertion;
+    npx:supersedes <https://w3id.org/np/RAOOjzhrizGQ7bcVbnGdkgSo1yr9dMyP6SST2l2xcNDxs>;
+    rdfs:label "Describing a morphological identification character";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ZFe7NcGCMezv/k0B9Dk42r7t9bSpoxhpxbpr3V+LkoFX/bkHp8RO+cV0JTPtkDgXQuGn/pEPevA0GqnxkY+5Azkh0CfzvNa9t97jzSIdrR977ggnM3QZFS3RgNmlA+BV+BziPRZFrvHZzCqCYRF7xxv6ikAagYuy8dRnT9Xfdv0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

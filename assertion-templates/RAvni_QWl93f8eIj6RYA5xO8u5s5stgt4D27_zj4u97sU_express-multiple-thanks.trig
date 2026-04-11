@@ -1,0 +1,107 @@
+@prefix this: <https://w3id.org/np/RAvni_QWl93f8eIj6RYA5xO8u5s5stgt4D27_zj4u97sU> .
+@prefix sub: <https://w3id.org/np/RAvni_QWl93f8eIj6RYA5xO8u5s5stgt4D27_zj4u97sU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has the comment" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Express thanks by one or more thankers to one or more thanked for one or more thanksReason, optionally with a comment";
+    rdfs:label "Express multiple thanks";
+    nt:hasNanopubLabelPattern "${thanker} thanks ${thanked}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05 .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "plain-text comment" .
+  
+  sub:st01 rdf:object <https://w3id.org/spaces/nanopub/r/thank/Thanks>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:thanks .
+  
+  sub:st02 a nt:RepeatableStatement;
+    rdf:object sub:thanker;
+    rdf:predicate <https://w3id.org/spaces/nanopub/r/thank/hasThanker>;
+    rdf:subject sub:thanks .
+  
+  sub:st03 a nt:RepeatableStatement;
+    rdf:object sub:thanked;
+    rdf:predicate <https://w3id.org/spaces/nanopub/r/thank/hasThanked>;
+    rdf:subject sub:thanks .
+  
+  sub:st04 a nt:RepeatableStatement;
+    rdf:object sub:thanksReason;
+    rdf:predicate <https://w3id.org/spaces/nanopub/r/thank/thanksFor>;
+    rdf:subject sub:thanks .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:thanks .
+  
+  sub:thanked a nt:AgentPlaceholder;
+    rdfs:label "choose who receives the thank you" .
+  
+  sub:thanker a nt:AgentPlaceholder;
+    rdfs:label "choose who gives the thank you" .
+  
+  sub:thanks a nt:LocalResource;
+    rdfs:label "this" .
+  
+  sub:thanksReason a nt:ExternalUriPlaceholder;
+    rdfs:label "enter the reason URI" .
+  
+  <https://w3id.org/spaces/nanopub/r/thank/Thanks> rdfs:label "thanks" .
+  
+  <https://w3id.org/spaces/nanopub/r/thank/hasThanked> rdfs:label "is giving thanks to" .
+  
+  <https://w3id.org/spaces/nanopub/r/thank/hasThanker> rdfs:label "is from" .
+  
+  <https://w3id.org/spaces/nanopub/r/thank/thanksFor> rdfs:label "thanks for" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-9488-1870, orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-9488-1870 foaf:name "Daniel Mietchen" .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-01-10T00:27:33.621Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-9488-1870, orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Express multiple thanks";
+    prov:wasDerivedFrom <https://w3id.org/np/RAlHHOxR1dTkUiDCS-JOf2ZHZdeBfi_voGPcyYPEyxb1k>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCW+VopfbAsAusLtasUe5QnVQL4ovdEXZRd7/44ZfSOuSYBr9BOFBxBoxBpfdCij85m1UHz3Dvb9YLSfx8oSyhdGhBFO4m6zimJ1hpnHQe5jA1cvF6PRYznWgQAhwC4RaYhZJ4MkzVMxXmWTI+8hYRn4oC2+qsg7DJjiS+cttD3tQIDAQAB";
+    npx:hasSignature "XFi4Qxka5ijDmpMD1HXYJES5lx6QG98rmS8Oqjlnfm7WBJDObewNzSQtz9Hc6BCniwtvElbyJ7BxP4Sky3P3UBCySmDbjg7rMEoT/P1GV4XR/KjE/V9jQM/Ou5XtetfwnSPoyyvkIQA16+KqqEzvKeOmOM51pGAtyhWx9h/6uIg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-9488-1870 .
+}
+

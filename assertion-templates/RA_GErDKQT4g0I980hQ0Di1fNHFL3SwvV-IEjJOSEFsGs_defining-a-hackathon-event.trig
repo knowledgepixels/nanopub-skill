@@ -1,0 +1,187 @@
+@prefix this: <https://w3id.org/np/RA_GErDKQT4g0I980hQ0Di1fNHFL3SwvV-IEjJOSEFsGs> .
+@prefix sub: <https://w3id.org/np/RA_GErDKQT4g0I980hQ0Di1fNHFL3SwvV-IEjJOSEFsGs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:date rdfs:label "date" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has name" .
+  
+  rdfs:seeAlso rdfs:label "is further described by" .
+  
+  <https://schema.org/endTime> rdfs:label "end time" .
+  
+  <https://schema.org/location> rdfs:label "located in" .
+  
+  <https://schema.org/startTime> rdfs:label "start time" .
+  
+  <https://w3id.org/fair/3pff/Hybrid-Event> rdfs:label "hybrid event" .
+  
+  <https://w3id.org/fair/3pff/In-Person-Event> rdfs:label "in-person event" .
+  
+  <https://w3id.org/fair/3pff/Virtual-Event> rdfs:label "virtual event" .
+  
+  <https://w3id.org/fair/3pff/has-event-organizer> rdfs:label "has event organizer" .
+  
+  <https://w3id.org/fair/3pff/has-event-sponsor> rdfs:label "has event sponsor" .
+  
+  <https://w3id.org/fair/connect/has-participating-community> rdfs:label "has participating community" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template can be used to define a Hackathon Event.";
+    rdfs:label "Defining a Hackathon Event";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st09, sub:st10, sub:st11, sub:st12;
+    nt:hasTag "Events" .
+  
+  sub:community a nt:ValuePlaceholder;
+    rdfs:label "community - a community that has partecipated in the event" .
+  
+  sub:date a nt:LiteralPlaceholder;
+    rdfs:label "(starting) date of the event (e.g. 2020-12-31)";
+    nt:hasRegex "[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]" .
+  
+  sub:end-time a nt:LiteralPlaceholder .
+  
+  sub:event a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix" .
+  
+  sub:event-type a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue <https://w3id.org/fair/3pff/Hybrid-Event>, <https://w3id.org/fair/3pff/In-Person-Event>,
+      <https://w3id.org/fair/3pff/Virtual-Event> .
+  
+  sub:finish-date a nt:LiteralPlaceholder;
+    rdfs:label "finish date of the event (e.g. 2020-12-31)" .
+  
+  sub:location a nt:LiteralPlaceholder;
+    rdfs:label "location of the event (URL or name)" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the event" .
+  
+  sub:online-resource a nt:UriPlaceholder;
+    rdfs:label "online resource" .
+  
+  sub:organizer a nt:LiteralPlaceholder;
+    rdfs:label "organizer of the event (ROR, URL or name)" .
+  
+  sub:sponsor a nt:ValuePlaceholder;
+    rdfs:label "sponsor of the event (ROR or name)" .
+  
+  sub:st01 rdf:object <https://w3id.org/np/RApotRhDip5_Jc5gsSLvEf-wGuYkh5nhcadX_y4ni8Gc4/OSCEvent>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:event;
+    nt:statementOrder "0" .
+  
+  sub:st02 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:event;
+    nt:statementOrder "1" .
+  
+  sub:st03 rdf:object sub:date;
+    rdf:predicate dct:date;
+    rdf:subject sub:event;
+    nt:statementOrder "2" .
+  
+  sub:st04 a nt:OptionalStatement;
+    rdf:object sub:finish-date;
+    rdf:predicate dct:date;
+    rdf:subject sub:event;
+    nt:statementOrder "3" .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:start-time;
+    rdf:predicate <https://schema.org/startTime>;
+    rdf:subject sub:event;
+    nt:statementOrder "4" .
+  
+  sub:st06 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:organizer;
+    rdf:predicate <https://w3id.org/fair/3pff/has-event-organizer>;
+    rdf:subject sub:event;
+    nt:statementOrder "6" .
+  
+  sub:st07 a nt:OptionalStatement;
+    rdf:object sub:sponsor;
+    rdf:predicate <https://w3id.org/fair/3pff/has-event-sponsor>;
+    rdf:subject sub:event;
+    nt:statementOrder "7" .
+  
+  sub:st08 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:community;
+    rdf:predicate <https://w3id.org/fair/connect/has-participating-community>;
+    rdf:subject sub:event;
+    nt:statementOrder "8" .
+  
+  sub:st09 rdf:object sub:online-resource;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:event;
+    nt:statementOrder "9" .
+  
+  sub:st10 rdf:object sub:event-type;
+    rdf:predicate rdf:type;
+    rdf:subject sub:event;
+    nt:statementOrder "10" .
+  
+  sub:st11 a nt:OptionalStatement;
+    rdf:object sub:location;
+    rdf:predicate <https://schema.org/location>;
+    rdf:subject sub:event;
+    nt:statementOrder "11" .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:end-time;
+    rdf:predicate <https://schema.org/endTime>;
+    rdf:subject sub:event;
+    nt:statementOrder "5" .
+  
+  sub:start-time a nt:LiteralPlaceholder .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2408-7588 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-2408-7588 foaf:name "Christian Meesters" .
+  
+  this: dct:created "2026-01-23T10:51:08.380Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0003-2195-3997, orcid:0000-0003-2408-7588, orcid:0000-0003-2568-5694;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAEHW1ZUmEOHvPV0h89QQfmAIR2vZIdxF6KeoonOxpHXQ>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Defining a Hackathon Event";
+    prov:wasDerivedFrom ns1:RAML4TDGX_B8rqsc8Hy91_coDPC8ihxavjZjbtAinriro, <https://w3id.org/np/RA5D3Nk4nNZJV62CDijt8wPsGIbSdQvYxBAWZFhrTE6g4>,
+      <https://w3id.org/np/RAMFr3DOgD1DI7pFdLuHQoEOMKIx540YZl6eUVHZlQEG0>, <https://w3id.org/np/RAva6AzI6QVUnFsDgAzvGJHqL7UqHxBAB7nYu04eQs5Uk>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+DVJTSCzdJUJMzlwRfb2Qm2NZpuZ932RpVliWxMAhmZ6ZkeeibmJlW/Z0q51YkFArJIWbJ0f7rLQWM5epuZV4I5cjMqepOWGey6LrPolMs8lI9dJf9zW9lJsneV+py3U8WsrB6mg//pkEeXnVDd+WscADyXJ5EeLwoZjCkPn8/QIDAQAB";
+    npx:hasSignature "aIPgnBmqm95TcOxnwgQMC/R3RQGSwMQRl7s8LRdjjjweMjCT+DwLPtX+SEWGKdMb8bH83ywbRAajlDvx07A4AjortDFw1f1meH3NWJPs3HyvBk7a+exXVTvGVi9nJi5xOSiqtQQKf5DtYYtAufVJEiBPEpHXOpjRMaYDCxBHdqk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2408-7588 .
+}
+

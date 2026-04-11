@@ -1,0 +1,99 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix this: <http://purl.org/np/RAVF_WDsJRkRXXWgaJx5p9EnjLIguIv0-GqDlbfBtBPcQ> .
+@prefix sub: <http://purl.org/np/RAVF_WDsJRkRXXWgaJx5p9EnjLIguIv0-GqDlbfBtBPcQ#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix dctypes: <http://purl.org/dc/dcmitype/> .
+@prefix void: <http://rdfs.org/ns/void#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dctypes:Dataset rdfs:label "Dataset" .
+  
+  dcterms:description rdfs:label "has description" .
+  
+  dcterms:title rdfs:label "has name" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Describe a dataset with a SPARQL endpoint";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4 .
+  
+  sub:dataset a nt:LocalResource;
+    rdfs:label "This dataset" .
+  
+  sub:description a nt:LiteralPlaceholder;
+    rdfs:label "add the description of the dataset here" .
+  
+  sub:homepage a nt:UriPlaceholder;
+    rdfs:label "add the URL to the dataset homepage here" .
+  
+  sub:sparqlEndpoint a nt:UriPlaceholder;
+    rdfs:label "add the URL to the dataset SPARQL endpoint here" .
+  
+  sub:st0 a rdf:Statement;
+    rdf:object dctypes:Dataset;
+    rdf:predicate rdf:type;
+    rdf:subject sub:dataset;
+    nt:statementOrder "0"^^xsd:integer .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:title;
+    rdf:predicate dcterms:title;
+    rdf:subject sub:dataset;
+    nt:statementOrder "1"^^xsd:integer .
+  
+  sub:st2 a rdf:Statement;
+    rdf:object sub:description;
+    rdf:predicate dcterms:description;
+    rdf:subject sub:dataset;
+    nt:statementOrder "2"^^xsd:integer .
+  
+  sub:st3 a rdf:Statement;
+    rdf:object sub:homepage;
+    rdf:predicate foaf:page;
+    rdf:subject sub:dataset;
+    nt:statementOrder "3"^^xsd:integer .
+  
+  sub:st4 a rdf:Statement;
+    rdf:object sub:sparqlEndpoint;
+    rdf:predicate void:sparqlEndpoint;
+    rdf:subject sub:dataset;
+    nt:statementOrder "4"^^xsd:integer .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "add the name of the dataset here" .
+  
+  void:sparqlEndpoint rdfs:label "has SPARQL endpoint URL" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  foaf:page rdfs:label "has homepage" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1501-1082 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCR9fz0fKCdWOWC+pxhkQhEM/ppbdIYe5TLSdj+lJzSlv9mYBaPgrzVezSwwbmhlHBPDZa4/vHycU315BdmUGq+pXllp9+rWFfrb+kBJwhZjpG6BeyyXBsRFz4jmQVxl/ZYHilQTh/XalYzKkEAyTiEMPee4Kz61PaWOKH24CsnOQIDAQAB";
+    npx:hasSignature "MtudlwD3/+mbS1QDq4rq5d2HIEqG8z6sdi2T//shZ+reQziAygDQJPsumtzqL/oqTKn9QC7uqn3s0O+Xha40D0D6x+mnAT1mwq4MtMuUohq/z9sqaWzNP2gYsO9qMjPWD8IYOLZkm9+lYOGY6fa0Xz05pgizScqP4PspXxSQdHw=";
+    npx:hasSignatureTarget this: .
+  
+  this: dcterms:created "2020-04-14T13:13:44.817+01:00"^^xsd:dateTime;
+    dcterms:creator orcid:0000-0002-1501-1082 .
+}
+

@@ -1,0 +1,68 @@
+@prefix this: <https://w3id.org/np/RAJNAvxX9op9wGHHCSm3ZhojDgSsD0hHKfYRP8XB7WMKY> .
+@prefix sub: <https://w3id.org/np/RAJNAvxX9op9wGHHCSm3ZhojDgSsD0hHKfYRP8XB7WMKY#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the question text" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Publishing a question";
+    nt:hasNanopubLabelPattern "${question-text}";
+    nt:hasStatement sub:st0, sub:st1;
+    nt:hasTag "Comments" .
+  
+  sub:question a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short URI suffix for your question" .
+  
+  sub:question-text a nt:LongLiteralPlaceholder;
+    rdfs:label "question text" .
+  
+  sub:st0 rdf:object <https://www.wikidata.org/entity/Q189756>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:question .
+  
+  sub:st1 rdf:object sub:question-text;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:question .
+  
+  <https://www.wikidata.org/entity/Q189756> rdfs:label "question" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "MZVmBsxmiukp7E4ZIMR1Tr2KDIcSaoKfahfT1zQ5thdHVypo2CzsD1QP70Hmt6BeWoAuNGKGn5jhPb0rCDR3pzzQwTP+PbyPlwSJAwXZrqUuiJkKv3INsfOExPPb5doam98LtFcSsnmLP9XxpukuJe8wD3UgH8F2NMY5Y50vrrQ=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2024-01-16T16:58:43.525Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    rdfs:label "Template: Publishing a question";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

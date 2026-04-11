@@ -1,0 +1,84 @@
+@prefix this: <https://w3id.org/np/RALPCoi8MPPBbQsWh17-4ofVZGl9IZMGVUMK3wAPXW3G8> .
+@prefix sub: <https://w3id.org/np/RALPCoi8MPPBbQsWh17-4ofVZGl9IZMGVUMK3wAPXW3G8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-environments-for-taxon a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the environments associated to the given taxon.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get environments for taxon";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/f20d5bfdd3b1cb29232fbabf00df6e1a6e4293db8b904f08cf523ce74b1cc210>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix biolink: <https://w3id.org/biolink/vocab/>
+prefix biodiv: <https://w3id.org/kpxl/biodiv/terms/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+
+select distinct ?relation ?relation_label ?environment ?environment_label ?source ?creator ?np (\"^\" as ?np_label) where {
+  graph npa:graph {
+    ?np npx:hasNanopubType biolink:OrganismTaxonToEnvironmentAssociation .
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np dct:created ?date .
+    ?np npx:introduces ?association .
+    ?np np:hasAssertion ?a .
+    ?np np:hasProvenance ?p .
+    ?np np:hasPublicationInfo ?i .
+    ?np npx:signedBy ?creator .
+  }
+  graph ?a {
+    ?association a biolink:OrganismTaxonToEnvironmentAssociation .
+    ?association biolink:subject ?taxonConcept .
+    ?taxonConcept biodiv:hasTaxonName ?_taxonname_iri .
+    ?association biolink:predicate ?relation .
+    ?association biolink:object ?environment .
+  }
+  optional { graph ?p { ?a dct:source ?source } }
+  optional { graph ?i { ?relation nt:hasLabelFromApi ?relation_label } }
+  optional { graph ?i { ?environment nt:hasLabelFromApi ?environment_label } }
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-02-12T07:08:16.540Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-environments-for-taxon;
+    npx:supersedes <https://w3id.org/np/RAiqxFkVoqilDj9-mGUnibWlgpgWVfSZ3E0hZWBjFGcR4>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "Zx1PKW7wvWce9NPHFjzNgNoshdr29SBv2iZLbqBdLRD5NH1Tp0V1Lp1fh6+/kzNzbOk7Y69FxZlUMZHshjDUbteMj06PPcTo0RzBWfGQ0qTh/QmBOwPnrATILR4SLjqI53SR4/JRO2/cquhikzWXlg3/0Q1BIKG6vBQrx8euVlY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

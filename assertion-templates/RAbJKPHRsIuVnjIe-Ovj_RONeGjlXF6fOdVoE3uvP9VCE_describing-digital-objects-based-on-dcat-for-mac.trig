@@ -1,0 +1,179 @@
+@prefix this: <https://w3id.org/np/RAbJKPHRsIuVnjIe-Ovj_RONeGjlXF6fOdVoE3uvP9VCE> .
+@prefix sub: <https://w3id.org/np/RAbJKPHRsIuVnjIe-Ovj_RONeGjlXF6fOdVoE3uvP9VCE#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://edamontology.org/topic_3172> rdfs:label "metabolomics" .
+  
+  <http://linked.data.gov.au/def/project#grantNumber> rdfs:label "has number" .
+  
+  dct:BibliographicResource rdfs:label "article" .
+  
+  dct:contributor rdfs:label "has contributor" .
+  
+  dct:creator rdfs:label "has creator" .
+  
+  dct:date rdfs:label "has publication date" .
+  
+  dct:description rdfs:label "has description" .
+  
+  dct:publisher rdfs:label "has publisher" .
+  
+  dct:subject rdfs:label "is about domain" .
+  
+  dct:title rdfs:label "has title" .
+  
+  dct:type rdfs:label "has digital object type" .
+  
+  <http://www.w3.org/ns/dcat#accessURL> rdfs:label "has access URI" .
+  
+  <http://www.w3.org/ns/dcat#contactPoint> rdfs:label "has contact point" .
+  
+  <https://ror.org/027bh9e22> rdfs:label "Leiden University" .
+  
+  <https://schema.org/funder> rdfs:label "has funder" .
+  
+  sub:access a nt:ExternalUriPlaceholder;
+    rdfs:label "access URI" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Demo template for MAC digital objects";
+    rdfs:label "Describing digital objects based on DCAT for MAC";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st09, sub:st10, sub:st11, sub:st12;
+    nt:hasTag "MAC" .
+  
+  sub:contact-point a nt:AgentPlaceholder;
+    rdfs:label "ORCID of contact point" .
+  
+  sub:contributor a nt:AgentPlaceholder;
+    rdfs:label "ORCID of contributor" .
+  
+  sub:creator a nt:AgentPlaceholder;
+    rdfs:label "ORCID of creator" .
+  
+  sub:date a nt:LiteralPlaceholder;
+    rdfs:label "publication date (e.g. 2023-12-31)";
+    nt:hasRegex "[2][0][2][0-9]-[01][0-9]-[0-3][0-9]" .
+  
+  sub:description a nt:LiteralPlaceholder;
+    rdfs:label "description" .
+  
+  sub:digitalObject a nt:ExternalUriPlaceholder, nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "DOI or URI of the digital object" .
+  
+  sub:funder a nt:ValuePlaceholder;
+    rdfs:label "funder URI" .
+  
+  sub:number a nt:LiteralPlaceholder;
+    rdfs:label "grant number" .
+  
+  sub:st01 rdf:object sub:type;
+    rdf:predicate dct:type;
+    rdf:subject sub:digitalObject .
+  
+  sub:st02 rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:digitalObject .
+  
+  sub:st03 rdf:object sub:creator;
+    rdf:predicate dct:creator;
+    rdf:subject sub:digitalObject .
+  
+  sub:st04 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:contributor;
+    rdf:predicate dct:contributor;
+    rdf:subject sub:digitalObject .
+  
+  sub:st05 rdf:object sub:date;
+    rdf:predicate dct:date;
+    rdf:subject sub:digitalObject .
+  
+  sub:st06 rdf:object <https://ror.org/027bh9e22>;
+    rdf:predicate dct:publisher;
+    rdf:subject sub:digitalObject .
+  
+  sub:st07 rdf:object sub:contact-point;
+    rdf:predicate <http://www.w3.org/ns/dcat#contactPoint>;
+    rdf:subject sub:digitalObject .
+  
+  sub:st08 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:digitalObject .
+  
+  sub:st09 rdf:object <http://edamontology.org/topic_3172>;
+    rdf:predicate dct:subject;
+    rdf:subject sub:digitalObject .
+  
+  sub:st10 a nt:OptionalStatement;
+    rdf:object sub:access;
+    rdf:predicate <http://www.w3.org/ns/dcat#accessURL>;
+    rdf:subject sub:digitalObject .
+  
+  sub:st11 rdf:object sub:funder;
+    rdf:predicate <https://schema.org/funder>;
+    rdf:subject sub:digitalObject .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:number;
+    rdf:predicate <http://linked.data.gov.au/def/project#grantNumber>;
+    rdf:subject sub:digitalObject .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title" .
+  
+  sub:type a nt:RestrictedChoicePlaceholder;
+    rdfs:label "digital object type";
+    nt:possibleValue dct:BibliographicResource, <https://w3id.org/reproduceme#Method>,
+      <https://www.w3.org/TR/vocab-dcat-3/#Class:Dataset> .
+  
+  <https://w3id.org/reproduceme#Method> rdfs:label "method" .
+  
+  <https://www.w3.org/TR/vocab-dcat-3/#Class:Dataset> rdfs:label "dataset" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCM0tu3I/KK6A/qPha/6pfngQZ4LBQpLnKAcIUuZLnSEb0epJ2IoY3zh/4N42us/6LpCHgZZZtSOTm5/KVo+OTDIqo294PpEZAO70u5DcMcGMC5OufzxGKs3Dwdo6XqPiDHxXuiaKCTO7/ABWAi7CtFoMrqJAHfeyqe82dAiH2IiwIDAQAB";
+    npx:hasSignature "FzB1yCYe2eGlQ7tUgbCQtjkegWij/e3sJ40b2AuzqkMYQbP9dTKnJYh/S5N7y/1c3CbzHfhBhSNmIMD2QvETGfeQAe2M8YIVMx8jkJAGV7BJGJA15REpYUO8y8zAjEBGMkZHA7kAXMMiTwyV30rXQ9O9ZqbQtBBe6pl/C5JGzqM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+  
+  this: dct:created "2025-01-20T20:08:39.088Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAYPO3Nm_GgZmna2nErr3Y9ZBEMckWgmN4sIRweXHe4b8>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Describing digital objects based on DCAT for MAC";
+    prov:wasDerivedFrom <https://w3id.org/np/RAhPFxesdOZq-w6Z8VBfc1aV9hfN6c5FnJ7XjR0dAMn_I>,
+      <https://w3id.org/np/RAtsQsnujkDn-ytomeY8RvbOSGrIOmepExa0KfmDrfVfY>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RAUN36daH1cvP7EpwEfc7ZqAGWNe8q2YgDSr81mFaGcWo>;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAGBEisKAxwcQTdfR7ALwCeQBrUVeU23F8uFvFmO-H6F0> .
+}
+

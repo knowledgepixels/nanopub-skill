@@ -1,0 +1,97 @@
+@prefix this: <https://w3id.org/np/RAWdDgH8EfNe5cuKLMaYAJWKAvTz0YHlZ4KxKaI-liDVs> .
+@prefix sub: <https://w3id.org/np/RAWdDgH8EfNe5cuKLMaYAJWKAvTz0YHlZ4KxKaI-liDVs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-rfip-decl-in-context a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns R-FIP declarations: FIP declarations whose community has a Reference-FAIR-Implementation-Profile, matched with the latest R-FIP profile for that community.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get R-FIP declarations in context";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix schema: <https://schema.org/>
+
+select ?fip_index ?fip_title ?decl_np where {
+  # Find R-FIP profiles (latest per community)
+  graph npa:graph {
+    ?fip_index npx:hasNanopubType fip:Reference-FAIR-Implementation-Profile .
+    ?fip_index npa:hasValidSignatureForPublicKeyHash ?pkh .
+    filter not exists { ?inv npx:invalidates ?fip_index ; npa:hasValidSignatureForPublicKeyHash ?pkh . }
+    ?fip_index np:hasAssertion ?rfip_a .
+    ?fip_index npx:introduces ?rfip .
+    ?fip_index dct:created ?rfip_date .
+  }
+  graph ?rfip_a {
+    ?rfip rdfs:label ?fip_title .
+    ?rfip fip:declared-by ?community .
+  }
+  # Keep only the latest R-FIP profile per community
+  filter not exists {
+    graph npa:graph {
+      ?newer_rfip npx:hasNanopubType fip:Reference-FAIR-Implementation-Profile .
+      ?newer_rfip npa:hasValidSignatureForPublicKeyHash ?nkh .
+      filter not exists { ?ninv npx:invalidates ?newer_rfip ; npa:hasValidSignatureForPublicKeyHash ?nkh . }
+      ?newer_rfip np:hasAssertion ?nra .
+      ?newer_rfip dct:created ?newer_date .
+    }
+    graph ?nra {
+      ?nrfip fip:declared-by ?community .
+    }
+    filter(?newer_date > ?rfip_date)
+  }
+
+  # Find FIP declarations from these R-FIP communities that have schema:version
+  graph npa:graph {
+    ?decl_np npx:hasNanopubType fip:FIP-Declaration .
+    ?decl_np npa:hasValidSignatureForPublicKey ?dpk .
+    filter not exists { ?dinv npx:invalidates ?decl_np ; npa:hasValidSignatureForPublicKey ?dpk . }
+    ?decl_np np:hasAssertion ?decl_a .
+  }
+  graph ?decl_a {
+    ?decl fip:declared-by ?community .
+    ?decl schema:version ?version .
+  }
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-04-10T12:26:03Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-rfip-decl-in-context;
+    rdfs:label "Get R-FIP declarations in context";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "cV11D+la2C3Rt/LkuHrlZOn50lvF5qSfN6xkVCiRCUw8k0cjCMAiKa01ATiHMr/DCnW+u9Un/TL78LMBH4iczxsk2MsKeH88rwmy6Egt4N5aGoTLzGY0akIMCQtNNF0MnXT/64tGOpQQw5bA8RY8hT9uFVxfVmAf1Q6guDFTGgo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

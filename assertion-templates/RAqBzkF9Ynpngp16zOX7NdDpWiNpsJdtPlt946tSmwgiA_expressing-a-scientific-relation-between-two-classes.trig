@@ -1,0 +1,122 @@
+@prefix this: <http://purl.org/np/RAqBzkF9Ynpngp16zOX7NdDpWiNpsJdtPlt946tSmwgiA> .
+@prefix sub: <http://purl.org/np/RAqBzkF9Ynpngp16zOX7NdDpWiNpsJdtPlt946tSmwgiA#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    dct:description """<p>Such nanopublications express a causal (e.g. \"A causes B\"), spatio-temporal (e.g. \"A is included in B\"), or comparative (e.g. \"A is larger than B\") relation between the instances of two classes.</p>
+
+<p>The subject and object are classes that are connected by the fact that their instances tend to have a particular relation.</p>
+
+<p>The aspect of \"tending to\" is left underspecified; for more precise statements, use the super-pattern template instead.</p>""";
+    rdfs:label "Expressing a scientific relation between two classes";
+    nt:hasNanopubLabelPattern "${subj} - ${relation} - ${obj}";
+    nt:hasStatement sub:st0;
+    nt:hasTag "Claims";
+    nt:hasTargetNanopubType <https://w3id.org/kpxl/rel/terms/tendsToHaveRelationTo> .
+  
+  sub:obj a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of the object class";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:relation a nt:RestrictedChoicePlaceholder;
+    rdfs:label "URI of the relation type";
+    nt:possibleValue <https://w3id.org/kpxl/rel/terms/tendsToAffect>, <https://w3id.org/kpxl/rel/terms/tendsToBeCausedBy>,
+      <https://w3id.org/kpxl/rel/terms/tendsToBeFollowedBy>, <https://w3id.org/kpxl/rel/terms/tendsToBeIncludedIn>,
+      <https://w3id.org/kpxl/rel/terms/tendsToBeNecessaryAndSufficientFor>, <https://w3id.org/kpxl/rel/terms/tendsToCause>,
+      <https://w3id.org/kpxl/rel/terms/tendsToContributeTo>, <https://w3id.org/kpxl/rel/terms/tendsToCooccurWith>,
+      <https://w3id.org/kpxl/rel/terms/tendsToDecrease>, <https://w3id.org/kpxl/rel/terms/tendsToEnable>,
+      <https://w3id.org/kpxl/rel/terms/tendsToFollow>, <https://w3id.org/kpxl/rel/terms/tendsToHaveDifferentValueFrom>,
+      <https://w3id.org/kpxl/rel/terms/tendsToHaveLargerValueThan>, <https://w3id.org/kpxl/rel/terms/tendsToHaveSameValueAs>,
+      <https://w3id.org/kpxl/rel/terms/tendsToHaveSimilarValueAs>, <https://w3id.org/kpxl/rel/terms/tendsToHaveSmallerValueThan>,
+      <https://w3id.org/kpxl/rel/terms/tendsToInclude>, <https://w3id.org/kpxl/rel/terms/tendsToIncrease>,
+      <https://w3id.org/kpxl/rel/terms/tendsToInhibit>, <https://w3id.org/kpxl/rel/terms/tendsToPrevent>,
+      <https://w3id.org/kpxl/rel/terms/tendsToRequire> .
+  
+  sub:st0 rdf:object sub:obj;
+    rdf:predicate sub:relation;
+    rdf:subject sub:subj .
+  
+  sub:subj a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of the subject class";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToAffect> rdfs:label "has instances that tend to affect instances of - the instances of the subject tend to positively or negatively affect the intensity or frequency of activity instances of the object" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToBeCausedBy> rdfs:label "has instances that tend to be caused by instances of - the instances of the subject tend to cause the existence of instances of the object" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToBeFollowedBy> rdfs:label "has instances that tend to be followed by instances of - the instances of the subject tend to come into existence before instances of the object" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToBeIncludedIn> rdfs:label "has instances that tend to be included in instances of - the instances of the subject tend to be spatiotemporally included in instances of the object" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToBeNecessaryAndSufficientFor> rdfs:label "has instances that tend to be necessary and sufficient for instances of - the instances of the subject tend to cause the existence of instances of the object, which would not exist if the subject instances did not exist" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToCause> rdfs:label "has instances that tend to cause instances of - the instances of the subject tend to cause the existence of instances of the object" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToContributeTo> rdfs:label "has instances that tend to contribute to instances of -  the instances of the subject tend to positively affect the intensity or frequency of activity instances of the object" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToCooccurWith> rdfs:label "has instances that tend to co-occur with instances of - the instances of the subject tend to be close to instances of the object in terms of space and time" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToDecrease> rdfs:label "has instances that tend to decrease instances of - the instances of the subject tend to cause the value of instances of the object to decrease" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToEnable> rdfs:label "has instances that tend to enable instances of - the instances of the subject tend to cause activity instances of the object to happen" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToFollow> rdfs:label "has instances that tend to follow instances of - the instances of the subject tend to come into existence after instances of the object" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToHaveDifferentValueFrom> rdfs:label "has instances that tend to have a different value from instances of - the quantifiable instances of the subject tend to have a value that is different from quantifiable instances of the object" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToHaveLargerValueThan> rdfs:label "has instances that tend to have a larger value than instances of - the quantifiable instances of the subject tend to have a larger value than quantifiable instances of the object" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToHaveSameValueAs> rdfs:label "has instances that tend to have the same value as instances of - the quantifiable instances of the subject tend to have the same value as quantifiable instances of the object" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToHaveSimilarValueAs> rdfs:label "has instances that tend to have a similar value as instances of - the quantifiable instances of the subject tend to have a similar value as quantifiable instances of the object" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToHaveSmallerValueThan> rdfs:label "has instances that tend to have a smaller value than instances of - the quantifiable instances of the subject tend to have a smaller value than quantifiable instances of the object" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToInclude> rdfs:label "has instances that tend to include instances of - the instances of the subject tend to spatiotemporally include instances of the object" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToIncrease> rdfs:label "has instances that tend to increase instances of - the instances of the subject tend to cause the value of instances of the object to increase" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToInhibit> rdfs:label "has instances that tend to inhibit instances of - the instances of the subject tend to negatively affect the intensity or frequency of the activity instances of the object" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToPrevent> rdfs:label "has instances that tend to prevent instances of - the instances of the subject tend to cause the activity instances of the object not to happen" .
+  
+  <https://w3id.org/kpxl/rel/terms/tendsToRequire> rdfs:label "has instances that tend to require instances of - the instances of the subject tend not to have existed if instances of the object did not exist" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "TUdXEuy/BIlDr+h/gfON0uquSznRanF40vqYY8AEEne4mG1nIhT85nHjOgJlT0/R5ECSSMdk9DvKZeomcQCa8VbFEuMGnNwbMFNZHhAtZJ1AILP8hzMB4TRrUTAsCC/cWC0Oye/aITfdB5f+Qb/Xl8I2Yk1zSReMMtevf1yx9Is=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-16T09:11:41.713Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <http://purl.org/np/RAQ9wpGlnll9o034hWI9tGZw6oTBvcN9azFS7hzdESY0I>;
+    rdfs:label "Template: Expressing a scientific relation between two classes";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RANjqEfLnGSzLuq0heRSXN0psYWW0oX4v3W8w7osb3xfs> .
+}
+

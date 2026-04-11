@@ -1,0 +1,73 @@
+@prefix this: <https://w3id.org/np/RA_IcmwsJjICvGpSudP3AgR9ckFFoNQh7m5m8-veaHSJM> .
+@prefix sub: <https://w3id.org/np/RA_IcmwsJjICvGpSudP3AgR9ckFFoNQh7m5m8-veaHSJM/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-presentations-by-speaker a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns all presentations by a given speaker, with label, date, event, and nanopub link.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get presentations by speaker";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/3952cad1a6d2561f045d33e5e79c03e7264b0a492b8becf6c62656c596cf398c>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix wd: <http://www.wikidata.org/entity/>
+
+select ?presentation ?presentation_label ?date ?event ?event_label ?np (\"^\" as ?np_label) where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np dct:created ?npdate .
+    ?np np:hasAssertion ?a .
+    ?np npx:introduces ?presentation .
+  }
+  graph ?a {
+    ?presentation a wd:Q604733 .
+    ?presentation wd:P823 ?_speaker_iri .
+    optional { ?presentation rdfs:label ?presentation_label . }
+    optional { ?presentation dct:date ?date . }
+    optional {
+      ?presentation dct:isPartOf ?event .
+      optional { ?event rdfs:label ?event_label . }
+    }
+  }
+} order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-03-17T12:11:35Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-presentations-by-speaker;
+    rdfs:label "Get presentations by speaker" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "WwbDBfx3SsGuXWANOQR8oV46UosHf4xR/T5UHerOKCuVvNlgk8pX8B8TWR4F7j6m1agxCf1IWN20S74OsyfTSYfQQ4MK+qJy9okfcN+hBH90A048HZepicHvH9If62lPMNv1opc47kN3SuGovAvXIZ/8r+3TpGolUy6UHCjosAw=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

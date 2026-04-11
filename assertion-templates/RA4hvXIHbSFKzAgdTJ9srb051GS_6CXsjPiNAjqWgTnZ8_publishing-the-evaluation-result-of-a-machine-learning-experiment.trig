@@ -1,0 +1,157 @@
+@prefix this: <http://purl.org/np/RA4hvXIHbSFKzAgdTJ9srb051GS_6CXsjPiNAjqWgTnZ8> .
+@prefix sub: <http://purl.org/np/RA4hvXIHbSFKzAgdTJ9srb051GS_6CXsjPiNAjqWgTnZ8#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.obolibrary.org/obo/STATO_0000415> rdfs:label "accuracy - in the context of binary classification, accuracy is defined as the proportion of true results (both true positives and true negatives) to the total number of cases examined (the sum of true positive, true negative, false positive and false negative). It can be understood as a measure of the proximity of measurement results to the true value." .
+  
+  <http://purl.obolibrary.org/obo/STATO_0000416> rdfs:label "precision - precision or positive predictive value is defined as the proportion of the true positives against all the positive results (both true positives and false positives)" .
+  
+  dct:description rdfs:label "is described by - connects a thing to a human-readable description of that thing." .
+  
+  sub:algorithm a nt:GuidedChoicePlaceholder;
+    rdfs:label "the used algorithm (e.g. Random Forest)";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23NamedIndividual&searchterm=",
+      "https://www.ebi.ac.uk/ols/api/select?fieldList=iri,label,description&q=", "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "<p>Such a nanopublication describes the results of a Machine Learning experiment, such as the accuracy achieved by a applying a given ML technique on a given dataset. This template is based on <a href=\"https://ml-schema.github.io/documentation/ML%20Schema.html\">ML Schema</a>.</p>";
+    rdfs:label "Publishing the evaluation result of a Machine Learning experiment";
+    nt:hasNanopubLabelPattern "Result of Machine Learning run: ${run-label}";
+    nt:hasStatement sub:st10, sub:st11, sub:st12, sub:st20, sub:st30, sub:st40, sub:st50,
+      sub:st60, sub:st70, sub:st80;
+    nt:hasTag "Machine Learning" .
+  
+  sub:dataset a nt:UriPlaceholder;
+    rdfs:label "the URL of the used dataset" .
+  
+  sub:dataset-label a nt:LiteralPlaceholder;
+    rdfs:label "the name of the dataset" .
+  
+  sub:evaluation a nt:LocalResource;
+    rdfs:label "an evaluation" .
+  
+  sub:evaluation-measure a nt:GuidedChoicePlaceholder;
+    rdfs:label "the evaluation measure (e.g. Accuracy)";
+    nt:possibleValue <http://purl.obolibrary.org/obo/STATO_0000415>, <http://purl.obolibrary.org/obo/STATO_0000416>,
+      <https://www.wikidata.org/entity/Q6975395>;
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23NamedIndividual&searchterm=",
+      "https://www.ebi.ac.uk/ols/api/select?ontology=stato&fieldList=iri,label,description&q=" .
+  
+  sub:evaluation-value a nt:LiteralPlaceholder;
+    rdfs:label "value of the evaluation result (e.g. 0.81 if the accuracy is 81%)";
+    nt:hasRegex "[0-9]+(\\.[0-9]+)?" .
+  
+  sub:run a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this run" .
+  
+  sub:run-description a nt:LongLiteralPlaceholder;
+    rdfs:label "textual description of the experiment run" .
+  
+  sub:run-label a nt:LiteralPlaceholder;
+    rdfs:label "name or label of the experiment run" .
+  
+  sub:st10 rdf:object <http://www.w3.org/ns/mls#Run>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:run .
+  
+  sub:st11 rdf:object sub:run-label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:run .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:run-description;
+    rdf:predicate dct:description;
+    rdf:subject sub:run .
+  
+  sub:st20 rdf:object sub:algorithm;
+    rdf:predicate <http://www.w3.org/ns/mls#realizes>;
+    rdf:subject sub:run .
+  
+  sub:st30 rdf:object sub:task;
+    rdf:predicate <http://www.w3.org/ns/mls#achieves>;
+    rdf:subject sub:run .
+  
+  sub:st40 rdf:object sub:dataset;
+    rdf:predicate <http://www.w3.org/ns/mls#hasInput>;
+    rdf:subject sub:run .
+  
+  sub:st50 a nt:OptionalStatement;
+    rdf:object sub:dataset-label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:dataset .
+  
+  sub:st60 rdf:object sub:evaluation;
+    rdf:predicate <http://www.w3.org/ns/mls#hasOutput>;
+    rdf:subject sub:run .
+  
+  sub:st70 rdf:object sub:evaluation-measure;
+    rdf:predicate <http://www.w3.org/ns/mls#specifiedBy>;
+    rdf:subject sub:evaluation .
+  
+  sub:st80 rdf:object sub:evaluation-value;
+    rdf:predicate <http://www.w3.org/ns/mls#hasValue>;
+    rdf:subject sub:evaluation .
+  
+  sub:task a nt:GuidedChoicePlaceholder;
+    rdfs:label "the task performed (e.g. Spam Detection)";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23NamedIndividual&searchterm=",
+      "https://www.ebi.ac.uk/ols/api/select?fieldList=iri,label,description&q=", "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  rdf:type rdfs:label "is a - connects a thing (left) to a class it belongs to (right)" .
+  
+  rdfs:label rdfs:label "has the label - connects a thing (left) to its human-readable label (right)" .
+  
+  <http://www.w3.org/ns/mls#Run> rdfs:label "run of a Machine Learning experiment - Run is an execution of an implementation on a machine (computer). It is limited in time (has a start and end point), can be successful or failed." .
+  
+  <http://www.w3.org/ns/mls#achieves> rdfs:label "performs the task - A relation between a run and a task, where the run achieves specifications formulated by the task." .
+  
+  <http://www.w3.org/ns/mls#hasInput> rdfs:label "uses as input - A relation between a run and data that is taken as input to the run." .
+  
+  <http://www.w3.org/ns/mls#hasOutput> rdfs:label "has as output - A relation between a run and either a model or model evaluation that is produced on it's output." .
+  
+  <http://www.w3.org/ns/mls#hasValue> rdfs:label "has the result value - assigns a numerical value denoting the measured result of an evaluation" .
+  
+  <http://www.w3.org/ns/mls#realizes> rdfs:label "executes an implementation of the algorithm - A relation between a run and an algorithm, where the run executes an implementation of the algorithm." .
+  
+  <http://www.w3.org/ns/mls#specifiedBy> rdfs:label "measures - A relation between an entity and the information content entity that specifies it." .
+  
+  <https://www.wikidata.org/entity/Q6975395> rdfs:label "F1 score -  measure of a test's accuracy" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "CLDRymxyTY0b3gH4HpMmgXmB2DGYWxcw0wJ3uBv6/nancMLu5hrwhdwVrksBAz+iBejYTJg/G5NmTmviAg7dyHspvBNhANb2KNTSkWZrPq8UpdOYSXNYAmwKezByg6WV2BbxVGOLmVQacTxYq63BLu+CyvmJHpYLDYKoiT6anrE=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-16T11:05:20.868Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <http://purl.org/np/RAGEv4a9uT48mgnIlWqAvL-XnupfNYojIUmszJDa50xoc>;
+    rdfs:label "Template: Publishing the evaluation result of a Machine L...";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RANjqEfLnGSzLuq0heRSXN0psYWW0oX4v3W8w7osb3xfs> .
+}
+

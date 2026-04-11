@@ -1,0 +1,63 @@
+@prefix this: <https://w3id.org/np/RAjZuDi0FBYbKKwz3DridF8DpuTqVRXbtB4nCqmtjg8X0> .
+@prefix sub: <https://w3id.org/np/RAjZuDi0FBYbKKwz3DridF8DpuTqVRXbtB4nCqmtjg8X0#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:Mountain a nt:GuidedChoicePlaceholder;
+    rdfs:label "Place where the achievement took place, the mountain which top has been reached" .
+  
+  sub:Person a nt:GuidedChoicePlaceholder;
+    rdfs:label "Person who achieved the goal" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template to specify a Mountaineer has reached the summit without supplementary oxygen";
+    rdfs:label "Ascend Without Oxygen";
+    nt:hasNanopubLabelPattern "${Person} summitsWithoutOxygen ${Mountain}";
+    nt:hasStatement sub:st1 .
+  
+  sub:st1 rdf:object sub:Mountain;
+    rdf:predicate sub:summitsWithoutOxygen;
+    rdf:subject sub:Person .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0009-2423-7479 .
+}
+
+sub:pubinfo {
+  orcid:0009-0009-2423-7479 foaf:name "Luca Cavellini" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCdn8zrEl4339hlr7DiQbX8TvvaJsAmyRvD/Qoi9UXedJZ3klgcbwKHjoJ+EGhCNbgdNO46/w5RwZMtHvMawFbNocIhKpEabPVhyx8a3+J9C5ldnwV1JbtURpC5crlzKZxF1fkDqkcRVFF/QIeGCkFSVFCGmDWmHZXqZ4/MORFESwIDAQAB";
+    npx:hasSignature "YU/YeLOyd8D97XB2pgZl6CxttWnvwQ6whrPDH+dQQSfLXPecuiU2dY+JlGSFwGZo2T0Izo0K1T0UaUBPcaUjSpnS4peuKMXY5tWTc0bjHmJ/TWVrh4CGcPUIqSXG5HMsoKw6MAktM8Ot1+GndnIii0nKWRFtC3jkbdTsKEyBZK8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0009-2423-7479 .
+  
+  this: dct:created "2024-10-05T17:33:57.579Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0009-2423-7479;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Ascend Without Oxygen";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALtjkZX1lYrTL2eCZp4VTW6vGGxiDZ-aaU-s1Z0Fcs2I> .
+}
+

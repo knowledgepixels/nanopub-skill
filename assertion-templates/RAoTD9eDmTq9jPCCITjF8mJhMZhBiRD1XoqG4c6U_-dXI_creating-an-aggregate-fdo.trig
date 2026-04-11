@@ -1,0 +1,104 @@
+@prefix this: <https://w3id.org/np/RAoTD9eDmTq9jPCCITjF8mJhMZhBiRD1XoqG4c6U_-dXI> .
+@prefix sub: <https://w3id.org/np/RAoTD9eDmTq9jPCCITjF8mJhMZhBiRD1XoqG4c6U_-dXI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:conformsTo rdfs:label "conforms to the profile" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <https://purl.org/dc/terms/hasPart> rdfs:label "has as part" .
+  
+  <https://w3id.org/fdof/ontology#FAIRDigitalObject> rdfs:label "FAIR Digital Object" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication declares an FDO that is an aggregation of other given FDOs.";
+    rdfs:label "Creating an aggregate FDO";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st4, sub:st5;
+    nt:hasTag "FDO" .
+  
+  sub:fdo a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID used as URI suffix" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "short, human-readable label for the FDO" .
+  
+  sub:part a nt:GuidedChoicePlaceholder;
+    rdfs:label "select FDO as part";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https://w3id.org/fdof/ontology%23FAIRDigitalObject&searchterm=" .
+  
+  sub:source a nt:GuidedChoicePlaceholder;
+    rdfs:label "select FDO (or other thing) as source";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https://w3id.org/fdof/ontology%23FAIRDigitalObject&searchterm=" .
+  
+  sub:st1 rdf:object <https://w3id.org/fdof/ontology#FAIRDigitalObject>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:fdo .
+  
+  sub:st2 rdf:object <https://w3id.org/np/RAudZj6DD7iByABdBXAWSsNh3kd6kj5P2bmHi6hzg1xcE/aggregate-fdo-profile>;
+    rdf:predicate dct:conformsTo;
+    rdf:subject sub:fdo .
+  
+  sub:st3 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:fdo .
+  
+  sub:st4 a nt:RepeatableStatement;
+    rdf:object sub:part;
+    rdf:predicate <https://purl.org/dc/terms/hasPart>;
+    rdf:subject sub:fdo .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:source;
+    rdf:predicate <https://www.w3.org/ns/prov#wasDerivedFrom>;
+    rdf:subject sub:fdo .
+  
+  <https://w3id.org/np/RAudZj6DD7iByABdBXAWSsNh3kd6kj5P2bmHi6hzg1xcE/aggregate-fdo-profile>
+    rdfs:label "Aggregate FDO Profile" .
+  
+  <https://www.w3.org/ns/prov#wasDerivedFrom> rdfs:label "was derived from" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-10-03T08:49:19.092Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAi4SdhmAEhHxEfiz-ztmElXNcXS2cLVK4sg7rI9Io9HE>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Creating an aggregate FDO";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "a3d647I20dQe7WglwNx6PWALFkPeU8BFhrfvIuu2UI78W6qUOJjXE0G9ijr+tKxc+1L2YUU2fWcAlzE2UASuHTP+fD2ESEptlNjlXainKCSs5O3l5GDAka/wf+Fa0Jz3+sj+CtebhNssYCs9pJPX3+cJLJJqaOHPY9+aVzov7MY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

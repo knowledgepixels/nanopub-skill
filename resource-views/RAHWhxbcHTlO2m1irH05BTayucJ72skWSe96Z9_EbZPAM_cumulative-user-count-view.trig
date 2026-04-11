@@ -1,0 +1,60 @@
+@prefix this: <https://w3id.org/np/RAHWhxbcHTlO2m1irH05BTayucJ72skWSe96Z9_EbZPAM> .
+@prefix sub: <https://w3id.org/np/RAHWhxbcHTlO2m1irH05BTayucJ72skWSe96Z9_EbZPAM/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:cumulative-users-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RAo9-P-XiAzXGaI7FiSvPLXidRlwqFsDvNHtIIcUp3i-k/cumulative-users-view-kind>;
+    dct:title "📈 Cumulative User Count";
+    rdfs:label "Cumulative user count view";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/MaintainedResource>,
+      <https://w3id.org/kpxl/gen/terms/Space>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "5.5.cumulativeUsers";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RA6MMHn6iUBCFXzBqyGhrwAiBKCkUjZhp7CM4v1aPaAuo/get-cumulative-user-count>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RA6MMHn6iUBCFXzBqyGhrwAiBKCkUjZhp7CM4v1aPaAuo/get-cumulative-user-count>
+    nt:hasLabelFromApi "Get cumulative user count by week - Returns the cumulative number of human users (with ORCID) who have published an introduction nanopub, per week (Mon-Sun)." .
+  
+  this: dct:created "2026-03-20T15:41:38.805+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:cumulative-users-view;
+    npx:introduces <https://w3id.org/np/RAo9-P-XiAzXGaI7FiSvPLXidRlwqFsDvNHtIIcUp3i-k/cumulative-users-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAo9-P-XiAzXGaI7FiSvPLXidRlwqFsDvNHtIIcUp3i-k>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "POqkLJ9oNmvKL8bxlWiac+rPogoD+cPZkVR1/kQIPMpA3n7iZQS/Mx67BQNrGfpM/j7yPns9sQD56LOvrINBrBQY+CWakg+d1cjiFwL6wiC84VbjEnjt47hPu76J5pBroCTM4L1IIV2yp+AyxZCzEmhETQ7csdKoI8bIhYQbSls=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

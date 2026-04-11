@@ -1,0 +1,167 @@
+@prefix this: <https://w3id.org/np/RAtoyEeCmsTWoUG2BsE7PxjabWTkYwRcoBSG1CPPNcwNk> .
+@prefix sub: <https://w3id.org/np/RAtoyEeCmsTWoUG2BsE7PxjabWTkYwRcoBSG1CPPNcwNk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:title rdfs:label "has title" .
+  
+  <http://purl.org/ontology/bibo/authorList> rdfs:label "has" .
+  
+  <http://purl.org/spar/fabio/ScholarlyWork> rdfs:label "scholarly work" .
+  
+  <http://schema.org/affiliation> rdfs:label "has affiliation" .
+  
+  <http://schema.org/email> rdfs:label "has email address" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  foaf:name rdfs:label "has name" .
+  
+  <https://schema.org/result> rdfs:label "results from" .
+  
+  sub:affiliation-organization a nt:RestrictedChoicePlaceholder;
+    rdfs:label "name of organization (select from above)";
+    nt:possibleValue sub:organization .
+  
+  sub:affiliation-person a nt:RestrictedChoicePlaceholder;
+    rdfs:label "name of author (select from above)";
+    nt:possibleValue sub:author .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Template for describing a scholarly work – either published in written form or delivered orally at a meeting – at summary level and linking to its relevant project.";
+    rdfs:label "Describing scholarly work at summary level - simple";
+    nt:hasNanopubLabelPattern "Declaration of ${manuscript}: ${title}";
+    nt:hasStatement sub:st0, sub:st2, sub:st3, sub:st4, sub:st7, sub:st8, sub:st9;
+    nt:hasTag "Journals";
+    nt:hasTargetNanopubType <http://purl.org/spar/fabio/ScholarlyWork> .
+  
+  sub:author a nt:ExternalUriPlaceholder;
+    rdfs:label "ORCID ID of author (starting with https://orcid.org/...)";
+    nt:hasRegex "https://orcid\\.org/[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]" .
+  
+  sub:author-email a nt:LiteralPlaceholder;
+    rdfs:label "email address of author";
+    nt:hasRegex "[A-Za-z0-9._+\\-\\']+@[A-Za-z0-9.\\-]+\\.[A-Za-z]{2,}" .
+  
+  sub:author-list a nt:LocalResource;
+    rdfs:label "this author list" .
+  
+  sub:author-name a nt:LiteralPlaceholder;
+    rdfs:label "full name of author" .
+  
+  sub:author-with-email a nt:RestrictedChoicePlaceholder;
+    rdfs:label "name of corresponding author (select from above)";
+    nt:possibleValue sub:author .
+  
+  sub:manuscript a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "URI of scholarly work (e.g. publication)";
+    nt:hasRegex "https://doi\\.org/10.+" .
+  
+  sub:membership-property a nt:SequenceElementPlaceholder;
+    rdfs:label "has at position ${number}";
+    nt:hasPrefix "http://www.w3.org/1999/02/22-rdf-syntax-ns#_";
+    nt:hasPrefixLabel "includes as element number";
+    nt:hasRegex "[1-9][0-9]*" .
+  
+  sub:organization a nt:UriPlaceholder;
+    rdfs:label "ROR identifier (https://ror.org/...) or short local URI suffix (e.g. \"stanford\")";
+    nt:hasRegex "(https://ror\\.org/[0-9a-z]+|[a-zA-Z0-9_\\-]+)" .
+  
+  sub:organization-name a nt:LiteralPlaceholder;
+    rdfs:label "name of organization" .
+  
+  sub:project a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of nanopublication for related research project";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https://schema.org/ResearchProject&searchterm=" .
+  
+  sub:st0 rdf:object <http://purl.org/spar/fabio/ScholarlyWork>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:manuscript .
+  
+  sub:st2 rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:manuscript .
+  
+  sub:st3 rdf:object sub:project;
+    rdf:predicate <https://schema.org/result>;
+    rdf:subject sub:manuscript .
+  
+  sub:st4 a nt:GroupedStatement, nt:RepeatableStatement;
+    rdf:object sub:author-list;
+    rdf:predicate <http://purl.org/ontology/bibo/authorList>;
+    rdf:subject sub:manuscript;
+    nt:hasStatement sub:st5, sub:st6 .
+  
+  sub:st5 rdf:object sub:author;
+    rdf:predicate sub:membership-property;
+    rdf:subject sub:author-list .
+  
+  sub:st6 rdf:object sub:author-name;
+    rdf:predicate foaf:name;
+    rdf:subject sub:author .
+  
+  sub:st7 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:author-email;
+    rdf:predicate <http://schema.org/email>;
+    rdf:subject sub:author-with-email .
+  
+  sub:st8 a nt:RepeatableStatement;
+    rdf:object sub:organization-name;
+    rdf:predicate foaf:name;
+    rdf:subject sub:organization .
+  
+  sub:st9 a nt:RepeatableStatement;
+    rdf:object sub:affiliation-organization;
+    rdf:predicate <http://schema.org/affiliation>;
+    rdf:subject sub:affiliation-person .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title of scholarly work" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-4930-2662 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0002-4930-2662 foaf:name "Alessa An Gambardella" .
+  
+  this: dct:created "2025-06-06T17:11:04.729Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0002-4930-2662;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA-SEOmEEY85LtS5u3s-CufZUxL4WNJUfr1ZiQugb4NaM>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Describing scholarly work at summary level - simple";
+    prov:wasDerivedFrom <https://w3id.org/np/RAN5Mdzqj_aO88RRAS4FC5NiPOCWf8l6zV7v-XJ4raUZk>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA, <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA5reLVXOCPQFWr2UiCJb19ES7NwOpQRmudb17e2iB0c4> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCEJGVv2xFV8o+Ojt3f0N2LgtZTt4+24Lxp8esEZiFYKryDGBYaR0Ef4ajadqtlSpvUHlwNlVIF7XRWiGd64P8drVnqPtpRtxJ+SOl0UNvxuHzUjeWlOYKpKZ/UgrGwVSSR3LvwqXOM9qUkWqy0IQ2KsFbJHHwzgNbcEZuZOD+/WQIDAQAB";
+    npx:hasSignature "djQliEHnF/GOiGCPFT/oQO+GgfgqPFxL0ll7frtYMOX+KPygnd9N8784nOP0+2jTAhTGygUqWLn9zMMmQ8aZek+JVQAHI9qzKksfLzdBFxZX5M2JGPYVfKOZxFOIAS4E9U/0oMq6HqlxyMJcVyrlilF+DBOcdrfsmXc/ACTvrwY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-4930-2662 .
+}
+

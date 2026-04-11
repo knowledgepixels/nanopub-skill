@@ -1,0 +1,72 @@
+@prefix this: <https://w3id.org/np/RAa6BArMhixFHF1rFuPOG6IgxPTq5bD2j_LxMJ0pVE91E> .
+@prefix sub: <https://w3id.org/np/RAa6BArMhixFHF1rFuPOG6IgxPTq5bD2j_LxMJ0pVE91E/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-sciencelive-nanopubs a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns all npx:hasNanopubType ScienceLive nanopubs.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get ScienceLive nanopubs";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+
+SELECT ?np ?label ?creator ?date
+WHERE {
+  GRAPH npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    FILTER NOT EXISTS { 
+      ?npx npx:invalidates ?np ; 
+      npa:hasValidSignatureForPublicKey ?pubkey . 
+    }
+    ?np npx:hasNanopubType <https://w3id.org/np/RAbrZanVELw9xGL0IgtU5a7jrbdY7JSwBf9dPbT0UJVao> .
+    ?np dct:created ?date .
+    ?np np:hasAssertion ?a .
+    ?np npx:signedBy ?creator .
+    OPTIONAL { ?np rdfs:label ?label }
+  }
+} order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1784-2920 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1784-2920 foaf:name "Anne Fouilloux" .
+  
+  this: dct:created "2025-04-25T13:07:56.811Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1784-2920;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-sciencelive-nanopubs;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDWv2pJnmDsBOq8OlT1aSvYXSuWT34WOp4FYqEzdnn2F0kqzcFevBqWGZDxJWC0lqCrDEuNfp2QFyPe/+nES9dlHGYIhqPi68fwK6ZiNUotRFxXou+rjFznVvUxtCL8Ede79EBHwWN61QtwSIcU12bLoZsNPFlqQASQ93BJuKlihwIDAQAB";
+    npx:hasSignature "yccuBO4W3y6yXQhV3cQVaAZB3ZiTBXmVQbwB8sH1QjvBpHI3TTYICq/qR/k/uRlKAJxd+mDTqJEpl2jsCCpFZ8gU/tCiPliz0PfzAibV/RB/WRmJXMD3UFcp7GEszSxxm0Ar0Uvpo3Em/CpeAzFNiiy37nsF121B6eOQJ37xlEA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1784-2920 .
+}
+

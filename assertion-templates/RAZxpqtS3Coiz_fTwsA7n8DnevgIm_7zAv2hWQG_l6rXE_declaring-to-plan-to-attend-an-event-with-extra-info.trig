@@ -1,0 +1,86 @@
+@prefix this: <https://w3id.org/np/RAZxpqtS3Coiz_fTwsA7n8DnevgIm_7zAv2hWQG_l6rXE> .
+@prefix sub: <https://w3id.org/np/RAZxpqtS3Coiz_fTwsA7n8DnevgIm_7zAv2hWQG_l6rXE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:date rdfs:label "has the date" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <https://w3id.org/kpxl/gen/terms/plansToAttend> rdfs:label "plans to attend" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication declares that the creator plans to attend an event, including extra info like name and date of the event, to make sure this info is available when needed by queries.";
+    rdfs:label "Declaring to plan to attend an event (with extra info)";
+    nt:hasNanopubLabelPattern "Plan to attend: ${space}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3;
+    nt:hasTag "Spaces";
+    nt:hasTargetNanopubType <https://w3id.org/kpxl/gen/terms/plansToAttend> .
+  
+  sub:date a nt:LiteralPlaceholder;
+    rdfs:label "(start) date of the event";
+    nt:hasDatatype xsd:date .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "name of the event" .
+  
+  sub:space a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of event" .
+  
+  sub:st1 rdf:object sub:space;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/plansToAttend>;
+    rdf:subject nt:CREATOR .
+  
+  sub:st2 a nt:OptionalStatement;
+    rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:space .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:date;
+    rdf:predicate dct:date;
+    rdf:subject sub:space .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-12-16T10:22:06.724Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Declaring to plan to attend an event (with extra info)";
+    prov:wasDerivedFrom <https://w3id.org/np/RApJpBDrmYylKaa9_JpE721eyjw0-OgNcfu9yhbS1uO8k>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "ffuNOvaZjsFMXUOcN2WzBtS5k84fphA/oxFS382U6Ntkp2rySd4qNGtmVdbOzP1kz9zdmVAc7K+R9zOlEnT0MwUGrAXNrIGH40FVMySLC7Lkobtd2UMDe2zJ+9D0r7hO1Zrff9bG/LxL594jaNaHGotEFkj3ldplrUuVWsD9J+U=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

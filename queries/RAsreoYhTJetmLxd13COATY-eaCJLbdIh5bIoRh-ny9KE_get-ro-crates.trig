@@ -1,0 +1,81 @@
+@prefix this: <https://w3id.org/np/RAsreoYhTJetmLxd13COATY-eaCJLbdIh5bIoRh-ny9KE> .
+@prefix sub: <https://w3id.org/np/RAsreoYhTJetmLxd13COATY-eaCJLbdIh5bIoRh-ny9KE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-ro-crates a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns all RO-Crates of which the metadata were published as nanopublications.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get RO-Crates";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/a94355158beda26c5d1533e079a7f76e827b9037dc594fac440e0cf3a2a153d1>;
+    <https://w3id.org/kpxl/grlc/sparql> """PREFIX schema: <http://schema.org/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+
+select distinct ?np ?metadata ?obj (group_concat(distinct ?objType; separator=\" \") as ?objTypes) (group_concat(distinct ?keyword; separator=\" \") as ?keywords) ?date where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+    ?np np:hasAssertion ?a .
+    optional { ?np rdfs:label ?label }
+  }
+  graph ?a {
+    optional { ?metadata_a <http://schema.org/about> ?obj_a . filter(strends(str(?metadata_a), \"ro-crate-metadata.json\")) }
+    optional { ?metadata_b <http://schema.org/about> ?obj_b . filter(strends(str(?metadata_b), \"ro-crate-metadata.jsonld\")) }
+    filter(bound(?metadata_a) || bound(?metadata_b))
+    bind(coalesce(?metadata_a, ?metadata_b) as ?metadata)
+    bind(coalesce(?obj_a, ?obj_b) as ?obj)
+  }
+  optional { graph ?a { ?obj schema:datePublished ?datePublished . } }
+  optional { graph ?a { ?obj schema:dateCreated ?dateCreated . } }
+  bind(coalesce(?datePublished, ?dateCreated) as ?date)
+  optional { graph ?a { ?obj a ?objType . } }
+  optional { graph ?a { ?obj schema:keywords ?keyword . } }
+}
+group by ?np ?metadata ?obj ?date
+order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-07-18T14:21:46.842Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-ro-crates;
+    npx:supersedes <https://w3id.org/np/RA0kShKuqPRUVhiYAZb0H5xs5uGdYEmnY8BZk6fX7hXHs>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "6eYhBDfACGt296JtHYa1bWk2FTdTacNZpokgKqUSpAQ4gmk7BskfF6VOP7AbxvnHR2jScbFO2Nye/9+wnDQ9pQHP4R7ey0xTnsT72GVKEQcd/rcL8mAkPHa5rAXjCq2vu5kBo/j2pSSXmQHl7ZgCga/ugN/QMdU8tpVfCopIxI8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

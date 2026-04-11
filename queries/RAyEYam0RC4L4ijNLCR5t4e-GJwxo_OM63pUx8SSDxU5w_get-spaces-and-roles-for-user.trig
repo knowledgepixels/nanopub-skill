@@ -1,0 +1,116 @@
+@prefix this: <https://w3id.org/np/RAyEYam0RC4L4ijNLCR5t4e-GJwxo_OM63pUx8SSDxU5w> .
+@prefix sub: <https://w3id.org/np/RAyEYam0RC4L4ijNLCR5t4e-GJwxo_OM63pUx8SSDxU5w/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-spaces-and-roles-for-user a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns all the spaces a given user belongs to, together with the role names the user has in each space.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get Spaces and roles for user";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix schema: <http://schema.org/>
+
+select ?space ?space_label (group_concat(distinct str(?role); separator=\" \") as ?roles_multi_iri) (group_concat(distinct ?roleName; separator=\"\\n\") as ?roles_label_multi) where {
+  {
+    {
+      graph npa:graph {
+        ?spaceRole_np npx:hasNanopubType gen:SpaceMemberRole .
+        ?spaceRole_np npa:hasValidSignatureForPublicKeyHash ?spaceRole_pubkey .
+        filter not exists { ?spaceRole_npx npx:invalidates ?spaceRole_np ; npa:hasValidSignatureForPublicKeyHash ?spaceRole_pubkey . }
+        ?spaceRole_np np:hasAssertion ?spaceRole_a .
+      }
+      graph ?spaceRole_a {
+        ?space gen:hasRole ?role .
+      }
+    } union {
+      bind(<https://w3id.org/np/RA_eEJjQbxzSqYSwPzfjzOZi5sMPpUmHskFNsgJYSws8I/adminRole> as ?role)
+    }
+  }
+  graph ?role_a {
+    ?role a gen:SpaceMemberRole .
+    ?role rdfs:label ?roleLabel .
+    ?role dct:title ?roleTitle .
+    ?role schema:name ?roleName .
+  }
+  graph npa:graph {
+    ?role_np npx:embeds ?role .
+    ?role_np np:hasAssertion ?role_a .
+  }
+  {
+    {
+      graph ?role_a {
+        ?role gen:hasRegularProperty ?reg .
+      }
+      graph ?link_a {
+        ?_agent_iri ?reg ?space .
+      }
+    } union {
+      graph ?role_a {
+        ?role gen:hasInverseProperty ?inv .
+      }
+      graph ?link_a {
+        ?space ?inv ?_agent_iri .
+      }
+    }
+  }
+  graph npa:graph {
+    ?link_np np:hasAssertion ?link_a .
+    ?link_np npa:hasValidSignatureForPublicKeyHash ?link_pubkey .
+    filter not exists { ?link_npx npx:invalidates ?link_np ; npa:hasValidSignatureForPublicKeyHash ?link_pubkey . }
+  }
+  optional {
+    graph npa:graph {
+      ?space_np npx:introduces ?space .
+      ?space_np npa:hasValidSignatureForPublicKeyHash ?space_pubkey .
+      filter not exists { ?space_npx npx:invalidates ?space_np ; npa:hasValidSignatureForPublicKeyHash ?space_pubkey . }
+      ?space_np rdfs:label ?space_label .
+    }
+  }
+}
+group by ?space ?space_label
+order by ?space_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-03-25T06:04:26Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-spaces-and-roles-for-user;
+    npx:supersedes <https://w3id.org/np/RA1ocBObGoFMpE57hJR9M37I626a1CarXzPOVEiTWyZaA>;
+    rdfs:label "Get Spaces and roles for user";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "fK47m4AB5ErTGSetBIbwXYi+F2TpBzXB0JgWkYzweJqIkHRVdlzt6b7N2KJ5jvwcmr9LoIsyCI527JI4P/TtdXL83G/bHVzs0Gxo4fJWURlXfMBzAUxtfK+giyqKVLlTQUEtYP685SyOm26Cah8NHceVrddXnQSl7zYLTfF9yPw=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

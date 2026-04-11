@@ -1,0 +1,170 @@
+@prefix this: <https://w3id.org/np/RALwVLnRJ4Y6ZkRC-fDiU0E8QB0XfWBRS0ntWyDMh1l8I> .
+@prefix sub: <https://w3id.org/np/RALwVLnRJ4Y6ZkRC-fDiU0E8QB0XfWBRS0ntWyDMh1l8I/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:conformsTo rdfs:label "conforms to (has FDO profile)", "conforms to" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <http://www.w3.org/ns/shacl#NodeShape> rdfs:label "node shape" .
+  
+  <http://www.w3.org/ns/shacl#hasValue> rdfs:label "has the object value" .
+  
+  <http://www.w3.org/ns/shacl#maxCount> rdfs:label "has max count" .
+  
+  <http://www.w3.org/ns/shacl#minCount> rdfs:label "has min count" .
+  
+  <http://www.w3.org/ns/shacl#path> rdfs:label "has the path" .
+  
+  <http://www.w3.org/ns/shacl#property> rdfs:label "has the property" .
+  
+  <http://www.w3.org/ns/shacl#targetClass> rdfs:label "has the target class" .
+  
+  <https://w3id.org/fdoc/o/terms/FdoProfile> rdfs:label "FDO Profile" .
+  
+  <https://w3id.org/fdoc/o/terms/hasShape> rdfs:label "has the shape" .
+  
+  <https://w3id.org/fdof/ontology#FAIRDigitalObject> rdfs:label "FAIR Digital Object" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template defines an FDO Profile based on a SHACL shape.";
+    rdfs:label "Defining an FDO Profile";
+    nt:hasStatement sub:st00, sub:st000a, sub:st000b, sub:st00a, sub:st00b, sub:st01,
+      sub:st02, sub:st03group, sub:st05, sub:st06, sub:st07;
+    nt:hasTag "FDO";
+    nt:hasTargetNanopubType nt:AssertionTemplate .
+  
+  sub:maxCountPropertyShape a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select property shape from above";
+    nt:possibleValue sub:propertyShape .
+  
+  sub:minCountPropertyShape a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select property shape from above";
+    nt:possibleValue sub:propertyShape .
+  
+  sub:nodeShape a nt:LocalResource;
+    rdfs:label "this node shape" .
+  
+  sub:objValue a nt:UriPlaceholder;
+    rdfs:label "object value URI" .
+  
+  sub:pathPredicate a nt:GuidedChoicePlaceholder;
+    rdfs:label "path predicate URI";
+    nt:possibleValue dct:conformsTo;
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https://w3id.org/fdoc/o/terms/FdoAttribute&searchterm=" .
+  
+  sub:profile a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder .
+  
+  sub:profilelabel a nt:LiteralPlaceholder;
+    rdfs:label "human-readable label of the profile" .
+  
+  sub:propertyShape a nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short property shape ID";
+    nt:hasDefaultValue sub:propertyShape .
+  
+  sub:st00 rdf:object <https://w3id.org/fdoc/o/terms/FdoProfile>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:profile .
+  
+  sub:st000a rdf:object <https://w3id.org/fdof/ontology#FAIRDigitalObject>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:profile .
+  
+  sub:st000b rdf:object <https://w3id.org/np/RAprU0T8cWWRNseTC15oQn5oaoiIIgpPx9QMmBZNPsehg/basic-fdo-profile-profile>;
+    rdf:predicate dct:conformsTo;
+    rdf:subject sub:profile .
+  
+  sub:st00a rdf:object sub:profilelabel;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:profile .
+  
+  sub:st00b rdf:object sub:nodeShape;
+    rdf:predicate <https://w3id.org/fdoc/o/terms/hasShape>;
+    rdf:subject sub:profile .
+  
+  sub:st01 rdf:object <http://www.w3.org/ns/shacl#NodeShape>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:nodeShape .
+  
+  sub:st02 rdf:object <https://w3id.org/fdof/ontology#FAIRDigitalObject>;
+    rdf:predicate <http://www.w3.org/ns/shacl#targetClass>;
+    rdf:subject sub:nodeShape .
+  
+  sub:st03 rdf:object sub:propertyShape;
+    rdf:predicate <http://www.w3.org/ns/shacl#property>;
+    rdf:subject sub:nodeShape .
+  
+  sub:st03group a nt:GroupedStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st03, sub:st04 .
+  
+  sub:st04 rdf:object sub:pathPredicate;
+    rdf:predicate <http://www.w3.org/ns/shacl#path>;
+    rdf:subject sub:propertyShape .
+  
+  sub:st05 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object "1";
+    rdf:predicate <http://www.w3.org/ns/shacl#maxCount>;
+    rdf:subject sub:maxCountPropertyShape .
+  
+  sub:st06 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object "1";
+    rdf:predicate <http://www.w3.org/ns/shacl#minCount>;
+    rdf:subject sub:minCountPropertyShape .
+  
+  sub:st07 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:objValue;
+    rdf:predicate <http://www.w3.org/ns/shacl#hasValue>;
+    rdf:subject sub:valuePropertyShape .
+  
+  sub:valuePropertyShape a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select property shape from above";
+    nt:possibleValue sub:propertyShape .
+  
+  <https://w3id.org/np/RAprU0T8cWWRNseTC15oQn5oaoiIIgpPx9QMmBZNPsehg/basic-fdo-profile-profile>
+    rdfs:label "the basic profile for FDO Profiles" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-08-29T12:38:48.835Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAsITobf6Kucg5cK6C0I7XIyQZnDvvSgMuCwd2_Q1XqSo>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Defining an FDO Profile";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "WOt1U/vTFHygW2fHOsH9ehSHEhsXEsjqbqvJpaJzxCHY2Lq+2JDq2R4gVbvA55dFk5qJToNx/6/iQmebS31BnxGKxR5hgjCWd/kgIJhSNFkcFygbOtqVkUC810J6vhX/KIvKmZ+0fknO8s4njVALVMZ5JOtLXgx+6TYASSvEq7w=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

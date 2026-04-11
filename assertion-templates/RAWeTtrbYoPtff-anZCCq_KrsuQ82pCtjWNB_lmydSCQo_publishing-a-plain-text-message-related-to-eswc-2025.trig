@@ -1,0 +1,81 @@
+@prefix this: <https://w3id.org/np/RAWeTtrbYoPtff-anZCCq_KrsuQ82pCtjWNB_lmydSCQo> .
+@prefix sub: <https://w3id.org/np/RAWeTtrbYoPtff-anZCCq_KrsuQ82pCtjWNB_lmydSCQo/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdfs:label rdfs:label "has the text" .
+  
+  rdfs:seeAlso rdfs:label "has the link / further info at" .
+  
+  <https://2025.eswc-conferences.org/> rdfs:label "ESWC 2025" .
+  
+  <https://schema.org/about> rdfs:label "is about" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Publishing a plain-text message related to ESWC 2025";
+    nt:hasNanopubLabelPattern "${message}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3;
+    nt:hasTag "Comments" .
+  
+  sub:link a nt:ExternalUriPlaceholder;
+    rdfs:label "link your message is about or with additional info" .
+  
+  sub:message a nt:LongLiteralPlaceholder;
+    rdfs:label "your plain-text message" .
+  
+  sub:st1 rdf:object sub:message;
+    rdf:predicate rdfs:label;
+    rdf:subject nt:ASSERTION .
+  
+  sub:st2 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:link;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject nt:ASSERTION .
+  
+  sub:st3 rdf:object <https://2025.eswc-conferences.org/>;
+    rdf:predicate <https://schema.org/about>;
+    rdf:subject nt:ASSERTION .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-05-31T05:56:50.056Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RARRQMCJ9_QU5utKkP7arkFmrd9bCgRBiDFGjwvboXQqg>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Publishing a plain-text message related to ESWC 2025";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA5reLVXOCPQFWr2UiCJb19ES7NwOpQRmudb17e2iB0c4> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "RLh+xLAxtGHfupQJTIqtF9d8POyKePth6SSABgNiBNV1mJ4vybE8di+Aiur3c0DR5fhTDJd+zxY0Gn5vkcVrLyipkTF46tR6c9IclZAYPOaDFPk2SASc7OiM7mvBXCS1mMdORUJQqigRUHssw2ZS5q/btcz9UNgB8nkfnDLea+I=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

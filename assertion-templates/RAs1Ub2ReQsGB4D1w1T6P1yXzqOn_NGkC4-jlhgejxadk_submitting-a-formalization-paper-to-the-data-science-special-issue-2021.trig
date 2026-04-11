@@ -1,0 +1,65 @@
+@prefix this: <http://purl.org/np/RAs1Ub2ReQsGB4D1w1T6P1yXzqOn_NGkC4-jlhgejxadk> .
+@prefix sub: <http://purl.org/np/RAs1Ub2ReQsGB4D1w1T6P1yXzqOn_NGkC4-jlhgejxadk#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Submitting a formalization paper to the Data Science special issue 2021";
+    nt:hasStatement sub:st01, sub:st02;
+    nt:hasTag "Journals" .
+  
+  sub:nanopub a nt:TrustyUriPlaceholder;
+    rdfs:label "add the URI of the nanopublication here" .
+  
+  sub:st01 rdf:object <https://w3id.org/linkflows/formalization-papers/DataScienceSpecialIssue>;
+    rdf:predicate <http://purl.org/vocab/frbr/core#partOf>;
+    rdf:subject sub:nanopub .
+  
+  sub:st02 rdf:object <http://purl.org/spar/pso/submitted>;
+    rdf:predicate <http://purl.org/spar/pso/withStatus>;
+    rdf:subject sub:nanopub .
+  
+  <http://purl.org/spar/pso/submitted> rdfs:label "submitted" .
+  
+  <http://purl.org/spar/pso/withStatus> rdfs:label "has the status" .
+  
+  <http://purl.org/vocab/frbr/core#partOf> rdfs:label "is submitted as part of" .
+  
+  <https://w3id.org/linkflows/formalization-papers/DataScienceSpecialIssue> rdfs:label
+      "Formalization Papers Special Issue 2021 at Data Science" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "lzFPXA383W5Imd9zzB6ytJR95Atpe4yVmElm5tNurUHzzyJhVfzOc9QywWJ9NzMNsa//5ei4qIK9aCZ57dJYHo0LOEvPosL2WE3ENcZpQ9D0Fjje4kMD972JADXSyAG7gHevFx/AaYYxXDrDj3vkHOvhuG7mN0tpMK3mb9vl5is=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2022-01-26T15:06:11.363+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    npx:supersedes <http://purl.org/np/RAK8ZEEuVneG9bh_OxG_ep6pAzjURATo2c0zTGlYDVwwk>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RARMBqX_-9lnhkaqk4BuxfLcC6H5cqTlzdtDzeDIwuKdU> .
+}
+

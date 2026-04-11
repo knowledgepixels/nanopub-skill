@@ -1,0 +1,103 @@
+@prefix this: <https://w3id.org/np/RAhI-C2KsqS_IvnxwyBrbMFsoj65dhLWE_CBo_KtcVEVA> .
+@prefix sub: <https://w3id.org/np/RAhI-C2KsqS_IvnxwyBrbMFsoj65dhLWE_CBo_KtcVEVA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-monthly-type-overview-by-pubkeys a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns an monthly overview of published nanopublications by types for the past 12 months for the given pubkey hashes.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get type overview of monthly nanopubs by pubkeys";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/meta>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+
+select ?type ?month ?npCount ?npCountType where {
+
+
+{ select ?type ?month (count(?np) as ?npCount) where {
+  graph npa:graph {
+    values ?_pubkey_multi {}
+    ?np npa:hasValidSignatureForPublicKeyHash ?_pubkey_multi .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?_pubkey_multi . }
+    ?np dct:created ?date .
+    ?np npx:hasNanopubType ?type .
+
+    bind(substr(str(?date), 0, 8) as ?month)
+    bind(now() as ?now)
+    bind(concat(str(year(?now)), '-', if(month(?now)>9,'','0'), str(month(?now))) as ?lastMonth)
+    bind(concat(str(year(?now)-1), '-', if(month(?now)>9,'','0'), str(month(?now))) as ?firstMonth)
+    filter(?month > ?firstMonth && ?month <= ?lastMonth)
+  }
+}
+group by ?type ?month
+order by ?type desc(?month)
+}
+
+{ select ?type (count(?np) as ?npCountType) where {
+  graph npa:graph {
+    values ?_pubkey_multi {}
+    ?np npa:hasValidSignatureForPublicKeyHash ?_pubkey_multi .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?_pubkey_multi . }
+    ?np dct:created ?date .
+    ?np npx:hasNanopubType ?type .
+
+    bind(substr(str(?date), 0, 8) as ?month)
+    bind(now() as ?now)
+    bind(concat(str(year(?now)), '-', if(month(?now)>9,'','0'), str(month(?now))) as ?lastMonth)
+    bind(concat(str(year(?now)-1), '-', if(month(?now)>9,'','0'), str(month(?now))) as ?firstMonth)
+    filter(?month > ?firstMonth && ?month <= ?lastMonth)
+  }
+}
+group by ?type
+order by desc(?npCountType)
+}
+
+}
+order by desc(?npCountType) ?type desc(?month)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-10-02T07:36:08.194Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-monthly-type-overview-by-pubkeys;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RActSoHqt-TlpCOldqLb9skfMioVxHzCZUYaNEM06FTsY>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "tCkQ/wAjH8Ls0RUhGKhSQp1yspcSjlESQvp6fph5Yd7HP+9nmB+OD8YgSR1sORrF2Nwqy0GofzMZajguwz0mpcT5lXqRWJr8QODZ9jlz5am3fWSi+uudXZGFhphvcoHxPmHxsEy/29q2gtzbTAW5Sb0MlWf8ghQQXc6bjN0oAmI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

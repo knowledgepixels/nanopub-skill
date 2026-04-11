@@ -1,0 +1,97 @@
+@prefix this: <https://w3id.org/np/RAe-oA5eSmkCXCALZ99-0k4imnlI74KPqURfhHOmnzo6A> .
+@prefix sub: <https://w3id.org/np/RAe-oA5eSmkCXCALZ99-0k4imnlI74KPqURfhHOmnzo6A#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-latest-nanopubs-from-pubkeys a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the latest nanopublications from the given set of pubkey hashes.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the latest nanopublications from pubkeys";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/meta>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+
+select ?np ?label ?pubkey ?date where {
+
+  #==================== MULTI-VALUE PLACEHOLDER =====================#------ config: ------
+  { select ?pkh {                                                    # <- VAR pkh
+    bind(?_pubkeyhashes as ?vs)         # <- VAR _pubkeyhashes
+    {select*{optional{<x:> <x:> <x:>}}} # (for some Virtuoso ver.)   #
+    values ?x {0 1 2 3 4 5 6 7 8 9} values ?y {0 1 2 3 4 5 6 7 8 9}  #
+    bind((10*?x)+?y as ?n) # (works up to a maximum of 100 values)   #
+    bind(\" \" as ?sep) # (separator as single regex-compatible char)  # <- CONST sep
+    bind(concat(\"^([^\",?sep,\"]*\",?sep,\"){\",str(?n),\"}\") as ?p)       #
+    bind(concat(?sep,\".*\") as ?p0)                                   #
+    filter(if(?n=0,true,regex(?vs,?p))) # (?n=0 check for Viruoso)   #
+    bind(replace(if(?n=0,?vs,replace(?vs,?p,\"\")),?p0,\"\") as ?pkh)    # <- VAR pkh
+    filter(!bound(?pkh) || exists {?any_np npa:hasValidSignatureForPublicKeyHash ?pkh })  # Filter out the hashes for which no repo exists; try to do this better with future versions of Nanopub Query
+  } }                                                                #
+  #==================================================================#---------------------
+  bind(uri(concat(\"https://w3id.org/np/l/nanopub-query-1.1/repo/pubkey/\", ?pkh)) as ?pubkeyservice)
+
+  service ?pubkeyservice {
+    select ?np ?pubkey ?date ?label {
+      { select ?np ?pubkey ?date where {
+        graph npa:graph {
+          ?np npa:hasValidSignatureForPublicKey ?pubkey .
+          ?np dct:created ?date .
+      } } order by desc(?date) }
+      graph npa:graph {
+        ?np dct:creator ?__userid_iri .
+        optional { ?np rdfs:label ?label }
+        filter not exists {  ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+        filter not exists {  ?np npx:hasNanopubType npx:retracts . }
+      }
+    } limit 100
+  }
+
+}
+order by desc(?date)
+limit 100""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "0KSsFg/SRg3D3kwEnfPuHF5q7f9wOPxu9d3Fc6GWO/S+M6xLwJ1HfYHB3j6wpzhv37eJKu8KRlNmeEMlPIFPF2rcQLzn5DBkMCLgH/SxAl5iFfJ1uurEt/BpHndxuELf+GLI4Wc8l558nQZ3ZVrl9lEFhss1fowWgHkYuS5ch8M=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2025-04-08T07:27:54.115Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-latest-nanopubs-from-pubkeys;
+    npx:supersedes <https://w3id.org/np/RACzZG4HmDGSg4N0KnNrymC_CMOcahWKvIj7yWm4Z7C-4>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+}
+

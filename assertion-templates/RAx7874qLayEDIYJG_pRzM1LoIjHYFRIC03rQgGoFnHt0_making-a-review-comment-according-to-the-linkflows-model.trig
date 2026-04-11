@@ -1,0 +1,143 @@
+@prefix this: <http://purl.org/np/RAx7874qLayEDIYJG_pRzM1LoIjHYFRIC03rQgGoFnHt0> .
+@prefix sub: <http://purl.org/np/RAx7874qLayEDIYJG_pRzM1LoIjHYFRIC03rQgGoFnHt0#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:ActionClass a nt:RestrictedChoicePlaceholder;
+    rdfs:label "specify whether an action is required";
+    nt:possibleValue <https://w3id.org/linkflows/reviews/ActionNeededComment>, <https://w3id.org/linkflows/reviews/NoActionNeededComment>,
+      <https://w3id.org/linkflows/reviews/SuggestionComment> .
+  
+  sub:AspectClass a nt:RestrictedChoicePlaceholder;
+    rdfs:label "specify whether it is about syntax, style, or content";
+    nt:possibleValue <https://w3id.org/linkflows/reviews/ContentComment>, <https://w3id.org/linkflows/reviews/StyleComment>,
+      <https://w3id.org/linkflows/reviews/SyntaxComment> .
+  
+  sub:PositivityClass a nt:RestrictedChoicePlaceholder;
+    rdfs:label "specify whether it is positive, neutral, or negative";
+    nt:possibleValue <https://w3id.org/linkflows/reviews/NegativeComment>, <https://w3id.org/linkflows/reviews/NeutralComment>,
+      <https://w3id.org/linkflows/reviews/PositiveComment> .
+  
+  sub:ReferredMentioning a nt:UriPlaceholder;
+    rdfs:label "identifier of a thing mentioned in the object that is reviewed" .
+  
+  sub:ReferredObject a nt:UriPlaceholder;
+    rdfs:label "identifier of the object that is reviewed (e.g. a text or nanopublication)" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Making a review comment according to the LinkFlows model";
+    nt:hasNanopubLabelPattern "Review comment about ${ReferredObject}: '${reviewComment}'";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st10, sub:st11, sub:st12, sub:st13,
+      sub:st20;
+    nt:hasTag "Reviews" .
+  
+  sub:comment a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "This comment" .
+  
+  sub:impact a nt:LiteralPlaceholder;
+    rdfs:label "integer value from 1 (low impact) to 5 (high impact)";
+    nt:hasRegex "[1-5]" .
+  
+  sub:reviewComment a nt:LiteralPlaceholder, nt:LongLiteralPlaceholder;
+    rdfs:label "The content of this comment as free text" .
+  
+  sub:st00 rdf:object <https://w3id.org/linkflows/reviews/ReviewComment>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:comment .
+  
+  sub:st01 rdf:object sub:ReferredObject;
+    rdf:predicate <https://w3id.org/linkflows/reviews/refersTo>;
+    rdf:subject sub:comment .
+  
+  sub:st02 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:ReferredMentioning;
+    rdf:predicate <https://w3id.org/linkflows/reviews/refersToMentioningOf>;
+    rdf:subject sub:comment .
+  
+  sub:st10 rdf:object sub:AspectClass;
+    rdf:predicate rdf:type;
+    rdf:subject sub:comment .
+  
+  sub:st11 rdf:object sub:PositivityClass;
+    rdf:predicate rdf:type;
+    rdf:subject sub:comment .
+  
+  sub:st12 rdf:object sub:ActionClass;
+    rdf:predicate rdf:type;
+    rdf:subject sub:comment .
+  
+  sub:st13 rdf:object sub:impact;
+    rdf:predicate <https://w3id.org/linkflows/reviews/hasImpact>;
+    rdf:subject sub:comment .
+  
+  sub:st20 rdf:object sub:reviewComment;
+    rdf:predicate <https://w3id.org/linkflows/reviews/hasCommentText>;
+    rdf:subject sub:comment .
+  
+  rdf:type rdfs:label "is a" .
+  
+  <https://w3id.org/linkflows/reviews/ActionNeededComment> rdfs:label "comment that declares that an action is needed" .
+  
+  <https://w3id.org/linkflows/reviews/ContentComment> rdfs:label "comment about the content" .
+  
+  <https://w3id.org/linkflows/reviews/NegativeComment> rdfs:label "negative comment" .
+  
+  <https://w3id.org/linkflows/reviews/NeutralComment> rdfs:label "neutral comment" .
+  
+  <https://w3id.org/linkflows/reviews/NoActionNeededComment> rdfs:label "comment that does not ask for an action" .
+  
+  <https://w3id.org/linkflows/reviews/PositiveComment> rdfs:label "positive comment" .
+  
+  <https://w3id.org/linkflows/reviews/ReviewComment> rdfs:label "review comment" .
+  
+  <https://w3id.org/linkflows/reviews/StyleComment> rdfs:label "comment about the style" .
+  
+  <https://w3id.org/linkflows/reviews/SuggestionComment> rdfs:label "suggestion" .
+  
+  <https://w3id.org/linkflows/reviews/SyntaxComment> rdfs:label "comment about the syntax" .
+  
+  <https://w3id.org/linkflows/reviews/hasCommentText> rdfs:label "has the comment text" .
+  
+  <https://w3id.org/linkflows/reviews/hasImpact> rdfs:label "has impact level" .
+  
+  <https://w3id.org/linkflows/reviews/refersTo> rdfs:label "refers to" .
+  
+  <https://w3id.org/linkflows/reviews/refersToMentioningOf> rdfs:label "refers to the mentioning of" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "SxhKlP2yFs3qTXk1Mh+XSfFsRa49lDgrGaBaelpUpItACf8hgt93Vlc2oIxpCO6BZqVhM7aYeWv6FbLb+x0jEf2NZHPRdTP7zbDABptpAgoXcTLWn1bbFjAclVgwhnHTXY4k3K15tkh8wEPyUGMDNAO5oII+1fHhXlU9LbGKy9M=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-16T12:41:01.767+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <http://purl.org/np/RAmm-SaXKeUkpb8PCtxe0VqXenu1zrFhBdCh5fToOQhvM>;
+    rdfs:label "Template: Making a review comment according to the LinkFlows model";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RANjqEfLnGSzLuq0heRSXN0psYWW0oX4v3W8w7osb3xfs> .
+}
+

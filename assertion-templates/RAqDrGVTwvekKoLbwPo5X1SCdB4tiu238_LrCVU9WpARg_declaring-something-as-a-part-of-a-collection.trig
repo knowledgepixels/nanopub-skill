@@ -1,0 +1,116 @@
+@prefix this: <https://w3id.org/np/RAqDrGVTwvekKoLbwPo5X1SCdB4tiu238_LrCVU9WpARg> .
+@prefix sub: <https://w3id.org/np/RAqDrGVTwvekKoLbwPo5X1SCdB4tiu238_LrCVU9WpARg/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:isPartOf rdfs:label "is part of" .
+  
+  dct:source rdfs:label "has the source" .
+  
+  <http://purl.org/spar/fabio/ScholarlyWork> rdfs:label "scholarly work" .
+  
+  <http://rdf-vocabulary.ddialliance.org/discovery#Study> rdfs:label "study" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has my comment" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <https://w3id.org/kpxl/gen/terms/CollectionElement> rdfs:label "collection element" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Declaring something as a part of a collection";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st02b, sub:st03, sub:st10;
+    nt:hasTag "Collections" .
+  
+  sub:collection a nt:GuidedChoicePlaceholder;
+    rdfs:label "the collection this item belongs to";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http://purl.org/dc/dcmitype/Collection&searchterm=" .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "comment about this item" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "label of the item" .
+  
+  sub:source a nt:ExternalUriPlaceholder;
+    rdfs:label "source URI, e.g. DOI of paper" .
+  
+  sub:st00 rdf:object <https://w3id.org/kpxl/gen/terms/CollectionElement>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:thing .
+  
+  sub:st01 rdf:object sub:type;
+    rdf:predicate rdf:type;
+    rdf:subject sub:thing .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:thing .
+  
+  sub:st02b a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:thing .
+  
+  sub:st03 a nt:OptionalStatement;
+    rdf:object sub:source;
+    rdf:predicate dct:source;
+    rdf:subject sub:thing .
+  
+  sub:st10 rdf:object sub:collection;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:thing .
+  
+  sub:thing a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short suffix of full URI of item" .
+  
+  sub:type a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the type of the item";
+    nt:possibleValue <http://purl.org/spar/fabio/ScholarlyWork>, <http://rdf-vocabulary.ddialliance.org/discovery#Study>;
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-12-19T08:39:51.574+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA1WYfadLYViV_V83o871dTwLWWrfEaytH49BrK8dzCGs>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Declaring something as a part of a collection";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "DnIQ+bDe7eyHwXmGvwtqEJEGsGAir1yiZWHTiwhdTtHL4xW58uuLlgvJYNL52Xn8ArizY6XgVgYoAznXk/ZCc6mzRW1sgP9Ljg+86iphDWKHsew4dQnO6FunQY3Sf1Vihq4EdYEEXwIV0Y342Z0TDxdZQvNdkJbAUQFNOuKKIm0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

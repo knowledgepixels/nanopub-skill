@@ -1,0 +1,75 @@
+@prefix this: <https://w3id.org/np/RAdeng6AdglsqVfdNhzEHL2VdePcTsL9N545NAi9VUnrw> .
+@prefix sub: <https://w3id.org/np/RAdeng6AdglsqVfdNhzEHL2VdePcTsL9N545NAi9VUnrw/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdfs:label rdfs:label "has the text" .
+  
+  rdfs:seeAlso rdfs:label "has the link / further info at" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    rdfs:label "Testing template";
+    nt:hasNanopubLabelPattern "Message: ${message}";
+    nt:hasStatement sub:st1, sub:st2;
+    nt:hasTag "Comments" .
+  
+  sub:link a nt:ExternalUriPlaceholder;
+    rdfs:label "link your message is about or with additional info" .
+  
+  sub:message a nt:LongLiteralPlaceholder;
+    rdfs:label "your plain-text message" .
+  
+  sub:st1 rdf:object sub:message;
+    rdf:predicate rdfs:label;
+    rdf:subject nt:ASSERTION .
+  
+  sub:st2 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:link;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject nt:ASSERTION .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-04-24T06:08:18.820Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAMQeg3Il38V4Sy_dKIRBkAcngQ7_J7YVQWbHPwqsItyI>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Template: Testing template";
+    prov:wasDerivedFrom <https://w3id.org/np/RA66vcP_zCtPYIqFaQkv-WhjYZnUiToHRG5EmbMAovZSw>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAGBEisKAxwcQTdfR7ALwCeQBrUVeU23F8uFvFmO-H6F0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "nXiUvCtN8J495b6PbPbMd5wErJX4Y8WbRx/NItcBULZIKU8TXPW8BMhWKbOs1MJb24eyyt6JJtm1uOepG+SZXgxxiANpJcJkr/7q4EPQu6dbXVxPZ9xCW/TUny4kIOMBEBbvqO2gTYNkpSjVzhA9GpoQzNKHkZttlGI/Wyi0uF8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,129 @@
+@prefix this: <https://w3id.org/np/RAOYgmgXWTKBYDCyJQQH3thfJEiJwmtH75phh1T6Dmk_Q> .
+@prefix sub: <https://w3id.org/np/RAOYgmgXWTKBYDCyJQQH3thfJEiJwmtH75phh1T6Dmk_Q/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <http://www.w3.org/2002/07/owl#sameAs> rdfs:label "has the alternative ID" .
+  
+  <https://w3id.org/kpxl/gen/terms/Alliance> rdfs:label "Alliance - (with focus on bringing units together)" .
+  
+  <https://w3id.org/kpxl/gen/terms/Community> rdfs:label "Community - (with focus on exchange)" .
+  
+  <https://w3id.org/kpxl/gen/terms/Division> rdfs:label "Division - (with focus on structuring into sub-units)" .
+  
+  <https://w3id.org/kpxl/gen/terms/Group> rdfs:label "Group - (with focus on getting work done)" .
+  
+  <https://w3id.org/kpxl/gen/terms/Organization> rdfs:label "Organization - (with focus on formal vessel)" .
+  
+  <https://w3id.org/kpxl/gen/terms/Outlet> rdfs:label "Outlet - (with focus on outreach)" .
+  
+  <https://w3id.org/kpxl/gen/terms/Program> rdfs:label "Program - (with focus on coordination)" .
+  
+  <https://w3id.org/kpxl/gen/terms/Space> rdfs:label "Space" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasAdmin> rdfs:label "has as admin" .
+  
+  sub:admin a nt:AgentPlaceholder;
+    rdfs:label "an admin of the Space" .
+  
+  sub:altId a nt:ExternalUriPlaceholder;
+    rdfs:label "alternative URI" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such nanopublications defines an open-ended Space, i.e. a group, program, outlet, or community.";
+    rdfs:label "Defining an open-ended Space";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st03, sub:st04, sub:st90;
+    nt:hasTag "Spaces" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "the description of the Space" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the name of the Space" .
+  
+  sub:space a nt:ExternalUriPlaceholder, nt:IntroducedResource;
+    rdfs:label "Space identifier";
+    nt:hasPrefix "https://w3id.org/spaces/";
+    nt:hasPrefixLabel "https://w3id.org/spaces/" .
+  
+  sub:st00 rdf:object <https://w3id.org/kpxl/gen/terms/Space>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:space .
+  
+  sub:st01 rdf:object sub:type;
+    rdf:predicate rdf:type;
+    rdf:subject sub:space .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:space .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:space .
+  
+  sub:st04 a nt:RepeatableStatement;
+    rdf:object sub:admin;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasAdmin>;
+    rdf:subject sub:space .
+  
+  sub:st90 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:altId;
+    rdf:predicate <http://www.w3.org/2002/07/owl#sameAs>;
+    rdf:subject sub:space .
+  
+  sub:type a nt:RestrictedChoicePlaceholder;
+    rdfs:label "type of the Space";
+    nt:possibleValue <https://w3id.org/kpxl/gen/terms/Alliance>, <https://w3id.org/kpxl/gen/terms/Community>,
+      <https://w3id.org/kpxl/gen/terms/Division>, <https://w3id.org/kpxl/gen/terms/Group>,
+      <https://w3id.org/kpxl/gen/terms/Organization>, <https://w3id.org/kpxl/gen/terms/Outlet>,
+      <https://w3id.org/kpxl/gen/terms/Program> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-10-30T10:53:06.540+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAW60x3VUcpO3sUzCmNy8V3BAbrJ3gyUWdP3wTNNZe4GU>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Defining an open-ended Space";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "OAninGtswE54FFM2dBlSlCB+F29W3W5kdpKL8FJd0EVWoSGO8C75ZJPHLVW4XEufrbBQPhZLXnF7Jwwv4kxKrbit+8kEEB41KY55u0rqxZ8vxwUZPtI7VDgGJnkNLh4plBCcy/5jPGFKiU2in1+ImUoEwhhlzd74+yw9Mz8uYrg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

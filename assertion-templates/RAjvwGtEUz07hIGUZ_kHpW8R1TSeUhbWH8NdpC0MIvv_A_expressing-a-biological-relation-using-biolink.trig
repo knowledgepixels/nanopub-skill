@@ -1,0 +1,68 @@
+@prefix this: <http://purl.org/np/RAjvwGtEUz07hIGUZ_kHpW8R1TSeUhbWH8NdpC0MIvv_A> .
+@prefix sub: <http://purl.org/np/RAjvwGtEUz07hIGUZ_kHpW8R1TSeUhbWH8NdpC0MIvv_A#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    dct:description """<p>Such nanopublications express biology-related relations, such as that a chemical can treat a disease or that a given type of protein interacts with another one.</p>
+
+<p>The relations of this template are based on the <a href=\"https://biolink.github.io/biolink-model/docs/\">Biolink model</a>.</p>""";
+    rdfs:label "Expressing a biological relation using Biolink";
+    nt:hasNanopubLabelPattern "${subj} - ${rel} - ${obj}";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Biology";
+    nt:hasTargetNanopubType <https://w3id.org/biolink/vocab/related_to> .
+  
+  sub:obj a nt:GuidedChoicePlaceholder;
+    rdfs:label "object of the biological relation";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?fieldList=iri,label,description&q=" .
+  
+  sub:rel a nt:RestrictedChoicePlaceholder;
+    rdfs:label "identifier of biological relation";
+    nt:possibleValuesFrom <http://purl.org/np/RAYOsXf6wLjW5R7f7Sjg4bjbYzKnxF5hS7EPHa73sCnP4> .
+  
+  sub:st1 rdf:object sub:obj;
+    rdf:predicate sub:rel;
+    rdf:subject sub:subj .
+  
+  sub:subj a nt:GuidedChoicePlaceholder;
+    rdfs:label "subject of the biological relation";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?fieldList=iri,label,description&q=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "AMjY6+2tyF5ltF8z1HRZmqKjgU00NohdG2pjg3aBa1Y6mG7dc3Avtw0HV1yqs6jlxspUjL9hUivOJ+TkrSCsBAVXTdNzi55Abdr9ra06L8Bw58OBPIRk08Z/zPYknl0eyrq9he9JfSvL1LxuS8+WRm1bo6j7YHN80yFHpDZmqpU=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-23T12:11:37.052Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <http://purl.org/np/RAxAMf8RX-2Xvv-bo3nWrPKtEnbJbUxGiNOofg2m3pNL0>;
+    rdfs:label "Template: Expressing a biological relation using Biolink";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so> .
+}
+

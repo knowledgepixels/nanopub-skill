@@ -1,0 +1,215 @@
+@prefix this: <https://w3id.org/np/RA6o3lUdj_uN2u6tWMrqS69kKi1Pf_TX1_IUqKtloXubU> .
+@prefix sub: <https://w3id.org/np/RA6o3lUdj_uN2u6tWMrqS69kKi1Pf_TX1_IUqKtloXubU#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C64357> rdfs:label "negative control (cell culture medium without nanoparticles)" .
+  
+  <http://nmrML.org/nmrCV#NMR:1000868> rdfs:label "the SMILES chemical structure of the ligand(s)" .
+  
+  <http://purl.bioontology.org/ontology/npo#NPO_1808> rdfs:label "nanoparticle core composition" .
+  
+  <http://purl.bioontology.org/ontology/npo#NPO_274> rdfs:label "shape of nanoparticle" .
+  
+  <http://purl.obolibrary.org/obo/BiPOm#ligand> rdfs:label "ligand(s) bound to each nanoparticle" .
+  
+  <http://purl.obolibrary.org/obo/CLO_0001601> rdfs:label "A549 cells" .
+  
+  <http://purl.obolibrary.org/obo/OBI_0000272> rdfs:label "has used protocol" .
+  
+  <http://purl.obolibrary.org/obo/PATO_0000117> rdfs:label "the size of the nanoparticle" .
+  
+  <http://purl.obolibrary.org/obo/STATO_0000237> rdfs:label "standard deviation (n=3) of cellular uptake" .
+  
+  <http://purl.org/dc/dcmitype/Dataset> rdfs:label "dataset" .
+  
+  dct:description rdfs:label "has the description" .
+  
+  dct:identifier rdfs:label "has index" .
+  
+  dct:license rdfs:label "has license" .
+  
+  dct:publisher rdfs:label "is published by" .
+  
+  dct:references rdfs:label "has reference" .
+  
+  dct:title rdfs:label "has the title" .
+  
+  <http://www.ebi.ac.uk/efo/EFO_0004368> rdfs:label "the number of molecules of the ligand(s) bound to each nanoparticle" .
+  
+  <http://www.pepathway.org/peo/1.2#Cellular_uptake> rdfs:label "cellular uptake of metallic nanoparticles" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template can be used to describe datasets of cellular uptake of metallic nanoparticles by A549 cells. It provides information on the data and metadata produced as part of the CompSafeNano project.";
+    rdfs:label "Describing a dataset of cellular uptake of metalic nanoparticles by A549 cells at summary level";
+    nt:hasNanopubLabelPattern "Dataset: ${title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07a,
+      sub:st07b, sub:st07c, sub:st08, sub:st09, sub:st10, sub:st11, sub:st12, sub:st13,
+      sub:st14, sub:st15, sub:st16;
+    nt:hasTag "Datasets";
+    nt:hasTargetNanopubType <http://purl.org/dc/dcmitype/Dataset> .
+  
+  sub:dataset a nt:UriPlaceholder;
+    rdfs:label "URI of the dataset" .
+  
+  sub:description a nt:LiteralPlaceholder;
+    rdfs:label "description of the dataset" .
+  
+  sub:index a nt:ValuePlaceholder;
+    rdfs:label "unique identifier of the assessed NP" .
+  
+  sub:license a nt:ExternalUriPlaceholder;
+    rdfs:label "the license of the dataset" .
+  
+  sub:protocol a nt:ExternalUriPlaceholder;
+    rdfs:label "the URI of the protocol used" .
+  
+  sub:publisher a nt:ValuePlaceholder;
+    rdfs:label "URI of the publisher of the dataset (e.g., ORCID)" .
+  
+  sub:reference a nt:ExternalUriPlaceholder;
+    rdfs:label "DOI or URI of the reference" .
+  
+  sub:st01 a rdf:Statement;
+    rdf:object <http://purl.org/dc/dcmitype/Dataset>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:dataset .
+  
+  sub:st02 a rdf:Statement;
+    rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:dataset .
+  
+  sub:st03 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:dataset .
+  
+  sub:st04 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:publisher;
+    rdf:predicate dct:publisher;
+    rdf:subject sub:dataset .
+  
+  sub:st05 a rdf:Statement, nt:RepeatableStatement;
+    rdf:object sub:index;
+    rdf:predicate dct:identifier;
+    rdf:subject sub:dataset .
+  
+  sub:st06 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:protocol;
+    rdf:predicate <http://purl.obolibrary.org/obo/OBI_0000272>;
+    rdf:subject sub:dataset .
+  
+  sub:st07a a rdf:Statement;
+    rdf:object <http://www.pepathway.org/peo/1.2#Cellular_uptake>;
+    rdf:predicate nt:hasStatement;
+    rdf:subject sub:dataset .
+  
+  sub:st07b a rdf:Statement;
+    rdf:object <http://purl.obolibrary.org/obo/CLO_0001601>;
+    rdf:predicate nt:hasStatement;
+    rdf:subject sub:dataset .
+  
+  sub:st07c a rdf:Statement;
+    rdf:object <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C64357>;
+    rdf:predicate nt:hasStatement;
+    rdf:subject sub:dataset .
+  
+  sub:st08 a rdf:Statement;
+    rdf:object <http://purl.obolibrary.org/obo/STATO_0000237>;
+    rdf:predicate nt:hasStatement;
+    rdf:subject sub:dataset .
+  
+  sub:st09 a rdf:Statement;
+    rdf:object <http://purl.bioontology.org/ontology/npo#NPO_274>;
+    rdf:predicate nt:hasStatement;
+    rdf:subject sub:dataset .
+  
+  sub:st10 a rdf:Statement;
+    rdf:object <http://purl.bioontology.org/ontology/npo#NPO_1808>;
+    rdf:predicate nt:hasStatement;
+    rdf:subject sub:dataset .
+  
+  sub:st11 a rdf:Statement;
+    rdf:object <http://purl.obolibrary.org/obo/PATO_0000117>;
+    rdf:predicate nt:hasStatement;
+    rdf:subject sub:dataset .
+  
+  sub:st12 a rdf:Statement;
+    rdf:object <http://purl.obolibrary.org/obo/BiPOm#ligand>;
+    rdf:predicate nt:hasStatement;
+    rdf:subject sub:dataset .
+  
+  sub:st13 a rdf:Statement;
+    rdf:object <http://nmrML.org/nmrCV#NMR:1000868>;
+    rdf:predicate nt:hasStatement;
+    rdf:subject sub:dataset .
+  
+  sub:st14 a rdf:Statement;
+    rdf:object <http://www.ebi.ac.uk/efo/EFO_0004368>;
+    rdf:predicate nt:hasStatement;
+    rdf:subject sub:dataset .
+  
+  sub:st15 a rdf:Statement;
+    rdf:object sub:license;
+    rdf:predicate dct:license;
+    rdf:subject sub:dataset .
+  
+  sub:st16 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:reference;
+    rdf:predicate dct:references;
+    rdf:subject sub:dataset .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title of the dataset" .
+  
+  nt:hasStatement rdfs:label "includes" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1297-3104 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1297-3104 foaf:name "Anastasios Papadiamantis" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCmuNEj4ElDZJ16VEbGLAt860vRLkkabjqt+pGDygqoGhpc8HLMY+brE+YUb23iDU7Y0ItXlnf7jtd4TL4s2gcSagJ/9Kh5nlrFHDmt3Qah7GxjEvnojLxGzkWHtNCgwsQ8xdvWjMXtnXSxLE5D/T3eXWWj180rTrgy2CSsQC6iEQIDAQAB";
+    npx:hasSignature "WAIBq/Ko2C2efdVgvKN8QPrDkVzpMIMe5K0V3lzhHrKISwiS/pK8x5OpWDP34MXRXsWDvkxjF36QyV216fgEGHd9F9Gn7UMbfgrj2E6vPg+RNzbFlP+BS3UruidP5DMgV8MllhQbLAZGp91Q/dZ1vr8wDnoTup46MViZkuowFN8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1297-3104 .
+  
+  this: dct:created "2024-07-03T10:03:47.665Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0002-1297-3104;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Template: Describing a dataset of cellular uptake of metalic nanoparticles by A549 cells at summary level";
+    prov:wasDerivedFrom ns1:RAdvwtp0LfbKYtdCSVhZ2f52fdXqToOXv55TJY5NZcl8I, <https://w3id.org/np/RAB2Y0fy92y7AnSw9dkWhhIU3_oSuN4cuu6na_V8L3qGY>,
+      <https://w3id.org/np/RAUBwkE2m--9rA1FK3j9XH1y1dR-Hc0HgleABN-gxzo50>, <https://w3id.org/np/RAjOqtG9ahp5myT9T12vWJghtpMYHNmDVFhsSqn64Xm9s>,
+      <https://w3id.org/np/RAkhV_4MIbIf3eUaVAoKCm7xHakzxt2x1iqjtzD-7wKWU>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM, ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALtjkZX1lYrTL2eCZp4VTW6vGGxiDZ-aaU-s1Z0Fcs2I> .
+}
+

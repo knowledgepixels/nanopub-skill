@@ -1,0 +1,84 @@
+@prefix this: <https://w3id.org/np/RAB2ORBgv3nWJuGpUAMqbWYSdb8K5r4mp4nI0D-ZfZf8U> .
+@prefix sub: <https://w3id.org/np/RAB2ORBgv3nWJuGpUAMqbWYSdb8K5r4mp4nI0D-ZfZf8U#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-reactions a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns all the reactions modeled with CiTO and published as nanopublications that refer to a given paper (e.g. by DOI) or other nanopublication.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get all reactions on a paper or nanopublication";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix oa: <http://www.w3.org/ns/oa#>
+
+select distinct ?np ?user ?rel ?reltext ?pub ?text ?date ?pubkey where {
+  graph npa:networkGraph {
+     ?_pub_iri npx:supersedes* ?pub .
+  }
+  graph npa:graph {
+    ?np np:hasAssertion ?a .
+    ?np dct:created ?date .
+    ?np dct:creator ?user .
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+  }
+  graph ?a {
+    ?a dct:creator ?user .
+    ?a ?rel ?pub .
+    optional { ?a rdfs:comment ?text . }
+    filter regex(str(?rel), \"http://purl.org/spar/cito/.*\")
+  }
+  graph <http://purl.org/np/RA6d0qLmlRdXd-ubre83LxP22auJdJjXGzaW3W3qH4Neo#assertion> {
+    ?rel rdfs:label ?reltext .
+  }
+}
+order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "ELV7m9W9RUZJz585mEduwE7zjT6DtzJpRsJDQEpcBUUgF69YNmon/bPIJiiGIJRZ/sMjrAceSiY1AX2/Sl5BqMQnSiHRuaHF9gyoQ+QfwbnPU2zfUm3XmMNEsOt9BF+5+XIfP8O9XOeiDR7zL+uplH55xR0VMlOujy+uSeFRy8I=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-09-11T13:13:27.725Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-reactions;
+    npx:supersedes <https://w3id.org/np/RAvGOq9ZXIeKncGeegwGaOIv9N0fMPQfhaWsxSTT9QNnQ>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+}
+

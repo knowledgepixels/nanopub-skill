@@ -1,0 +1,131 @@
+@prefix this: <https://w3id.org/np/RAat2Sv0MQqNvgGN0Z1vA3NRAvpoAKYirzKE2dAJQg87Q> .
+@prefix sub: <https://w3id.org/np/RAat2Sv0MQqNvgGN0Z1vA3NRAvpoAKYirzKE2dAJQg87Q/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:seeAlso rdfs:label "is about" .
+  
+  <https://schema.org/SocialMediaPosting> rdfs:label "post" .
+  
+  <https://schema.org/articleBody> rdfs:label "has the text" .
+  
+  <https://schema.org/author> rdfs:label "is authored by" .
+  
+  <https://schema.org/datePublished> rdfs:label "is published on" .
+  
+  <https://schema.org/headline> rdfs:label "has the title" .
+  
+  <https://schema.org/url> rdfs:label "has the link" .
+  
+  <https://w3id.org/linkflows/reviews/isResponseTo> rdfs:label "is a response to" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Create a post";
+    nt:hasNanopubLabelPattern "${title}";
+    nt:hasStatement sub:st, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6, sub:st7, sub:st8 .
+  
+  sub:author a nt:AgentPlaceholder;
+    rdfs:label "choose author";
+    nt:hasDefaultValue nt:CREATOR .
+  
+  sub:body a nt:LongLiteralPlaceholder;
+    rdfs:label "body text of your post" .
+  
+  sub:date a nt:LiteralPlaceholder;
+    rdfs:label "select date";
+    nt:hasDatatype xsd:date .
+  
+  sub:link a nt:ExternalUriPlaceholder;
+    rdfs:label "primary URL of this post" .
+  
+  sub:post a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this" .
+  
+  sub:reference a nt:ExternalUriPlaceholder;
+    rdfs:label "related (third-party) URL" .
+  
+  sub:referencedPost a nt:ExternalUriPlaceholder;
+    rdfs:label "URL of referenced post" .
+  
+  sub:st rdf:object <https://schema.org/SocialMediaPosting>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:post .
+  
+  sub:st2 rdf:object sub:title;
+    rdf:predicate <https://schema.org/headline>;
+    rdf:subject sub:post .
+  
+  sub:st3 rdf:object sub:body;
+    rdf:predicate <https://schema.org/articleBody>;
+    rdf:subject sub:post .
+  
+  sub:st4 rdf:object sub:date;
+    rdf:predicate <https://schema.org/datePublished>;
+    rdf:subject sub:post .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:link;
+    rdf:predicate <https://schema.org/url>;
+    rdf:subject sub:post .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:reference;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:post .
+  
+  sub:st7 rdf:object sub:author;
+    rdf:predicate <https://schema.org/author>;
+    rdf:subject sub:post .
+  
+  sub:st8 a nt:OptionalStatement;
+    rdf:object sub:referencedPost;
+    rdf:predicate <https://w3id.org/linkflows/reviews/isResponseTo>;
+    rdf:subject sub:post .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title/headline of the post" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-03-10T19:31:53.411Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAe1t8HDRdTc37vIoFaTTIIJPO5KF-HVTXRgKcoXywzSo>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Create a post";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAQIZQdqa_kqYfFSnboJOHst-BTcR7_PPG_ywE5EMUEMI> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "mx3p4EnDCPYa84mzwoi71t2gjWajRCkq5zWwB6JFoFTYuS6kIEvxy8jrHvqdPIhjvFrZBRKNSmCf1vVe0VpsPs6M+yWlUtbph0kmbBZ6PYlSdZTnFc60bqu+XN85NgBsOtqGsOpyWtgUr0EEur7nUDkoKg8K+dZ8JNs5LCCNTy4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

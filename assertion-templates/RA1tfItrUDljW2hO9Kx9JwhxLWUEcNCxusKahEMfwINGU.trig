@@ -1,0 +1,130 @@
+@prefix this: <https://w3id.org/np/RA1tfItrUDljW2hO9Kx9JwhxLWUEcNCxusKahEMfwINGU> .
+@prefix sub: <https://w3id.org/np/RA1tfItrUDljW2hO9Kx9JwhxLWUEcNCxusKahEMfwINGU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:01_conformsTo <http://www.w3.org/ns/shacl#hasValue> <https://w3id.org/np/RAYTg5ni2HX6EjtxndlVQHpjPzyLfwUfrqpZP4D1dEBVY/FSR-Specification-Profile>;
+    <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#minCount> "1";
+    <http://www.w3.org/ns/shacl#path> dct:conformsTo .
+  
+  sub:02_type <http://www.w3.org/ns/shacl#hasValue> <https://w3id.org/fair/fip/terms/FAIR-Supporting-Resource>;
+    <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#minCount> "1";
+    <http://www.w3.org/ns/shacl#path> rdf:type .
+  
+  sub:03_label <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#minCount> "1";
+    <http://www.w3.org/ns/shacl#path> rdfs:label .
+  
+  sub:04_description <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#minCount> "1";
+    <http://www.w3.org/ns/shacl#path> rdfs:comment .
+  
+  sub:05_description-source <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> <https://w3id.org/fair/fip/terms/has-description-source> .
+  
+  sub:06_type <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#minCount> "1";
+    <http://www.w3.org/ns/shacl#path> rdf:type .
+  
+  sub:07_type <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#minCount> "1";
+    <http://www.w3.org/ns/shacl#path> rdf:type .
+  
+  sub:08_in-scope-of <http://www.w3.org/ns/shacl#path> <https://w3id.org/fair/fip/terms/in-scope-of> .
+  
+  sub:09_see-also <http://www.w3.org/ns/shacl#path> rdfs:seeAlso .
+  
+  sub:10_access-url <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> <http://schema.org/url> .
+  
+  sub:11_implements <http://www.w3.org/ns/shacl#path> <http://usefulinc.com/ns/doap#implements> .
+  
+  sub:12_exact-match <http://www.w3.org/ns/shacl#path> <http://www.w3.org/2004/02/skos/core#exactMatch> .
+  
+  sub:13_parent <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> <http://www.w3.org/2004/02/skos/core#broadMatch> .
+  
+  sub:13a_type <http://www.w3.org/ns/shacl#minCount> "1";
+    <http://www.w3.org/ns/shacl#path> rdf:type .
+  
+  sub:14_created-by <http://www.w3.org/ns/shacl#path> dct:creator .
+  
+  sub:15_version <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> <https://schema.org/version> .
+  
+  sub:16_registered_on <http://www.w3.org/ns/shacl#path> <https://w3id.org/fair/fip/terms/registered-on> .
+  
+  sub:17_data_usage_license <http://www.w3.org/ns/shacl#maxCount> "1";
+    <http://www.w3.org/ns/shacl#path> <https://w3id.org/fair/fip/terms/has-data-usage-license> .
+  
+  sub:nodeShape a <http://www.w3.org/ns/shacl#NodeShape>;
+    <http://www.w3.org/ns/shacl#property> sub:01_conformsTo, sub:02_type, sub:03_label,
+      sub:04_description, sub:05_description-source, sub:06_type, sub:07_type, sub:08_in-scope-of,
+      sub:09_see-also, sub:10_access-url, sub:11_implements, sub:12_exact-match, sub:13_parent,
+      sub:13a_type, sub:14_created-by, sub:15_version, sub:16_registered_on, sub:17_data_usage_license;
+    <http://www.w3.org/ns/shacl#targetClass> <https://w3id.org/fdof/ontology#FAIRDigitalObject> .
+  
+  <https://w3id.org/np/RAYTg5ni2HX6EjtxndlVQHpjPzyLfwUfrqpZP4D1dEBVY/FSR-Specification-Profile>
+    a <https://w3id.org/fdoc/o/terms/FdoProfile>, <https://w3id.org/fdof/ontology#FAIRDigitalObject>;
+    dct:conformsTo <https://w3id.org/np/RAprU0T8cWWRNseTC15oQn5oaoiIIgpPx9QMmBZNPsehg/basic-fdo-profile-profile>;
+    rdfs:label "FAIR Supporting Resource Specification Profile";
+    <https://w3id.org/fdoc/o/terms/hasShape> sub:nodeShape .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  dct:conformsTo nt:hasLabelFromApi "FDO attribute: conforms to - Links an FDO to the FDO profile it complies to." .
+  
+  rdf:type nt:hasLabelFromApi "has the type - This relation connects an FDO to its types." .
+  
+  rdfs:comment nt:hasLabelFromApi "has the description - A description of the subject resource." .
+  
+  rdfs:label nt:hasLabelFromApi "has the label - A human-readable name for the subject." .
+  
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  <https://schema.org/version> nt:hasLabelFromApi "Version - The version of the CreativeWork embodied by a specified resource." .
+  
+  this: dct:created "2026-03-19T08:13:48.593Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:hasNanopubType nt:AssertionTemplate;
+    npx:introduces <https://w3id.org/np/RAYTg5ni2HX6EjtxndlVQHpjPzyLfwUfrqpZP4D1dEBVY/FSR-Specification-Profile>;
+    npx:supersedes <https://w3id.org/np/RAnl_Y1IyareKTUdYPQEzbl1SNG0NMTeGpWrJEaxM3zHY>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RA5MTl9GFH-QuuBHYEA2hOtxOMOV4-jrhtdx5lOy9CAQE>,
+      <https://w3id.org/np/RADZQi9ZQ6M8ZceDaR536xmY5ViqI6Ko1kN9EvYrqDBSY>, <https://w3id.org/np/RAJbduMbW71ekYhULtjXdE6qeM0-WUt-WAB3HHA1vYPgE>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALwVLnRJ4Y6ZkRC-fDiU0E8QB0XfWBRS0ntWyDMh1l8I> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCM0tu3I/KK6A/qPha/6pfngQZ4LBQpLnKAcIUuZLnSEb0epJ2IoY3zh/4N42us/6LpCHgZZZtSOTm5/KVo+OTDIqo294PpEZAO70u5DcMcGMC5OufzxGKs3Dwdo6XqPiDHxXuiaKCTO7/ABWAi7CtFoMrqJAHfeyqe82dAiH2IiwIDAQAB";
+    npx:hasSignature "T9x9ubrVx6U4+pm/6bJ8K77HiCnqFq4kbfIK1J/N10qIVDW+x6SUeO+jCTDRsAcoTMZaCEPYyJ8Z56LSzC5uTVFT0RNnxLTd3l3dzXvrMDq00iG8LnbS+aHgTAeaqMPA+qki09vTeUwmaXMuJchS0Ub37E/C6w5Uc6VZS//cgG4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+}
+

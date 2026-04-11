@@ -1,0 +1,236 @@
+@prefix this: <http://purl.org/np/RAy3tITXPlULFLXxAxek39GLqLdqKkNM5hIzUOZxxjMmI> .
+@prefix sub: <http://purl.org/np/RAy3tITXPlULFLXxAxek39GLqLdqKkNM5hIzUOZxxjMmI#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    dct:description """<p>This nanopublication makes a statement that in the context of a thing of a certain type (e.g. a mouse), another thing of a certain type (e.g. a gene) tends to have a relation (such as causing) to another thing of a certain type (e.g. a disease) in the same context.</p>
+
+<p>Note that the context is <strong>not</strong> a reference to a general topic or field. It denotes the class for the context in which the relations happen. If each relation is happening in a human, for example, such as a certain condition leading to a certain symptom, then the context class should be 'human'.</p>
+
+<p>The technical background of the super-pattern can be found in <a href=\"https://doi.org/10.1145/3460210.3493561\">this publication</a>.</p>""";
+    rdfs:label "Expressing a general claim with a super-pattern";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6;
+    nt:hasTag "Claims" .
+  
+  sub:contextClass a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of the context class";
+    nt:possibleValue <https://w3id.org/linkflows/superpattern/terms/UniversalContext>;
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "informal label or text for the whole superpattern instance" .
+  
+  sub:objectClass a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of the object class";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:qualifier a nt:RestrictedChoicePlaceholder;
+    rdfs:label "URI of the qualifier";
+    nt:possibleValue <https://w3id.org/linkflows/superpattern/terms/alwaysQualifier>,
+      <https://w3id.org/linkflows/superpattern/terms/canAlwaysQualifier>, <https://w3id.org/linkflows/superpattern/terms/canFrequentlyNotQualifier>,
+      <https://w3id.org/linkflows/superpattern/terms/canFrequentlyQualifier>, <https://w3id.org/linkflows/superpattern/terms/canGenerallyNotQualifier>,
+      <https://w3id.org/linkflows/superpattern/terms/canGenerallyQualifier>, <https://w3id.org/linkflows/superpattern/terms/canMostlyNotQualifier>,
+      <https://w3id.org/linkflows/superpattern/terms/canMostlyQualifier>, <https://w3id.org/linkflows/superpattern/terms/canNeverQualifier>,
+      <https://w3id.org/linkflows/superpattern/terms/canSometimesNotQualifier>, <https://w3id.org/linkflows/superpattern/terms/canSometimesQualifier>,
+      <https://w3id.org/linkflows/superpattern/terms/frequentlyNotQualifier>, <https://w3id.org/linkflows/superpattern/terms/frequentlyQualifier>,
+      <https://w3id.org/linkflows/superpattern/terms/generallyNotQualifier>, <https://w3id.org/linkflows/superpattern/terms/generallyQualifier>,
+      <https://w3id.org/linkflows/superpattern/terms/mostlyNotQualifier>, <https://w3id.org/linkflows/superpattern/terms/mostlyQualifier>,
+      <https://w3id.org/linkflows/superpattern/terms/neverQualifier>, <https://w3id.org/linkflows/superpattern/terms/sometimesNotQualifier>,
+      <https://w3id.org/linkflows/superpattern/terms/sometimesQualifier> .
+  
+  sub:relation a nt:RestrictedChoicePlaceholder;
+    rdfs:label "URI of the relation type";
+    nt:possibleValue <https://w3id.org/linkflows/superpattern/terms/affects>, <https://w3id.org/linkflows/superpattern/terms/causes>,
+      <https://w3id.org/linkflows/superpattern/terms/contributesTo>, <https://w3id.org/linkflows/superpattern/terms/cooccursWith>,
+      <https://w3id.org/linkflows/superpattern/terms/decreases>, <https://w3id.org/linkflows/superpattern/terms/enables>,
+      <https://w3id.org/linkflows/superpattern/terms/follows>, <https://w3id.org/linkflows/superpattern/terms/hasDifferentValueFrom>,
+      <https://w3id.org/linkflows/superpattern/terms/hasLargerValueThan>, <https://w3id.org/linkflows/superpattern/terms/hasSameValueAs>,
+      <https://w3id.org/linkflows/superpattern/terms/hasSimilarValueAs>, <https://w3id.org/linkflows/superpattern/terms/hasSmallerValueThan>,
+      <https://w3id.org/linkflows/superpattern/terms/includes>, <https://w3id.org/linkflows/superpattern/terms/increases>,
+      <https://w3id.org/linkflows/superpattern/terms/inhibits>, <https://w3id.org/linkflows/superpattern/terms/isCausedBy>,
+      <https://w3id.org/linkflows/superpattern/terms/isFollowedBy>, <https://w3id.org/linkflows/superpattern/terms/isIncludedIn>,
+      <https://w3id.org/linkflows/superpattern/terms/isNecessaryAndSufficientFor>, <https://w3id.org/linkflows/superpattern/terms/isSameAs>,
+      <https://w3id.org/linkflows/superpattern/terms/prevents>, <https://w3id.org/linkflows/superpattern/terms/requires> .
+  
+  sub:spi a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "SPI: - this super-pattern instance" .
+  
+  sub:st0 rdf:object <https://w3id.org/linkflows/superpattern/terms/SuperPatternInstance>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:spi .
+  
+  sub:st1 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:spi .
+  
+  sub:st2 rdf:object sub:contextClass;
+    rdf:predicate <https://w3id.org/linkflows/superpattern/terms/hasContextClass>;
+    rdf:subject sub:spi .
+  
+  sub:st3 rdf:object sub:subjectClass;
+    rdf:predicate <https://w3id.org/linkflows/superpattern/terms/hasSubjectClass>;
+    rdf:subject sub:spi .
+  
+  sub:st4 rdf:object sub:qualifier;
+    rdf:predicate <https://w3id.org/linkflows/superpattern/terms/hasQualifier>;
+    rdf:subject sub:spi .
+  
+  sub:st5 rdf:object sub:relation;
+    rdf:predicate <https://w3id.org/linkflows/superpattern/terms/hasRelation>;
+    rdf:subject sub:spi .
+  
+  sub:st6 rdf:object sub:objectClass;
+    rdf:predicate <https://w3id.org/linkflows/superpattern/terms/hasObjectClass>;
+    rdf:subject sub:spi .
+  
+  sub:subjectClass a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of the subject class";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  rdf:type rdfs:label "This is a - links a thing (left) to a class it belongs (right)" .
+  
+  rdfs:label rdfs:label "Informally, it can be shown as - links a formal identifier (left) to a human-readable name (right)" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/SuperPatternInstance> rdfs:label "super-pattern instance - a statement that conforms to the super-pattern" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/UniversalContext> rdfs:label "universal context (i.e. no context restriction) - The universal context is used in a super-pattern when the subject and object instances of a super-pattern statement happen outside of any obvious context entities (such as the context of \"organism\" in the case of genes affecting diseases)" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/affects> rdfs:label "affects - the subject instance positively or negatively affects the intensity or frequency of the activity instance of the object" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/alwaysQualifier> rdfs:label "always - true in 100% of cases" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/canAlwaysQualifier> rdfs:label "can always - can be made true in 100% cases" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/canFrequentlyNotQualifier> rdfs:label
+      "can frequently not - can be made true in at most 90% of cases" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/canFrequentlyQualifier> rdfs:label
+      "can frequently - can be made true in at least 10% of cases" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/canGenerallyNotQualifier> rdfs:label
+      "can generally not - can be made true in at most 10% of cases" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/canGenerallyQualifier> rdfs:label "can generally - can be made true in at least 90% of cases" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/canMostlyNotQualifier> rdfs:label "can mostly not - can be made true in at most 50% of cases" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/canMostlyQualifier> rdfs:label "can mostly - can be made true in at least 50% of cases" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/canNeverQualifier> rdfs:label "can never - can be made true in 0% of cases" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/canSometimesNotQualifier> rdfs:label
+      "can sometimes not - can be made true in at most 99.9% of cases" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/canSometimesQualifier> rdfs:label "can sometimes - can be made true in at least 0.1% of cases" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/causes> rdfs:label "causes - the subject instance causes the existence of the object instance" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/contributesTo> rdfs:label "contributes to - the subject instance positively affects the intensity or frequency of the activity instance of the object" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/cooccursWith> rdfs:label "co-occurs with - the subject instance is close to the object instance in terms of space and time" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/decreases> rdfs:label "decreases - the subject instance causes the value of the object instance to decrease" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/enables> rdfs:label "enables - the subject instance causes the activity instance of the object to happen" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/follows> rdfs:label "follows - the object instance came into existence before the subject instance" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/frequentlyNotQualifier> rdfs:label
+      "frequently not - true in at most 90% of cases" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/frequentlyQualifier> rdfs:label "frequently - true in at least 10% of cases" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/generallyNotQualifier> rdfs:label "generally not - true in at most 10% of cases" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/generallyQualifier> rdfs:label "generally - true in at least 90% of the cases" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/hasContextClass> rdfs:label "In the context of all things of type - specifies the context class (right) for the given super-pattern instance (left)" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/hasDifferentValueFrom> rdfs:label "has different value from - the quantifiable subject instance has a value that is different from the quantifiable object instance" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/hasLargerValueThan> rdfs:label "has larger value than - the quantifiable subject instance has a larger value than the quantifiable object instance" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/hasObjectClass> rdfs:label "... to things of type - specifies the object class (right) for the given super-pattern instance (left)" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/hasQualifier> rdfs:label "... (qualifier) - specifies the qualifier (right) for the given super-pattern statement (left)" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/hasRelation> rdfs:label "... have a relation of type - specifies the relation type (right) for the given super-pattern statement (left)" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/hasSameValueAs> rdfs:label "has same value as - the quantifiable subject instance has the same value as the quantifiable object instance" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/hasSimilarValueAs> rdfs:label "has similar value as - the quantifiable subject instance has a similar value as the quantifiable object instance" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/hasSmallerValueThan> rdfs:label "has smaller value than - the quantifiable subject instance has a smaller value than the quantifiable object instance" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/hasSubjectClass> rdfs:label "... things of type - specifies the subject class (right) for the given super-pattern instance (left)" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/includes> rdfs:label "includes - the subject instance spatiotemporally includes the object instance" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/increases> rdfs:label "increases - the subject instance causes the value of the object instance to increase" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/inhibits> rdfs:label "inhibits - the subject instance negatively affects the intensity or frequency of the activity instance of the object" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/isCausedBy> rdfs:label "is caused by - the existence of the subject instance is caused by the object instance" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/isFollowedBy> rdfs:label "is followed by - the subject instance comes into existence before the object instance" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/isIncludedIn> rdfs:label "is included in - the object instance spatiotemporally includes the subject instance" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/isNecessaryAndSufficientFor> rdfs:label
+      "is necessary and sufficient for - the subject instance causes the existence of the object instance, which would not come to exist if the subject did not exist" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/isSameAs> rdfs:label "is same as - the subject instance and the object instance are the same individual" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/mostlyNotQualifier> rdfs:label "mostly not - true in at most 50% of cases" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/mostlyQualifier> rdfs:label "mostly - true in at least 50% of cases" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/neverQualifier> rdfs:label "never - true in 0% of cases" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/prevents> rdfs:label "prevents - the subject instance causes the activity instance of the object not to happen" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/requires> rdfs:label "requires - the subject instance would not come to exist if the object instance did not exist" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/sometimesNotQualifier> rdfs:label "sometimes not - true in at most 99.9% of cases" .
+  
+  <https://w3id.org/linkflows/superpattern/terms/sometimesQualifier> rdfs:label "sometimes - true in at least 0.1% of cases" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "rPb9JbS8XzTtI6DDF9cu63cEwddTQ/jTWI743EzDZ7+fKu8M6tKMnzgCkv4RZj/mn/fWVsm+vJiW54UgYGKRsRPKFEFhwk9U4DBZ/eAwgjqnGkEUKbiBNT6vE8T0+igii+QdmPpkFmJQ6wDjJo92ZGh7kofmJdyOiP6TkZh95l8=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-03-01T09:30:43.959+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    npx:supersedes <http://purl.org/np/RAcpME3OebcWJg2TOf9CYcAEJD5Dp1WFPkwDNdUBSA3Qg>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RA6mo9EIIcGA9jewFh6Ql7uiEIy4HpOefEr21rs_qURdQ> .
+}
+

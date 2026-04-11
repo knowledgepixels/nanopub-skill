@@ -1,0 +1,79 @@
+@prefix this: <https://w3id.org/np/RAy1i3pT-n1aRaTgB9cM4nNB4oo4rdziJ7gNZ6BF6ZxNQ> .
+@prefix sub: <https://w3id.org/np/RAy1i3pT-n1aRaTgB9cM4nNB4oo4rdziJ7gNZ6BF6ZxNQ/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-all-us a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns all user stories.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get user stories";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX np: <http://www.nanopub.org/nschema#>
+PREFIX npa: <http://purl.org/nanopub/admin/>
+PREFIX npx: <http://purl.org/nanopub/x/>
+PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX prov: <http://www.w3.org/ns/prov#>
+
+SELECT ?n1 ?label ?thing ?date where {
+GRAPH npa:graph {
+  ?n1 npx:introduces ?thing .
+    ?n1 npx:hasNanopubType <https://w3id/fff/req/User-Story> .
+    ?n1 npa:hasValidSignatureForPublicKey ?pubkey .
+    filter not exists {
+      ?np2 npx:invalidates ?n1 ;
+            npa:hasValidSignatureForPublicKey ?pubkey .
+    }
+    ?n1 dct:created ?date .
+    ?n1 rdfs:label ?label .
+  }
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-0319-6542 foaf:name "Dario Bijker" .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  this: dct:created "2025-12-16T10:45:53.254Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-0319-6542, orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-all-us;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAhcTYDaGHLnooZpQKrYhDYJVPUha9iEI9PZrnO7z6-as>,
+      <https://w3id.org/np/RAncMNkChEXKJdO8cDG8dJE8H54Lf0BxiJjXBmxkLegi0>, <https://w3id.org/np/RAtXPiNeqzgeAwiByOi6nPNSRdJBKEiyJT0PGH0Hunoxk>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCfUo0FLu1y2EeueL40lqkVdm9fTJa6WhF6MhyjhKAagbuaWe1wwyk453ot8KAQ3aHtL3B8Ze/aLf+wHrBhS0nz4wS6urc8ksIzlLCoa9KIfa0JuQunBLFptV0U9fTR8kDlPoB+klNrUfzeCXmkdgnnUiiwBoN+j1eN87XMSHKI3wIDAQAB";
+    npx:hasSignature "Fxk0ia6YTAd3ZMCh/z/eQE9o8Nx1T9xqaL90dNjdjQQ/lU0/TgZMWM9QjnClAgItz7W+r9fMvjQG9WTixjgf2Ij0w3R/sKkOq5chZYmE2BzEBpYN8qLAE7VTioxwqYNSBdbck8ARlfySmtZlsBg8ngYexQOnXO5B72CSc0qfKGM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-0319-6542 .
+}
+

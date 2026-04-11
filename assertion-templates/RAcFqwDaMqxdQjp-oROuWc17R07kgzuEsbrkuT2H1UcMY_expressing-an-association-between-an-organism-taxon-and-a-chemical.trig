@@ -1,0 +1,98 @@
+@prefix this: <https://w3id.org/np/RAcFqwDaMqxdQjp-oROuWc17R07kgzuEsbrkuT2H1UcMY> .
+@prefix sub: <https://w3id.org/np/RAcFqwDaMqxdQjp-oROuWc17R07kgzuEsbrkuT2H1UcMY#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.obolibrary.org/obo/RO_0001019> rdfs:label "contains" .
+  
+  rdf:type rdfs:label "is an" .
+  
+  <https://w3id.org/biolink/vocab/object> rdfs:label "refers to the chemical" .
+  
+  <https://w3id.org/biolink/vocab/predicate> rdfs:label "refers to the relation (between taxon and chemical)" .
+  
+  <https://w3id.org/biolink/vocab/subject> rdfs:label "refers to the organism taxon" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Such a nanopublication expresses an association between an organism taxon (e.g. a species) and a chemical.";
+    rdfs:label "Expressing an association between an organism taxon and a chemical";
+    nt:hasNanopubLabelPattern "${taxon} ${relation} ${chemical}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3;
+    nt:hasTag "Biodiversity";
+    nt:hasTargetNanopubType <https://w3id.org/kpxl/biodiv/terms/BiodivNanopub> .
+  
+  sub:association a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this association" .
+  
+  sub:chemical a nt:GuidedChoicePlaceholder;
+    rdfs:label "the chemical to be associated with the taxon";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:relation a nt:GuidedChoicePlaceholder;
+    rdfs:label "the type of relation between the taxon and the chemical";
+    nt:possibleValue <http://purl.obolibrary.org/obo/RO_0001019>;
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=ro&fieldList=iri,label,description&q=" .
+  
+  sub:st0 rdf:object <https://w3ihttps://w3id.org/kpxl/biodiv/terms/OrganismTaxonToChemicalAssociation>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:association .
+  
+  sub:st1 rdf:object sub:taxon;
+    rdf:predicate <https://w3id.org/biolink/vocab/subject>;
+    rdf:subject sub:association .
+  
+  sub:st2 rdf:object sub:relation;
+    rdf:predicate <https://w3id.org/biolink/vocab/predicate>;
+    rdf:subject sub:association .
+  
+  sub:st3 rdf:object sub:chemical;
+    rdf:predicate <https://w3id.org/biolink/vocab/object>;
+    rdf:subject sub:association .
+  
+  sub:taxon a nt:GuidedChoicePlaceholder;
+    rdfs:label "the organism taxon, e.g. a species";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  <https://w3ihttps://w3id.org/kpxl/biodiv/terms/OrganismTaxonToChemicalAssociation>
+    rdfs:label "organism taxon to chemical association" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "bre6T6+1qQVyVy9LBzoESjjq+RUkvIly9azxExVXG3u1sXjZCjIHZsT8LJg/uz+eskk0ubicR5YuBEHoAbGt/cwB2wrb2TcbmepLjrZVTZv+6VVAl5BZ0BdG5QTPloSDFrNgG17HBrxT4fAMeSEpo17VUWzaS1zVmMl0qYY6NHA=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2024-02-06T16:11:26.816Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-3389-2191;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAYPTZVeBhqbabhNwh9aB0AoK_bz_Uk5Z3bEh-8gs0QiU>;
+    rdfs:label "Template: Expressing an association between an organism taxon and a chemical";
+    prov:wasDerivedFrom <https://w3id.org/np/RAxvh4t8yoViwe1P-Qbole8o-ZIlURCj7uvDND9mIBr6M>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM, ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

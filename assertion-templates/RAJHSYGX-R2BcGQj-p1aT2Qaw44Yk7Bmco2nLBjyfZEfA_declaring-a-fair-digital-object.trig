@@ -1,0 +1,139 @@
+@prefix this: <https://w3id.org/np/RAJHSYGX-R2BcGQj-p1aT2Qaw44Yk7Bmco2nLBjyfZEfA> .
+@prefix sub: <https://w3id.org/np/RAJHSYGX-R2BcGQj-p1aT2Qaw44Yk7Bmco2nLBjyfZEfA#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <https://w3id.org/fair/fip/terms/Structured-vocabulary> rdfs:label "Structured vocabulary" .
+  
+  <https://w3id.org/fdof/ontology#FAIRDigitalInformationObject> rdfs:label "FAIR Digital Information Object (FDIO)" .
+  
+  <https://w3id.org/fdof/ontology#hasEncodingFormat> rdfs:label "has the format" .
+  
+  <https://w3id.org/fdof/ontology#hasInformationObjectType> rdfs:label "has the type of" .
+  
+  <https://w3id.org/fdof/ontology#hasMetadata> rdfs:label "has its metadata in" .
+  
+  <https://w3id.org/fdof/ontology#isMaterializedBy> rdfs:label "is materialized by" .
+  
+  <https://w3id.org/fdof/types#Article> rdfs:label "Article" .
+  
+  <https://w3id.org/fdof/types#Dataset> rdfs:label "Dataset" .
+  
+  <https://w3id.org/fdof/types#Ontology> rdfs:label "Ontology" .
+  
+  <https://w3id.org/fdof/types#Photograph> rdfs:label "Photograph" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Declaring a FAIR Digital Object";
+    nt:hasNanopubLabelPattern "FAIR Digital Object: ${label}";
+    nt:hasStatement sub:st0, sub:st1, sub:st3, sub:st5, sub:st6;
+    nt:hasTag "FDO" .
+  
+  sub:fdo a nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "GUPRI of this FDIO" .
+  
+  sub:format a nt:ExternalUriPlaceholder;
+    rdfs:label "MIME type, such as \"text/csv\" or \"application/trig\"";
+    nt:hasPrefix "https://iana.org/assignments/media-types/";
+    nt:hasPrefixLabel "the MIME type" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "label or name for this FDO" .
+  
+  sub:media-object a nt:ExternalUriPlaceholder;
+    rdfs:label "URL of concrete object" .
+  
+  sub:metadataURI a nt:ExternalUriPlaceholder;
+    rdfs:label "GUPRI of FDMO metadata" .
+  
+  sub:st0 rdf:object <https://w3id.org/fdof/ontology#FAIRDigitalInformationObject>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:fdo .
+  
+  sub:st1 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:fdo .
+  
+  sub:st3 rdf:object sub:type;
+    rdf:predicate <https://w3id.org/fdof/ontology#hasInformationObjectType>;
+    rdf:subject sub:fdo .
+  
+  sub:st4 rdf:object sub:media-object;
+    rdf:predicate <https://w3id.org/fdof/ontology#isMaterializedBy>;
+    rdf:subject sub:fdo .
+  
+  sub:st5 a nt:GroupedStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st4, sub:st5b, sub:st5c, sub:st5d .
+  
+  sub:st5b rdf:object <https://w3id.org/fdof/ontology#FAIRDigitalMediaObject>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:media-object .
+  
+  sub:st5c rdf:object sub:format;
+    rdf:predicate <https://w3id.org/fdof/ontology#hasEncodingFormat>;
+    rdf:subject sub:media-object .
+  
+  sub:st5d rdf:object sub:metadataURI;
+    rdf:predicate <https://w3id.org/fdof/ontology#hasMetadata>;
+    rdf:subject sub:media-object .
+  
+  sub:st6 rdf:object nt:NANOPUB;
+    rdf:predicate <https://w3id.org/fdof/ontology#hasMetadata>;
+    rdf:subject sub:fdo .
+  
+  sub:type a nt:GuidedChoicePlaceholder;
+    rdfs:label "FDO Type URI";
+    nt:possibleValue <https://w3id.org/fair/fip/terms/Structured-vocabulary>, <https://w3id.org/fdof/types#Article>,
+      <https://w3id.org/fdof/types#Dataset>, <https://w3id.org/fdof/types#Ontology>, <https://w3id.org/fdof/types#Photograph> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCM0tu3I/KK6A/qPha/6pfngQZ4LBQpLnKAcIUuZLnSEb0epJ2IoY3zh/4N42us/6LpCHgZZZtSOTm5/KVo+OTDIqo294PpEZAO70u5DcMcGMC5OufzxGKs3Dwdo6XqPiDHxXuiaKCTO7/ABWAi7CtFoMrqJAHfeyqe82dAiH2IiwIDAQAB";
+    npx:hasSignature "OqrxpCoD/YCulTUgAvH3+pD+pdpe25zkb7s8cD3GGUl1qgaJRRB9Zj+OZr+9sNgDLbXYXqOhcRDP0HiPH4d93CDw5PN78C+LkFTW41JQefLvLe+1KOrsobdp/lBGrJdZ38YXdrFr8nRZCfgMR3SU/WCkg0ob6JKSGCmzQuJol0M=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+  
+  this: dct:created "2024-11-05T09:52:31.638Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAc78YJaIyz_NGJjX1k8f1GvXEDcJz_Lv_I_vmtzyLZnI>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Declaring a FAIR Digital Object";
+    prov:wasDerivedFrom ns1:RAbkSFDaRJ-POAm91hKeSoEEZS7stWfpLtImhsb4dNtuY;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM, ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALtjkZX1lYrTL2eCZp4VTW6vGGxiDZ-aaU-s1Z0Fcs2I> .
+}
+

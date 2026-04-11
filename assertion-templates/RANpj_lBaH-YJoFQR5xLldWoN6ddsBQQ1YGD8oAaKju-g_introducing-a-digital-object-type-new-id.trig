@@ -1,0 +1,126 @@
+@prefix this: <http://purl.org/np/RANpj_lBaH-YJoFQR5xLldWoN6ddsBQQ1YGD8oAaKju-g> .
+@prefix sub: <http://purl.org/np/RANpj_lBaH-YJoFQR5xLldWoN6ddsBQQ1YGD8oAaKju-g/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "can be described as follows: - gives a thing (left) a human-readable description (right)" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Introducing a Digital Object Type (new ID)";
+    nt:hasStatement sub:st0, sub:st2, sub:st3, sub:st3b, sub:st4, sub:st5;
+    nt:hasTag "FAIR" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the Digital Object Type or Methodology" .
+  
+  sub:descriptionSource a nt:ExternalUriPlaceholder;
+    rdfs:label "the source of the description above" .
+  
+  sub:mappedResource a nt:ExternalUriPlaceholder;
+    rdfs:label "the identifier of the related resource" .
+  
+  sub:mappingPredicate a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose mapping relation";
+    nt:possibleValue <http://www.w3.org/2004/02/skos/core#broadMatch>, <http://www.w3.org/2004/02/skos/core#closeMatch>,
+      <http://www.w3.org/2004/02/skos/core#exactMatch>, <http://www.w3.org/2004/02/skos/core#relatedMatch> .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the Digital Object Type or a Methodology" .
+  
+  sub:seeAlsoLink a nt:ExternalUriPlaceholder;
+    rdfs:label "a URL where more information can be found" .
+  
+  sub:st0 rdf:object <https://w3id.org/fair/fip/terms/Digital-Object-Type>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:thing .
+  
+  sub:st2 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:thing .
+  
+  sub:st3 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:thing .
+  
+  sub:st3b a nt:OptionalStatement;
+    rdf:object sub:descriptionSource;
+    rdf:predicate <https://w3id.org/fair/fip/terms/has-description-source>;
+    rdf:subject sub:thing .
+  
+  sub:st4 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:mappedResource;
+    rdf:predicate sub:mappingPredicate;
+    rdf:subject sub:thing .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:seeAlsoLink;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:thing .
+  
+  sub:thing a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix - the formal identifier of the Digital Object Type or a Methodology";
+    nt:hasPrefix "https://w3id.org/gff/rao/terms/";
+    nt:hasPrefixLabel "https://w3id.org/gff/rao/terms/" .
+  
+  rdf:type rdfs:label "is a - asserts that the given thing (left) belongs to the given class (right)" .
+  
+  rdfs:label rdfs:label "has the name - connects an identifier to a human-readable name for it" .
+  
+  rdfs:seeAlso rdfs:label "is further explained at - connects an identifier to a link with further information about it" .
+  
+  <http://www.w3.org/2004/02/skos/core#broadMatch> rdfs:label "has parent resource" .
+  
+  <http://www.w3.org/2004/02/skos/core#closeMatch> rdfs:label "can in some situations be considered the same as" .
+  
+  <http://www.w3.org/2004/02/skos/core#exactMatch> rdfs:label "is (almost) exactly the same as" .
+  
+  <http://www.w3.org/2004/02/skos/core#relatedMatch> rdfs:label "is related to - links this identifier to other related existing identifiers",
+      "is related to" .
+  
+  <https://w3id.org/fair/fip/terms/Digital-Object-Type> rdfs:label "Digital Object Type" .
+  
+  <https://w3id.org/fair/fip/terms/has-description-source> rdfs:label "has the description source" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2025-04-25T13:53:03.885Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes ns1:RA5vRQ7yVqL6MPp4hLp_TVFApuZfYDsmsMoj4gs3t7eEU;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Template: Introducing a Digital Object Type (new ID)";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAGBEisKAxwcQTdfR7ALwCeQBrUVeU23F8uFvFmO-H6F0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "aNEJ/dH+irMH3ofPGvj2Y2DxhMJ/7DjYvvGdzjbtEnKfrxv5ZxKXLIJEmFvvNszmonHXpVQ7RXbNYT8FpnDKStcJgG59L49ofUXqboAE3OH7J2FkpMLQ2eu0aVWCw2gGurGorlPSr6auMyj7BtGshHn4OW9dKXZv6QPvDC+q1oc=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+}
+

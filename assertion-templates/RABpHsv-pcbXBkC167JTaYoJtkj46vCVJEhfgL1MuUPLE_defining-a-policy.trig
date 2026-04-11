@@ -1,0 +1,74 @@
+@prefix this: <http://purl.org/np/RABpHsv-pcbXBkC167JTaYoJtkj46vCVJEhfgL1MuUPLE> .
+@prefix sub: <http://purl.org/np/RABpHsv-pcbXBkC167JTaYoJtkj46vCVJEhfgL1MuUPLE#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  dct:title rdfs:label "has the title" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Defining a policy";
+    nt:hasStatement sub:st0, sub:st1, sub:st2 .
+  
+  sub:comment a nt:LiteralPlaceholder;
+    rdfs:label "description of the policy" .
+  
+  sub:policy a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "This policy" .
+  
+  sub:st0 rdf:object <http://www.wikidata.org/entity/Q1156854>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:policy .
+  
+  sub:st1 rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:policy .
+  
+  sub:st2 rdf:object sub:comment;
+    rdf:predicate dct:description;
+    rdf:subject sub:policy .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "the title of the policy" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  <http://www.wikidata.org/entity/Q1156854> rdfs:label "Policy" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-1062-5576 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDQhERLOLXMGB9OewEiwCGA6Nv2tNWO1CeQrY6JT026PuZ5rdf+CmTSdINGYyID6HPXDDZmhisgcP3ik3OEKyx7AyHr4b6MOkZOsaM+wpx+4DPqgFAhsMHEbwLN3xw47CknBow804OEviWTiKsitsKi7vZB12j9G0aBuqvar2pngwIDAQAB";
+    npx:hasSignature "CM2uyN3vJUdJngAzWGi+tfAwt0kyYBa7Ci/Vft8+u3UU5QMVg7LwoxzPis8l0NTmxkszWgC7J3ZCWoCObrOhsPBCDRBgiHUOcVJh7zYQspBejJ81zBG67MAbKLhrJcPERktPPKQloydU7+EAHS6+X1r8BMb4PI5tcivV5SIZnHY=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-03-29T16:32:02.513Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0003-1062-5576;
+    npx:supersedes <http://purl.org/np/RABZl6DuynwQYBOC3wR1OtNHHbx5x1A32nEGQAdQ3WCfs>;
+    prov:wasDerivedFrom <http://purl.org/np/RAOSnkAwBowEh2VQ9Ki_c3wtUe4M5ZNnq_iMVd_aqtFLQ>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A>,
+      <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RA6mo9EIIcGA9jewFh6Ql7uiEIy4HpOefEr21rs_qURdQ> .
+}
+

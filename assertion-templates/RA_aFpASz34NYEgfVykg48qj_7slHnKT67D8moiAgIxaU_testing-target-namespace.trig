@@ -1,0 +1,60 @@
+@prefix this: <http://purl.org/np/RA_aFpASz34NYEgfVykg48qj_7slHnKT67D8moiAgIxaU> .
+@prefix sub: <http://purl.org/np/RA_aFpASz34NYEgfVykg48qj_7slHnKT67D8moiAgIxaU#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    rdfs:label "Testing target namespace";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Comments";
+    nt:hasTargetNamespace <https://example.org/foo/bar/> .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "your comment" .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:thing .
+  
+  sub:thing a nt:UriPlaceholder;
+    rdfs:label "The URL/URI of the thing you want to comment on" .
+  
+  rdfs:comment rdfs:label "has my comment - connects an identifier (left) to a human-readable comment (right)" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "FYRsanLszREV+9zbV+hvTl2K0gXEz3ThDCjetIfBjYw4YHx1DiaS5wuzBjCgDlsFSsqF3iCPFbdJcMWJmd5EzJsQQVBL0FNUgGVzd2DpYGHassyxNZrP5rFiPHlmlL3PFTR5UNRWKR5Kc8JXkdX2/Jt6uvTkZpbzDhINfidbpFs=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-07-24T09:20:51.178+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    prov:wasDerivedFrom <http://purl.org/np/RA53odwaVUJzKA_TMWpQUDRWPqlz9Lkj8UHICMByCeSXc>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA>, <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RAcePQpCDGpHwy7tKiEkZ-r1dqWahglraKXhSAwXp_nEs> .
+}
+

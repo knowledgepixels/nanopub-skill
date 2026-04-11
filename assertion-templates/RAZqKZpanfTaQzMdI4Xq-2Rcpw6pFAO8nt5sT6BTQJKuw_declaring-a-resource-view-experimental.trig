@@ -1,0 +1,277 @@
+@prefix this: <https://w3id.org/np/RAZqKZpanfTaQzMdI4Xq-2Rcpw6pFAO8nt5sT6BTQJKuw> .
+@prefix sub: <https://w3id.org/np/RAZqKZpanfTaQzMdI4Xq-2Rcpw6pFAO8nt5sT6BTQJKuw/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:isVersionOf rdfs:label "is a version of" .
+  
+  dct:title rdfs:label "has the title" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <https://w3id.org/kpxl/gen/terms/ColumnWidth02of12> rdfs:label "2/12 columns" .
+  
+  <https://w3id.org/kpxl/gen/terms/ColumnWidth03of12> rdfs:label "3/12 columns" .
+  
+  <https://w3id.org/kpxl/gen/terms/ColumnWidth04of12> rdfs:label "4/12 columns" .
+  
+  <https://w3id.org/kpxl/gen/terms/ColumnWidth05of12> rdfs:label "5/12 columns" .
+  
+  <https://w3id.org/kpxl/gen/terms/ColumnWidth06of12> rdfs:label "6/12 columns" .
+  
+  <https://w3id.org/kpxl/gen/terms/ColumnWidth07of12> rdfs:label "7/12 columns" .
+  
+  <https://w3id.org/kpxl/gen/terms/ColumnWidth08of12> rdfs:label "8/12 columns" .
+  
+  <https://w3id.org/kpxl/gen/terms/ColumnWidth09of12> rdfs:label "9/12 columns" .
+  
+  <https://w3id.org/kpxl/gen/terms/ColumnWidth10of12> rdfs:label "10/12 columns" .
+  
+  <https://w3id.org/kpxl/gen/terms/ColumnWidth12of12> rdfs:label "12/12 columns" .
+  
+  <https://w3id.org/kpxl/gen/terms/ListView> rdfs:label "list view" .
+  
+  <https://w3id.org/kpxl/gen/terms/ResourceView> rdfs:label "resource view" .
+  
+  <https://w3id.org/kpxl/gen/terms/TabularView> rdfs:label "tabular view" .
+  
+  <https://w3id.org/kpxl/gen/terms/ViewEntryAction> rdfs:label "view entry action - an action that is applied on a result entry of the view" .
+  
+  <https://w3id.org/kpxl/gen/terms/ViewResultAction> rdfs:label "view result action - an action that is applied on the entire result of a view" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasActionTemplate> rdfs:label "has the template" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> rdfs:label "has the template part field" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> rdfs:label "has the query mapping" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> rdfs:label "has the template target field" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasDisplayWidth> rdfs:label "has the display width" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasElementNamespace> rdfs:label "has the element namespace" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasPageSize> rdfs:label "has the page size" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> rdfs:label "has the structural position" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasViewAction> rdfs:label "has the action" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasViewQuery> rdfs:label "has the query" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> rdfs:label "has the query target field" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasViewTargetClass> rdfs:label "targets resources of class" .
+  
+  sub:action a nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID suffix for the action";
+    nt:hasDefaultValue sub:action .
+  
+  sub:actionLabel a nt:LiteralPlaceholder;
+    rdfs:label "text shown on the action button" .
+  
+  sub:actionTemplate a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the template for this action";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RARD6qOGIXUvfxmf5CQNEDxPqlTVCqeLdWeSg5h8tUcEA/search-templates" .
+  
+  sub:actionTemplateField a nt:LiteralPlaceholder;
+    rdfs:label "the template field URI suffix";
+    nt:hasDefaultValue "resource" .
+  
+  sub:actionTemplatePartField a nt:LiteralPlaceholder;
+    rdfs:label "put \"void\" if not applicable";
+    nt:hasDefaultValue "void" .
+  
+  sub:actionTemplateQueryMapping a nt:LiteralPlaceholder;
+    rdfs:label "table column to template param mapping like 'col:param'";
+    nt:hasDefaultValue "void" .
+  
+  sub:actionType a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the type of the action";
+    nt:hasDefaultValue <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    nt:possibleValue <https://w3id.org/kpxl/gen/terms/ViewEntryAction>, <https://w3id.org/kpxl/gen/terms/ViewResultAction> .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Declaring a view that to be shown on a resource page (i.e. user/space/maintained resource page).";
+    rdfs:label "Declaring a resource view (experimental)";
+    nt:hasStatement sub:st10, sub:st10b, sub:st11, sub:st20, sub:st21, sub:st30, sub:st31,
+      sub:st41, sub:st42, sub:st43, sub:st44, sub:st45, sub:st50;
+    nt:hasTag "Spaces" .
+  
+  sub:elementNamespace a nt:ExternalUriPlaceholder;
+    rdfs:label "namespace of (some) elements" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "label of the view" .
+  
+  sub:pageSize a nt:LiteralPlaceholder;
+    rdfs:label "number of elements/rows per page";
+    nt:hasRegex "[0-9]+" .
+  
+  sub:query a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the query";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/grlc/grlc-query" .
+  
+  sub:queryField a nt:LiteralPlaceholder;
+    rdfs:label "the query placeholder name";
+    nt:hasDefaultValue "resource" .
+  
+  sub:st10 rdf:object <https://w3id.org/kpxl/gen/terms/ResourceView>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:view .
+  
+  sub:st10b rdf:object sub:viewKind;
+    rdf:predicate dct:isVersionOf;
+    rdf:subject sub:view .
+  
+  sub:st11 rdf:object sub:viewType;
+    rdf:predicate rdf:type;
+    rdf:subject sub:view .
+  
+  sub:st20 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:view .
+  
+  sub:st21 rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:view .
+  
+  sub:st30 rdf:object sub:query;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasViewQuery>;
+    rdf:subject sub:view .
+  
+  sub:st31 rdf:object sub:queryField;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField>;
+    rdf:subject sub:view .
+  
+  sub:st41 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:targetClass;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasViewTargetClass>;
+    rdf:subject sub:view .
+  
+  sub:st42 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:elementNamespace;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasElementNamespace>;
+    rdf:subject sub:view .
+  
+  sub:st43 a nt:OptionalStatement;
+    rdf:object sub:pageSize;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasPageSize>;
+    rdf:subject sub:view .
+  
+  sub:st44 a nt:OptionalStatement;
+    rdf:object sub:width;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasDisplayWidth>;
+    rdf:subject sub:view .
+  
+  sub:st45 a nt:OptionalStatement;
+    rdf:object sub:structuralPosition;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasStructuralPosition>;
+    rdf:subject sub:view .
+  
+  sub:st50 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st51, sub:st51b, sub:st52, sub:st53, sub:st53b, sub:st53c, sub:st54 .
+  
+  sub:st51 rdf:object sub:action;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasViewAction>;
+    rdf:subject sub:view .
+  
+  sub:st51b rdf:object sub:actionType;
+    rdf:predicate rdf:type;
+    rdf:subject sub:action .
+  
+  sub:st52 rdf:object sub:actionTemplate;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasActionTemplate>;
+    rdf:subject sub:action .
+  
+  sub:st53 rdf:object sub:actionTemplateField;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField>;
+    rdf:subject sub:action .
+  
+  sub:st53b rdf:object sub:actionTemplatePartField;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField>;
+    rdf:subject sub:action .
+  
+  sub:st53c rdf:object sub:actionTemplateQueryMapping;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping>;
+    rdf:subject sub:action .
+  
+  sub:st54 rdf:object sub:actionLabel;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:action .
+  
+  sub:structuralPosition a nt:LiteralPlaceholder;
+    rdfs:label "digits for section/subsection + short id like '5.5.thing'";
+    nt:hasRegex "[1-9]\\.[1-9]\\..*" .
+  
+  sub:targetClass a nt:ExternalUriPlaceholder;
+    rdfs:label "target class URI" .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title to be shown as table header" .
+  
+  sub:view a nt:EmbeddedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID suffix for the view" .
+  
+  sub:viewKind a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "short suffix or existing URI of view kind" .
+  
+  sub:viewType a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose the type of view";
+    nt:hasDefaultValue <https://w3id.org/kpxl/gen/terms/TabularView>;
+    nt:possibleValue <https://w3id.org/kpxl/gen/terms/ListView>, <https://w3id.org/kpxl/gen/terms/TabularView> .
+  
+  sub:width a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose display width";
+    nt:possibleValue <https://w3id.org/kpxl/gen/terms/ColumnWidth02of12>, <https://w3id.org/kpxl/gen/terms/ColumnWidth03of12>,
+      <https://w3id.org/kpxl/gen/terms/ColumnWidth04of12>, <https://w3id.org/kpxl/gen/terms/ColumnWidth05of12>,
+      <https://w3id.org/kpxl/gen/terms/ColumnWidth06of12>, <https://w3id.org/kpxl/gen/terms/ColumnWidth07of12>,
+      <https://w3id.org/kpxl/gen/terms/ColumnWidth08of12>, <https://w3id.org/kpxl/gen/terms/ColumnWidth09of12>,
+      <https://w3id.org/kpxl/gen/terms/ColumnWidth10of12>, <https://w3id.org/kpxl/gen/terms/ColumnWidth12of12> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-11-26T08:15:17.690Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RApfqQCV29bcsCVcjFkc2WtHV4g3m-6cd01nJKLs5SXcM>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Declaring a resource view (experimental)";
+    prov:wasDerivedFrom <https://w3id.org/np/RAc-xMT11OPl1U6HrAILARobPzySXI35DSFBu7R6OEZWY>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "OdInFh5UMjrJnI8WgHVmKuV1KOKtE81+WEsBotw0f7N7yz4ORmnAAoWova+3VVFRBIYHquWC7v87HKvgOG0fU8vxsJmDbrkw6j4FmWmV1uQ5EgaxJuy9bhYXPzE9hSpsjwSos2k0H2U6PK6d70G6fYnOu6l+2jCc4dB2WR9QuAU=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

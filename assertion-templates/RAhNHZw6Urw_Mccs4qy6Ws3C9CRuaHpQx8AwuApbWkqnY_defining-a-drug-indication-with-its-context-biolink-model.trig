@@ -1,0 +1,245 @@
+@prefix this: <http://purl.org/np/RAhNHZw6Urw_Mccs4qy6Ws3C9CRuaHpQx8AwuApbWkqnY> .
+@prefix sub: <http://purl.org/np/RAhNHZw6Urw_Mccs4qy6Ws3C9CRuaHpQx8AwuApbWkqnY#> .
+@prefix schema: <https://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix bl: <https://w3id.org/biolink/vocab/> .
+@prefix nkg: <https://w3id.org/um/neurodkg/> .
+@prefix ncit: <http://purl.obolibrary.org/obo/NCIT_> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  ncit:C15675 rdfs:label "Adjuvant Therapy, any therapy that is administered to augment or stimulate other treatment modalities or to minimize or prevent disease recurrence subsequent to the main treatment plan. " .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Defining a drug indication with its context (BioLink model)";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st09, sub:st10, sub:st11, sub:st12, sub:st13, sub:st14 .
+  
+  sub:association a nt:LocalResource;
+    rdfs:label "this association" .
+  
+  sub:associationRelation a nt:GuidedChoicePlaceholder;
+    rdfs:label "provide the type of drug indication";
+    nt:possibleValue ncit:C15675, schema:ApprovedIndication, schema:MedicalContraindication,
+      schema:PreventionIndication, schema:TreatmentIndication, nkg:OffLabelIndication, nkg:SymptomaticReliefIndication .
+  
+  sub:cohort a nt:LocalResource;
+    rdfs:label "the study cohort" .
+  
+  sub:cohortAgeLabel a nt:LiteralPlaceholder;
+    rdfs:label "describe the life stage or age of the cohort (e.g. Adults)" .
+  
+  sub:cohortAgeMax a nt:LiteralPlaceholder;
+    rdfs:label "describe the maximum age of the cohort (e.g. 80)" .
+  
+  sub:cohortAgeMin a nt:LiteralPlaceholder;
+    rdfs:label "describe the minimum age of the cohort (e.g. 7)" .
+  
+  sub:hasPhenotype a nt:GuidedChoicePlaceholder;
+    rdfs:label "provide additional phenotypes for the cohort";
+    nt:possibleValuesFromApi "https://name-resolution-sri.renci.org/lookup?limit=10&string=" .
+  
+  sub:object a nt:GuidedChoicePlaceholder;
+    rdfs:label "search for the disease it treats";
+    nt:possibleValuesFromApi "https://name-resolution-sri.renci.org/lookup?limit=10&string=" .
+  
+  sub:publication a nt:UriPlaceholder;
+    rdfs:label "add the URL of a publication supporting this association (doi, PubMed...)" .
+  
+  sub:readableassertion a nt:LiteralPlaceholder;
+    rdfs:label "describe the assertion concisely (e.g. tylenol treats pain in adults patients)" .
+  
+  sub:st00 a rdf:Statement;
+    rdf:object sub:readableassertion;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:association;
+    nt:statementOrder "0"^^xsd:integer .
+  
+  sub:st01 a rdf:Statement;
+    rdf:object sub:subject;
+    rdf:predicate rdf:subject;
+    rdf:subject sub:association;
+    nt:statementOrder "1"^^xsd:integer .
+  
+  sub:st02 a rdf:Statement;
+    rdf:object sub:object;
+    rdf:predicate rdf:object;
+    rdf:subject sub:association;
+    nt:statementOrder "3"^^xsd:integer .
+  
+  sub:st03 a rdf:Statement;
+    rdf:object bl:ChemicalToDiseaseOrPhenotypicFeatureAssociation;
+    rdf:predicate bl:association_type;
+    rdf:subject sub:association;
+    nt:statementOrder "19"^^xsd:integer .
+  
+  sub:st04 a rdf:Statement;
+    rdf:object sub:associationRelation;
+    rdf:predicate bl:relation;
+    rdf:subject sub:association;
+    nt:statementOrder "6"^^xsd:integer .
+  
+  sub:st05 a rdf:Statement;
+    rdf:object <https://w3id.org/um/NeuroDKG>;
+    rdf:predicate bl:provided_by;
+    rdf:subject sub:association;
+    nt:statementOrder "22"^^xsd:integer .
+  
+  sub:st06 a nt:OptionalStatement;
+    rdf:object sub:publication;
+    rdf:predicate bl:publications;
+    rdf:subject sub:association;
+    nt:statementOrder "10"^^xsd:integer .
+  
+  sub:st07 a nt:GroupedStatement, nt:OptionalStatement;
+    nt:hasStatement sub:st07a, sub:st07b, sub:st07c;
+    nt:statementOrder "11"^^xsd:integer .
+  
+  sub:st07a a rdf:Statement;
+    rdf:object sub:cohort;
+    rdf:predicate bl:has_population_context;
+    rdf:subject sub:association;
+    nt:statementOrder "12"^^xsd:integer .
+  
+  sub:st07b a rdf:Statement;
+    rdf:object sub:cohortAgeLabel;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:cohort;
+    nt:statementOrder "13"^^xsd:integer .
+  
+  sub:st07c a rdf:Statement;
+    rdf:object bl:Cohort;
+    rdf:predicate bl:category;
+    rdf:subject sub:cohort;
+    nt:statementOrder "14"^^xsd:integer .
+  
+  sub:st08 a nt:OptionalStatement;
+    rdf:object sub:cohortAgeMin;
+    rdf:predicate schema:requiredMinAge;
+    rdf:subject sub:cohort;
+    nt:statementOrder "15"^^xsd:integer .
+  
+  sub:st09 a nt:OptionalStatement;
+    rdf:object sub:cohortAgeMax;
+    rdf:predicate schema:requiredMaxAge;
+    rdf:subject sub:cohort;
+    nt:statementOrder "16"^^xsd:integer .
+  
+  sub:st10 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:hasPhenotype;
+    rdf:predicate bl:has_phenotype;
+    rdf:subject sub:cohort;
+    nt:statementOrder "18"^^xsd:integer .
+  
+  sub:st11 a rdf:Statement;
+    rdf:object rdf:Statement;
+    rdf:predicate rdf:type;
+    rdf:subject sub:association;
+    nt:statementOrder "20"^^xsd:integer .
+  
+  sub:st12 a rdf:Statement;
+    rdf:object bl:Drug;
+    rdf:predicate bl:category;
+    rdf:subject sub:subject;
+    nt:statementOrder "23"^^xsd:integer .
+  
+  sub:st13 a rdf:Statement;
+    rdf:object bl:Disease;
+    rdf:predicate bl:category;
+    rdf:subject sub:object;
+    nt:statementOrder "24"^^xsd:integer .
+  
+  sub:st14 a rdf:Statement;
+    rdf:object bl:treats;
+    rdf:predicate rdf:predicate;
+    rdf:subject sub:association;
+    nt:statementOrder "21"^^xsd:integer .
+  
+  sub:subject a nt:GuidedChoicePlaceholder;
+    rdfs:label "search for the indicated drug";
+    nt:possibleValuesFromApi "https://name-resolution-sri.renci.org/lookup?limit=10&string=" .
+  
+  rdf:Statement rdfs:label "association Statement" .
+  
+  rdf:object rdfs:label "has disease" .
+  
+  rdf:predicate rdfs:label "has predicate" .
+  
+  rdf:subject rdfs:label "has drug" .
+  
+  rdf:type rdfs:label "has type" .
+  
+  rdfs:label rdfs:label "has label" .
+  
+  schema:ApprovedIndication rdfs:label "An indication for a medical therapy that has been formally specified or approved by a regulatory body." .
+  
+  schema:MedicalContraindication rdfs:label "A condition or factor that serves as a reason to withhold a certain medical therapy." .
+  
+  schema:PreventionIndication rdfs:label "An indication for preventing an underlying condition, symptom, etc." .
+  
+  schema:TreatmentIndication rdfs:label "An indication for treating an underlying condition." .
+  
+  schema:requiredMaxAge rdfs:label "participant maximum age is" .
+  
+  schema:requiredMinAge rdfs:label "participant minimum age is" .
+  
+  bl:EvidenceType rdfs:label "EvidenceType" .
+  
+  bl:association_type rdfs:label "has BioLink type" .
+  
+  bl:category rdfs:label "is a" .
+  
+  bl:description rdfs:label "is described by" .
+  
+  bl:has_drug rdfs:label "uses drug" .
+  
+  bl:has_phenotype rdfs:label "has phenotypes" .
+  
+  bl:has_population_context rdfs:label "has population context" .
+  
+  bl:id rdfs:label "has id" .
+  
+  bl:negated rdfs:label "is negated" .
+  
+  bl:provided_by rdfs:label "is provided by" .
+  
+  bl:publications rdfs:label "has publications" .
+  
+  bl:qualifiers rdfs:label "is qualified by" .
+  
+  bl:relation rdfs:label "has relation" .
+  
+  nkg:OffLabelIndication rdfs:label "An indication found in off-label drug uses" .
+  
+  nkg:SymptomaticReliefIndication rdfs:label "An indication for only managing the symptoms of the condition" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1501-1082 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCR9fz0fKCdWOWC+pxhkQhEM/ppbdIYe5TLSdj+lJzSlv9mYBaPgrzVezSwwbmhlHBPDZa4/vHycU315BdmUGq+pXllp9+rWFfrb+kBJwhZjpG6BeyyXBsRFz4jmQVxl/ZYHilQTh/XalYzKkEAyTiEMPee4Kz61PaWOKH24CsnOQIDAQAB";
+    npx:hasSignature "iAatWmfjWSEn9Y+fQrjbn+LCcUdLV0Q3Wht3KH/7F35NuZyTI3dKqWrsg3qZrRLxOuL1Jdbkua8DgwZdSM3D5wY4Mb4ZGO14KD06Kok9FfRnOdjup0LXrg2a7enuXuLuexNnmKFVoC4AGrX8hrH8dE06II9wauAWL8FSY9OWMQI=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2021-08-16T11:00:00+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1501-1082;
+    npx:supersedes <http://purl.org/np/RA0w66ghERSs6kP8RKJyOvNdXgU51XwvqDOrKmOSlLfT4> .
+}
+

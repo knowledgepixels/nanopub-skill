@@ -1,0 +1,265 @@
+@prefix this: <https://w3id.org/np/RAmx7t4CyAaCdd5qpSCBN7_4baU9e5myQLtemF5QzQd-U> .
+@prefix sub: <https://w3id.org/np/RAmx7t4CyAaCdd5qpSCBN7_4baU9e5myQLtemF5QzQd-U#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://w3id.org/aopdo#0042> rdfs:label "KeyEvent" .
+  
+  <http://w3id.org/aopdo#0063> rdfs:label "hasID" .
+  
+  sub:AOPName a nt:LiteralPlaceholder .
+  
+  sub:Action a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue sub:Decreased, sub:Increased .
+  
+  sub:ApplicabilityDomain a nt:LongLiteralPlaceholder .
+  
+  sub:AuthorStatus a nt:LiteralPlaceholder .
+  
+  sub:BiologicalOrganizationLevel a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue sub:Cell, sub:Community, sub:Individual, sub:Molecular, sub:Organ,
+      sub:OrganSystem, sub:Population, sub:Tissue .
+  
+  sub:DOI a nt:LiteralPlaceholder .
+  
+  sub:Description a nt:LongLiteralPlaceholder .
+  
+  sub:ID a nt:LiteralPlaceholder .
+  
+  sub:LifeStage a nt:LiteralPlaceholder .
+  
+  sub:LifeStagesEvidence a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue sub:High, sub:Moderate .
+  
+  sub:MeasurementAndDetectionTechniques a nt:LongLiteralPlaceholder .
+  
+  sub:OECDStatus a nt:LiteralPlaceholder .
+  
+  sub:Object a nt:LiteralPlaceholder .
+  
+  sub:OrganTerm a nt:LiteralPlaceholder .
+  
+  sub:PointOfContact a nt:LiteralPlaceholder .
+  
+  sub:Process a nt:LiteralPlaceholder .
+  
+  sub:RoleInAOP a nt:LiteralPlaceholder .
+  
+  sub:ScientificTerm a nt:LiteralPlaceholder .
+  
+  sub:Sex a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue sub:Female, sub:Male .
+  
+  sub:SexApplicabilityEvidence a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue sub:High, sub:Moderate .
+  
+  sub:ShortName a nt:LiteralPlaceholder .
+  
+  sub:TaxonomicApplicabilityEvidence a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue sub:High, sub:Moderate .
+  
+  sub:Term a nt:LiteralPlaceholder .
+  
+  sub:Title a nt:LiteralPlaceholder .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Template to store data required to describe an AOP's KeyEvent following FAIR principles.";
+    rdfs:label "KeyEvent Data Template";
+    nt:hasStatement sub:st-1, sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st4a, sub:st4b,
+      sub:st4c, sub:st4d, sub:st5, sub:st6, sub:st7, sub:st8;
+    nt:hasTag "AOPs Elements" .
+  
+  sub:st-1 a rdf:Statement;
+    rdf:object sub:ID;
+    rdf:predicate <http://w3id.org/aopdo#0063>;
+    rdf:subject <http://w3id.org/aopdo#0042> .
+  
+  sub:st0 a rdf:Statement;
+    rdf:object sub:Title;
+    rdf:predicate sub:hasTitle;
+    rdf:subject sub:KeyEvent .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:ShortName;
+    rdf:predicate sub:hasShortName;
+    rdf:subject sub:KeyEvent .
+  
+  sub:st2 a nt:GroupedStatement, nt:OptionalStatement;
+    rdf:object sub:BiologicalContext;
+    rdf:predicate sub:hasBiologicalContext;
+    rdf:subject sub:KeyEvent;
+    nt:hasStatement sub:st2a, sub:st2b .
+  
+  sub:st2a rdf:object sub:BiologicalOrganizationLevel;
+    rdf:predicate sub:hasBiologicalOrganizationLevel;
+    rdf:subject sub:BiologicalContext .
+  
+  sub:st2b rdf:object sub:OrganTerm;
+    rdf:predicate sub:hasOrganTerm;
+    rdf:subject sub:BiologicalContext .
+  
+  sub:st3 a nt:GroupedStatement, nt:RepeatableStatement;
+    rdf:object sub:Components;
+    rdf:predicate sub:hasComponents;
+    rdf:subject sub:KeyEvent;
+    nt:hasStatement sub:st3a, sub:st3b, sub:st3c .
+  
+  sub:st3a rdf:object sub:Process;
+    rdf:predicate sub:hasProcess;
+    rdf:subject sub:Components .
+  
+  sub:st3b rdf:object sub:Object;
+    rdf:predicate sub:hasObject;
+    rdf:subject sub:Components .
+  
+  sub:st3c rdf:object sub:Action;
+    rdf:predicate sub:hasAction;
+    rdf:subject sub:Components .
+  
+  sub:st4 a nt:GroupedStatement;
+    rdf:object sub:Overview;
+    rdf:predicate sub:hasOverview;
+    rdf:subject sub:KeyEvent;
+    nt:hasStatement sub:st4a, sub:st4b, sub:st4c, sub:st4d .
+  
+  sub:st4a a nt:GroupedStatement, nt:RepeatableStatement;
+    rdf:object sub:IncludedInAOP;
+    rdf:predicate sub:hasIncludedInAOP;
+    rdf:subject sub:Overview;
+    nt:hasStatement sub:st4a1, sub:st4a2, sub:st4a3, sub:st4a4, sub:st4a5 .
+  
+  sub:st4a1 rdf:object sub:AOPName;
+    rdf:predicate sub:hasAOPName;
+    rdf:subject sub:IncludedInAOP .
+  
+  sub:st4a2 rdf:object sub:RoleInAOP;
+    rdf:predicate sub:hasRoleInAOP;
+    rdf:subject sub:IncludedInAOP .
+  
+  sub:st4a3 rdf:object sub:PointOfContact;
+    rdf:predicate sub:hasPointOfContact;
+    rdf:subject sub:IncludedInAOP .
+  
+  sub:st4a4 rdf:object sub:AuthorStatus;
+    rdf:predicate sub:hasAuthorStatus;
+    rdf:subject sub:IncludedInAOP .
+  
+  sub:st4a5 rdf:object sub:OECDStatus;
+    rdf:predicate sub:hasOECDStatus;
+    rdf:subject sub:IncludedInAOP .
+  
+  sub:st4b a nt:GroupedStatement, nt:RepeatableStatement;
+    rdf:object sub:TaxonomicApplicability;
+    rdf:predicate sub:hasTaxonomicApplicability;
+    rdf:subject sub:Overview;
+    nt:hasStatement sub:st4b1, sub:st4b2, sub:st4b3 .
+  
+  sub:st4b1 rdf:object sub:Term;
+    rdf:predicate sub:hasTerm;
+    rdf:subject sub:TaxonomicApplicability .
+  
+  sub:st4b2 rdf:object sub:ScientificTerm;
+    rdf:predicate sub:hasScientificTerm;
+    rdf:subject sub:TaxonomicApplicability .
+  
+  sub:st4b3 rdf:object sub:TaxonomicApplicabilityEvidence;
+    rdf:predicate sub:hasEvidence;
+    rdf:subject sub:TaxonomicApplicability .
+  
+  sub:st4c a nt:GroupedStatement, nt:RepeatableStatement;
+    rdf:object sub:LifeStages;
+    rdf:predicate sub:hasLifeStages;
+    rdf:subject sub:Overview;
+    nt:hasStatement sub:st4c1, sub:st4c2 .
+  
+  sub:st4c1 rdf:object sub:LifeStage;
+    rdf:predicate sub:hasLifeStage;
+    rdf:subject sub:LifeStages .
+  
+  sub:st4c2 rdf:object sub:LifeStagesEvidence;
+    rdf:predicate sub:hasEvidence;
+    rdf:subject sub:LifeStages .
+  
+  sub:st4d a nt:GroupedStatement, nt:RepeatableStatement;
+    rdf:object sub:SexApplicability;
+    rdf:predicate sub:hasSexApplicability;
+    rdf:subject sub:Overview;
+    nt:hasStatement sub:st4d1, sub:st4d2 .
+  
+  sub:st4d1 rdf:object sub:Sex;
+    rdf:predicate sub:hasSex;
+    rdf:subject sub:SexApplicability .
+  
+  sub:st4d2 rdf:object sub:SexApplicabilityEvidence;
+    rdf:predicate sub:hasEvidence;
+    rdf:subject sub:SexApplicability .
+  
+  sub:st5 rdf:object sub:Description;
+    rdf:predicate sub:hasDescription;
+    rdf:subject sub:KeyEvent .
+  
+  sub:st6 rdf:object sub:MeasurementAndDetectionTechniques;
+    rdf:predicate sub:hasMeasurementAndDetectionTechniques;
+    rdf:subject sub:KeyEvent .
+  
+  sub:st7 rdf:object sub:ApplicabilityDomain;
+    rdf:predicate sub:hasApplicabilityDomain;
+    rdf:subject sub:KeyEvent .
+  
+  sub:st8 a nt:GroupedStatement, nt:RepeatableStatement;
+    rdf:object sub:References;
+    rdf:predicate sub:hasReferences;
+    rdf:subject sub:KeyEvent;
+    nt:hasStatement sub:st8a, sub:st8b .
+  
+  sub:st8a rdf:object sub:Title;
+    rdf:predicate sub:hasTitle;
+    rdf:subject sub:References .
+  
+  sub:st8b rdf:object sub:DOI;
+    rdf:predicate sub:hasDOI;
+    rdf:subject sub:References .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-0593-2598 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-0593-2598 foaf:name "Saurav Kumar" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCB7V9ZswxMNiTLUYtX1XGYMme8mjymikJ6AWyXqvhDymE3ISX75oWz2KbMUwg6t73nUJA7tJK2PNpXTd4irxzgaAUCOU4BoT3Z8mNsEPIQziQcDHChK0zhnajIqRpEdZcrSoj98oJrutKQUVrHug8M139ItLJm3IdVlb9+PIYQoQIDAQAB";
+    npx:hasSignature "ZZZUDbtdkiG1ABEtRv+8fFew220Zzi0sAEOPeT1t6wzV8RDqRMbDvqBqFhuBQAaQ0hvoAiVu2qvuzaov4nmW8yAQvtmb2v2kfH0k0ZXBJigyawM8d5C4yO/iSPXIOKVuBqEQJ0WLvUfl5IPV8+wclyM8xJ4RWeveyfzbZSwWfAw=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-0593-2598 .
+  
+  this: dct:created "2024-11-27T13:08:42.392Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0003-0593-2598;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAZQ3zsjF-8p0GsCMVBdfRmH21PKWyl3Q0axl5Lfn_u1w>;
+    npx:wasCreatedAt <https://nanodash.petapico.org/>;
+    rdfs:label "Template: KeyEvent Data Template";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAGBEisKAxwcQTdfR7ALwCeQBrUVeU23F8uFvFmO-H6F0> .
+}
+

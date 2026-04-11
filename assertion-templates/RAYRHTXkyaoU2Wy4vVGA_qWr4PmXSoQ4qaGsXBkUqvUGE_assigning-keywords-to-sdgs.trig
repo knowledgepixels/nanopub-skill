@@ -1,0 +1,68 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix this: <http://purl.org/np/RAYRHTXkyaoU2Wy4vVGA_qWr4PmXSoQ4qaGsXBkUqvUGE> .
+@prefix sub: <http://purl.org/np/RAYRHTXkyaoU2Wy4vVGA_qWr4PmXSoQ4qaGsXBkUqvUGE#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dcterms:subject rdfs:label "a keyord (right) is assigned to an SDG (links)" .
+  
+  sub:Keyword a nt:UriPlaceholder;
+    rdfs:label "The URL/URI of the keyword from the controlled vocabulary to be assigned to the SDG" .
+  
+  sub:SDG a nt:RestrictedChoicePlaceholder;
+    rdfs:label "Select the Sustainable Development Goal (SDG) to which you want to assign a keyword";
+    nt:possibleValue <http://metadata.un.org/sdg/1>, <http://metadata.un.org/sdg/10>,
+      <http://metadata.un.org/sdg/11>, <http://metadata.un.org/sdg/12>, <http://metadata.un.org/sdg/13>,
+      <http://metadata.un.org/sdg/14>, <http://metadata.un.org/sdg/15>, <http://metadata.un.org/sdg/16>,
+      <http://metadata.un.org/sdg/17>, <http://metadata.un.org/sdg/2>, <http://metadata.un.org/sdg/3>,
+      <http://metadata.un.org/sdg/4>, <http://metadata.un.org/sdg/5>, <http://metadata.un.org/sdg/6>,
+      <http://metadata.un.org/sdg/7>, <http://metadata.un.org/sdg/8>, <http://metadata.un.org/sdg/9> .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dcterms:description "Keywords from controlled vocabulary as a supplement to the keywords of the \"SDG Knowledge Organisation System\" accessible at http://metadata.un.org/sdg";
+    rdfs:label "Assigning keywords to SDGs";
+    nt:hasStatement sub:st1 .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:Keyword;
+    rdf:predicate dcterms:subject;
+    rdf:subject sub:SDG .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2940-6795 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCN8GhzzyXNQThdjhQKanW+p2DNWRBNJZaRglRa5hz3PU2Vq3YHwhgnqCCp1uUynDcy1hulwEvnnpDaOgzxL0cMLZaeu9qNSkQrK5FIqAVH0IWx64eMTEM163CjwUVEU8tiQTmN4e5aMoie5+BWJPyTIfAEgZvWjK1oWLkjmLWnVQIDAQAB";
+    npx:hasSignature "SVnWfk8NgsF8Q9HhLOWx1nZ2ewCLq2tuTHfIhegcAfbZVn0GgM/IIRw9N7OGmXgK0SNkw2Ntouh0fZP+yHfCqK587U0KyPEpqBfdRzwgVsCdcsx2lj0t0Kr7yh0Fr7ogclcR8A4sXwTekw495CWu/vIUXQIxsTL6KwG812RA/h0=";
+    npx:hasSignatureTarget this: .
+  
+  this: a npx:ExampleNanopub;
+    dcterms:created "2023-06-26T12:58:53.008Z"^^xsd:dateTime;
+    dcterms:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2940-6795;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/>;
+    prov:wasDerivedFrom <http://purl.org/np/RA53odwaVUJzKA_TMWpQUDRWPqlz9Lkj8UHICMByCeSXc>,
+      <http://purl.org/np/RAkEsYyvtTK6tD5ubGNLRe73-uJDp5hrMexUe630OewOA>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A>,
+      <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>, <http://purl.org/np/RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RA5awHTBKJwv0iGa1au6zAor35CtkO-ZQDglzUuq8AT88> .
+}
+

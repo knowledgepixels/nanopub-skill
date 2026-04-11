@@ -1,0 +1,161 @@
+@prefix this: <https://w3id.org/np/RAb0MsnGztDVu1jCHnvAYVhze-1hhT3zXil0P8trZjPSE> .
+@prefix sub: <https://w3id.org/np/RAb0MsnGztDVu1jCHnvAYVhze-1hhT3zXil0P8trZjPSE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has description" .
+  
+  rdfs:label rdfs:label "has title" .
+  
+  <https://w3id.org/fair/fip/terms/has-description-source> rdfs:label "has source" .
+  
+  <https://w3id.org/fff/req/digital-object-type> rdfs:label "has digital object type" .
+  
+  <https://w3id.org/fff/req/fair-assessment> rdfs:label "has FAIR assessment" .
+  
+  <https://w3id.org/fff/req/fairification> rdfs:label "has FAIRification plan" .
+  
+  <https://w3id.org/fff/req/has-fip> rdfs:label "has FAIR Implementation Plan" .
+  
+  <https://w3id.org/fff/req/has-variable> rdfs:label "has variable" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Template for analysing a Digital Object";
+    rdfs:label "Anaylsing a Digital Object";
+    nt:hasRequiredPubinfoElement ns1:RA_R5w4lZ-6xuZyylG8qSlMhmWBaTE41-zlhiBVUQblCc;
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st03a, sub:st04, sub:st04a, sub:st05,
+      sub:st06, sub:st08, sub:st09, sub:st10;
+    nt:hasTag "FAIR" .
+  
+  sub:assessment a nt:GuidedChoicePlaceholder;
+    rdfs:label "FAIR Assessment report" .
+  
+  sub:contact a nt:AgentPlaceholder;
+    rdfs:label "ORCID of contact point" .
+  
+  sub:description a nt:LiteralPlaceholder;
+    rdfs:label "description" .
+  
+  sub:do a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "digital object analysis" .
+  
+  sub:fip a nt:ExternalUriPlaceholder;
+    rdfs:label "identifier of the FAIR Implementation Profile" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "title" .
+  
+  sub:pid a nt:ExternalUriPlaceholder;
+    rdfs:label "persistent identifier of a representative digital object" .
+  
+  sub:plan a nt:ExternalUriPlaceholder;
+    rdfs:label "action plan" .
+  
+  sub:source a nt:ExternalUriPlaceholder;
+    rdfs:label "URI to source" .
+  
+  sub:st01 rdf:object <https://w3id.org/fff/req/Digital-Object-Analysis>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:do .
+  
+  sub:st02 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:do .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:do .
+  
+  sub:st03a a nt:RepeatableStatement;
+    rdf:object sub:source;
+    rdf:predicate <https://w3id.org/fair/fip/terms/has-description-source>;
+    rdf:subject sub:do .
+  
+  sub:st04 a nt:RepeatableStatement;
+    rdf:object sub:pid;
+    rdf:predicate <https://schema.org/url>;
+    rdf:subject sub:do .
+  
+  sub:st04a a nt:OptionalStatement;
+    rdf:object sub:contact;
+    rdf:predicate <https://www.w3.org/ns/dcat#contactPoint>;
+    rdf:subject sub:do .
+  
+  sub:st05 rdf:object sub:type;
+    rdf:predicate <https://w3id.org/fff/req/digital-object-type>;
+    rdf:subject sub:do .
+  
+  sub:st06 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:variable;
+    rdf:predicate <https://w3id.org/fff/req/has-variable>;
+    rdf:subject sub:do .
+  
+  sub:st08 rdf:object sub:fip;
+    rdf:predicate <https://w3id.org/fff/req/has-fip>;
+    rdf:subject sub:do .
+  
+  sub:st09 rdf:object sub:assessment;
+    rdf:predicate <https://w3id.org/fff/req/fair-assessment>;
+    rdf:subject sub:do .
+  
+  sub:st10 rdf:object sub:plan;
+    rdf:predicate <https://w3id.org/fff/req/fairification>;
+    rdf:subject sub:do .
+  
+  sub:type a nt:GuidedChoicePlaceholder, nt:LiteralPlaceholder;
+    rdfs:label "digital object type";
+    nt:possibleValuesFrom ns1:RACXDZHEowTYDAzZvdmD0qIGpXZwY5ghMRBBlt6N8Iu5s .
+  
+  sub:variable rdfs:label "URI to FAIR variable" .
+  
+  <https://www.w3.org/ns/dcat#contactPoint> rdfs:label "has contact point" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  this: dct:created "2026-01-08T09:13:19.148Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAsuYLsZSaSiR4xk9kv3EOXzrvqNOV3fnT3bZuPwTK8fw>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Anaylsing a Digital Object";
+    prov:wasDerivedFrom ns1:RAntWwY-oLQ5QTSviLZrZ6GD6dniz-_skWtO-4_8031zU, ns1:RAtG8zeo_0OYP63K60rrot8vFOkHNOg_1_zu618NbL4pI,
+      <https://w3id.org/np/RA2FzWT-kYUWZae1lP-dcHbpDzXgprPS9NTbeIJ3feEGs>, <https://w3id.org/np/RADad7dDql-G5p_ahdVHYKgtfzALcdFeG8JZG-s9f_o9g>,
+      <https://w3id.org/np/RAHvFJa5qmcA7pokZ39ZYXYq7HUp43shYjr8CyUe0aRWY>, <https://w3id.org/np/RApxTdf4fpu4piXkCosKyz43YVFYr3JGWoiAEO65qDCSU>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCM0tu3I/KK6A/qPha/6pfngQZ4LBQpLnKAcIUuZLnSEb0epJ2IoY3zh/4N42us/6LpCHgZZZtSOTm5/KVo+OTDIqo294PpEZAO70u5DcMcGMC5OufzxGKs3Dwdo6XqPiDHxXuiaKCTO7/ABWAi7CtFoMrqJAHfeyqe82dAiH2IiwIDAQAB";
+    npx:hasSignature "aILDObnhy7wIwZjSlTM+KT0b5nirKau2SHu0q1Z9Ait1tqdsy4TkCxyB+hW3/z86UFI6bheTCILyZrSy6vI6qQNLDZvXbg5pW6naIYk0jI8xWgtN0TzHrMYwAjDaA7cIcJ+GkimvSMBWajt1fXoruxHE8Sbzy7Sa6JN6J5MMaIQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+}
+

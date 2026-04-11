@@ -1,0 +1,122 @@
+@prefix this: <https://w3id.org/np/RA3VbbujgFVx0LcaBBpKvzH_hG-I87zhuVYCYJW4whBiI> .
+@prefix sub: <https://w3id.org/np/RA3VbbujgFVx0LcaBBpKvzH_hG-I87zhuVYCYJW4whBiI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:creator rdfs:label "is created by" .
+  
+  dct:hasPart rdfs:label "has the part" .
+  
+  <http://purl.org/vocab/vann/preferredNamespacePrefix> rdfs:label "has the preferred namespace prefix" .
+  
+  <http://purl.org/vocab/vann/preferredNamespaceUri> rdfs:label "has the namespace URI" .
+  
+  rdf:type rdfs:label "is a - asserts that the thing on the left belongs to the class on the right" .
+  
+  rdfs:label rdfs:label "is called - connects a formal identifier (left) to an informal human-readable name (right)" .
+  
+  <http://www.w3.org/2002/07/owl#Ontology> rdfs:label "ontology - a set of terms like classes and relations" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication defines a new ontology, to which terms like classes and properties can later be added.";
+    rdfs:label "Defining a new ontology";
+    nt:hasNanopubLabelPattern "Ontology: ${name}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6;
+    nt:hasTag "Terms" .
+  
+  sub:creator a nt:AgentPlaceholder;
+    rdfs:label "creator/owner of the ontology" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the ontology" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the ontology" .
+  
+  sub:namespacePrefix a nt:LiteralPlaceholder;
+    rdfs:label "short namespace prefix, e.g. \"foaf\"" .
+  
+  sub:namespaceUri a nt:LiteralPlaceholder;
+    rdfs:label "namespace URI (prefix of all contained IDs)" .
+  
+  sub:ontology a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short URI suffix or full URI" .
+  
+  sub:part a nt:ExternalUriPlaceholder;
+    rdfs:label "term or index of term nanopubs" .
+  
+  sub:st0 rdf:object <http://www.w3.org/2002/07/owl#Ontology>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:ontology .
+  
+  sub:st1 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:ontology .
+  
+  sub:st2 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:ontology .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:namespacePrefix;
+    rdf:predicate <http://purl.org/vocab/vann/preferredNamespacePrefix>;
+    rdf:subject sub:ontology .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:namespaceUri;
+    rdf:predicate <http://purl.org/vocab/vann/preferredNamespaceUri>;
+    rdf:subject sub:ontology .
+  
+  sub:st5 a nt:RepeatableStatement;
+    rdf:object sub:creator;
+    rdf:predicate dct:creator;
+    rdf:subject sub:ontology .
+  
+  sub:st6 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:part;
+    rdf:predicate dct:hasPart;
+    rdf:subject sub:ontology .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-07-18T07:56:48.679Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAXm6tpBRbLVu-ptzPvUbNc_mpxKN42WB912Qfb-wCBmU>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template: Defining a new ontology";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA5reLVXOCPQFWr2UiCJb19ES7NwOpQRmudb17e2iB0c4> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "sYTSw+WPSjjjw1nj6L0xaumsGCiknJnVs8qULKkrKaifssx+WHGvuxYxntklMOqWYF1tw4vJt7esTpSK6qzidI/5bhSkL1ChSrNXmGDKZlPFupZItFFCl0VjbgpCJ4OaaWmZJz0ou8LQDhgF0zWd4lC/qdH/QIoqe9rC1R56pkA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

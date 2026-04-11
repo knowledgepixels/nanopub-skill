@@ -1,0 +1,109 @@
+@prefix this: <https://w3id.org/np/RAGbz8Qcl6QdP45GBgcfzshnQ2L6L9bU6P0S97Ui12fOs> .
+@prefix sub: <https://w3id.org/np/RAGbz8Qcl6QdP45GBgcfzshnQ2L6L9bU6P0S97Ui12fOs#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "can be described as follows: - gives a thing (left) a human-readable description (right)" .
+  
+  rdf:type rdfs:label "is a - asserts that the given thing (left) belongs to the given class (right)" .
+  
+  rdfs:label rdfs:label "has the name - connects an identifier to a human-readable name for it" .
+  
+  rdfs:seeAlso rdfs:label "is further explained at - connects an identifier to a link with further information about it" .
+  
+  <http://www.w3.org/2004/02/skos/core#exactMatch> rdfs:label "is almost exactly the same as - links this identifier to other related existing identifiers" .
+  
+  <https://w3id.org/fair/fip/terms/Digital-Object-Type> rdfs:label "Digital Object Type" .
+  
+  <https://w3id.org/fair/fip/terms/Non-FAIR-representation> rdfs:label "Non-FAIR representation" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Introducing a new SIP related term (new ID)";
+    nt:hasNanopubLabelPattern "${class}: ${name}";
+    nt:hasStatement sub:st0, sub:st2, sub:st3, sub:st4, sub:st5;
+    nt:hasTag "FAIR" .
+  
+  sub:class a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose whether this is a Digital Object Type or a Methodology";
+    nt:hasDefaultValue <https://w3id.org/fair/fip/terms/Digital-Object-Type>;
+    nt:possibleValue <https://w3id.org/fair/fip/terms/Digital-Object-Type>, <https://w3id.org/fair/fip/terms/Non-FAIR-representation> .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the Digital Object Type or Methodology" .
+  
+  sub:exactMatch a nt:ExternalUriPlaceholder;
+    rdfs:label "a URL of a term that is almost exactly the same as" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the Digital Object Type or a Methodology" .
+  
+  sub:seeAlsoLink a nt:ExternalUriPlaceholder;
+    rdfs:label "a URL where more information can be found" .
+  
+  sub:st0 rdf:object sub:class;
+    rdf:predicate rdf:type;
+    rdf:subject sub:thing .
+  
+  sub:st2 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:thing .
+  
+  sub:st3 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:thing .
+  
+  sub:st4 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:exactMatch;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#exactMatch>;
+    rdf:subject sub:thing .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:seeAlsoLink;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:thing .
+  
+  sub:thing a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix - the formal identifier of the Digital Object Type or a Methodology";
+    nt:hasPrefix "https://w3id.org/gff/rao/terms/";
+    nt:hasPrefixLabel "https://w3id.org/gff/rao/terms/" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFntPrMZqvg2kVhCNArNnEn37ddXGwZ/0r4C8CS4lDry7C7YkYgng9yb0UMZQUHiTVkR/5A4m/xjE+Vy+AnwcWUeB75SfGZjE5ylI6VeHjTHi9+2hh2PHYIWnkhU4WHl3COEnxSSa/VouvPzZ2BIWLH6fTrq7NNL3RF5hGegGG0QIDAQAB";
+    npx:hasSignature "bx57mzqEgOEbl4h6aUOzLpssH6ShJcVWfF9OgJo4HtB0onuk0DQfw0IqD5WovYAa0QhMZ+pdSIubQGAaqxUIRWhUOn0cW+QVgYXVt4aFIDad4+63Pp9ltK9pfNDebwLGmk3V/mscszBL4h+XzKV1ZjCWBs/WTYfJJ8vMGPwoWG8=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2024-01-02T20:31:31.022Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes ns1:RAvh7Hm1pFwRKhfCEX4LKpafODfzt1yRsYViOod6IrODE;
+    rdfs:label "Template: Introducing a new SIP related term (new ID)";
+    prov:wasDerivedFrom ns1:RAgWS0DiYQS2v1TEGo-AQpyeYRkk9pa1LPKf9PbnrcDkY;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RA2vCBXZf-icEcVRGhulJXugTGxpsV5yVr9yqCI1bQh4A,
+      ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM, ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+}
+

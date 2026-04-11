@@ -1,0 +1,168 @@
+@prefix this: <https://w3id.org/np/RAQhbrrzMjfrEk_9s2TurwW4eqKe_ntioqjOq1fI3_X5Q> .
+@prefix sub: <https://w3id.org/np/RAQhbrrzMjfrEk_9s2TurwW4eqKe_ntioqjOq1fI3_X5Q/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://data.europa.eu/r5r/applicableLegislation> rdfs:label "has the applicable legislation" .
+  
+  dct:accessRights rdfs:label "has the access rights" .
+  
+  dct:creator rdfs:label "has the creator" .
+  
+  dct:description rdfs:label "has the description" .
+  
+  dct:publisher rdfs:label "has the publisher" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  sub:accessRights a nt:ExternalUriPlaceholder;
+    rdfs:label "Rights Statement (IRI)" .
+  
+  sub:applicableLegislation a nt:ExternalUriPlaceholder;
+    rdfs:label "URI for legislation" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Describing dataset according to Health-DCAT-AP-NL";
+    nt:hasNanopubLabelPattern "${title}";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st05a,
+      sub:st05b, sub:st06, sub:st07, sub:st08, sub:st09;
+    nt:hasTag "Datasets" .
+  
+  sub:contactPoint a nt:LocalResource;
+    rdfs:label "a contact point" .
+  
+  sub:contactPointEmail a nt:LiteralPlaceholder;
+    rdfs:label "contact point email address" .
+  
+  sub:contactPointFormattedName a nt:LiteralPlaceholder;
+    rdfs:label "name of contact point" .
+  
+  sub:creator a nt:AgentPlaceholder;
+    rdfs:label "choose creator" .
+  
+  sub:dataset a nt:ExternalUriPlaceholder, nt:IntroducedResource;
+    rdfs:label "dataset URI" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description of dataset" .
+  
+  sub:keyword a nt:LiteralPlaceholder;
+    rdfs:label "keyword string" .
+  
+  sub:publisher a nt:ExternalUriPlaceholder;
+    rdfs:label "publisher URI" .
+  
+  sub:st00 rdf:object <https://www.w3.org/ns/dcat#Dataset>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:dataset .
+  
+  sub:st01 rdf:object sub:title;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:dataset .
+  
+  sub:st02 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:dataset .
+  
+  sub:st03 a nt:RepeatableStatement;
+    rdf:object sub:creator;
+    rdf:predicate dct:creator;
+    rdf:subject sub:dataset .
+  
+  sub:st04 rdf:object sub:publisher;
+    rdf:predicate dct:publisher;
+    rdf:subject sub:dataset .
+  
+  sub:st05 rdf:object sub:contactPoint;
+    rdf:predicate <https://www.w3.org/ns/dcat#contactPoint>;
+    rdf:subject sub:dataset .
+  
+  sub:st05a rdf:object sub:contactPointFormattedName;
+    rdf:predicate <https://www.w3.org/TR/vcard-rdf/#d4e891>;
+    rdf:subject sub:contactPoint .
+  
+  sub:st05b rdf:object sub:contactPointEmail;
+    rdf:predicate <https://www.w3.org/TR/vcard-rdf/#d4e183>;
+    rdf:subject sub:contactPoint .
+  
+  sub:st06 a nt:RepeatableStatement;
+    rdf:object sub:theme;
+    rdf:predicate <https://www.w3.org/ns/dcat#theme>;
+    rdf:subject sub:dataset .
+  
+  sub:st07 a nt:RepeatableStatement;
+    rdf:object sub:keyword;
+    rdf:predicate <https://www.w3.org/ns/dcat#keyword>;
+    rdf:subject sub:dataset .
+  
+  sub:st08 rdf:object sub:accessRights;
+    rdf:predicate dct:accessRights;
+    rdf:subject sub:dataset .
+  
+  sub:st09 a nt:RepeatableStatement;
+    rdf:object sub:applicableLegislation;
+    rdf:predicate <http://data.europa.eu/r5r/applicableLegislation>;
+    rdf:subject sub:dataset .
+  
+  sub:theme a nt:ExternalUriPlaceholder;
+    rdfs:label "theme URI" .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title of the dataset" .
+  
+  <https://www.w3.org/TR/vcard-rdf/#d4e183> rdfs:label "has the email" .
+  
+  <https://www.w3.org/TR/vcard-rdf/#d4e891> rdfs:label "has the name" .
+  
+  <https://www.w3.org/ns/dcat#Dataset> rdfs:label "dataset" .
+  
+  <https://www.w3.org/ns/dcat#contactPoint> rdfs:label "has the contact point" .
+  
+  <https://www.w3.org/ns/dcat#keyword> rdfs:label "has the keyword" .
+  
+  <https://www.w3.org/ns/dcat#theme> rdfs:label "has the theme" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-01-26T09:58:09.258Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAcbmCnH4Y11azW7zSuUsy4CedBVFqAR_3la32kmKjxts>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Describing dataset according to Health-DCAT-AP-NL";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "gYQ9bIcJDnNOKu4yg7zex4H3iHegF4HE+VBx8pdxwi0ocb9/d6QXTRftcn3XH+NbRn11lqoyTtRPfHr7BvKtSEW9zcm2kwKuCx5GcmZhVJXx/OS4TYfAWZ0WB6WEYJyTFVLFP6pOqnJUKYStOUXWEHVa0aaaCs7IeTFweBuK+yQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

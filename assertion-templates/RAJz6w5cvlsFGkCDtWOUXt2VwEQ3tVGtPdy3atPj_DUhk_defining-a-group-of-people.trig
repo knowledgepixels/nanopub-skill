@@ -1,0 +1,94 @@
+@prefix ns1: <http://purl.org/np/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix this: <http://purl.org/np/RAJz6w5cvlsFGkCDtWOUXt2VwEQ3tVGtPdy3atPj_DUhk> .
+@prefix sub: <http://purl.org/np/RAJz6w5cvlsFGkCDtWOUXt2VwEQ3tVGtPdy3atPj_DUhk#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description - attaches a human-readable description (right) to a formal identifier of a thing (left)" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublications defines a group to which people can be linked as members.";
+    rdfs:label "Defining a group of people";
+    nt:hasNanopubLabelPattern "Group: ${group}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st5;
+    nt:hasTag "Social" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "a textual description of the group" .
+  
+  sub:group a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "short ID of group - this is the identifier of the group";
+    nt:hasPrefix "https://w3id.org/kpxl/group/terms/";
+    nt:hasPrefixLabel "the group";
+    nt:hasRegex "[A-Za-z0-9\\-_]{3,20}" .
+  
+  sub:member a nt:ExternalUriPlaceholder;
+    rdfs:label "the ORCID identifier of the member";
+    nt:hasRegex "https://orcid.org/[0-9]{4}-[0-9]{4}-[0-9]{4}-[0-9]{3}[0-9X]" .
+  
+  sub:name a nt:LiteralPlaceholder .
+  
+  sub:st1 rdf:object foaf:Group;
+    rdf:predicate rdf:type;
+    rdf:subject sub:group .
+  
+  sub:st2 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:group .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:group .
+  
+  sub:st5 a nt:RepeatableStatement;
+    rdf:object sub:member;
+    rdf:predicate foaf:member;
+    rdf:subject sub:group .
+  
+  rdf:type rdfs:label "is a - links a thing (left) to a class it belongs to (right)" .
+  
+  rdfs:label rdfs:label "has the name - attaches a human-readable name (right) to a formal identifier of a thing (left)" .
+  
+  foaf:Group rdfs:label "group" .
+  
+  foaf:member rdfs:label "has as member" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "EmuySCtziRp4lDg/Wl659wAuBkGIqFETHYCKsPhJfvBExFh5FzEmljXZBaYtXO+rGwLBc6AZSS8CXAFPrzvCPUj44Zc4koe1adjLEA4tBHSDvuayLHgtgWKlFotdmGevqu7WIpEOLrFJeFFucWBrbQ8UiibEmhhhY/PTweBziNU=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-16T09:33:17.501Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes ns1:RARntomoGYHBSqSc-hT37LT--cEE_WyittPQwF-DAtiqs;
+    rdfs:label "Template: Defining a group of people";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate ns1:RANjqEfLnGSzLuq0heRSXN0psYWW0oX4v3W8w7osb3xfs .
+}
+

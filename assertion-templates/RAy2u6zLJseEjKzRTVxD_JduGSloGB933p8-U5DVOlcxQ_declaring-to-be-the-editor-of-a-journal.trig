@@ -1,0 +1,58 @@
+@prefix this: <http://purl.org/np/RAy2u6zLJseEjKzRTVxD_JduGSloGB933p8-U5DVOlcxQ> .
+@prefix sub: <http://purl.org/np/RAy2u6zLJseEjKzRTVxD_JduGSloGB933p8-U5DVOlcxQ#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication declares that its creator is on the editorial board for a given journal.";
+    rdfs:label "Declaring to be the editor of a journal";
+    nt:hasNanopubLabelPattern "Editor of: ${journal}";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Journals" .
+  
+  sub:journal a nt:UriPlaceholder;
+    rdfs:label "the identifier (URL/URI) of the journal" .
+  
+  sub:st1 rdf:object sub:journal;
+    rdf:predicate <http://purl.org/ontology/bibo/editor>;
+    rdf:subject nt:CREATOR .
+  
+  <http://purl.org/ontology/bibo/editor> rdfs:label "am an editor of - connecting a person (left) to a journal (right) for which that person is on the editorial board" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCjDGQCS1S+SRnERDuYDXOugdYUP0efEquHJEEHAbU/uLzBVlga89zqrNPCS7fBE6lArBUWEmT8eLKdMapyqvAzI1J3jUWTMhDJF+XFBkUiuiFfNSc4vJJcmi0yujtnuzXsRIG202jyaP4f5ULoskFwaZOSBZJfiE0dsB3D7DTIAQIDAQAB";
+    npx:hasSignature "kYIxtKscX9To12uPpPSzQfcdkgzqgYuK8+EWv+qjEJFemXIaMYbcR01nMIklqp8jsQBJXOj+LyVdTGxarQY4L7JzMuUykpviLBxbP4jsuCsRfJ0nw+CUxzhQAi4k4zmxcl9Bsj6Ln+xCcipWlhc8RqfZPP9y/XOt99LMLbGq3/E=";
+    npx:hasSignatureTarget this: .
+  
+  this: dct:created "2023-08-16T09:19:55.580Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <http://purl.org/np/RAXK9oGBqdEnvhaC0kIIzT81VPpLORQ773eL-jM5Q6MSM>;
+    rdfs:label "Template: Declaring to be the editor of a journal";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RANjqEfLnGSzLuq0heRSXN0psYWW0oX4v3W8w7osb3xfs> .
+}
+

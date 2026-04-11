@@ -1,0 +1,97 @@
+@prefix this: <https://w3id.org/np/RA_PEcdLWMpCY7QT3O5bn5aNvIhemcboW_Ggb4vJ6SM6k> .
+@prefix sub: <https://w3id.org/np/RA_PEcdLWMpCY7QT3O5bn5aNvIhemcboW_Ggb4vJ6SM6k#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-core-np-info a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the core info - creator, author, label, etc. - of a given nanopublication.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the core info of a nanopublication";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix oa: <http://www.w3.org/ns/oa#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+prefix pav: <http://purl.org/pav/>
+prefix bibo: <http://purl.org/ontology/bibo/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+select distinct ?np (coalesce(?signer, min(?declaredCreator)) as ?creator) (coalesce(?firstAuthor, min(?author), min(?creator)) as ?mainAuthor) (if(count(distinct ?author)>0,count(distinct ?author),count(distinct ?creator)) as ?authorCount) ?introducedThing ?label ?date where {
+  graph npa:graph {
+    bind(replace(str(?_np_iri), \"^.*[^a-zA-Z0-9-_](RA[a-zA-Z0-9-_]{43})$\", \"$1\") as ?ac)
+    ?np npa:artifactCode ?ac .
+    optional {<x:> <x:> ?_np_iri}  # for grlc to pick up the placeholder
+    ?np npa:hasHeadGraph ?h .
+    ?np dct:created ?date .
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    ?np rdfs:label ?label .
+    ?np np:hasPublicationInfo ?i .
+    ?np dct:creator ?declaredCreator .
+    optional { ?np npx:signedBy ?signer . }
+    optional { ?np npx:introduces ?introducedThing . }
+  }
+  optional {
+    graph ?i { ?np pav:authoredBy ?author . }
+  }
+  optional {
+    graph ?i {
+      ?np bibo:authorList ?authorList .
+      ?authorList ?hasElement ?author .
+      filter(strstarts(str(?hasElement), str(rdf:_)))
+    }
+  }
+  optional {
+    graph ?i {
+      ?np bibo:authorList ?authorList .
+      ?authorList rdf:_1 ?firstAuthor .
+    }
+  }
+}
+group by ?np ?signer ?introducedThing ?label ?date ?firstAuthor""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "aEoC8cpmICaQd+zdFbYd9afz+COr/0hlxn/t74ge5KEvSLa6IjqcjNlmOd+6faeZ5sCHl6qdJZLN3dgcbG/+f1GhhJLo8qIZL0vd6VniMZij9X4ijLJdbAa1QS68SgRnaC18vCaHCwIifaAdzjUTeNuWUnIMs4s+NLvvubmhyRI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  this: dct:created "2024-07-01T07:47:13.780Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-core-np-info;
+    npx:supersedes <https://w3id.org/np/RAXBQyoCy6jCpGWoPA3m9Ktyo_eFiu2G5HhZA10OcLy4E>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+}
+
