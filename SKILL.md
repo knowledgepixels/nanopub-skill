@@ -413,7 +413,7 @@ Do **not** publish automatically. After signing and testing, **stop and present 
 
 ```bash
 # Test server
-java -jar $JAR publish --server https://test.registry.knowledgepixels.com/ tmp/<name>-signed.trig
+java -jar $JAR publish -u https://test.registry.knowledgepixels.com/ tmp/<name>-signed.trig
 
 # Live network
 java -jar $JAR publish tmp/<name>-signed.trig
