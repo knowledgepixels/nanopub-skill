@@ -1,0 +1,58 @@
+@prefix this: <https://w3id.org/np/RAaPiSFQVQ2k0pXSzXaNYjWBVh1zPXwHGfYmX-rZOuLrQ> .
+@prefix sub: <https://w3id.org/np/RAaPiSFQVQ2k0pXSzXaNYjWBVh1zPXwHGfYmX-rZOuLrQ/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:popular-templates a <https://w3id.org/kpxl/gen/terms/ItemListView>, <https://w3id.org/kpxl/gen/terms/ResourceView>;
+    dct:isVersionOf <https://w3id.org/np/RAYMZEdmvjIS5QGFASa8L5hygapUlvK3feZBpG6quMYqc/popular-templates-kind>;
+    dct:title "⭐ Popular Templates";
+    rdfs:label "Popular Templates View";
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "5.5.popular-templates";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAz-5JLrXHfS9LInO8L8Mw64PSGJwojVemL-V3pqqIisc/get-most-used-templates-last30d>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "template" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-04-13T16:19:27.684+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:popular-templates;
+    npx:introduces <https://w3id.org/np/RAYMZEdmvjIS5QGFASa8L5hygapUlvK3feZBpG6quMYqc/popular-templates-kind>;
+    npx:supersedes <https://w3id.org/np/RAYMZEdmvjIS5QGFASa8L5hygapUlvK3feZBpG6quMYqc>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ibWQumXbsGAkpNW/MwUOr+Xkukoyn4INvD/8xhNhvpRq6vX+gbFuOXErD2+cZT/BmmLIWCw2K1eM0vlWDBYyAXCWu6B0xC/57v/CfQlrHg4x5+L8udiHzwv4zq7EShU/bLGHaSrfMR84TjJmX0qkfg5PZr0Bky/2cmkkqrFxzyI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAz-5JLrXHfS9LInO8L8Mw64PSGJwojVemL-V3pqqIisc/get-most-used-templates-last30d>
+    nt:hasLabelFromApi "Get the most used templates of the last 30 days - This query returns the most used assertion templates of the last 30 days, con..." .
+}
+

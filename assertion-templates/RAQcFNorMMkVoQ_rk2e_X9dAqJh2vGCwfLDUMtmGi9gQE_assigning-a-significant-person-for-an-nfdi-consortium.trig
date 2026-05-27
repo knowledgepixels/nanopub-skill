@@ -1,0 +1,75 @@
+@prefix this: <https://w3id.org/np/RAQcFNorMMkVoQ_rk2e_X9dAqJh2vGCwfLDUMtmGi9gQE> .
+@prefix sub: <https://w3id.org/np/RAQcFNorMMkVoQ_rk2e_X9dAqJh2vGCwfLDUMtmGi9gQE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  <http://www.wikidata.org/entity/P3342> rdfs:label "has as significant person" .
+  
+  <http://www.wikidata.org/entity/Q98270496> rdfs:label "NFDI consortium" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Assigning a significant person for an NFDI consortium";
+    nt:hasNanopubLabelPattern "${entity} has significant person ${person}";
+    nt:hasStatement sub:st0, sub:st1;
+    nt:hasTargetNanopubType <http://www.wikidata.org/entity/P3342> .
+  
+  sub:entity a nt:GuidedChoicePlaceholder;
+    rdfs:label "select entity (e.g. NFDI consortium)";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:person a nt:AgentPlaceholder;
+    rdfs:label "choose person";
+    nt:hasDefaultValue nt:CREATOR .
+  
+  sub:st0 rdf:object <http://www.wikidata.org/entity/Q98270496>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:entity .
+  
+  sub:st1 rdf:object sub:person;
+    rdf:predicate <http://www.wikidata.org/entity/P3342>;
+    rdf:subject sub:entity .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-05-19T08:17:57.970Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Assigning a significant person for an NFDI consortium";
+    prov:wasDerivedFrom <https://w3id.org/np/RAazPWKq4eyq8ykGoaWsVO3GckSm-Bqct_-FMmoCzYsgA>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAQIZQdqa_kqYfFSnboJOHst-BTcR7_PPG_ywE5EMUEMI> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "5wVgKngs422pIM26vUEHR7ypiirM/sao9oKhxphZGs3YGAO8sDS3bRQJcP0ToQK+M/zNWAhleOXNcmKkKsdkYB4LaltN55+DOxgOkPogJTF6/x5YZ4Pi2xO/SB0QcSyNBa69lwRQ1xqKVLc6TyrkHsTETgELZ3hMBO86sJ+1nDM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

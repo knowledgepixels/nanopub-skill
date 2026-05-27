@@ -1,0 +1,64 @@
+@prefix this: <https://w3id.org/np/RA8rPcBcreaZF01eA6Xeh_wwqQcM-Nz7xQyKbLhRHkCXA> .
+@prefix sub: <https://w3id.org/np/RA8rPcBcreaZF01eA6Xeh_wwqQcM-Nz7xQyKbLhRHkCXA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:SnamakeReportRegistrations a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Will list all Snakemake report registrations created by this template: https://w3id.org/np/RAsmNjwvzjYfc8Hson0gyjSL6Oov3nZZEfRy7TOFtO5I8 - will need update if the template updates.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Snakemake Report Registrations";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """PREFIX np:  <http://www.nanopub.org/nschema#>
+PREFIX npa: <http://purl.org/nanopub/admin/>
+PREFIX npx: <http://purl.org/nanopub/x/>
+PREFIX dct: <http://purl.org/dc/terms/>
+
+SELECT DISTINCT ?np ?date
+WHERE {
+  # any triple (any graph) where the template appears as object
+  ?np ?p <https://w3id.org/np/RAsmNjwvzjYfc8Hson0gyjSL6Oov3nZZEfRy7TOFtO5I8> .
+  # get its creation date (admin graph)
+  GRAPH npa:graph { ?np dct:created ?date }
+}
+LIMIT 100""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2408-7588 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-2408-7588 foaf:name "Christian Meesters" .
+  
+  this: dct:created "2026-05-20T10:03:58.076Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0003-2408-7588;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:SnamakeReportRegistrations;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQC+DVJTSCzdJUJMzlwRfb2Qm2NZpuZ932RpVliWxMAhmZ6ZkeeibmJlW/Z0q51YkFArJIWbJ0f7rLQWM5epuZV4I5cjMqepOWGey6LrPolMs8lI9dJf9zW9lJsneV+py3U8WsrB6mg//pkEeXnVDd+WscADyXJ5EeLwoZjCkPn8/QIDAQAB";
+    npx:hasSignature "EkRmNSFMnn2MPbA2ddFTfKuz3zZKdtaR5NBTplNOFHm/vjBCFmXEfl2Djq2IvD5Suc8g19Xt8KgH1uoXVP93ZQKql5iK+F6bTU2JzCOeX/MulHLgJP5EU4Oz7YLpGvdWE5vnDoOl8MMQ9aifpPFmeJIZAC1N5oOJ/Ogj0IED1/o=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2408-7588 .
+}
+

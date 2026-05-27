@@ -1,0 +1,138 @@
+@prefix this: <https://w3id.org/np/RApmrqOEr4f5bJC2vayrTnzhwnuEfAU_I4Pdg8K5JxeBw> .
+@prefix sub: <https://w3id.org/np/RApmrqOEr4f5bJC2vayrTnzhwnuEfAU_I4Pdg8K5JxeBw/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:subject rdfs:label "has subject" .
+  
+  <http://purl.org/spar/cito/isSupportedBy> rdfs:label "is supported by" .
+  
+  <http://schema.org/endDate> rdfs:label "was completed on" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Describing a synthesis across multiple replication outcomes with practical recommendations";
+    rdfs:label "Science Live Research Synthesis";
+    nt:hasStatement sub:st1, sub:st10, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6, sub:st7,
+      sub:st9;
+    nt:hasTag "FORRT" .
+  
+  sub:conclusion a nt:LongLiteralPlaceholder;
+    rdfs:label "Conclusion of the synthesis" .
+  
+  sub:conditions a nt:LongLiteralPlaceholder;
+    rdfs:label "Conditions of the synthesis" .
+  
+  sub:date a nt:LiteralPlaceholder;
+    nt:hasDatatype xsd:date .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "label" .
+  
+  sub:limitations a nt:LongLiteralPlaceholder;
+    rdfs:label "Limitations of the synthesis" .
+  
+  sub:recommendation a nt:LongLiteralPlaceholder;
+    rdfs:label "Recommendations" .
+  
+  sub:source a nt:UriPlaceholder;
+    rdfs:label "URI of the source supporting the synthesis" .
+  
+  sub:st1 rdf:object <https://w3id.org/sciencelive/o/terms/Research-Synthesis>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:synthesis .
+  
+  sub:st10 a nt:RepeatableStatement;
+    rdf:object sub:topic;
+    rdf:predicate dct:subject;
+    rdf:subject sub:synthesis .
+  
+  sub:st2 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:synthesis .
+  
+  sub:st3 rdf:object sub:conclusion;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasSynthesisDescription>;
+    rdf:subject sub:synthesis .
+  
+  sub:st4 rdf:object sub:recommendation;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasRecommendationDescription>;
+    rdf:subject sub:synthesis .
+  
+  sub:st5 rdf:object sub:conditions;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasConditionsDescription>;
+    rdf:subject sub:synthesis .
+  
+  sub:st6 rdf:object sub:limitations;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/hasLimitationsDescription>;
+    rdf:subject sub:synthesis .
+  
+  sub:st7 a nt:RepeatableStatement;
+    rdf:object sub:source;
+    rdf:predicate <http://purl.org/spar/cito/isSupportedBy>;
+    rdf:subject sub:synthesis .
+  
+  sub:st9 rdf:object sub:date;
+    rdf:predicate <http://schema.org/endDate>;
+    rdf:subject sub:synthesis .
+  
+  sub:synthesis a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short URI suffix for outcome ID" .
+  
+  sub:topic a nt:GuidedChoicePlaceholder;
+    rdfs:label "topic";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasConditionsDescription> rdfs:label "has the conditions" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasLimitationsDescription> rdfs:label "has the limitations" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasRecommendationDescription> rdfs:label "has the recommendation" .
+  
+  <https://w3id.org/sciencelive/o/terms/hasSynthesisDescription> rdfs:label "has the synthesis conclusion" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1784-2920 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1784-2920 foaf:name "Anne Fouilloux" .
+  
+  this: dct:created "2026-04-18T18:46:52.303Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1784-2920;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA-ahnCOKnyLdqxUKbmRxFrXXc3PQMoa-_ce-W-J5-GLY>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Science Live Research Synthesis";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAQIZQdqa_kqYfFSnboJOHst-BTcR7_PPG_ywE5EMUEMI> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDWv2pJnmDsBOq8OlT1aSvYXSuWT34WOp4FYqEzdnn2F0kqzcFevBqWGZDxJWC0lqCrDEuNfp2QFyPe/+nES9dlHGYIhqPi68fwK6ZiNUotRFxXou+rjFznVvUxtCL8Ede79EBHwWN61QtwSIcU12bLoZsNPFlqQASQ93BJuKlihwIDAQAB";
+    npx:hasSignature "xz8MhvhgWSOuNyReRLXtMxpF7lED0uQPStDn5XAdmd+jfUj6DKBJsJgcN4C9BL4QylDDkzVD/8W6AHmXimCuGui90+KEVbDiya0qLVG061jemXdHiV7nN3yjFJxukpRFN1BaiegbDaDYV4NSIUAASukxNfGTY/S7WmoWgpEtTcw=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1784-2920 .
+}
+

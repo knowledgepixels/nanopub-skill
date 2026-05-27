@@ -1,0 +1,81 @@
+@prefix this: <https://w3id.org/np/RApT0O5Trs4SmBIKkhx7WsTktpeO3rNnD-yQSrRx0dJgk> .
+@prefix sub: <https://w3id.org/np/RApT0O5Trs4SmBIKkhx7WsTktpeO3rNnD-yQSrRx0dJgk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix kgrlc: <https://w3id.org/kpxl/grlc/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-nanopubs-by-user a kgrlc:grlc-query;
+    dct:description "Returns the latest nanopublications signed by or created by a given user (signed via npx:signedBy, or created via dct:creator if no npx:signedBy is present).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get latest nanopublications by user";
+    kgrlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    kgrlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+
+select ?np ?date where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    ?np dct:created ?date .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+    filter not exists { ?np npx:hasNanopubType npx:retracts . }
+  }
+  {
+    graph npa:graph {
+      ?np npx:signedBy ?_userid_iri .
+    }
+  } union {
+    filter not exists {
+      graph npa:graph { ?np npx:signedBy ?anyuser . }
+    }
+    graph npa:graph {
+      ?np dct:creator ?_userid_iri .
+    }
+  }
+}
+order by desc(?date)
+limit 100""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-04-13T10:45:00Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-nanopubs-by-user;
+    npx:supersedes <https://w3id.org/np/RAKzeqTfQ6tZ3ZotlmgJJsXtEkSPaIpsfKJAvjWG-LRlw>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "PjRy/bicdLFIbGAQ4m740Tz8zOXbd1OL5ZazBQdocm37ABV7TDObcOnPZEqzMKX+YFieIXz3ejREH33AkQcTiECl9PHoTpEBeyNQfh3VF82/NFvowACqV4fIFMovcPa4LpY02xC2RuKBkd2WJmxBYdAAFrx2GZmDFdwjhodfti4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

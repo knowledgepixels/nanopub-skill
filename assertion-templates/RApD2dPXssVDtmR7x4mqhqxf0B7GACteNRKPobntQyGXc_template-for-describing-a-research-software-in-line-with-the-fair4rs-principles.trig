@@ -1,0 +1,507 @@
+@prefix this: <https://w3id.org/np/RApD2dPXssVDtmR7x4mqhqxf0B7GACteNRKPobntQyGXc> .
+@prefix sub: <https://w3id.org/np/RApD2dPXssVDtmR7x4mqhqxf0B7GACteNRKPobntQyGXc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C69141> rdfs:label "is maintained by" .
+  
+  <http://purl.org/dc/dcam/domainIncludes> rdfs:label "has domain" .
+  
+  <http://purl.org/dc/dcmitype/Software> rdfs:label "software" .
+  
+  dct:created rdfs:label "was created on" .
+  
+  dct:creator rdfs:label "was developed by" .
+  
+  dct:dateAccepted rdfs:label "was published on" .
+  
+  dct:dateSubmitted rdfs:label "was submitted for publication on" .
+  
+  dct:description rdfs:label "has the description" .
+  
+  dct:hasVersion rdfs:label "has version" .
+  
+  dct:isReferencedBy rdfs:label "is referenced by" .
+  
+  dct:license rdfs:label "has license" .
+  
+  dct:publisher rdfs:label "is published by" .
+  
+  dct:references rdfs:label "has reference" .
+  
+  dct:rightsHolder rdfs:label "is owned by" .
+  
+  dct:subject rdfs:label "has keywords" .
+  
+  dct:title rdfs:label "has the title" .
+  
+  dct:type rdfs:label "has software category" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  <http://www.w3.org/ns/sosa/isHostedBy> rdfs:label "is hosted by" .
+  
+  <https://w3id.org/gdmt/IsVersionOf> rdfs:label "is a version of" .
+  
+  <https://w3id.org/np/RA2v1C5z6oymMYKLs04ya7jUTNHcGBYA3j0IGZji0-j2E> rdfs:label "has programming language" .
+  
+  <https://w3id.org/np/RA581iMeKq1VQSoA6PXuV_EX0ihD1jRBd5w8xjEHNNmuw> rdfs:label "has dependency" .
+  
+  <https://w3id.org/np/RA9bcYDArjiJ0bfCz5Cn-O9nmtmQQTrM1sNbraaVNbbVQ> rdfs:label "has TRL level" .
+  
+  <https://w3id.org/np/RA9u9LKcl5Q7xkyIUjr7GvYFHq8mmxD-ObkcsOegoMP8w> rdfs:label "has as funding source" .
+  
+  <https://w3id.org/np/RAPkuZHhrguZ9q5bhgnE98o6fzRcUN5It2jEU_1kKjwfA> rdfs:label "has sustainability plan" .
+  
+  <https://w3id.org/np/RARbcsRpPnsMgfMJsG6Big1XfHS6fqIrFNpI2w7qviLeU> rdfs:label "has container reference" .
+  
+  <https://w3id.org/np/RAS-6k9lDkuoeGVMNDYKt9m-Ap6vhlfJIvBGMwxdPI6oo> rdfs:label "has deployment" .
+  
+  <https://w3id.org/np/RAVC0B6xfdG4uo97jWTWlHiTx8tm7RG53qnSlhnGCAE4s> rdfs:label "has quality assurance (QA)" .
+  
+  <https://w3id.org/np/RAW5PN8fkG1e7bD5uLkywdjsRG9j_hQUS_5dAZaRzS3cw> rdfs:label "has authentication scheme" .
+  
+  <https://w3id.org/np/RA_KFwzv06xqCE16OvGjmlQpR-ExXVoT1xNxlPXjZQ8p0> rdfs:label "has source code repository" .
+  
+  <https://w3id.org/np/RAaK4RN3kg43F7inYx2f7tKO8g0RQNR7oaCgIQl01yVXk> rdfs:label "has component structure" .
+  
+  <https://w3id.org/np/RAcY7RaD-1Q7aDCyrnZj-8S1TQq5J2tVf3JWc_IpdMPMU> rdfs:label "has component or software input" .
+  
+  <https://w3id.org/np/RAeyK4iUuyazOTMtP-bJfZpmZXlSPZL6L6qci_PKXipDc> rdfs:label "conforms to standard" .
+  
+  <https://w3id.org/np/RAoRuBsgozgmES9acyIXVFPz_KylqAF79R_GecmuzVDmM> rdfs:label "has documentation" .
+  
+  sub:TRLmaturity a nt:RestrictedChoicePlaceholder;
+    rdfs:label "TRL of the software";
+    nt:possibleValuesFrom <https://w3id.org/np/RABjV-iSE0O2IvhsXE_XEki7ymPrkUUckBlKdhmAv_vUw> .
+  
+  sub:TRLmaturitymanual a nt:ValuePlaceholder;
+    rdfs:label "URI or manual input of software TRL" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "This template can be used to produce a machine actionable metadata record to report the metadata of a scientific software or tool in accordance with the FAIR4RS principles.";
+    rdfs:label "Template for describing a Research Software in line with the FAIR4RS Principles";
+    nt:hasNanopubLabelPattern "Software: ${title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st03a, sub:st04, sub:st05, sub:st05b,
+      sub:st06, sub:st07, sub:st08, sub:st09, sub:st10, sub:st11, sub:st12, sub:st13, sub:st14,
+      sub:st15, sub:st16, sub:st16a, sub:st17, sub:st18, sub:st19a, sub:st20a, sub:st21,
+      sub:st22a, sub:st23, sub:st27a, sub:st28a, sub:st29, sub:st30, sub:st31, sub:st32,
+      sub:st33, sub:st34, sub:st35, sub:st36, sub:st37, sub:st38, sub:st39;
+    nt:hasTag "Research Software";
+    nt:hasTargetNanopubType <http://purl.org/dc/dcmitype/Software> .
+  
+  sub:authenticationscheme a nt:ValuePlaceholder;
+    rdfs:label "URI or manual input of authentication scheme" .
+  
+  sub:changelog a nt:UriPlaceholder;
+    rdfs:label "URI of changelog" .
+  
+  sub:componentstructure a nt:RestrictedChoicePlaceholder;
+    rdfs:label "component structure";
+    nt:possibleValuesFrom <https://w3id.org/np/RA37Jxlq4hIeFwqw6BHy0sSO-5CGoL8N8_Jo0voV6nM8c> .
+  
+  sub:componentstructuremanual a nt:ValuePlaceholder;
+    rdfs:label "URI or manual input of component structure" .
+  
+  sub:componenttype a nt:RestrictedChoicePlaceholder;
+    rdfs:label "component types of the software";
+    nt:possibleValuesFrom <https://w3id.org/np/RAwYNmDdzldQtsd1F4VLx_7Swn8btm6TjQ3rY1J8INEOU> .
+  
+  sub:componenttypemanual a nt:ValuePlaceholder;
+    rdfs:label "component types of the software" .
+  
+  sub:datecreated a nt:LiteralPlaceholder;
+    rdfs:label "date the software was created" .
+  
+  sub:datepublished a nt:LiteralPlaceholder;
+    rdfs:label "date the software was published" .
+  
+  sub:datesubmitted a nt:LiteralPlaceholder;
+    rdfs:label "date the software was submitted for publication" .
+  
+  sub:dependencies a nt:ValuePlaceholder;
+    rdfs:label "URI or manual input of software dependency" .
+  
+  sub:deploymenttype a nt:ValuePlaceholder;
+    rdfs:label "URI or manual input of deployment type" .
+  
+  sub:description a nt:LiteralPlaceholder;
+    rdfs:label "description of the software" .
+  
+  sub:developer a nt:ValuePlaceholder;
+    rdfs:label "URI of the developer(s) of the software (e.g., ORCID)" .
+  
+  sub:documentation a nt:ValuePlaceholder;
+    rdfs:label "URI or manual of software documentation" .
+  
+  sub:domain a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the software domain";
+    nt:possibleValuesFrom <https://w3id.org/np/RAXKaV_s5IwqstCdJLoycXxR6ULtvoQRr1x2YamV1y5TM> .
+  
+  sub:domainmanual a nt:ValuePlaceholder;
+    rdfs:label "software domain URI or manual input" .
+  
+  sub:externalservicescalled a nt:ValuePlaceholder;
+    rdfs:label "URI or manual input of external services called" .
+  
+  sub:fundingsource a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the software's funding source";
+    nt:possibleValuesFrom <https://w3id.org/np/RAtWyOWnoqPievqzaNlWHIkfsbm09eIN7Q2auQKX2V3Mw> .
+  
+  sub:fundingsourcemanual a nt:ValuePlaceholder;
+    rdfs:label "URI or manual input of the software's funding source" .
+  
+  sub:hostingplatform a nt:ValuePlaceholder;
+    rdfs:label "URI of the platform hosting the software" .
+  
+  sub:imagecontainer a nt:UriPlaceholder;
+    rdfs:label "URI of the image container / docker" .
+  
+  sub:inputs a nt:LiteralPlaceholder;
+    rdfs:label "software and / or component input(s)" .
+  
+  sub:intendeduse a nt:ValuePlaceholder;
+    rdfs:label "the intended use of the software" .
+  
+  sub:isreferencedby a nt:UriPlaceholder;
+    rdfs:label "DOI or URI of resource(s) referencing the software" .
+  
+  sub:isversionof a nt:ExternalUriPlaceholder;
+    rdfs:label "the URI of the previous software version" .
+  
+  sub:keywords a nt:ValuePlaceholder;
+    rdfs:label "the URI/name of related keywords" .
+  
+  sub:license a nt:ExternalUriPlaceholder;
+    rdfs:label "the license of the software" .
+  
+  sub:maintainer a nt:ValuePlaceholder;
+    rdfs:label "URI of the maintainer(s) of the software (e.g., ORCID)" .
+  
+  sub:outputs a nt:LiteralPlaceholder;
+    rdfs:label "software and / or component output(s)" .
+  
+  sub:owner a nt:ValuePlaceholder;
+    rdfs:label "URI of the owner(s) of the software (e.g., ORCID)" .
+  
+  sub:programminglanguage a nt:ValuePlaceholder;
+    rdfs:label "the programming language of the software" .
+  
+  sub:publisher a nt:ValuePlaceholder;
+    rdfs:label "URI/name of the publisher of the software (e.g., ORCID)" .
+  
+  sub:qualityassurance a nt:ValuePlaceholder;
+    rdfs:label "URI or manual input of software QA" .
+  
+  sub:references a nt:ExternalUriPlaceholder;
+    rdfs:label "DOI or URI of related reference(s)" .
+  
+  sub:reportedconformancestandards a nt:ValuePlaceholder;
+    rdfs:label "URI or manual input of the standard(s) the software conforms to" .
+  
+  sub:software a nt:UriPlaceholder;
+    rdfs:label "URI of the software" .
+  
+  sub:sourcecoderepository a nt:ValuePlaceholder;
+    rdfs:label "URI of the source code repository" .
+  
+  sub:st01 a rdf:Statement;
+    rdf:object <http://purl.org/dc/dcmitype/Software>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:software .
+  
+  sub:st02 a rdf:Statement;
+    rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:software .
+  
+  sub:st03 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:software .
+  
+  sub:st03a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:documentation;
+    rdf:predicate <https://w3id.org/np/RAoRuBsgozgmES9acyIXVFPz_KylqAF79R_GecmuzVDmM>;
+    rdf:subject sub:software .
+  
+  sub:st04 a rdf:Statement;
+    rdf:object sub:publisher;
+    rdf:predicate dct:publisher;
+    rdf:subject sub:software .
+  
+  sub:st05 a rdf:Statement;
+    rdf:object sub:hostingplatform;
+    rdf:predicate <http://www.w3.org/ns/sosa/isHostedBy>;
+    rdf:subject sub:software .
+  
+  sub:st05a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:trustedrepositoryindicator;
+    rdf:predicate <https://w3id.org/np/RAufoNFyOGo5QMPWC1_j60qknrHVcfbovxG72-Ld18l2k>;
+    rdf:subject sub:software .
+  
+  sub:st05b a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:trustedrepositoryindicatormanual;
+    rdf:predicate <https://w3id.org/np/RAufoNFyOGo5QMPWC1_j60qknrHVcfbovxG72-Ld18l2k>;
+    rdf:subject sub:software .
+  
+  sub:st06 a nt:OptionalStatement;
+    rdf:object sub:datecreated;
+    rdf:predicate dct:created;
+    rdf:subject sub:software .
+  
+  sub:st07 a nt:OptionalStatement;
+    rdf:object sub:datesubmitted;
+    rdf:predicate dct:dateSubmitted;
+    rdf:subject sub:software .
+  
+  sub:st08 a nt:OptionalStatement;
+    rdf:object sub:datepublished;
+    rdf:predicate dct:dateAccepted;
+    rdf:subject sub:software .
+  
+  sub:st09 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:owner;
+    rdf:predicate dct:rightsHolder;
+    rdf:subject sub:software .
+  
+  sub:st10 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:developer;
+    rdf:predicate dct:creator;
+    rdf:subject sub:software .
+  
+  sub:st11 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:maintainer;
+    rdf:predicate <http://ncicb.nci.nih.gov/xml/owl/EVS/Thesaurus.owl#C69141>;
+    rdf:subject sub:software .
+  
+  sub:st12 a rdf:Statement;
+    rdf:object sub:license;
+    rdf:predicate dct:license;
+    rdf:subject sub:software .
+  
+  sub:st13 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:programminglanguage;
+    rdf:predicate <https://w3id.org/np/RA2v1C5z6oymMYKLs04ya7jUTNHcGBYA3j0IGZji0-j2E>;
+    rdf:subject sub:software .
+  
+  sub:st14 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:type;
+    rdf:predicate dct:type;
+    rdf:subject sub:software .
+  
+  sub:st15 a nt:OptionalStatement;
+    rdf:object sub:version;
+    rdf:predicate dct:hasVersion;
+    rdf:subject sub:software .
+  
+  sub:st16 a nt:OptionalStatement;
+    rdf:object sub:isversionof;
+    rdf:predicate <https://w3id.org/gdmt/IsVersionOf>;
+    rdf:subject sub:software .
+  
+  sub:st16a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:changelog;
+    rdf:predicate <https://w3id.org/np/RAxT4mvjIcKMwABwmxFj76NAiEWwr-nUeXu6ZkoFm0GEw>;
+    rdf:subject sub:software .
+  
+  sub:st17 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:sourcecoderepository;
+    rdf:predicate <https://w3id.org/np/RA_KFwzv06xqCE16OvGjmlQpR-ExXVoT1xNxlPXjZQ8p0>;
+    rdf:subject sub:software .
+  
+  sub:st18 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:keywords;
+    rdf:predicate dct:subject;
+    rdf:subject sub:software .
+  
+  sub:st19 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:fundingsource;
+    rdf:predicate <https://w3id.org/np/RA9u9LKcl5Q7xkyIUjr7GvYFHq8mmxD-ObkcsOegoMP8w>;
+    rdf:subject sub:software .
+  
+  sub:st19a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:fundingsourcemanual;
+    rdf:predicate <https://w3id.org/np/RA9u9LKcl5Q7xkyIUjr7GvYFHq8mmxD-ObkcsOegoMP8w>;
+    rdf:subject sub:software .
+  
+  sub:st20 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:domain;
+    rdf:predicate <http://purl.org/dc/dcam/domainIncludes>;
+    rdf:subject sub:software .
+  
+  sub:st20a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:domainmanual;
+    rdf:predicate <http://purl.org/dc/dcam/domainIncludes>;
+    rdf:subject sub:software .
+  
+  sub:st21 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:intendeduse;
+    rdf:predicate <https://w3id.org/np/RAzCVLle4lKo6vUqK2EAnHhgz1lpM2natsqKMZQI9ku5s>;
+    rdf:subject sub:software .
+  
+  sub:st22 a nt:OptionalStatement;
+    rdf:object sub:TRLmaturity;
+    rdf:predicate <https://w3id.org/np/RA9bcYDArjiJ0bfCz5Cn-O9nmtmQQTrM1sNbraaVNbbVQ>;
+    rdf:subject sub:software .
+  
+  sub:st22a a nt:OptionalStatement;
+    rdf:object sub:TRLmaturitymanual;
+    rdf:predicate <https://w3id.org/np/RA9bcYDArjiJ0bfCz5Cn-O9nmtmQQTrM1sNbraaVNbbVQ>;
+    rdf:subject sub:software .
+  
+  sub:st23 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:sustainabilityplan;
+    rdf:predicate <https://w3id.org/np/RAPkuZHhrguZ9q5bhgnE98o6fzRcUN5It2jEU_1kKjwfA>;
+    rdf:subject sub:software .
+  
+  sub:st27 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:componentstructure;
+    rdf:predicate <https://w3id.org/np/RAaK4RN3kg43F7inYx2f7tKO8g0RQNR7oaCgIQl01yVXk>;
+    rdf:subject sub:software .
+  
+  sub:st27a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:componentstructuremanual;
+    rdf:predicate <https://w3id.org/np/RAaK4RN3kg43F7inYx2f7tKO8g0RQNR7oaCgIQl01yVXk>;
+    rdf:subject sub:software .
+  
+  sub:st28 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:componenttype;
+    rdf:predicate <https://w3id.org/np/RAqDWaPpMKWtDMUF8kiuaJSEIKCBTO0F3ufWo-62EzOW4>;
+    rdf:subject sub:software .
+  
+  sub:st28a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:componenttypemanual;
+    rdf:predicate <https://w3id.org/np/RAqDWaPpMKWtDMUF8kiuaJSEIKCBTO0F3ufWo-62EzOW4>;
+    rdf:subject sub:software .
+  
+  sub:st29 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:inputs;
+    rdf:predicate <https://w3id.org/np/RAcY7RaD-1Q7aDCyrnZj-8S1TQq5J2tVf3JWc_IpdMPMU>;
+    rdf:subject sub:software .
+  
+  sub:st30 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:outputs;
+    rdf:predicate <https://w3id.org/np/RArgiQrSsvrkbQ9G4Ujau1k56gIwxW-4AXyksZKpmcWdM>;
+    rdf:subject sub:software .
+  
+  sub:st31 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:dependencies;
+    rdf:predicate <https://w3id.org/np/RA581iMeKq1VQSoA6PXuV_EX0ihD1jRBd5w8xjEHNNmuw>;
+    rdf:subject sub:software .
+  
+  sub:st32 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:externalservicescalled;
+    rdf:predicate <https://w3id.org/np/RAzeBzX1FySqC1FMsNRDGU6ohCd1gvXAKTCA_P4smfCBk>;
+    rdf:subject sub:software .
+  
+  sub:st33 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:imagecontainer;
+    rdf:predicate <https://w3id.org/np/RARbcsRpPnsMgfMJsG6Big1XfHS6fqIrFNpI2w7qviLeU>;
+    rdf:subject sub:software .
+  
+  sub:st34 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:reportedconformancestandards;
+    rdf:predicate <https://w3id.org/np/RAeyK4iUuyazOTMtP-bJfZpmZXlSPZL6L6qci_PKXipDc>;
+    rdf:subject sub:software .
+  
+  sub:st35 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:qualityassurance;
+    rdf:predicate <https://w3id.org/np/RAVC0B6xfdG4uo97jWTWlHiTx8tm7RG53qnSlhnGCAE4s>;
+    rdf:subject sub:software .
+  
+  sub:st36 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:deploymenttype;
+    rdf:predicate <https://w3id.org/np/RAS-6k9lDkuoeGVMNDYKt9m-Ap6vhlfJIvBGMwxdPI6oo>;
+    rdf:subject sub:software .
+  
+  sub:st37 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:authenticationscheme;
+    rdf:predicate <https://w3id.org/np/RAW5PN8fkG1e7bD5uLkywdjsRG9j_hQUS_5dAZaRzS3cw>;
+    rdf:subject sub:software .
+  
+  sub:st38 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:isreferencedby;
+    rdf:predicate dct:isReferencedBy;
+    rdf:subject sub:software .
+  
+  sub:st39 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:references;
+    rdf:predicate dct:references;
+    rdf:subject sub:software .
+  
+  sub:sustainabilityplan a nt:ValuePlaceholder;
+    rdfs:label "URI or manual input of sustainability plan" .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "the title of the software" .
+  
+  sub:trustedrepositoryindicator a nt:RestrictedChoicePlaceholder;
+    rdfs:label "has trusted repository indication";
+    nt:possibleValuesFrom <https://w3id.org/np/RAg5_HWv0tM8LH1fDcd2Sm7I8wto7P4Kkr5RZm1TWucJY> .
+  
+  sub:trustedrepositoryindicatormanual a nt:ValuePlaceholder;
+    rdfs:label "URI or manual trusted repository indication" .
+  
+  sub:type a nt:ValuePlaceholder;
+    rdfs:label "the category of the software" .
+  
+  sub:version a nt:LiteralPlaceholder;
+    rdfs:label "the version of the software" .
+  
+  <https://w3id.org/np/RAqDWaPpMKWtDMUF8kiuaJSEIKCBTO0F3ufWo-62EzOW4> rdfs:label "has component type" .
+  
+  <https://w3id.org/np/RArgiQrSsvrkbQ9G4Ujau1k56gIwxW-4AXyksZKpmcWdM> rdfs:label "has has component or software output" .
+  
+  <https://w3id.org/np/RAufoNFyOGo5QMPWC1_j60qknrHVcfbovxG72-Ld18l2k> rdfs:label "has trusted repository indicator" .
+  
+  <https://w3id.org/np/RAxT4mvjIcKMwABwmxFj76NAiEWwr-nUeXu6ZkoFm0GEw> rdfs:label "has changelog" .
+  
+  <https://w3id.org/np/RAzCVLle4lKo6vUqK2EAnHhgz1lpM2natsqKMZQI9ku5s> rdfs:label "has intended use" .
+  
+  <https://w3id.org/np/RAzeBzX1FySqC1FMsNRDGU6ohCd1gvXAKTCA_P4smfCBk> rdfs:label "has external services called" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1297-3104 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1297-3104 foaf:name "Anastasios Papadiamantis" .
+  
+  this: dct:created "2026-05-11T10:48:18.944Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1297-3104;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAuQdCJ4IWw_DddS464ij9JsTPCSL7LcgbrXr5ONMeQHc>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Template for describing a Research Software in line with the FAIR4RS Principles";
+    prov:wasDerivedFrom <https://w3id.org/np/RA1N11KrGR8__rkuQzOpc58vagNlnjIoFlHeaLw_eWDh8>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDLrgIs0zCX11YIad1vf4iKrxmu/l3phA4ES5BixalXnpd5LD/znJ3GlB95mZ/KOrhGhBZyj39QaZVpQQuPTsqmigo4blW6FtTc0iWkFSNEj6dyWeavF9nJ0cSr7k6KEx3i8ue+O53k2lmF/UzG/w0cOSV71T3qVBFPupy5WMCTwwIDAQAB";
+    npx:hasSignature "CfLOjwJQDaSJNXywM0WUByVSQFRVFTr07c/4WXX4JhrsihN3+yXSoWIxVdfNYoTfN7P+Xx+3qbgQBTPlU6O8HrB4guwluMllGRT1ZcnvYtE4n4Qs74KipQ3ZGcYpns8X5eWCcywgCS6HIzhPdWXsOwjcUVfH0Cjy/IoKiD8wsv4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1297-3104 .
+}
+

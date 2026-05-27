@@ -1,0 +1,105 @@
+@prefix this: <https://w3id.org/np/RAgXdY6555fDT5BkrouMpc8nXTTXiNprc3y4fqrX1cxDA> .
+@prefix sub: <https://w3id.org/np/RAgXdY6555fDT5BkrouMpc8nXTTXiNprc3y4fqrX1cxDA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-colonial-collections-annotations a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns all Web Annotations (oa:Annotation) contained in Colonial Collections nanopubs, together with their specific content subtype, the scope (which field of the target object the annotation refines), the source object (with a short label derived from its identifier), the body text and its language, the community group on whose behalf the annotation was made, the individual creator, and the creation date. Sorted from most recent first.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get Colonial Collections annotations";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/9f1f58f4a7d23fa9955733b9c187dd9c5155d6dce4b57e4a43a8b0f861d99e12>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix oa: <http://www.w3.org/ns/oa#>
+prefix prov: <http://www.w3.org/ns/prov#>
+
+select ?subtype ?subtype_label ?scope ?scope_label ?source ?source_label ?body ?lang ?group ?group_label ?creator ?creator_label ?date ?np (\"^\" as ?np_label) where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey ;
+        dct:created ?datetime ;
+        np:hasAssertion ?ag ;
+        np:hasProvenance ?pg ;
+        np:hasPublicationInfo ?pig .
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+  }
+  bind(substr(str(?datetime), 1, 10) as ?date)
+  graph ?pig {
+    ?np a ?subtype .
+    filter(strstarts(str(?subtype), \"https://n2t.net/ark:/27023/9819f32405815dc7f2e0ecd9d8a9e604#\") && str(?subtype) != \"https://n2t.net/ark:/27023/9819f32405815dc7f2e0ecd9d8a9e604#Nanopub\")
+    bind(strafter(str(?subtype), \"#\") as ?subtype_label)
+  }
+  graph ?ag {
+    ?anno a oa:Annotation ;
+          oa:hasBody ?b ;
+          oa:hasTarget ?t .
+    ?b rdf:value ?body_lit .
+    bind(str(?body_lit) as ?body)
+    bind(lang(?body_lit) as ?lang)
+    optional {
+      ?t oa:hasScope ?scope .
+      bind(if(contains(str(?scope), \"#\"), strafter(str(?scope), \"#\"), str(?scope)) as ?scope_label)
+    }
+    optional {
+      ?t oa:hasSource ?source .
+      bind(substr(replace(str(?source), \"^.*/\", \"\"), 1, 8) as ?source_label)
+    }
+  }
+  optional {
+    graph ?pg {
+      ?ag prov:wasAttributedTo ?creator .
+      optional { ?creator rdfs:label ?creator_label }
+      optional {
+        ?creator prov:actedOnBehalfOf ?group .
+        optional { ?group rdfs:label ?group_label }
+      }
+    }
+  }
+}
+order by desc(?datetime)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-05-20T13:38:00Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-colonial-collections-annotations;
+    npx:supersedes <https://w3id.org/np/RAhR8CHO7jxB252oCBo4wV0u3eUNjrd4Zy5b6QfSCqqAQ>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "bWVROEYs18BzbHtDeXqnobk4wKAlnA/85VkQRG3wA1PJPE3AisuG9JhZplzYEtBTzlZ5K349yyd9m5wvQkchGujqE0u+curdKbhmwmlRzfCRHE25uxiioE49X4KnadVYipPxGGdDmn6db1eWg9wdXqmns1N52PgZzjPF+TgWUyM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -280,6 +280,100 @@ Example — pre-filling a news article template:
 https://nanodash.knowledgepixels.com/publish?template=https%3A%2F%2Fw3id.org%2Fnp%2FRAxxxxx&param_headline=My+News+Title&param_body=Article+body+text&param_datePublished=2026-01-15&param_space=https%3A%2F%2Fw3id.org%2Fspaces%2Fmy-space
 ```
 
+#### Querying spaces and trust state (the admin repositories)
+
+Nanopub Query computes **space-membership and authority state** server-side (since v1.11) into two dedicated repositories, `spaces` and `trust`. Every Nanopub Query repo can be queried two ways — pick based on whether the query is a one-off or something to keep:
+
+- **Ad-hoc SPARQL** against the underlying RDF4J repo at `/repo/<name>` (GET or POST). Best for development and one-off questions; no nanopub to publish:
+
+  ```bash
+  curl -s -G "https://query.knowledgepixels.com/repo/spaces" \
+    --data-urlencode "query=<SPARQL>" -H "Accept: text/csv"   # or application/json
+  ```
+
+- **A published grlc query template**, exactly like any other template — these repos are *not* special. Set the template's `grlc:endpoint` to the target repo, e.g. `<https://w3id.org/np/l/nanopub-query-1.1/repo/spaces>` (or `.../repo/trust`); the repo name is derived from that endpoint. Most existing templates default to `full`, `meta`, or a per-type `type/<hash>` repo, but the pointer-join patterns below are ordinary SPARQL and work fine inside a template.
+
+Repos addressable either way include `full`, `meta`, `text`, `last30d`, the per-type `type_<hash>` / per-pubkey `pubkey_<hash>` repos, and the two **admin repos** `spaces` and `trust`. For ad-hoc `curl`, the instance host (`query.knowledgepixels.com/repo/...`) is fine; for a `grlc:endpoint` you publish, use the generic `w3id.org/np/l/nanopub-query-1.1/repo/...` prefix (rewritten to the in-cluster endpoint at query time), per the rules above.
+
+A `HEAD /` reports instance state via response headers — `Nanopub-Query-Version`, `Nanopub-Query-Status`, `Nanopub-Query-Load-Counter`, `Nanopub-Query-Loaded-Nanopub-Count`, `Nanopub-Query-Loaded-Nanopub-Checksum`.
+
+Common prefixes for both admin repos: `npa:` = `<http://purl.org/nanopub/admin/>`, `gen:` = `<https://w3id.org/kpxl/gen/terms/>`.
+
+**The `spaces` repo.** The materializer maintains one *current validated state graph* and a pointer to it in the admin graph `<http://purl.org/nanopub/admin/graph>`. The state graph IRI (`npass:<trustStateHash>_<loadCounter>`) changes on every full rebuild, so **never address it directly across requests** — resolve the pointer and read the data in the *same* query (atomic across rebuilds):
+
+```sparql
+PREFIX npa: <http://purl.org/nanopub/admin/>
+PREFIX gen: <https://w3id.org/kpxl/gen/terms/>
+SELECT ?agent WHERE {
+  GRAPH npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?g . }
+  GRAPH ?g {
+    ?ri a gen:RoleInstantiation ; npa:forSpace <SPACE_IRI> ; npa:forAgent ?agent .
+  }
+}
+```
+
+The state graph carries validated `gen:RoleInstantiation` rows (`npa:forSpace`, `npa:forAgent`, `npa:viaNanopub`; admin-tier rows additionally carry `npa:inverseProperty gen:hasAdmin`), one canonical `foaf:name` per agent (mirrored in, so no cross-repo join is needed), and convenience relation triples: `npa:isSubSpaceOf` / `npa:hasSubSpace`, `npa:isMaintainedBy` / `npa:hasMaintainedResource`, `npa:sameAsSpace`. A validated row's *role predicate/tier* is dropped from the state graph; recover it by joining back to the add-only extraction graph `npa:spacesGraph` on the same `?ri` IRI: `GRAPH npa:spacesGraph { { ?ri npa:regularProperty ?pred } UNION { ?ri npa:inverseProperty ?pred } }`.
+
+To list everyone associated with a space and whether each is approved, tag the extraction-graph universe against the state graph:
+
+```sparql
+PREFIX npa:  <http://purl.org/nanopub/admin/>
+PREFIX gen:  <https://w3id.org/kpxl/gen/terms/>
+PREFIX foaf: <http://xmlns.com/foaf/0.1/>
+SELECT ?agent ?name ?status WHERE {
+  GRAPH npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?g . }
+  GRAPH npa:spacesGraph {
+    ?ri a gen:RoleInstantiation ; npa:forSpace <SPACE_IRI> ; npa:forAgent ?agent .
+  }
+  BIND(EXISTS { GRAPH ?g { ?v a gen:RoleInstantiation ; npa:forSpace <SPACE_IRI> ; npa:forAgent ?agent } } AS ?hasV)
+  BIND(EXISTS { GRAPH ?g { ?a a npa:AccountState ; npa:agent ?agent } } AS ?hasA)
+  BIND(IF(?hasV, "approved", IF(?hasA, "tier-mismatch", "agent-unknown")) AS ?status)
+  OPTIONAL { GRAPH ?g { ?agent foaf:name ?name } }
+} ORDER BY ?status ?agent
+```
+
+`approved` = at least one of the agent's role instantiations passed tier validation; `tier-mismatch` = the agent is in the trust state but no instantiation for this space validated (granted by someone whose tier didn't qualify); `agent-unknown` = the agent has no trust-state account at all (self-declarations from outside the trust radius extract but never validate).
+
+The `/spaces` (HTML) and `/spaces.json` (JSON) routes list every known space ref with its `spaceIri` and `rootNanopub`.
+
+**The `trust` repo.** Mirrors the registry's agent ↔ approved-pubkey mapping. Same pointer idiom with `npa:hasCurrentTrustState`. "Approved" means `npa:trustStatus` ∈ `{npa:loaded, npa:toLoad}` — **not** "anything that isn't skipped"; `npa:skipped` means *explicitly rejected* by the trust calculation, and there are several transient statuses in between.
+
+```sparql
+PREFIX npa: <http://purl.org/nanopub/admin/>
+ASK {
+  GRAPH npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentTrustState ?g . }
+  GRAPH ?g { ?s npa:agent <AGENT_IRI> ; npa:pubkey "<PUBKEY_HEX>" ; npa:trustStatus npa:loaded . }
+}
+```
+
+**Two SPARQL gotchas** when writing these queries (both bite real consumers):
+
+1. `GRAPH ?x { OPTIONAL { ... } }` silently drops the *entire row* when the optional pattern is unmatched (RDF4J quirk). Pull the `OPTIONAL` outside the `GRAPH` wrapper: `OPTIONAL { GRAPH ?x { ... } }`, one block per optional triple.
+2. Resolving the `hasCurrentSpaceState` / `hasCurrentTrustState` pointer inline is correct and atomic, but for *heavy* queries (multiple cross-graph joins plus a `UNION` under `GRAPH ?g`) RDF4J's planner can time out (504 after 60s) even though the same query with a hardcoded graph IRI returns instantly. Keep consumer queries simple; if one is heavy, resolve the pointer in a separate `SELECT ?g {...}` request and substitute the IRI as a constant (you give up atomicity across a rebuild during that window).
+
+Note: these repos materialize only from the **live** network — a nanopub published to the test server will not appear in the live `spaces`/`trust` state.
+
+#### Creating space, role, membership, and maintained-resource nanopubs
+
+Spaces, roles, and memberships are ordinary nanopubs created with the standard workflow below (write the TriG, sign, publish) — they just use the `gen:` vocabulary (`<https://w3id.org/kpxl/gen/terms/>`) in their assertions, and the live server materializes them into the `spaces` repo automatically once published. Existing assertion templates (tag **"Spaces"**) cover every case below and are already in [assertion-templates/](assertion-templates/); prefer replicating the template's assertion shape (or use the Nanodash publish-URL form above) over inventing triples. Pick a Space/role for IRI fields via the lookup API `find-things?type=<gen-type>` (the `RAyMrQ89...` endpoint, as for any `GuidedChoicePlaceholder`).
+
+| To create… | Assertion shape | Template |
+|---|---|---|
+| **A Space** | `<space> a gen:Space, gen:<Type>` (Type ∈ `Alliance`/`Community`/`Division`/`Group`/`Organization`/`Outlet`/`Program`); `rdfs:label`; `dct:description`; `<space> gen:hasAdmin <agent>` (≥1); `<space> gen:hasRootDefinition <thisNP>` (self-referential for a new space — `this:` in the temp form; the original root's URI when superseding); optional `<space> owl:sameAs <altIri>`. Space IRI under `https://w3id.org/spaces/`; `npx:introduces <space>`. | `RAgrIys3ge48pXrL_qNE0Rt1DHnIP8Rl2_29BnacMqYYY` (open-ended) |
+| **An extra admin** | `<space> gen:hasAdmin <agent>` | `RAsOQ7k3GNnuUqZuLm57PWwWopQJR_4onnCpNR457CZg8` |
+| **A member role** | embedded role IRI: `<role> a gen:SpaceMemberRole` (+ optional tier subclass `gen:MaintainerRole` / `gen:MemberRole` / `gen:ObserverRole`); `rdfs:label`; `<role> gen:hasRegularProperty <prop>` (space→agent) and/or `gen:hasInverseProperty <prop>` (agent→space). Nanopub type `gen:SpaceMemberRole`. | `RAJJ-AsTOOI_wTej2Taj0ZaZ4janKXJ7akQvanUNGxVRM` |
+| **Attach a role to a Space** | `<space> gen:hasRole <roleIri>` | `RARBzGkEqiQzeiHk0EXFcv9Ol1d-17iOh9MoFJzgfVQDc` |
+| **Grant a role to an agent** (role instantiation) | one triple using the role's *regular* property (space→agent, e.g. `<space> gen:hasObserver <agent>`) or *inverse* property (agent→space, e.g. `<agent> <http://www.wikidata.org/entity/P463> <space>`) | membership `RA4eg0fGov3swvzHmDnKvDnydNezNwCH9g6uPsA9GJ2Mo`; observe `RAs3LMTf4JLXDUGCi1MjT2448aJQE3aatSgkapNwgdgHY` |
+| **A maintained resource** | `<resource> a gen:MaintainedResource`; `rdfs:label`; `dct:description`; `<resource> gen:isMaintainedBy <space>`; optional `gen:hasNamespace`. | `RAadceLO9eTvnfdmuWKiTYLmVLyDevpITnqaJtQW2DnVY` |
+| **A sub-space link** | `<child> gen:isSubSpaceOf <parent>` (embedded in the Space nanopub or standalone single-triple assertion) | — |
+
+**Authority model — what actually takes effect.** A syntactically valid nanopub still has to pass an authority check before it appears in the validated state; otherwise it shows as `tier-mismatch`/`agent-unknown` in the query above. The grant rules form a downward chain (admin > maintainer > member > observer):
+
+- The admin(s) named in a Space's **own root definition** are the trust seed — admins by construction. Any *additional* admin (`gen:hasAdmin` published separately) only validates if the publisher is already an admin of that space.
+- A `gen:hasRole` attachment and a `gen:isMaintainedBy` declaration validate only when published by an **admin** of the space.
+- A role grant (instantiation) validates when published by someone whose tier is at or above the role's tier: admin can grant any tier; maintainer can grant member/observer; member can grant observer; **observer is the default tier** and is the only one an agent may **self-attest** (publisher == the agent being granted).
+- Authority is resolved via the signing **pubkey** mapped through the current `trust` state, not via the self-declared `npx:signedBy`. When superseding a Space definition, keep the same Space IRI (it is the space's identity).
+
 ### 2. Check the user's profile
 
 Before creating the TriG file, read `~/.nanopub/profile.yaml` to get the user's ORCID:

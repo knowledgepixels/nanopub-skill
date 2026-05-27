@@ -1,0 +1,58 @@
+@prefix this: <https://w3id.org/np/RAr4qrDh77rNoRcodAoGDOJLEECu3sBvrUJPAhuK73e1c> .
+@prefix sub: <https://w3id.org/np/RAr4qrDh77rNoRcodAoGDOJLEECu3sBvrUJPAhuK73e1c/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:software-agents-view a gen:ItemListView, gen:ResourceView;
+    dct:isVersionOf <https://w3id.org/np/RAe87P4wKwB3ReMtAGWHhN-PRlgeqZKtuusLwgvLAJqrk/software-agents-view-kind>;
+    dct:title "🤖 Software Agents";
+    rdfs:label "Software agents view";
+    gen:appliesToInstancesOf gen:IndividualAgent;
+    gen:hasStructuralPosition "5.5.software-agents";
+    gen:hasViewQuery <https://w3id.org/np/RAFMW55TSw7rwAi-mLRsgnhOugd7ZYf4L5zvzFeoU9OWQ/get-approved-software-agents> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RAFMW55TSw7rwAi-mLRsgnhOugd7ZYf4L5zvzFeoU9OWQ/get-approved-software-agents>
+    nt:hasLabelFromApi "🤖 Software Agents - Returns all approved (trust-state-loaded) users that are software agents, with their display name." .
+  
+  this: dct:created "2026-05-27T13:52:07Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:software-agents-view;
+    npx:introduces <https://w3id.org/np/RAe87P4wKwB3ReMtAGWHhN-PRlgeqZKtuusLwgvLAJqrk/software-agents-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAe87P4wKwB3ReMtAGWHhN-PRlgeqZKtuusLwgvLAJqrk>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "htXfqvNuYOUQC+pydFTbzLf5Sb+kiUXisANsKqXI0SJseSdTXVg7qFsDbeMg3x93Y0TSoU0cOPtAcZp5gwtgaKn/pbHwMNICcFUhuOt9V2B1TAFmD394QAHl2cRp3BX8TjLGYp3xLtEl8wW9EUPfn1zSM3HP7zXqDOm12we1eUI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

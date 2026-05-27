@@ -1,0 +1,67 @@
+@prefix this: <https://w3id.org/np/RAo0c4UNoD-uTP3xATU_-TB6vO-nMO4Ya-mvdaGjX5qVE> .
+@prefix sub: <https://w3id.org/np/RAo0c4UNoD-uTP3xATU_-TB6vO-nMO4Ya-mvdaGjX5qVE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-space-members a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns the non-admin member RoleInstantiations of the given space(s) from the extraction graph (npa:spacesGraph) of the spaces repo (/repo/spaces): each member agent, the nanopublication that instantiated the membership, and the role's regular/inverse predicate. Admin RIs are excluded and invalidated nanopubs are filtered out. The caller is expected to gate members by role-predicate match. Pass one or more space IRIs.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get space members";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?member ?regProp ?invProp ?np (\"^\" as ?np_label) where {
+  values ?_space_multi_iri {}
+  graph npa:spacesGraph {
+    ?ri a gen:RoleInstantiation ;
+        npa:forSpace ?_space_multi_iri ;
+        npa:forAgent ?member ;
+        npa:viaNanopub ?np .
+    optional { ?ri npa:regularProperty ?regProp }
+    optional { ?ri npa:inverseProperty ?invProp }
+    filter not exists { ?ri npa:inverseProperty gen:hasAdmin }
+  }
+  filter not exists { graph npa:graph { ?invNp npx:invalidates ?np . } }
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-05-26T14:25:12Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-space-members;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "EK89UXC/o+YTDYgY2ZkBaYjnuNbe0G5dZovNdTXej1WChWcuA7iFNNZl1MOQUtUvMJCtmj7nrpMDeArBW2qDjwUlpr4BZmp5Z0QhITwRHZWD3tDaN3l3Hi3Fp+XhvcF7Y/QA8JvOmI9F7siYM3AQz6rGdqT9BLqd4I/EOTwhIEg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

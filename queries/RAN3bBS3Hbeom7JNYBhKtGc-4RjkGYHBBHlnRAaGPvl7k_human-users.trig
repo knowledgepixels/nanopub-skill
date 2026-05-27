@@ -1,0 +1,65 @@
+@prefix this: <https://w3id.org/np/RAN3bBS3Hbeom7JNYBhKtGc-4RjkGYHBBHlnRAaGPvl7k> .
+@prefix sub: <https://w3id.org/np/RAN3bBS3Hbeom7JNYBhKtGc-4RjkGYHBBHlnRAaGPvl7k/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-approved-human-users a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns all approved (trust-state-loaded) users that are not software agents, with their display name.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "👤 Human Users";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/trust>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix np: <http://www.nanopub.org/nschema#>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?user_iri (sample(?name) as ?user_iri_label) where {
+  graph npa:graph { npa:thisRepo npa:hasCurrentTrustState ?g . }
+  graph ?g { ?acct a npa:AccountState ; npa:agent ?user_iri ; npa:trustStatus npa:loaded . }
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/type/77757cabf6184c51c20b8b0fe5dc5e1365b7f628448335184ad54319a0affdfc> {
+    graph ?a { ?kd npx:declaredBy ?user_iri . }
+    filter not exists { graph ?a2 { ?user_iri a npx:SoftwareAgent } }
+    optional { graph ?a { ?user_iri foaf:name ?name } }
+  }
+} group by ?user_iri order by lcase(str(sample(?name)))""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-05-27T13:52:07Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-approved-human-users;
+    npx:supersedes <https://w3id.org/np/RAsH858RE9hwaSyuoF1PAw83-L-E8RMwibHfy5QohM82w>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <https://w3id.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <https://w3id.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "lVCy5fV7n0VpalDIs3QYa3kaJdldWnMJPAOMWaQ8k/5zfdXgmvX87YagZ2Z1Y3OPjfLznVl0BufeuSwuUMgL28BXJMQUHaFfUIlPH31FvjYoiAjT/vwAMvxU7FcsN3UqmSaX/2lm2eHRzai1/Q3VtO/w6IP7hElTKNmYA6bFSfo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

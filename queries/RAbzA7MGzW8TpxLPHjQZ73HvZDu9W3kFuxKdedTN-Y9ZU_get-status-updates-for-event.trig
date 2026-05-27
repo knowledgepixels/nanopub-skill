@@ -1,0 +1,83 @@
+@prefix this: <https://w3id.org/np/RAbzA7MGzW8TpxLPHjQZ73HvZDu9W3kFuxKdedTN-Y9ZU> .
+@prefix sub: <https://w3id.org/np/RAbzA7MGzW8TpxLPHjQZ73HvZDu9W3kFuxKdedTN-Y9ZU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-status-updates-for-event a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns all status updates belonging to the given event, with label, description, concerned spaces, links, creator, and nanopub link.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get status updates for event";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/d635d8e9818def8765c4252d207ee6941f339641318ff7826e41d5dd9d222efb>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix schema: <http://schema.org/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?item ?item_label ?description (group_concat(distinct str(?space); separator=\" \") as ?spaces_multi_iri) (group_concat(distinct concat('<span><a href=\"', str(?link), '\">link</a></span>'); separator=\", \") as ?link) ?creator ?np (\"^\" as ?np_label) where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np dct:created ?npdate .
+    ?np dct:creator ?creator .
+    ?np np:hasAssertion ?a .
+    ?np npx:introduces ?item .
+  }
+  values ?_event_multi_iri {}
+  graph ?a {
+    ?item a gen:StatusUpdate .
+    ?item dct:isPartOf ?_event_multi_iri .
+    ?item schema:about ?space .
+    optional { ?item rdfs:label ?item_label . }
+    optional { ?item dct:description ?description . }
+    optional { ?item rdfs:seeAlso ?link . }
+  }
+}
+group by ?item ?item_label ?description ?creator ?np ?npdate
+order by asc(?npdate)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-05-20T12:00:44Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-status-updates-for-event;
+    npx:supersedes <https://w3id.org/np/RAj270KTpJBPrj7S7mT52kkMDgzZNA17HTbIZCuvDKnXc>;
+    rdfs:label "Get status updates for event";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RAcm8OurwUk15WOgBM9wySo-T3a5h6as4K8YR5MBrrxUc>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "GaDjAOh1psqKmaZNoX7f8y7VAmWGeuiWuZv204teE+wjEI9xAHNsF8U0hkb2L4DdBaQ0n5zb+mXhcnjV7nFV7O2vZhN86xlhQkUvMLFs1pmaBCqxqpnOtKcFfQ7vwebS8AXrjRVWgTGbwfquSfYkJPrsIvrgo1cCYJ+MyRKKI+w=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,73 @@
+@prefix this: <https://w3id.org/np/RAaQHF8pXj2Y4UeWChdkLxM9g5webS68YaZjYPtAlhe2Q> .
+@prefix sub: <https://w3id.org/np/RAaQHF8pXj2Y4UeWChdkLxM9g5webS68YaZjYPtAlhe2Q/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-rocrate-nanopubs a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns all RO-Crate nanopubs. Including the old and new type.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get all RO-Crate nanopubs";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix kpxl: <https://w3id.org/kpxl/gen/terms/>
+
+# find all ro-crates, with old and new nanopub type
+select distinct ?rocrate ?date ?np where { 
+  graph npa:graph {
+    {?np npx:hasNanopubType kpxl:RoCrateNanopub .} union {?np npx:hasNanopubType npx:RoCrateNanopub .}
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkeyhash .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkeyhash . }
+    ?np dct:created ?date .
+    ?np npx:introduces ?rocrate .
+    ?np npx:signedBy ?agent_iri .
+  }
+}
+order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0008-3635-347X .
+}
+
+sub:pubinfo {
+  orcid:0009-0008-3635-347X foaf:name "Ziroli Plutschow" .
+  
+  this: dct:created "2026-05-13T14:58:41.537Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0008-3635-347X;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-rocrate-nanopubs;
+    npx:supersedes <https://w3id.org/np/RA2MCzg_RFEPe4ngx0XrG1C13LVA8EuNFlnxOGTmH_6AI>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAFGm6dE-H9M5WgOViQJQrvKrwQofZxViNF2wq2CbAZTA>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCRxqE9AJd10geyZVSAzaTl5ly3X0EBV59zn6ot8ZdcB77wkUqI44Mw5IYeG/isXoAZqq5yXWZjMOk0Uv94jqu31KnXlv2cazidBqJeO9GD0UAfX6hU3mpbC6Hj3MFNDYEDMX/yAC55oOr78B93NqhdiTieTMKzNe/kHyVhCIPjgQIDAQAB";
+    npx:hasSignature "AVaI97UVGfXYiydYNadqujglY8BBIiL9rySX8UeMKzEeE2XDGVIFUhMtnJf2ygsueKHRI1F68AAIatRxR4fix13tr4k8hC7aznX5bgWlz4Ci1WyTl5+vOWdjItYRe3bhx/FEJI/5zz+IyGqUz+cbDkqBXGthDCdijdFmRTtBBJs=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0008-3635-347X .
+}
+

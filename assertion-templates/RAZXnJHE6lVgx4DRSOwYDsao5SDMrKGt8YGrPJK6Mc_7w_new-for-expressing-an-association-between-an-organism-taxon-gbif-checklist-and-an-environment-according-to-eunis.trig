@@ -1,0 +1,148 @@
+@prefix this: <https://w3id.org/np/RAZXnJHE6lVgx4DRSOwYDsao5SDMrKGt8YGrPJK6Mc_7w> .
+@prefix sub: <https://w3id.org/np/RAZXnJHE6lVgx4DRSOwYDsao5SDMrKGt8YGrPJK6Mc_7w/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.obolibrary.org/obo/RO_0002303> rdfs:label "has habitat" .
+  
+  rdf:type rdfs:label "is an" .
+  
+  rdfs:comment rdfs:label "has the free-text comment" .
+  
+  <https://w3id.org/biolink/vocab/OrganismTaxonToEnvironmentAssociation> rdfs:label
+      "association of an organism taxon to an environment" .
+  
+  <https://w3id.org/biolink/vocab/object> rdfs:label "links the taxon to the environment" .
+  
+  <https://w3id.org/biolink/vocab/predicate> rdfs:label "refers to the relation (between taxon and environment)" .
+  
+  <https://w3id.org/biolink/vocab/subject> rdfs:label "refers to" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasSubjectLifeCycleStage> rdfs:label "refers to the taxon's life cycle stage" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition> rdfs:label "is used as defined in" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonName> rdfs:label "has the name - links a taxon usage to a taxon name" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication expresses an association between an organism taxon (listed in GBIF Backbone Taxonomy) and an environment (EUNIS classification), for example expressing that the organisms of the given species inhabit the specified environment, represented by EUNIS identifier.";
+    rdfs:label "(new) for expressing an association between an organism taxon (GBIF checklist) and an environment (according to EUNIS)";
+    nt:hasDefaultProvenance ns1:RA2VjRiJ5AsNnPHDXuOqvsEJwTwqtj5rBb-OFkpPOzd9s;
+    nt:hasNanopubLabelPattern "${taxonname} - ${relation} - ${environment}";
+    nt:hasStatement sub:st00, sub:st05, sub:st10, sub:st11, sub:st12, sub:st20, sub:st40,
+      sub:st60;
+    nt:hasTag "Biodiversity";
+    nt:hasTargetNanopubType <https://w3id.org/kpxl/biodiv/terms/BiodivNanopub> .
+  
+  sub:association a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this association" .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "short explanation related to the above statement" .
+  
+  sub:environment a nt:GuidedChoicePlaceholder;
+    rdfs:label "the environment (via EUNIS identifier)";
+    nt:possibleValuesFromApi "https://discodata.eea.europa.eu/sql?query=SELECT%20concat(%27https%3A%2F%2Feunis.eea.europa.eu%2Fhabitats%2F%27%2C%5Bid_habitat%5D)%20as%20%5B%40id%5D%2C%20%5Bscientific_name%5D%20AS%20label%2C%20%5Bhabitat_description%5D%20as%20description%20FROM%20%5BEUNIS%5D.%5Blatest%5D.%5BHabitat_Information%5D%20WHERE%20%5Bhabitat_category%5D%20LIKE%20%27%25EUNISrev%25%27%20AND%20concat(%5Bscientific_name%5D%2C%27%20%27%2C%5Benglish_name%5D%2C%27%20%27%2C%5Beunis_habitat_code%5D)%20LIKE%20%27%25 %25%27&p=1&nrOfHits=50&mail=null&schema=null" .
+  
+  sub:lifecyclestage a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the life cycle stage";
+    nt:possibleValuesFrom ns1:RAVZS2MV-siFEqsgFTtgSoKA5qJkp7r1nM_n-MqPkvgdE .
+  
+  sub:relation a nt:GuidedChoicePlaceholder;
+    rdfs:label "the type of relation between the taxon and the environment";
+    nt:possibleValue <http://purl.obolibrary.org/obo/RO_0002303>;
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=ro&fieldList=iri,label,description&q=" .
+  
+  sub:st00 rdf:object <https://w3id.org/biolink/vocab/OrganismTaxonToEnvironmentAssociation>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:association .
+  
+  sub:st05 rdf:object sub:relation;
+    rdf:predicate <https://w3id.org/biolink/vocab/predicate>;
+    rdf:subject sub:association .
+  
+  sub:st10 rdf:object sub:taxon;
+    rdf:predicate <https://w3id.org/biolink/vocab/subject>;
+    rdf:subject sub:association .
+  
+  sub:st11 rdf:object sub:taxonname;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonName>;
+    rdf:subject sub:taxon .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:taxondef;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition>;
+    rdf:subject sub:taxon .
+  
+  sub:st20 a nt:OptionalStatement;
+    rdf:object sub:lifecyclestage;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasSubjectLifeCycleStage>;
+    rdf:subject sub:association .
+  
+  sub:st40 rdf:object sub:environment;
+    rdf:predicate <https://w3id.org/biolink/vocab/object>;
+    rdf:subject sub:association .
+  
+  sub:st60 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:association .
+  
+  sub:taxon a nt:LocalResource;
+    rdfs:label "a taxon concept" .
+  
+  sub:taxondef a nt:ExternalUriPlaceholder;
+    rdfs:label "publication DOI (https://doi.org/...) or taxon treatment ID (https://treatment.plazi.org/id/...)";
+    nt:hasRegex "(https://doi.org/|https://treatment.plazi.org/id/).+" .
+  
+  sub:taxonname a nt:GuidedChoicePlaceholder;
+    rdfs:label "search and select from list";
+    nt:possibleValuesFromApi "https://api.gbif.org/v1/species/suggest?datasetKey=d7dddbf4-2cf0-4f39-9b2a-bb099caae36c&q=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-4587-3476 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0002-4587-3476 foaf:name "roberto pizzolotto" .
+  
+  this: dct:created "2026-04-30T16:03:47.854Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0002-4587-3476;
+    dct:license <https://creativecommons.org/licenses/by-sa/4.0/>, <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:supersedes <https://w3id.org/np/RABz1BLaMWPOvFFVX2itIDKq5iJ9-qFclaHgfg4eXioJc>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "(new) for expressing an association between an organism taxon (GBIF checklist) and an environment...";
+    prov:wasDerivedFrom ns1:RAwy5ZloUugunk3gafYppW6MfZGQXD554XgHfCAFHH08k, <https://w3id.org/np/RAnVBkE-HJpOIF6Ns1gC-lotJcqtgRVkLp5tKsVuAVG8U>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUDeKXhXlFhZOfNX+50fX31+K+KNwHGyuh65vqoj49E+Sc920NGPGIEmoyGDFtPONltIEFzp80aEY5mn+V+r27uUpDORorw6OlGGepR0dnWNwEJ8jyFVu7z7d+eIqC5t9V+tQbU4c1H2b8IEzlbpTT0n7DY6gjP0jDjwTBC94mdQIDAQAB";
+    npx:hasSignature "Y9iJny14UZMJn5uBgEpReDuImQauKw37Dxp+qsDB4V6gSgThmK2B2A0mn9rQh//fLu/1eGuDTVDjzuEyvamnTlkhTG1hjDD2Z216ohZFLzrOIfugIk/wOSyOxtJ9BSu13DwXdOZ8eGFeoTpckhwMkSSRkrbha7WCNe644rUdwwI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-4587-3476 .
+}
+

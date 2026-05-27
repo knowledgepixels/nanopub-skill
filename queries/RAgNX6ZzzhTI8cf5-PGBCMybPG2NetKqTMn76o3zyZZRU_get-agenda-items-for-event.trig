@@ -1,0 +1,83 @@
+@prefix this: <https://w3id.org/np/RAgNX6ZzzhTI8cf5-PGBCMybPG2NetKqTMn76o3zyZZRU> .
+@prefix sub: <https://w3id.org/np/RAgNX6ZzzhTI8cf5-PGBCMybPG2NetKqTMn76o3zyZZRU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-agenda-items-for-event a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns all agenda items belonging to the given event, with label, description, related spaces, links, creator, and nanopub link.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get agenda items for event";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/8d75c5e7b088af4582146e3fca9ed2c6c398fe9f72aff5f7159df0f811cb3640>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix schema: <http://schema.org/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?item ?item_label ?description (group_concat(distinct str(?space); separator=\" \") as ?spaces_multi_iri) (group_concat(distinct concat('<span><a href=\"', str(?link), '\">link</a></span>'); separator=\", \") as ?link) ?creator ?np (\"^\" as ?np_label) where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np dct:created ?npdate .
+    ?np dct:creator ?creator .
+    ?np np:hasAssertion ?a .
+    ?np npx:introduces ?item .
+  }
+  values ?_event_multi_iri {}
+  graph ?a {
+    ?item a gen:AgendaItem .
+    ?item dct:isPartOf ?_event_multi_iri .
+    optional { ?item rdfs:label ?item_label . }
+    optional { ?item dct:description ?description . }
+    optional { ?item schema:about ?space . }
+    optional { ?item rdfs:seeAlso ?link . }
+  }
+}
+group by ?item ?item_label ?description ?creator ?np ?npdate
+order by asc(?npdate)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-05-20T12:00:44Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-agenda-items-for-event;
+    npx:supersedes <https://w3id.org/np/RAzHXGlRWtIn_fRuK1J9WYMxWgozA9-r1wx9W7y2w20Tk>;
+    rdfs:label "Get agenda items for event";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RAcm8OurwUk15WOgBM9wySo-T3a5h6as4K8YR5MBrrxUc>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "m8ASHYbpPd83TN3mICiW1r+/33xQZFgQxTzeoMnDADdNaLE6qAEhl0N6jCOlEH8iN99XVW9OXblydmDfTk5fynatA5IHlKJ/yljHDxRjdE+U9CZziuE7cXHGfLcqhCj4uSd0pZ1+1W36hE/1+SvSL0yvfFuVreH/HaJuzmBIE28=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

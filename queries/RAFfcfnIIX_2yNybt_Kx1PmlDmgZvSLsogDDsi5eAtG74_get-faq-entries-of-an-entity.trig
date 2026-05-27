@@ -1,0 +1,89 @@
+@prefix this: <https://w3id.org/np/RAFfcfnIIX_2yNybt_Kx1PmlDmgZvSLsogDDsi5eAtG74> .
+@prefix sub: <https://w3id.org/np/RAFfcfnIIX_2yNybt_Kx1PmlDmgZvSLsogDDsi5eAtG74/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-faqs a grlc:grlc-query;
+    dct:description "This query returns the FAQ entries (questions and answers) of an entity, including source nanopub and date. When several nanopubs declare the same FAQ entry, only the most recent one is returned.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get FAQ entries of an entity";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/88a3271eb4f952262a674b6765824830ecb6c5a9ae10f1fd8caa4fc21cdccad7>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix schema: <http://schema.org/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?title ?content ?date ?faq ?np where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np dct:created ?date .
+    ?np np:hasAssertion ?a .
+  }
+  graph ?a {
+    ?faq rdf:type schema:Question .
+    ?faq rdfs:label ?title .
+    ?faq gen:hasContent ?content .
+    values ?_resource_multi_iri {}
+    ?faq dct:isPartOf ?_resource_multi_iri .
+    optional { ?faq gen:hasPositionString ?position }
+  }
+  filter not exists {
+    graph npa:graph {
+      ?np2 npa:hasValidSignatureForPublicKeyHash ?pubkey2 .
+      filter not exists { ?npx2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+      ?np2 dct:created ?date2 .
+      ?np2 np:hasAssertion ?a2 .
+      filter (?date2 > ?date)
+    }
+    graph ?a2 {
+      ?faq rdf:type schema:Question .
+    }
+  }
+}
+order by ?position ?title""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-05-09T21:08:58Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-faqs;
+    npx:supersedes <https://w3id.org/np/RA8oSPXZOq2ddEwa6LghfmXnjl7DGQVXLL36fjDI6F0uE>;
+    rdfs:label "Get FAQ entries of an entity";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "PBy0PS823UWCNVsioqXnkbi3ZpK1K7J7cp0G3VSxsB3Ctq92P1R+thxeOK/h4I8hXZma467tFYHwyI6uHfLGWiOpzAFPp4RhLn8pbeMf4iEpLIm9zSlCCZtAVXySJKCKhyp2K/aejVFAX7LtDdHMMOEAthGRxuC+J4ZJMe4M5I0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

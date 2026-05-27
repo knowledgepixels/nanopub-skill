@@ -1,0 +1,117 @@
+@prefix this: <https://w3id.org/np/RAFpk14hjqsgCRi1kEwLq7F9BcRPoK1E8PrqhaZvxQuac> .
+@prefix sub: <https://w3id.org/np/RAFpk14hjqsgCRi1kEwLq7F9BcRPoK1E8PrqhaZvxQuac/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "is described as" .
+  
+  dct:isPartOf rdfs:label "is part of" .
+  
+  <http://schema.org/about> rdfs:label "concerns" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  rdfs:seeAlso rdfs:label "has the link / further info at" .
+  
+  <https://w3id.org/kpxl/gen/terms/StatusUpdate> rdfs:label "status update" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Publish a status update belonging to an event. Must be linked to one or more spaces (e.g. projects) that the update concerns, and optionally to one or more URLs with further info.";
+    rdfs:label "Publishing a status update for an event";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06;
+    nt:hasTag "Events" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description or notes for the status update" .
+  
+  sub:event a nt:GuidedChoicePlaceholder;
+    rdfs:label "event the status update belongs to";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Event" .
+  
+  sub:link a nt:ExternalUriPlaceholder;
+    rdfs:label "link with further info on the status update" .
+  
+  sub:space a nt:GuidedChoicePlaceholder;
+    rdfs:label "space (e.g. project) the update concerns";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st01 rdf:object <https://w3id.org/kpxl/gen/terms/StatusUpdate>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:statusUpdate .
+  
+  sub:st02 rdf:object sub:title;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:statusUpdate .
+  
+  sub:st03 rdf:object sub:event;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:statusUpdate .
+  
+  sub:st04 a nt:RepeatableStatement;
+    rdf:object sub:space;
+    rdf:predicate <http://schema.org/about>;
+    rdf:subject sub:statusUpdate .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:statusUpdate .
+  
+  sub:st06 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:link;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:statusUpdate .
+  
+  sub:statusUpdate a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID suffix for the status update";
+    nt:hasDefaultValue sub:statusUpdate .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title of the status update";
+    nt:hasDefaultValue "Status update" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-05-27T14:23:51.497+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAlu1vgi7Th9TTWwpDqIzquRRgcdUUmIQq2IBHcCWc0co>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Publishing a status update for an event";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAAiJBqq60yVebKKb0NyCOFtKa4zD-dFxmyB1Gb-30BMw> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "I/iJdSQk+w/0mr71tmea2brVQUGFLX9J/B/m+rRn2rqajDVBKR8RrvPQ996D1uz1QomzrLjFxwIKekdC7Lnld9srpyUlWmfEkjaBuJ805ObEepse8cxmIMncOmuKjRf9cjicqxp1+jiRQ4b386yjDl+vleitz5SPKSsKinqqJQg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

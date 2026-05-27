@@ -1,0 +1,108 @@
+@prefix this: <https://w3id.org/np/RAKR2ck1AmBHkIEOeeVYSz_fxIGlh8D6hPpNqwo_G8UeY> .
+@prefix sub: <https://w3id.org/np/RAKR2ck1AmBHkIEOeeVYSz_fxIGlh8D6hPpNqwo_G8UeY/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdfs:label rdfs:label "is called - connects a formal identifier (left) to an informal human-readable name (right)" .
+  
+  rdfs:subClassOf rdfs:label "is a subclass of - states that all instances of the class/type to the left are also instances of the class/type to the right" .
+  
+  <http://www.w3.org/2002/07/owl#sameAs> rdfs:label "is exactly the same as" .
+  
+  <http://www.w3.org/2004/02/skos/core#definition> rdfs:label "is defined as follows: - connects an identifier (left) to a human-readable definition (right)" .
+  
+  <http://www.w3.org/2004/02/skos/core#relatedMatch> rdfs:label "is related to - connects two things that are somehow related" .
+  
+  <https://w3id.org/fdof/ontology#FAIRDigitalObject> rdfs:label "FAIR Digital Object (FDO)" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication defines a new subclass of a FAIR Digital Objects (FDO) that can then be used as type of specific FDOs.";
+    rdfs:label "Defining a type of an FDO";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st4, sub:st5;
+    nt:hasTag "FDO";
+    nt:hasTargetNanopubType <https://w3id.org/fdof/ontology#FAIRDigitalObject> .
+  
+  sub:definition a nt:LongLiteralPlaceholder;
+    rdfs:label "definition of the FDO type" .
+  
+  sub:fdoType a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the FDO type" .
+  
+  sub:relatedentity a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of a related entity";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:sameentity a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of a class/type that should be treated as fully synonymous" .
+  
+  sub:st0 rdf:object <https://w3id.org/fdof/ontology#FAIRDigitalObject>;
+    rdf:predicate rdfs:subClassOf;
+    rdf:subject sub:fdoType .
+  
+  sub:st1 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:fdoType .
+  
+  sub:st2 rdf:object sub:definition;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#definition>;
+    rdf:subject sub:fdoType .
+  
+  sub:st4 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:relatedentity;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#relatedMatch>;
+    rdf:subject sub:fdoType .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:sameentity;
+    rdf:predicate <http://www.w3.org/2002/07/owl#sameAs>;
+    rdf:subject sub:fdoType .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-04-22T13:52:39.302Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:supersedes <https://w3id.org/np/RA6MWXcEbbS_SGkzpYmP92QMu3CgSHTuYE-lBJxkb0ij8>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Defining a type of an FDO";
+    prov:wasDerivedFrom <https://w3id.org/np/RAGgM9kYzzaGF9eY1eawXCG-U-_HOEdw6NOnghAb5ijZA>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "2c1YdrE6eAJHWTOtgczvX7itEukcbCV232SdqQOMgNtghBplBt4gRb/Fr1vvKb3NvzJTQKoZGP4a9CIgAb8jUQv67F1uRm2Pmt689bfLpegx5jqG45/k29Vd/8evLJz5U0NCxXCnanx+ecuXt9LhiNk4QuWyq8x8Trt06pooMxY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

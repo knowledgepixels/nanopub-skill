@@ -1,0 +1,109 @@
+@prefix this: <https://w3id.org/np/RAOegISS6mc-7kZbYDub6ycKVepCe1y7kpuFkOscqASco> .
+@prefix sub: <https://w3id.org/np/RAOegISS6mc-7kZbYDub6ycKVepCe1y7kpuFkOscqASco/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://schema.org/NewsArticle> rdfs:label "news article" .
+  
+  <http://schema.org/articleBody> rdfs:label "has the body content" .
+  
+  <http://schema.org/datePublished> rdfs:label "was published on" .
+  
+  <http://schema.org/headline> rdfs:label "has the title" .
+  
+  <http://schema.org/isPartOf> rdfs:label "is part of" .
+  
+  <http://schema.org/url> rdfs:label "is available at" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Publish a news article to a Space";
+    nt:hasNanopubLabelPattern "${headline}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5 .
+  
+  sub:body a nt:LongLiteralPlaceholder .
+  
+  sub:datePublished a nt:LiteralPlaceholder;
+    nt:hasDatatype xsd:date .
+  
+  sub:externalUrl a nt:ExternalUriPlaceholder .
+  
+  sub:headline a nt:LiteralPlaceholder .
+  
+  sub:newsItem a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    nt:hasDefaultValue sub:newsItem .
+  
+  sub:space a nt:GuidedChoicePlaceholder;
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st0 rdf:object <http://schema.org/NewsArticle>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:newsItem .
+  
+  sub:st1 rdf:object sub:headline;
+    rdf:predicate <http://schema.org/headline>;
+    rdf:subject sub:newsItem .
+  
+  sub:st2 a nt:RepeatableStatement;
+    rdf:object sub:space;
+    rdf:predicate <http://schema.org/isPartOf>;
+    rdf:subject sub:newsItem .
+  
+  sub:st3 rdf:object sub:body;
+    rdf:predicate <http://schema.org/articleBody>;
+    rdf:subject sub:newsItem .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:datePublished;
+    rdf:predicate <http://schema.org/datePublished>;
+    rdf:subject sub:newsItem .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:externalUrl;
+    rdf:predicate <http://schema.org/url>;
+    rdf:subject sub:newsItem .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-04-22T04:37:24.976Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354, orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>, <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Publish a news article to a Space";
+    prov:wasDerivedFrom <https://w3id.org/np/RAcfSnvfmsAbz9iORFAAkj5Khg1iMDL0qaq9eNlrlIaAs>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "U6FR8YY8oVOQNIOtZQXaBFiE4gDw6lT5DzCsDGG2BVsbfcCNbWvodegtl935Ntd8GgRBCa1WujADwD1kJFpub4k2iBFQpLTHvB6DQh/+v0lfkLOTysXohhbi7jl9kpvdKOeE74K6NwnJ/ZnmMZSz82dso0HnU2s2afwSppvDG20=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,71 @@
+@prefix this: <https://w3id.org/np/RAqkSe7JA-k0pGty6Cikl4POsZVyNRR1tanfSOulwqlfs> .
+@prefix sub: <https://w3id.org/np/RAqkSe7JA-k0pGty6Cikl4POsZVyNRR1tanfSOulwqlfs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    rdfs:label "add...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RAWVrrZFodmZwbu78C0jwIcbdPo-GKNsXI5N1Ckroo_u4>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "entity" .
+  
+  sub:faq-view a <https://w3id.org/kpxl/gen/terms/PlainParagraphView>, <https://w3id.org/kpxl/gen/terms/ResourceView>;
+    dct:isVersionOf <https://w3id.org/np/RAaLqz6Duezztu2ak_L_nXAjl8QweaUL7i5PuJD8_eH8I/faq-view-kind>;
+    dct:title "❓ FAQ";
+    rdfs:label "FAQ view";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/IndividualAgent>,
+      <https://w3id.org/kpxl/gen/terms/MaintainedResource>, <https://w3id.org/kpxl/gen/terms/Space>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.1.faq";
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:addAction;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAFfcfnIIX_2yNybt_Kx1PmlDmgZvSLsogDDsi5eAtG74/get-faqs>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RAFfcfnIIX_2yNybt_Kx1PmlDmgZvSLsogDDsi5eAtG74/get-faqs> nt:hasLabelFromApi
+      "Get FAQ entries of an entity - This query returns the FAQ entries (questions and answers) of an entity, incl..." .
+  
+  <https://w3id.org/np/RAWVrrZFodmZwbu78C0jwIcbdPo-GKNsXI5N1Ckroo_u4> nt:hasLabelFromApi
+      "Create an FAQ entry" .
+  
+  this: dct:created "2026-05-09T23:13:57.260+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:faq-view;
+    npx:introduces <https://w3id.org/np/RAaLqz6Duezztu2ak_L_nXAjl8QweaUL7i5PuJD8_eH8I/faq-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAF4GUnaXOMjWWscMrFbY8czrLzevkBN45HANTcFLMOJY>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "TEtYXl8pNiCr7mXg5qFFNzDvEN9S4AhR26CDebD2j3Tg6lI9WHqHSsx6i70NPbJN6lhFtqFK3qbRccowr/ZEq2PpDAJdp+RqFCGbhPxpro+lQO3vJmLYMxTAYG3owrrC74eHtDJfr79hlew2QvWZ0T0aWNyLZdKuLgUiIfE/cn4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+
