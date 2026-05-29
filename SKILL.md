@@ -544,6 +544,24 @@ java -jar $JAR retract -i <nanopub-uri> -k ~/.nanopub/<bot>_id_rsa -s <signer-IR
 
 The `-p` flag publishes the retraction immediately. When using a specific key (`-k`), you must also specify the signer IRI (`-s`), which can be an ORCID or a bot IRI.
 
+### Note: \npx:retracts vs npx:invalidates
+Two predicates with overlapping appearance and distinct purposes:
+
+npx:retracts is the publisher-facing predicate. Use it directly when you (the publisher of a target nanopub) want to mark it retracted. The retraction nanopub asserts <your-orcid> npx:retracts <target-Trusty-URI> in its assertion graph and must be signed by the same key that signed the target.
+npx:invalidates is an admin-layer generalisation derived inside the nanopub-query repos. When a retraction (npx:retracts) or supersession (npx:supersedes) is published, the registry derives a matching npx:invalidates triple in the admin graph. Publishers do not write npx:invalidates directly.
+
+When writing SPARQL filters on validated content (e.g. inside a grlc-query for a pinned standing view), filter on npx:invalidates from the admin graph:
+```sparql
+GRAPH npa:graph {
+  ?n1 npa:hasValidSignatureForPublicKey ?pubkey .
+  FILTER NOT EXISTS {
+    ?inv npx:invalidates ?n1 ;
+         npa:hasValidSignatureForPublicKey ?pubkey .
+  }
+}
+```
+This catches both retractions and supersessions in one filter. Writing FILTER NOT EXISTS { ?r npx:retracts ?n1 } only catches retractions and misses superseded nanopubs.
+If you publish an npx:invalidates triple directly (instead of npx:retracts), the registry may not derive the expected admin-graph entries; the filter above may then fail to exclude the target. Treat npx:invalidates as read-only from a publisher's perspective.
 ### 9. Create a nanopub index
 
 A nanopub index groups multiple nanopubs under a single entry point:
