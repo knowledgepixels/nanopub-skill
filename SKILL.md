@@ -183,6 +183,25 @@ Resource views define how data is displayed on resource pages (user/space/mainta
 curl -s "https://query.knowledgepixels.com/api/RAcyg9La3L2Xuig-jEXicmdmEgUGYfHda6Au1Pfq64hR0/get-all-resource-views"
 ```
 
+### Activating a view on a Space (`gen:ViewDisplay`)
+
+Defining a view is not the same as making it appear on a Space page. A resource view (`gen:ResourceView`, `gen:TabularView`, etc.) declares *what* the view is — its query, structural position, applies-to scope. A separate **view-display** activation nanopub asserts *that* the view is active on a given Space.
+
+The activation template is `https://w3id.org/np/RAsc8FMsGih955oFSFG0YcB9sDKA62VLbp3VIw86IxMvk` ("Displaying a view for a Space"). The assertion graph contains four predicates on a single local resource:
+
+```turtle
+sub:display a gen:ActivatedViewDisplay, gen:ViewDisplay ;
+    gen:appliesTo       <space-URI> ;
+    gen:isDisplayFor    <space-URI> ;
+    gen:isDisplayOfView <view-referent-URI> .
+```
+
+**The object of `gen:isDisplayOfView` is the view's referent URI** — the form `<wrapper-Trusty-URI>/<view-local-name>` — not the Trusty URI of any underlying query nanopub. The view-display points at the *typed wrapper* that carries `gen:hasViewQuery`, `gen:hasStructuralPosition`, and the other display metadata. Pointing `gen:isDisplayOfView` at a bare grlc-query Trusty URI produces a syntactically valid nanopub that renders no panel; the renderer expects the typed-wrapper layer to find its query and display attributes.
+
+A view that is defined but not activated will not appear on the Space page. A view that is activated against a bare query (skipping the wrapper) likewise does not render. Both errors are silent: the nanopubs publish and resolve, but the Space page shows nothing new.
+
+To remove an active view-display, retract the activation nanopub (see §"Retract a nanopub"). The wrapper itself need not be retracted unless its definition is wrong.
+
 To browse the OpenAPI spec for a specific published query:
 
 ```
