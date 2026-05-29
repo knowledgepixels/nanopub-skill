@@ -393,6 +393,25 @@ Spaces, roles, and memberships are ordinary nanopubs created with the standard w
 - A role grant (instantiation) validates when published by someone whose tier is at or above the role's tier: admin can grant any tier; maintainer can grant member/observer; member can grant observer; **observer is the default tier** and is the only one an agent may **self-attest** (publisher == the agent being granted).
 - Authority is resolved via the signing **pubkey** mapped through the current `trust` state, not via the self-declared `npx:signedBy`. When superseding a Space definition, keep the same Space IRI (it is the space's identity).
 
+### A note on the older `gen:NanodashProject` model
+
+The current model uses `gen:Space` as the higher-level container and `gen:hasAdmin` as the trust-seed predicate (see above). An older model based on `gen:NanodashProject` uses `gen:hasOwner` instead, with related differences in how pinned templates and pinned queries are declared.
+
+Comparison:
+
+| Aspect | Space model (current) | NanodashProject model (older) |
+|---|---|---|
+| Container class | `gen:Space` (often also `gen:Project`) | `gen:NanodashProject` |
+| Trust-seed predicate | `gen:hasAdmin` | `gen:hasOwner` |
+| Pinned templates | Federated per-action nanopubs: one `gen:hasPinnedTemplate` assertion per pin, signed by an admin | Often bundled inline in the project-definition nanopub's assertion graph |
+| Pinned queries | Federated per-action nanopubs: one `gen:hasPinnedQuery` assertion per pin | Often bundled inline |
+| Adding a pin | Publish a new pin-action nanopub (additive) | Supersede the project-definition nanopub |
+| Removing a pin | Retract the pin-action | Supersede the project-definition nanopub |
+
+Both models are live on the registry. When reading a project/space definition, check the container class and the ownership predicate to determine which model is in use. When creating new spaces, prefer the `gen:Space` + `gen:hasAdmin` model — the federated per-action approach scales better and avoids supersession churn on the root definition.
+
+The Space model also distinguishes admin / maintainer / member / observer roles (see above); the older NanodashProject model has only the binary owner/non-owner distinction.
+
 ### 2. Check the user's profile
 
 Before creating the TriG file, read `~/.nanopub/profile.yaml` to get the user's ORCID:
