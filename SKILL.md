@@ -183,6 +183,25 @@ Resource views define how data is displayed on resource pages (user/space/mainta
 curl -s "https://query.knowledgepixels.com/api/RAcyg9La3L2Xuig-jEXicmdmEgUGYfHda6Au1Pfq64hR0/get-all-resource-views"
 ```
 
+### Activating a view on a Space (`gen:ViewDisplay`)
+
+Defining a view is not the same as making it appear on a Space page. A resource view (`gen:ResourceView`, `gen:TabularView`, etc.) declares *what* the view is — its query, structural position, applies-to scope. A separate **view-display** activation nanopub asserts *that* the view is active on a given Space.
+
+The activation template is `https://w3id.org/np/RAsc8FMsGih955oFSFG0YcB9sDKA62VLbp3VIw86IxMvk` ("Displaying a view for a Space"). The assertion graph contains four predicates on a single local resource:
+
+```turtle
+sub:display a gen:ActivatedViewDisplay, gen:ViewDisplay ;
+    gen:appliesTo       <space-URI> ;
+    gen:isDisplayFor    <space-URI> ;
+    gen:isDisplayOfView <view-referent-URI> .
+```
+
+**The object of `gen:isDisplayOfView` is the view's referent URI** — the form `<wrapper-Trusty-URI>/<view-local-name>` — not the Trusty URI of any underlying query nanopub. The view-display points at the *typed wrapper* that carries `gen:hasViewQuery`, `gen:hasStructuralPosition`, and the other display metadata. Pointing `gen:isDisplayOfView` at a bare grlc-query Trusty URI produces a syntactically valid nanopub that renders no panel; the renderer expects the typed-wrapper layer to find its query and display attributes.
+
+A view that is defined but not activated will not appear on the Space page. A view that is activated against a bare query (skipping the wrapper) likewise does not render. Both errors are silent: the nanopubs publish and resolve, but the Space page shows nothing new.
+
+To remove an active view-display, retract the activation nanopub (see §"Retract a nanopub"). The wrapper itself need not be retracted unless its definition is wrong.
+
 To browse the OpenAPI spec for a specific published query:
 
 ```
@@ -374,6 +393,25 @@ Spaces, roles, and memberships are ordinary nanopubs created with the standard w
 - A role grant (instantiation) validates when published by someone whose tier is at or above the role's tier: admin can grant any tier; maintainer can grant member/observer; member can grant observer; **observer is the default tier** and is the only one an agent may **self-attest** (publisher == the agent being granted).
 - Authority is resolved via the signing **pubkey** mapped through the current `trust` state, not via the self-declared `npx:signedBy`. When superseding a Space definition, keep the same Space IRI (it is the space's identity).
 
+### A note on the older `gen:NanodashProject` model
+
+The current model uses `gen:Space` as the higher-level container and `gen:hasAdmin` as the trust-seed predicate (see above). An older model based on `gen:NanodashProject` uses `gen:hasOwner` instead, with related differences in how pinned templates and pinned queries are declared.
+
+Comparison:
+
+| Aspect | Space model (current) | NanodashProject model (older) |
+|---|---|---|
+| Container class | `gen:Space` (often also `gen:Project`) | `gen:NanodashProject` |
+| Trust-seed predicate | `gen:hasAdmin` | `gen:hasOwner` |
+| Pinned templates | Federated per-action nanopubs: one `gen:hasPinnedTemplate` assertion per pin, signed by an admin | Often bundled inline in the project-definition nanopub's assertion graph |
+| Pinned queries | Federated per-action nanopubs: one `gen:hasPinnedQuery` assertion per pin | Often bundled inline |
+| Adding a pin | Publish a new pin-action nanopub (additive) | Supersede the project-definition nanopub |
+| Removing a pin | Retract the pin-action | Supersede the project-definition nanopub |
+
+Both models are live on the registry. When reading a project/space definition, check the container class and the ownership predicate to determine which model is in use. When creating new spaces, prefer the `gen:Space` + `gen:hasAdmin` model — the federated per-action approach scales better and avoids supersession churn on the root definition.
+
+The Space model also distinguishes admin / maintainer / member / observer roles (see above); the older NanodashProject model has only the binary owner/non-owner distinction.
+
 ### 2. Check the user's profile
 
 Before creating the TriG file, read `~/.nanopub/profile.yaml` to get the user's ORCID:
@@ -524,6 +562,29 @@ java -jar $JAR retract -i <nanopub-uri> -k ~/.nanopub/<bot>_id_rsa -s <signer-IR
 ```
 
 The `-p` flag publishes the retraction immediately. When using a specific key (`-k`), you must also specify the signer IRI (`-s`), which can be an ORCID or a bot IRI.
+
+### Note: `npx:retracts` vs `npx:invalidates`
+
+Two predicates with overlapping appearance and distinct purposes:
+
+- **`npx:retracts`** is the publisher-facing predicate. Use it directly when you (the publisher of a target nanopub) want to mark it retracted. The retraction nanopub asserts <your-orcid> npx:retracts <target-Trusty-URI> in its assertion graph and must be signed by the same key that signed the target.
+
+- **`npx:invalidates`** is an admin-layer generalisation derived inside the nanopub-query repos. When a retraction (npx:retracts) or supersession (npx:supersedes) is published, the registry derives a matching npx:invalidates triple in the admin graph. Publishers do not write npx:invalidates directly.
+
+When writing SPARQL filters on validated content (e.g. inside a grlc-query for a pinned standing view), filter on npx:invalidates from the admin graph:
+```sparql
+GRAPH npa:graph {
+  ?n1 npa:hasValidSignatureForPublicKey ?pubkey .
+  FILTER NOT EXISTS {
+    ?inv npx:invalidates ?n1 ;
+         npa:hasValidSignatureForPublicKey ?pubkey .
+  }
+}
+```
+
+This catches both retractions and supersessions in one filter. Writing FILTER NOT EXISTS { ?r npx:retracts ?n1 } only catches retractions and misses superseded nanopubs.
+
+If you publish an npx:invalidates triple directly (instead of npx:retracts), the registry may not derive the expected admin-graph entries; the filter above may then fail to exclude the target. Treat npx:invalidates as read-only from a publisher's perspective.
 
 ### 9. Create a nanopub index
 
