@@ -1,0 +1,54 @@
+@prefix this: <https://w3id.org/np/RAS-Wm3ewaQtz8rhzKY-EAyrJnYGZMq3MOz2AZ9fXQ5e8> .
+@prefix sub: <https://w3id.org/np/RAS-Wm3ewaQtz8rhzKY-EAyrJnYGZMq3MOz2AZ9fXQ5e8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:fdt-observations-per-method-view a <https://w3id.org/kpxl/gen/terms/ResourceView>,
+      <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf sub:fdt-observations-per-method-view-kind;
+    dct:title "MAC FDT — observations per method";
+    rdfs:label "MAC FDT — observations per method view";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/Space>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "5.3.fdt-observations-per-method";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAIKnskDgF8ZX-hOIC1UKLSxDapH1K1FjkNKi5Or-A3ws>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8888-635X .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-05-29T08:51:39Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8888-635X;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:fdt-observations-per-method-view;
+    npx:introduces sub:fdt-observations-per-method-view-kind;
+    rdfs:label "MAC FDT — observations per method view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD3w/IUb755GIzp3ueODYkgELhyq4Clygb5Kspge50xo+n8uC/IvXwi+ukRjEpdfX/JZ09yKUCJ2AMMr/QchrsP1Xhg9Q3fEZ4E12XqFd5jX00Qs0K5XZwjBaV8NdDTJW9I4gpcyh0cry7hSBAWHkXEkqbK+lQvR4UFAKejFq6u/wIDAQAB";
+    npx:hasSignature "GsfnfQRgWF5pCkdWloX/Ie2WZUpmi6V+OQHW2012E0H2CFD5t2An8Gc5lzEFoEKDluYDxMz1kKrfOVFMKTZG1jM9Lyh0H2XgsE6ZT+xIZjrAaw228fflsX5TRhTrUy87keL1/GaGg6gO3GfA4j36BWQ4eFb7avSz4zUIUJPYHCo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8888-635X .
+}
+

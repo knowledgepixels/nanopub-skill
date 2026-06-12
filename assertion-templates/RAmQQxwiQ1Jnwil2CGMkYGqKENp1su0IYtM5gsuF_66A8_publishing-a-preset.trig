@@ -1,0 +1,154 @@
+@prefix this: <https://w3id.org/np/RAmQQxwiQ1Jnwil2CGMkYGqKENp1su0IYtM5gsuF_66A8> .
+@prefix sub: <https://w3id.org/np/RAmQQxwiQ1Jnwil2CGMkYGqKENp1su0IYtM5gsuF_66A8/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  dct:isVersionOf rdfs:label "is a version of" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the name" .
+  
+  gen:IndividualAgent rdfs:label "individual agent" .
+  
+  gen:MaintainedResource rdfs:label "maintained resource" .
+  
+  gen:Preset rdfs:label "preset - a named bundle of default views and roles that applies to a resource type" .
+  
+  gen:Space rdfs:label "space" .
+  
+  gen:appliesToInstancesOf rdfs:label "applies to instances of" .
+  
+  gen:appliesToNamespace rdfs:label "applies to the namespace" .
+  
+  gen:hasRole rdfs:label "has the role" .
+  
+  gen:hasView rdfs:label "has the view" .
+  
+  sub:appliesToClass a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the type of resource page this preset applies to";
+    nt:possibleValue gen:IndividualAgent, gen:MaintainedResource, gen:Space .
+  
+  sub:appliesToNamespace a nt:ExternalUriPlaceholder;
+    rdfs:label "optionally, a namespace (URI prefix) this preset applies to" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description """<p>Publish a <strong>preset</strong>: a named bundle that defines which views are shown by default and which roles are set up for a resource page — applied to all instances of a resource type (user, space, or maintained resource), so that any such resource automatically picks up the preset.</p>
+
+<p>Presets appear in view dropdowns alongside individual views, marked as a preset. A preset can bundle:</p>
+<ul>
+<li>one or more <strong>views</strong> to display by default, and</li>
+<li>one or more <strong>role definitions</strong> to set up (e.g. to be assigned to the space).</li>
+</ul>
+
+<p>Like resource views, a preset has a stable <em>preset kind</em> (linked via <code>dct:isVersionOf</code>) that persists across superseding versions.</p>
+
+<p>This template introduces the proposed term <code>gen:Preset</code> (reusing the existing <code>gen:hasView</code> and <code>gen:hasRole</code> properties) and is a draft for <a href=\"https://github.com/knowledgepixels/nanodash/issues/302\" target=\"_blank\">nanodash issue #302</a>.</p>""";
+    rdfs:label "Publishing a preset";
+    nt:hasNanopubLabelPattern "Preset: ${name}";
+    nt:hasStatement sub:st10, sub:st10b, sub:st20, sub:st25, sub:st30, sub:st36, sub:st40,
+      sub:st50;
+    nt:hasTag "Spaces";
+    nt:hasTargetNanopubType gen:Preset .
+  
+  sub:description a nt:LiteralPlaceholder;
+    rdfs:label "an optional description of what this preset is for" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "a short name for this preset (e.g. \"Nano Session\")" .
+  
+  sub:preset a nt:EmbeddedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID suffix for the preset" .
+  
+  sub:presetKind a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "short suffix or existing URI of the preset kind" .
+  
+  sub:role a nt:GuidedChoicePlaceholder;
+    rdfs:label "a role definition to include in this preset";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/SpaceMemberRole" .
+  
+  sub:st10 rdf:object gen:Preset;
+    rdf:predicate rdf:type;
+    rdf:subject sub:preset .
+  
+  sub:st10b rdf:object sub:presetKind;
+    rdf:predicate dct:isVersionOf;
+    rdf:subject sub:preset .
+  
+  sub:st20 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:preset .
+  
+  sub:st25 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:preset .
+  
+  sub:st30 a nt:RepeatableStatement;
+    rdf:object sub:appliesToClass;
+    rdf:predicate gen:appliesToInstancesOf;
+    rdf:subject sub:preset .
+  
+  sub:st36 a nt:AdvancedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:appliesToNamespace;
+    rdf:predicate gen:appliesToNamespace;
+    rdf:subject sub:preset .
+  
+  sub:st40 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:view;
+    rdf:predicate gen:hasView;
+    rdf:subject sub:preset .
+  
+  sub:st50 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:role;
+    rdf:predicate gen:hasRole;
+    rdf:subject sub:preset .
+  
+  sub:view a nt:GuidedChoicePlaceholder;
+    rdfs:label "a view to show by default for this preset";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAs7Q2IMbb7C2WzFa98bVwlDMhN3kJ0rrF9cSEybtvLaA/find-embedded-things?type=https://w3id.org/kpxl/gen/terms/ResourceView" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-02T14:39:46Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Publishing a preset";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "nm0JB2r7MRzoH5Vk295qTZ+B4ngCJTqiM9Rw9VmFV+NCikaABYO8EyxzXyuYm+m1two0VxUYxVROJE1afVHqxv1KOClWnX9VsFi+p6FB9aL0JX+8Qttct2+FmSLWevsX7KCrbLb0bZ7pANnFItq5kZpMUrjzTDJ9M+Q3+JQzyY0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

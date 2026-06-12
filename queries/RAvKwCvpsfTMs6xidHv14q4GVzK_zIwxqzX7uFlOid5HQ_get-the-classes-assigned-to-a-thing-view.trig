@@ -1,0 +1,75 @@
+@prefix this: <https://w3id.org/np/RAvKwCvpsfTMs6xidHv14q4GVzK_zIwxqzX7uFlOid5HQ> .
+@prefix sub: <https://w3id.org/np/RAvKwCvpsfTMs6xidHv14q4GVzK_zIwxqzX7uFlOid5HQ/> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-classes-for-thing-view a grlc:grlc-query;
+    dct:description "Returns the classes assigned to the given thing, with view-friendly columns (class / class_label). Used by the /explore page as a resource view (the 'Assigned to' list).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the classes assigned to a thing (view)";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix dct: <http://purl.org/dc/terms/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+
+select distinct ?class ?class_label where {
+  graph ?g {
+    ?_thing_iri a ?class .
+  }
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+    ?np npa:hasGraph ?g .
+    ?np np:hasPublicationInfo ?i .
+  }
+  optional { graph ?g {  ?class rdfs:label ?classLabel1 . } }
+  optional { graph ?g {  ?class dct:title ?classLabel2 . } }
+  optional { graph ?i {  ?class rdfs:label ?classLabel3 . } }
+  optional { graph ?i {  ?class nt:hasLabelFromApi ?classLabel4 . } }
+  bind(coalesce(?classLabel1, ?classLabel2, ?classLabel3, ?classLabel4) as ?class_label)
+} limit 1000""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-05-30T08:00:00Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-classes-for-thing-view;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "AdPD3lZA1gzwKygl5IhSH7GyP62hroOzC4jw6pT/KsxmbP7vRSc53VJReE3Kr4G/aOWivpRSMkTFrW3v7+XPyGY3gZOsuRNNXFqM4rH/64vy4Iwn4UM3ZSAtHmI4119Wft5Ptn++/0i9SyK0bwhVz2T0vaiCzLXU9ArEaXpksxI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,85 @@
+@prefix this: <https://w3id.org/np/RAiPISFvhxtq8q5Raepq9pI2WUUC6rMc9QafghW4FohHE> .
+@prefix sub: <https://w3id.org/np/RAiPISFvhxtq8q5Raepq9pI2WUUC6rMc9QafghW4FohHE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-fip-supercommunities a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns a list of all FIP communities that have supercommunities.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get FIP supercommunities";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+
+select distinct ?community (group_concat(distinct ?supercommunity; separator=\" \") as ?supercommunities) (group_concat(distinct ?sc; separator=\" \") as ?sc) where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+    ?np npx:hasNanopubType fip:FAIR-Implementation-Community .
+    ?np (npx:introduces|npx:describes) ?community .
+    ?np np:hasAssertion ?a .
+  }
+  graph ?a {
+    ?community dct:isPartOf ?supercommunity .
+  }
+  optional {
+    graph npa:graph {
+      ?disapproval np:hasAssertion ?da .
+      ?disapproval npa:hasValidSignatureForPublicKey ?dpubkey .
+      filter not exists { ?disapproval_x npx:invalidates ?disapproval ; npa:hasValidSignatureForPublicKey ?dpubkey . }
+    }
+    graph <https://w3id.org/np/RAkVk6aKWsmgcuKtPA7OSp2h-GbDfx8xrz_kJAAgY8Xa4#assertion> {
+      ?dpubkeys npx:hasPublicKey ?dpubkey .
+    }
+    graph ?da {
+      ?dsomebody ( npx:disapproves-of | npx:disapprovesOf ) ?np .
+    }
+  } filter(!bound(?disapproval))  # for some reason this is much faster than \"filter not exists\"
+  bind(replace(str(?supercommunity), \".*[#/]\", \"\") as ?sc)
+} group by ?community""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234;
+    prov:wasDerivedFrom <https://w3id.org/np/RAz76URtDXiLs-16LwzK-zNyzbIugXW8OjhUQdh5jPdtw> .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-05T12:38:39Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-fip-supercommunities;
+    rdfs:label "Get FIP supercommunities";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "m/q+bEQQ2VGu90ewmU1r6i9fRJhYG+/7STgpuRDkVu4kzxLWBm44KzZR7YPlsQGW3R+RXaM06924It+ygBPyYhRG5WCceqJpqabVZelMW//t9UQBlmkWkd8fL0NjysbJeKE07e/ZhEsU2ukYXA7C7waNCTIvcCKeIt8G+1GTsKQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

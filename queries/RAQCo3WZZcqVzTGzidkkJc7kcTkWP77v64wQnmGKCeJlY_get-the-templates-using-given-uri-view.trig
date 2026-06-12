@@ -1,0 +1,73 @@
+@prefix this: <https://w3id.org/np/RAQCo3WZZcqVzTGzidkkJc7kcTkWP77v64wQnmGKCeJlY> .
+@prefix sub: <https://w3id.org/np/RAQCo3WZZcqVzTGzidkkJc7kcTkWP77v64wQnmGKCeJlY/> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-templates-with-uri-view a grlc:grlc-query;
+    dct:description "Returns the assertion templates that use the given URI in their statements, with view-friendly columns (template_iri / template_iri_label). Used by the /explore page as a resource view (the 'Related Templates' list).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the templates using given URI (view)";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/79342356d3a68063a627e83ac34b376479e438abb8a4c4b27d49f845f537dc8d>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+
+select distinct ?template_iri ?template_iri_label where {
+  graph ?assertion {
+    ?statement ?relation ?_thing_iri .
+    values ?relation { rdf:subject rdf:predicate rdf:object nt:possibleValue }
+  }
+  graph npa:graph {
+    ?template_iri npa:hasValidSignatureForPublicKey ?pubkey .
+    filter not exists { ?npx npx:invalidates ?template_iri ; npa:hasValidSignatureForPublicKey ?pubkey . }
+    filter not exists { ?template_iri npx:hasNanopubType nt:UnlistedTemplate . }
+    ?template_iri np:hasAssertion ?assertion .
+    optional { ?template_iri rdfs:label ?template_iri_label }
+  }
+} limit 1000""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-05-30T08:00:00Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-templates-with-uri-view;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
+      ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90, ns1:RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Dxnk2dsi/miE8lCvXsgj8rXa1BGsNdlWXbrNf4D3tRoKQJjeGh5c0MsQL2Tc1M4GMpuhUlVXNqFqlS7C/YQlYFo+6fSJdxcHOBEDwAWATQEZlE0lkcWJV8dr+L79h5b8rZI4eL5AyT97Z1fK9wpXpox/DhccQQcPEJncpCZm2RA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

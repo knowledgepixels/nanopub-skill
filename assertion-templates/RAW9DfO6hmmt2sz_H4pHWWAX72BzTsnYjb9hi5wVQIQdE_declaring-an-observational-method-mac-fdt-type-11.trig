@@ -1,0 +1,223 @@
+@prefix this: <https://w3id.org/np/RAW9DfO6hmmt2sz_H4pHWWAX72BzTsnYjb9hi5wVQIQdE> .
+@prefix sub: <https://w3id.org/np/RAW9DfO6hmmt2sz_H4pHWWAX72BzTsnYjb9hi5wVQIQdE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix mac: <https://w3id.org/spaces/mac/r/ontology/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:contributor rdfs:label "has contributor" .
+  
+  dct:creator rdfs:label "has creator" .
+  
+  dct:isPartOf rdfs:label "is part of" .
+  
+  dct:license rdfs:label "data usage license" .
+  
+  dct:publisher rdfs:label "has publisher" .
+  
+  dct:references rdfs:label "references" .
+  
+  dct:source rdfs:label "has source" .
+  
+  dct:subject rdfs:label "has domain" .
+  
+  <http://purl.org/spar/cito/citesAsAuthority> rdfs:label "cites as authority" .
+  
+  <http://schema.org/url> rdfs:label "has URL" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has description" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <https://creativecommons.org/licenses/by/4.0/> rdfs:label "Attribution 4.0 International (CC BY 4.0)" .
+  
+  <https://doi.org/10.3389/fbinf.2025.1634111> rdfs:label "FAIR² data article (Frontiers in Bioinformatics)" .
+  
+  <https://doi.org/10.71728/hw56-vj34> rdfs:label "FAIR² Data Package DOI" .
+  
+  <https://w3id.org/fair/fip/terms/implements> rdfs:label "implements" .
+  
+  <https://w3id.org/fdof/ontology#FAIRDigitalObject> rdfs:label "FAIR Digital Object (FDO)" .
+  
+  <https://w3id.org/fdof/ontology#hasEncodingFormat> rdfs:label "has format" .
+  
+  <https://w3id.org/fdof/ontology#hasMetadata> rdfs:label "has its metadata in" .
+  
+  <https://w3id.org/fdof/ontology#materializes> rdfs:label "is a concrete materialization of" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "An epidemiological surveillance system or data collection platform through which real-world occurrences of biological entities are documented. Referenced by real-world observation FDOs (Type 2) via mac:hasSurveillanceMethod. Carries one or more cito:citesAsAuthority URIs identifying the published descriptions of the system, and an optional schema:url for the platform. The nanopublication self-materializes (assertion graph is the FDO).";
+    rdfs:label "Declaring an Observational Method (MAC FDT Type 11)";
+    nt:hasNanopubLabelPattern "Observational method (${label})";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st5b, sub:st5c,
+      sub:st5d, sub:st6, sub:st7, sub:st8, sub:st91, sub:st92, sub:st95, sub:st_ci, sub:st_pp,
+      sub:st_su;
+    nt:hasTag "MAC" .
+  
+  sub:authority a nt:ExternalUriPlaceholder;
+    rdfs:label "published method authority (DOI or URL)" .
+  
+  sub:contact a nt:LiteralPlaceholder;
+    rdfs:label "contact email" .
+  
+  sub:contributor a nt:AgentPlaceholder;
+    rdfs:label "ORCID of contributor" .
+  
+  sub:creator a nt:AgentPlaceholder;
+    rdfs:label "ORCID of creator";
+    nt:hasDefaultValue nt:CREATOR .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "free-text description of this method" .
+  
+  sub:domain a nt:RestrictedChoicePlaceholder;
+    rdfs:label "domain";
+    nt:possibleValuesFrom <https://w3id.org/np/RACXDZHEowTYDAzZvdmD0qIGpXZwY5ghMRBBlt6N8Iu5s> .
+  
+  sub:fdo a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "full URI or short suffix for this observational method FDO" .
+  
+  sub:fip a nt:GuidedChoicePlaceholder;
+    rdfs:label "FAIR Implementation Profile";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FFAIR-Implementation-Profile&searchterm=" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "label for this method (e.g. \"GISAID — Global Initiative on Sharing All Influenza Data\")" .
+  
+  sub:project a nt:GuidedChoicePlaceholder;
+    rdfs:label "project";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAFTZ8GqPOOJQOBcEo5IB8lg5vZCFiIyr_RVLKZDQBHMk/get-projects?searchterm=" .
+  
+  sub:publisher a nt:ExternalUriPlaceholder;
+    rdfs:label "ROR of the publishing entity" .
+  
+  sub:st0 rdf:object <https://w3id.org/fdof/ontology#FAIRDigitalObject>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:fdo .
+  
+  sub:st1 a nt:OptionalStatement;
+    rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:fdo .
+  
+  sub:st2 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:fdo .
+  
+  sub:st3 rdf:object mac:ObservationalMethod;
+    rdf:predicate rdf:type;
+    rdf:subject sub:fdo .
+  
+  sub:st4 rdf:object nt:NANOPUB;
+    rdf:predicate <https://w3id.org/fdof/ontology#hasMetadata>;
+    rdf:subject sub:fdo .
+  
+  sub:st5 rdf:object sub:fdo;
+    rdf:predicate <https://w3id.org/fdof/ontology#materializes>;
+    rdf:subject nt:NANOPUB .
+  
+  sub:st5b rdf:object <https://www.iana.org/assignments/media-types/application/trig>;
+    rdf:predicate <https://w3id.org/fdof/ontology#hasEncodingFormat>;
+    rdf:subject nt:NANOPUB .
+  
+  sub:st5c rdf:object <https://creativecommons.org/licenses/by/4.0/>;
+    rdf:predicate dct:license;
+    rdf:subject nt:NANOPUB .
+  
+  sub:st5d rdf:object nt:NANOPUB;
+    rdf:predicate <https://www.w3.org/ns/dcat#accessURL>;
+    rdf:subject nt:NANOPUB .
+  
+  sub:st6 a nt:RepeatableStatement;
+    rdf:object sub:creator;
+    rdf:predicate dct:creator;
+    rdf:subject sub:fdo .
+  
+  sub:st7 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:contributor;
+    rdf:predicate dct:contributor;
+    rdf:subject sub:fdo .
+  
+  sub:st8 rdf:object sub:contact;
+    rdf:predicate <https://www.w3.org/ns/dcat#contactPoint>;
+    rdf:subject sub:fdo .
+  
+  sub:st91 a nt:OptionalStatement;
+    rdf:object sub:domain;
+    rdf:predicate dct:subject;
+    rdf:subject sub:fdo .
+  
+  sub:st92 rdf:object sub:publisher;
+    rdf:predicate dct:publisher;
+    rdf:subject sub:fdo .
+  
+  sub:st95 a nt:OptionalStatement;
+    rdf:object sub:fip;
+    rdf:predicate <https://w3id.org/fair/fip/terms/implements>;
+    rdf:subject sub:fdo .
+  
+  sub:st_ci a nt:RepeatableStatement;
+    rdf:object sub:authority;
+    rdf:predicate <http://purl.org/spar/cito/citesAsAuthority>;
+    rdf:subject sub:fdo .
+  
+  sub:st_pp rdf:object sub:project;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:fdo .
+  
+  sub:st_su a nt:OptionalStatement;
+    rdf:object sub:url;
+    rdf:predicate <http://schema.org/url>;
+    rdf:subject sub:fdo .
+  
+  sub:url a nt:ExternalUriPlaceholder;
+    rdfs:label "platform URL" .
+  
+  mac:ObservationalMethod rdfs:label "Observational Method" .
+  
+  <https://www.iana.org/assignments/media-types/application/trig> rdfs:label "TriG (RDF named-graph serialization)" .
+  
+  <https://www.w3.org/ns/dcat#accessURL> rdfs:label "has access URL" .
+  
+  <https://www.w3.org/ns/dcat#contactPoint> rdfs:label "has contact point" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8888-635X .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-05-27T20:44:44Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8888-635X;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Template: Declaring an Observational Method (MAC FDT Type 11)";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA5reLVXOCPQFWr2UiCJb19ES7NwOpQRmudb17e2iB0c4> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD3w/IUb755GIzp3ueODYkgELhyq4Clygb5Kspge50xo+n8uC/IvXwi+ukRjEpdfX/JZ09yKUCJ2AMMr/QchrsP1Xhg9Q3fEZ4E12XqFd5jX00Qs0K5XZwjBaV8NdDTJW9I4gpcyh0cry7hSBAWHkXEkqbK+lQvR4UFAKejFq6u/wIDAQAB";
+    npx:hasSignature "y+hgKetRP0uZUWpNVLkG/e4F0YD4wTo7rlCB0G2eF/RokRT54bS0iRk/+SVMuVW4oWMCLKzLGsE24MchNFJMtdudl55DyTTaL7YfyW1i0o/8I/0gYy/fecI5E5BMt7GvsVkgeyzaZMa9DnkcLFDjoLJzB1GxzCO/zIwLJ6Cx+qU=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8888-635X .
+}
+

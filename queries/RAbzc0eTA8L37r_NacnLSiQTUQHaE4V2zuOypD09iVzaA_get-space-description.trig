@@ -1,0 +1,78 @@
+@prefix this: <https://w3id.org/np/RAbzc0eTA8L37r_NacnLSiQTUQHaE4V2zuOypD09iVzaA> .
+@prefix sub: <https://w3id.org/np/RAbzc0eTA8L37r_NacnLSiQTUQHaE4V2zuOypD09iVzaA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-space-description a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns the description (dct:description) of a given space, taken from its latest non-invalidated space-declaration nanopub that was signed by an admin of the space, as a single paragraph (content + source nanopub).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get space description";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?content ?np where {
+  values ?_space_multi_iri {}
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+    graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+    graph ?stateG {
+      ?ri a gen:RoleInstantiation ; npa:inverseProperty gen:hasAdmin ; npa:forSpace ?_space_multi_iri ; npa:forAgent ?admin .
+      ?acct a npa:AccountState ; npa:agent ?admin ; npa:pubkey ?pubkey .
+    }
+  }
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np dct:created ?date ; np:hasAssertion ?a .
+  }
+  graph ?a {
+    ?_space_multi_iri a gen:Space ; dct:description ?content .
+  }
+}
+order by desc(?date)
+limit 1""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-09T12:54:28Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-space-description;
+    rdfs:label "Get space description";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "V+/bDJbvsFmJOBliCfvADW0592mLyVVALiSxUdr1v5QWiUe2qOKJJB2zes8ldYx3EclGxMlLJTew59gqbtC+mZy5EF7Cd7Y49RhBwqWk5F1Rn/oJ6SKmNQOI1V/PprbQuJvXzYtAMEC+25skfUPoaMJX16eyJdT4DgWmj/RjpOw=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

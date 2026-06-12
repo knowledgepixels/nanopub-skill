@@ -1,0 +1,104 @@
+@prefix this: <https://w3id.org/np/RAGPBkIHVWXEpJl3e1JELzOhW_rEdqlArABTocK_PJwe0> .
+@prefix sub: <https://w3id.org/np/RAGPBkIHVWXEpJl3e1JELzOhW_rEdqlArABTocK_PJwe0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:list-space-members a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Lists the members of a given space together with their highest role tier (admin, maintainer, or member, in that order) and links to the role-assignment nanopubs (labelled by the specific role name, preferring schema:name). Observer-tier roles are excluded. When the same role is assigned to the same person by multiple nanopubs, only the latest one is linked.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "List space members";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix schema: <http://schema.org/>
+
+select ?user ?tier ?role_assignments_multi_iri ?role_assignments_label_multi where {
+  {
+    select ?user
+           (if(min(?rank)=1,\"Admin\",if(min(?rank)=2,\"Maintainer\",\"Member\")) as ?tier)
+           (min(?rank) as ?rankMin)
+           (group_concat(?latestNp; separator=\" \") as ?role_assignments_multi_iri)
+           (group_concat(?roleLabel; separator=\"\\n\") as ?role_assignments_label_multi)
+    where {
+      {
+        select ?user ?roleProp
+               (min(?rank0) as ?rank)
+               (sample(?roleLabel0) as ?roleLabel)
+               (strafter(max(concat(coalesce(str(?dateNp),\"\"), \" \", str(?grantNp))), \" \") as ?latestNp)
+        where {
+          values ?_space_multi_iri {}
+          graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?g . }
+          graph ?g {
+            ?ri a gen:RoleInstantiation ; npa:forSpace ?_space_multi_iri ; npa:forAgent ?user ; npa:viaNanopub ?grantNp .
+          }
+          bind(exists { graph ?g { ?ri npa:inverseProperty gen:hasAdmin } } as ?isAdmin)
+          optional { graph npa:spacesGraph { ?ri (npa:regularProperty|npa:inverseProperty) ?ropExt } }
+          optional { graph ?g { ?ri (npa:regularProperty|npa:inverseProperty) ?ropState } }
+          bind(coalesce(?ropExt,?ropState) as ?roleProp)
+          bind(exists { graph npa:spacesGraph { ?rd a npa:RoleDeclaration ; npa:hasRoleType gen:MaintainerRole ; (gen:hasRegularProperty|gen:hasInverseProperty) ?roleProp } } as ?isMaintainer)
+          bind(exists { graph npa:spacesGraph { ?rd a npa:RoleDeclaration ; npa:hasRoleType gen:MemberRole ; (gen:hasRegularProperty|gen:hasInverseProperty) ?roleProp } } as ?isMember)
+          bind(if(?isAdmin,1,if(?isMaintainer,2,if(?isMember,3,0))) as ?rank0)
+          optional { graph npa:graph { ?grantNp dct:created ?dateNp } }
+          optional {
+            graph npa:spacesGraph { ?rd2 a npa:RoleDeclaration ; (gen:hasRegularProperty|gen:hasInverseProperty) ?roleProp ; npa:viaNanopub ?roleNp ; npa:role ?role . }
+            graph npa:graph { ?roleNp np:hasAssertion ?role_a . }
+            optional { graph ?role_a { ?role schema:name ?rlS } }
+            optional { graph ?role_a { ?role rdfs:label ?rlA } }
+            optional { graph ?role_a { ?role dct:title ?rlB } }
+            bind(coalesce(?rlS,?rlA,?rlB) as ?rl)
+          }
+          bind(if(?isAdmin,coalesce(?rl,\"admin\"),coalesce(?rl,\"role\")) as ?roleLabel0)
+        }
+        group by ?user ?roleProp
+      }
+      filter(?rank > 0)
+    }
+    group by ?user
+  }
+}
+order by ?rankMin ?user""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-11T06:00:16Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:list-space-members;
+    npx:supersedes <https://w3id.org/np/RAXBY2v6vQhuVJqltiPAfFgK-k3zXjmJRIo5N_bumMgx0>;
+    rdfs:label "List space members";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "hGHiYDT9P3gg2nI6oHFbUcbdWzW1v90sGibVEaOp9dPjTGQrQ1yZ20o688RGfMfJBsKzBX34XBZ5MZ4mzxPOy+ejY5qCw9xpZJrhr0WHwjWn6Enr/OWxeYFONWAPZtKPG03xtqiJ7k60twdz13dU/eL3PQgtqVUM33ZJS+fmwR0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

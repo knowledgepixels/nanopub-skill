@@ -1,0 +1,73 @@
+@prefix this: <https://w3id.org/np/RAOCiFNyjzD-kRYGK49dpFiEwg9i4HqQwN9JrNu_KiOpg> .
+@prefix sub: <https://w3id.org/np/RAOCiFNyjzD-kRYGK49dpFiEwg9i4HqQwN9JrNu_KiOpg/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-cited-papers-for-resource a grlc:grlc-query;
+    dct:description "Given a resource, this query returns the papers it cites via any CiTO relation. For each citation it reports the citation type used (the CiTO property, with a human-readable label), the cited paper's title (linked to its DOI) and publication date (from the paper's bibliographic metadata nanopublication, if any), and a link to the citation nanopublication that asserts the citation. Citations whose cited paper has no bibliographic metadata nanopublication yet are still returned (with empty title and publication date).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get cited papers for a resource";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+
+select distinct (?citoProp as ?citation_type) ?citation_type_label (?paper as ?title) ?title_label ?publication_date (?citeNp as ?np) (\"^\" as ?np_label) where {
+  graph npa:graph { ?citeNp np:hasAssertion ?ca . }
+  graph ?ca { ?_resource_iri ?citoProp ?paper . }
+  filter(strstarts(str(?citoProp), \"http://purl.org/spar/cito/\"))
+  bind(lcase(replace(replace(str(?citoProp), \"http://purl.org/spar/cito/\", \"\"), \"([a-z])([A-Z])\", \"$1 $2\")) as ?citation_type_label)
+  filter not exists { graph npa:graph { ?cinv npx:invalidates ?citeNp . } }
+  optional {
+    graph npa:graph { ?descNp npx:introduces ?paper . ?descNp np:hasAssertion ?pa . }
+    graph ?pa { ?paper dct:title ?title_label . }
+    optional { graph ?pa { ?paper dct:date ?publication_date . } }
+    graph npa:graph { ?descNp npa:hasValidSignatureForPublicKey ?pk . }
+    filter not exists { graph npa:graph { ?inv npx:invalidates ?descNp ; npa:hasValidSignatureForPublicKey ?pk . } }
+  }
+}
+order by ?citation_type_label ?publication_date ?title_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-02T08:32:12Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-cited-papers-for-resource;
+    npx:supersedes <https://w3id.org/np/RANUkyEj-cdAPyuKx1AoUzUsYe_F0Bajv4i-6DC5B9Yvg>;
+    rdfs:label "Get cited papers for a resource";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "JDVUavVg52kb29hVLHvTWODtSmpi7VWYYjnhwENbZrQGFfjcGW2HuN//t6+9gDVMfrQli3n+P7eqKO+idPybEi4bfzQvqjMhXIYRWfQfMl8t39bL9B09OVpAEcJBHhpoaqJyPUuhva491dGlxjARDEDIKkRj7dBNhVUYIK/4nZs=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

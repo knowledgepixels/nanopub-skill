@@ -1,0 +1,71 @@
+@prefix this: <https://w3id.org/np/RAIKnskDgF8ZX-hOIC1UKLSxDapH1K1FjkNKi5Or-A3ws> .
+@prefix sub: <https://w3id.org/np/RAIKnskDgF8ZX-hOIC1UKLSxDapH1K1FjkNKi5Or-A3ws/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:observations-per-method a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Counts of observation FDOs grouped by the method (computational, experimental, or surveillance) that produced them — demonstrating multi-source decentralized attribution.";
+    dct:license <https://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "MAC FDT — observations per method";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX np:   <http://www.nanopub.org/nschema#>
+PREFIX npa:  <http://purl.org/nanopub/admin/>
+PREFIX npx:  <http://purl.org/nanopub/x/>
+PREFIX dct:  <http://purl.org/dc/terms/>
+PREFIX fdof: <https://w3id.org/fdof/ontology#>
+PREFIX mac:  <https://w3id.org/spaces/mac/r/ontology/>
+
+SELECT ?method (COUNT(?obs) AS ?count) WHERE {
+  GRAPH npa:graph {
+    ?n1 npa:hasValidSignatureForPublicKey ?pubkey .
+    filter not exists {
+      ?np2 npx:invalidates ?n1 ;
+           npa:hasValidSignatureForPublicKey ?pubkey .
+    }
+    ?n1 np:hasAssertion ?a .
+  }
+  graph ?a {
+    ?obs ?methodPred ?method .
+    VALUES ?methodPred { mac:hasPredictionMethod mac:hasExperimentalMethod mac:hasSurveillanceMethod }
+  }
+} GROUP BY ?method ORDER BY DESC(?count)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8888-635X .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-05-28T10:51:46Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8888-635X;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:observations-per-method;
+    rdfs:label "MAC FDT — observations per method";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD3w/IUb755GIzp3ueODYkgELhyq4Clygb5Kspge50xo+n8uC/IvXwi+ukRjEpdfX/JZ09yKUCJ2AMMr/QchrsP1Xhg9Q3fEZ4E12XqFd5jX00Qs0K5XZwjBaV8NdDTJW9I4gpcyh0cry7hSBAWHkXEkqbK+lQvR4UFAKejFq6u/wIDAQAB";
+    npx:hasSignature "M4d5r0z/u5SAlD/Cix9mr4wqf+WVj5brWFhjAthn9hSULj5gFPFOm5oRJaq5ZJwlRYdMik2mWWdMT9j8FNncinG2LELjR3aTkLFskzjlVw0OgxPBS9xG0gI0OAWcRw4fgmXP1n4Yj6LHK2c3MuLViDPQgzfskgV+HdztBhFfCpo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8888-635X .
+}
+

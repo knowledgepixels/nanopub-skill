@@ -1,0 +1,94 @@
+@prefix this: <https://w3id.org/np/RAVuk57ZbRuPfJ-CLI0cWJLKr-b_RRc7kXs4T_LXkMp3c> .
+@prefix sub: <https://w3id.org/np/RAVuk57ZbRuPfJ-CLI0cWJLKr-b_RRc7kXs4T_LXkMp3c/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:references rdfs:label "references - connects a resource (left) to a term it references (right)" .
+  
+  rdf:type rdfs:label "is a - connects a thing (left) to a class it belongs to (right)" .
+  
+  rdfs:label rdfs:label "has the label - connects a thing (left) to its human-readable label (right)" .
+  
+  skos:Concept rdfs:label "concept - a unit of thought, here a glossary term" .
+  
+  skos:definition rdfs:label "is defined as - connects a concept (left) to a human-readable definition (right)" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such nanopublications add a glossary term to a resource: an existing concept (identified by an existing URI such as a Wikidata entity) is typed as a SKOS concept, given a preferred label and a human-readable definition, and linked from the resource via dct:references. Opened from a resource page, the resource is pre-filled, so the term shows up in that resource's glossary.";
+    rdfs:label "Adding a glossary term referenced by a resource";
+    nt:hasNanopubLabelPattern "${label}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:stref;
+    nt:hasTag "Terms";
+    nt:hasTargetNanopubType skos:Concept .
+  
+  sub:concept a nt:GuidedChoicePlaceholder, nt:IntroducedResource;
+    rdfs:label "the term, identified by an existing URI (e.g. a Wikidata entity)";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:definition a nt:LongLiteralPlaceholder;
+    rdfs:label "a human-readable definition of the term" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the preferred label of the term" .
+  
+  sub:resource a nt:ExternalUriPlaceholder;
+    rdfs:label "the resource that references this term" .
+  
+  sub:st0 rdf:object skos:Concept;
+    rdf:predicate rdf:type;
+    rdf:subject sub:concept .
+  
+  sub:st1 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:concept .
+  
+  sub:st2 rdf:object sub:definition;
+    rdf:predicate skos:definition;
+    rdf:subject sub:concept .
+  
+  sub:stref rdf:object sub:concept;
+    rdf:predicate dct:references;
+    rdf:subject sub:resource .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-02T11:48:42Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RATf1d8m6ESAFfLv2ves-G_2uL3bOOKysG7LvwVDMJhpc>;
+    rdfs:label "Adding a glossary term referenced by a resource";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <https://w3id.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <https://w3id.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAAiJBqq60yVebKKb0NyCOFtKa4zD-dFxmyB1Gb-30BMw> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "it3OYrFa6Fea3vvJGGg6fDKRI7Q3cd3H7N6IVDHJz/0wGvyWEdpZAAnN/ZZ8rY8tg9Qdx/NjkXkvzLB9SJ2FQhXGCyob4+oZd+en++4jRBWxSDBy1jReEd/j5KWec5+LqVo52eQa9oIYDd88BSkV0NG9LKtU9Xt8K9qsuNRslFg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

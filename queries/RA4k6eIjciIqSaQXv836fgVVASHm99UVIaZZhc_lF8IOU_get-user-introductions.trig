@@ -1,0 +1,114 @@
+@prefix this: <https://w3id.org/np/RA4k6eIjciIqSaQXv836fgVVASHm99UVIaZZhc_lF8IOU> .
+@prefix sub: <https://w3id.org/np/RA4k6eIjciIqSaQXv836fgVVASHm99UVIaZZhc_lF8IOU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-user-introductions a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns the introduction nanopublications of a given user (creation date, key location, declared public-key hashes), plus session-relative action targets from the viewer's local key (?__LOCALPUBKEY_multi) and site URL (?__SITEURL_multi): conditional retract/derive targets that are owner-gated (?_user_iri = ?__CURRENTUSER_multi_iri) and computed against the same notion of a 'local introduction' as the UI: an introduction SIGNED BY the local key, DECLARING the local key, whose local-key declaration has no location or matches the site URL (nanobench->nanodash). retract_target fires on a local introduction when there is more than one (duplicate cleanup); derive_target fires on a non-local introduction when there are zero local introductions. The retract/derive/local columns are action-mapping data (hidden from display by the result builders). The keys column annotates each declared key hash with its trust-approval status, federated from the trust repo: a checkmark when the key is loaded/approved for the user, a warning sign otherwise.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get user introductions";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/77757cabf6184c51c20b8b0fe5dc5e1365b7f628448335184ad54319a0affdfc>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix np: <http://www.nanopub.org/nschema#>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix dct: <http://purl.org/dc/terms/>
+
+select (max(?date0) as ?date) (sample(str(?keyLocation)) as ?location)
+       (group_concat(distinct ?keyAnnotated; separator=\", \") as ?keys) ?np (\"^\" as ?np_label)
+       (if(max(?isOwner) > 0 && max(?signedByLocal) > 0 && sum(?localDeclOk) > 0 && ?localCount > 1, str(?np), \"\") as ?retract_target)
+       (if(max(?isOwner) > 0 && (max(?signedByLocal) = 0 || sum(?localDeclOk) = 0) && ?localCount = 0 && max(?lpkBound) > 0, str(?np), \"\") as ?derive_target)
+       (sample(?lpk) as ?local_pubkey) (sample(?lpkShort) as ?local_pubkey_short)
+       (sample(?siteUrl) as ?site_url)
+where {
+  values ?__LOCALPUBKEY_multi {}
+  values ?__SITEURL_multi {}
+  values ?__CURRENTUSER_multi_iri {}
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?introPubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?introPubkey . }
+    ?np dct:created ?date0 .
+    ?np np:hasAssertion ?a .
+  }
+  graph ?a {
+    ?keydeclaration npx:declaredBy ?_user_iri .
+    ?keydeclaration npx:hasPublicKey ?pubkey .
+    optional { ?keydeclaration npx:hasKeyLocation ?keyLocation . }
+    bind(substr(sha256(?pubkey), 1, 10) as ?keyHash)
+    bind(lcase(sha256(str(?pubkey))) as ?keyHashFull)
+  }
+  bind(if(exists {
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/trust> {
+        graph npa:graph { npa:thisRepo npa:hasCurrentTrustState ?tg . }
+        graph ?tg { ?acct npa:agent ?_user_iri ; npa:pubkey ?keyHashFull ; npa:trustStatus npa:loaded . }
+      }
+    }, concat(\"✅ \", ?keyHash), concat(\"⚠️ \", ?keyHash)) as ?keyAnnotated)
+  bind(coalesce(if(str(?pubkey) = str(?__LOCALPUBKEY_multi), 1, 0), 0) as ?isLocal)
+  bind(if(?isLocal = 1 && (!bound(?keyLocation) || coalesce(str(?keyLocation) = str(?__SITEURL_multi), false) || coalesce(replace(str(?keyLocation), \"nanobench\", \"nanodash\") = str(?__SITEURL_multi), false)), 1, 0) as ?localDeclOk)
+  bind(coalesce(if(str(?introPubkey) = str(?__LOCALPUBKEY_multi), 1, 0), 0) as ?signedByLocal)
+  bind(if(bound(?__LOCALPUBKEY_multi), 1, 0) as ?lpkBound)
+  bind(coalesce(if(?_user_iri = ?__CURRENTUSER_multi_iri, 1, 0), 0) as ?isOwner)
+  bind(coalesce(str(?__LOCALPUBKEY_multi), \"\") as ?lpk)
+  bind(if(strlen(?lpk) >= 45, concat(substr(?lpk, 1, 1), \"..\", substr(?lpk, 41, 5), \"..\"), \"\") as ?lpkShort)
+  bind(coalesce(str(?__SITEURL_multi), \"\") as ?siteUrl)
+  {
+    select (count(distinct ?lnp) as ?localCount) where {
+      values ?__LOCALPUBKEY_multi {}
+      values ?__SITEURL_multi {}
+      graph npa:graph {
+        ?lnp npa:hasValidSignatureForPublicKey ?lsign .
+        filter not exists { ?lnpx npx:invalidates ?lnp ; npa:hasValidSignatureForPublicKey ?lsign . }
+        ?lnp np:hasAssertion ?la .
+      }
+      graph ?la {
+        ?lkd npx:declaredBy ?_user_iri ; npx:hasPublicKey ?lpubkey .
+        optional { ?lkd npx:hasKeyLocation ?lloc . }
+      }
+      filter(coalesce(str(?lsign) = str(?__LOCALPUBKEY_multi), false))
+      filter(coalesce(str(?lpubkey) = str(?__LOCALPUBKEY_multi), false))
+      filter(!bound(?lloc) || coalesce(str(?lloc) = str(?__SITEURL_multi), false) || coalesce(replace(str(?lloc), \"nanobench\", \"nanodash\") = str(?__SITEURL_multi), false))
+    }
+  }
+}
+group by ?np ?localCount
+order by desc(max(?date0))""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-09T08:47:02Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-user-introductions;
+    npx:supersedes <https://w3id.org/np/RAK2SHxnkzmdUw_ihCvqeO63q8YFVu6kPO9xao32yBLFs>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "r30PfQDwua1nme24vIZDv/WZkjbffAi592ysZ67rS9RYtc7ic92VpdnFxF/VKjQrf6RpUSelLX1K2JOysPxc0PwBEB0JhkdyuGUrJPzYEpS9k+4JBhyPl2UH+nytP9r/G7TBOhb/23P/Ja9ex2AZ4ddeLPKRf774GLYfzAhw6w4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

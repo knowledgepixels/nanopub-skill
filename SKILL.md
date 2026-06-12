@@ -183,6 +183,26 @@ Resource views define how data is displayed on resource pages (user/space/mainta
 curl -s "https://query.knowledgepixels.com/api/RAcyg9La3L2Xuig-jEXicmdmEgUGYfHda6Au1Pfq64hR0/get-all-resource-views"
 ```
 
+The current view-creation template is `RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM` ("Declaring a resource view", in [assertion-templates/](assertion-templates/)); prefer replicating its statement shapes when hand-authoring a view.
+
+**View layout properties:** A view can declare `gen:hasDisplayWidth` with one of `gen:ColumnWidth01of12` … `gen:ColumnWidth12of12` (e.g. `gen:ColumnWidth06of12` renders the view half-width; omitted means full width), `gen:hasPageSize` (an integer literal), and `gen:hasStructuralPosition` (a sort-key string such as `"5.5.spaceRoles"` that orders views on the page). The same predicates can be set on a `gen:ViewDisplay` to override the view's own values for one specific resource.
+
+**View actions:** A view can carry action buttons that open a pre-filled Nanodash publish form. Each action is an embedded node referenced via `gen:hasViewAction` (example from the live space-roles view):
+
+```turtle
+sub:add-role-action a gen:ViewResultAction ;  # view-level button; gen:ViewEntryAction = per-row button
+  rdfs:label "➕ add role..." ;                # a leading emoji/symbol token renders as the menu icon
+  gen:hasActionTemplate <template-np-uri> ;
+  gen:hasActionTemplateTargetField "space" ;   # template field filled with the page's resource IRI
+  gen:hasActionTemplatePartField "void" ;      # unused fields carry the literal "void"
+  gen:hasActionTemplateQueryMapping "void" ;   # (required so the action group round-trips on edit)
+  gen:isVisibleTo gen:AdminRole .
+```
+
+- **`gen:isVisibleTo`** restricts the button to viewers holding a role **tier** (`gen:AdminRole` / `gen:MaintainerRole` / `gen:MemberRole` / `gen:ObserverRole` — matches that tier *or above* in the resource's governing space) or a **specific role IRI** (exact holders only). Multiple values are OR. Omission or `gen:EveryoneRole` means visible to everyone — `gen:EveryoneRole` is a Nanodash-side sentinel (never a grantable tier) that exists because the template cannot make the statement optional inside the repeated action group. On a user page the owner counts as sole admin. This is relevance-gating, not a security boundary — publishing authority is still checked server-side.
+- **`gen:hasActionTemplateQueryMapping`** maps query result columns to template fields for per-row (`gen:ViewEntryAction`) buttons. One literal can hold **multiple whitespace-separated `column:target` mappings**. A target is normally a template placeholder name (filled as `param_<target>`); with an `@` prefix it is a raw publish-URL key instead (e.g. `@derive-a`, `@supersede`, or `@template` to let the row decide which template opens). Example from the introductions view: `"derive_target:@derive-a local_pubkey:public-key__.1 local_pubkey_short:key-declaration__.1 local_pubkey_short:key-declaration-ref__.1 site_url:key-location__.1"` (the same source column may feed several targets).
+- **Per-row visibility:** a per-row button is hidden when a mapped value is empty and its target is required (a non-optional template placeholder, or any `@` fill-mode key). Express row-level conditions in the query by binding the action's target column conditionally, e.g. `BIND(IF(?retractable, str(?np), "") AS ?retract_target)` — combined with magic parameters (see above), this hides owner-only actions from other viewers without any role check.
+
 To browse the OpenAPI spec for a specific published query:
 
 ```
@@ -202,6 +222,14 @@ Nanopub SPARQL templates use an extended version of the grlc syntax for placehol
 
 **API parameter naming:** The SPARQL variable name is stripped of its prefix and suffix to form the API parameter name. For example, `?_user_iri` becomes just `user` in the API, not `_user_iri`.
 
+**Wire caveats (verified against the live service):** A *single* (non-multi) placeholder is text-substituted into the SPARQL — it cannot be tested with `bound(?_x)` (you'd get `bound("literal")`, which is malformed); guard comparisons with `coalesce(<comparison>, false)` instead. A *multi* placeholder is bound through its author-written `values ?_x_multi {}` block: absence leaves the block empty and the query still runs (all rows returned, no error), making optional-multi the only form that is both bindable and absent-tolerant. Each subquery scope needs its **own** `values` block — an outer block does not reach into subqueries. The `_multi_val` suffix is **not** recognized for placeholders (it is a result-column convention only, see below); use `_multi` for literals and `_multi_iri` for IRIs.
+
+**Magic (session-bound) parameters in view queries:** A view query can declare placeholders with one of the reserved names `LOCALPUBKEY` (the viewer's signing public key), `SITEURL` (the Nanodash instance URL), or `CURRENTUSER` (the viewer's agent IRI). Nanodash fills these automatically from the browser session — no form field is shown — letting a view branch on session state (e.g. per-row "retract"/"derive" action targets on the introductions view, or an owner gate comparing `CURRENTUSER` against the page's `?_user_iri`). Conventions:
+
+- Declare as **optional multi** with an explicit empty values block: `?__LOCALPUBKEY_multi`, `?__SITEURL_multi`, `?__CURRENTUSER_multi_iri`, each with its `values ?__NAME_multi {}` (one per subquery scope).
+- When the session has no value (logged out, no key pair), the variable stays unbound and the query must degrade gracefully — so every comparison must be `coalesce`-guarded, e.g. `coalesce(str(?pubkey) = str(?__LOCALPUBKEY_multi), false)`, never `bound()`-tested.
+- The names are SCREAMING_CASE by convention and **reserved**: an ordinary parameter that happens to use one of these names would be auto-bound by Nanodash.
+
 **Date/time parameters:** Literal placeholders (e.g. `?_startDate`) are substituted as untyped string literals by grlc. When comparing against `xsd:dateTime` values (e.g. `dct:created`), always cast using `xsd:dateTime(?_startDate)` in the filter — otherwise the typed/untyped mismatch silently produces no results. The parameter value passed by the user must also be a full ISO 8601 datetime string (e.g. `2026-03-01T00:00:00Z`); bare date strings like `2026-03-01` will cause the cast to fail.
 
 **Result column labels:** When a result column holds a URI, the UI renders it nicely if there is a companion `?<name>_label` variable. For example, a `?view` column with a `?view_label` variable will display the label text linked to the URI. For nanopub URI columns, use `("^" as ?np_label)` to show a short clickable symbol instead of the full URI. Always place `?np` and `?np_label` as the last two columns in the SELECT clause, in that order (`?np` before `?np_label`).
@@ -215,6 +243,8 @@ Nanopub SPARQL templates use an extended version of the grlc syntax for placehol
 The escaping pattern `replace(replace(?val, "\\\\", "\\\\\\\\"), "[\r\n]+", "\\\\n")` should always be applied when concatenating literals with a newline separator: first escape existing backslashes (`\` → `\\`), then replace any sequence of CR/LF characters with the two-character escape `\n`.
 
 The `_label` naming convention also applies to multi-value columns. For a `?things_multi_iri` column holding concatenated URIs, use `?things_label_multi` as its label companion holding the corresponding concatenated literal labels. For example: `?authors_multi_iri` (whitespace-separated ORCIDs) paired with `?authors_label_multi` (newline-separated names with escaping).
+
+**`_noheader` column suffix:** A result column whose SELECT variable ends in `_noheader` still renders in a tabular view, but its header label is blanked; when no rendered column has a visible header left, the whole header row is dropped. The marker is stripped to form the logical column name, so type suffixes, `_label` companions, and action mappings keep matching the unmarked name (companions themselves stay unmarked).
 
 **Calling a query via the API:**
 
@@ -361,11 +391,13 @@ Spaces, roles, and memberships are ordinary nanopubs created with the standard w
 |---|---|---|
 | **A Space** | `<space> a gen:Space, gen:<Type>` (Type ∈ `Alliance`/`Community`/`Division`/`Group`/`Organization`/`Outlet`/`Program`); `rdfs:label`; `dct:description`; `<space> gen:hasAdmin <agent>` (≥1); `<space> gen:hasRootDefinition <thisNP>` (self-referential for a new space — `this:` in the temp form; the original root's URI when superseding); optional `<space> owl:sameAs <altIri>`. Space IRI under `https://w3id.org/spaces/`; `npx:introduces <space>`. | `RAgrIys3ge48pXrL_qNE0Rt1DHnIP8Rl2_29BnacMqYYY` (open-ended) |
 | **An extra admin** | `<space> gen:hasAdmin <agent>` | `RAsOQ7k3GNnuUqZuLm57PWwWopQJR_4onnCpNR457CZg8` |
-| **A member role** | embedded role IRI: `<role> a gen:SpaceMemberRole` (+ optional tier subclass `gen:MaintainerRole` / `gen:MemberRole` / `gen:ObserverRole`); `rdfs:label`; `<role> gen:hasRegularProperty <prop>` (space→agent) and/or `gen:hasInverseProperty <prop>` (agent→space). Nanopub type `gen:SpaceMemberRole`. | `RAJJ-AsTOOI_wTej2Taj0ZaZ4janKXJ7akQvanUNGxVRM` |
+| **A member role** | embedded role IRI: `<role> a gen:SpaceMemberRole` (+ optional tier subclass `gen:MaintainerRole` / `gen:MemberRole` / `gen:ObserverRole`; observer is the default when no tier is declared; `gen:AdminRole` is reserved for the built-in admin role); `rdfs:label`; `<role> gen:hasRegularProperty <prop>` (space→agent) and/or `gen:hasInverseProperty <prop>` (agent→space). Nanopub type `gen:SpaceMemberRole`. | `RAJJ-AsTOOI_wTej2Taj0ZaZ4janKXJ7akQvanUNGxVRM` |
 | **Attach a role to a Space** | `<space> gen:hasRole <roleIri>` | `RARBzGkEqiQzeiHk0EXFcv9Ol1d-17iOh9MoFJzgfVQDc` |
 | **Grant a role to an agent** (role instantiation) | one triple using the role's *regular* property (space→agent, e.g. `<space> gen:hasObserver <agent>`) or *inverse* property (agent→space, e.g. `<agent> <http://www.wikidata.org/entity/P463> <space>`) | membership `RA4eg0fGov3swvzHmDnKvDnydNezNwCH9g6uPsA9GJ2Mo`; observe `RAs3LMTf4JLXDUGCi1MjT2448aJQE3aatSgkapNwgdgHY` |
 | **A maintained resource** | `<resource> a gen:MaintainedResource`; `rdfs:label`; `dct:description`; `<resource> gen:isMaintainedBy <space>`; optional `gen:hasNamespace`. | `RAadceLO9eTvnfdmuWKiTYLmVLyDevpITnqaJtQW2DnVY` |
 | **A sub-space link** | `<child> gen:isSubSpaceOf <parent>` (embedded in the Space nanopub or standalone single-triple assertion) | — |
+| **A preset** (a reusable bundle of default views and roles) | `<preset> a gen:Preset`; `dct:isVersionOf <presetKind>` (embedded instance + introduced stable kind, exactly like resource views); `rdfs:label`; optional `dct:description`; `gen:appliesToInstancesOf` (≥1, same values as for views); bundled content (each optional, repeatable): `gen:hasTopLevelView <view>`, `gen:hasView <view>`, `gen:hasRole <role>`. | `RAjdBPJa3HQ1Oa5knoSQEs1ui6bf69iO8vGuEhoogRmcQ` |
+| **A preset assignment** | `<assignment> a gen:PresetAssignment` plus `gen:ActivatedPresetAssignment` (default) or `gen:DeactivatedPresetAssignment`; `gen:isAssignmentOfPreset <preset>`; `gen:isAssignmentFor <resource>`. Identity is the `(preset, resource)` **pair**, not the nanopub URI — to deactivate, anyone authorized publishes a *new* nanopub re-describing the pair with the deactivated type (works across signing keys); latest-wins by publication time. | `RA5shNOPHqtqUWkHnAWmff94G3wreqWUYYQFlHmrMTYzo` |
 
 **Authority model — what actually takes effect.** A syntactically valid nanopub still has to pass an authority check before it appears in the validated state; otherwise it shows as `tier-mismatch`/`agent-unknown` in the query above. The grant rules form a downward chain (admin > maintainer > member > observer):
 
@@ -373,6 +405,7 @@ Spaces, roles, and memberships are ordinary nanopubs created with the standard w
 - A `gen:hasRole` attachment and a `gen:isMaintainedBy` declaration validate only when published by an **admin** of the space.
 - A role grant (instantiation) validates when published by someone whose tier is at or above the role's tier: admin can grant any tier; maintainer can grant member/observer; member can grant observer; **observer is the default tier** and is the only one an agent may **self-attest** (publisher == the agent being granted).
 - Authority is resolved via the signing **pubkey** mapped through the current `trust` state, not via the self-declared `npx:signedBy`. When superseding a Space definition, keep the same Space IRI (it is the space's identity).
+- Preset assignments and view displays take effect on a page only when published by an agent with authority over the target: admins/maintainers for a space or maintained resource, the user themselves for a user page. Preset-supplied views and directly-attached view displays share **one pool** and override each other latest-wins in both directions — a later individual `gen:ViewDisplay` can deactivate a preset-borne view, and a later preset assignment can override an earlier standalone view display.
 
 ### 2. Check the user's profile
 
@@ -589,7 +622,8 @@ Show:
 - Always validate a TriG file with `check` before signing to catch structural errors early.
 - **Always include template links in pubinfo — no exceptions**: Every nanopub (including assertion/provenance/pubinfo template nanopubs themselves) must include `nt:wasCreatedFromTemplate`, `nt:wasCreatedFromProvenanceTemplate`, and `nt:wasCreatedFromPubinfoTemplate` links in pubinfo, even when the nanopub is not generated through the template forms. Determine the matching templates by looking at recently published nanopubs with a similar structure. Never skip these links — they make nanopubs discoverable, derivable, and updatable via the template UI.
 - **`npx:hasNanopubType`** can be set explicitly in pubinfo, but it is not necessary if it can be inferred — e.g. from the types of introduced (`npx:introduces`) or embedded (`npx:embeds`) resources. See [nanosession 8 slides](https://github.com/knowledgepixels/slides/blob/main/nanosession8-typeslabels/slides.md) for the full type/label determination rules.
-- **Superseding referenced nanopubs**: When superseding a query template that other nanopubs reference (e.g. a view's `gen:hasViewQuery`), also supersede those referencing nanopubs so they point to the new query version.
+- **Superseding referenced nanopubs**: When superseding a query template that other nanopubs reference (e.g. a view's `gen:hasViewQuery`), also supersede those referencing nanopubs so they point to the new query version. The reverse does not apply to views: view displays, presets, and Nanodash's built-in view references resolve a view to its **latest version** automatically, so superseding a view does not require republishing the nanopubs that reference it.
+- **Resolve the actual head(s) before superseding**: A known IRI may not be the latest version of its chain. Query `get-latest-version-of-np` first (`https://query.knowledgepixels.com/api/RAiRsB2YywxjsBMkVRTREJBooXhf2ZOHoUs5lxciEl37I/get-latest-version-of-np?np=<uri>`) and supersede the head it returns. If the chain has **forked** into two heads (this happens when a republish was built on a stale base), publish one new version with `npx:supersedes` triples for **both** heads to collapse the fork — with two heads, latest-version resolution is ambiguous and consumers may pick either.
 - **One predicate per statement in templates**: Each template statement should use only one predicate for a given piece of information. Do not duplicate the same value under multiple predicates (e.g. don't use both `schema:name` and `rdfs:label` for the same title). When in doubt, prefer `rdfs:label` as the default predicate for labels/titles.
 - **Prefer DCTERMS and RDFS predicates over schema.org equivalents**: Use `dct:isPartOf` rather than `schema:isPartOf`, `rdfs:label` rather than `schema:name`, etc. DCTERMS and RDFS are the standard vocabularies in the nanopub ecosystem.
 - **Use `nt:AgentPlaceholder` for people/agents in templates**: When a template field refers to a person, user, or agent (e.g. author, presenter, creator), always use `nt:AgentPlaceholder` rather than `nt:ExternalUriPlaceholder`. This provides proper agent lookup and selection in the UI.
