@@ -509,13 +509,17 @@ To sign with a **specific key** (e.g. for a bot identity):
 java -jar "$JAR" sign -k ~/.nanopub/<bot>_id_rsa -o tmp/<name>-signed.trig tmp/<name>.trig
 ```
 
-**After signing, always verify** that `npx:signedBy` is present before publishing:
+**After signing, always verify** that `npx:signedBy` is present **and is the correct ORCID** before publishing:
 
 ```bash
 grep "signedBy" tmp/<name>-signed.trig
+# Compare against the expected ORCID (the sign command copies it verbatim from profile.yml):
+grep "orcid_id" ~/.nanopub/profile.yaml
 ```
 
 If `npx:signedBy` is absent, the user's ORCID was not found in the profile. Stop, ask the user to add it to `~/.nanopub/profile.yaml`, and re-sign.
+
+If `npx:signedBy` is present but is a **placeholder or wrong ORCID** — in particular the all-zeros `orcid:0000-0000-0000-0000` (the value the Python `nanopub` library writes when it installs its "Python test" profile, which silently overwrites `~/.nanopub/profile.yml`) — **stop, do not publish.** The `sign` command stamps `npx:signedBy` from `profile.yml`'s `orcid_id`, so a bad profile produces correctly-key-signed but mis-attributed nanopubs. Restore the profile (the correct values are kept in `~/.nanopub/profile.yml.bak` and the ORCID alone in `~/.nanopub/orcid`), then re-sign.
 
 ### 5. Test query template nanopubs before publishing
 
