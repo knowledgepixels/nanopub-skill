@@ -342,7 +342,18 @@ SELECT ?agent WHERE {
 }
 ```
 
-The state graph carries validated `gen:RoleInstantiation` rows (`npa:forSpace`, `npa:forAgent`, `npa:viaNanopub`; admin-tier rows additionally carry `npa:inverseProperty gen:hasAdmin`), one canonical `foaf:name` per agent (mirrored in, so no cross-repo join is needed), and convenience relation triples: `npa:isSubSpaceOf` / `npa:hasSubSpace`, `npa:isMaintainedBy` / `npa:hasMaintainedResource`, `npa:sameAsSpace`. A validated row's *role predicate/tier* is dropped from the state graph; recover it by joining back to the add-only extraction graph `npa:spacesGraph` on the same `?ri` IRI: `GRAPH npa:spacesGraph { { ?ri npa:regularProperty ?pred } UNION { ?ri npa:inverseProperty ?pred } }`.
+The state graph carries each validated `gen:RoleInstantiation` with everything needed to classify it **directly on the `?ri` node** — no join back to `npa:spacesGraph` is required:
+
+- `npa:forSpace`, `npa:forSpaceRef` (the space IRI and the space *ref*), `npa:forAgent`, `npa:viaNanopub` (the granting nanopub).
+- **`npa:hasRoleType`** — the validated **tier**, one of `gen:AdminRole` / `gen:MaintainerRole` / `gen:MemberRole` / `gen:ObserverRole`. **This is the authoritative tier; read it straight off the node.**
+- **`gen:hasRole`** — the specific role IRI granted (e.g. `…/projectLeadRole`). Present on maintainer/member/observer rows; **omitted on admin rows**, which use the built-in admin role.
+- `npa:regularProperty` (space→agent) / `npa:inverseProperty` (agent→space) — the role *predicate* (e.g. `gen:hasAdmin`, `gen:hasObserver`).
+
+It also carries one canonical `foaf:name` per agent (mirrored in, so no cross-repo join is needed), and convenience relation triples: `npa:isSubSpaceOf` / `npa:hasSubSpace`, `npa:isMaintainedBy` / `npa:hasMaintainedResource`, `npa:sameAsSpace`.
+
+> **Read tier/role off the node — do not re-derive it.** The materializer stamps `npa:hasRoleType` (and `gen:hasRole`) onto every validated instantiation (nanopub-query #125 + #127). Earlier consumer queries instead recovered the tier by matching the role *predicate* against `npa:RoleDeclaration` rows in `npa:spacesGraph` — but declarations are **global and unscoped**, so a predicate (e.g. `gen:hasTeamMember`) declared at different tiers by different spaces collides, and the same predicate-holder gets classified at the wrong tier everywhere (this leaked observer-tier members into the "approved members" listing; see nanodash#498). Match on `npa:hasRoleType` on the `?ri` in the **state graph** instead.
+
+`npa:spacesGraph` (the add-only extraction graph) is still needed for two things only: (1) the role's **display label** — join `gen:hasRole ?role` → `GRAPH npa:spacesGraph { ?rd npa:role ?role ; npa:viaNanopub ?roleNp }` → that nanopub's assertion, where the canonical label is `schema:name` (roles published via the role template carry `schema:name`); and (2) **unvalidated / self-declared** claims, which extract into `npa:spacesGraph` but never reach the validated state graph (these have no `npa:hasRoleType` stamp — tier must be inferred from the declaration, with the global-collision caveat above).
 
 To list everyone associated with a space and whether each is approved, tag the extraction-graph universe against the state graph:
 
