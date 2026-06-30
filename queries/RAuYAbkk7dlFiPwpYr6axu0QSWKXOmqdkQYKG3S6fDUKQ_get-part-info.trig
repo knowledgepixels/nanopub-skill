@@ -1,0 +1,90 @@
+@prefix this: <https://w3id.org/np/RAuYAbkk7dlFiPwpYr6axu0QSWKXOmqdkQYKG3S6fDUKQ> .
+@prefix sub: <https://w3id.org/np/RAuYAbkk7dlFiPwpYr6axu0QSWKXOmqdkQYKG3S6fDUKQ/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-part-info a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Key-value Info table for a PART. Finds the part's latest defining nanopub (npx:introduces/describes/embeds the part 'partid', signed by an owning-resource member pubkey 'pubkey', not invalidated) and shows Type (rdf:type), Subclass of (rdfs:subClassOf), Part of (the owning resource 'context', via dct:partOf), and Defined in (the defining nanopub, labelled by a shortened artifact code, linking to the nanopub). Type and Subclass-of allow multiple values (one row each).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get part info";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select distinct ?Property_noheader ?Property_label ?Value_noheader ?Value_label where {
+  values ?__pubkey_multi {}
+  graph npa:graph {
+    ?dnp npa:hasValidSignatureForPublicKeyHash ?__pubkey_multi ;
+         (npx:introduces|npx:describes|npx:embeds) ?_partid_iri ;
+         dct:created ?ddate ;
+         np:hasAssertion ?da .
+    filter not exists { ?inv npx:invalidates ?dnp ; npa:hasValidSignatureForPublicKeyHash ?__pubkey_multi . }
+    filter not exists {
+      ?dnp2 npa:hasValidSignatureForPublicKeyHash ?pk2 ;
+            (npx:introduces|npx:describes|npx:embeds) ?_partid_iri ;
+            dct:created ?ddate2 .
+      filter not exists { ?inv2 npx:invalidates ?dnp2 ; npa:hasValidSignatureForPublicKeyHash ?pk2 . }
+      filter(?ddate2 > ?ddate)
+    }
+  }
+  optional { graph ?da { ?_partid_iri a ?typeIri . } }
+  optional { graph ?da { ?_partid_iri rdfs:subClassOf ?superClass . } }
+  bind(substr(replace(str(?dnp), \"^.*/np/\", \"\"), 1, 10) as ?npCode)
+  values (?key ?Property_noheader ?Property_label ?ord) {
+    ('Type' rdf:type 'Type:' 1)
+    ('Subclass of' rdfs:subClassOf 'Subclass of:' 2)
+    ('Belongs to' dct:partOf 'Part of:' 3)
+    ('Defined in' 'Defined in:' 'Defined in:' 4)
+  }
+  bind(if(?key = 'Type', ?typeIri,
+       if(?key = 'Subclass of', ?superClass,
+       if(?key = 'Belongs to', ?_context_iri, ?dnp))) as ?Value_noheader)
+  filter(bound(?Value_noheader))
+  bind(if(?key = 'Type', replace(str(?typeIri), '^.*[/#]', ''),
+       if(?key = 'Subclass of', replace(str(?superClass), '^.*[/#]', ''),
+       if(?key = 'Belongs to', replace(str(?_context_iri), '^.*[/#]', ''),
+       ?npCode))) as ?Value_label)
+}
+order by ?ord""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-16T07:58:51Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-part-info;
+    npx:supersedes <https://w3id.org/np/RATb_4T9HlL0wL2B-PzbUTxbZJkp7mEtvgd_krmkI1EXw>;
+    rdfs:label "Get part info" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "HJoK6VPaOJpI7LgV3jy/2CtdT6m7exhjkGkTXnW39WVpI9ZABSavi/fVvIzLsZxtmB/fWEk688gUCljWDJMDkjq7+/MAw51Fdo/NWIa3lB41GGJ4aprKPkPi/kMybXnrNkdN7UG8Pi2q+sulGct824Qn5HJufwUhfFLwZkhvijc=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

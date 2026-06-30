@@ -1,0 +1,93 @@
+@prefix this: <https://w3id.org/np/RA3xiGd-jgf7j2YwQqARiYNz-uBakaRvSMUegt0EbPvWI> .
+@prefix sub: <https://w3id.org/np/RA3xiGd-jgf7j2YwQqARiYNz-uBakaRvSMUegt0EbPvWI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:list-space-observers a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Lists the observer-tier members of a given space (highest validated tier is observer). Reads the materialized tier directly off each validated gen:RoleInstantiation (npa:hasRoleType) in the current space state and excludes anyone holding a higher tier; no role-declaration re-derivation. IRI-keyed by npa:forSpace (param space).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "List space observers";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix schema: <http://schema.org/>
+select ?user ?role_assignments_multi_iri ?role_assignments_label_multi where {
+  {
+    select ?user
+           (max(?higher) as ?maxHigher)
+           (group_concat(?latestNp; separator=\" \") as ?role_assignments_multi_iri)
+           (group_concat(?roleLabel; separator=\"\\n\") as ?role_assignments_label_multi)
+    where {
+      {
+        select ?user ?role
+               (max(?higher0) as ?higher)
+               (sample(?roleLabel0) as ?roleLabel)
+               (strafter(max(concat(coalesce(str(?dateNp),\"\"), \" \", str(?grantNp))), \" \") as ?latestNp)
+        where {
+          values ?_space_multi_iri {}
+          graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?g . }
+          graph ?g {
+            ?ri a gen:RoleInstantiation ; npa:forSpace ?_space_multi_iri ; npa:forAgent ?user ; npa:viaNanopub ?grantNp ; npa:hasRoleType ?rt .
+          }
+          bind(if(?rt=gen:ObserverRole,0,1) as ?higher0)
+          optional { graph npa:graph { ?grantNp dct:created ?dateNp } }
+          optional {
+            graph ?g { ?ri gen:hasRole ?role . }
+            graph npa:spacesGraph { ?rd2 npa:role ?role ; npa:viaNanopub ?roleNp . }
+            graph npa:graph { ?roleNp np:hasAssertion ?role_a . }
+            optional { graph ?role_a { ?role schema:name ?rl } }
+          }
+          bind(coalesce(?rl,\"role\") as ?roleLabel0)
+        }
+        group by ?user ?role
+      }
+    }
+    group by ?user
+    having (max(?higher) = 0)
+  }
+}
+order by ?user""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-24T06:44:13Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:list-space-observers;
+    npx:supersedes <https://w3id.org/np/RAT1mruQUZ07RQVMVqbSH0MvxlibhIsSOYGJ4A8sdhzow>;
+    rdfs:label "List space observers";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "XyaWXWSf90mHoSNA6UzeGWVcX9wYUiQcFNgwokgt58WxXOW3hWk1ojOLs6fDLbSt1E76oStmh4yoHDTBn4Gf3dWbfRkhASrdEdDZ0BJyyahSpbBWWWs6zBStHuLLKDLUTlPKPtVM8bCMsI+UA6a6L3nJIwje+x2TxRu//WYjv3g=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

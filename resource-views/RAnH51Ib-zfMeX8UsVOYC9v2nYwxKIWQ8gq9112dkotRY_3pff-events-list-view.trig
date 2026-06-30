@@ -1,0 +1,58 @@
+@prefix this: <https://w3id.org/np/RAnH51Ib-zfMeX8UsVOYC9v2nYwxKIWQ8gq9112dkotRY> .
+@prefix sub: <https://w3id.org/np/RAnH51Ib-zfMeX8UsVOYC9v2nYwxKIWQ8gq9112dkotRY/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:3pff-events-list-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAm77RJaLywLk4zAuHgRDKwRPx7fymwTecGm3BMRUCZbM/3pff-events-list-view-kind>;
+    dct:title "📅 3PFF events";
+    rdfs:label "3PFF events list view";
+    gen:appliesToInstancesOf gen:MaintainedResource, gen:Space;
+    gen:hasStructuralPosition "5.2.3pff-events";
+    gen:hasViewQuery <https://w3id.org/np/RAXvUVaa8iTn_ahA-N3URP_MTkRGSzNL1Uhk2BDvd62NY/get-3pff-events-html> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RAXvUVaa8iTn_ahA-N3URP_MTkRGSzNL1Uhk2BDvd62NY/get-3pff-events-html>
+    nt:hasLabelFromApi "Get 3PFF Events (HTML)" .
+  
+  this: dct:created "2026-06-15T10:59:51Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:3pff-events-list-view;
+    npx:introduces <https://w3id.org/np/RAm77RJaLywLk4zAuHgRDKwRPx7fymwTecGm3BMRUCZbM/3pff-events-list-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAHrIKBQ3XDbBwZa5gqBTR3IAfhsg4r5eWSwNKCcDHoeM>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "LFhCeUzdMeEiSuuH7qkIPW4zhdmo6UUPLDtSIuBGldKVKoA4zpkH8dp98XT4u6AMzSHAg9goMVYvumDCSuwf5xBdi+StqGFXZRhFcZiIPxPo+wgSq/ULVk6OYKrWu7pkB5F7o9U2FVczDonKVvyUX26Xq2gkGXxmSj8zg9Prgj8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

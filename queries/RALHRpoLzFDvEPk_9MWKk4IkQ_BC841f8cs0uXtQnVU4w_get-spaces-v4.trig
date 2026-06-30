@@ -1,0 +1,77 @@
+@prefix this: <https://w3id.org/np/RALHRpoLzFDvEPk_9MWKk4IkQ_BC841f8cs0uXtQnVU4w> .
+@prefix sub: <https://w3id.org/np/RALHRpoLzFDvEPk_9MWKk4IkQ_BC841f8cs0uXtQnVU4w/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-spaces a grlc:grlc-query;
+    dct:description "Returns the latest non-invalidated SpaceDefinition per space ref from the server-materialised spaces repo, joined to the declaring nanopublication for its label and type. Ref-aware variant of Get spaces (v2): adds the space ref (?ref) and its root nanopublication (?root) so the client can key one space per ref (space IRI + root definition) rather than per IRI. v4 (supersedes the v3 RAD5KmWO…): the invalidation filter is gated on a shared signing pubkey (npa:hasValidSignatureForPublicKeyHash) between the invalidating nanopub and the space-definition nanopub, so a foreign-key retraction can no longer suppress a space definition (issue #487).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get spaces (v4, ref-aware, same-pubkey invalidation gate)";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?space_iri ?space_iri_label ?type ?type_label ?date ?np (\"^\" as ?np_label) ?ref ?root where {
+  graph npa:spacesGraph {
+    ?ref a npa:SpaceRef ; npa:spaceIri ?space_iri .
+    optional { ?ref npa:rootNanopub ?root }
+    ?def a npa:SpaceDefinition ;
+         npa:forSpaceRef ?ref ;
+         npa:viaNanopub  ?np ;
+         dct:created     ?date .
+  }
+  graph npa:graph {
+    ?np rdfs:label ?space_iri_label .
+    ?np npx:hasNanopubType ?type .
+    filter(strstarts(str(?type), \"https://w3id.org/kpxl/gen/terms/\"))
+    filter(?type != gen:Space)
+  }
+  filter not exists { graph npa:graph { ?invNp npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?invpk . ?np npa:hasValidSignatureForPublicKeyHash ?invpk . } }
+  bind(strafter(str(?type), \"https://w3id.org/kpxl/gen/terms/\") as ?type_label)
+} order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-19T07:32:09Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-spaces;
+    npx:supersedes <https://w3id.org/np/RAD5KmWO6uqjM04tK7tb2IREgbxA1GTGyRhaRjjaVIKPw>,
+      <https://w3id.org/np/RAyXmrfs8HeSJWGxz2dFX7qhMIsvTMzWro0J6EyBvsNu8>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "LNyP69rg3q+ix9pVRRDxRZ5yjOxfH6eMwdlnYHeU99vxtPYM2GiYG8pLC4AZ3zuXA40JRNyuE9NrXA6Yah8TzW2h75M23RTAiASvJAXYQ+x54DsjrOm4XLgsJRYTySAn6u2/9HQQNb26fuhAoI5MuNkdA5zpKV9OvBpdEr9svwg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

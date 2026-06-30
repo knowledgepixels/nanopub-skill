@@ -1,0 +1,71 @@
+@prefix this: <https://w3id.org/np/RA3tlmhzWEmFBfbsDtakC_ixoDtnycM1Sx6grZEKe_1ts> .
+@prefix sub: <https://w3id.org/np/RA3tlmhzWEmFBfbsDtakC_ixoDtnycM1Sx6grZEKe_1ts/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    rdfs:label "add use case...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RAyZT6z0jKiQqwoQgEIqy4pgmIUhUh2qGgxC-RjRfGHyY>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "useCase";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "entity" .
+  
+  sub:use-cases-view a <https://w3id.org/kpxl/gen/terms/ListView>, <https://w3id.org/kpxl/gen/terms/ResourceView>;
+    dct:isVersionOf <https://w3id.org/np/RAiTPeRJXd8BIMIWvW40p6wqrZHasD79pgnq7a14QXZfU/use-cases-view-kind>;
+    dct:title "💡 Use cases";
+    rdfs:label "Use cases view";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/MaintainedResource>,
+      <https://w3id.org/kpxl/gen/terms/Space>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.2.useCases";
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:addAction;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAqhvb8zLACxV0_SqpQr-KrPhZBKcVy0uwnXz8PuCpMMA/get-use-cases-for-resource>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "entity" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-23T13:58:28.097+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:use-cases-view;
+    npx:introduces <https://w3id.org/np/RAiTPeRJXd8BIMIWvW40p6wqrZHasD79pgnq7a14QXZfU/use-cases-view-kind>;
+    npx:supersedes <https://w3id.org/np/RA6k53WzYT0h-2zCQggJH8IOx4U0SepXz9G4nhioZozDs>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "mWMbfaqnDQRWMslOVOzcuj5D3TJvEqhjJ3vWb9U1cvaBf54fEbOSf6VXuN/d2vEfsd+meM6ymydPvfgQdx0cOgBoDEMIvTLlMmvxHwk3aj4ecEQz2NynOv2Zh9u9s+OzEfZuBV3Zl8dPNgBjEtsVL2hveYjZoEHRQFfeyobvMu0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAqhvb8zLACxV0_SqpQr-KrPhZBKcVy0uwnXz8PuCpMMA/get-use-cases-for-resource>
+    nt:hasLabelFromApi "Get use cases for a resource" .
+  
+  <https://w3id.org/np/RAyZT6z0jKiQqwoQgEIqy4pgmIUhUh2qGgxC-RjRfGHyY> nt:hasLabelFromApi
+      "Describing a use case for a resource" .
+}
+

@@ -1,0 +1,87 @@
+@prefix this: <https://w3id.org/np/RAVJ-InZ7FNkhuXoTVxp8dMYNI4qV_0pxIj1Z2R8IveS8> .
+@prefix sub: <https://w3id.org/np/RAVJ-InZ7FNkhuXoTVxp8dMYNI4qV_0pxIj1Z2R8IveS8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:list-visualizations a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Nanopublications which advertise that they're trying to assist Iolanta visualizations of other pieces of Linked Data.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "List Iolanta visualizations";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+  prefix np: <http://www.nanopub.org/nschema#>
+  prefix npa: <http://purl.org/nanopub/admin/>
+  prefix npx: <http://purl.org/nanopub/x/>
+  prefix dct: <http://purl.org/dc/terms/>
+  prefix iolanta: <https://iolanta.tech/>
+
+  select distinct ?np ?label ?visualized ?date where {
+    graph npa:graph {
+      ?np npa:hasValidSignatureForPublicKey ?pubkey ;
+          np:hasAssertion ?assertion ;
+          np:hasProvenance ?provenance ;
+          dct:created ?date .
+
+      optional { ?np rdfs:label ?label . }
+
+      filter not exists {
+        ?invalidator npx:invalidates ?np ;
+                     npa:hasValidSignatureForPublicKey ?pubkey .
+      }
+
+      filter not exists {
+        ?newer npx:supersedes ?np ;
+               npa:hasValidSignatureForPublicKey ?pubkey .
+      }
+
+      filter not exists {
+        ?np npx:hasNanopubType npx:retracts .
+      }
+    }
+
+    graph ?provenance {
+      ?assertion iolanta:visualizes ?visualized .
+    }
+  }
+  order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0001-8740-4213 .
+}
+
+sub:pubinfo {
+  orcid:0009-0001-8740-4213 foaf:name "Anatoly Scherbakov" .
+  
+  this: dct:created "2026-06-14T19:15:30.792Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0001-8740-4213;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:list-visualizations;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCG3vOeo4fKJP9Z2EMSAGCGD91x9p6vSKc9aKWqsLJFEiGkI4U+bAEKHHTUY98w8fa1kr6+wp1VG1Xk0PMygPV4sdvmerzzR/hjhGRoTIeIXkO/x63LPFMaaoLdS/RfCvJW920dmq8C8GWp7D+AUxwe2cx86N03QdZL35hSN9Pi+wIDAQAB";
+    npx:hasSignature "L2z4o2CFvtOZPg+N5uvX5JVzqFgdGu/7vlg4q1w33wN40KedVN5XZe8JT+n9ZIjKMm6V5N5umdkBi4ncsQrVq6rmyV7BNe3/q7ceVz5VaeYjKIjIOG5PObWLcbgdxGzFKVJWR2K+1FYdXMzTrof7OiO3R7XeuIA6BAwWvAZU/LI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0001-8740-4213 .
+}
+

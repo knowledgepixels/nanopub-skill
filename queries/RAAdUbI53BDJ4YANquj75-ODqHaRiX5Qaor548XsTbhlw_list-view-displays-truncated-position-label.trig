@@ -1,0 +1,199 @@
+@prefix this: <https://w3id.org/np/RAAdUbI53BDJ4YANquj75-ODqHaRiX5Qaor548XsTbhlw> .
+@prefix sub: <https://w3id.org/np/RAAdUbI53BDJ4YANquj75-ODqHaRiX5Qaor548XsTbhlw/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:list-view-displays a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Lists the currently active view displays of a resource, for the About page: standalone view displays and the views contributed by assigned presets (marked in the via_preset column). Filtered to declarations signed by an admin or maintainer of the owning space, or by the affected user themselves; deactivated entries (and entries with a newer deactivation for the same pair) are excluded. Shows each view (resolved to its latest version), its structural position, the contributing preset (if any), who added it, the date, and the source nanopub. Ordered by structural position. Experimental variant of RAe63temfrauWIRVIpGa5booRJgioepZSg8t54lgMxmNo: adds a position_label column (the first three characters of the structural position) so the position cell shows e.g. \\\"1.1\\\" while the full literal \\\"1.1.about\\\" is shown on hover via the result-table label/tooltip convention.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "List view displays (truncated position label)";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/11daee46fdfff957dc17b46f5dc1a618045afd4f5634d5334ce9db19c3689a3c>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select (coalesce(?viewLatest, ?viewRef) as ?view) ?view_label ?position (substr(?position, 1, 3) as ?position_label)
+       (?preset as ?via_preset) (?preset_label as ?via_preset_label)
+       (?user as ?added_by) (?date as ?date_added)
+       ?deactivateView ?np (\"^\" as ?np_label) where {
+  values ?_resource_multi_iri {}
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+    graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+    {
+      graph ?stateG {
+        ?_resource_multi_iri npa:isMaintainedBy? ?space .
+        ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?authAgent ;
+            (npa:inverseProperty|npa:regularProperty) ?roleProp .
+        ?authAcct a npa:AccountState ; npa:agent ?authAgent ; npa:pubkey ?pubkey .
+      }
+      optional {
+        graph npa:spacesGraph {
+          ?rd a npa:RoleDeclaration ; npa:forSpace ?space ;
+              npa:hasRoleType gen:MaintainerRole ;
+              (npa:inverseProperty|npa:regularProperty) ?roleProp .
+          bind(true as ?isMaintainer)
+        }
+      }
+      filter(?roleProp = gen:hasAdmin || bound(?isMaintainer))
+    } union {
+      graph ?stateG { ?selfAcct a npa:AccountState ; npa:agent ?_resource_multi_iri ; npa:pubkey ?pubkey . }
+    }
+  }
+  {
+    graph npa:graph {
+      ?np npx:hasNanopubType gen:ViewDisplay ;
+          npa:hasValidSignatureForPublicKeyHash ?pubkey ;
+          dct:created ?date ;
+          npx:embeds ?display ;
+          np:hasAssertion ?a .
+      filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+      optional { ?np npx:signedBy ?user }
+    }
+    graph ?a {
+      ?display gen:isDisplayOfView ?viewRef ;
+               gen:isDisplayFor ?_resource_multi_iri .
+      optional {
+        values ?displayMode { gen:ActivatedViewDisplay gen:DeactivatedViewDisplay }
+        ?display a ?displayMode .
+      }
+    }
+  }
+  union
+  {
+    select ?viewRef ?displayMode ?preset ?preset_label ?user ?date ?np ?pubkey ?_resource_multi_iri {
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/full> {
+        graph npa:graph {
+          ?np npx:hasNanopubType gen:PresetAssignment ;
+              npa:hasValidSignatureForPublicKeyHash ?pubkey ;
+              dct:created ?date ;
+              npx:embeds ?assignment ;
+              np:hasAssertion ?a .
+          filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+          optional { ?np npx:signedBy ?user }
+        }
+        graph ?a {
+          ?assignment gen:isAssignmentFor ?_resource_multi_iri ;
+                      gen:isAssignmentOfPreset ?preset .
+          optional {
+            values ?displayMode { gen:ActivatedPresetAssignment gen:DeactivatedPresetAssignment }
+            ?assignment a ?displayMode .
+          }
+        }
+        filter not exists {
+          graph npa:graph {
+            ?np2 npx:hasNanopubType gen:PresetAssignment ;
+                npa:hasValidSignatureForPublicKeyHash ?pubkey2 ;
+                dct:created ?date2 ;
+                npx:embeds ?assignment2 ;
+                np:hasAssertion ?a2 .
+            filter not exists { ?npx2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+          }
+          graph ?a2 {
+            ?assignment2 a gen:DeactivatedPresetAssignment ;
+                        gen:isAssignmentFor ?_resource_multi_iri ;
+                        gen:isAssignmentOfPreset ?preset .
+          }
+          filter(?date2 > ?date)
+        }
+        graph npa:graph { ?presetNp npx:embeds ?preset ; np:hasAssertion ?pa . }
+        graph ?pa {
+          ?preset a gen:Preset .
+          optional { ?preset rdfs:label ?preset_label . }
+          { ?preset gen:hasTopLevelView ?viewRef } union { ?preset gen:hasView ?viewRef }
+        }
+      }
+    }
+  }
+  optional {
+    graph npa:graph { ?np np:hasAssertion ?npAssertion . }
+    graph ?npAssertion { ?npDisplay gen:hasStructuralPosition ?dispPos . }
+  }
+  filter(!bound(?displayMode) || !contains(str(?displayMode), \"Deactivated\"))
+  filter not exists {
+    graph npa:graph {
+      ?np2 npx:hasNanopubType gen:ViewDisplay ;
+          npa:hasValidSignatureForPublicKeyHash ?pubkey2 ;
+          dct:created ?date2 ;
+          npx:embeds ?display2 ;
+          np:hasAssertion ?a2 .
+      filter not exists { ?npx2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+    }
+    graph ?a2 {
+      ?display2 a gen:DeactivatedViewDisplay ;
+                gen:isDisplayOfView ?viewRef ;
+                gen:isDisplayFor ?_resource_multi_iri .
+    }
+    filter(?date2 > ?date)
+  }
+  optional {
+    service <https://w3id.org/np/l/nanopub-query-1.1/repo/type/ec6722efa3b44e0a18aa63afe5964158a1fdb7f0413ea5f23bfddf5c03ca0221> {
+      graph npa:graph { ?vnp npx:embeds ?viewRef . }
+      { select ?vnp (max(?hDate) as ?headDate) where {
+          graph npa:networkGraph { ?h (npx:supersedes)* ?vnp . }
+          graph npa:graph {
+            ?vnp npa:hasValidSignatureForPublicKey ?k .
+            ?h npa:hasValidSignatureForPublicKey ?k ; dct:created ?hDate .
+            filter not exists { ?i npx:invalidates ?h ; npa:hasValidSignatureForPublicKey ?k . }
+          }
+        } group by ?vnp }
+      graph npa:networkGraph { ?headNp (npx:supersedes)* ?vnp . }
+      graph npa:graph {
+        ?vnp npa:hasValidSignatureForPublicKey ?vKey .
+        ?headNp npa:hasValidSignatureForPublicKey ?vKey ; dct:created ?headDate ;
+                npx:embeds ?viewLatest ; np:hasAssertion ?hva .
+        filter not exists { ?i2 npx:invalidates ?headNp ; npa:hasValidSignatureForPublicKey ?vKey . }
+      }
+      graph ?hva { ?viewLatest dct:title ?view_label . }
+      optional { graph ?hva { ?viewLatest gen:hasStructuralPosition ?viewPos . } }
+    }
+  }
+  bind(coalesce(?dispPos, ?viewPos, \"\") as ?position)
+  bind(str(?viewRef) as ?deactivateView)
+}
+order by ?position desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-22T07:27:06Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:list-view-displays;
+    npx:supersedes <https://w3id.org/np/RAZ2afk23KJAV_meSNR8mBvw_jboT7JaDrhvtnApG88BI>;
+    rdfs:label "List view displays (truncated position label)";
+    prov:wasDerivedFrom <https://w3id.org/np/RAe63temfrauWIRVIpGa5booRJgioepZSg8t54lgMxmNo>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "NK78BK4zmlhLqA7Ul/iDvhSGjC5lfWE7ua7YAuE3HyLC5JXmvD/lvesiZ1A92j1QyuHtwggqY7yqD6CdNRKKyEvV6jqqQI19VzVhBCdgYEHINDy8tNumXEemMcQOusdR7As14d9EqpPUXf3BSQu12zgzfvSDZ36JaTEhJMbzu1M=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

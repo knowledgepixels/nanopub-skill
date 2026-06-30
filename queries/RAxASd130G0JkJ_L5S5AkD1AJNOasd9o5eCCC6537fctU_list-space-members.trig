@@ -1,0 +1,96 @@
+@prefix this: <https://w3id.org/np/RAxASd130G0JkJ_L5S5AkD1AJNOasd9o5eCCC6537fctU> .
+@prefix sub: <https://w3id.org/np/RAxASd130G0JkJ_L5S5AkD1AJNOasd9o5eCCC6537fctU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:list-space-members a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Lists the members (admin, maintainer, or member tier) of a given space together with their highest tier and links to the role-assignment nanopubs (labelled by the role name). Observer-tier roles are excluded. Reads the materialized tier directly off each validated gen:RoleInstantiation (npa:hasRoleType) and its role (gen:hasRole) in the current space state; no role-declaration re-derivation. IRI-keyed by npa:forSpace (param space).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "List space members";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix schema: <http://schema.org/>
+select ?user ?tier ?role_assignments_multi_iri ?role_assignments_label_multi where {
+  {
+    select ?user
+           (if(min(?rank)=1,\"Admin\",if(min(?rank)=2,\"Maintainer\",\"Member\")) as ?tier)
+           (min(?rank) as ?rankMin)
+           (group_concat(?latestNp; separator=\" \") as ?role_assignments_multi_iri)
+           (group_concat(?roleLabel; separator=\"\\n\") as ?role_assignments_label_multi)
+    where {
+      {
+        select ?user ?role
+               (min(?rank0) as ?rank)
+               (sample(?roleLabel0) as ?roleLabel)
+               (strafter(max(concat(coalesce(str(?dateNp),\"\"), \" \", str(?grantNp))), \" \") as ?latestNp)
+        where {
+          values ?_space_multi_iri {}
+          
+          graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?g . }
+          graph ?g {
+            ?ri a gen:RoleInstantiation ; npa:forSpace ?_space_multi_iri ; npa:forAgent ?user ;
+                npa:viaNanopub ?grantNp ; npa:hasRoleType ?rt .
+          }
+          bind(if(?rt=gen:AdminRole,1,if(?rt=gen:MaintainerRole,2,if(?rt=gen:MemberRole,3,0))) as ?rank0)
+          filter(?rank0 > 0)
+          optional { graph npa:graph { ?grantNp dct:created ?dateNp } }
+          optional {
+            graph ?g { ?ri gen:hasRole ?role . }
+            graph npa:spacesGraph { ?rd npa:role ?role ; npa:viaNanopub ?roleNp . }
+            graph npa:graph { ?roleNp np:hasAssertion ?role_a . }
+            optional { graph ?role_a { ?role schema:name ?rl } }
+          }
+          bind(if(?rt=gen:AdminRole,\"admin\",coalesce(?rl,\"role\")) as ?roleLabel0)
+        }
+        group by ?user ?role
+      }
+    }
+    group by ?user
+  }
+}
+order by ?rankMin ?user""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-24T06:44:13Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:list-space-members;
+    npx:supersedes <https://w3id.org/np/RA31qGZjsFCePyZ4wDFALqvJD1AW1qN52zSvmHra39x4M>;
+    rdfs:label "List space members";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "nfgkGrvX//eLusRV7qSgaTe26JVhyxf4wqVqXL+CDegJ9u9Dv9/G4lWRAuptAA2TdBJOhi8CFy+ctJgkwxm01KCbw4H/ieeZfscXtN4sNPNJMYqnHW1kcfuDTKSyqyC2lxNWSMC98LCgSLtM3qYXNezeNJX+lbTzDIVtGndAIeo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

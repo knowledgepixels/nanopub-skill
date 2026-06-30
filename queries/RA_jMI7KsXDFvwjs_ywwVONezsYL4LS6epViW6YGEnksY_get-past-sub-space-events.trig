@@ -1,0 +1,96 @@
+@prefix this: <https://w3id.org/np/RA_jMI7KsXDFvwjs_ywwVONezsYL4LS6epViW6YGEnksY> .
+@prefix sub: <https://w3id.org/np/RA_jMI7KsXDFvwjs_ywwVONezsYL4LS6epViW6YGEnksY/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-past-sub-space-events a grlc:grlc-query;
+    dct:description "Returns the past (concluded) events (defined as Spaces) that are sub-spaces of the given space.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get past sub-space events";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/8ad572d99071cc1ba0c16e54087b43594bdd9e8b2cfb62d2a0b16945fc49e53c>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix schema: <http://schema.org/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+select ?event ?event_label ?dates ?np (\"^\" as ?np_label) where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np npx:introduces ?event .
+    ?np np:hasAssertion ?a .
+    ?np dct:created ?npDate .
+    filter not exists {
+      ?np2 npx:introduces ?event .
+      ?np2 npa:hasValidSignatureForPublicKeyHash ?pubkey2 .
+      filter not exists { ?npx2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+      ?np2 dct:created ?npDate2 .
+      filter(?npDate2 > ?npDate)
+    }
+  }
+  graph ?a {
+    ?event a gen:Space .
+    ?event a gen:Event .
+    ?event rdfs:label ?event_label .
+    ?event schema:startDate ?datetime .
+    optional { ?event schema:endDate ?endDatetime . }
+  }
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+    graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+    graph ?stateG { ?_resource_iri npa:hasSubSpace ?event . }
+  }
+  bind(xsd:date(substr(str(?datetime), 1, 10)) as ?date)
+  bind(xsd:date(substr(str(now()), 1, 10)) as ?today)
+  optional { bind(xsd:date(substr(str(?endDatetime), 1, 10)) as ?endDate) }
+  bind(if(bound(?endDate), ?endDate, ?date) as ?effectiveEnd)
+  filter(?effectiveEnd < ?today)
+  bind(substr(str(?datetime), 1, 10) as ?startDay)
+  bind(if(bound(?endDatetime), substr(str(?endDatetime), 1, 10), ?startDay) as ?endDay)
+  bind(if(?startDay = ?endDay, concat(?startDay, \" \", substr(str(?datetime), 12, 5)), concat(?startDay, \" – \", ?endDay)) as ?dates)
+} order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-23T11:45:33Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-past-sub-space-events;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "jX/Iua6tcUwPYRTevSJGuS2puJgeizLBVpIotxdtxqAdhi159sDqysSe44LOHq8e48Hi7q7WysGdxdQIV+O7iTIF6FmcmdcaiuASlrrLmtmg2IpI+4WCfmJOOPKo/TGckgLXPMqb7Txn/yAp0BWfQU5nNnTzAd4sgsEFFaY76cM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

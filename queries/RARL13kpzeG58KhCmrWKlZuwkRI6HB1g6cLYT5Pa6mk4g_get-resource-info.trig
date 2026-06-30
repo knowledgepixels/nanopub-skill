@@ -1,0 +1,123 @@
+@prefix this: <https://w3id.org/np/RARL13kpzeG58KhCmrWKlZuwkRI6HB1g6cLYT5Pa6mk4g> .
+@prefix sub: <https://w3id.org/np/RARL13kpzeG58KhCmrWKlZuwkRI6HB1g6cLYT5Pa6mk4g/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-resource-info a grlc:grlc-query;
+    dct:description "Returns key-value facts for display on a space or maintained-resource page: its type(s), description(s), and admins. Type and description are read from the resource's latest non-invalidated definition nanopub. Admins are the validated admins (npa:hasRoleType gen:AdminRole) of the governing space - the resource itself when it is a space, or its maintaining space when it is a maintained resource - resolved via the spaces repository. Each property occupies one row; the Value column is a multi-value cell so properties with several values (multiple types or admins) list them all in a single row. Both columns use the '_noheader' convention so the redundant header row is dropped.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get resource info";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select distinct ?Property_noheader ?Property_label ?Value_multi_val_noheader ?Value_label_multi where {
+  values ?_resource_multi_iri {}
+  graph npa:graph {
+    ?np npx:introduces ?_resource_multi_iri ; npa:hasValidSignatureForPublicKeyHash ?pubkey ; np:hasAssertion ?a .
+    filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+  }
+  graph ?a { ?_resource_multi_iri a ?baseType . filter(?baseType in (gen:Space, gen:MaintainedResource)) }
+
+  optional {
+    select (group_concat(?typeIriS; separator=\"\\n\") as ?typeVal) (group_concat(?typeLocal; separator=\"\\n\") as ?typeLabel) where {
+      select distinct ?typeIriS ?typeLocal where {
+        values ?_resource_multi_iri {}
+        graph npa:graph {
+          ?npt npx:introduces ?_resource_multi_iri ; npa:hasValidSignatureForPublicKeyHash ?pkt ; np:hasAssertion ?at .
+          filter not exists { ?invt npx:invalidates ?npt ; npa:hasValidSignatureForPublicKeyHash ?pkt . }
+        }
+        graph ?at { ?_resource_multi_iri a ?typeIri . filter(?typeIri != gen:Space && ?typeIri != gen:MaintainedResource) }
+        bind(str(?typeIri) as ?typeIriS)
+        bind(replace(str(?typeIri), '^.*[/#]', '') as ?typeLocal)
+      }
+    } having (count(?typeIriS) > 0)
+  }
+
+  optional {
+    select (group_concat(distinct ?descEsc; separator=\"\\n\") as ?descVal) where {
+      values ?_resource_multi_iri {}
+      graph npa:graph {
+        ?npd npx:introduces ?_resource_multi_iri ; npa:hasValidSignatureForPublicKeyHash ?pkd ; np:hasAssertion ?ad .
+        filter not exists { ?invd npx:invalidates ?npd ; npa:hasValidSignatureForPublicKeyHash ?pkd . }
+      }
+      graph ?ad { ?_resource_multi_iri dct:description ?desc . }
+      bind(replace(replace(str(?desc), \"\\\\\\\\\", \"\\\\\\\\\\\\\\\\\"), \"[\\r\\n]+\", \"\\\\\\\\n\") as ?descEsc)
+    } having (count(?desc) > 0)
+  }
+
+  optional {
+    select (group_concat(?admin2; separator=\"\\n\") as ?adminVal) (group_concat(?adminName; separator=\"\\n\") as ?adminLabel) where {
+      select distinct ?admin2 ?adminName where {
+        values ?_resource_multi_iri {}
+        service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+          graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?g . }
+          optional { graph ?g { ?_resource_multi_iri npa:isMaintainedBy ?maint . } }
+          bind(coalesce(?maint, ?_resource_multi_iri) as ?adminSpace)
+          graph ?g { ?ri a gen:RoleInstantiation ; npa:forSpace ?adminSpace ; npa:hasRoleType gen:AdminRole ; npa:forAgent ?admin . }
+          optional { graph ?g { ?admin foaf:name ?adminName0 . } }
+        }
+        bind(coalesce(?adminName0, str(?admin)) as ?adminName)
+        bind(str(?admin) as ?admin2)
+      }
+    } having (count(?admin2) > 0)
+  }
+
+  values (?key ?Property_noheader ?Property_label) {
+    ('Type' rdf:type 'Type:')
+    ('Description' dct:description 'Description:')
+    ('Admins' gen:hasAdmin 'Admins:')
+  }
+  bind(if(?key='Type', ?typeVal, if(?key='Description', ?descVal, ?adminVal)) as ?Value_multi_val_noheader)
+  filter(bound(?Value_multi_val_noheader))
+  bind(if(?key='Type', ?typeLabel, if(?key='Admins', ?adminLabel, '')) as ?Value_label_multi)
+}
+order by (if(?key='Type', 1, if(?key='Description', 2, 3)))""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-26T07:42:34Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-resource-info;
+    rdfs:label "Get resource info";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "WFeUtVAvS1oUVcrPsLin4mya6af5BujqWDK75ptKCN8RPd7Go92Um8Qmqv+V2ZCKqmJThf/dfnn/Tjl5tDtFstPz+I8B5H0hpvmVJjzP6F5Z5IQku0AC8qytUmtPY0qrWEYdoNPk2f8uto7RHUwR/ctBma0UeO39BLF9VgjhiTA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,69 @@
+@prefix this: <https://w3id.org/np/RAPbjYd4hgWEfHZ10waBuwGZ_KF_iYvfePsiKii5k80ig> .
+@prefix sub: <https://w3id.org/np/RAPbjYd4hgWEfHZ10waBuwGZ_KF_iYvfePsiKii5k80ig/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <https://w3id.org/kpxl/gen/terms/hasMaintainer> rdfs:label "has maintainer" .
+  
+  sub:admin a nt:AgentPlaceholder;
+    rdfs:label "an admin of the Space" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Declaring a maintainer of a Space";
+    nt:hasNanopubLabelPattern "${space} has maintainer ${admin}";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Spaces";
+    nt:hasTargetNanopubType <https://w3id.org/kpxl/gen/terms/RoleInstantiation> .
+  
+  sub:space a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose a Space";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space&searchterm=" .
+  
+  sub:st1 rdf:object sub:admin;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasMaintainer>;
+    rdf:subject sub:space .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-23T07:30:46.445Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAWgXZJpKEg3BiJ2JhzpCUMohTEWdN3Vran7EQlRqBm6U>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Declaring a maintainer of a Space";
+    prov:wasDerivedFrom <https://w3id.org/np/RAsOQ7k3GNnuUqZuLm57PWwWopQJR_4onnCpNR457CZg8>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAAiJBqq60yVebKKb0NyCOFtKa4zD-dFxmyB1Gb-30BMw> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "t7Es+hPaJMEfnDAQTsQgS1ZjYHRpGabYL7F71HR1j650zoAZ/p8vakYp3bmdISupoWYld51GjU/3v/lhXTXRyzaYrcE4QAUP7PxmdV4uQ18dCHfpfD+U0fWD2KhhuPmiimihmsP9/Lc9YFS/uK+RcoGLTtxmRO11LM0oNLKYUJk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

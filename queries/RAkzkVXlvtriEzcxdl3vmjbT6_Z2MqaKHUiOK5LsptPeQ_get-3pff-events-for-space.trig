@@ -1,0 +1,101 @@
+@prefix this: <https://w3id.org/np/RAkzkVXlvtriEzcxdl3vmjbT6_Z2MqaKHUiOK5LsptPeQ> .
+@prefix sub: <https://w3id.org/np/RAkzkVXlvtriEzcxdl3vmjbT6_Z2MqaKHUiOK5LsptPeQ/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-3pff-events-for-space a grlc:grlc-query;
+    dct:description "Returns the events related to the Three Point FAIRification Framework (3PFF) that are connected to a given Space: events that name the Space or one of its alternative IDs as participating community or as event sponsor. Intended as a view query for Space pages, with the optional multi-value 'space' parameter bound to the Space IRI and its owl:sameAs alternative IDs. Without parameter values, all 3PFF events are returned. One row per event with date and facilitators (facilitator names resolved from the trust repository, falling back to the URI's local name).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get 3PFF events for Space";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/1c6aa07996de9244076dbdbf96515ae280fb28a8a0cc49f7b0b8c819bc8d54cf>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix tpff: <https://w3id.org/fair/3pff/>
+prefix schema: <http://schema.org/>
+
+select
+  ?Event
+  (max(?eventShortName) as ?Event_label)
+  (max(?eventLongName) as ?Name)
+  (max(?eventDate) as ?Date)
+  (group_concat(distinct str(?eventFacilitator); separator=\" \") as ?Facilitators_multi_iri)
+  (group_concat(distinct replace(replace(coalesce(?eventFacilitatorName, replace(str(?eventFacilitator), \"^.*[/#]\", \"\")), \"\\\\\\\\\", \"\\\\\\\\\\\\\\\\\"), \"[\\\\r\\\\n]+\", \"\\\\\\\\n\"); separator=\"\\n\") as ?Facilitators_label_multi)
+  (sample(?np0) as ?np)
+  (\"^\" as ?np_label)
+where {
+  values ?__space_multi_iri {}
+  graph npa:graph {
+    ?np0 npa:hasValidSignatureForPublicKey ?pubkey .
+    ?np0 np:hasAssertion ?assertion .
+    ?np0 npx:introduces ?Event .
+    filter not exists { ?npx npx:invalidates ?np0 ; npa:hasValidSignatureForPublicKey ?pubkey . }
+  }
+  graph ?assertion {
+    ?Event a tpff:3PFF-event .
+    { ?Event tpff:has-participating-community ?__space_multi_iri . }
+    union
+    { ?Event tpff:has-event-sponsor ?__space_multi_iri . }
+    ?Event rdfs:label ?eventName .
+    optional { ?Event dct:date ?dateDct . }
+    optional { ?Event schema:startDate ?dateSchema . }
+    bind(coalesce(?dateDct, strBefore(str(?dateSchema), \"T\")) as ?eventDate)
+    bind(replace(str(?eventName), ' ?\\\\|.*$', '') as ?eventShortName)
+    bind(replace(str(?eventName), '^.*\\\\| ?(.*)$', '$1') as ?eventLongName)
+    optional {
+      ?Event tpff:has-event-facilitator ?eventFacilitator .
+      optional {
+        service <https://w3id.org/np/l/nanopub-query-1.1/repo/trust> {
+          graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentTrustState ?trustState . }
+          graph ?trustState { ?eventFacilitator foaf:name ?eventFacilitatorName . }
+        }
+      }
+    }
+  }
+}
+group by ?Event
+order by desc(?Date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234;
+    prov:wasDerivedFrom <https://w3id.org/np/RAxodanpNcT5GconxJytu8HOkugjx-vuhmkKFwgUfVyFg> .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-06-12T14:28:58Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-3pff-events-for-space;
+    rdfs:label "Get 3PFF events for Space";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Ww/Fjqm4ljB9wkCGKSUKMwlhWj+i1CzZ4kwzqadvFebGWgezQuWrS+Ca7RdHcwANBgnhUfpE3WGwIWM/qcp5stJUVg5aLgjgWIDF4D4XEwJsb3YuRIVa0ohXQZqljgVAtwKdjxAKObqnf7JfxNW9eV7J+SbCbJpuuijRx2Hl1bY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

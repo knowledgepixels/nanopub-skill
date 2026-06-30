@@ -1,0 +1,161 @@
+@prefix this: <https://w3id.org/np/RAffmm3grc1B0Z2SlyeRXLINaG4sBkmSvotrAOZKj-7Sc> .
+@prefix sub: <https://w3id.org/np/RAffmm3grc1B0Z2SlyeRXLINaG4sBkmSvotrAOZKj-7Sc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-3pff-events-iris a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns a list of all events related to the Three Point FAIRification Framework (3PFF), with IRIs output directly (not pre-rendered as HTML). Multi-value organizer/facilitator/more-info columns carry their IRIs alongside a parallel label companion column (organizer and facilitator labels resolved from the trust repository, falling back to the URI's local name). Variant of get-3pff-events-html intended for tabular views that render IRIs and labels natively (e.g. Nanodash). The final 'np' column uses '^' labels to trigger the per-row dropdown menu.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get 3PFF Events (IRIs)";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/1c6aa07996de9244076dbdbf96515ae280fb28a8a0cc49f7b0b8c819bc8d54cf>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix tpff: <https://w3id.org/fair/3pff/>
+prefix schema: <http://schema.org/>
+
+select
+  (?event as ?Event_ID) (?eventShortName as ?Event_ID_label)
+  (?eventLongName as ?Event_Name)
+  (?eventDate as ?Date)
+  ?Organizers_multi_iri ?Organizers_label_multi
+  ?Facilitators_multi_iri ?Facilitators_label_multi
+  ?More_Info_multi_iri ?More_Info_label_multi
+  ?np (\"^\" as ?np_label)
+where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    ?np np:hasAssertion ?assertion .
+    ?np npx:introduces ?event .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+  }
+  graph ?assertion {
+    ?event a tpff:3PFF-event .
+    ?event rdfs:label ?eventName .
+    optional { ?event dct:date ?dateDct . }
+    optional { ?event schema:startDate ?dateSchema . }
+  }
+  bind(coalesce(?dateDct, strBefore(str(?dateSchema), \"T\")) as ?eventDate)
+  bind(replace(str(?eventName), ' ?\\\\|.*$', '') as ?eventShortName)
+  bind(replace(str(?eventName), '^.*\\\\| ?(.*)$', '$1') as ?eventLongName)
+
+  optional {
+    select ?event
+      (group_concat(str(?org); separator=\" \") as ?Organizers_multi_iri)
+      (group_concat(?orgLabel; separator=\"\\n\") as ?Organizers_label_multi)
+    where {
+      select ?event ?org (sample(?orgName) as ?orgLabel) where {
+        graph npa:graph {
+          ?onp npx:introduces ?event ; np:hasAssertion ?oa ; npa:hasValidSignatureForPublicKey ?opk .
+          filter not exists { ?onpx npx:invalidates ?onp ; npa:hasValidSignatureForPublicKey ?opk . }
+        }
+        graph ?oa {
+          ?event a tpff:3PFF-event .
+          ?event tpff:has-event-organizer ?org .
+        }
+        bind(replace(replace(str(?org), \"/$\", \"\"), \"^.*[/#]\", \"\") as ?orgLocal)
+        optional {
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/trust> {
+            graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentTrustState ?ts . }
+            graph ?ts { ?org foaf:name ?orgFoaf . }
+          }
+        }
+        bind(coalesce(?orgFoaf, ?orgLocal) as ?orgName)
+      } group by ?event ?org
+    } group by ?event
+  }
+
+  optional {
+    select ?event
+      (group_concat(str(?fac); separator=\" \") as ?Facilitators_multi_iri)
+      (group_concat(?facLabel; separator=\"\\n\") as ?Facilitators_label_multi)
+    where {
+      select ?event ?fac (sample(?facName) as ?facLabel) where {
+        graph npa:graph {
+          ?fnp npx:introduces ?event ; np:hasAssertion ?fa ; npa:hasValidSignatureForPublicKey ?fpk .
+          filter not exists { ?fnpx npx:invalidates ?fnp ; npa:hasValidSignatureForPublicKey ?fpk . }
+        }
+        graph ?fa {
+          ?event a tpff:3PFF-event .
+          ?event tpff:has-event-facilitator ?fac .
+        }
+        bind(replace(replace(str(?fac), \"/$\", \"\"), \"^.*[/#]\", \"\") as ?facLocal)
+        optional {
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/trust> {
+            graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentTrustState ?fts . }
+            graph ?fts { ?fac foaf:name ?facFoaf . }
+          }
+        }
+        bind(coalesce(?facFoaf, ?facLocal) as ?facName)
+      } group by ?event ?fac
+    } group by ?event
+  }
+
+  optional {
+    select ?event
+      (group_concat(str(?link); separator=\" \") as ?More_Info_multi_iri)
+      (group_concat(?linkLabel; separator=\"\\n\") as ?More_Info_label_multi)
+    where {
+      select ?event ?link (sample(?linkLocal) as ?linkLabel) where {
+        graph npa:graph {
+          ?lnp npx:introduces ?event ; np:hasAssertion ?la ; npa:hasValidSignatureForPublicKey ?lpk .
+          filter not exists { ?lnpx npx:invalidates ?lnp ; npa:hasValidSignatureForPublicKey ?lpk . }
+        }
+        graph ?la {
+          ?event a tpff:3PFF-event .
+          ?event rdfs:seeAlso ?link .
+        }
+        bind(replace(replace(str(?link), \"/$\", \"\"), \"^.*[/#]\", \"\") as ?linkLocal)
+      } group by ?event ?link
+    } group by ?event
+  }
+}
+order by desc(?eventDate)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234;
+    prov:wasDerivedFrom <https://w3id.org/np/RAXvUVaa8iTn_ahA-N3URP_MTkRGSzNL1Uhk2BDvd62NY> .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-30T07:42:34Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-3pff-events-iris;
+    rdfs:label "Get 3PFF Events (IRIs)";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "V6I2jgU74RH4eg2k5EK25gGtWr5EdNYu7PmOOZuzH97e1Q4sXjQ1fAqL7ikfziwBcgiQSDCSbYC0Iti+Oct5B7B6twBtwk8j9SXTdBg6x22JMX0fVQknPnrk/MwEp8aWPzLKHt9O6R89k7WHmvcjB21UdlCtnxblt2vIQjJ2EGI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,208 @@
+@prefix this: <https://w3id.org/np/RAD4mKOVqsJc7nAVVR0dXXcVFU2IOjrFywv2GspkpalfQ> .
+@prefix sub: <https://w3id.org/np/RAD4mKOVqsJc7nAVVR0dXXcVFU2IOjrFywv2GspkpalfQ/> .
+@prefix schema: <http://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix pehterms: <https://w3id.org/peh/terms/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dcterms:isPartOf rdfs:label "is part of" .
+  
+  schema:alternateName rdfs:label "has alternative name" .
+  
+  schema:comment rdfs:label "has comment" .
+  
+  schema:identifier rdfs:label "identifier type" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  rdfs:subClassOf rdfs:label "is a subclass of" .
+  
+  owl:Class rdfs:label "class" .
+  
+  skos:exactMatch rdfs:label "is exactly the same as (external identifier)" .
+  
+  sub:aliasname a nt:LiteralPlaceholder;
+    rdfs:label "the alias (short name) used in the given context" .
+  
+  sub:aliastype a nt:LiteralPlaceholder;
+    rdfs:label "the alias type, e.g. \"short_name\"" .
+  
+  sub:altname a nt:LiteralPlaceholder;
+    rdfs:label "an alternative name" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dcterms:description "<p>Such a nanopublication defines a <em>biochementity</em>: a chemical entity (compound, metabolite, isomer, group, …) as a subclass of BioChemEntity, with its names, external identifiers, inter-entity relations and context-specific aliases.</p>";
+    rdfs:label "Defining a biochementity";
+    nt:hasStatement sub:st0, sub:st1, sub:st10, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6,
+      sub:st7, sub:st8, sub:st9, sub:st9a, sub:st9b, sub:st9c, sub:st9d, sub:st9e;
+    nt:hasTag "Terms" .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "a comment" .
+  
+  sub:context a nt:GuidedChoicePlaceholder;
+    rdfs:label "context: organization (ROR id)";
+    nt:possibleValuesFromApi "https://api.ror.org/organizations?query=" .
+  
+  sub:contextalias a nt:LocalResource;
+    rdfs:label "a context-specific alias" .
+  
+  sub:externalid a nt:ExternalUriPlaceholder;
+    rdfs:label "external identifier (identifiers.org: InChIKey, CHEBI, CAS, PubChem, …)" .
+  
+  sub:grouplabel a nt:LiteralPlaceholder;
+    rdfs:label "the group label" .
+  
+  sub:isomer a nt:GuidedChoicePlaceholder;
+    rdfs:label "the biochementity this one is an isomer of";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Fpeh%2Fterms%2FBioChemEntity&searchterm=" .
+  
+  sub:metaboliteparent a nt:GuidedChoicePlaceholder;
+    rdfs:label "the biochementity this one is a metabolite of";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Fpeh%2Fterms%2FBioChemEntity&searchterm=" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the biochementity" .
+  
+  sub:parent a nt:GuidedChoicePlaceholder;
+    rdfs:label "the parent class (BioChemEntity, or another biochementity)";
+    nt:hasDefaultValue pehterms:BioChemEntity;
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Fpeh%2Fterms%2FBioChemEntity&searchterm=" .
+  
+  sub:st0 a rdf:Statement;
+    rdf:object owl:Class;
+    rdf:predicate rdf:type;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st10 a nt:OptionalStatement;
+    rdf:object sub:vocabulary;
+    rdf:predicate dcterms:isPartOf;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st2 a rdf:Statement;
+    rdf:object sub:parent;
+    rdf:predicate rdfs:subClassOf;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st3 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:altname;
+    rdf:predicate schema:alternateName;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate schema:comment;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:externalid;
+    rdf:predicate skos:exactMatch;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:grouplabel;
+    rdf:predicate pehterms:hasGroupLabel;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st7 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:metaboliteparent;
+    rdf:predicate pehterms:isMetaboliteOf;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st8 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:isomer;
+    rdf:predicate pehterms:isIsomerOf;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st9 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st9a, sub:st9b, sub:st9c, sub:st9d, sub:st9e .
+  
+  sub:st9a rdf:object sub:contextalias;
+    rdf:predicate pehterms:hasContextAlias;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st9b rdf:object pehterms:ContextAlias;
+    rdf:predicate rdf:type;
+    rdf:subject sub:contextalias .
+  
+  sub:st9c rdf:object sub:aliasname;
+    rdf:predicate schema:alternateName;
+    rdf:subject sub:contextalias .
+  
+  sub:st9d rdf:object sub:aliastype;
+    rdf:predicate schema:identifier;
+    rdf:subject sub:contextalias .
+  
+  sub:st9e rdf:object sub:context;
+    rdf:predicate pehterms:hasContext;
+    rdf:subject sub:contextalias .
+  
+  sub:vocabulary a nt:GuidedChoicePlaceholder;
+    rdfs:label "the vocabulary / ontology this biochementity is part of";
+    nt:hasDefaultValue <https://w3id.org/spaces/biochementity/r/vocabulary>;
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http://www.w3.org/2002/07/owl%23Ontology&searchterm=" .
+  
+  <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> a nt:IntroducedResource;
+    rdfs:label "this biochementity" .
+  
+  pehterms:BioChemEntity rdfs:label "BioChemEntity (top class)" .
+  
+  pehterms:ContextAlias rdfs:label "context alias" .
+  
+  pehterms:hasContext rdfs:label "has context (organization)" .
+  
+  pehterms:hasContextAlias rdfs:label "has context alias" .
+  
+  pehterms:hasGroupLabel rdfs:label "has group label" .
+  
+  pehterms:isIsomerOf rdfs:label "is an isomer of" .
+  
+  pehterms:isMetaboliteOf rdfs:label "is a metabolite of" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dcterms:created "2026-06-25T09:46:44Z"^^xsd:dateTime;
+    dcterms:creator orcid:0000-0002-1267-0234;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAhSlIuuw5YqmMoyyvmy5GL3qIhs7sp14i6x2y3DCOhXM>;
+    rdfs:label "Defining a biochementity";
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAM3Mma65yu2b7JmKhw6GYcMVc2LWdgcqkZD3FGJbCIo4> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "GtMXcF3QWw+MLS4egmecw6IfpKp/LmnN1enHR7QejoHh6EDtUEx9xM3inNU3ffy0WXaqaaTppFQNC15BzHqwU++FocVl/Q29vJOiSJOzYLOccZrjCnSfIGnABQ8cc74YuUeWRjZOHg0ih95Dq4NiUi+AOWS1riWPhl3GDZFlCZw=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

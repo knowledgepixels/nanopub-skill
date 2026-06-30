@@ -1,0 +1,55 @@
+@prefix this: <https://w3id.org/np/RA5IaC4ipTiLw4PZkvY46rxOHrE1i5nubIpWk-OJlta8I> .
+@prefix sub: <https://w3id.org/np/RA5IaC4ipTiLw4PZkvY46rxOHrE1i5nubIpWk-OJlta8I/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:iolanta-visualizations a <https://w3id.org/kpxl/gen/terms/NanopubSetView>, <https://w3id.org/kpxl/gen/terms/ResourceView>;
+    dct:isVersionOf sub:iolanta-visualizations;
+    dct:title "Iolanta Visualizations";
+    rdfs:label "Iolanta Visualizations";
+    <https://w3id.org/kpxl/gen/terms/hasPageSize> "10";
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "1.1.visualizations";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAVJ-InZ7FNkhuXoTVxp8dMYNI4qV_0pxIj1Z2R8IveS8>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0001-8740-4213 .
+}
+
+sub:pubinfo {
+  orcid:0009-0001-8740-4213 foaf:name "Anatoly Scherbakov" .
+  
+  this: dct:created "2026-06-14T19:21:29.517Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0001-8740-4213;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:iolanta-visualizations;
+    npx:introduces sub:iolanta-visualizations;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCG3vOeo4fKJP9Z2EMSAGCGD91x9p6vSKc9aKWqsLJFEiGkI4U+bAEKHHTUY98w8fa1kr6+wp1VG1Xk0PMygPV4sdvmerzzR/hjhGRoTIeIXkO/x63LPFMaaoLdS/RfCvJW920dmq8C8GWp7D+AUxwe2cx86N03QdZL35hSN9Pi+wIDAQAB";
+    npx:hasSignature "dMLAgsxZr3e8QNqIurZ1n1+m2OYXv15JXqP83HI5axNqXpP00hLs18O+2yvyHAFRmhNK1dHTWCEw+blLR/fh3keOn8LQ7u207b7m9a8JfZlQfVBI+wJaVHub4lR1G1G2oUCjRdJEh+BsVUpNkUD+0/Ai92MyRmHynBpPbzwHE2o=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0001-8740-4213 .
+}
+

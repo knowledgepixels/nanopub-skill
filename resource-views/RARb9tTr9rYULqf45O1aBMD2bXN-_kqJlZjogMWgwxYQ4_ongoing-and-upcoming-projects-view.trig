@@ -1,0 +1,58 @@
+@prefix this: <https://w3id.org/np/RARb9tTr9rYULqf45O1aBMD2bXN-_kqJlZjogMWgwxYQ4> .
+@prefix sub: <https://w3id.org/np/RARb9tTr9rYULqf45O1aBMD2bXN-_kqJlZjogMWgwxYQ4/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:sub-space-projects-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RAQzTC-b1E0LXKERLpkh91KtX-XldAn-CY46G8A4Cb6cs/sub-space-projects-view-kind>;
+    dct:title "📁 Ongoing and upcoming projects";
+    rdfs:label "Ongoing and upcoming projects view";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/Space>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "5.9.ongoing-projects";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAhzAprDuCF-20742WmzdkJ4luAdKW5zNHPqjU1joqJD8/get-ongoing-and-upcoming-sub-space-projects>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-23T13:37:43Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:sub-space-projects-view;
+    npx:introduces <https://w3id.org/np/RAQzTC-b1E0LXKERLpkh91KtX-XldAn-CY46G8A4Cb6cs/sub-space-projects-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAOJhXFET0AV0Y89-NLoWDp90tRBg5w9l72Gpl9K4KP-A>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "jFk65GNGA+6ov53hB6cCczbksdu0x08GBYPPbUro071Pwt+koyuQzjffQhhWxUYeuFWJDXGhpD/HtbeJvNFh8aui4eFnyx5Cf7U/IIuGgVta7tn+FR6+mZiAXNRNl+j8ZwQEAk4Gw1+YG8Afi4oFbIPGe4B0/KydT6VLzaZb7zE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAhzAprDuCF-20742WmzdkJ4luAdKW5zNHPqjU1joqJD8/get-ongoing-and-upcoming-sub-space-projects>
+    nt:hasLabelFromApi "Get ongoing and upcoming sub-space projects - Returns the ongoing and upcoming projects (defined as Spaces) that are sub-spaces of the given space, together with their project lead (Member-tier or above)." .
+}
+
