@@ -1,0 +1,80 @@
+@prefix this: <https://w3id.org/np/RAlOhckYva-Bm0dr3074I8ouSCYcHxigdVJYxv1slYCW8> .
+@prefix sub: <https://w3id.org/np/RAlOhckYva-Bm0dr3074I8ouSCYcHxigdVJYxv1slYCW8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:list-space-3pff-participants a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Lists the participants of a given space (one row per agent): agents holding a participant role, matched via the role's participation properties (participatedAsParticipantIn or wikidata P1344) so all role versions and both the 3PFF and general participant-role lineages are covered (validated role instantiations in the current space state). The np column points to the participation grant nanopub. IRI-keyed by npa:forSpace (param space).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "List space 3PFF participants";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+select ?user_iri ?user_iri_label ?np ?np_label where {
+  {
+    select ?user_iri
+           (sample(?name) as ?name)
+           (max(?grantNpStr) as ?np0)
+    where {
+      values ?_space_multi_iri {}
+      values ?partProp { <https://w3id.org/fair/3pff/participatedAsParticipantIn> <http://www.wikidata.org/entity/P1344> }
+      graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?g . }
+      graph ?g {
+        ?ri a gen:RoleInstantiation ; npa:forSpace ?_space_multi_iri ; npa:forAgent ?user_iri ; npa:viaNanopub ?grantNp ;
+            npa:regularProperty ?partProp .
+      }
+      optional { graph ?g { ?user_iri foaf:name ?name } }
+      bind(str(?grantNp) as ?grantNpStr)
+    }
+    group by ?user_iri
+  }
+  bind(iri(?np0) as ?np)
+  bind(\"^\" as ?np_label)
+  bind(if(bound(?name), str(?name), \"\") as ?user_iri_label)
+}
+order by lcase(?user_iri_label)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-02T12:47:16Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:list-space-3pff-participants;
+    npx:supersedes <https://w3id.org/np/RASqSkO5Ehmk38q3QaBPr81egCVs_6mWBLr-5L8t_HuvA>;
+    rdfs:label "List space 3PFF participants";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "UtsV+ZcOaEvix/dn2ScjfTtyNkdtoi00Qo60hKvqf8Lw26r8cbSR7nCUtbjeVNSh7f/ocgax866GJQv5NvROVh4lcupyUNHquk1r2b6DmJ6/Y0qEY3ycOj7zL+FjfDC4JMx9bZk1Gbo/MZDzHWEIyO/nHwx4Mf4Nb1pot2BXizc=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

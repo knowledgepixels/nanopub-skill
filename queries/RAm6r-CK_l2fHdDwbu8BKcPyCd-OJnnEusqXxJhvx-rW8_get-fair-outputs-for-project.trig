@@ -1,0 +1,94 @@
+@prefix this: <https://w3id.org/np/RAm6r-CK_l2fHdDwbu8BKcPyCd-OJnnEusqXxJhvx-rW8> .
+@prefix sub: <https://w3id.org/np/RAm6r-CK_l2fHdDwbu8BKcPyCd-OJnnEusqXxJhvx-rW8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-project-fair-outputs a grlc:grlc-query;
+    dct:description "Returns all FAIR outputs linked to the given project via the FAIR-findings (ff) output relations (has-article, has-dataset, has-software, has-method, has-dmp, has-preregistration), with the output's title and the kind of output derived from the relation, restricted to links authored by a member, maintainer, or admin of the project's space.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get FAIR outputs for project";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix ff: <https://w3id.org/fair/ff/terms/>
+
+select ?output ?output_label ?kind
+  ?np (\"^\" as ?np_label)
+where {
+  values ?_project_multi_iri {}
+  values ?outputProp { ff:has-article ff:has-dataset ff:has-software ff:has-method ff:has-dmp ff:has-preregistration ff:has-presentation }
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+    select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+      graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+      values ?_project_multi_iri {}
+      graph ?stateG {
+        ?_project_multi_iri npa:isMaintainedBy? ?space .
+        ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?roleType .
+        filter(?roleType in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+        ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+      }
+    }
+  }
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?npPubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?npPubkey . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np np:hasAssertion ?a .
+    ?np np:hasPublicationInfo ?pi .
+  }
+  filter(contains(?memberPubkeys, ?npPubkey))
+  graph ?a { ?_project_multi_iri ?outputProp ?output . }
+  optional { graph ?a { ?output rdfs:label ?output_label0 } }
+  optional { graph ?pi { ?output nt:hasLabelFromApi ?output_label1 } }
+  bind(coalesce(?output_label0, ?output_label1) as ?output_label)
+  bind(strafter(str(?outputProp), \"https://w3id.org/fair/ff/terms/has-\") as ?kind)
+}
+order by ?kind ?output_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-03T13:09:25Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-project-fair-outputs;
+    npx:supersedes <https://w3id.org/np/RAjkmVAg3JXmEZq5Kjz8imku9kARW81vQcJSioPZ30Yg4>;
+    rdfs:label "Get FAIR outputs for project";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RAcm8OurwUk15WOgBM9wySo-T3a5h6as4K8YR5MBrrxUc>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "kFiQ461NNrdt4nChPxp60cryw/2X1PmHVwHsakrk7uRp1vHizDZVacyLuSyyEoHZfDwLk34in4rkR5ghsCxv91iHjCEUOg/EDBs9F18/Nq7NVumkYEE+q0agcfbiHu552EmTngChNu/CK22fICCOAM2NhQ9MTXzgKVbT2gSJBH4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

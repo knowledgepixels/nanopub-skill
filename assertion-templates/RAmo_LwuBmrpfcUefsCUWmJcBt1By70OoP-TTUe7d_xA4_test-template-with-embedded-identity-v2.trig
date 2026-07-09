@@ -1,0 +1,60 @@
+@prefix this: <https://w3id.org/np/RAmo_LwuBmrpfcUefsCUWmJcBt1By70OoP-TTUe7d_xA4> .
+@prefix sub: <https://w3id.org/np/RAmo_LwuBmrpfcUefsCUWmJcBt1By70OoP-TTUe7d_xA4/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "comment text (v2)" .
+  
+  sub:st01 rdf:object sub:name;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:thing .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Version 2 of the governed test template (docs/template-identity-and-governance.md in the nanodash repo). Deliberately carries NO npx:supersedes link to its predecessor: it becomes the canonical version purely via space-based governed resolution (newest version of the (kind, space) pair signed by a current member+ of the governing space). Not meant for real content.";
+    dct:isVersionOf <https://w3id.org/np/RAiK3l4D7biiBJzA0r_EVywfNkPc2INHvyU88WsnR0Zrc/test-template-kind>;
+    rdfs:label "🧪 Test template with embedded identity (v2)";
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels>;
+    nt:hasStatement sub:st01 .
+  
+  sub:thing a nt:UriPlaceholder;
+    rdfs:label "URI of the thing to comment on (v2)" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-08T11:45:13Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:introduces <https://w3id.org/np/RAiK3l4D7biiBJzA0r_EVywfNkPc2INHvyU88WsnR0Zrc/test-template-kind> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "EID2z5jsIMdtsn7jH1+kcM8I9id28TSV/Sb1brwYMQjMGJrdxoywXJNTc8tSrk0WWe8Vf0qph5XPALhnZiUH6q+O6wett55ZYOZHwGGUEQlAT+WbSBrhFlWqORWTOXHniBu0MtRcrXMlKTmznMy+FFPugiimmyHrFPz3E9m16c4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

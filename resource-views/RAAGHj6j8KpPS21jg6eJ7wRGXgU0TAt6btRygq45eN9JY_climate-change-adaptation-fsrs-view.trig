@@ -1,0 +1,58 @@
+@prefix this: <https://w3id.org/np/RAAGHj6j8KpPS21jg6eJ7wRGXgU0TAt6btRygq45eN9JY> .
+@prefix sub: <https://w3id.org/np/RAAGHj6j8KpPS21jg6eJ7wRGXgU0TAt6btRygq45eN9JY/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:cca-fsr-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAYs7_nYBVsNybSxaDdjxtSSEJh2jLdA5jwI1JGlGHzzU/cca-fsr-view-kind>;
+    dct:title "🌍 Climate change adaptation FSRs";
+    rdfs:label "Climate change adaptation FSRs view";
+    gen:appliesToInstancesOf gen:Space;
+    gen:hasStructuralPosition "4.5.ccaFsrs";
+    gen:hasViewQuery <https://w3id.org/np/RAwhCOVgo8-hj3YhFRoFX4b-flQpnOiZ1PyXJOd59sOf0/get-cca-fsr> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-02T08:04:32Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:cca-fsr-view;
+    npx:introduces <https://w3id.org/np/RAYs7_nYBVsNybSxaDdjxtSSEJh2jLdA5jwI1JGlGHzzU/cca-fsr-view-kind>;
+    npx:supersedes <https://w3id.org/np/RApzOlanaZqrpqlRjQc1RiWE7S8SY27AmUAX6xOWMu45A>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "b2h2sn5jvYamTMooG1SeI5K9dLXS/nt0af++Zj/NRCKsxbPoWvzErm4NhNjVeFJzQw1DqgIQStKEYvZKAIraXzwwK/QAbEARUsERSs8OOab6AowSEVcP73sTfDkZsrd+q4jcXwSTbzMzBqAXQnwp0NTF9bBLg6ppOeoaWAYJKwQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAwhCOVgo8-hj3YhFRoFX4b-flQpnOiZ1PyXJOd59sOf0/get-cca-fsr> nt:hasLabelFromApi
+      "Get all climate change adaptation FSRs" .
+}
+

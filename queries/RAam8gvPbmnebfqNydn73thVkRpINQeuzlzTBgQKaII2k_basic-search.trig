@@ -1,0 +1,97 @@
+@prefix this: <https://w3id.org/np/RAam8gvPbmnebfqNydn73thVkRpINQeuzlzTBgQKaII2k> .
+@prefix sub: <https://w3id.org/np/RAam8gvPbmnebfqNydn73thVkRpINQeuzlzTBgQKaII2k/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:basic-search a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query performs a basic search on the nanopublications: a URI (starting with http:// or https://) finds the nanopublications referencing it in subject, predicate, or object position (via a federated query on the full repo); any other input is treated as a full-text search.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Basic search";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/text>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix search: <http://www.openrdf.org/contrib/lucenesail#>
+
+select distinct ?np ?label ?date where {
+  {
+    # Full-text mode: any input that is not a URI is passed to the Lucene index.
+    # The mode filters become constants after placeholder substitution, so the
+    # non-matching branch is pruned before evaluation.
+    filter(!(strstarts(?_query, \"http://\") || strstarts(?_query, \"https://\")))
+    graph npa:graph {
+      ?np npa:hasValidSignatureForPublicKey ?pubkey .
+      filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+      optional { ?np rdfs:label ?label . }
+      ?np dct:created ?date .
+    }
+    ?np search:matches [
+      search:query ?_query ;
+      search:property npa:hasFilterLiteral ;
+      search:score ?score ] .
+  } union {
+    # URI mode: find the nanopublications referencing the URI in subject,
+    # predicate, or object position, federated to the full repo.
+    filter(strstarts(?_query, \"http://\") || strstarts(?_query, \"https://\"))
+    service <https://w3id.org/np/l/nanopub-query-1.1/repo/full> {
+      graph ?g {
+        { { bind(iri(?_query) as ?subj) } union { bind(iri(?_query) as ?pred) } union { bind(iri(?_query) as ?obj) } }
+        ?subj ?pred ?obj .
+      }
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKey ?pubkey .
+        filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+        optional { ?np rdfs:label ?label . }
+        ?np dct:created ?date .
+        ?np ?graphpred ?g .
+        values ?graphpred { np:hasAssertion np:hasProvenance np:hasPublicationInfo }
+      }
+    }
+  }
+}
+limit 100""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234;
+    prov:wasDerivedFrom <https://w3id.org/np/RAxdh5xkc6K6SMLY23yKu__zTWJPXeRFc0qgNNxkbOkpY>,
+      <https://w3id.org/np/RAz1ogtMxSTKSOYwHAfD5M3Y-vd1vd46OZta_vvbqh8kY> .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-07T21:46:20Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:basic-search;
+    npx:supersedes <https://w3id.org/np/RAnsd1P64i9HQkASyUfakViJHgX2sSroB7TcQ41vzvDd4>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "D0S9CqJNkHAL4OmFCMpe4uPfjLiTRIzSXZpiO/fPkUvYGxOxdPTW5r886urT+tUpPHW8iHQhc1dxD0cNr59Ps0fvWGvnImq+XCWNhxyWaVKzY7UsOnpyNXSX/eRQDTkXumMfs1Xpe+s+Zb6phZQTxyV+qf5+8I7jbYcG3gR0r5w=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

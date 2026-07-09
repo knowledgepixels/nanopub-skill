@@ -1,0 +1,78 @@
+@prefix this: <https://w3id.org/np/RAvh4S1bTIg_sDSNuice65xk7nblns848NFAw8zfB_KB0> .
+@prefix sub: <https://w3id.org/np/RAvh4S1bTIg_sDSNuice65xk7nblns848NFAw8zfB_KB0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "A finding presented as evidence: a statement typed as the SIO evidence class that bears on a claim through a typed (CiTO) relation. It is an ordinary discourse contribution (a schema:Statement carrying rdf:value and a CiTO stance) additionally typed as evidence, so it flows through the same discourse queries as any other contribution.";
+    rdfs:label "Evidence finding";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st4;
+    nt:hasTag "Discourse" .
+  
+  sub:claim a nt:ExternalUriPlaceholder .
+  
+  sub:finding a nt:IntroducedResource .
+  
+  sub:findingText a nt:LongLiteralPlaceholder .
+  
+  sub:st1 rdf:object <https://schema.org/Statement>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:finding .
+  
+  sub:st2 rdf:object <http://semanticscience.org/resource/SIO_001394>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:finding .
+  
+  sub:st3 rdf:object sub:findingText;
+    rdf:predicate rdf:value;
+    rdf:subject sub:finding .
+  
+  sub:st4 rdf:object sub:claim;
+    rdf:predicate sub:stance;
+    rdf:subject sub:finding .
+  
+  sub:stance a nt:RestrictedChoicePlaceholder;
+    nt:possibleValuesFrom <https://w3id.org/np/RAZt5kzfoJg2m4dMRdMm2SP6JeUDD_GMzSq9xyRPMgP5k> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0009-0118-9195 .
+}
+
+sub:pubinfo {
+  orcid:0009-0009-0118-9195 foaf:name "Virginia Balseiro" .
+  
+  this: dct:created "2026-07-09T06:31:53.707Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0009-0118-9195;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAVdHiaP9xECOIasX02yd71cs1pn44Fb_LTAvDU8cMy5c>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Evidence finding";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAE1uwovw7QhYIgEZMElrpfZWu-p0VczMyShiTEG-RyLE> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFJNRSo0AhDh7EfwM3nZXQbACb8v6F7tKGOj4Mnc/VuEu0CqzwyomaSvXmfwIKeHmCGCdIrL7tMes3U3K7qJ6c3m5j9U1SDBA+d6UDGvBKSN4X8vvRHzH+PNZyegn3Wu+liXjq+4bnGdTdhPRdRFO9DjSb+rpAfaH21md4qRhCewIDAQAB";
+    npx:hasSignature "fevfMCvK/GnB42j6YUM/ZeGClo56AbbZfsmZwyCzGjXayA7cpDnloi0B4lLAEiy89nblIft9y5PbojGgIFIx5YGr9HGoe5N5yVsYAFCMU5nf9I7A/HFaLboO6/0ThvDE14NPDNGQSUADUPCr/yREeq+SKJCWYGJ8v5d8AmLitUo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0009-0118-9195 .
+}
+

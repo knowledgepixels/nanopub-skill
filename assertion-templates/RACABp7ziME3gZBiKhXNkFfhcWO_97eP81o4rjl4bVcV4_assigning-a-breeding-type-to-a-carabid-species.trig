@@ -1,0 +1,70 @@
+@prefix this: <https://w3id.org/np/RACABp7ziME3gZBiKhXNkFfhcWO_97eP81o4rjl4bVcV4> .
+@prefix sub: <https://w3id.org/np/RACABp7ziME3gZBiKhXNkFfhcWO_97eP81o4rjl4bVcV4/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Assigning a breeding type to a carabid species";
+    nt:hasNanopubLabelPattern "${taxon} has the feature ${feature}";
+    nt:hasStatement sub:st .
+  
+  sub:breeding_time a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose breeding type";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https%3A%2F%2Fw3id.org%2Fspaces%2Fcarabid-beetles%2Fr%2Fontology%2FBreeding_time&searchterm=" .
+  
+  sub:st rdf:object sub:breeding_time;
+    rdf:predicate <https://w3id.org/spaces/biodiversity/r/ontology/hasFeature>;
+    rdf:subject sub:taxon .
+  
+  sub:taxon a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose taxon";
+    nt:possibleValuesFromApi "https://api.gbif.org/v1/species/suggest?datasetKey=d7dddbf4-2cf0-4f39-9b2a-bb099caae36c&q=" .
+  
+  <https://w3id.org/spaces/biodiversity/r/ontology/hasFeature> rdfs:label "has the feature" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0002-4587-3476 foaf:name "roberto pizzolotto" .
+  
+  this: dct:created "2026-07-05T13:27:50.037Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0002-4587-3476;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Assigning a breeding type to a carabid species";
+    prov:wasDerivedFrom <https://w3id.org/np/RAHYCMDKC5xYooIF_bjMMpHHQEavF07neVexLxkQ7GmDc>,
+      <https://w3id.org/np/RAb9Mht5rh2N9scRcYmUfPcf42FXelXrRup956hpD5i4Q>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAE1uwovw7QhYIgEZMElrpfZWu-p0VczMyShiTEG-RyLE> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUDeKXhXlFhZOfNX+50fX31+K+KNwHGyuh65vqoj49E+Sc920NGPGIEmoyGDFtPONltIEFzp80aEY5mn+V+r27uUpDORorw6OlGGepR0dnWNwEJ8jyFVu7z7d+eIqC5t9V+tQbU4c1H2b8IEzlbpTT0n7DY6gjP0jDjwTBC94mdQIDAQAB";
+    npx:hasSignature "bOYPgUNAe7M+sek0QoLvJ5/A+hiN9GPn6J3X+wmIa9HM/xq+FdnfCKEmbQW8UWpwcv9wK20ZCXJM67pHt8XrQBQCEGsNAQn6v2jIrwF5f1kDqNYgQ59aYbVjSpGi/4b42VpnXG8SgBIFDJWbJknAczCeTRx84wlziTN4VRhoQEk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-4587-3476 .
+}
+

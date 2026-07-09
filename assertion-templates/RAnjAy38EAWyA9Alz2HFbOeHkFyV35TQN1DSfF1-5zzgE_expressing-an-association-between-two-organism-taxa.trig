@@ -1,0 +1,173 @@
+@prefix this: <https://w3id.org/np/RAnjAy38EAWyA9Alz2HFbOeHkFyV35TQN1DSfF1-5zzgE> .
+@prefix sub: <https://w3id.org/np/RAnjAy38EAWyA9Alz2HFbOeHkFyV35TQN1DSfF1-5zzgE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is an" .
+  
+  rdfs:comment rdfs:label "has the free-text comment" .
+  
+  <https://w3id.org/biolink/vocab/OrganismTaxonToOrganismTaxonAssociation> rdfs:label
+      "association between two organism taxa" .
+  
+  <https://w3id.org/biolink/vocab/object> rdfs:label "refers to - links an association to its object" .
+  
+  <https://w3id.org/biolink/vocab/predicate> rdfs:label "refers to the relation (between subject taxon and object taxon)" .
+  
+  <https://w3id.org/biolink/vocab/subject> rdfs:label "refers to - links an association to its subject" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasObjectLifeCycleStage> rdfs:label "refers to the object taxon's life cycle stage" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasSubjectLifeCycleStage> rdfs:label "refers to the subject taxon's life cycle stage" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition> rdfs:label "is used as defined in" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonName> rdfs:label "has the name - links a taxon usage to a taxon name" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description """<p>Such a nanopublication expresses an association between classes of organisms (taxa), a subject taxon and an object taxon, for example expressing that the organisms of the subject taxon prey on organisms of the object taxon.</p>
+
+<p>For expressing observations of interactions between individual organisms, please use the alternative template \"Associations between organisms\".</p>""";
+    rdfs:label "Expressing an association between two organism taxa";
+    nt:hasDefaultProvenance ns1:RA2VjRiJ5AsNnPHDXuOqvsEJwTwqtj5rBb-OFkpPOzd9s;
+    nt:hasNanopubLabelPattern "${subjtaxonname} - ${relation} - ${objtaxonname}";
+    nt:hasStatement sub:st00, sub:st05, sub:st10, sub:st11, sub:st12, sub:st20, sub:st40,
+      sub:st41, sub:st42, sub:st50, sub:st60;
+    nt:hasTag "Biodiversity";
+    nt:hasTargetNanopubType <https://w3id.org/kpxl/biodiv/terms/BiodivNanopub> .
+  
+  sub:association a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this association" .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "short explanation related to the above statement" .
+  
+  sub:objlifecyclestage a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the life cycle stage of the object taxon";
+    nt:possibleValuesFrom ns1:RAVZS2MV-siFEqsgFTtgSoKA5qJkp7r1nM_n-MqPkvgdE .
+  
+  sub:objtaxon a nt:LocalResource;
+    rdfs:label "the object taxon concept" .
+  
+  sub:objtaxondef a nt:ExternalUriPlaceholder;
+    rdfs:label "publication DOI (https://doi.org/...) or taxon treatment ID (https://treatment.plazi.org/id/...)";
+    nt:hasRegex "(https://doi.org/|https://treatment.plazi.org/id/).+" .
+  
+  sub:objtaxonname a nt:GuidedChoicePlaceholder;
+    rdfs:label "search and select from list (via GBIF)";
+    nt:possibleValuesFromApi "https://api.gbif.org/v1/species/suggest?datasetKey=d7dddbf4-2cf0-4f39-9b2a-bb099caae36c&q=" .
+  
+  sub:relation a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the type of relation between the two taxa";
+    nt:possibleValuesFrom <https://w3id.org/np/RAQUHrC3sP4AYu7i7pt-eVOMnyUtwi2P8LVZDWxhffEAI> .
+  
+  sub:st00 rdf:object <https://w3id.org/biolink/vocab/OrganismTaxonToOrganismTaxonAssociation>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:association .
+  
+  sub:st05 rdf:object sub:relation;
+    rdf:predicate <https://w3id.org/biolink/vocab/predicate>;
+    rdf:subject sub:association .
+  
+  sub:st10 rdf:object sub:subjtaxon;
+    rdf:predicate <https://w3id.org/biolink/vocab/subject>;
+    rdf:subject sub:association .
+  
+  sub:st11 rdf:object sub:subjtaxonname;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonName>;
+    rdf:subject sub:subjtaxon .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:subjtaxondef;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition>;
+    rdf:subject sub:subjtaxon .
+  
+  sub:st20 a nt:OptionalStatement;
+    rdf:object sub:subjlifecyclestage;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasSubjectLifeCycleStage>;
+    rdf:subject sub:association .
+  
+  sub:st40 rdf:object sub:objtaxon;
+    rdf:predicate <https://w3id.org/biolink/vocab/object>;
+    rdf:subject sub:association .
+  
+  sub:st41 rdf:object sub:objtaxonname;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonName>;
+    rdf:subject sub:objtaxon .
+  
+  sub:st42 a nt:OptionalStatement;
+    rdf:object sub:objtaxondef;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition>;
+    rdf:subject sub:objtaxon .
+  
+  sub:st50 a nt:OptionalStatement;
+    rdf:object sub:objlifecyclestage;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasObjectLifeCycleStage>;
+    rdf:subject sub:association .
+  
+  sub:st60 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:association .
+  
+  sub:subjlifecyclestage a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the life cycle stage of the subject taxon";
+    nt:possibleValuesFrom ns1:RAVZS2MV-siFEqsgFTtgSoKA5qJkp7r1nM_n-MqPkvgdE .
+  
+  sub:subjtaxon a nt:LocalResource;
+    rdfs:label "the subject taxon concept" .
+  
+  sub:subjtaxondef a nt:ExternalUriPlaceholder;
+    rdfs:label "publication DOI (https://doi.org/...) or taxon treatment ID (https://treatment.plazi.org/id/...)";
+    nt:hasRegex "(https://doi.org/|https://treatment.plazi.org/id/).+" .
+  
+  sub:subjtaxonname a nt:GuidedChoicePlaceholder;
+    rdfs:label "search and select from list (via GBIF)";
+    nt:possibleValuesFromApi "https://api.gbif.org/v1/species/suggest?datasetKey=d7dddbf4-2cf0-4f39-9b2a-bb099caae36c&q=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-4587-3476 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0002-4587-3476 foaf:name "roberto pizzolotto" .
+  
+  this: dct:created "2026-07-05T11:35:37.859Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0000-0002-4587-3476;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Expressing an association between two organism taxa";
+    prov:wasDerivedFrom <https://w3id.org/np/RAThWJjWZQM4c1voesyeV-ID20eoTKbiM6h9t0DXsuTLs>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUDeKXhXlFhZOfNX+50fX31+K+KNwHGyuh65vqoj49E+Sc920NGPGIEmoyGDFtPONltIEFzp80aEY5mn+V+r27uUpDORorw6OlGGepR0dnWNwEJ8jyFVu7z7d+eIqC5t9V+tQbU4c1H2b8IEzlbpTT0n7DY6gjP0jDjwTBC94mdQIDAQAB";
+    npx:hasSignature "JYaKnhWhzvPvBxSvXJmhbFRijhPe0DGDWNQ3y3L8/eDvlm3LVdc7XbTwT12e4Kj4VwOKwwbQjlL/0prgdVtQpPEsUzJYyik2H/XiOaC7R9gjmdJBJBn1lzyhttgA7kts+TR22H767gFi172wFGW00rNHj5YWEN/i48QN1rpv/i0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-4587-3476 .
+}
+

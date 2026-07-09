@@ -1,0 +1,214 @@
+@prefix this: <https://w3id.org/np/RA6ewIPEix2ZBalRmFrQSqfmpCjC1ci2AG3NoJ4AwxWAI> .
+@prefix sub: <https://w3id.org/np/RA6ewIPEix2ZBalRmFrQSqfmpCjC1ci2AG3NoJ4AwxWAI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-properties-of-ontology-from-space-members a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Like 'Get the properties of an ontology', but only returns properties published by an admin, maintainer, or member of the space that maintains the given resource. Properties are included if their definition declares them part of the given ontology (dct:isPartOf, or the legacy dct:partOf) or if their IRI starts with the ontology's namespace (optional 'ontologyNamespace' parameter). The maintaining space and its validated member public-key hashes are resolved server-side from the spaces repo (/repo/spaces); observers are excluded. Each property URI appears once, kept from the latest (by nanopub timestamp) member-published definition. Superproperty, domain and range labels are taken from the term's own rdfs:label when it is defined in the same ontology or namespace (superproperties from the property repo, domain/range from the class repo), otherwise the local name is shown; domain and range are multi-valued. The types column lists any rdf:type assignments besides rdf:Property (e.g. owl:ObjectProperty, owl:DatatypeProperty). The last_modified_by/last_modified columns give the signer and timestamp of that latest definition; the signer name is resolved from the trust repo (/repo/trust) or left blank.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the properties of an ontology from space members including namespace";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/0ecf438131f3cf9e7777966e39e6c8302684a3d64cf48d80902cc0f66fc85fe6>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+  prefix owl: <http://www.w3.org/2002/07/owl#>
+  prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+  prefix dct: <http://purl.org/dc/terms/>
+  prefix np: <http://www.nanopub.org/nschema#>
+  prefix npa: <http://purl.org/nanopub/admin/>
+  prefix npx: <http://purl.org/nanopub/x/>
+  prefix skos: <http://www.w3.org/2004/02/skos/core#>
+  prefix gen: <https://w3id.org/kpxl/gen/terms/>
+  prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+  select ?property ?property_label ?description
+         ?superproperties_multi_iri ?superproperties_label_multi
+         ?domain_multi_iri ?domain_label_multi
+         ?range_multi_iri ?range_label_multi
+         ?types_multi_iri ?types_label_multi
+         ?last_modified_by (sample(?lmbl) as ?last_modified_by_label) ?last_modified
+         ?np ?np_label where {
+    {
+      select ?property
+             (coalesce(min(?property_label_u), min(?property_label_a)) as ?property_label)
+             (coalesce(min(?definition_u), min(?definition_a)) as ?description)
+             (group_concat(distinct str(?superprop); separator=\" \") as ?superproperties_multi_iri)
+             (group_concat(distinct replace(replace(coalesce(?superprop_lbl, replace(str(?superprop), \"^.*[/#]\", \"\")), \"\\\\\\\\\", \"\\\\\\\\\\\\\\\\\"), \"[\\r\\n]+\", \"\\\\\\\\n\"); separator=\"\\n\") as ?superproperties_label_multi)
+             (group_concat(distinct str(?domain); separator=\" \") as ?domain_multi_iri)
+             (group_concat(distinct replace(replace(coalesce(?domain_lbl, replace(str(?domain), \"^.*[/#]\", \"\")), \"\\\\\\\\\", \"\\\\\\\\\\\\\\\\\"), \"[\\r\\n]+\", \"\\\\\\\\n\"); separator=\"\\n\") as ?domain_label_multi)
+             (group_concat(distinct str(?range); separator=\" \") as ?range_multi_iri)
+             (group_concat(distinct replace(replace(coalesce(?range_lbl, replace(str(?range), \"^.*[/#]\", \"\")), \"\\\\\\\\\", \"\\\\\\\\\\\\\\\\\"), \"[\\r\\n]+\", \"\\\\\\\\n\"); separator=\"\\n\") as ?range_label_multi)
+             (group_concat(distinct str(?type); separator=\" \") as ?types_multi_iri)
+             (group_concat(distinct replace(replace(replace(str(?type), \"^.*[/#]\", \"\"), \"\\\\\\\\\", \"\\\\\\\\\\\\\\\\\"), \"[\\r\\n]+\", \"\\\\\\\\n\"); separator=\"\\n\") as ?types_label_multi)
+             (sample(?user) as ?last_modified_by) (sample(?date) as ?last_modified)
+             ?np (\"^\" as ?np_label) where {
+        values ?_ontology_multi_iri {}
+        {
+          select (group_concat(distinct str(?pubkey); separator=\" \") as ?memberkeys) where {
+            values ?_ontology_multi_iri {}
+            service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+              graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+              graph ?stateG {
+                ?_ontology_multi_iri npa:isMaintainedBy? ?space .
+                ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ;
+                    npa:hasRoleType ?rt .
+                filter(?rt in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?pubkey .
+              }
+            }
+          }
+        }
+        graph npa:graph {
+          ?np npx:hasNanopubType rdf:Property .
+          ?np npa:hasValidSignatureForPublicKeyHash ?pubkey1 .
+          filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey1 . }
+          ?np dct:created ?date .
+          ?np npx:introduces ?property .
+          ?np np:hasAssertion ?a .
+          optional { ?np npx:signedBy ?user . }
+        }
+        filter(contains(?memberkeys, str(?pubkey1)))
+        graph ?a {
+          {
+            ?property a rdf:Property .
+            filter(strstarts(str(?property), ?__ontologyNamespace))
+          } union {
+            ?property (dct:partOf|dct:isPartOf) ?_ontology_multi_iri .
+          }
+          optional { ?property rdfs:label ?property_label_u . filter(lang(?property_label_u) = \"\") }
+          optional { ?property rdfs:label ?property_label_a . }
+          optional { ?property skos:definition ?definition_u . filter(lang(?definition_u) = \"\") }
+          optional { ?property skos:definition ?definition_a . }
+          optional { ?property rdfs:subPropertyOf ?superprop . filter(isIRI(?superprop)) }
+          optional { ?property rdfs:domain ?domain . filter(isIRI(?domain)) }
+          optional { ?property rdfs:range ?range . filter(isIRI(?range)) }
+          optional { ?property a ?type . filter(?type != rdf:Property) }
+        }
+        filter not exists {
+          graph npa:graph {
+            ?np2 npx:hasNanopubType rdf:Property .
+            ?np2 npa:hasValidSignatureForPublicKeyHash ?pubkey2 .
+            filter not exists { ?np2x npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+            ?np2 dct:created ?date2 .
+            ?np2 npx:introduces ?property .
+            ?np2 np:hasAssertion ?a2 .
+          }
+          filter(contains(?memberkeys, str(?pubkey2)))
+          graph ?a2 {
+            {
+              ?property a rdf:Property .
+              filter(strstarts(str(?property), ?__ontologyNamespace))
+            } union {
+              ?property (dct:partOf|dct:isPartOf) ?_ontology_multi_iri .
+            }
+          }
+          filter(?date2 > ?date || (?date2 = ?date && str(?np2) > str(?np)))
+        }
+        optional {
+          select ?superprop (coalesce(min(?splbl_u), min(?splbl_a)) as ?superprop_lbl) where {
+            values ?_ontology_multi_iri {}
+            graph npa:graph { ?spnp npx:hasNanopubType rdf:Property ; npx:introduces ?superprop ; np:hasAssertion ?spa . }
+            graph ?spa {
+              {
+                ?superprop a rdf:Property .
+                filter(strstarts(str(?superprop), ?__ontologyNamespace))
+              } union {
+                ?superprop (dct:partOf|dct:isPartOf) ?_ontology_multi_iri .
+              }
+              ?superprop rdfs:label ?splbl_a .
+              optional { ?superprop rdfs:label ?splbl_u . filter(lang(?splbl_u) = \"\") }
+            }
+          } group by ?superprop
+        }
+        optional {
+          select ?domain (coalesce(min(?dl_u), min(?dl_a)) as ?domain_lbl) where {
+            values ?_ontology_multi_iri {}
+            service <https://w3id.org/np/l/nanopub-query-1.1/repo/type/e8cc5bb29ec5597303f8f101c65c545dc124ee0df68ce733764b03adc3237184> {
+              graph npa:graph { ?dnp npx:hasNanopubType owl:Class ; npx:introduces ?domain ; np:hasAssertion ?dca . }
+              graph ?dca {
+                {
+                  ?domain a owl:Class .
+                  filter(strstarts(str(?domain), ?__ontologyNamespace))
+                } union {
+                  ?domain (dct:partOf|dct:isPartOf) ?_ontology_multi_iri .
+                }
+                ?domain rdfs:label ?dl_a .
+                optional { ?domain rdfs:label ?dl_u . filter(lang(?dl_u) = \"\") }
+              }
+            }
+          } group by ?domain
+        }
+        optional {
+          select ?range (coalesce(min(?rl_u), min(?rl_a)) as ?range_lbl) where {
+            values ?_ontology_multi_iri {}
+            service <https://w3id.org/np/l/nanopub-query-1.1/repo/type/e8cc5bb29ec5597303f8f101c65c545dc124ee0df68ce733764b03adc3237184> {
+              graph npa:graph { ?rnp npx:hasNanopubType owl:Class ; npx:introduces ?range ; np:hasAssertion ?rca . }
+              graph ?rca {
+                {
+                  ?range a owl:Class .
+                  filter(strstarts(str(?range), ?__ontologyNamespace))
+                } union {
+                  ?range (dct:partOf|dct:isPartOf) ?_ontology_multi_iri .
+                }
+                ?range rdfs:label ?rl_a .
+                optional { ?range rdfs:label ?rl_u . filter(lang(?rl_u) = \"\") }
+              }
+            }
+          } group by ?range
+        }
+      } group by ?property ?np
+    }
+    bind(coalesce(?last_modified_by, <urn:no-agent>) as ?signer)
+    optional {
+      {
+        select ?signer ?lmbl where {
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/trust> {
+            graph npa:graph { npa:thisRepo npa:hasCurrentTrustState ?tg . }
+            graph ?tg { ?signer foaf:name ?lmbl . }
+          }
+        }
+      }
+    }
+  }
+  group by ?property ?property_label ?description ?superproperties_multi_iri ?superproperties_label_multi ?domain_multi_iri ?domain_label_multi ?range_multi_iri ?range_label_multi ?types_multi_iri ?types_label_multi ?last_modified_by ?last_modified ?np ?np_label
+  order by ?property_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-03T09:27:37Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:get-properties-of-ontology-from-space-members;
+    npx:supersedes <https://w3id.org/np/RAAgtLalXXmS0XWoDPnjsGeRWg-cbvnkGt7Nk5tfBIWho>;
+    rdfs:label "Get the properties of an ontology from space members including namespace";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "HOc9rgX69rPVhtQNPy3aMdkGtyahxZr1U8gE24nNvWkM9PD+u7Ajp10hxlOdkmxzwfz1ypQ57yQD/REGHeUCGbKlrZ2sZcpDCEkSmNAewNtxVEVxTa5IjVbMkd8EwBe8c8djj9ImwAJ3lFtp/SrERi84oeAChuhvwzumibH817s=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

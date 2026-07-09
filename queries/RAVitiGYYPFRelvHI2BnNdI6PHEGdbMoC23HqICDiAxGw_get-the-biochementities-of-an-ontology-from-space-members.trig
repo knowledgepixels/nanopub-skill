@@ -1,0 +1,138 @@
+@prefix this: <https://w3id.org/np/RAVitiGYYPFRelvHI2BnNdI6PHEGdbMoC23HqICDiAxGw> .
+@prefix sub: <https://w3id.org/np/RAVitiGYYPFRelvHI2BnNdI6PHEGdbMoC23HqICDiAxGw/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-biochementities-from-space-members a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Like 'Get the classes of an ontology from space members', but links classes to the ontology via dct:isPartOf (the predicate used by the biochementity template). Returns the biochementities (owl:Class) that declare dct:isPartOf the given resource, restricted to nanopubs published by an admin, maintainer, or member of the space that maintains the resource. The maintaining space and its validated member public-key hashes are resolved server-side from the spaces repo (/repo/spaces); observers are excluded. Each class URI appears once, kept from the latest (by nanopub timestamp) member-published definition. Superclass labels are taken from the superclass' own rdfs:label when it is a biochementity in the same ontology. The types column lists any rdf:type assignments besides owl:Class. The last_modified_by/last_modified columns give the signer and timestamp of that latest definition; the signer name is resolved from the trust repo (/repo/trust) or left blank.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the biochementities of an ontology from space members";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/e8cc5bb29ec5597303f8f101c65c545dc124ee0df68ce733764b03adc3237184>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix owl: <http://www.w3.org/2002/07/owl#>
+  prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+  prefix dct: <http://purl.org/dc/terms/>
+  prefix np: <http://www.nanopub.org/nschema#>
+  prefix npa: <http://purl.org/nanopub/admin/>
+  prefix npx: <http://purl.org/nanopub/x/>
+  prefix skos: <http://www.w3.org/2004/02/skos/core#>
+  prefix gen: <https://w3id.org/kpxl/gen/terms/>
+  prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+  select ?class ?class_label ?description ?superclasses_multi_iri ?superclasses_label_multi
+         ?types_multi_iri ?types_label_multi
+         ?last_modified_by (sample(?lmbl) as ?last_modified_by_label) ?last_modified
+         (?np as ?override_target) ?np ?np_label where {
+    {
+      select ?class ?class_label (?definition as ?description)
+             (group_concat(distinct str(?superclass); separator=\" \") as ?superclasses_multi_iri)
+             (group_concat(distinct replace(replace(coalesce(?superclass_lbl, str(?superclass)), \"\\\\\\\\\", \"\\\\\\\\\\\\\\\\\"), \"[\\r\\n]+\", \"\\\\\\\\n\"); separator=\"\\n\") as ?superclasses_label_multi)
+             (group_concat(distinct str(?type); separator=\" \") as ?types_multi_iri)
+             (group_concat(distinct replace(replace(replace(str(?type), \"^.*[/#]\", \"\"), \"\\\\\\\\\", \"\\\\\\\\\\\\\\\\\"), \"[\\r\\n]+\", \"\\\\\\\\n\"); separator=\"\\n\") as ?types_label_multi)
+             (sample(?user) as ?last_modified_by) (sample(?date) as ?last_modified)
+             ?np (\"^\" as ?np_label) where {
+        values ?_ontology_multi_iri {}
+        service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+          select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+            graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+            values ?_ontology_multi_iri {}
+            graph ?stateG {
+              ?_ontology_multi_iri npa:isMaintainedBy? ?space .
+              ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ;
+                  npa:hasRoleType ?rt .
+              filter(?rt in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+              ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+            }
+          }
+        }
+        graph npa:graph {
+          ?np npx:hasNanopubType owl:Class .
+          ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+          filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+          ?np dct:created ?date .
+          ?np npx:introduces ?class .
+          ?np np:hasAssertion ?a .
+          optional { ?np npx:signedBy ?user . }
+        }
+        filter(contains(?memberPubkeys, ?pubkey))
+        graph ?a {
+          ?class dct:isPartOf ?_ontology_multi_iri .
+          optional { ?class rdfs:label ?class_label . filter(lang(?class_label) = \"\") }
+          optional { ?class skos:definition ?definition . }
+          optional { ?class rdfs:subClassOf ?superclass . filter(isIRI(?superclass)) }
+          optional { ?class a ?type . filter(?type != owl:Class) }
+        }
+        filter not exists {
+          graph npa:graph {
+            ?np2 npx:hasNanopubType owl:Class .
+            ?np2 npa:hasValidSignatureForPublicKeyHash ?pubkey2 .
+            filter not exists { ?np2x npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+            ?np2 dct:created ?date2 .
+            ?np2 npx:introduces ?class .
+            ?np2 np:hasAssertion ?a2 .
+          }
+          filter(contains(?memberPubkeys, ?pubkey2))
+          graph ?a2 { ?class dct:isPartOf ?_ontology_multi_iri . }
+          filter(?date2 > ?date || (?date2 = ?date && str(?np2) > str(?np)))
+        }
+        optional {
+          select ?superclass (sample(?sclbl) as ?superclass_lbl) where {
+            values ?_ontology_multi_iri {}
+            graph npa:graph { ?scnp npx:hasNanopubType owl:Class ; npx:introduces ?superclass ; np:hasAssertion ?sca . }
+            graph ?sca { ?superclass dct:isPartOf ?_ontology_multi_iri ; rdfs:label ?sclbl . }
+          } group by ?superclass
+        }
+      } group by ?class ?class_label ?definition ?np
+    }
+    optional {
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/trust> {
+        select ?last_modified_by ?lmbl where {
+          graph npa:graph { npa:thisRepo npa:hasCurrentTrustState ?tg . }
+          graph ?tg { ?last_modified_by foaf:name ?lmbl . }
+        }
+      }
+    }
+  }
+  group by ?class ?class_label ?description ?superclasses_multi_iri ?superclasses_label_multi ?types_multi_iri ?types_label_multi ?last_modified_by ?last_modified ?np ?np_label
+  order by ?class_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-08T08:10:15Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:get-biochementities-from-space-members;
+    npx:supersedes <https://w3id.org/np/RAL_TMdpiIDp4RMz0qg3KCnoPrelacfJHgHXlasC817uU>;
+    rdfs:label "Get the biochementities of an ontology from space members";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "m0v0qOw398WRW+BY8hvA3U9AbhFLicwW2CMMVH44rP+KeLUlz5fWc/MuZtw0Qb2wRpnUTriwZXfzEpUeI6b2zQgR+/mKyOrBWadAYDzoRykZKMBTxhqpNvN6jrPI0pmL8f1u3HkOLg7wOhI0Th53HI6ZO95VTMlydVjtMxs7I1I=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

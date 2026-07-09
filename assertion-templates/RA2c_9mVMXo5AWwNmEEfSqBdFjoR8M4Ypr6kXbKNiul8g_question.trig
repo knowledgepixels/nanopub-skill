@@ -1,0 +1,84 @@
+@prefix this: <https://w3id.org/np/RA2c_9mVMXo5AWwNmEEfSqBdFjoR8M4Ypr6kXbKNiul8g> .
+@prefix sub: <https://w3id.org/np/RA2c_9mVMXo5AWwNmEEfSqBdFjoR8M4Ypr6kXbKNiul8g/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "A question posed to the discourse graph: a schema:Question carrying its text in rdf:value. It may reply to a prior contribution (as:inReplyTo), or carry a rhetorical CiTO stance toward one when the question implicitly challenges its target (e.g. cito:disputes), and may cite evidence. Answers are separate contributions that target this question. A standalone question with no target is valid.";
+    rdfs:label "Question";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st4, sub:st5;
+    nt:hasTag "Discourse" .
+  
+  sub:evidence a nt:ExternalUriPlaceholder .
+  
+  sub:question a nt:IntroducedResource .
+  
+  sub:questionText a nt:LongLiteralPlaceholder .
+  
+  sub:st1 rdf:object <https://schema.org/Question>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:question .
+  
+  sub:st2 rdf:object sub:questionText;
+    rdf:predicate rdf:value;
+    rdf:subject sub:question .
+  
+  sub:st3 rdf:object sub:target;
+    rdf:predicate sub:stance;
+    rdf:subject sub:question .
+  
+  sub:st4 rdf:object sub:target;
+    rdf:predicate <https://www.w3.org/ns/activitystreams#inReplyTo>;
+    rdf:subject sub:question .
+  
+  sub:st5 rdf:object sub:evidence;
+    rdf:predicate <http://purl.org/spar/cito/citesAsEvidence>;
+    rdf:subject sub:question .
+  
+  sub:stance a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue <http://purl.org/spar/cito/corrects>, <http://purl.org/spar/cito/critiques>,
+      <http://purl.org/spar/cito/discusses>, <http://purl.org/spar/cito/disputes>, <http://purl.org/spar/cito/qualifies> .
+  
+  sub:target a nt:ExternalUriPlaceholder .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0009-0118-9195 .
+}
+
+sub:pubinfo {
+  orcid:0009-0009-0118-9195 foaf:name "Virginia Balseiro" .
+  
+  this: dct:created "2026-07-09T04:30:48.269Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0009-0118-9195;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Question";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAE1uwovw7QhYIgEZMElrpfZWu-p0VczMyShiTEG-RyLE> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCFJNRSo0AhDh7EfwM3nZXQbACb8v6F7tKGOj4Mnc/VuEu0CqzwyomaSvXmfwIKeHmCGCdIrL7tMes3U3K7qJ6c3m5j9U1SDBA+d6UDGvBKSN4X8vvRHzH+PNZyegn3Wu+liXjq+4bnGdTdhPRdRFO9DjSb+rpAfaH21md4qRhCewIDAQAB";
+    npx:hasSignature "ZeN/N4eHu3BvapudIIIivj7/pFw+p0gaLbAOYz1ukGSOY58gCCeb0wcqVqyErBjDDIU5V9emoKDfPfM/R6AN+ubrmYZaYNSQpTOHM4ICoulj5zlfjjK9an7csbfKDaw4bzOSMKLfZBmEtz7WzjDRMN/Wp8GlvG5IqcdvtX4dIZg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0009-0118-9195 .
+}
+

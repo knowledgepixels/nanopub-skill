@@ -1,0 +1,113 @@
+@prefix this: <https://w3id.org/np/RAwhCOVgo8-hj3YhFRoFX4b-flQpnOiZ1PyXJOd59sOf0> .
+@prefix sub: <https://w3id.org/np/RAwhCOVgo8-hj3YhFRoFX4b-flQpnOiZ1PyXJOd59sOf0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-cca-fsr a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "The query returns all FAIR Supporting Resources (FSRs) that are in scope of climate change adaptation (GEMET concept 15033).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get all climate change adaptation FSRs";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+prefix search: <http://www.openrdf.org/contrib/lucenesail#>
+
+select distinct ?thing (?label as ?thing_label) ?description (group_concat(distinct ?type; separator=\" \") as ?types_multi_iri) ?np ?date where {
+
+  graph npa:graph {
+    <https://w3id.org/np/RA27Uhopq4MHZziL2lKXX-wTb1jz4KVLbHaupxyAcCt9Y> npa:hasValidSignatureForPublicKey ?curators_np_pk .
+    ?latest_curators_np npa:hasValidSignatureForPublicKey ?curators_np_pk .
+    filter not exists { ?latest_curators_npx npx:invalidates ?latest_curators_np ; npa:hasValidSignatureForPublicKey ?curators_np_pk . }
+    ?latest_curators_np np:hasAssertion ?latest_curators_assertion .
+  }
+  graph npa:networkGraph {
+    ?latest_curators_np (npx:supersedes)* <https://w3id.org/np/RA27Uhopq4MHZziL2lKXX-wTb1jz4KVLbHaupxyAcCt9Y> .
+    filter not exists { ?latest_curators_npxx npx:supersedes ?latest_curators_np }
+  }
+
+    graph npa:graph {
+      ?np rdfs:label ?label ;
+          npa:hasValidSignatureForPublicKey ?pubkey ;
+          dct:created ?date .
+      ?np npx:introduces|npx:describes ?thing .
+      filter(str(?date) > \"2022\")
+      filter exists { ?np npx:hasNanopubType ?fsr_type . values ?fsr_type { fip:FAIR-Enabling-Resource fip:FAIR-Supporting-Resource fip:Available-FAIR-Enabling-Resource } }
+      filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+      ?np npx:hasNanopubType ?type .
+      filter(?type != fip:FAIR-Enabling-Resource)
+      filter(?type != fip:Available-FAIR-Enabling-Resource)
+      filter(?type != fip:FAIR-Enabling-Resource-to-be-Developed)
+      filter(?type != fip:FAIR-Supporting-Resource)
+      filter(?type != fip:Available-FAIR-Supporting-Resource)
+      filter(?type != fip:FAIR-Supporting-Resource-to-be-Developed)
+      filter(?type != fip:Domain-Specific-FAIR-Supporting-Resource)
+      filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+      ?np np:hasAssertion ?a .
+    }
+
+    graph ?a {
+      ?thing rdfs:comment ?description .
+      ?thing fip:in-scope-of <http://www.eionet.europa.eu/gemet/concept/15033> .
+    }
+
+    filter not exists {
+      graph npa:graph {
+        ?disapproval_np npx:hasNanopubType <http://purl.org/nanopub/x/disapprovesOf> .
+        ?disapproval_np np:hasAssertion ?da ;
+          npa:hasValidSignatureForPublicKey ?dpubkey .
+        filter not exists { ?disapproval_npx npx:invalidates ?disapproval_np ; npa:hasValidSignatureForPublicKey ?dpubkey . }
+      }
+      graph ?latest_curators_assertion {
+        ?qpubkeys npx:hasPublicKey ?dpubkey .
+      }
+      graph ?da {
+        ?disapprover npx:disapprovesOf ?np .
+      }
+    }
+
+} group by ?np ?thing ?description ?label ?date order by ?label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-07-02T08:04:32Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-cca-fsr;
+    npx:supersedes <https://w3id.org/np/RAx5i0hCKlJv_q04wvaoudC9jAiZWym36UIfRIn7pQcFM>;
+    rdfs:label "Get all climate change adaptation FSRs";
+    prov:wasDerivedFrom <https://w3id.org/np/RAY9jl7fCOM7qyYP6IAwouMNaXbdiweDM7xcS_Q_ldE6I>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "qsrcoFptAY7S4ra6ILifT0bHP5TPtmEOCqwc6zToTLZpD8RUk8eVajPb3ZSs7eRv1poBBf/+/tTZ+W0eoOWuCth6NMTfZZCAEJlNw1LoyXI1uuAbHzRqZyg3LoSfTxshy6PPmvvRaDa4Djg+9ydsmLhlmFQOVkWuJJyLkLHUhZY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,105 @@
+@prefix this: <https://w3id.org/np/RASsQMe406O_ZMpaN8VWLSxzdr0pTrQw-Piq-idCrlx5s> .
+@prefix sub: <https://w3id.org/np/RASsQMe406O_ZMpaN8VWLSxzdr0pTrQw-Piq-idCrlx5s/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-term-details a grlc:grlc-query;
+    dct:description "Given a glossary term (a SKOS concept, typically identified by its Wikidata URI), this query returns its details as property-value rows: its type, label, and definition, the resources that reference it in their glossary via dct:references, and the statements (AIDA sentences) that are about it. Recognized properties get human-readable labels and are shown first.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get term details";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix hycl: <http://purl.org/petapico/o/hycl#>
+
+select ?property ?property_label ?value (min(?vlabel) as ?value_label) where {
+  {
+    graph npa:graph { ?np np:hasAssertion ?a ; npa:hasValidSignatureForPublicKey ?pk . }
+    filter not exists { graph npa:graph { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pk . } }
+    graph ?a { ?_term_iri ?property ?value . }
+    bind(if(?value = skos:Concept, \"Concept\", ?xu) as ?vlabel)
+    bind(
+      if(?property = rdf:type, \"Type\",
+      if(?property = rdfs:label, \"Label\",
+      if(?property = skos:definition, \"Definition\",
+      str(?property)))) as ?property_label)
+    bind(
+      if(?property = rdf:type, 0,
+      if(?property = rdfs:label, 1,
+      if(?property = skos:definition, 2,
+      40))) as ?sort)
+  } union {
+    graph npa:graph { ?rnp np:hasAssertion ?ra ; npa:hasValidSignatureForPublicKey ?rpk . }
+    filter not exists { graph npa:graph { ?rinv npx:invalidates ?rnp ; npa:hasValidSignatureForPublicKey ?rpk . } }
+    graph ?ra { ?value dct:references ?_term_iri . }
+    bind(dct:references as ?property)
+    bind(\"Referenced by\" as ?property_label)
+    bind(50 as ?sort)
+    optional {
+      graph npa:graph { ?lnp np:hasAssertion ?la ; npa:hasValidSignatureForPublicKey ?lpk . }
+      filter not exists { graph npa:graph { ?linv npx:invalidates ?lnp ; npa:hasValidSignatureForPublicKey ?lpk . } }
+      graph ?la { ?value rdfs:label ?vlabel . }
+    }
+  } union {
+    graph npa:graph { ?snp np:hasAssertion ?sa ; npa:hasValidSignatureForPublicKey ?spk . }
+    filter not exists { graph npa:graph { ?sinv npx:invalidates ?snp ; npa:hasValidSignatureForPublicKey ?spk . } }
+    graph ?sa {
+      ?value ?aboutProp ?_term_iri .
+      ?value a hycl:AIDA-Sentence .
+    }
+    filter(?aboutProp in (<http://schema.org/about>, <https://schema.org/about>))
+    bind(?aboutProp as ?property)
+    bind(\"Topic of statement\" as ?property_label)
+    bind(60 as ?sort)
+    optional { graph npa:graph { ?snp rdfs:label ?vlabel . } }
+  }
+}
+group by ?property ?property_label ?value ?sort
+order by ?sort str(?value)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-06T14:36:37Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-term-details;
+    rdfs:label "Get term details";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "mgpf0/e19sP97X2PSbql4Ts330t2b5IaLgCo1QioMdsUFLQPUdVFhjojvyRZEz6zbDOtzNmLoQ3rlPXpNQQE2Qpw0CvdvV30sTehyvP/8M70s7DoCR9Nbgw8nSdfYGOOjtE31VYKKJK1SqppGs9SxC1ewY99UVTo1OvpsZGKSY0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

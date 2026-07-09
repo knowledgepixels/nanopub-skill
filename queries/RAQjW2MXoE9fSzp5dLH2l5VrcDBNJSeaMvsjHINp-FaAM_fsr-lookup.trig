@@ -1,0 +1,111 @@
+@prefix this: <https://w3id.org/np/RAQjW2MXoE9fSzp5dLH2l5VrcDBNJSeaMvsjHINp-FaAM> .
+@prefix sub: <https://w3id.org/np/RAQjW2MXoE9fSzp5dLH2l5VrcDBNJSeaMvsjHINp-FaAM/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:fsr-lookup a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Autocomplete lookup for FAIR Supporting Resources (FSRs), searching on labels and descriptions, excluding retracted/superseded nanopublications, example nanopublications, entries from before 2022, and entries disapproved by the curators.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "FSR lookup";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/text>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+prefix search: <http://www.openrdf.org/contrib/lucenesail#>
+
+select distinct ?thing ?label ?description ?np ?date ?pubkey where {
+
+  graph npa:graph {
+    <https://w3id.org/np/RA27Uhopq4MHZziL2lKXX-wTb1jz4KVLbHaupxyAcCt9Y> npa:hasValidSignatureForPublicKey ?curators_np_pk .
+    ?latest_curators_np npa:hasValidSignatureForPublicKey ?curators_np_pk .
+    filter not exists { ?latest_curators_npx npx:invalidates ?latest_curators_np ; npa:hasValidSignatureForPublicKey ?curators_np_pk . }
+    ?latest_curators_np np:hasAssertion ?latest_curators_assertion .
+  }
+  graph npa:networkGraph {
+    ?latest_curators_np (npx:supersedes)* <https://w3id.org/np/RA27Uhopq4MHZziL2lKXX-wTb1jz4KVLbHaupxyAcCt9Y> .
+    filter not exists { ?latest_curators_npxx npx:supersedes ?latest_curators_np }
+  }
+
+  graph npa:graph {
+    ?np rdfs:label ?label .
+    optional { ?np dct:description ?description . }
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+    ?np dct:created ?date .
+    filter(str(?date) > \"2022\")
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np npx:introduces|npx:describes ?thing .
+    ?np npx:hasNanopubType ?type .
+    values ?type { fip:Data-usage-license fip:Metadata-preservation-policy fip:Persistency-Policy fip:Crosswalk fip:Editor fip:FAIR-Representation-Service fip:Authentication-and-authorization-service fip:Provenance-Tracking-Service fip:Validation-Service fip:Web-API fip:Identifier-service fip:FAIR-Supporting-Software fip:Registry fip:Communication-protocol fip:Knowledge-representation-language fip:Metadata-schema fip:Metadata-data-linking-schema fip:Provenance-model fip:Structured-vocabulary fip:Semantic-model }
+  }
+  {
+    ?np search:matches [
+      search:query ?_searchterm ;
+      search:property rdfs:label ] .
+  } union {
+    ?np search:matches [
+      search:query ?_searchterm ;
+      search:property dct:description ] .
+  }
+
+  bind(iri(concat(\"https://w3id.org/np/l/nanopub-query-1.1/repo/type/\", sha256(\"http://purl.org/nanopub/x/disapprovesOf\"))) as ?disappr_service)
+  filter not exists { service ?disappr_service {
+    graph npa:graph {
+      ?disapproval_np np:hasAssertion ?da ;
+        npa:hasValidSignatureForPublicKey ?dpubkey .
+      filter not exists { ?disapproval_npx npx:invalidates ?disapproval_np ; npa:hasValidSignatureForPublicKey ?dpubkey . }
+    }
+    graph ?latest_curators_assertion {
+      ?qpubkeys npx:hasPublicKey ?dpubkey .
+    }
+    graph ?da {
+      ?disapprover npx:disapprovesOf ?np .
+    }
+  } }
+
+}
+limit 10""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234;
+    prov:wasDerivedFrom <https://raw.githubusercontent.com/knowledgepixels/fairconnect-api/main/fsr_lookup.rq> .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-03T13:22:48Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:fsr-lookup;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "hxbxs0VO7L+zsIJ9Nn83aPJ1711KosY6TY9Oi2AK1UcpqTpPmKDjnsHKGVUGWhsDMID5W2AqRErWE2bDzEzCwJo9KIJCp2hpx1Bu3t+jycaQxvZYPM4TkzYSC4s7SpCes799p7AQ39Kbilm+fVvSHIOQnTiy5sTJtuRgyFwzOa8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,3 +1,83 @@
-<!doctype html>
-<title>Not Found</title>
-<p>Not Found</p>
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix orcid: <https://orcid.org/> .
+@prefix this: <https://w3id.org/livingreviews/np/templates/relationTemplate/RAe4Wi8DOD5yRQ_BExFbinmxkVieCE_3QcF_k1zkYhlfo> .
+@prefix sub: <https://w3id.org/livingreviews/np/templates/relationTemplate/RAe4Wi8DOD5yRQ_BExFbinmxkVieCE_3QcF_k1zkYhlfo#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix hycl: <http://purl.org/petapico/o/hycl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  hycl:hasConflictingMeaning rdfs:label "has a conflicting meaning with" .
+  
+  hycl:hasConsistentMeaning rdfs:label "has a consistent meaning with" .
+  
+  hycl:hasDifferentMeaning rdfs:label "has a different meaning as" .
+  
+  hycl:hasMoreGeneralMeaningThan rdfs:label "has a more general meaning than" .
+  
+  hycl:hasMoreSpecificMeaningThan rdfs:label "has a more specific meaning than" .
+  
+  hycl:hasNonoppositeMeaning rdfs:label "has the non-opposite meaning as" .
+  
+  hycl:hasOppositeMeaning rdfs:label "has the opposite meaning as" .
+  
+  hycl:hasRelatedMeaning rdfs:label "has a related meaning as" .
+  
+  hycl:hasSameMeaning rdfs:label "has the same meaning as" .
+  
+  hycl:hasUnrelatedMeaning rdfs:label "has a unrelated meaning with" .
+  
+  hycl:isImprovedVersionOf rdfs:label "is a improved version of" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Create a relation between two statements";
+    nt:hasStatement sub:st0 .
+  
+  sub:mappingPredicate a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue hycl:hasConflictingMeaning, hycl:hasConsistentMeaning, hycl:hasDifferentMeaning,
+      hycl:hasMoreGeneralMeaningThan, hycl:hasMoreSpecificMeaningThan, hycl:hasNonoppositeMeaning,
+      hycl:hasOppositeMeaning, hycl:hasRelatedMeaning, hycl:hasSameMeaning, hycl:hasUnrelatedMeaning,
+      hycl:isImprovedVersionOf .
+  
+  sub:resource1 a nt:UriPlaceholder;
+    rdfs:label "The first statement in the form of a AIDA URI." .
+  
+  sub:resource2 a nt:UriPlaceholder;
+    rdfs:label "The second statement in the form of a AIDA URI." .
+  
+  sub:st0 a rdf:Statement;
+    rdf:object sub:resource2;
+    rdf:predicate sub:mappingPredicate;
+    rdf:subject sub:resource1;
+    nt:statementOrder "0"^^xsd:integer .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTO orcid:0000-0002-1267-0234, orcid:0000-0002-2363-5880,
+      orcid:0000-0002-3429-2879, orcid:0000-0003-1460-8757, orcid:0000-0003-2929-3815 .
+}
+
+sub:pubinfo {
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCWuPNlXrLXvDdieFPgneCCu7ExNauuYhHXzebtSsXchN8ZQdj8Nj03110q/s+CK+tQ+omyhjaiMxKsEIr+dLwcpAKNmeHMdXnZH1JjmkMa0KC89BfV+s8JKfGZJv/gmqtLdB6fqRXjEx9s1ExIH+6YIq2FoibxCBdE6ZeIFMNxhwIDAQAB";
+    npx:hasSignature "Svv2u3TttdzVZhDqZQDica2E/SUJJc+XBIZlZgfpkkEFnSm9joBdItxA43qYCrTAXWsRWPG4OyZAnWwxKASe1OC5HfniIISj/7sP2fcprpp2Y0JkNR2LImw2gqfdL8yIUev1AZcyUu09VSgBjPgmGSJYjJGHIfYTyMAt7TqCujY=";
+    npx:hasSignatureTarget this: .
+  
+  this: dcterms:created "2021-03-16T21:01:07.137+01:00"^^xsd:dateTime;
+    dcterms:creator orcid:0000-0002-1267-0234, orcid:0000-0002-2363-5880, orcid:0000-0002-3429-2879,
+      orcid:0000-0003-1460-8757, orcid:0000-0003-2929-3815;
+    dcterms:license <https://creativecommons.org/share-your-work/public-domain/cc0/> .
+}
+

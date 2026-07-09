@@ -1,0 +1,65 @@
+@prefix this: <https://w3id.org/np/RAcdrF_yHnh4xkCTvLkJudGj9P1XejGJlo-SUDan4yOLk> .
+@prefix sub: <https://w3id.org/np/RAcdrF_yHnh4xkCTvLkJudGj9P1XejGJlo-SUDan4yOLk/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a gen:ViewResultAction;
+    rdfs:label "➕ add output...";
+    gen:hasActionTemplate <https://w3id.org/np/RA6qPIEIiWAz66evvlbEEoU1XvCj9VlxWjICdlSX8elqs>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "project" .
+  
+  sub:fair-outputs-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAgjbh-OjBB0IdrCbf05q5mLqFrGn_AE-sMYJqp2wcVlY/fair-outputs-view-kind>;
+    dct:title "📚 FAIR Outputs";
+    rdfs:label "FAIR outputs for project view";
+    gen:appliesToInstancesOf gen:Space;
+    gen:hasStructuralPosition "4.5.fairoutputs";
+    gen:hasViewAction sub:addAction;
+    gen:hasViewQuery <https://w3id.org/np/RAm6r-CK_l2fHdDwbu8BKcPyCd-OJnnEusqXxJhvx-rW8/get-project-fair-outputs>;
+    gen:hasViewQueryTargetField "project" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-03T13:10:17Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:fair-outputs-view;
+    npx:introduces <https://w3id.org/np/RAgjbh-OjBB0IdrCbf05q5mLqFrGn_AE-sMYJqp2wcVlY/fair-outputs-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAhWzX8KLpTu8sUDa3Cg2deFnq9zl1MaqwFxXAcI5mZMI>;
+    rdfs:label "FAIR outputs for project view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "MqGl+yJ1xxcxMV1sN1lb4ZxCQ3bGXQDc+HkJbzPXWlXwD8mgfScMNqIW60teBU5hmYLIf968Bu8F1zFbSIhxxtzWUrkxpYwse/hFVo3CZplF9zMPTPHlLINBPgisx0/tH5d29CMgX7niJZu8lXKtLSU5PAqQz4K/OwSa4AGsoxA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

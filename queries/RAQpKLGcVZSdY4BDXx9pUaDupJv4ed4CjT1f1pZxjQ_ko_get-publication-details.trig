@@ -1,0 +1,130 @@
+@prefix this: <https://w3id.org/np/RAQpKLGcVZSdY4BDXx9pUaDupJv4ed4CjT1f1pZxjQ_ko> .
+@prefix sub: <https://w3id.org/np/RAQpKLGcVZSdY4BDXx9pUaDupJv4ed4CjT1f1pZxjQ_ko/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-publication-details a grlc:grlc-query;
+    dct:description "Given a publication (identified by its DOI URI or other identifier), this query returns its details as property-value rows: its bibliographic metadata (type, title, authors in list order, journal, date, volume, pages) from the nanopublication introducing it, the resources citing it via CiTO relations (with the citation type in the property label), and the statements (AIDA sentences) that were derived from it. Recognized properties get human-readable labels and are shown first.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get publication details";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix bibo: <http://purl.org/ontology/bibo/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix hycl: <http://purl.org/petapico/o/hycl#>
+
+select ?property ?property_label ?value (min(?vlabel) as ?value_label) where {
+  {
+    graph npa:graph { ?np npx:introduces ?_publication_iri ; np:hasAssertion ?a ; npa:hasValidSignatureForPublicKey ?pk . }
+    filter not exists { graph npa:graph { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pk . } }
+    {
+      graph ?a { ?_publication_iri ?property ?value . }
+      filter(?property not in (dct:isPartOf, bibo:authorList, bibo:pageStart, bibo:pageEnd))
+      bind(if(?property = rdf:type, replace(replace(str(?value), \"^.*[/#]\", \"\"), \"([a-z])([A-Z])\", \"$1 $2\"), ?xu) as ?vlabel)
+      bind(
+        if(?property = rdf:type, \"Type\",
+        if(?property = dct:title, \"Title\",
+        if(?property = dct:date, \"Date\",
+        if(?property = bibo:volume, \"Volume\",
+        str(?property))))) as ?property_label)
+      bind(
+        if(?property = rdf:type, 0,
+        if(?property = dct:title, 1,
+        if(?property = dct:date, 30,
+        if(?property = bibo:volume, 32,
+        40)))) as ?sort)
+    } union {
+      graph ?a { ?_publication_iri dct:isPartOf ?j . ?j dct:title ?value . }
+      bind(dct:isPartOf as ?property)
+      bind(\"Published in\" as ?property_label)
+      bind(31 as ?sort)
+    } union {
+      graph ?a { ?_publication_iri bibo:pageStart ?ps . }
+      optional { graph ?a { ?_publication_iri bibo:pageEnd ?pe . } }
+      bind(bibo:pageStart as ?property)
+      bind(\"Pages\" as ?property_label)
+      bind(33 as ?sort)
+      bind(if(bound(?pe) && str(?pe) != str(?ps), concat(str(?ps), \"-\", str(?pe)), str(?ps)) as ?value)
+    } union {
+      graph ?a { ?_publication_iri bibo:authorList ?al . ?al ?m ?author . ?author foaf:name ?value . }
+      filter(strstarts(str(?m), \"http://www.w3.org/1999/02/22-rdf-syntax-ns#_\"))
+      bind(bibo:authorList as ?property)
+      bind(\"Author\" as ?property_label)
+      bind(10 + xsd:integer(strafter(str(?m), \"#_\")) / 1000.0 as ?sort)
+    }
+  } union {
+    graph npa:graph { ?cnp np:hasAssertion ?ca ; npa:hasValidSignatureForPublicKey ?cpk . }
+    filter not exists { graph npa:graph { ?cinv npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKey ?cpk . } }
+    graph ?ca { ?value ?property ?_publication_iri . }
+    filter(strstarts(str(?property), \"http://purl.org/spar/cito/\"))
+    bind(concat(\"Cited by (\", lcase(replace(replace(str(?property), \"http://purl.org/spar/cito/\", \"\"), \"([a-z])([A-Z])\", \"$1 $2\")), \")\") as ?property_label)
+    bind(50 as ?sort)
+    optional {
+      graph npa:graph { ?lnp np:hasAssertion ?la ; npa:hasValidSignatureForPublicKey ?lpk . }
+      filter not exists { graph npa:graph { ?linv npx:invalidates ?lnp ; npa:hasValidSignatureForPublicKey ?lpk . } }
+      graph ?la { ?value rdfs:label ?vlabel . }
+    }
+  } union {
+    graph npa:graph { ?snp np:hasAssertion ?sa ; npa:hasValidSignatureForPublicKey ?spk . }
+    filter not exists { graph npa:graph { ?sinv npx:invalidates ?snp ; npa:hasValidSignatureForPublicKey ?spk . } }
+    graph ?sa {
+      ?value prov:wasDerivedFrom ?_publication_iri .
+      ?value a hycl:AIDA-Sentence .
+    }
+    bind(prov:wasDerivedFrom as ?property)
+    bind(\"Basis for statement\" as ?property_label)
+    bind(60 as ?sort)
+    optional { graph npa:graph { ?snp rdfs:label ?vlabel . } }
+  }
+}
+group by ?property ?property_label ?value ?sort
+order by ?sort str(?value)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-06T14:36:37Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-publication-details;
+    rdfs:label "Get publication details";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "em4h2FdUvlBRObrzMsiKezarCOxCwjEf/mrLqz41T4Ak7orOQ5laWA5G/SxveLfDlDgVMXgH5co/wtZpjxQVSUYzTrBw1v1r7ecoBSbTEnKEJlv+4NXv51cpY0WiAofVTuzmOasWYkKVwZAh71npjkIrtG0Xk+lk2RZhO3Y6KDs=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

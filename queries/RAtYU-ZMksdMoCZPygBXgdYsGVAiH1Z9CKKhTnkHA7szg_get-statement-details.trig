@@ -1,0 +1,101 @@
+@prefix this: <https://w3id.org/np/RAtYU-ZMksdMoCZPygBXgdYsGVAiH1Z9CKKhTnkHA7szg> .
+@prefix sub: <https://w3id.org/np/RAtYU-ZMksdMoCZPygBXgdYsGVAiH1Z9CKKhTnkHA7szg/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-statement-details a grlc:grlc-query;
+    dct:description "Given a statement (AIDA sentence), this query returns its details as property-value rows: its type, the topic(s) it is about, the source(s) it was derived from (with titles where available), and the resources that cover it via gen:coversClaim. Recognized properties get human-readable labels and are shown first.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get statement details";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix hycl: <http://purl.org/petapico/o/hycl#>
+
+select ?property ?property_label ?value (min(?vlabel) as ?value_label) where {
+  {
+    graph npa:graph { ?np np:hasAssertion ?a ; npa:hasValidSignatureForPublicKey ?pk . }
+    filter not exists { graph npa:graph { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pk . } }
+    graph ?a { ?_statement_iri ?property ?value . }
+    bind(\"out\" as ?dir)
+    optional {
+      graph npa:graph { ?lnp np:hasAssertion ?la ; npa:hasValidSignatureForPublicKey ?lpk . }
+      filter not exists { graph npa:graph { ?linv npx:invalidates ?lnp ; npa:hasValidSignatureForPublicKey ?lpk . } }
+      graph ?la { ?value rdfs:label|dct:title ?vlabelRaw . }
+    }
+  } union {
+    graph npa:graph { ?np np:hasAssertion ?a ; npa:hasValidSignatureForPublicKey ?pk . }
+    filter not exists { graph npa:graph { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pk . } }
+    graph ?a { ?value gen:coversClaim ?_statement_iri . }
+    bind(gen:coversClaim as ?property)
+    bind(\"in\" as ?dir)
+    optional {
+      graph npa:graph { ?lnp np:hasAssertion ?la ; npa:hasValidSignatureForPublicKey ?lpk . }
+      filter not exists { graph npa:graph { ?linv npx:invalidates ?lnp ; npa:hasValidSignatureForPublicKey ?lpk . } }
+      graph ?la { ?value rdfs:label ?vlabelRaw . }
+    }
+  }
+  bind(coalesce(?vlabelRaw, if(?value = hycl:AIDA-Sentence, \"AIDA sentence\", ?xu)) as ?vlabel)
+  bind(
+    if(?dir = \"in\", \"Covered by\",
+    if(?property = rdf:type, \"Type\",
+    if(?property = <http://schema.org/about> || ?property = <https://schema.org/about>, \"Topic\",
+    if(?property = prov:wasDerivedFrom, \"Derived from\",
+    str(?property))))) as ?property_label)
+  bind(
+    if(?dir = \"in\", 50,
+    if(?property = rdf:type, 0,
+    if(?property = <http://schema.org/about> || ?property = <https://schema.org/about>, 10,
+    if(?property = prov:wasDerivedFrom, 20,
+    40)))) as ?sort)
+}
+group by ?property ?property_label ?value ?sort
+order by ?sort str(?value)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-06T14:36:37Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-statement-details;
+    rdfs:label "Get statement details";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "HQoMqcCp3x262LMq9Wmg92q7jDjYAIrQ8xZliXyAAsDCkKAtD8cvp+7367qxAgMks+4NHuq/Q1lQgwRA09YwuCF4KeV9Adc82i2oAC7tIt13AAckwN5EtTmzRnPkGEAuYOaig1Q5Z5V5ydSFwIzC9azSs2Htvyk5S5m9s4A6zjY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+
