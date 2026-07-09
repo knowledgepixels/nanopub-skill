@@ -13,7 +13,7 @@ OUTPUT_DIR="${1:-$SCRIPT_DIR/../assertion-templates}"
 mkdir -p "$OUTPUT_DIR"
 
 echo "Fetching assertion template list from Nanopub Query..."
-QUERY_LIST=$(curl -s "https://query.knowledgepixels.com/api/RA6bgrU3Ezfg5VAiLru0BFYHaSj6vZU6jJTscxNl8Wqvc/get-assertion-templates")
+QUERY_LIST=$(curl -s "https://query.knowledgepixels.com/api/RAoEo6jLZlH6sJeI6Lw3CIBfirDOscT8dI8Mab58BS8Sc/get-assertion-templates")
 
 # Skip the CSV header line
 TOTAL=$(echo "$QUERY_LIST" | tail -n +2 | wc -l)

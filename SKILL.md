@@ -166,8 +166,18 @@ bash scripts/download-assertion-templates.sh
 Assertion templates define the structure for creating nanopubs of a specific type (e.g. expressing a claim, defining a class, declaring event participation). They can be listed via the API:
 
 ```bash
-curl -s "https://query.knowledgepixels.com/api/RA6bgrU3Ezfg5VAiLru0BFYHaSj6vZU6jJTscxNl8Wqvc/get-assertion-templates"
+curl -s "https://query.knowledgepixels.com/api/RAoEo6jLZlH6sJeI6Lw3CIBfirDOscT8dI8Mab58BS8Sc/get-assertion-templates"
 ```
+
+(Sibling queries: `RAl2C9PT3mFS7qADWmzZcxPkWlVjjaGkNE-TAll3yPUk4/get-provenance-templates` and `RAGxzVO9RO7wIoI5rPy3T33CcpbJ44pgdVgpbOPXmDmwY/get-pubinfo-templates`. These read the label off the typed template node, so they cover both template identity shapes below, and they list only the current governed winner per kind.)
+
+**Template shapes (legacy vs embedded identity):** A template nanopub comes in two shapes:
+
+- **Legacy**: the template node is the **assertion graph URI** (`sub:assertion a nt:AssertionTemplate ; …`) and the template is externally referenced by the **nanopub URI**. Still valid indefinitely.
+- **Embedded identity** (preferred for new templates): the template node is a regular embedded IRI with any local name (`sub:my-template a nt:AssertionTemplate ; …`), declared **`npx:embeds sub:my-template`** in pubinfo — the embeds triple is required (type inference, listings, and governed resolution all key on it). External references (`nt:wasCreatedFromTemplate`, `template=` publish URLs) then carry the embedded IRI, not the nanopub URI. Optionally the node declares a stable **kind** (`dct:isVersionOf <kind>`, with `npx:introduces <kind>` in pubinfo — same rules as view kinds: use the original full URI on later versions) and **`gen:governedBy <space>`** (see space-governed definition versions below). Same pattern applies to `nt:ProvenanceTemplate` / `nt:PubinfoTemplate`.
+- A **half-way** mix is legitimate and safe for consumers with older parsers: legacy node + kind + `gen:governedBy` + `npx:embeds` pointing at the assertion URI — the template becomes governed without changing its identity.
+
+The current template-creation meta-template is `RA70oTVRB9Ub5xWY-JrGhCPHs5XK14dJd42E3tATBBHzs` ("Defining an assertion template (new version)"); prefer replicating its statement shapes when hand-authoring a template.
 
 **Downloading all resource views locally:**
 
@@ -183,7 +193,7 @@ Resource views define how data is displayed on resource pages (user/space/mainta
 curl -s "https://query.knowledgepixels.com/api/RAcyg9La3L2Xuig-jEXicmdmEgUGYfHda6Au1Pfq64hR0/get-all-resource-views"
 ```
 
-The current view-creation template is `RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM` ("Declaring a resource view", in [assertion-templates/](assertion-templates/)); prefer replicating its statement shapes when hand-authoring a view.
+The current view-creation template is `RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM` ("Declaring a resource view", in [assertion-templates/](assertion-templates/)); prefer replicating its statement shapes when hand-authoring a view. For a view declaring `gen:governedBy` (space-governed versions, see below), use the derived variant `RAr1Krh98VGXbIc7JVSJpH24bWi2JEVRYfvJ_KJq0wJtc` ("Declaring a resource view (with governed-by)").
 
 **View layout properties:** A view can declare `gen:hasDisplayWidth` with one of `gen:ColumnWidth01of12` … `gen:ColumnWidth12of12` (e.g. `gen:ColumnWidth06of12` renders the view half-width; omitted means full width), `gen:hasPageSize` (an integer literal), and `gen:hasStructuralPosition` (a sort-key string such as `"5.5.spaceRoles"` that orders views on the page). The same predicates can be set on a `gen:ViewDisplay` to override the view's own values for one specific resource.
 
@@ -421,6 +431,18 @@ Spaces, roles, and memberships are ordinary nanopubs created with the standard w
 - Authority is resolved via the signing **pubkey** mapped through the current `trust` state, not via the self-declared `npx:signedBy`. When superseding a Space definition, keep the same Space IRI (it is the space's identity).
 - Preset assignments and view displays take effect on a page only when published by an agent with authority over the target: admins/maintainers for a space or maintained resource, the user themselves for a user page. Preset-supplied views and directly-attached view displays share **one pool** and override each other latest-wins in both directions — a later individual `gen:ViewDisplay` can deactivate a preset-borne view, and a later preset assignment can override an earlier standalone view display.
 
+**Space-governed definition versions (views & templates).** A definition's **kind** (its `dct:isVersionOf` target) can be registered as a maintained resource of a space (`<kind> a gen:MaintainedResource ; gen:isMaintainedBy <space>`, admin-gated, via the maintained-resource template above — a namespace is not needed). A version that then declares both `dct:isVersionOf <kind>` and `gen:governedBy <space>` resolves **space-based**: the canonical version is the newest non-invalidated one of that `(kind, space)` pair whose nanopub `npx:embeds` the instance and is signed by a **current member+** (admin/maintainer/member, not observer) of the governing space. Resolve it via:
+
+```bash
+curl -s "https://query.knowledgepixels.com/api/RAPSWgzHef9bIJyCoLodFH-BWtlESf1jIstEb0kn4B5Cw/get-latest-governed-version?kind=<KIND-URI>&space=<SPACE-URI>"
+```
+
+The query is type-agnostic (views, templates, and any future definition kind following the embeds/isVersionOf/governedBy convention). Notes:
+
+- **No `npx:supersedes` needed**: governed versions float purely by publication time and space membership, so a *different* member can publish the next canonical version — the escape hatch for definitions whose original signing key is unavailable. An empty resolver result means the caller keeps its pinned version (the pin is the floor).
+- `gen:governedBy` is a label, not a grant: it is **inert until the kind is registered** as maintained by that space (fails silently to the pin), and versions signed by non-members are skipped.
+- Governance is opt-in per version; versions without `gen:governedBy` keep the ordinary supersedes/same-key resolution.
+
 ### 2. Check the user's profile
 
 Before creating the TriG file, read `~/.nanopub/profile.yaml` to get the user's ORCID:
@@ -609,13 +631,13 @@ Show:
 - Never copy the original nanopub's author ORCID into `dct:creator`/`prov:wasAttributedTo` — always use the current user's ORCID from their profile.
 - Always get the current UTC time by running `date -u +"%Y-%m-%dT%H:%M:%SZ"` for `dct:created` timestamps. Never use a date-only or zeroed time. When updating a nanopub before publishing (e.g. after revisions), always refresh the timestamp to the current time.
 - If a bad nanopub was published (e.g. missing `npx:signedBy`), retract it with `retract -i <uri> -p` before publishing the corrected version.
-- **Superseding requires the same signing key**: `npx:supersedes` is only valid when the new nanopub is signed with the same key (same public key hash) as the original. Before adding `npx:supersedes`, verify that the current signing key matches the original nanopub's public key. If the keys differ (e.g. the original was signed via Nanodash with a different key than the local `~/.nanopub/id_rsa`), do **not** use `npx:supersedes` — instead use `prov:wasDerivedFrom` to link to the original.
+- **Superseding requires the same signing key**: `npx:supersedes` is only valid when the new nanopub is signed with the same key (same public key hash) as the original. Before adding `npx:supersedes`, verify that the current signing key matches the original nanopub's public key. If the keys differ (e.g. the original was signed via Nanodash with a different key than the local `~/.nanopub/id_rsa`), do **not** use `npx:supersedes` — instead use `prov:wasDerivedFrom` to link to the original. For **space-governed definitions** (views/templates with a registered kind + `gen:governedBy`), there is a third option: publish the new version with the same `(kind, space)` pair and no `npx:supersedes` at all — it becomes canonical via space membership (see space-governed definition versions above).
 - Provenance should reflect the actual origin of the assertion content: use `prov:wasDerivedFrom` when content comes from an external source, `prov:wasAttributedTo` when the user authored it, or both when the user modified external content.
 - **Introduced vs embedded resources**: Nanopubs can declare resources in pubinfo with `npx:introduces` and/or `npx:embeds`, which serve different purposes:
   - **`npx:introduces`** declares a stable identity for a resource (e.g. a view kind, class, or query definition). When the nanopub is superseded, the introduced resource **must keep the same IRI** from the original nanopub — use the full absolute URI (e.g. `<https://w3id.org/np/RAxxxxx/my-resource-kind>`) rather than `sub:my-resource-kind`, so the IRI does not change with each new trusty URI. The new nanopub re-introduces the same resource at the same stable IRI. Use this for resources that others may reference by IRI.
   - **`npx:embeds`** declares a concrete instance that is contained in this specific nanopub. Each time the nanopub is superseded, the embedded resource naturally gets a new IRI (since it lives under the new nanopub's trusty URI via `sub:`). Use this for the version-specific content.
   - Most nanopubs use only one: `npx:introduces` for templates, classes, and other referenceable definitions; `npx:embeds` for instances and content.
-  - **Resource views use both**: the embedded resource is the concrete view instance (with query, type, templates, etc.) and the introduced resource is the abstract view kind (a stable identifier). They are linked in the assertion with `dct:isVersionOf`. The view-kind is only declared via `npx:introduces` in pubinfo — do **not** add a type triple (e.g. `sub:my-view-kind a gen:ResourceView`) in the assertion. When superseding, the embedded resource (`sub:my-view`) naturally gets a new IRI, but the introduced resource must use the **original full URI** so it stays stable:
+  - **Resource views and embedded-identity templates use both**: the embedded resource is the concrete instance (the view with query/type/actions, or the template node with its statements) and the introduced resource is the abstract kind (a stable identifier). They are linked in the assertion with `dct:isVersionOf`. The view-kind is only declared via `npx:introduces` in pubinfo — do **not** add a type triple (e.g. `sub:my-view-kind a gen:ResourceView`) in the assertion. When superseding, the embedded resource (`sub:my-view`) naturally gets a new IRI, but the introduced resource must use the **original full URI** so it stays stable:
     ```turtle
     sub:assertion {
       sub:my-view a gen:ResourceView, gen:TabularView ;
@@ -641,7 +663,7 @@ Show:
 - **Always include template links in pubinfo — no exceptions**: Every nanopub (including assertion/provenance/pubinfo template nanopubs themselves) must include `nt:wasCreatedFromTemplate`, `nt:wasCreatedFromProvenanceTemplate`, and `nt:wasCreatedFromPubinfoTemplate` links in pubinfo, even when the nanopub is not generated through the template forms. Determine the matching templates by looking at recently published nanopubs with a similar structure. Never skip these links — they make nanopubs discoverable, derivable, and updatable via the template UI.
 - **`npx:hasNanopubType`** can be set explicitly in pubinfo, but it is not necessary if it can be inferred — e.g. from the types of introduced (`npx:introduces`) or embedded (`npx:embeds`) resources. See [nanosession 8 slides](https://github.com/knowledgepixels/slides/blob/main/nanosession8-typeslabels/slides.md) for the full type/label determination rules.
 - **Superseding referenced nanopubs**: When superseding a query template that other nanopubs reference (e.g. a view's `gen:hasViewQuery`), also supersede those referencing nanopubs so they point to the new query version. The reverse does not apply to views: view displays, presets, and Nanodash's built-in view references resolve a view to its **latest version** automatically, so superseding a view does not require republishing the nanopubs that reference it.
-- **Resolve the actual head(s) before superseding**: A known IRI may not be the latest version of its chain. Query `get-latest-version-of-np` first (`https://query.knowledgepixels.com/api/RAiRsB2YywxjsBMkVRTREJBooXhf2ZOHoUs5lxciEl37I/get-latest-version-of-np?np=<uri>`) and supersede the head it returns. If the chain has **forked** into two heads (this happens when a republish was built on a stale base), publish one new version with `npx:supersedes` triples for **both** heads to collapse the fork — with two heads, latest-version resolution is ambiguous and consumers may pick either.
+- **Resolve the actual head(s) before superseding**: A known IRI may not be the latest version of its chain. Query `get-latest-version-of-np` first (`https://query.knowledgepixels.com/api/RAiRsB2YywxjsBMkVRTREJBooXhf2ZOHoUs5lxciEl37I/get-latest-version-of-np?np=<uri>`) and supersede the head it returns. Note it only follows same-key supersedes chains — for a space-governed definition, resolve the canonical version via `get-latest-governed-version` instead (see above). If the chain has **forked** into two heads (this happens when a republish was built on a stale base), publish one new version with `npx:supersedes` triples for **both** heads to collapse the fork — with two heads, latest-version resolution is ambiguous and consumers may pick either.
 - **One predicate per statement in templates**: Each template statement should use only one predicate for a given piece of information. Do not duplicate the same value under multiple predicates (e.g. don't use both `schema:name` and `rdfs:label` for the same title). When in doubt, prefer `rdfs:label` as the default predicate for labels/titles.
 - **Prefer DCTERMS and RDFS predicates over schema.org equivalents**: Use `dct:isPartOf` rather than `schema:isPartOf`, `rdfs:label` rather than `schema:name`, etc. DCTERMS and RDFS are the standard vocabularies in the nanopub ecosystem.
 - **Use `nt:AgentPlaceholder` for people/agents in templates**: When a template field refers to a person, user, or agent (e.g. author, presenter, creator), always use `nt:AgentPlaceholder` rather than `nt:ExternalUriPlaceholder`. This provides proper agent lookup and selection in the UI.
