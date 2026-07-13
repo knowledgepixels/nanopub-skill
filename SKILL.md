@@ -166,10 +166,10 @@ bash scripts/download-assertion-templates.sh
 Assertion templates define the structure for creating nanopubs of a specific type (e.g. expressing a claim, defining a class, declaring event participation). They can be listed via the API:
 
 ```bash
-curl -s "https://query.knowledgepixels.com/api/RAoEo6jLZlH6sJeI6Lw3CIBfirDOscT8dI8Mab58BS8Sc/get-assertion-templates"
+curl -s "https://query.knowledgepixels.com/api/RAi6EPio6sbvJ06mqfYm_QBmisWQnJ8cvzm-DKRHKPGUg/get-assertion-templates"
 ```
 
-(Sibling queries: `RAl2C9PT3mFS7qADWmzZcxPkWlVjjaGkNE-TAll3yPUk4/get-provenance-templates` and `RAGxzVO9RO7wIoI5rPy3T33CcpbJ44pgdVgpbOPXmDmwY/get-pubinfo-templates`. These read the label off the typed template node, so they cover both template identity shapes below, and they list only the current governed winner per kind.)
+(Sibling queries: `RA4ynLpmZXQjnMQzvm7OPt-q8uPPXU8qMxSHm4oSxlw5Y/get-provenance-templates` and `RAxzYV8Pr9vgTcajVMKrZ4GRO8xjxYgEzHCLN_BE0FQfs/get-pubinfo-templates`. These read the label off the typed template node, so they cover both template identity shapes below, and they list only the current governed winner per kind.)
 
 **Template shapes (legacy vs embedded identity):** A template nanopub comes in two shapes:
 
