@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RA33Eah2-MF_vAZfMf9BCSKrHJRHxLPm7DNxJ14RPxdN8> .
-@prefix sub: <https://w3id.org/np/RA33Eah2-MF_vAZfMf9BCSKrHJRHxLPm7DNxJ14RPxdN8/> .
+@prefix this: <https://w3id.org/np/RAzJuZHAPeDBVEbefVp03cf-mQwhTC4RBJBT7GULnMYUA> .
+@prefix sub: <https://w3id.org/np/RAzJuZHAPeDBVEbefVp03cf-mQwhTC4RBJBT7GULnMYUA/> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -19,13 +19,14 @@ sub:Head {
 }
 
 sub:assertion {
-  sub:all-templates-view a gen:ResourceView, gen:TabularView;
-    dct:isVersionOf sub:all-templates-view-kind;
-    dct:title "📋 All Templates";
-    rdfs:label "All templates view";
-    gen:appliesToInstancesOf gen:MaintainedResource;
-    gen:hasStructuralPosition "5.5.all-templates";
-    gen:hasViewQuery <https://w3id.org/np/RA7HCpPKDuU9MlnakZE7QHomIFsj-Nk5GwnConWniI2js/get-all-templates> .
+  sub:onehealth-domains-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RANr0-nnFm0ffq51seN7LnFDsOBbCJmV-JxRcaWarhtw4/onehealth-domains-view-kind>;
+    dct:title "🌍 One Health domains (all projects)";
+    rdfs:label "One Health domains across sub-spaces view";
+    gen:appliesToInstancesOf gen:Space;
+    gen:hasStructuralPosition "4.6.onehealth";
+    gen:hasViewQuery <https://w3id.org/np/RAdaOjQ5PRM7anstZwDfT36fjYOcRIidjHFQl30Wqq510/get-space-onehealth-domains>;
+    gen:hasViewQueryTargetField "space" .
 }
 
 sub:provenance {
@@ -35,11 +36,13 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-04-13T14:37:17Z"^^xsd:dateTime;
+  this: dct:created "2026-07-13T06:00:00Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:embeds sub:all-templates-view;
-    npx:introduces sub:all-templates-view-kind;
+    npx:embeds sub:onehealth-domains-view;
+    npx:introduces <https://w3id.org/np/RANr0-nnFm0ffq51seN7LnFDsOBbCJmV-JxRcaWarhtw4/onehealth-domains-view-kind>;
+    npx:supersedes <https://w3id.org/np/RANr0-nnFm0ffq51seN7LnFDsOBbCJmV-JxRcaWarhtw4>;
+    rdfs:label "One Health domains across sub-spaces view";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
@@ -47,11 +50,8 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "OwGLNLdP9ZC7Q/iuIqEysBnQGB3bSqa94BV4QaIW+h+XK13LDIqG6pAj7ZqA63RWRtFca9ijQpgzbdm4k0aznur7dJeIrZj5hRVNXDDZTmJTT28ktZaAyGTVe9E29CwHjskLYm4m2QJ5oq061cJmVmDSbUTcfI4U0kH/zkX6MSc=";
+    npx:hasSignature "S3zYjB9dfJDdFQ+eQuAfTtoMkJG5wO2ztnDq+e4Ntd1lZEbLrvywlmBfA8XISdFwV/9coYaqqHLMFyqYckq+Frb1sgEavtfqOa+dZfw+QmyrEPPyNKTcN6KC9ZEcar8qUZv2muSQhXR2DMcg7y34vVc1YUqjrUfFgsnyV/vkZQU=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
-  
-  <https://w3id.org/np/RA7HCpPKDuU9MlnakZE7QHomIFsj-Nk5GwnConWniI2js/get-all-templates>
-    nt:hasLabelFromApi "Get all templates - Returns all assertion templates with their label, tag, creator and date, ordered by descending date." .
 }
 

@@ -1,5 +1,6 @@
-@prefix this: <https://w3id.org/np/RAadceLO9eTvnfdmuWKiTYLmVLyDevpITnqaJtQW2DnVY> .
-@prefix sub: <https://w3id.org/np/RAadceLO9eTvnfdmuWKiTYLmVLyDevpITnqaJtQW2DnVY/> .
+@prefix this: <https://w3id.org/np/RAuoIiBPtkpMCALeI5AWNlQHoXdBfqZwqj_sVHiBGbfQo> .
+@prefix sub: <https://w3id.org/np/RAuoIiBPtkpMCALeI5AWNlQHoXdBfqZwqj_sVHiBGbfQo/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -33,11 +34,11 @@ sub:assertion {
   
   <http://www.w3.org/2008/05/skos#ConceptScheme> rdfs:label "SKOS concept scheme" .
   
-  <https://w3id.org/kpxl/gen/terms/MaintainedResource> rdfs:label "maintained resource" .
+  gen:MaintainedResource rdfs:label "maintained resource" .
   
-  <https://w3id.org/kpxl/gen/terms/hasNamespace> rdfs:label "has the namespace" .
+  gen:hasNamespace rdfs:label "has the namespace" .
   
-  <https://w3id.org/kpxl/gen/terms/isMaintainedBy> rdfs:label "is maintained by" .
+  gen:isMaintainedBy rdfs:label "is maintained by" .
   
   sub:assertion a nt:AssertionTemplate;
     dct:description "Such nanopublications declares a resource maintanced by a space (e.g. organization, group, community).";
@@ -61,7 +62,7 @@ sub:assertion {
     rdfs:label "the space maintaining this resource";
     nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
   
-  sub:st00 rdf:object <https://w3id.org/kpxl/gen/terms/MaintainedResource>;
+  sub:st00 rdf:object gen:MaintainedResource;
     rdf:predicate rdf:type;
     rdf:subject sub:resource .
   
@@ -79,18 +80,21 @@ sub:assertion {
     rdf:subject sub:resource .
   
   sub:st04 rdf:object sub:space;
-    rdf:predicate <https://w3id.org/kpxl/gen/terms/isMaintainedBy>;
+    rdf:predicate gen:isMaintainedBy;
     rdf:subject sub:resource .
   
   sub:st05 a nt:OptionalStatement;
     rdf:object sub:namespace;
-    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasNamespace>;
+    rdf:predicate gen:hasNamespace;
     rdf:subject sub:resource .
   
   sub:type a nt:GuidedChoicePlaceholder;
     rdfs:label "type of the resource";
     nt:possibleValue <http://purl.org/dc/dcmitype/Collection>, <http://purl.org/spar/fabio/SystematicReview>,
-      <http://www.w3.org/2002/07/owl#Ontology>, <http://www.w3.org/2008/05/skos#ConceptScheme> .
+      <http://www.w3.org/2002/07/owl#Ontology>, <http://www.w3.org/2008/05/skos#ConceptScheme>,
+      nt:AssertionTemplate .
+  
+  nt:AssertionTemplate rdfs:label "assertion template" .
 }
 
 sub:provenance {
@@ -100,20 +104,20 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2025-12-17T12:20:07.551Z"^^xsd:dateTime;
+  this: dct:created "2026-07-13T07:41:32.368Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:supersedes <https://w3id.org/np/RAw9SoovZeFX9T2Ah_qMz2bmY5jAVT9y9hV4YPd7S6F_U>;
+    npx:supersedes <https://w3id.org/np/RAadceLO9eTvnfdmuWKiTYLmVLyDevpITnqaJtQW2DnVY>;
     npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
     rdfs:label "Defining a maintained resource";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
-    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
-    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
-    npx:hasSignature "avzaGn7z5FJPnjJxs1uCyGaxF6ayN+CFsYwkAoBf7g1Th74ESiS1HT+zqP/xKiusIFiDci7aLARMwjVjTCnkuuELXR9W+0HVblFDlD7CQ+H8bl12wbtGI3XyX2F+OoK5a994+BWhAtvNrnUBeVfGn4PKchj6Yf/dAgsHTMu71dk=";
+    npx:hasSignature "jLGIPnRFP611U3cnprcDNH90d7kIbx9dnikIwQaCMz+btHZBQfi0sqYbAYqpTK3NKS1ycr1h7/a4qkZpwcMknG63cdnUs/an0ovGMjwCSB1ZC/I7jkmjGolVm+XgR4KiZhb+Zy2AoXeN4NRZfhV85SHgPTvM3hZ8HCWR14zY4cw=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

@@ -1,0 +1,113 @@
+@prefix this: <https://w3id.org/np/RAnlijDB03ItDjMK7P-JMbV5b3HCUdbgPCo9hDYroSq1Q> .
+@prefix sub: <https://w3id.org/np/RAnlijDB03ItDjMK7P-JMbV5b3HCUdbgPCo9hDYroSq1Q/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-all-templates a grlc:grlc-query;
+    dct:description "Returns all assertion templates with their label, tags, creator and date, ordered by descending date. Supports both template identity shapes: for templates with embedded identity (anchored via the npx:embeds triple), the returned template IRI is the embedded template node (the IRI external references should carry) and label/tags are read off that node; for legacy templates, the nanopub URI is returned and label/tags are read off the assertion graph node. Multiple tags are concatenated into one multi-value column, and dual labels collapse to one (untagged-language label preferred). Governed version pairs are deduplicated: a version declaring dct:isVersionOf plus gen:governedBy is listed only if it is the current governed winner of its (kind, space) pair -- the newest non-invalidated version signed by a current member+ of the governing space, with the kind validated as maintained by that space (mirroring the get-latest-governed-version resolver). The winners are materialized once in a single-row group_concat sub-select and checked via string containment, avoiding per-row re-evaluation of the federated SERVICE call. A governed version whose pair does not validate is kept (inert gen:governedBy); non-governed versions are unaffected.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get all templates";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/79342356d3a68063a627e83ac34b376479e438abb8a4c4b27d49f845f537dc8d>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?template_iri (coalesce(min(?ulabel), min(?anylabel)) as ?template_iri_label) (group_concat(distinct replace(replace(str(?tag), \"\\\\\\\\\", \"\\\\\\\\\\\\\\\\\"), \"[\\r\\n]+\", \"\\\\\\\\n\"); separator=\"\\n\") as ?tags_multi) ?creator ?date ?np (\"^\" as ?np_label) where {
+  {
+    select (group_concat(?w1; separator=\"|\") as ?winners) where {
+      {
+        select ?gKind ?gSpace (max(concat(str(?gDate), \">\", str(?gNp))) as ?maxW) where {
+          graph npa:graph {
+            ?gNp npa:hasValidSignatureForPublicKeyHash ?gPubkeyhash ;
+                 dct:created ?gDate ;
+                 npx:embeds ?gVersion ;
+                 np:hasAssertion ?gA .
+            filter not exists { ?gInv npx:invalidates ?gNp ; npa:hasValidSignatureForPublicKeyHash ?gPubkeyhash . }
+          }
+          graph ?gA { ?gVersion dct:isVersionOf ?gKind ; gen:governedBy ?gSpace . }
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+            graph ?stateG {
+              ?gKind npa:isMaintainedBy ?gSpace ; npa:hasGoverningSpaceRef ?gRef .
+              ?gRi a gen:RoleInstantiation ; npa:forSpace ?gSpace ; npa:forSpaceRef ?gRef ;
+                   npa:hasRoleType ?gTier ; npa:forAgent ?gAgent .
+              filter(?gTier = gen:AdminRole || ?gTier = gen:MaintainerRole || ?gTier = gen:MemberRole)
+              ?gAcct a npa:AccountState ; npa:agent ?gAgent ; npa:pubkey ?gPubkeyhash .
+            }
+          }
+        } group by ?gKind ?gSpace
+      }
+      bind(concat(str(?gKind), \">\", str(?gSpace), \">\", ?maxW) as ?w1)
+    }
+  }
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+    ?np npx:hasNanopubType nt:AssertionTemplate .
+    ?np dct:created ?date .
+    ?np np:hasAssertion ?a .
+    optional { ?np npx:signedBy ?creator . }
+  }
+  optional {
+    graph npa:graph { ?np npx:embeds ?tnode . }
+    graph ?a { ?tnode a nt:AssertionTemplate . }
+  }
+  bind(coalesce(?tnode, ?a) as ?t)
+  bind(if(?t = ?a, ?np, ?t) as ?template_iri)
+  optional { graph ?a { ?t rdfs:label ?ulabel . filter(lang(?ulabel) = \"\") } }
+  optional { graph ?a { ?t rdfs:label ?anylabel } }
+  optional { graph ?a { ?t nt:hasTag ?tag . } }
+  filter not exists { graph ?a { ?t a nt:UnlistedTemplate } }
+  optional { graph ?a { ?t dct:isVersionOf ?kind ; gen:governedBy ?space . } }
+  bind(concat(\"|\", coalesce(?winners, \"\"), \"|\") as ?wlist)
+  filter( !bound(?kind)
+    || !contains(?wlist, concat(\"|\", str(?kind), \">\", str(?space), \">\"))
+    || contains(?wlist, concat(\"|\", str(?kind), \">\", str(?space), \">\", str(?date), \">\", str(?np), \"|\")) )
+} group by ?template_iri ?creator ?date ?np
+order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-09T13:44:41Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-all-templates;
+    npx:supersedes <https://w3id.org/np/RAMwJesaFD-BwtWcEdoL0lE8O8UWm4kz1MJPZ979Oz514>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "e/Vds7d6B/QC9ufkLtdmpGpngp4wFI/seB4Hhw43vGIDoHYFVwDyIzdOENsv5kxl98uS4Ie3E++lmnMWmttsVKnTvXF1Qx37vGpho96aCsd0bBm2Ss8ZjHQqJYqCb/KvKT42AA8LL0+h+PGuobkLFJz4lZExxBTCNQ9cLpJWcoY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RA8lgWQi1WrBzv5HhV2J5pdb8dzu8zp69JOogNDWADdYw> .
-@prefix sub: <https://w3id.org/np/RA8lgWQi1WrBzv5HhV2J5pdb8dzu8zp69JOogNDWADdYw/> .
+@prefix this: <https://w3id.org/np/RAUhaZxpkJi7vJIDq3ppFSHIliCGozq5328pJWLT2337w> .
+@prefix sub: <https://w3id.org/np/RAUhaZxpkJi7vJIDq3ppFSHIliCGozq5328pJWLT2337w/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -19,19 +19,15 @@ sub:Head {
 }
 
 sub:assertion {
-  <http://example.org/hasSamplingPermit> rdfs:label "has a sampling permit" .
-  
-  <http://purl.obolibrary.org/obo/NCIT_C25662> rdfs:label "sampling" .
-  
   <http://purl.obolibrary.org/obo/NCIT_C43376> rdfs:label "Biologically-Derived Material" .
-  
-  <http://www.molmod.info/semantics/pims-ii.ttl#Intention> rdfs:label "an intention" .
   
   rdf:type rdfs:label "is an instance of" .
   
-  <http://www.w3.org/2002/07/owl#sameAs> rdfs:label "is the same as" .
-  
   <http://www.w3.org/2003/01/geo/wgs84_pos#location> rdfs:label "has the location" .
+  
+  <http://www.w3.org/ns/dcat#temporalEndDate> rdfs:label "has the end date" .
+  
+  <http://www.w3.org/ns/dcat#temporalStartDate> rdfs:label "has the start date" .
   
   <https://w3id.org/biolink/vocab/predicate> rdfs:label "refers to the relation" .
   
@@ -39,16 +35,18 @@ sub:assertion {
   
   <https://w3id.org/biolink/vocab/timepoint> rdfs:label "has the timepoint" .
   
-  <https://w3id.org/mixs/0001151> rdfs:label "purpose of sampling" .
-  
   sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
-    dct:description "Declares the intention to collect a sample consisting of biological material or containing biological material of some sort for a specific purpose.";
+    dct:description "Declares the intention to select and obtain small representative quantities of biological material or environmental material containing biological material for a specific purpose.";
     rdfs:label "Declaring intention to sample biological material";
-    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
-      sub:st08, sub:st09, sub:st10, sub:st11, sub:st12, sub:st13;
+    nt:hasNanopubLabelPattern "Intention to sample ${targetMaterial} in ${location}";
+    nt:hasStatement sub:st01, sub:st02, sub:st04, sub:st05, sub:st06, sub:st07, sub:st08,
+      sub:st10, sub:st13, sub:st14, sub:st15, sub:st16, sub:st17;
     nt:hasTag "naturalProducts" .
   
-  sub:association a nt:IntroducedResource .
+  sub:association a nt:IntroducedResource, nt:LocalResource .
+  
+  sub:endDate a nt:LiteralPlaceholder;
+    nt:hasDatatype xsd:date .
   
   sub:environmentMaterial a nt:GuidedChoicePlaceholder;
     rdfs:label "specify the type of environmental sample (ENVO ontology)";
@@ -61,15 +59,14 @@ sub:assertion {
   sub:permit a nt:ValuePlaceholder;
     rdfs:label "specify the permit ID or URL" .
   
-  sub:purpose rdfs:label "sampling purpose" .
-  
-  sub:sampling rdfs:label "sampling activity" .
-  
-  sub:samplingPurpose a nt:GuidedChoicePlaceholder;
+  sub:purpose a nt:GuidedChoicePlaceholder;
     rdfs:label "specify the purpose of sampling (MESH ontology)";
     nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=mesh&q=" .
   
-  sub:st01 rdf:object <http://www.molmod.info/semantics/pims-ii.ttl#Intention>;
+  sub:sampling a nt:LocalResource;
+    rdfs:label "sampling activity" .
+  
+  sub:st01 rdf:object <https://w3id.org/spaces/biodiversity/r/ontology/samplingIntention>;
     rdf:predicate rdf:type;
     rdf:subject sub:association .
   
@@ -77,16 +74,12 @@ sub:assertion {
     rdf:predicate <https://w3id.org/biolink/vocab/predicate>;
     rdf:subject sub:association .
   
-  sub:st03 rdf:object <http://purl.obolibrary.org/obo/NCIT_C25662>;
-    rdf:predicate <http://www.w3.org/2002/07/owl#sameAs>;
-    rdf:subject sub:sampling .
-  
   sub:st04 rdf:object sub:targetMaterial;
     rdf:predicate <https://w3id.org/biolink/vocab/subject>;
     rdf:subject sub:association .
   
   sub:st05 rdf:object <http://purl.obolibrary.org/obo/NCIT_C43376>;
-    rdf:predicate <http://www.w3.org/2002/07/owl#sameAs>;
+    rdf:predicate rdf:type;
     rdf:subject sub:targetMaterial .
   
   sub:st06 a nt:OptionalStatement, nt:RepeatableStatement;
@@ -103,29 +96,43 @@ sub:assertion {
     rdf:predicate <http://www.w3.org/2003/01/geo/wgs84_pos#location>;
     rdf:subject sub:association .
   
-  sub:st09 a nt:OptionalStatement;
+  sub:st10 a nt:RepeatableStatement;
+    rdf:object sub:purpose;
+    rdf:predicate <https://w3id.org/spaces/biodiversity/r/ontology/hasSamplingPurpose>;
+    rdf:subject sub:association .
+  
+  sub:st13 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:permit;
+    rdf:predicate <https://w3id.org/spaces/biodiversity/r/ontology/hasSamplingPermit>;
+    rdf:subject sub:association .
+  
+  sub:st14 a nt:OptionalStatement;
+    rdf:object sub:timePeriod;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/coversTimePeriod>;
+    rdf:subject sub:association .
+  
+  sub:st15 a nt:OptionalStatement;
+    rdf:object sub:startDate;
+    rdf:predicate <http://www.w3.org/ns/dcat#temporalStartDate>;
+    rdf:subject sub:timePeriod .
+  
+  sub:st16 a nt:OptionalStatement;
+    rdf:object sub:endDate;
+    rdf:predicate <http://www.w3.org/ns/dcat#temporalEndDate>;
+    rdf:subject sub:timePeriod .
+  
+  sub:st17 a nt:OptionalStatement;
     rdf:object sub:timepoint;
     rdf:predicate <https://w3id.org/biolink/vocab/timepoint>;
     rdf:subject sub:association .
   
-  sub:st10 rdf:object sub:purpose;
-    rdf:predicate <https://w3id.org/biolink/vocab/predicate>;
-    rdf:subject sub:association .
+  sub:startDate a nt:LiteralPlaceholder;
+    nt:hasDatatype xsd:date .
   
-  sub:st11 rdf:object <https://w3id.org/mixs/0001151>;
-    rdf:predicate <http://www.w3.org/2002/07/owl#sameAs>;
-    rdf:subject sub:purpose .
+  sub:targetMaterial a nt:LocalResource;
+    rdfs:label "sample material" .
   
-  sub:st12 rdf:object sub:samplingPurpose;
-    rdf:predicate rdf:type;
-    rdf:subject sub:purpose .
-  
-  sub:st13 a nt:OptionalStatement, nt:RepeatableStatement;
-    rdf:object sub:permit;
-    rdf:predicate <http://example.org/hasSamplingPermit>;
-    rdf:subject sub:association .
-  
-  sub:targetMaterial rdfs:label "sample material" .
+  sub:timePeriod a nt:LocalResource .
   
   sub:timepoint a nt:LiteralPlaceholder;
     rdfs:label "time expressed in XSD DateTime format, e.g. '2023-03-30T22:17:11Z'";
@@ -134,6 +141,14 @@ sub:assertion {
   sub:tissueMaterial a nt:GuidedChoicePlaceholder;
     rdfs:label "specify the type of tissue sample (BTO ontology)";
     nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=bto&q=" .
+  
+  <https://w3id.org/sciencelive/o/terms/coversTimePeriod> rdfs:label "covers time period" .
+  
+  <https://w3id.org/spaces/biodiversity/r/ontology/hasSamplingPermit> rdfs:label "has a sampling permit" .
+  
+  <https://w3id.org/spaces/biodiversity/r/ontology/hasSamplingPurpose> rdfs:label "has sampling purpose" .
+  
+  <https://w3id.org/spaces/biodiversity/r/ontology/samplingIntention> rdfs:label "a sampling intention" .
 }
 
 sub:provenance {
@@ -143,11 +158,11 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0001-6534-6609 foaf:name "Mitja M. Zdouc" .
   
-  this: dct:created "2026-07-09T14:30:15.956Z"^^xsd:dateTime;
+  this: dct:created "2026-07-10T20:28:46.685Z"^^xsd:dateTime;
     dct:creator orcid:0000-0001-6534-6609;
     dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
     npx:embeds sub:assertion;
-    npx:supersedes <https://w3id.org/np/RAsOBbtqmrJ7dCiZJhJMcXnBEsb9nN8JhBi7rneHkgo2A>;
+    npx:supersedes <https://w3id.org/np/RA9F4PDBJCVZWxu7eudOusPoAEG-8UW2sP8z2QLaUY2dU>;
     npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
     rdfs:label "Declaring intention to sample biological material";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
@@ -157,7 +172,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnj9AmTE2Q7RxppglmQDLGezpd8yHXSVP7AqgUhyZ36SjaTCdhOlYhCIapxtat5RBYFjIQ5OreKs7GRf29kXtKqAsBR4skDZ10RviKdb52YvZEC+r1CsqOOuMCpG8fQhIWiD53PonxeeyjL9RXWFh1n4lGQ+Bo8qhIQQKgjEHnpwOgb+rLSg1V/K0j6DDW21ScOC1w1FGn+rgf2U3f0jnr9/EL8wV6uhUsRmVyPQF5YqoYsu1e10cxoXO3A63BZFg6GYeUWBenxlSo/8ZIM0Q/mk3Rt6W46aj9srX9o6KyQotN1Hux6QkgtG6usCaQEHr0g37Ip6NMPScT/rTfu3fZwIDAQAB";
-    npx:hasSignature "O4mf87Q08QCzFL3f3JJtzYDWFfpXwxJ7PAhbCb8jfZThGxiqGMUwffGIAumWEHk0oZG1/coZYw6at4gSMm/i9TFznO0t2AjXXe0z/Wv7J526jmXyYzMR6LYos2NWIYTCoVd7TA5kdt38ZoJtN/zeRi54TEQPc7TKH8swd4ytjloFcvpRXL6OyvMTFizPzbhDCY+gCAscXJtD7A7d/6CGMNf1C4RfFAcerLFaPqG8Kme2M3TB8GOU5rpfq7dTGSgEEZJOGRyEgkJ8u3fX2KgvYVrEF3nvG2t1kBqFGalk1u/xjMUw6LZ1VwHmd8ldX2qzRYBjtPczd6Q2L60yvShgoA==";
+    npx:hasSignature "YSNTPWWOsleRPSIvy8I3FhpuvNODwanwiwtF3I5Bcv6jvbm9TRWJzHSh5x7eM0lMZpqoeTuxFpj52xm1Bg/ULEk4r1b6VlRaQ9Gy+Fn6U9U+KGJKXAacMuM279ZQJpfyHJCfOKWvOn5pjf5XcRyLlGLRtXQ6nixCjBev0AGLJUgmQdJyF3f7NXmxe5yEP3LNP+fjXmlKx/cKknXs07jpmA8knNlPErPajp6fdeMqvcoizSyOIvcXJESJjmSgvEj2SX75l0lBduEeChY2y0YhT3jUZlw0W3gpqHaxf9JAYVCclxrjO5ssXOKqysO8lyKzRx9Tc7FQiFX72+0y71cerw==";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0001-6534-6609 .
 }

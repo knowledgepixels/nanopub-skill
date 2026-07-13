@@ -1,0 +1,101 @@
+@prefix this: <https://w3id.org/np/RAAHc9JTvuDx5gfaFQICdtCFphLltqlVDeGP7QEPJbnak> .
+@prefix sub: <https://w3id.org/np/RAAHc9JTvuDx5gfaFQICdtCFphLltqlVDeGP7QEPJbnak/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-space-reused-datasets a grlc:grlc-query;
+    rdfs:label "Get existing datasets reused per project for a space and its sub-spaces";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix ff: <https://w3id.org/fair/ff/terms/>
+prefix oh: <https://w3id.org/spaces/zonmw/r/onehealth/>
+
+select ?project ?project_label ?dataset ?dataset_label ?publisher
+  (group_concat(distinct str(?domain); separator=\"\\n\") as ?domains_multi_iri)
+  (group_concat(distinct ?domain_label; separator=\"\\n\") as ?domains_label_multi)
+  ?np (\"^\" as ?np_label)
+where {
+  values ?_space_multi_iri {}
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+    select (group_concat(distinct ?mpk; separator=\" \") as ?memberPubkeys) where {
+      graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+      values ?_space_multi_iri {}
+      graph ?stateG {
+        ?ri a gen:RoleInstantiation ; npa:forSpace ?proj ; npa:forAgent ?agent ; npa:hasRoleType ?rt .
+        filter(?rt in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+        filter(?proj = ?_space_multi_iri || strstarts(str(?proj), concat(str(?_space_multi_iri), \"/\")))
+        ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+      }
+    }
+  }
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?npPubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?npPubkey . }
+    filter not exists { ?supNp npx:supersedes ?np . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np np:hasAssertion ?a .
+    ?np np:hasPublicationInfo ?pi .
+  }
+  filter(contains(?memberPubkeys, ?npPubkey))
+  graph ?a {
+    ?project ff:reuses ?dataset .
+    ?dataset rdfs:label ?dataset_label .
+    optional { ?dataset dct:publisher ?publisher }
+    optional { ?dataset oh:domain ?domain }
+  }
+  filter(?project = ?_space_multi_iri || strstarts(str(?project), concat(str(?_space_multi_iri), \"/\")))
+  optional { graph ?pi { ?project nt:hasLabelFromApi ?project_label } }
+  bind(strafter(str(?domain), \"https://w3id.org/spaces/zonmw/r/onehealth/\") as ?domain_label)
+}
+group by ?project ?project_label ?dataset ?dataset_label ?publisher ?np
+order by ?project_label ?dataset_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-13T06:00:00Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-space-reused-datasets;
+    npx:supersedes <https://w3id.org/np/RARY7uRqFMpxElsPdhsDxEr6HZtrgJ3Djm7NIqJQb8LVw>;
+    rdfs:label "Get existing datasets reused per project for a space and its sub-spaces";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RAcm8OurwUk15WOgBM9wySo-T3a5h6as4K8YR5MBrrxUc>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "bgsdGQHq/ZAzmRp0rFlcLB2bdyYcObqPBV5aaYyShxTIT/Qdj5dlmln0ew+4hxrycdHvP8+WtCIjl9BC0GXNJ+/AXlXk49GMVVvl2B41x1obUSgvLGTIrLtWbCbUIdoMqwAHLZAqJUj9C8HnleIYe4OCFIQabm4aHrEXBHNWyZc=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

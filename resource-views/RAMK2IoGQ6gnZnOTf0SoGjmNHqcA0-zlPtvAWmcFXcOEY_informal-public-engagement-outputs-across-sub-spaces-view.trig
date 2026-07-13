@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAWBgobIGYYDjT5RBLu8xy6qKbibangrlAtbKtwbHk9w0> .
-@prefix sub: <https://w3id.org/np/RAWBgobIGYYDjT5RBLu8xy6qKbibangrlAtbKtwbHk9w0/> .
+@prefix this: <https://w3id.org/np/RAMK2IoGQ6gnZnOTf0SoGjmNHqcA0-zlPtvAWmcFXcOEY> .
+@prefix sub: <https://w3id.org/np/RAMK2IoGQ6gnZnOTf0SoGjmNHqcA0-zlPtvAWmcFXcOEY/> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -19,15 +19,14 @@ sub:Head {
 }
 
 sub:assertion {
-  sub:maintained-resource-info-view a gen:ResourceView, gen:TabularView;
-    dct:isVersionOf <https://w3id.org/np/RAqKkqvOFWWCDJ4LOa6rrgQJMFbDnoaG56zkIBN5AMBZw/maintained-resource-info-view-kind>;
-    dct:title "ℹ️ Info";
-    rdfs:label "Maintained resource info view";
-    gen:appliesToInstancesOf gen:MaintainedResource;
-    gen:hasDisplayWidth gen:ColumnWidth06of12;
-    gen:hasStructuralPosition "3.2.info";
-    gen:hasViewQuery <https://w3id.org/np/RAru8wDmV6xiprsM8Wyx3zdQcFAK_Qu6wCUV8uykj6E0g/get-maintained-resource-info>;
-    gen:hasViewQueryTargetField "resource" .
+  sub:informal-outputs-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAnSWvEkYcfUTS1uxUIUzm-IRr8lq8fnjVZ4sHwTtVZgY/informal-outputs-view-kind>;
+    dct:title "📣 Public engagement (all projects)";
+    rdfs:label "Informal / public-engagement outputs across sub-spaces view";
+    gen:appliesToInstancesOf gen:Space;
+    gen:hasStructuralPosition "4.8.engagement";
+    gen:hasViewQuery <https://w3id.org/np/RA-O0ObpI05DLr6TueQLe_QgFd_oxuSksnaAuY6hGYli0/get-space-informal-outputs>;
+    gen:hasViewQueryTargetField "space" .
 }
 
 sub:provenance {
@@ -37,13 +36,13 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-07-03T06:45:56Z"^^xsd:dateTime;
+  this: dct:created "2026-07-13T07:47:43Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:embeds sub:maintained-resource-info-view;
-    npx:introduces <https://w3id.org/np/RAqKkqvOFWWCDJ4LOa6rrgQJMFbDnoaG56zkIBN5AMBZw/maintained-resource-info-view-kind>;
-    npx:supersedes <https://w3id.org/np/RA-nuesIF0Ha4X_l9_rQPnpRzw3_SSTBf_Q8uY5uUxYUE>;
-    rdfs:label "Maintained resource info view";
+    npx:embeds sub:informal-outputs-view;
+    npx:introduces <https://w3id.org/np/RAnSWvEkYcfUTS1uxUIUzm-IRr8lq8fnjVZ4sHwTtVZgY/informal-outputs-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAEejkwdz_AUF-ME_16lcdqqMbA0MtWgdHWZfoonNhhaI>;
+    rdfs:label "Informal / public-engagement outputs across sub-spaces view";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
@@ -51,7 +50,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "mXudGrkMav4WVdOzR4EQdf332QIrL/YNUiPC/rn2oDCkRY9lRkjP15ABzARQuDX8S1tzV3eYNvD4G7t+BYoVRuE2x3psgTz1JHjMUDVba/MPELIU3scvtwHoJdGAV8oSz+DtWIT9PmkznxyI53oGMhQCGTBXUurv1z/wYkJe6Tg=";
+    npx:hasSignature "iN5g0DDCq82qm2C1Le1VPy+VIbaoPrXCvSXDsP1b2fKHWXkVJi9wlTVzdVX13AskFb3e6qMUn7NrPTkgS9lXGTstsZcaWpizJpkusD6t9nqce1/oTi6ky2wrnLCLVu3XZrtAPlGT3Z7wuRxv0gytcoOPvVYjkjPdVFXsJT3ag3o=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

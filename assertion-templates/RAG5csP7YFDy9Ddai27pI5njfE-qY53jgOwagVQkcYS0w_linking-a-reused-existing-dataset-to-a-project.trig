@@ -1,0 +1,101 @@
+@prefix this: <https://w3id.org/np/RAG5csP7YFDy9Ddai27pI5njfE-qY53jgOwagVQkcYS0w> .
+@prefix sub: <https://w3id.org/np/RAG5csP7YFDy9Ddai27pI5njfE-qY53jgOwagVQkcYS0w/> .
+@prefix ff: <https://w3id.org/fair/ff/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix oh: <https://w3id.org/spaces/zonmw/r/onehealth/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Declares that a given project reused an existing dataset or database as input (data that already existed and was reanalyzed or built upon), optionally recording the dataset's title, its custodian/publisher, and the One Health domain(s) it covers.";
+    rdfs:label "Linking a reused existing dataset to a project";
+    nt:hasNanopubLabelPattern "${project} reuses ${dataset}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st4, sub:st5;
+    nt:hasTag "FAIR Findings", "Spaces";
+    nt:hasTargetNanopubType ff:reuses .
+  
+  sub:dataset a nt:ExternalUriPlaceholder;
+    rdfs:label "the reused dataset (paste a DOI, URL, or other identifier)" .
+  
+  sub:datasetLabel a nt:LiteralPlaceholder;
+    rdfs:label "title of the reused dataset" .
+  
+  sub:domain a nt:RestrictedChoicePlaceholder;
+    rdfs:label "One Health domain the dataset covers (optional, repeatable)";
+    nt:possibleValue oh:Animal, oh:Environment, oh:Human .
+  
+  sub:project a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the project";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Project" .
+  
+  sub:publisher a nt:LiteralPlaceholder;
+    rdfs:label "custodian / publisher of the dataset (optional)" .
+  
+  sub:st1 rdf:object sub:dataset;
+    rdf:predicate ff:reuses;
+    rdf:subject sub:project .
+  
+  sub:st2 rdf:object ff:Dataset;
+    rdf:predicate rdf:type;
+    rdf:subject sub:dataset .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:datasetLabel;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:dataset .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:publisher;
+    rdf:predicate dct:publisher;
+    rdf:subject sub:dataset .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:domain;
+    rdf:predicate oh:domain;
+    rdf:subject sub:dataset .
+  
+  oh:Animal rdfs:label "Animal" .
+  
+  oh:Environment rdfs:label "Environment" .
+  
+  oh:Human rdfs:label "Human" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-13T06:00:00Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Linking a reused existing dataset to a project";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "n6ubUu6+Qw71DLees6UUiHB1gCH70v6ojr22OFQ//t+mQXoP327nwZ1mLtEex0GIeJikJXctgDBgPYn5df18/RqIuhYJVWNeIQbWvO3Ex5Q5Rgs4fAYv+pqSmcbvLdh95L4utpEm4nWOPij6nchZlNgRzKJ85K4jhGkza3kq1is=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+
