@@ -1,15 +1,14 @@
-@prefix this: <https://w3id.org/np/RAhAAhrQ7o6vVphjp267_JjFBC2CxpER7NEDjLKBkX0WU> .
-@prefix sub: <https://w3id.org/np/RAhAAhrQ7o6vVphjp267_JjFBC2CxpER7NEDjLKBkX0WU/> .
+@prefix this: <https://w3id.org/np/RAKmcrbEVkxF0ivA0_yGg8bnl6iKkwVDp_2SSHvPBrkPw> .
+@prefix sub: <https://w3id.org/np/RAKmcrbEVkxF0ivA0_yGg8bnl6iKkwVDp_2SSHvPBrkPw/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix orcid: <https://orcid.org/> .
-@prefix ns1: <http://purl.org/np/> .
-@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
-@prefix dct: <http://purl.org/dc/terms/> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
-@prefix npx: <http://purl.org/nanopub/x/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
@@ -87,6 +86,10 @@ sub:assertion {
   sub:nanopubtype a nt:ExternalUriPlaceholder;
     rdfs:label "type of nanopub created (can be class of assertion or nanopub, or main prediate in assertion)" .
   
+  sub:newtemplate a nt:EmbeddedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short local name of this template";
+    nt:hasDefaultValue sub:template .
+  
   sub:placeholder a nt:LocalResource, nt:RestrictedChoicePlaceholder;
     rdfs:label "placeholder mentioned above";
     nt:possibleValue sub:tobj, sub:tpred, sub:tsubj .
@@ -153,69 +156,69 @@ sub:assertion {
   
   sub:stA010 rdf:object nt:AssertionTemplate;
     rdf:predicate rdf:type;
-    rdf:subject sub:template .
+    rdf:subject sub:newtemplate .
   
   sub:stA020 rdf:object sub:tlabel;
     rdf:predicate rdfs:label;
-    rdf:subject sub:template .
+    rdf:subject sub:newtemplate .
   
   sub:stA021 a nt:AdvancedStatement, nt:GroupedStatement, nt:OptionalStatement;
     nt:hasStatement sub:stA021a, sub:stA021b .
   
   sub:stA021a rdf:object sub:templateKind;
     rdf:predicate dct:isVersionOf;
-    rdf:subject sub:template .
+    rdf:subject sub:newtemplate .
   
   sub:stA021b rdf:object sub:governingSpace;
     rdf:predicate gen:governedBy;
-    rdf:subject sub:template .
+    rdf:subject sub:newtemplate .
   
   sub:stA022 a nt:OptionalStatement;
     rdf:object sub:description;
     rdf:predicate dct:description;
-    rdf:subject sub:template .
+    rdf:subject sub:newtemplate .
   
   sub:stA025 a nt:OptionalStatement;
     rdf:object sub:tag;
     rdf:predicate nt:hasTag;
-    rdf:subject sub:template .
+    rdf:subject sub:newtemplate .
   
   sub:stA030 a nt:AdvancedStatement, nt:OptionalStatement;
     rdf:object sub:templateType;
     rdf:predicate rdf:type;
-    rdf:subject sub:template .
+    rdf:subject sub:newtemplate .
   
   sub:stA040 a nt:AdvancedStatement, nt:OptionalStatement;
     rdf:object sub:defaultprov;
     rdf:predicate nt:hasDefaultProvenance;
-    rdf:subject sub:template .
+    rdf:subject sub:newtemplate .
   
   sub:stA050 a nt:AdvancedStatement, nt:OptionalStatement, nt:RepeatableStatement;
     rdf:object sub:reqpubinfo;
     rdf:predicate nt:hasRequiredPubinfoElement;
-    rdf:subject sub:template .
+    rdf:subject sub:newtemplate .
   
   sub:stA060 a nt:AdvancedStatement, nt:OptionalStatement;
     rdf:object sub:targetnamespace;
     rdf:predicate nt:hasTargetNamespace;
-    rdf:subject sub:template .
+    rdf:subject sub:newtemplate .
   
   sub:stA065 a nt:AdvancedStatement, nt:OptionalStatement, nt:RepeatableStatement;
     rdf:object sub:nanopubtype;
     rdf:predicate nt:hasTargetNanopubType;
-    rdf:subject sub:template .
+    rdf:subject sub:newtemplate .
   
   sub:stA070 a nt:AdvancedStatement, nt:OptionalStatement;
     rdf:object sub:labelpattern;
     rdf:predicate nt:hasNanopubLabelPattern;
-    rdf:subject sub:template .
+    rdf:subject sub:newtemplate .
   
   sub:stB000 a nt:GroupedStatement, nt:RepeatableStatement;
     nt:hasStatement sub:stB001, sub:stB010, sub:stB020, sub:stB030 .
   
   sub:stB001 rdf:object sub:tstatement;
     rdf:predicate nt:hasStatement;
-    rdf:subject sub:template .
+    rdf:subject sub:newtemplate .
   
   sub:stB010 rdf:object sub:tsubj;
     rdf:predicate rdf:subject;
@@ -234,7 +237,7 @@ sub:assertion {
   
   sub:stC021 rdf:object sub:group;
     rdf:predicate nt:hasStatement;
-    rdf:subject sub:template .
+    rdf:subject sub:newtemplate .
   
   sub:stC022 rdf:object nt:GroupedStatement;
     rdf:predicate rdf:type;
@@ -330,10 +333,9 @@ sub:assertion {
   sub:targetnamespace a nt:ExternalUriPlaceholder;
     rdfs:label "the target namespace (URI prefix) in which the nanopublication ID is minted" .
   
-  sub:template a nt:AssertionTemplate, nt:EmbeddedResource, nt:LocalResource, nt:UriPlaceholder;
+  sub:template a nt:AssertionTemplate;
     dct:description "This nanopublication defines an assertion template. Such templates are used to generate the input form for the assertion part of nanopublications. A role predicate used above (fixed IRI or placeholder) can be pinned as gen:InverseRoleProperty / gen:RegularRoleProperty in the publication info to declare its direction.";
-    rdfs:label "Defining an assertion template (new version)", "short local name of this template";
-    nt:hasDefaultValue sub:template;
+    rdfs:label "Defining an assertion template (new version)";
     nt:hasNanopubLabelPattern "${tlabel}";
     nt:hasStatement sub:stA010, sub:stA020, sub:stA021, sub:stA021a, sub:stA021b, sub:stA022,
       sub:stA025, sub:stA030, sub:stA040, sub:stA050, sub:stA060, sub:stA065, sub:stA070,
@@ -465,23 +467,21 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-07-09T11:08:44.189+02:00"^^xsd:dateTime;
+  this: dct:created "2026-07-14T08:58:37Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:template;
-    npx:supersedes <https://w3id.org/np/RA70oTVRB9Ub5xWY-JrGhCPHs5XK14dJd42E3tATBBHzs>;
-    npx:wasCreatedAt <http://localhost:37373/>;
+    npx:supersedes <https://w3id.org/np/RAhAAhrQ7o6vVphjp267_JjFBC2CxpER7NEDjLKBkX0WU>;
     rdfs:label "Defining an assertion template (new version)";
-    prov:wasDerivedFrom <https://w3id.org/np/RAM3Mma65yu2b7JmKhw6GYcMVc2LWdgcqkZD3FGJbCIo4>;
-    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
       <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
-    nt:wasCreatedFromTemplate <https://w3id.org/np/RA70oTVRB9Ub5xWY-JrGhCPHs5XK14dJd42E3tATBBHzs> .
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAhAAhrQ7o6vVphjp267_JjFBC2CxpER7NEDjLKBkX0WU> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "Sdvk6muY/A4Fgvf9uBYDZzbQjq7oA3E8RbapykKO2LgYpd9IhTEdfAWzIHyjdsFxLrSAj6siEsV+/XOgpozWv1MelStKR8D8614CCUfIReYq0n8c+4EX1fxE1aa7LJjfXNAvvnFY2IpBscAvtbNY7llzt2BR4UlpQoU7SXxOwBY=";
+    npx:hasSignature "m1y+c2co5NDMAbHHZPXlkW8wUgDuDHiiNYaE7YR0yx5lITOZuaRSy4Eb409DIPQKd7gbME481FajrmxsX6W0WReapMvIDoJcez/O+VfYtWlOwjCX52bGuchPCGu90LHLhSIcQHMtmEQwAudqSMmdY6+03NtKOmV8BGsFJhivThU=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }
