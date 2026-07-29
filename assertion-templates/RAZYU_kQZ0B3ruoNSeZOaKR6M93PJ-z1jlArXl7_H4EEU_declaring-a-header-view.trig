@@ -1,0 +1,249 @@
+@prefix this: <https://w3id.org/np/RAZYU_kQZ0B3ruoNSeZOaKR6M93PJ-z1jlArXl7_H4EEU> .
+@prefix sub: <https://w3id.org/np/RAZYU_kQZ0B3ruoNSeZOaKR6M93PJ-z1jlArXl7_H4EEU/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  dct:isVersionOf rdfs:label "is a version of" .
+  
+  dct:title rdfs:label "has the title" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  gen:AdminRole rdfs:label "admins" .
+  
+  gen:ColumnWidth02of12 rdfs:label "2/12 columns" .
+  
+  gen:ColumnWidth03of12 rdfs:label "3/12 columns" .
+  
+  gen:ColumnWidth04of12 rdfs:label "4/12 columns" .
+  
+  gen:ColumnWidth05of12 rdfs:label "5/12 columns" .
+  
+  gen:ColumnWidth06of12 rdfs:label "6/12 columns" .
+  
+  gen:ColumnWidth07of12 rdfs:label "7/12 columns" .
+  
+  gen:ColumnWidth08of12 rdfs:label "8/12 columns" .
+  
+  gen:ColumnWidth09of12 rdfs:label "9/12 columns" .
+  
+  gen:ColumnWidth10of12 rdfs:label "10/12 columns" .
+  
+  gen:ColumnWidth12of12 rdfs:label "12/12 columns" .
+  
+  gen:EveryoneRole rdfs:label "everyone" .
+  
+  gen:HeaderView rdfs:label "header view - a view that shows just a section header with a title, an optional description, and optional actions" .
+  
+  gen:MaintainerRole rdfs:label "maintainers" .
+  
+  gen:MemberRole rdfs:label "members" .
+  
+  gen:ObserverRole rdfs:label "observers" .
+  
+  gen:ResourceView rdfs:label "resource view" .
+  
+  gen:ViewResultAction rdfs:label "view result action - an action that is applied on the entire result of a view" .
+  
+  gen:appliesToInstancesOf rdfs:label "applies to instances of" .
+  
+  gen:appliesToNamespace rdfs:label "applies to the namespace" .
+  
+  gen:hasActionTemplate rdfs:label "has the template" .
+  
+  gen:hasActionTemplatePartField rdfs:label "has the template part field" .
+  
+  gen:hasActionTemplateTargetField rdfs:label "has the template target field" .
+  
+  gen:hasDisplayWidth rdfs:label "has the display width" .
+  
+  gen:hasStructuralPosition rdfs:label "has the structural position" .
+  
+  gen:hasViewAction rdfs:label "has the action" .
+  
+  gen:isVisibleTo rdfs:label "is visible to" .
+  
+  sub:action a nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID suffix for the action";
+    nt:hasDefaultValue sub:action .
+  
+  sub:actionLabel a nt:LiteralPlaceholder;
+    rdfs:label "text shown on the action button" .
+  
+  sub:actionTemplate a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the template for this action";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RARD6qOGIXUvfxmf5CQNEDxPqlTVCqeLdWeSg5h8tUcEA/search-templates" .
+  
+  sub:actionTemplateField a nt:LiteralPlaceholder;
+    rdfs:label "the template field URI suffix";
+    nt:hasDefaultValue "resource" .
+  
+  sub:actionTemplatePartField a nt:LiteralPlaceholder;
+    rdfs:label "put \"void\" if not applicable";
+    nt:hasDefaultValue "void" .
+  
+  sub:actionVisibilityRole a nt:GuidedChoicePlaceholder;
+    rdfs:label "restrict this action to a role tier (or a specific role IRI)";
+    nt:hasDefaultValue gen:EveryoneRole;
+    nt:possibleValue gen:AdminRole, gen:EveryoneRole, gen:MaintainerRole, gen:MemberRole,
+      gen:ObserverRole;
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/SpaceMemberRole" .
+  
+  sub:appliesToClasses a nt:ExternalUriPlaceholder;
+    rdfs:label "classes this view applies to" .
+  
+  sub:appliesToNamespace a nt:ExternalUriPlaceholder;
+    rdfs:label "namespace this view applies to" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description text shown below the header title" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "label of the view" .
+  
+  sub:st10 rdf:object gen:ResourceView;
+    rdf:predicate rdf:type;
+    rdf:subject sub:view .
+  
+  sub:st10b rdf:object sub:viewKind;
+    rdf:predicate dct:isVersionOf;
+    rdf:subject sub:view .
+  
+  sub:st11 rdf:object gen:HeaderView;
+    rdf:predicate rdf:type;
+    rdf:subject sub:view .
+  
+  sub:st20 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:view .
+  
+  sub:st21 rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:view .
+  
+  sub:st22 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:view .
+  
+  sub:st35 a nt:RepeatableStatement;
+    rdf:object sub:appliesToClasses;
+    rdf:predicate gen:appliesToInstancesOf;
+    rdf:subject sub:view .
+  
+  sub:st36 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:appliesToNamespace;
+    rdf:predicate gen:appliesToNamespace;
+    rdf:subject sub:view .
+  
+  sub:st40 rdf:object sub:structuralPosition;
+    rdf:predicate gen:hasStructuralPosition;
+    rdf:subject sub:view .
+  
+  sub:st44 a nt:OptionalStatement;
+    rdf:object sub:width;
+    rdf:predicate gen:hasDisplayWidth;
+    rdf:subject sub:view .
+  
+  sub:st50 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st51, sub:st51b, sub:st52, sub:st53, sub:st53b, sub:st54, sub:st55 .
+  
+  sub:st51 rdf:object sub:action;
+    rdf:predicate gen:hasViewAction;
+    rdf:subject sub:view .
+  
+  sub:st51b rdf:object gen:ViewResultAction;
+    rdf:predicate rdf:type;
+    rdf:subject sub:action .
+  
+  sub:st52 rdf:object sub:actionTemplate;
+    rdf:predicate gen:hasActionTemplate;
+    rdf:subject sub:action .
+  
+  sub:st53 rdf:object sub:actionTemplateField;
+    rdf:predicate gen:hasActionTemplateTargetField;
+    rdf:subject sub:action .
+  
+  sub:st53b rdf:object sub:actionTemplatePartField;
+    rdf:predicate gen:hasActionTemplatePartField;
+    rdf:subject sub:action .
+  
+  sub:st54 rdf:object sub:actionLabel;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:action .
+  
+  sub:st55 rdf:object sub:actionVisibilityRole;
+    rdf:predicate gen:isVisibleTo;
+    rdf:subject sub:action .
+  
+  sub:structuralPosition a nt:LiteralPlaceholder;
+    rdfs:label "digits for section/subsection + short id like '5.5.thing'";
+    nt:hasRegex "[1-9]\\.[1-9]\\..*" .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Declaring a header view: a view that shows just a section header at its structural position on a resource page (i.e. user/space/maintained resource page), with a title, an optional description text below it, and optional result-level actions. Unlike other resource views, header views have no query.";
+    rdfs:label "Declaring a header view";
+    nt:hasStatement sub:st10, sub:st10b, sub:st11, sub:st20, sub:st21, sub:st22, sub:st35,
+      sub:st36, sub:st40, sub:st44, sub:st50;
+    nt:hasTag "Spaces" .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title to be shown as the section header" .
+  
+  sub:view a nt:EmbeddedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID suffix for the view" .
+  
+  sub:viewKind a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "short suffix or existing URI of view kind" .
+  
+  sub:width a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose display width";
+    nt:possibleValue gen:ColumnWidth02of12, gen:ColumnWidth03of12, gen:ColumnWidth04of12,
+      gen:ColumnWidth05of12, gen:ColumnWidth06of12, gen:ColumnWidth07of12, gen:ColumnWidth08of12,
+      gen:ColumnWidth09of12, gen:ColumnWidth10of12, gen:ColumnWidth12of12 .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-29T09:31:23Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    rdfs:label "Declaring a header view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "QKUis5sNq3umzstMyyFgpN3u3Z2Q+sfdNXr/c04KXJmQaLqJkIKZ9jkokZ+2so36BzTZ/AZuV023MUoV57nWRupsXCokgtjJq/kvIz7/FCayi3Wi6vGZ54aIpTaXByGlmFNoNpuAdlJO7y3IJ1iFLoaZh+s/g2brKV5J0FUZXJ0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}

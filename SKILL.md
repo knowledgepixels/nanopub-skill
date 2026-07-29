@@ -193,11 +193,33 @@ Resource views define how data is displayed on resource pages (user/space/mainta
 curl -s "https://query.knowledgepixels.com/api/RAcyg9La3L2Xuig-jEXicmdmEgUGYfHda6Au1Pfq64hR0/get-all-resource-views"
 ```
 
-The current view-creation template is `RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM` ("Declaring a resource view", in [assertion-templates/](assertion-templates/)); prefer replicating its statement shapes when hand-authoring a view. For a view declaring `gen:governedBy` (space-governed versions, see below), use the derived variant `RAr1Krh98VGXbIc7JVSJpH24bWi2JEVRYfvJ_KJq0wJtc` ("Declaring a resource view (with governed-by)").
+The current view-creation template is `RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM` ("Declaring a resource view", in [assertion-templates/](assertion-templates/)); prefer replicating its statement shapes when hand-authoring a view. For a view declaring `gen:governedBy` (space-governed versions, see below), use the derived variant `RAr1Krh98VGXbIc7JVSJpH24bWi2JEVRYfvJ_KJq0wJtc` ("Declaring a resource view (with governed-by)"). For a query-less **header view**, use `RAZYU_kQZ0B3ruoNSeZOaKR6M93PJ-z1jlArXl7_H4EEU` ("Declaring a header view") — see the dedicated "Header views" section below.
 
 **View layout properties:** A view can declare `gen:hasDisplayWidth` with one of `gen:ColumnWidth01of12` … `gen:ColumnWidth12of12` (e.g. `gen:ColumnWidth06of12` renders the view half-width; omitted means full width), `gen:hasPageSize` (an integer literal), and `gen:hasStructuralPosition` (a sort-key string such as `"5.5.spaceRoles"` that orders views on the page). The same predicates can be set on a `gen:ViewDisplay` to override the view's own values for one specific resource.
 
 **Structural position format** (`gen:hasStructuralPosition`, [details in nanodash `docs/structural-position.md`](https://github.com/knowledgepixels/nanodash/blob/master/docs/structural-position.md)): a string literal of the **strict** form `<section>.<sub>.<label>`, regex `[1-9]\.[1-9]\.[a-zA-Z0-9._-]+`. The first digit (`<section>`) is the page section and is the **grouping key** — views sharing it render in one horizontal stripe. The second digit (`<sub>`) orders within the section. `<label>` is a free identifier that may contain letters, digits, hyphens, underscores, **and dots** (so siblings like `4.5.concepts.1` / `4.5.concepts.2` stay adjacent). Ordering is plain lexicographic over the whole string, so keep both leading components single digits (`1`–`9`, never `0`); zero-pad numeric label tails if exact numeric order across 10+ siblings matters. Section digits map to: 1 preamble, 2 header, **3 intro, 4 primary, 5 secondary, 6 tertiary, 7 outro**, 8 appendix, 9 footer — but **only 3–7 (intro…outro) are in use today**; 1, 2, 8, 9 are reserved. The default when unset is `"5.5.default"`. The format is a convention (not yet validated in code), so a malformed position still sorts — just not where expected.
+
+**Header views** (`gen:HeaderView`, nanodash issue #572): a view that renders just a **section header** at its structural position — a title, an optional description text below it, and optional result-level actions — with **no query**. Use it to give a section stripe of views a heading (like the built-in "📐 Structure" headers on About pages). Shape (from the live example `RAUqJMjX0m3cwMl7gOdu9Ucese3JoEUeKjLRqT7k9mmsY/test-header-view`):
+
+```turtle
+sub:my-header-view a gen:ResourceView, gen:HeaderView ;
+  dct:isVersionOf sub:my-header-view-kind ;
+  rdfs:label "My section header view" ;
+  dct:title "🧪 My section" ;                    # the header text; leading emoji as usual
+  dct:description "Text shown below the title." ; # optional
+  gen:appliesToInstancesOf gen:Space ;
+  gen:hasStructuralPosition "5.1.myheader" ;      # a low <sub> digit puts it above the section's views
+  gen:hasViewAction sub:my-action .               # optional, gen:ViewResultAction only
+
+sub:my-action a gen:ViewResultAction ;
+  rdfs:label "➕ add thing..." ;
+  gen:hasActionTemplate <template-np-uri> ;
+  gen:hasActionTemplateTargetField "resource" ;
+  gen:hasActionTemplatePartField "void" ;
+  gen:isVisibleTo gen:EveryoneRole .
+```
+
+Rules that differ from regular views: **no** `gen:hasViewQuery`, `gen:hasViewQueryTargetField`, or `gen:hasPageSize`; actions are `gen:ViewResultAction` only (no per-row entry actions or query mappings — there are no rows); `gen:hasDisplayWidth` is usually omitted (defaults to full width, which is what a section header wants). The view **must keep `gen:ResourceView`** alongside `gen:HeaderView` — all listing/resolution queries (get-view-displays, find-views, latest-version and governed resolution) key on `gen:ResourceView` and never on the query, so header views need no server-side special-casing. Creation template: `RAZYU_kQZ0B3ruoNSeZOaKR6M93PJ-z1jlArXl7_H4EEU` ("Declaring a header view", in [assertion-templates/](assertion-templates/)). Display/preset attachment works exactly as for any other view. Requires nanodash with header-view support (merged 2026-07-29, PR knowledgepixels/nanodash#573); **older instances skip header views silently** (a per-row "View not found" is logged server-side, the rest of the page renders normally), so sections relying on a header for context degrade to headerless on old instances rather than erroring.
 
 **View actions:** A view can carry action buttons that open a pre-filled Nanodash publish form. Each action is an embedded node referenced via `gen:hasViewAction` (example from the live space-roles view):
 
