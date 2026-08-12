@@ -1,0 +1,85 @@
+@prefix this: <https://w3id.org/np/RA6VOR7RkSpQK_rwz5u-XGTHOIQjRAM8Z4dSkMe2vGpTA> .
+@prefix sub: <https://w3id.org/np/RA6VOR7RkSpQK_rwz5u-XGTHOIQjRAM8Z4dSkMe2vGpTA/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a - asserts that the thing on the left belongs to the class on the right" .
+  
+  rdfs:comment rdfs:label "has the description" .
+  
+  rdfs:label rdfs:label "has the name" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "further description of this example (optional)" .
+  
+  sub:example a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the existing thing that is an example of the use case" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "name of the example" .
+  
+  sub:st01 rdf:object sub:useCaseClass;
+    rdf:predicate rdf:type;
+    rdf:subject sub:example .
+  
+  sub:st02 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:example .
+  
+  sub:st03 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:example .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Declare an existing resource (identified by its URI - e.g. a project, ontology, dataset, or service) as a concrete example of a previously defined use case, with a name and an optional description. Use cases themselves can be defined with the 'Defining a use case for a resource' template.";
+    rdfs:label "Providing an example for a use case";
+    nt:hasNanopubLabelPattern "Use case example: ${name}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03;
+    nt:hasTargetNanopubType gen:UseCase .
+  
+  sub:useCaseClass a nt:GuidedChoicePlaceholder;
+    rdfs:label "the use case this is an example of";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/UseCase" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-30T10:33:10Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    rdfs:label "Providing an example for a use case";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "WKqLsxz/h4VSAUrwwz4eb7j61ujgPFY/N7QfKhxQlSg0eq4hXLb8NUk7xqj0exQX9UUz8BFmJOkJ1g6e/nOVPw+PRcpinVwdUIvUNdnzAZH27nnLB/09Z5ojOBEqPI3gnIQ+1T/0TL/QOVQ9kaPA7FqtivxaKLh+X8T6jM1Qrv8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
