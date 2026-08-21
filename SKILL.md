@@ -23,6 +23,8 @@ Extract the public key as a single-line base64 string (needed for the introducti
 grep -v '^\-' ~/.nanopub/<agent>_id_rsa.pub | tr -d '\n'
 ```
 
+`openssl genrsa` writes a PKCS#8 **PEM** file (with `-----BEGIN PRIVATE KEY-----` header lines). The CLI accepts that from **nanopub-java 1.92.0** onward; older jars expect only the headerless base64 body (as `mkkeys` writes it) and abort with a `PKCS8Key` parse error. The `sign` command also reads the sibling `<key>.pub` file, so keep both files next to each other.
+
 **Never delete or alter key files in `~/.nanopub/`** — they are required to sign and retract nanopubs published with that identity. Losing a key means losing the ability to manage those nanopubs.
 
 ### Create an introduction nanopub
@@ -76,22 +78,30 @@ sub:pubinfo {
 
 ### Sign and publish the introduction
 
-Sign the introduction with the **agent's own key** (not the owner's key):
+Sign the introduction with the **agent's own key** (not the owner's key), and name the agent itself as the signer by passing its **temporary sub-IRI** to `-s`:
 
 ```bash
-java -jar "$JAR" sign -k ~/.nanopub/<agent>_id_rsa -o tmp/<agent>-intro-signed.trig tmp/<agent>-intro.trig
+java -jar "$JAR" sign -k ~/.nanopub/<agent>_id_rsa \
+  -s http://purl.org/nanopub/temp/np001/<agent-name> \
+  -o tmp/<agent>-intro-signed.trig tmp/<agent>-intro.trig
 java -jar "$JAR" publish tmp/<agent>-intro-signed.trig
 ```
+
+The signer IRI goes through the same temp-URI replacement as the rest of the nanopub, so `npx:signedBy` comes out as the agent's own trusty sub-IRI (`sub:<agent-name>`, i.e. `<trusty-uri>/<agent-name>`): the introduction is **self-signed** by the very agent it introduces, and `check -v` lists that IRI under CREATORS. This needs **nanopub-java ≥ 1.92.0** — earlier versions added the signer statement after the replacement pass, so `npx:signedBy` kept the raw `http://purl.org/nanopub/temp/...` IRI and `check -v` reported "The signer is not a creator".
+
+Without `-s`, `sign` falls back to the `orcid_id` in `~/.nanopub/profile.yaml`, which attributes the introduction to the **owner's ORCID** while it is signed with the agent's key. That is a legitimate alternative — just choose it deliberately rather than by omission.
 
 After publishing, note the trusty URI — the agent's IRI becomes `<trusty-uri>/<agent-name>` (e.g. `https://w3id.org/np/RAxxxxx/agent-name`). Use this IRI as `dct:creator` and for `-s` when signing/retracting nanopubs with this agent.
 
 ### Using the agent identity
 
-When creating nanopubs as this agent, sign with `-k` and use the agent IRI as creator:
+When creating nanopubs as this agent, sign with `-k` and pass the published agent IRI to `-s`, so that `npx:signedBy` matches the key that signed and the agent IRI used as `dct:creator`:
 
 ```bash
-java -jar "$JAR" sign -k ~/.nanopub/<agent>_id_rsa -o tmp/<name>-signed.trig tmp/<name>.trig
+java -jar "$JAR" sign -k ~/.nanopub/<agent>_id_rsa -s <agent-IRI> -o tmp/<name>-signed.trig tmp/<name>.trig
 ```
+
+(Here the agent already exists, so `-s` takes its full trusty IRI; the temp sub-IRI form above is only for the introduction that mints it.)
 
 When retracting, specify the agent as signer:
 
@@ -493,7 +503,7 @@ Before creating the TriG file, read `~/.nanopub/profile.yaml` to get the user's 
 cat ~/.nanopub/profile.yaml
 ```
 
-If `orcid_id` is missing or empty, warn the user: without it, the `sign` command will omit `npx:signedBy` from the signature, which makes the nanopub unlinked from a person. Ask the user to add their ORCID to the profile before proceeding.
+If `orcid_id` is missing or empty, warn the user: with no ORCID in the profile and no `-s` on the command line, `sign` has no signer to record and aborts with `No valid signer specified. Use either: -s or --profile !`. Ask the user to add their ORCID to the profile before proceeding (or pass the intended signer explicitly with `-s`).
 
 ### 3. Create the TriG file
 
@@ -584,10 +594,12 @@ java -jar "$JAR" sign -o tmp/<name>-signed.trig tmp/<name>.trig
 To sign with a **specific key** (e.g. for a bot identity):
 
 ```bash
-java -jar "$JAR" sign -k ~/.nanopub/<bot>_id_rsa -o tmp/<name>-signed.trig tmp/<name>.trig
+java -jar "$JAR" sign -k ~/.nanopub/<bot>_id_rsa -s <bot-IRI> -o tmp/<name>-signed.trig tmp/<name>.trig
 ```
 
-**After signing, always verify** that `npx:signedBy` is present **and is the correct ORCID** before publishing:
+`-s` sets the signer IRI recorded as `npx:signedBy`; without it, `sign` uses the `orcid_id` from the profile, which would attribute a bot-key-signed nanopub to the profile owner. The signer is usually an ORCID or a published agent IRI, but it may also be a sub-IRI of the nanopub being signed, given under its temp URI — see [self-signed introductions](#sign-and-publish-the-introduction).
+
+**After signing, always verify** that `npx:signedBy` is present **and is the expected signer** before publishing — the user's ORCID by default, or the agent IRI when signing as an agent with `-s`:
 
 ```bash
 grep "signedBy" tmp/<name>-signed.trig
@@ -595,7 +607,7 @@ grep "signedBy" tmp/<name>-signed.trig
 grep "orcid_id" ~/.nanopub/profile.yaml
 ```
 
-If `npx:signedBy` is absent, the user's ORCID was not found in the profile. Stop, ask the user to add it to `~/.nanopub/profile.yaml`, and re-sign.
+If `npx:signedBy` is absent, no signer reached the signature. Stop, add the ORCID to `~/.nanopub/profile.yaml` (or pass `-s`), and re-sign.
 
 If `npx:signedBy` is present but is a **placeholder or wrong ORCID** — in particular the all-zeros `orcid:0000-0000-0000-0000` (the value the Python `nanopub` library writes when it installs its "Python test" profile, which silently overwrites `~/.nanopub/profile.yml`) — **stop, do not publish.** The `sign` command stamps `npx:signedBy` from `profile.yml`'s `orcid_id`, so a bad profile produces correctly-key-signed but mis-attributed nanopubs. Restore the profile (the correct values are kept in `~/.nanopub/profile.yml.bak` and the ORCID alone in `~/.nanopub/orcid`), then re-sign.
 
@@ -699,6 +711,7 @@ Show:
 - Always add an `rdfs:label` on `this:` in pubinfo with a short human-readable label for the nanopub. This can be omitted only if the nanopub has an introduced resource (via `npx:introduces`) that already has an `rdfs:label` in the assertion graph. Do not prefix labels with "Template: " or similar prefixes — just use the plain name.
 - Only add `npx:wasCreatedAt` if the nanopub was actually created at that specific tool instance. Do not add it by default.
 - The temp URI **must** use the `http://purl.org/nanopub/temp/` prefix (e.g. `http://purl.org/nanopub/temp/np001/`). Using `https://w3id.org/np/temp` instead causes the signed trusty URI to be malformed.
+- A signer IRI passed to `sign -s` may itself live under the temp URI (e.g. `http://purl.org/nanopub/temp/np001/my-bot`): from nanopub-java 1.92.0 it is rewritten to the trusty sub-IRI like any other reference, which is what makes a self-signed agent introduction possible. On older jars the raw temp IRI survives into `npx:signedBy` — check the signed file before publishing.
 - **Personal information policy**: Only include personal information (names, emails, affiliations, ORCIDs) in a nanopub if it is already permanently and openly published (e.g. in a published paper or made available by the person under an open license).
 - When it seems likely that a similar nanopub may already exist on the network (e.g. for well-known resources, popular DOIs, or common assertions), consider checking for duplicates before creating a new one. DOIs are case-insensitive but the nanopub network treats different cases as separate URIs.
 - Always validate a TriG file with `check` before signing to catch structural errors early.
