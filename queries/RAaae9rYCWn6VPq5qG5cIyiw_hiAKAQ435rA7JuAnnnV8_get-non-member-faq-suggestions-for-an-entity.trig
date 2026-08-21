@@ -1,0 +1,128 @@
+@prefix this: <https://w3id.org/np/RAaae9rYCWn6VPq5qG5cIyiw_hiAKAQ435rA7JuAnnnV8> .
+@prefix sub: <https://w3id.org/np/RAaae9rYCWn6VPq5qG5cIyiw_hiAKAQ435rA7JuAnnnV8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-faq-suggestions a grlc:grlc-query;
+    dct:description "This query returns FAQ answers or edits contributed by users who are NOT members of the space maintaining the entity: the inverse of the member-gated FAQ views. For each entry only the single latest non-member nanopub is returned, and only when it is newer (by timestamp) than the latest member version of that entry — i.e. the contribution that would win most-recent-wins if its author were a member (a pending suggestion). The member public-key hashes are resolved server-side from the spaces repo (/repo/spaces). override_target holds the suggestion nanopub itself, so a member can override it to accept the suggestion. Placeholder stubs (gen:UnansweredQuestion) are excluded.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get non-member FAQ suggestions for an entity";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/88a3271eb4f952262a674b6765824830ecb6c5a9ae10f1fd8caa4fc21cdccad7>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix schema: <http://schema.org/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?question ?content ?suggester (sample(?sname) as ?suggester_label)
+       (?np as ?override_target) ?np (\"^\" as ?np_label) where {
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+    select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+      graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+      values ?_resource_multi_iri {}
+      graph ?stateG {
+        ?_resource_multi_iri npa:isMaintainedBy? ?space .
+        ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ;
+            npa:hasRoleType ?rt .
+        filter(?rt in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+        ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+      }
+    }
+  }
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np dct:created ?date .
+    ?np np:hasAssertion ?a .
+    optional { ?np npx:signedBy ?suggester . }
+  }
+  filter(!contains(?memberPubkeys, ?pubkey))
+  graph ?a {
+    ?faq rdf:type schema:Question .
+    ?faq rdfs:label ?question .
+    ?faq gen:hasContent ?content .
+    values ?_resource_multi_iri {}
+    ?faq dct:isPartOf ?_resource_multi_iri .
+    filter not exists { ?faq rdf:type gen:UnansweredQuestion }
+  }
+  filter not exists {
+    graph npa:graph {
+      ?mnp npa:hasValidSignatureForPublicKeyHash ?mpk2 .
+      filter not exists { ?mx npx:invalidates ?mnp ; npa:hasValidSignatureForPublicKeyHash ?mpk2 . }
+      ?mnp dct:created ?mdate .
+      ?mnp np:hasAssertion ?ma .
+    }
+    filter(contains(?memberPubkeys, ?mpk2))
+    graph ?ma { ?faq rdf:type schema:Question . }
+    filter(?mdate >= ?date)
+  }
+  filter not exists {
+    graph npa:graph {
+      ?np2 npa:hasValidSignatureForPublicKeyHash ?pubkey2 .
+      filter not exists { ?npx2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+      ?np2 dct:created ?date2 .
+      ?np2 np:hasAssertion ?a2 .
+    }
+    filter(!contains(?memberPubkeys, ?pubkey2))
+    graph ?a2 {
+      ?faq rdf:type schema:Question .
+      filter not exists { ?faq rdf:type gen:UnansweredQuestion }
+    }
+    filter(?date2 > ?date || (?date2 = ?date && str(?np2) > str(?np)))
+  }
+  optional {
+    service <https://w3id.org/np/l/nanopub-query-1.1/repo/trust> {
+      select ?suggester ?sname where {
+        graph npa:graph { npa:thisRepo npa:hasCurrentTrustState ?tg . }
+        graph ?tg { ?suggester foaf:name ?sname . }
+      }
+    }
+  }
+}
+group by ?question ?content ?suggester ?np
+order by ?question""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-07-16T13:54:29Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-faq-suggestions;
+    rdfs:label "Get non-member FAQ suggestions for an entity";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "G0OGTzSMBXLV3ZFqmHkMM0ikfWgD5kXWg4YOet90quQUMcgn0G95RCZYK2F9qBA/9zXNTofPLDKasBaoHHjUDEFkwKcb33Z3ynlDrFn0Wi4NeOk8Vb8R+TYe9g4CC+Kti84q9pRlzYlmMOQyCErPLobu1zXBdYLZCMfhE8YbO4c=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

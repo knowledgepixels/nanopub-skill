@@ -1,0 +1,118 @@
+@prefix this: <https://w3id.org/np/RAAWlWQVkHhj2XoqrMFcalU-Q_LQ9mzbwnrDMytZ3uXng> .
+@prefix sub: <https://w3id.org/np/RAAWlWQVkHhj2XoqrMFcalU-Q_LQ9mzbwnrDMytZ3uXng/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-questions a grlc:grlc-query;
+    dct:description "This query returns the questions asked about a resource (a space, a maintained resource, or any other entity, including part-level resources), together with who asked them and when, and their answers and other follow-up contributions. Questions are schema:Question nodes anchored to the resource via schema:about, following the Nanoarguments discourse model; answers are discourse contributions (schema:Statement) targeting the question via as:inReplyTo. Each answer is identified by its own nanopublication rather than by its statement node, so that several answers remain distinct even when the template they were created from reuses one statement IRI. Answers are listed one per line, each showing the answer text followed by the name of its author and the date, where that byline links to the answer nanopublication. Retracted nanopublications and example nanopublications are excluded.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get questions and answers about a resource";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/29e2f808e4864fca4930806dee70c4a32df54a63ee90156244910a47d3443736>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix schema: <https://schema.org/>
+prefix as: <https://www.w3.org/ns/activitystreams#>
+
+select ?question ?question_label ?asked_by (min(?asked_byName) as ?asked_by_label) ?date
+  (group_concat(?ansLink; separator=\"\") as ?answers)
+  (str(?question) as ?reply_target)
+  ?np ?np_label
+where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists {
+      ?npi npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    }
+    ?np np:hasAssertion ?qa ; np:hasProvenance ?qprov ; np:hasPublicationInfo ?qpi ;
+        dct:created ?date .
+  }
+  graph ?qa {
+    ?question a schema:Question ; rdf:value ?question_label .
+    values ?_resource_multi_iri {}
+    ?question schema:about ?_resource_multi_iri .
+  }
+  filter not exists { graph ?qpi { ?np npx:hasNanopubType npx:ExampleNanopub } }
+  optional { graph ?qprov { ?qa prov:wasAttributedTo ?asked_by } }
+  optional { graph ?qpi { ?asked_by foaf:name ?asked_byName } }
+  optional {
+    select ?question ?anp (min(?lnk) as ?ansLink) where {
+      graph ?qa2 {
+        ?question a schema:Question .
+        values ?_resource_multi_iri {}
+        ?question schema:about ?_resource_multi_iri .
+      }
+      graph npa:graph {
+        ?anp npa:hasValidSignatureForPublicKeyHash ?apubkey .
+        filter not exists {
+          ?anpi npx:invalidates ?anp ; npa:hasValidSignatureForPublicKeyHash ?apubkey .
+        }
+        ?anp np:hasAssertion ?aa ; np:hasProvenance ?aprov ; np:hasPublicationInfo ?api ;
+             dct:created ?adate .
+      }
+      graph ?aa {
+        ?ans as:inReplyTo ?question ; rdf:value ?ansText .
+      }
+      filter not exists { graph ?api { ?anp npx:hasNanopubType npx:ExampleNanopub } }
+      optional { graph ?aprov { ?aa prov:wasAttributedTo ?answerer } }
+      optional { graph ?api { ?answerer foaf:name ?aname } }
+      bind(replace(
+        replace(replace(replace(str(?ansText), \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"),
+        \"\\\\s+\", \" \") as ?safeText)
+      bind(concat(
+        \"<div>\", ?safeText,
+        \" <a href=\\\"/explore?id=\", encode_for_uri(str(?anp)), \"\\\">— \",
+        coalesce(?aname, str(?answerer), \"unknown\"),
+        \", \", substr(str(?adate), 1, 10),
+        \"</a></div>\"
+      ) as ?lnk)
+    }
+    group by ?question ?anp
+  }
+  bind(\"^\" as ?np_label)
+}
+group by ?question ?question_label ?asked_by ?date ?np ?np_label
+order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-08-18T12:35:22Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-questions;
+    npx:supersedes <https://w3id.org/np/RAwlogTkyf_SOsC_w2UgRZbdwN--TLOjkFzPVgF2WRKV8>;
+    rdfs:label "Get questions and answers about a resource";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "aGktwx3G1RdEekJ3hCYGr1/xx1XWowMgp48ubw8/7KxBNowZg5FQzno5bLLTJSydpFP24VJB9QO722W2SJL2a3mSIi9hFPEB1iukUUnok6YBdltjuRSU46fb2uy0l1GVgZRSYHoc0jAQ1PNGhCGea/ztP2tr/ndfGHRPQcEJyyk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}

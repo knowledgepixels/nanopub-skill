@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAwFZ1BqGNhhWRK_VGtG2ZKz6vJbsgrCkYvESBq4v_Vao> .
-@prefix sub: <https://w3id.org/np/RAwFZ1BqGNhhWRK_VGtG2ZKz6vJbsgrCkYvESBq4v_Vao/> .
+@prefix this: <https://w3id.org/np/RAA9ivHlu0zTIXFBcOSoVO1nBWiEYx8eDNwg9inPC5VTQ> .
+@prefix sub: <https://w3id.org/np/RAA9ivHlu0zTIXFBcOSoVO1nBWiEYx8eDNwg9inPC5VTQ/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
@@ -43,7 +43,7 @@ select ?property ?property_label ?domain ?range (?definition as ?description) ?n
     ?np np:hasAssertion ?a .
   }
   graph ?a {
-    ?property dct:partOf ?_ontology_multi_iri .
+    ?property dct:partOf|dct:isPartOf ?_ontology_multi_iri .
     optional { ?property skos:definition ?definition . }
     optional { ?property rdfs:label ?property_label . }
     optional { ?property rdfs:domain ?domain . }
@@ -60,22 +60,22 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2025-12-04T10:42:20.004+01:00"^^xsd:dateTime;
+  this: dct:created "2026-07-27T11:54:13.946+02:00"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:get-properties-of-ontology;
-    npx:supersedes <https://w3id.org/np/RAfFr1PrIO3hhemkVyt_7YtuqWaBnmqsrZmGcwTWFSVtE>;
+    npx:supersedes <https://w3id.org/np/RAwFZ1BqGNhhWRK_VGtG2ZKz6vJbsgrCkYvESBq4v_Vao>;
     npx:wasCreatedAt <http://localhost:37373/>;
     prov:wasDerivedFrom <https://w3id.org/np/RAYxKjz0q05FpAjI2fKwVhI0_t0c_IKMsLMIlEgzm_Phk>;
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
-    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
       <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
     nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "atdf4rRv/eG7fJF/Bdp0z86KG5ZyUuy7NDpb7FhbhiNXyM4v8O4omRVRFK0j6qFSs+Pmrw87kFZMBqsKROAVAfCH3a684X/60tWyK6Vd63iR5DT9EqfJWTzDHqQikGg7tagRw27Ecpjk8/V5uyNKZtvSZ+s8bufwCdirJvavGxc=";
+    npx:hasSignature "ZkMI/LIOR9M29FCC4ZQm2a3Ip1HzyZdrV286kSLZyPyA08P+oHt5A/QIyiEjS6Qp7OpqwOae7eeRDEXvtDFSXoStmDea0NsbFpk2JlJIZNIjCfjB8CwuKgFajF9AOvm5AS8xIbwAnDn9EpLk8wTN5fy70rRWygiuzrgyymocHsk=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

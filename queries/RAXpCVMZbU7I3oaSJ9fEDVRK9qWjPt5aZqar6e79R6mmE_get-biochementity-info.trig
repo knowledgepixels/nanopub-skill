@@ -1,0 +1,162 @@
+@prefix this: <https://w3id.org/np/RAXpCVMZbU7I3oaSJ9fEDVRK9qWjPt5aZqar6e79R6mmE> .
+@prefix sub: <https://w3id.org/np/RAXpCVMZbU7I3oaSJ9fEDVRK9qWjPt5aZqar6e79R6mmE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-biochementity-info a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Key-value Info table for a biochementity (a chemical entity defined as a subclass of BioChemEntity). Finds the entity's latest defining nanopub ('partid', signed by an owning-resource member pubkey 'pubkey', not invalidated) and shows every field the biochementity template allows: the name (and its Dutch nl-be variant), alternative names, type, superclasses, metabolite/isomer relations, chemical roles, external identifiers, group labels, context-specific aliases, comment, the vocabulary it is part of, and the defining nanopub. Each property is one row with a single value cell: literal values render as text, IRI values render as links labelled by the companion column (linked entities defined on the network show their label). Multi-valued properties are collected into one cell; rows for optional fields are omitted when absent.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get biochementity info";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix schema: <http://schema.org/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix obo: <http://purl.obolibrary.org/obo/>
+prefix pehterms: <https://w3id.org/peh/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+
+select ?Property_noheader ?Property_label
+       (group_concat(replace(str(?val), '[\\r\\n]+', ' '); separator='\\n') as ?Value_multi_val_noheader)
+       (group_concat(replace(str(?vallabel), '[\\r\\n]+', ' '); separator='\\n') as ?Value_label_multi)
+where {
+  {
+    select ?ord ?Property_noheader ?Property_label ?val (min(?vallabelRaw) as ?vallabel) where {
+      {
+        select ?dnp ?da where {
+          values ?__pubkey_multi {}
+          graph npa:graph {
+            ?dnp npa:hasValidSignatureForPublicKeyHash ?__pubkey_multi ;
+                 (npx:introduces|npx:describes|npx:embeds) ?_partid_iri ;
+                 dct:created ?ddate ;
+                 np:hasAssertion ?da .
+            filter not exists { ?inv npx:invalidates ?dnp ; npa:hasValidSignatureForPublicKeyHash ?__pubkey_multi . }
+          }
+        } order by desc(?ddate) limit 1
+      }
+      {
+        graph ?da { ?_partid_iri rdfs:label ?v . filter(lang(?v) = '') }
+        bind(1 as ?ord) bind(rdfs:label as ?Property_noheader) bind('Name:' as ?Property_label)
+        bind(str(?v) as ?val) bind('' as ?vallabelRaw)
+      } union {
+        graph ?da { ?_partid_iri rdfs:label ?v . filter(lang(?v) = 'nl-be') }
+        bind(2 as ?ord) bind(rdfs:label as ?Property_noheader) bind('Name (Dutch):' as ?Property_label)
+        bind(str(?v) as ?val) bind('' as ?vallabelRaw)
+      } union {
+        graph ?da { ?_partid_iri schema:alternateName ?v }
+        bind(3 as ?ord) bind(schema:alternateName as ?Property_noheader) bind('Alternative names:' as ?Property_label)
+        bind(if(lang(?v) = 'nl-be', concat(str(?v), ' (nl)'), str(?v)) as ?val) bind('' as ?vallabelRaw)
+      } union {
+        graph ?da { ?_partid_iri rdf:type ?iri }
+        bind(4 as ?ord) bind(rdf:type as ?Property_noheader) bind('Type:' as ?Property_label)
+        bind(str(?iri) as ?val) bind(replace(str(?iri), '^.*[/#]', '') as ?vallabelRaw)
+      } union {
+        graph ?da { ?_partid_iri rdfs:subClassOf ?iri }
+        optional { graph npa:graph { ?vnp npx:introduces ?iri ; np:hasAssertion ?vaa . } graph ?vaa { ?iri rdfs:label ?vlab . filter(lang(?vlab) = '') } }
+        bind(5 as ?ord) bind(rdfs:subClassOf as ?Property_noheader) bind('Subclass of:' as ?Property_label)
+        bind(str(?iri) as ?val) bind(coalesce(?vlab, replace(str(?iri), '^.*[/#]', '')) as ?vallabelRaw)
+      } union {
+        graph ?da { ?_partid_iri pehterms:isMetaboliteOf ?iri }
+        optional { graph npa:graph { ?vnp npx:introduces ?iri ; np:hasAssertion ?vaa . } graph ?vaa { ?iri rdfs:label ?vlab . filter(lang(?vlab) = '') } }
+        bind(6 as ?ord) bind(pehterms:isMetaboliteOf as ?Property_noheader) bind('Is metabolite of:' as ?Property_label)
+        bind(str(?iri) as ?val) bind(coalesce(?vlab, replace(str(?iri), '^.*[/#]', '')) as ?vallabelRaw)
+      } union {
+        graph ?da { ?_partid_iri pehterms:isIsomerOf ?iri }
+        optional { graph npa:graph { ?vnp npx:introduces ?iri ; np:hasAssertion ?vaa . } graph ?vaa { ?iri rdfs:label ?vlab . filter(lang(?vlab) = '') } }
+        bind(7 as ?ord) bind(pehterms:isIsomerOf as ?Property_noheader) bind('Is isomer of:' as ?Property_label)
+        bind(str(?iri) as ?val) bind(coalesce(?vlab, replace(str(?iri), '^.*[/#]', '')) as ?vallabelRaw)
+      } union {
+        graph ?da { ?_partid_iri obo:RO_0000087 ?iri }
+        bind(8 as ?ord) bind(obo:RO_0000087 as ?Property_noheader) bind('Has role:' as ?Property_label)
+        bind(str(?iri) as ?val) bind(replace(str(?iri), '^.*[/#]', '') as ?vallabelRaw)
+      } union {
+        graph ?da { ?_partid_iri skos:exactMatch ?iri }
+        bind(9 as ?ord) bind(skos:exactMatch as ?Property_noheader) bind('External identifiers:' as ?Property_label)
+        bind(str(?iri) as ?val) bind(replace(str(?iri), '^.*/', '') as ?vallabelRaw)
+      } union {
+        graph ?da { ?_partid_iri pehterms:hasGroupLabel ?v }
+        bind(10 as ?ord) bind(pehterms:hasGroupLabel as ?Property_noheader) bind('Group labels:' as ?Property_label)
+        bind(str(?v) as ?val) bind('' as ?vallabelRaw)
+      } union {
+        graph ?da { ?_partid_iri pehterms:hasContextAlias ?ca . }
+        optional { graph ?da { ?ca schema:alternateName ?caName } }
+        optional { graph ?da { ?ca schema:identifier ?caType } }
+        optional { graph ?da { ?ca pehterms:hasContext ?caCtx } }
+        bind(11 as ?ord) bind(pehterms:hasContextAlias as ?Property_noheader) bind('Context aliases:' as ?Property_label)
+        bind(concat(coalesce(str(?caName), '?'), coalesce(concat(' (', str(?caType), ')'), ''), coalesce(concat(' @ ', replace(str(?caCtx), '^.*/', '')), '')) as ?val) bind('' as ?vallabelRaw)
+      } union {
+        graph ?da { ?_partid_iri schema:comment ?v }
+        bind(12 as ?ord) bind(schema:comment as ?Property_noheader) bind('Comment:' as ?Property_label)
+        bind(str(?v) as ?val) bind('' as ?vallabelRaw)
+      } union {
+        graph ?da { ?_partid_iri dct:isPartOf ?iri }
+        optional { graph npa:graph { ?vnp npx:introduces ?iri ; np:hasAssertion ?vaa . } graph ?vaa { ?iri rdfs:label ?vlab . filter(lang(?vlab) = '') } }
+        bind(13 as ?ord) bind(dct:isPartOf as ?Property_noheader) bind('Part of:' as ?Property_label)
+        bind(str(?iri) as ?val) bind(coalesce(?vlab, replace(str(?iri), '^.*[/#]', '')) as ?vallabelRaw)
+      }
+    } group by ?ord ?Property_noheader ?Property_label ?val
+  }
+  union
+  {
+    {
+      select ?dnp where {
+        values ?__pubkey_multi {}
+        graph npa:graph {
+          ?dnp npa:hasValidSignatureForPublicKeyHash ?__pubkey_multi ;
+               (npx:introduces|npx:describes|npx:embeds) ?_partid_iri ;
+               dct:created ?ddate .
+          filter not exists { ?inv npx:invalidates ?dnp ; npa:hasValidSignatureForPublicKeyHash ?__pubkey_multi . }
+        }
+      } order by desc(?ddate) limit 1
+    }
+    bind(14 as ?ord) bind(npa:viaNanopub as ?Property_noheader) bind('Defined in:' as ?Property_label)
+    bind(str(?dnp) as ?val) bind(substr(replace(str(?dnp), '^.*/np/', ''), 1, 10) as ?vallabel)
+  }
+}
+group by ?ord ?Property_noheader ?Property_label
+order by ?ord""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-12T08:49:27Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-biochementity-info;
+    npx:supersedes <https://w3id.org/np/RAOxnm178yESfuNMoQmk-xEeGNWAuhqeOpLFSUiLn3pDk>;
+    rdfs:label "Get biochementity info";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "GZa/zE0wngTj7AcxLnWAY4rxHuIx0MoESs8qk7PyZjR2DxSwL8CeoS4L37MHUOa4FWKTjpQlrhf7NA7T8SH2lCcqtxWU+iHsXlnHNKWcnmNY1/JbSSSsUh2cZ2fV5n5quWfgfWz7PGwZ1fv2cU1Xms3oBnZyLaYlVsTRFGVimDg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

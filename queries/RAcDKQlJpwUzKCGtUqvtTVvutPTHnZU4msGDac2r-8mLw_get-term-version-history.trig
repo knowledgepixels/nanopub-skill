@@ -1,0 +1,196 @@
+@prefix this: <https://w3id.org/np/RAcDKQlJpwUzKCGtUqvtTVvutPTHnZU4msGDac2r-8mLw> .
+@prefix sub: <https://w3id.org/np/RAcDKQlJpwUzKCGtUqvtTVvutPTHnZU4msGDac2r-8mLw/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-term-version-history a grlc:grlc-query;
+    dct:description "Returns the version history of a term (a class or other resource defined in the namespace of a maintained resource, e.g. a biochementity of an OWL vocabulary), for display on the term's resource-part page. Each row is a nanopublication that introduces, describes, or embeds the given term, showing its creation date, the label the term carried in that version, the change note attached to that version's publication info (skos:changeNote, truncated to its first line and at most 50 characters), and its author (signer, with the name resolved from the maintaining space's trust state where available). The status column is a multi-value literal listing '✓ current' (always first, when applicable) followed by the \"approved\", curation states of that version: \"deprecated\" (owl:DeprecatedClass), \"withdrawn\" (gen:WithdrawnTerm) and \"example\" (npx:ExampleNanopub). It replaces the former headerless status marker. A version counts as approved when the newest non-invalidated approval/disapproval nanopublication targeting it is an npx:approvesOf (latest wins across all publishers: a later npx:disapprovesOf neutralises an earlier approval, and a later approval reinstates it), its publisher signed with a key that belongs to a current member+ of the maintaining space, and that publisher is not the signer of the nanopublication being approved (self-approval never counts). The approve_target, disapprove_target and approval_choice columns are action data rather than content: exactly one of the two targets is non-empty per row -- approve_target while the row is unapproved, disapprove_target once it is approved -- so a view can offer a per-row approve/disapprove action whose label follows the current state, and approval_choice carries the matching npx predicate to pre-fill in the approval template. A contribution signed by a software agent (an npx:SoftwareAgent that declares its own key, e.g. a curation bot) counts as approved by default, on the grounds that the space admitted it as a member: no separate npx:approvesOf is needed. The default is only a starting point -- an outstanding member disapproval overrides it, and disapproving then re-approving returns the nanopublication to the explicit state. Human contributions carry no default and start out unapproved. The '✓ current' row is the definition that currently counts: the newest non-invalidated version signed by a current member+ (admin/maintainer/member) of the space maintaining the resource the term declares itself part of, mirroring the get-term-definitions resolution used for resource-part pages. That winner is materialized once in a self-contained sub-select sharing no variables with the outer query, then compared by string equality. The override_target column carries the nanopub URI only for the current row (empty otherwise), so a per-row override action is offered only on the current version. Rows are ordered newest first.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get term version history";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+
+select ?Date ?Label ?Change_note ?Author ?Author_label ?Status_multi ?override_target ?approve_target ?disapprove_target ?approval_choice ?np ?np_label where {
+  {
+    select (max(concat(str(?cDate), \">\", str(?cNp))) as ?maxCurrent) where {
+      graph npa:graph {
+        ?cNp npa:hasValidSignatureForPublicKeyHash ?cPubkeyhash ;
+             dct:created ?cDate ;
+             np:hasAssertion ?cA .
+        ?cNp npx:introduces|npx:describes|npx:embeds ?_term_iri .
+        filter not exists { ?cInv npx:invalidates ?cNp ; npa:hasValidSignatureForPublicKeyHash ?cPubkeyhash . }
+      }
+      graph ?cA { ?_term_iri dct:isPartOf ?cResource . }
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+        graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?cStateG . }
+        graph ?cStateG {
+          ?cResource npa:isMaintainedBy ?cSpace .
+          ?cRi a gen:RoleInstantiation ; npa:forSpace ?cSpace ; npa:hasRoleType ?cTier ; npa:forAgent ?cAgent .
+          values ?cTier { gen:AdminRole gen:MaintainerRole gen:MemberRole }
+          ?cAcct a npa:AccountState ; npa:agent ?cAgent ; npa:pubkey ?cPubkeyhash .
+        }
+      }
+    }
+  }
+  {
+    select (group_concat(distinct ?mPubkeyhash; separator=\" \") as ?memberPubkeys) where {
+      graph npa:graph {
+        ?mNp npx:introduces|npx:describes|npx:embeds ?_term_iri ;
+             np:hasAssertion ?mA .
+      }
+      graph ?mA { ?_term_iri dct:isPartOf ?mResource . }
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+        graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?mStateG . }
+        graph ?mStateG {
+          ?mResource npa:isMaintainedBy ?mSpace .
+          ?mRi a gen:RoleInstantiation ; npa:forSpace ?mSpace ; npa:hasRoleType ?mTier ; npa:forAgent ?mAgent .
+          values ?mTier { gen:AdminRole gen:MaintainerRole gen:MemberRole }
+          ?mAcct a npa:AccountState ; npa:agent ?mAgent ; npa:pubkey ?mPubkeyhash .
+        }
+      }
+    }
+  }
+  graph npa:graph {
+    ?np npx:introduces|npx:describes|npx:embeds ?_term_iri ;
+        dct:created ?Date ;
+        np:hasAssertion ?a ;
+        np:hasPublicationInfo ?pi .
+    optional { ?np npx:signedBy ?Author . }
+  }
+  bind(coalesce(?Author, <http://purl.org/nanopub/temp/none>) as ?AuthorSafe)
+  optional { graph ?a { ?_term_iri rdfs:label ?Label } }
+  optional { graph ?pi { ?np skos:changeNote ?noteRaw } }
+  bind(replace(coalesce(?noteRaw, \"\"), \"\\r\", \"\") as ?noteNoCr)
+  bind(if(contains(?noteNoCr, \"\\n\"), strbefore(?noteNoCr, \"\\n\"), ?noteNoCr) as ?firstLine)
+  bind(substr(?firstLine, 1, 50) as ?Change_note)
+  bind(concat(str(?Date), \">\", str(?np)) = coalesce(?maxCurrent, \"\") as ?isCurrent)
+  bind(if(?isCurrent, str(?np), \"\") as ?override_target)
+  bind(exists {
+    graph npa:graph {
+      ?apNp npx:signedBy ?apAgent ;
+            npa:hasValidSignatureForPublicKeyHash ?apPubkeyhash ;
+            dct:created ?apDate ;
+            np:hasAssertion ?apA .
+      filter not exists { ?apInv npx:invalidates ?apNp ; npa:hasValidSignatureForPublicKeyHash ?apPubkeyhash . }
+    }
+    graph ?apA { ?apAgent npx:approvesOf ?np . }
+    filter(?apAgent != ?AuthorSafe)
+    filter(contains(coalesce(?memberPubkeys, \"\"), ?apPubkeyhash))
+    filter not exists {
+      graph npa:graph {
+        ?dNp npx:signedBy ?dAgent ;
+             npa:hasValidSignatureForPublicKeyHash ?dPubkeyhash ;
+             dct:created ?dDate ;
+             np:hasAssertion ?dA .
+        filter not exists { ?dInv npx:invalidates ?dNp ; npa:hasValidSignatureForPublicKeyHash ?dPubkeyhash . }
+      }
+      graph ?dA { ?dAgent npx:disapprovesOf ?np . }
+      filter(?dAgent != ?AuthorSafe)
+      filter(contains(coalesce(?memberPubkeys, \"\"), ?dPubkeyhash))
+      filter(?dDate > ?apDate || (?dDate = ?apDate && str(?dNp) > str(?apNp)))
+    }
+  } as ?explicitApproved)
+  bind(exists {
+    graph npa:graph {
+      ?xdNp npx:signedBy ?xdAgent ;
+            npa:hasValidSignatureForPublicKeyHash ?xdPubkeyhash ;
+            dct:created ?xdDate ;
+            np:hasAssertion ?xdA .
+      filter not exists { ?xdInv npx:invalidates ?xdNp ; npa:hasValidSignatureForPublicKeyHash ?xdPubkeyhash . }
+    }
+    graph ?xdA { ?xdAgent npx:disapprovesOf ?np . }
+    filter(?xdAgent != ?AuthorSafe)
+    filter(contains(coalesce(?memberPubkeys, \"\"), ?xdPubkeyhash))
+    filter not exists {
+      graph npa:graph {
+        ?xaNp npx:signedBy ?xaAgent ;
+             npa:hasValidSignatureForPublicKeyHash ?xaPubkeyhash ;
+             dct:created ?xaDate ;
+             np:hasAssertion ?xaA .
+        filter not exists { ?xaInv npx:invalidates ?xaNp ; npa:hasValidSignatureForPublicKeyHash ?xaPubkeyhash . }
+      }
+      graph ?xaA { ?xaAgent npx:approvesOf ?np . }
+      filter(?xaAgent != ?AuthorSafe)
+      filter(contains(coalesce(?memberPubkeys, \"\"), ?xaPubkeyhash))
+      filter(?xaDate > ?xdDate || (?xaDate = ?xdDate && str(?xaNp) > str(?xdNp)))
+    }
+  } as ?explicitDisapproved)
+  bind(exists {
+    graph npa:graph {
+      ?np npa:hasValidSignatureForPublicKeyHash ?saPubkeyhash .
+      ?saNp np:hasAssertion ?saA .
+    }
+    filter(contains(coalesce(?memberPubkeys, \"\"), ?saPubkeyhash))
+    graph ?saA { ?AuthorSafe a npx:SoftwareAgent . ?saKd npx:declaredBy ?AuthorSafe . }
+  } as ?isTrustedBot)
+  bind(?explicitApproved || (?isTrustedBot && !?explicitDisapproved) as ?isApproved)
+  bind(if(?isApproved, \"\", str(?np)) as ?approve_target)
+  bind(if(?isApproved, str(?np), \"\") as ?disapprove_target)
+  bind(if(?isApproved, str(npx:disapprovesOf), str(npx:approvesOf)) as ?approval_choice)
+  bind(replace(concat(
+    if(?isCurrent, \"✓ current\\n\", \"\"),
+    if(?isApproved, \"approved\\n\", \"\"),
+    if(exists { graph ?a { ?_term_iri a owl:DeprecatedClass } }, \"deprecated\\n\", \"\"),
+    if(exists { graph ?a { ?_term_iri a gen:WithdrawnTerm } }, \"withdrawn\\n\", \"\"),
+    if(exists { graph npa:graph { ?np npx:hasNanopubType npx:ExampleNanopub } }, \"example\\n\", \"\")
+  ), \"\\n$\", \"\") as ?Status_multi)
+  optional {
+    service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+      graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?nStateG . }
+      graph ?nStateG { ?AuthorSafe foaf:name ?Author_label . }
+    }
+  }
+  bind(\"^\" as ?np_label)
+}
+order by desc(?Date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-12T08:51:20Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-term-version-history;
+    npx:supersedes <https://w3id.org/np/RADTWGUwcG7p36Ly2m8OGmDRCJ_6GgCtNbtoygzOFqsI8>;
+    rdfs:label "Get term version history";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "LnwMDe+4xhIFqtZxM6UPC1rx0gmYorSKlnkU7Va9kgH3bF515jRFUmYkKIYCHW/9K5w9miNma+cJYoKesIbighjwar61gHJssiKMsVYTTCK0HG0GJyqhZr5lTbm35OjVAnl8GSfa9R/HU9mPFLuT4uIV7P9fMNnLWdsY5B9VKSo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RA7BDm_AJfuwtYKLXgfJGKEyrpD33ZSMDQeL5ltfGuDGo> .
-@prefix sub: <https://w3id.org/np/RA7BDm_AJfuwtYKLXgfJGKEyrpD33ZSMDQeL5ltfGuDGo/> .
+@prefix this: <https://w3id.org/np/RAf_hcNeHFmt3PcDfreGUmgjKsvLaP-SBH8j2MfZklxJo> .
+@prefix sub: <https://w3id.org/np/RAf_hcNeHFmt3PcDfreGUmgjKsvLaP-SBH8j2MfZklxJo/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
@@ -46,7 +46,7 @@ sub:assertion {
       ?np np:hasAssertion ?a .
     }                                                                                                                                                             
     graph ?a {    
-      ?class dct:partOf ?_ontology_multi_iri .
+      ?class dct:partOf|dct:isPartOf ?_ontology_multi_iri .
       optional { ?class rdfs:label ?class_label . }                                                                                                               
       optional { ?class skos:definition ?definition . }
       optional {                                                                                                                                                  
@@ -67,11 +67,11 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-04-15T08:54:24.328Z"^^xsd:dateTime;
+  this: dct:created "2026-07-27T09:48:50.585Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
     npx:embeds sub:get-classes-of-ontology;
-    npx:supersedes <https://w3id.org/np/RADi1moqeaDAuLmj3u0y0QyYItX7_uG5baWoxvAAPv3mo>;
+    npx:supersedes <https://w3id.org/np/RA7BDm_AJfuwtYKLXgfJGKEyrpD33ZSMDQeL5ltfGuDGo>;
     npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
@@ -80,7 +80,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
-    npx:hasSignature "E+KJL8QOaB+28Ze8WhC0qIGoMhhTSRsWbpcKPDyL0XPCetQWm0SwKHEj579sZJyIkV/OrmIAToDD+J0GRDQnmpPTvSCyVK6Z5LmS1713mdcS00KRXLKSHvi5LuxYMe5GUvbu2i9nSjqqwjyAY2Uvgb+W4Z+Ivv0feq399DqkjpE=";
+    npx:hasSignature "NFBs9gzjPX7NBoMjYtWQbw+Va8b5xTbp+o5wl/eTxvv0b2B8WFw0x2vE050FEq/ks7yEMNz3z2X9rHhf8miw8VK/0AHwPucHDH4bR0PWoWYjU7+zGB1iNSQUiWCDNieBA+KMGVVU62ivLyFS53X0JGY25mEI5wYWo8i8VHzGA+c=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

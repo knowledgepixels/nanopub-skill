@@ -1,0 +1,106 @@
+@prefix this: <https://w3id.org/np/RAwS4ti-l3iHJviiNWY4SEdUjz3gJ6k-HEaF_SYw68tVk> .
+@prefix sub: <https://w3id.org/np/RAwS4ti-l3iHJviiNWY4SEdUjz3gJ6k-HEaF_SYw68tVk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-fair-compendium-papers a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns the papers that are candidates for a FAIR Compendium of Contributed Knowledge ('partid'): all scholarly works on the network whose author list contains the agent the compendium covers and whose publication date falls in the covered year. The compendium's covered agent and year are resolved from its latest non-invalidated defining nanopub. The status column currently always shows 'suggested'; papers confirmed for inclusion will later show 'included'.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get papers for FAIR Compendium";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/02d7b45686c0b73ba57fb9ef0c1f950a9149bff9165f3457e16a69b0d32b18df>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix bibo: <http://purl.org/ontology/bibo/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+
+select ?paper ?paper_label ?date ?status ?np (\"^\" as ?np_label) where {
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/type/76d6cd4231dca5c411812f254cb92473d90eb9cefb4182f91a94aca2f356d0d2> {
+    graph npa:graph {
+      ?dnp npa:hasValidSignatureForPublicKeyHash ?dpk ;
+           (npx:introduces|npx:describes|npx:embeds) ?_partid_iri ;
+           dct:created ?ddate ;
+           np:hasAssertion ?da .
+      filter not exists { ?inv npx:invalidates ?dnp ; npa:hasValidSignatureForPublicKeyHash ?dpk . }
+      filter not exists {
+        ?dnp2 npa:hasValidSignatureForPublicKeyHash ?pk2 ;
+              (npx:introduces|npx:describes|npx:embeds) ?_partid_iri ;
+              dct:created ?ddate2 .
+        filter not exists { ?inv2 npx:invalidates ?dnp2 ; npa:hasValidSignatureForPublicKeyHash ?pk2 . }
+        filter(?ddate2 > ?ddate)
+      }
+    }
+    graph ?da {
+      ?_partid_iri gen:coversAgent ?agent ;
+        gen:coversTime ?year .
+    }
+  }
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkeyhash ;
+        (npx:introduces|npx:describes) ?paper ;
+        np:hasAssertion ?a .
+    filter not exists { ?npi npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkeyhash . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    filter not exists {
+      ?np2 npa:hasValidSignatureForPublicKeyHash ?ppk2 ;
+           (npx:introduces|npx:describes) ?paper ;
+           dct:created ?pdate2 .
+      filter not exists { ?npi2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?ppk2 . }
+      ?np dct:created ?pdate .
+      filter(?pdate2 > ?pdate)
+    }
+  }
+  graph ?a {
+    ?paper dct:date ?date ;
+      bibo:authorList ?al .
+    ?al ?memberprop ?agent .
+  }
+  filter(strstarts(str(?memberprop), 'http://www.w3.org/1999/02/22-rdf-syntax-ns#_'))
+  filter(strstarts(str(?date), str(?year)))
+  optional { graph ?a { ?paper dct:title ?titleRaw } }
+  bind(coalesce(?titleRaw, str(?paper)) as ?paper_label)
+  bind('suggested' as ?status)
+} order by ?date""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-27T11:50:42Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-fair-compendium-papers;
+    rdfs:label "Get papers for FAIR Compendium";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "EdIXfHpoEvEms//k1LB9sERVQj+2SXwz41LQdD1whUcGAG+q2HRsd6Ad4EhC3YCQGmc+YhWCFHI6S+MtVhy+JaxfVFuOUGnMGif+0/J1En3RIqFgg4vyeQIJ0YUngcuTNHUVj380a0bBJiQFty2ppHZYOGb62GY29IFSREBMPuA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RA7ALZ2Z10gJ1n5McLF5mv7PWqdarVmAGn6TfJAksfCes> .
-@prefix sub: <https://w3id.org/np/RA7ALZ2Z10gJ1n5McLF5mv7PWqdarVmAGn6TfJAksfCes/> .
+@prefix this: <https://w3id.org/np/RAWxyEV4PJHr0BZyDZCUgoU6uMT9kyKm4c2jt9AEwJVEI> .
+@prefix sub: <https://w3id.org/np/RAWxyEV4PJHr0BZyDZCUgoU6uMT9kyKm4c2jt9AEwJVEI/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix grlc: <https://w3id.org/kpxl/grlc/> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -18,10 +18,10 @@ sub:Head {
 }
 
 sub:assertion {
-  sub:get-unanswered-faqs a grlc:grlc-query;
-    dct:description "This query returns the unanswered FAQ entries of an entity: questions whose most recent declaration is typed as gen:UnansweredQuestion (i.e. still carrying a placeholder instead of a real answer). Returns the question text as a plain label.";
+  sub:get-faqs a grlc:grlc-query;
+    dct:description "This query returns the answered FAQ entries (questions and answers) of an entity, including source nanopub and date. Only entries published by an admin, maintainer, or member of the space that maintains the entity are returned; the maintaining space and its validated member public-key hashes are resolved server-side from the spaces repo (/repo/spaces), observers excluded. Entries currently typed as gen:UnansweredQuestion (placeholder stubs) are excluded. When several member-published nanopubs declare the same FAQ entry, only the most recent one is returned.";
     dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
-    rdfs:label "Get unanswered FAQ entries of an entity";
+    rdfs:label "Get FAQ entries of an entity";
     grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/88a3271eb4f952262a674b6765824830ecb6c5a9ae10f1fd8caa4fc21cdccad7>;
     grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
 prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
@@ -32,19 +32,34 @@ prefix npx: <http://purl.org/nanopub/x/>
 prefix schema: <http://schema.org/>
 prefix gen: <https://w3id.org/kpxl/gen/terms/>
 
-select ?question ?np (\"^\" as ?np_label) where {
+select ?title ?content ?date ?faq (?np as ?override_target) ?np where {
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+    select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+      graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+      values ?_resource_multi_iri {}
+      graph ?stateG {
+        ?_resource_multi_iri npa:isMaintainedBy? ?space .
+        ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ;
+            npa:hasRoleType ?rt .
+        filter(?rt in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+        ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+      }
+    }
+  }
   graph npa:graph {
     ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
     filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
     ?np dct:created ?date .
     ?np np:hasAssertion ?a .
   }
+  filter(contains(?memberPubkeys, ?pubkey))
   graph ?a {
     ?faq rdf:type schema:Question .
-    ?faq rdf:type gen:UnansweredQuestion .
-    ?faq rdfs:label ?question .
+    ?faq rdfs:label ?title .
+    ?faq gen:hasContent ?content .
     values ?_resource_multi_iri {}
     ?faq dct:isPartOf ?_resource_multi_iri .
+    filter not exists { ?faq rdf:type gen:UnansweredQuestion }
     optional { ?faq gen:hasPositionString ?position }
   }
   filter not exists {
@@ -55,12 +70,13 @@ select ?question ?np (\"^\" as ?np_label) where {
       ?np2 np:hasAssertion ?a2 .
       filter (?date2 > ?date)
     }
+    filter(contains(?memberPubkeys, ?pubkey2))
     graph ?a2 {
       ?faq rdf:type schema:Question .
     }
   }
 }
-order by ?position ?question""" .
+order by ?position ?title""" .
 }
 
 sub:provenance {
@@ -68,12 +84,12 @@ sub:provenance {
 }
 
 sub:pubinfo {
-  this: dct:created "2026-06-11T06:34:49Z"^^xsd:dateTime;
+  this: dct:created "2026-07-16T06:49:04Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:embeds sub:get-unanswered-faqs;
-    npx:supersedes <https://w3id.org/np/RA2fncVAdJlDYMAuCz8-A7MhX_vOAM6XUa9T2-NI85UtM>;
-    rdfs:label "Get unanswered FAQ entries of an entity";
+    npx:embeds sub:get-faqs;
+    npx:supersedes <https://w3id.org/np/RAhUrDrKt1MclIQXc7eCQPIv2G0pd6Mo5_nNVtmdOyMc8>;
+    rdfs:label "Get FAQ entries of an entity";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
@@ -82,7 +98,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "oYbBVC4Jkbht4MyccI2ZFuYTPrjlXlZFevK1/MfisOOiwR43mmwllgjgR0MAvMC3zl9LKfTXsK+qxo8zTwye1i/FHkcrBkIFeeW7y0/q1M/+mD64mYQ8g/aPH4Mrf15EX+Mn6pf2kctHurukudHLCEGAY+k6HDpZfMUPQ7kYXjE=";
+    npx:hasSignature "n3G/AQ/X5QEEZp+CcPXIH+ArCASQsukgCC3UvsaXyeQcUvWxrGhAX6iMNsPq2Ge2d9xqLv9Cmk7lLb6716Qok1tTQB3Pq1LPfPBr03X2c65axPaRoQQkpTtQ/4Uvub2LrIHF6epu/gjbcCz4xQBfvHJvSxSGmWfOZgj/rHLBznY=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

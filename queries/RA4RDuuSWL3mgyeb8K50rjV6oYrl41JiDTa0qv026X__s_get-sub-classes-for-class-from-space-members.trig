@@ -1,0 +1,118 @@
+@prefix this: <https://w3id.org/np/RA4RDuuSWL3mgyeb8K50rjV6oYrl41JiDTa0qv026X__s> .
+@prefix sub: <https://w3id.org/np/RA4RDuuSWL3mgyeb8K50rjV6oYrl41JiDTa0qv026X__s/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-subclasses-simple a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the sub-classes of the given class, restricted to sub-classes that are part of the same space and published by admins, maintainers, or members of that space. Each sub-class appears exactly once, taken from its winning definition: the newest non-invalidated nanopublication signed by a member+ of the maintaining space that describes the sub-class as part of the same resource. That resolution matters because an override records only prov:wasDerivedFrom and never npx:supersedes, so nothing is invalidated and every version of a term stays live -- without it a sub-class is listed once per version. Judging on the winner also makes the listing follow later edits: a version that drops the rdfs:subClassOf triple removes the row, and a version that adds gen:WithdrawnTerm hides the sub-class, while publishing a newer version without that type reinstates it.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get sub-classes for class (from space members)";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?subclass (coalesce(min(?untaggedLabel), min(?anyLabel)) as ?subclass_label) ?date ?np where {
+  # the resource/ontology that the given (parent) class belongs to
+  graph ?pg { ?_class_iri dct:isPartOf ?resource . }
+  # collect the public keys of admins, maintainers, and members of the space maintaining that resource
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+    select ?resource (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+      graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+      graph ?stateG {
+        ?resource npa:isMaintainedBy? ?space .
+        ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?rt .
+        filter(?rt in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+        ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+      }
+    } group by ?resource
+  }
+  # sub-classes of the given class, that are part of the same resource and signed by a space member
+  graph ?g {
+    ?subclass rdfs:subClassOf ?_class_iri .
+    ?subclass dct:isPartOf ?resource .
+  }
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np npa:hasGraph ?g .
+    ?np np:hasPublicationInfo ?i .
+    ?np dct:created ?date .
+  }
+  filter(contains(?memberPubkeys, ?pubkey))
+  # Keep only the winning definition of each sub-class: the newest live member-signed
+  # nanopub describing it as part of this resource. Without this, an override -- which
+  # records prov:wasDerivedFrom but never npx:supersedes, so nothing is invalidated --
+  # leaves every version live and the sub-class is listed once per version. Judging on
+  # the winner also means a version that drops the rdfs:subClassOf triple removes the
+  # row, and a withdrawal can be undone by publishing a newer version without the type.
+  filter not exists {
+    graph ?g2 { ?subclass dct:isPartOf ?resource . }
+    graph npa:graph {
+      ?np2 npa:hasValidSignatureForPublicKeyHash ?pubkey2 .
+      filter not exists { ?np2x npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+      ?np2 npa:hasGraph ?g2 .
+      ?np2 dct:created ?date2 .
+    }
+    filter(contains(?memberPubkeys, ?pubkey2))
+    filter(?date2 > ?date || (?date2 = ?date && str(?np2) > str(?np)))
+  }
+  # a sub-class withdrawn from the resource is not listed
+  filter not exists { graph ?g { ?subclass a gen:WithdrawnTerm } }
+  optional { graph ?g {  ?subclass rdfs:label ?subclassLabel1 . } }
+  optional { graph ?g {  ?subclass dct:title ?subclassLabel2 . } }
+  optional { graph ?i {  ?subclass rdfs:label ?subclassLabel3 . } }
+  optional { graph ?i {  ?subclass nt:hasLabelFromApi ?subclassLabel4 . } }
+  bind(coalesce(?subclassLabel1, ?subclassLabel2, ?subclassLabel3, ?subclassLabel4) as ?anyLabel)
+  bind(if(lang(?anyLabel) = \"\", ?anyLabel, ?noLabel) as ?untaggedLabel)
+}
+group by ?subclass ?date ?np
+order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-12T09:26:52Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-subclasses-simple;
+    npx:supersedes <https://w3id.org/np/RAO_Zx86Dtliwpz1liEw8-1LGfnmj7HAG1GD-L1tZCsYQ>;
+    rdfs:label "Get sub-classes for class (from space members)";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "WfrrO3QCpZeqRrGlBF89hEvs1vcIdVza9x1XmFP8SLv3lIdp3m/h1Qu+UT27QWQ4trTQDmcBXo476B4xOCuzCkTf+BbypJIxLdJGMJ6Vyctc/RFu2TDiUvAaHWzOsIbpl3nKFNrc2A1ByDL/pa+EN6T5XCxPN4DYGkHkFtDn+PY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

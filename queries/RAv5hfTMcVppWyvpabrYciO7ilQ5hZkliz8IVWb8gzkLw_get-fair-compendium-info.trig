@@ -1,0 +1,109 @@
+@prefix this: <https://w3id.org/np/RAv5hfTMcVppWyvpabrYciO7ilQ5hZkliz8IVWb8gzkLw> .
+@prefix sub: <https://w3id.org/np/RAv5hfTMcVppWyvpabrYciO7ilQ5hZkliz8IVWb8gzkLw/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-fair-compendium-info a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Key-value Info table for a FAIR Compendium of Contributed Knowledge. Finds the compendium's latest defining nanopub ('partid', optionally restricted to owning-resource member pubkeys 'pubkey', not invalidated) and shows the fields of the compendium declaration template: the label, the type, the agent whose contributions it covers (labelled with their name), the covered year, and the defining nanopub. Each property is one row with a single value cell: literal values render as text, IRI values render as links labelled by the companion column. Rows for absent fields are omitted.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get FAIR Compendium info";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/76d6cd4231dca5c411812f254cb92473d90eb9cefb4182f91a94aca2f356d0d2>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+
+select ?Property_noheader ?Property_label
+       (group_concat(replace(str(?val), '[\\r\\n]+', ' '); separator='\\n') as ?Value_multi_val_noheader)
+       (group_concat(replace(str(?vallabel), '[\\r\\n]+', ' '); separator='\\n') as ?Value_label_multi)
+where {
+  {
+    select ?ord ?Property_noheader ?Property_label ?val (min(?vallabelRaw) as ?vallabel) where {
+      values ?__pubkey_multi {}
+      graph npa:graph {
+        ?dnp npa:hasValidSignatureForPublicKeyHash ?__pubkey_multi ;
+             (npx:introduces|npx:describes|npx:embeds) ?_partid_iri ;
+             dct:created ?ddate ;
+             np:hasAssertion ?da ;
+             np:hasPublicationInfo ?dpi .
+        filter not exists { ?inv npx:invalidates ?dnp ; npa:hasValidSignatureForPublicKeyHash ?__pubkey_multi . }
+        filter not exists {
+          ?dnp2 npa:hasValidSignatureForPublicKeyHash ?pk2 ;
+                (npx:introduces|npx:describes|npx:embeds) ?_partid_iri ;
+                dct:created ?ddate2 .
+          filter not exists { ?inv2 npx:invalidates ?dnp2 ; npa:hasValidSignatureForPublicKeyHash ?pk2 . }
+          filter(?ddate2 > ?ddate)
+        }
+      }
+      {
+        graph ?da { ?_partid_iri rdfs:label ?v }
+        bind(1 as ?ord) bind(rdfs:label as ?Property_noheader) bind('Label:' as ?Property_label)
+        bind(str(?v) as ?val) bind('' as ?vallabelRaw)
+      } union {
+        graph ?da { ?_partid_iri rdf:type ?iri }
+        bind(2 as ?ord) bind(rdf:type as ?Property_noheader) bind('Type:' as ?Property_label)
+        bind(str(?iri) as ?val)
+        bind(if(?iri = gen:FAIRCompendiumOfContributedKnowledge, 'FAIR Compendium of Contributed Knowledge', replace(str(?iri), '^.*[/#]', '')) as ?vallabelRaw)
+      } union {
+        graph ?da { ?_partid_iri gen:coversAgent ?iri }
+        optional { graph ?dpi { ?iri foaf:name ?aname } }
+        bind(3 as ?ord) bind(gen:coversAgent as ?Property_noheader) bind('Covers contributions by:' as ?Property_label)
+        bind(str(?iri) as ?val) bind(coalesce(?aname, replace(str(?iri), '^.*/', '')) as ?vallabelRaw)
+      } union {
+        graph ?da { ?_partid_iri gen:coversTime ?v }
+        bind(4 as ?ord) bind(gen:coversTime as ?Property_noheader) bind('Covers contributions made in:' as ?Property_label)
+        bind(str(?v) as ?val) bind('' as ?vallabelRaw)
+      } union {
+        graph npa:graph { ?iri np:hasAssertion ?da . }
+        bind(5 as ?ord) bind(npa:viaNanopub as ?Property_noheader) bind('Defined in:' as ?Property_label)
+        bind(str(?iri) as ?val) bind(substr(replace(str(?iri), '^.*/np/', ''), 1, 10) as ?vallabelRaw)
+      }
+    } group by ?ord ?Property_noheader ?Property_label ?val
+  }
+}
+group by ?ord ?Property_noheader ?Property_label
+order by ?ord""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-27T11:39:53Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-fair-compendium-info;
+    rdfs:label "Get FAIR Compendium info";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "cWXYiUsHm3TrK9zX1iKxfdR1ZRxQOBu8IeTzBzjtPvEdNOyBPWRhVEmGUh1S61QlDf1rarb3j75ma4Ko0tjeSFEJnjzLHEWEoycBzB77Q7n61EUFoWb3jgOPme0FDx+aQPwY+STPPS5ETlm9hkoAW3CZ45R7amA4aBjDE8DoCd8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

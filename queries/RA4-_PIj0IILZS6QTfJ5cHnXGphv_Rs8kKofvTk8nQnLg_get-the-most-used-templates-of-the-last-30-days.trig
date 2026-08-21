@@ -1,0 +1,85 @@
+@prefix this: <https://w3id.org/np/RA4-_PIj0IILZS6QTfJ5cHnXGphv_Rs8kKofvTk8nQnLg> .
+@prefix sub: <https://w3id.org/np/RA4-_PIj0IILZS6QTfJ5cHnXGphv_Rs8kKofvTk8nQnLg/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-most-used-templates-last30d a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the most used assertion templates of the last 30 days, considering the latest versions of these templates.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the most used templates of the last 30 days";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/last30d>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+prefix dct: <http://purl.org/dc/terms/>
+
+select ?template_iri ?template_iri_label (sum(?npcount) as ?overallcount) {
+  { select ?used_template_np (count(distinct ?np) as ?npcount) where {
+    graph npa:graph {
+      ?np npa:hasValidSignatureForPublicKey ?pubkey .
+      filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+      ?np np:hasPublicationInfo ?i .
+    }
+    graph ?i {
+      ?np nt:wasCreatedFromTemplate ?used_template_np .
+    }
+  } group by ?used_template_np }
+  bind(uri(concat(\"https://w3id.org/np/l/nanopub-query-1.1/repo/type/\", sha256(str(nt:AssertionTemplate)))) as ?atservice)
+  { service ?atservice {
+    graph npa:networkGraph {
+      ?template_iri npx:supersedes* ?used_template_np .
+    }
+    graph npa:graph {
+      ?used_template_np npa:hasValidSignatureForPublicKey ?pubkey .
+      ?template_iri npa:hasValidSignatureForPublicKey ?pubkey .
+      filter not exists { ?template_npx npx:invalidates ?template_iri ; npa:hasValidSignatureForPublicKey ?pubkey . }
+      ?used_template_np np:hasAssertion ?a .
+    }
+    graph ?a {
+      ?a rdfs:label ?template_iri_label .
+    }
+  } }
+} group by ?template_iri ?template_iri_label order by desc(?overallcount) limit 10""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234;
+    prov:wasDerivedFrom <https://w3id.org/np/RAz-5JLrXHfS9LInO8L8Mw64PSGJwojVemL-V3pqqIisc> .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-13T06:45:31Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-most-used-templates-last30d;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "CiBW1hCy1KLkE0ArAcMHCxfe0cL//Ud7iK8LRKg/yMMoV7/7JT4jl+csgq4cw4vTWqa2BPjTi1G6jF1Sq3WiJnlu/RD0EUPlaNWYX5iCAerDynwqfb18iqnLZJB/sXtjJSk2ag+M7Sn2xLghhE28k1o77gscu/lAPQmpKEepWYA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

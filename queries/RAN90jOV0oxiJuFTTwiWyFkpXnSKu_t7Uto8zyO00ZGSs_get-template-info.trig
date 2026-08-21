@@ -1,0 +1,108 @@
+@prefix this: <https://w3id.org/np/RAN90jOV0oxiJuFTTwiWyFkpXnSKu_t7Uto8zyO00ZGSs> .
+@prefix sub: <https://w3id.org/np/RAN90jOV0oxiJuFTTwiWyFkpXnSKu_t7Uto8zyO00ZGSs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-template-info a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns key-value facts about a space-governed template kind given as the resource, for display on its maintained-resource page: the label, description, tag, governing space, current governed version nanopub (shown as its short artifact code), and its last-modified date and author, all read off the current governed winner of the (kind, space) pair (newest non-invalidated version signed by a current member+ of the governing space, with the kind validated as maintained by that space -- mirroring get-latest-governed-version). It also yields a 'Use this template' row: a root-relative link (/publish?template=...) that opens the current version's template node on the Nanodash /publish page as a fillable form, with the template's title as the link text. Governed winners are materialized once per kind in a self-contained sub-select. Both columns use the '_noheader' convention so the redundant header row is dropped.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get template info";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?Property_noheader ?Value_noheader ?Value_label where {
+  values ?_resource_multi_iri {}
+  {
+    select ?gKind (max(concat(str(?gDate), '>', str(?gNp))) as ?maxW) where {
+      graph npa:graph {
+        ?gNp npa:hasValidSignatureForPublicKeyHash ?gPubkeyhash ;
+             dct:created ?gDate ; npx:embeds ?gVersion ; np:hasAssertion ?gA .
+        filter not exists { ?gInv npx:invalidates ?gNp ; npa:hasValidSignatureForPublicKeyHash ?gPubkeyhash . }
+      }
+      graph ?gA { ?gVersion dct:isVersionOf ?gKind ; gen:governedBy ?gSpace . }
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+        graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+        graph ?stateG {
+          ?gKind npa:isMaintainedBy ?gSpace ; npa:hasGoverningSpaceRef ?gRef .
+          ?gRi a gen:RoleInstantiation ; npa:forSpace ?gSpace ; npa:forSpaceRef ?gRef ;
+               npa:hasRoleType ?gTier ; npa:forAgent ?gAgent .
+          filter(?gTier = gen:AdminRole || ?gTier = gen:MaintainerRole || ?gTier = gen:MemberRole)
+          ?gAcct a npa:AccountState ; npa:agent ?gAgent ; npa:pubkey ?gPubkeyhash .
+        }
+      }
+    } group by ?gKind
+  }
+  filter(?gKind = ?_resource_multi_iri)
+  bind(iri(strafter(?maxW, '>')) as ?np)
+  graph npa:graph {
+    ?np npx:embeds ?tmpl ; dct:created ?dateVal ; np:hasAssertion ?a .
+    optional { ?np npx:signedBy ?authorVal . }
+  }
+  graph ?a { ?tmpl dct:isVersionOf ?_resource_multi_iri ; gen:governedBy ?spaceVal . }
+  optional { graph ?a { ?tmpl rdfs:label ?labelVal } }
+  optional { graph ?a { ?tmpl dct:description ?descVal } }
+  optional { graph ?a { ?tmpl nt:hasTag ?tagVal } }
+  bind(concat('<span><a href=\"/publish?template=', encode_for_uri(str(?tmpl)), '\">', coalesce(?labelVal, str(?tmpl)), '</a></span>') as ?formLink)
+  values (?ord ?Property_noheader) {
+    (1 'Label:')
+    (2 'Description:')
+    (3 'Tag:')
+    (4 'Governed by:')
+    (5 'Current version:')
+    (6 'Last modified:')
+    (7 'Last modified by:')
+    (8 'Use this template:')
+  }
+  bind(if(?ord=1, ?labelVal, if(?ord=2, ?descVal, if(?ord=3, ?tagVal, if(?ord=4, ?spaceVal, if(?ord=5, ?np, if(?ord=6, str(?dateVal), if(?ord=7, ?authorVal, if(?ord=8, ?formLink, '')))))))) as ?Value_noheader)
+  filter(bound(?Value_noheader))
+  bind(if(?ord=5, concat(substr(strafter(str(?np), '/np/'), 1, 10), '…'), '') as ?Value_label)
+}
+order by ?ord""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-13T15:09:17Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-template-info;
+    npx:supersedes <https://w3id.org/np/RApOlj410MSY2US-vIPrUOGVfFq4zNHeXq117ao66U0Ck>;
+    rdfs:label "Get template info";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Na2S9isaGzEJeIjnil+CEQebDrVQC8GdfHdaGmWy9NMkW7+eMBbIrw8yArPQHjqBP8fb0UcTaOPvlJ3gLsBIxFqJ+MZejWhi2MpFLazym6Ca5d+aNhompVHNVEjsIwOtL4BdrkZW8gNkRpcf1ct4+ATZDwZe0fapGCchJ4ASpXE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

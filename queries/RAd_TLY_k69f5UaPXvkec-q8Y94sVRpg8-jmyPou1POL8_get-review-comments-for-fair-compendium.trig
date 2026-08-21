@@ -1,0 +1,96 @@
+@prefix this: <https://w3id.org/np/RAd_TLY_k69f5UaPXvkec-q8Y94sVRpg8-jmyPou1POL8> .
+@prefix sub: <https://w3id.org/np/RAd_TLY_k69f5UaPXvkec-q8Y94sVRpg8-jmyPou1POL8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-fair-compendium-review-comments a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns the review comments that are candidates for a FAIR Compendium of Contributed Knowledge ('partid'): all LinkFlows review comments in nanopublications signed with a public key declared by the agent the compendium covers, and created in the covered year. Matching is done by public key rather than npx:signedBy, so it also finds older nanopublications that lack npx:signedBy in their publication info. The compendium's covered agent and year are resolved from its latest non-invalidated defining nanopub.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get review comments for FAIR Compendium";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix lf: <https://w3id.org/linkflows/reviews/>
+
+select distinct ?comment ?comment_label ?target ?date ?np (\"^\" as ?np_label) where {
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/type/76d6cd4231dca5c411812f254cb92473d90eb9cefb4182f91a94aca2f356d0d2> {
+    graph npa:graph {
+      ?dnp npa:hasValidSignatureForPublicKeyHash ?dpk ;
+           (npx:introduces|npx:describes|npx:embeds) ?_partid_iri ;
+           dct:created ?ddate ;
+           np:hasAssertion ?da .
+      filter not exists { ?inv npx:invalidates ?dnp ; npa:hasValidSignatureForPublicKeyHash ?dpk . }
+      filter not exists {
+        ?dnp2 npa:hasValidSignatureForPublicKeyHash ?pk2 ;
+              (npx:introduces|npx:describes|npx:embeds) ?_partid_iri ;
+              dct:created ?ddate2 .
+        filter not exists { ?inv2 npx:invalidates ?dnp2 ; npa:hasValidSignatureForPublicKeyHash ?pk2 . }
+        filter(?ddate2 > ?ddate)
+      }
+    }
+    graph ?da {
+      ?_partid_iri gen:coversAgent ?agent ;
+        gen:coversTime ?year .
+    }
+  }
+  graph ?gk { ?kd npx:declaredBy ?agent ; npx:hasPublicKey ?pubkey . }
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey ;
+        npa:hasValidSignatureForPublicKeyHash ?pkh ;
+        dct:created ?date ;
+        np:hasAssertion ?a .
+    filter not exists { ?npi npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pkh . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+  }
+  graph ?a {
+    ?comment rdf:type lf:ReviewComment ;
+      lf:hasCommentText ?comment_label ;
+      lf:refersTo ?target .
+  }
+  filter(strstarts(str(?date), str(?year)))
+} order by ?date""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-27T16:46:51.074+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:get-fair-compendium-review-comments;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ZlLXHj+PuKVai7LPqtTrJ4Bc36TB10VzxgZG/SqrLMhHMkyNs5zl7IeBHGTcqHALkIkaDyckkrv6hLGuvbWynnxXAx/lE1nb/W+982VGhWS1t0gMtvzhKNk3rpxJpdhn99ed8aanVUGBuIh8L8vFN5XnmHj/UKyx6csznhe2eCA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

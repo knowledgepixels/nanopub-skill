@@ -1,0 +1,275 @@
+@prefix this: <https://w3id.org/np/RA-uTs4-iFAtz-w3gcBv3sQMhHbt3QIg9kB9Mvc88P8cA> .
+@prefix sub: <https://w3id.org/np/RA-uTs4-iFAtz-w3gcBv3sQMhHbt3QIg9kB9Mvc88P8cA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-ego-trust-network-svg a grlc:grlc-query;
+    dct:description "Returns a single result row with one 'svg' column holding a complete SVG document rendering the ego trust network of an agent (the 'resource' parameter, typically the agent shown on a user page), computed dynamically from the nanopublication network. This is the query behind the 'Trust network' SVG view (gen:SvgView). The agent is shown as a central box; agents who endorse it (via npx:approvesOf on one of its introduction nanopublications) appear as boxes in a left-hand column with an arrow into the center, and agents it endorses appear in a right-hand column with arrows out of the center. Each side is capped at 15 boxes (ordered alphabetically by name), with a '+ N more' note when the cap is exceeded. Each neighbor box links root-relatively (/user?id=...) to that agent's user page and carries a colored dot reflecting the agent's status in the current trust state of the nanopublication network (green = approved, amber = contested, red = rejected, gray = not in the trust state), read via a federated SERVICE call to the trust repo. Below the diagram, a status line summarizes the central agent's own trust state: approval status, minimum depth from the trust seed, number of known keys, total trust paths, and network share (ratio). Names are taken from the canonical trust-state names where available, falling back to names in introduction nanopublications; long names wrap to two lines. Retracted endorsements are excluded via the invalidation check on the endorsing nanopublications. Positions are computed via rank subqueries, so the output is deterministic.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get ego trust network diagram as SVG";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+select (concat(
+    '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 660 ', str(?h), '\" width=\"990\" height=\"', str(?h * 3 / 2), '\" font-family=\"sans-serif\">',
+    if(?ltot > 0, '<text x=\"105\" y=\"24\" text-anchor=\"middle\" font-size=\"10\" font-style=\"italic\" fill=\"#666666\">endorsed by</text>', ''),
+    if(?rtot > 0, '<text x=\"540\" y=\"24\" text-anchor=\"middle\" font-size=\"10\" font-style=\"italic\" fill=\"#666666\">endorses</text>', ''),
+    ?frags,
+    if(?ltot > 0, concat(
+      '<line x1=\"205\" y1=\"51\" x2=\"205\" y2=\"', str(if(36 + (?lshown - 1) * 38 + 15 > ?cy, 36 + (?lshown - 1) * 38 + 15, ?cy)), '\" stroke=\"#444444\"></line>',
+      '<line x1=\"205\" y1=\"', str(?cy), '\" x2=\"236\" y2=\"', str(?cy), '\" stroke=\"#444444\"></line>',
+      '<path d=\"M 245 ', str(?cy), ' L 236 ', str(?cy - 4), ' L 236 ', str(?cy + 4), ' Z\" fill=\"#444444\"></path>'
+    ), ''),
+    if(?ltot > 15, concat('<text x=\"105\" y=\"', str(36 + 15 * 38 + 19), '\" text-anchor=\"middle\" font-size=\"10\" font-style=\"italic\" fill=\"#666666\">+ ', str(?ltot - 15), ' more</text>'), ''),
+    if(?rtot > 0, concat(
+      '<line x1=\"425\" y1=\"', str(?cy), '\" x2=\"440\" y2=\"', str(?cy), '\" stroke=\"#444444\"></line>',
+      '<line x1=\"440\" y1=\"51\" x2=\"440\" y2=\"', str(if(36 + (?rshown - 1) * 38 + 15 > ?cy, 36 + (?rshown - 1) * 38 + 15, ?cy)), '\" stroke=\"#444444\"></line>'
+    ), ''),
+    if(?rtot > 15, concat('<text x=\"540\" y=\"', str(36 + 15 * 38 + 19), '\" text-anchor=\"middle\" font-size=\"10\" font-style=\"italic\" fill=\"#666666\">+ ', str(?rtot - 15), ' more</text>'), ''),
+    '<rect x=\"245\" y=\"', str(?cy - 18), '\" width=\"180\" height=\"36\" fill=\"#ffffff\" stroke=\"#444444\" stroke-width=\"1.5\"></rect>',
+    if(?cl2 = '',
+      concat('<text x=\"335\" y=\"', str(?cy + 4), '\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#111111\">', replace(replace(replace(?cl1, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"), '</text>'),
+      concat('<text x=\"335\" y=\"', str(?cy - 3), '\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#111111\">', replace(replace(replace(?cl1, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"),
+             '<tspan x=\"335\" y=\"', str(?cy + 11), '\">', replace(replace(replace(?cl2, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"), '</tspan></text>')),
+    '<text x=\"335\" y=\"', str(36 + ?maxn * 38 + 14), '\" text-anchor=\"middle\" font-size=\"10\" fill=\"', ?statusCol, '\">', ?statusLine, '</text>',
+    if(?statLine2 != '', concat('<text x=\"335\" y=\"', str(36 + ?maxn * 38 + 29), '\" text-anchor=\"middle\" font-size=\"10\" fill=\"#666666\">', ?statLine2, '</text>'), ''),
+    '</svg>') as ?svg) where {
+
+  { select (group_concat(coalesce(?frag, \"\"); separator=\"\") as ?frags)
+            (coalesce(max(if(?side = 0, ?tot, 0)), 0) as ?ltot)
+            (coalesce(max(if(?side = 1, ?tot, 0)), 0) as ?rtot)
+            (min(?centerName0) as ?centerName)
+            (min(?tCName0) as ?tCName)
+            (min(?minDepth0) as ?minDepth)
+            (min(?paths0) as ?paths)
+            (min(?ratio0) as ?ratio)
+            (min(?nKeys0) as ?nKeys)
+            (min(?clv0) as ?clv)
+    where {
+
+    # --- center agent's display name from its introduction nanopub(s)
+    { select (min(?cnC) as ?centerName0) where {
+      optional {
+        graph npa:graph { ?npC np:hasAssertion ?aC . }
+        graph ?aC { ?kdC npx:declaredBy ?_resource_iri . ?_resource_iri foaf:name ?cnC . }
+      }
+    } }
+
+    # --- center agent's account state(s) in the current trust state
+    { select (min(?dS) as ?minDepth0) (sum(coalesce(?pcS, 0)) as ?paths0) (max(?ratioS) as ?ratio0)
+              (count(?accS) as ?nKeys0) (min(?cnS) as ?tCName0)
+              (max(if(?stS in (npa:loaded, npa:toLoad), 2, if(?stS = npa:contested, 1, 0))) as ?clv0) where {
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/trust> {
+        graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentTrustState ?gS . }
+        graph ?gS { ?accS npa:agent ?_resource_iri ; npa:depth ?dS ; npa:trustStatus ?stS . }
+        optional { graph ?gS { ?accS npa:pathCount ?pcS . } }
+        optional { graph ?gS { ?accS npa:ratio ?ratioS . } }
+        optional { graph ?gS { ?_resource_iri foaf:name ?cnS . } }
+      }
+    } }
+
+    # --- one row per rendered neighbor box: rank ?iy within its side, capped at 15
+    optional {
+      { select ?side ?nb ?nbName ?iy ?tot where {
+        { select ?side ?nb ?nbName (count(*) as ?iy) where {
+          { select (?side1 as ?side) (?nb1 as ?nb) (?nbName1 as ?nbName) where {
+    {
+      { select (0 as ?side1) ?nb1 (coalesce(min(?nI1), replace(str(?nb1), \"^.*/\", \"\")) as ?nbName1) where {
+        graph npa:graph { ?npX1 np:hasAssertion ?aX1 . }
+        graph ?aX1 { ?kdX1 npx:declaredBy ?_resource_iri . }
+        graph npa:graph {
+          ?npE1 npa:hasValidSignatureForPublicKeyHash ?pkE1 ; np:hasAssertion ?aE1 .
+          filter not exists { ?npEi1 npx:invalidates ?npE1 ; npa:hasValidSignatureForPublicKeyHash ?pkE1 . }
+        }
+        graph ?aE1 { ?nb1 npx:approvesOf ?npX1 . }
+        optional {
+          graph npa:graph { ?npN1 np:hasAssertion ?aN1 . }
+          graph ?aN1 { ?kdN1 npx:declaredBy ?nb1 . ?nb1 foaf:name ?nI1 . }
+        }
+        filter(?nb1 != ?_resource_iri)
+      } group by ?nb1 }
+    } union {
+      { select (1 as ?side1) ?nb1 (coalesce(min(?nO1), replace(str(?nb1), \"^.*/\", \"\")) as ?nbName1) where {
+        graph npa:graph {
+          ?npA1 npa:hasValidSignatureForPublicKeyHash ?pkA1 ; np:hasAssertion ?aA1 .
+          filter not exists { ?npAi1 npx:invalidates ?npA1 ; npa:hasValidSignatureForPublicKeyHash ?pkA1 . }
+        }
+        graph ?aA1 { ?_resource_iri npx:approvesOf ?intro1 . }
+        graph npa:graph { ?intro1 np:hasAssertion ?aI1 . }
+        graph ?aI1 { ?kdI1 npx:declaredBy ?nb1 . }
+        optional { graph ?aI1 { ?nb1 foaf:name ?nO1 . } }
+        filter(?nb1 != ?_resource_iri)
+      } group by ?nb1 }
+    }
+          } }
+          bind(concat(lcase(?nbName), \"|\", str(?nb)) as ?sk)
+          { select (?side2 as ?sideR) (concat(lcase(?nbName2), \"|\", str(?nb2)) as ?skR) where {
+    {
+      { select (0 as ?side2) ?nb2 (coalesce(min(?nI2), replace(str(?nb2), \"^.*/\", \"\")) as ?nbName2) where {
+        graph npa:graph { ?npX2 np:hasAssertion ?aX2 . }
+        graph ?aX2 { ?kdX2 npx:declaredBy ?_resource_iri . }
+        graph npa:graph {
+          ?npE2 npa:hasValidSignatureForPublicKeyHash ?pkE2 ; np:hasAssertion ?aE2 .
+          filter not exists { ?npEi2 npx:invalidates ?npE2 ; npa:hasValidSignatureForPublicKeyHash ?pkE2 . }
+        }
+        graph ?aE2 { ?nb2 npx:approvesOf ?npX2 . }
+        optional {
+          graph npa:graph { ?npN2 np:hasAssertion ?aN2 . }
+          graph ?aN2 { ?kdN2 npx:declaredBy ?nb2 . ?nb2 foaf:name ?nI2 . }
+        }
+        filter(?nb2 != ?_resource_iri)
+      } group by ?nb2 }
+    } union {
+      { select (1 as ?side2) ?nb2 (coalesce(min(?nO2), replace(str(?nb2), \"^.*/\", \"\")) as ?nbName2) where {
+        graph npa:graph {
+          ?npA2 npa:hasValidSignatureForPublicKeyHash ?pkA2 ; np:hasAssertion ?aA2 .
+          filter not exists { ?npAi2 npx:invalidates ?npA2 ; npa:hasValidSignatureForPublicKeyHash ?pkA2 . }
+        }
+        graph ?aA2 { ?_resource_iri npx:approvesOf ?intro2 . }
+        graph npa:graph { ?intro2 np:hasAssertion ?aI2 . }
+        graph ?aI2 { ?kdI2 npx:declaredBy ?nb2 . }
+        optional { graph ?aI2 { ?nb2 foaf:name ?nO2 . } }
+        filter(?nb2 != ?_resource_iri)
+      } group by ?nb2 }
+    }
+          } }
+          filter(?sideR = ?side && ?skR <= ?sk)
+        } group by ?side ?nb ?nbName }
+        { select (?side3 as ?side) (count(*) as ?tot) where {
+    {
+      { select (0 as ?side3) ?nb3 (coalesce(min(?nI3), replace(str(?nb3), \"^.*/\", \"\")) as ?nbName3) where {
+        graph npa:graph { ?npX3 np:hasAssertion ?aX3 . }
+        graph ?aX3 { ?kdX3 npx:declaredBy ?_resource_iri . }
+        graph npa:graph {
+          ?npE3 npa:hasValidSignatureForPublicKeyHash ?pkE3 ; np:hasAssertion ?aE3 .
+          filter not exists { ?npEi3 npx:invalidates ?npE3 ; npa:hasValidSignatureForPublicKeyHash ?pkE3 . }
+        }
+        graph ?aE3 { ?nb3 npx:approvesOf ?npX3 . }
+        optional {
+          graph npa:graph { ?npN3 np:hasAssertion ?aN3 . }
+          graph ?aN3 { ?kdN3 npx:declaredBy ?nb3 . ?nb3 foaf:name ?nI3 . }
+        }
+        filter(?nb3 != ?_resource_iri)
+      } group by ?nb3 }
+    } union {
+      { select (1 as ?side3) ?nb3 (coalesce(min(?nO3), replace(str(?nb3), \"^.*/\", \"\")) as ?nbName3) where {
+        graph npa:graph {
+          ?npA3 npa:hasValidSignatureForPublicKeyHash ?pkA3 ; np:hasAssertion ?aA3 .
+          filter not exists { ?npAi3 npx:invalidates ?npA3 ; npa:hasValidSignatureForPublicKeyHash ?pkA3 . }
+        }
+        graph ?aA3 { ?_resource_iri npx:approvesOf ?intro3 . }
+        graph npa:graph { ?intro3 np:hasAssertion ?aI3 . }
+        graph ?aI3 { ?kdI3 npx:declaredBy ?nb3 . }
+        optional { graph ?aI3 { ?nb3 foaf:name ?nO3 . } }
+        filter(?nb3 != ?_resource_iri)
+      } group by ?nb3 }
+    }
+        } group by ?side3 }
+        filter(?iy <= 15)
+      } }
+
+      # --- neighbor trust status (single evaluation, natural join on ?nb)
+      optional {
+        { select ?nb (max(if(?stT in (npa:loaded, npa:toLoad), 2, if(?stT = npa:contested, 1, 0))) as ?lv)
+                  (min(?nmT) as ?tnm) where {
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/trust> {
+            graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentTrustState ?gT . }
+            graph ?gT { ?accT npa:agent ?nb ; npa:trustStatus ?stT . }
+            optional { graph ?gT { ?nb foaf:name ?nmT . } }
+          }
+        } group by ?nb }
+      }
+
+      bind(36 + (?iy - 1) * 38 as ?boxY)
+      bind(?boxY + 15 as ?midY)
+      bind(if(?side = 0, 20, 455) as ?boxX)
+      bind(if(coalesce(?lv = 2, false), \"#2e7d32\", if(coalesce(?lv = 1, false), \"#b26a00\", if(bound(?lv), \"#b00020\", \"#999999\"))) as ?dotFill)
+
+      # display name: prefer the canonical trust-state name; two-line wrap when wide
+      bind(coalesce(?tnm, ?nbName) as ?dispName)
+      bind(strlen(?dispName) > 25 && regex(?dispName, \"^.{1,17}\\\\s\") as ?wrap)
+      bind(if(?wrap, replace(?dispName, \"^(.{1,17})\\\\s.*$\", \"$1\"), ?dispName) as ?l1)
+      bind(if(?wrap, replace(?dispName, \"^.{1,17}\\\\s\", \"\"), \"\") as ?l2)
+
+      bind(concat(
+        if(?side = 0,
+          concat('<line x1=\"190\" y1=\"', str(?midY), '\" x2=\"205\" y2=\"', str(?midY), '\" stroke=\"#444444\"></line>'),
+          concat('<line x1=\"440\" y1=\"', str(?midY), '\" x2=\"446\" y2=\"', str(?midY), '\" stroke=\"#444444\"></line>',
+                 '<path d=\"M 455 ', str(?midY), ' L 446 ', str(?midY - 4), ' L 446 ', str(?midY + 4), ' Z\" fill=\"#444444\"></path>')),
+        '<a href=\"/user?id=', encode_for_uri(str(?nb)), '\">',
+        '<rect x=\"', str(?boxX), '\" y=\"', str(?boxY), '\" width=\"170\" height=\"30\" fill=\"#ffffff\" stroke=\"#444444\"></rect>',
+        '<circle cx=\"', str(?boxX + 11), '\" cy=\"', str(?midY), '\" r=\"4\" fill=\"', ?dotFill, '\"></circle>',
+        if(?l2 = '',
+          concat('<text x=\"', str(?boxX + 22), '\" y=\"', str(?boxY + 19), '\" font-size=\"10\" fill=\"#111111\">', replace(replace(replace(?l1, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"), '</text>'),
+          concat('<text x=\"', str(?boxX + 22), '\" y=\"', str(?boxY + 13), '\" font-size=\"10\" fill=\"#111111\">', replace(replace(replace(?l1, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"),
+                 '<tspan x=\"', str(?boxX + 22), '\" y=\"', str(?boxY + 25), '\">', replace(replace(replace(?l2, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"), '</tspan></text>')),
+        '</a>'
+      ) as ?frag)
+    }
+  } }
+
+  bind(if(?ltot > 15, 15, ?ltot) as ?lshown)
+  bind(if(?rtot > 15, 15, ?rtot) as ?rshown)
+  bind(if(?ltot > 15, 16, ?ltot) as ?lrows)
+  bind(if(?rtot > 15, 16, ?rtot) as ?rrows)
+  bind(if(?lrows > ?rrows, ?lrows, ?rrows) as ?maxn0)
+  bind(if(?maxn0 < 1, 1, ?maxn0) as ?maxn)
+  bind(36 + (?maxn - 1) * 19 + 15 as ?cy)
+  bind(36 + ?maxn * 38 + 40 as ?h)
+
+  bind(coalesce(?tCName, ?centerName, replace(str(?_resource_iri), \"^.*/\", \"\")) as ?cname)
+  bind(strlen(?cname) > 28 && regex(?cname, \"^.{1,20}\\\\s\") as ?cwrap)
+  bind(if(?cwrap, replace(?cname, \"^(.{1,20})\\\\s.*$\", \"$1\"), ?cname) as ?cl1)
+  bind(if(?cwrap, replace(?cname, \"^.{1,20}\\\\s\", \"\"), \"\") as ?cl2)
+
+  bind(if(coalesce(?clv = 2, false), '&#10003; approved', if(coalesce(?clv = 1, false), '&#9888; contested', if(bound(?clv), '&#10007; rejected', 'not in the trust network'))) as ?statusTxt)
+  bind(if(coalesce(?clv = 2, false), '#2e7d32', if(coalesce(?clv = 1, false), '#b26a00', if(bound(?clv), '#b00020', '#666666'))) as ?statusCol)
+  bind(concat(?statusTxt, coalesce(concat(' &#183; depth ', str(?minDepth)), '')) as ?statusLine)
+  bind(coalesce(concat(str(?nKeys), if(?nKeys = 1, ' key', ' keys'), ' &#183; ',
+                       str(?paths), if(?paths = 1, ' trust path', ' trust paths'),
+                       ' &#183; network share ', str(round(?ratio * 10000) / 100), '%'), '') as ?statLine2)
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-12T19:22:38Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-ego-trust-network-svg;
+    rdfs:label "Get ego trust network diagram as SVG";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "L9ShOemuYldcJdp05Az1g8XMvWizsSKl6vDj11cWaY0XiyT/TcVer1Fyf5xPKM++8duwkwKy2VY7nUHU/ngN6zC+7hB+X0bw3E18Cit55UXgOyxEx0b/Tsz8fPzlz16xsvg+6Q1JV76rwpkede9WNmEi570yxGFrqcjZgYX9LWM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

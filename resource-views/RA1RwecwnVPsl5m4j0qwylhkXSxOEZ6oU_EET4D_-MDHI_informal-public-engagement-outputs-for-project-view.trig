@@ -1,0 +1,64 @@
+@prefix this: <https://w3id.org/np/RA1RwecwnVPsl5m4j0qwylhkXSxOEZ6oU_EET4D_-MDHI> .
+@prefix sub: <https://w3id.org/np/RA1RwecwnVPsl5m4j0qwylhkXSxOEZ6oU_EET4D_-MDHI/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a gen:ViewResultAction;
+    rdfs:label "➕ add informal output...";
+    gen:hasActionTemplate <https://w3id.org/np/RAknJENjQ9tpRNPSNQJWe79keZeyROy2jSir0lVs2Es3M>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "project" .
+  
+  sub:informal-outputs-project-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:informal-outputs-project-view-kind;
+    dct:title "📣 Public engagement";
+    rdfs:label "Informal / public-engagement outputs for project view";
+    gen:appliesToInstancesOf gen:Space;
+    gen:hasStructuralPosition "4.8.engagement";
+    gen:hasViewAction sub:addAction;
+    gen:hasViewQuery <https://w3id.org/np/RACL330S64CMNOzg89pHLfGEbIV95LfTBwTa-Jx6-Xv84/get-project-informal-outputs>;
+    gen:hasViewQueryTargetField "project" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-13T04:00:00Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:informal-outputs-project-view;
+    npx:introduces sub:informal-outputs-project-view-kind;
+    rdfs:label "Informal / public-engagement outputs for project view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "CBWqmVmfJDfozmWVWSK1WV6v8LxW1G8mozODjn+cKxbyq0VZIdk4uMeecSvRv4ZlUIs6eTcpt/5u/gwqEINDePPPqYFwNWXQQSr2pi3GtjTSwh9i0s0L0OrUpfiZyU2lHYSLeetJFe3KYfWMENufUFeKpRujhGprhxMNfEBjFe0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+
