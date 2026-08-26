@@ -1,0 +1,258 @@
+@prefix this: <https://w3id.org/np/RARgpSGSB9vgk4oUMpe46nvnZmPEbqdEkK3Yx0z_pghdo> .
+@prefix sub: <https://w3id.org/np/RARgpSGSB9vgk4oUMpe46nvnZmPEbqdEkK3Yx0z_pghdo/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-trust-network-overview-svg a grlc:grlc-query;
+    dct:description "Returns a single result row with one 'svg' column holding a complete SVG diagram of the whole trust network of the nanopublication ecosystem, computed entirely from the current trust state. This is the query behind the 'Trust network overview' SVG view (gen:SvgView). Every agent in the trust state is drawn as one equally sized tilted square with a thin black outline, using the same tilt as the profile-picture mask (a square rotated by about 14 degrees, not a 45-degree diamond), linking root-relatively (/user?id=...) to that agent's user page and carrying an SVG title element, so hovering a node shows the agent's canonical name from the trust state (falling back to the agent IRI for the few agents that have no foaf:name). Agents are grouped into horizontal bands by their minimum depth from the trust seed, spaced one empty row apart; within a band they are ordered by the number of agents they endorsed, descending, and laid out at a fixed spacing and wrapped onto as many rows as the band needs, with each row centered horizontally. The highest-endorsing agents therefore sit at the start of each band. A line is drawn for every endorsement between two distinct agents, so the fan below an agent shows the agents it brought into the network. Node color encodes depth, with bot and software agents in purple, contested agents in red and skipped (rejected) agents in gray; where these overlap, the contested and skipped colors win over the bot color. The bot set is read authoritatively from the npx:Bot / npx:SoftwareAgent types via a single federated sub-select against the full repository that shares no variables with the rest of the query, so it is evaluated once rather than per node. The diagram carries no title, caption or labels: it is a pure node-and-link rendering meant to sit under the view's own heading, and its height adapts to the number of rows needed. The query reads npa:EndorsementLink nodes (npa:fromAgent / npa:toAgent) together with the npa:AccountState rows of the current trust state, so it needs no federated SERVICE call and no scan of the full repository. Per-pubkey duplicate rows are collapsed to one node per agent, self-endorsements across an agent's own keys are not drawn as edges, and positions come from rank subqueries, so the output is deterministic. The 'resource' parameter is the page the view is shown on; it is not used by the diagram, which always shows the whole network.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get trust network overview diagram as SVG";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/trust>;
+    grlc:sparql """prefix npa: <http://purl.org/nanopub/admin/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix npx: <http://purl.org/nanopub/x/>
+select (concat(
+    \"<svg xmlns='http://www.w3.org/2000/svg' width='100%' viewBox='0 0 1200 \", str(?h),
+    \"' font-family='sans-serif'>\", ?edgesvg, ?nodesvg, \"</svg>\") as ?svg) where {
+  bind(?_resource_iri as ?pageResource)
+
+  { select (((30 + (?nd - 1) * 16) + ?totalRows * 16 + 20) as ?h) where {
+    { select (sum(?rr) as ?totalRows) (count(*) as ?nd) where {
+      { select ?dh (count(*) as ?ch) where {
+      { select ?aH (min(?dH) as ?depH) where {
+          npa:thisRepo npa:hasCurrentTrustState ?tsH .
+          graph ?tsH { ?stH a npa:AccountState ; npa:agent ?aH ; npa:depth ?dH }
+        } group by ?aH }
+          bind(?depH as ?dh)
+        } group by ?dh }
+      bind(xsd:integer(ceil(?ch / 83)) as ?rr)
+    } }
+  } }
+
+  { select (group_concat(?eline; separator=\"\") as ?edgesvg) where {
+  { select ?aF ?depF ?outF
+       ((round((1200 - ?nrowF * 14) / 2) + (?rankF - 1 - ?rowF * 83) * 14 + 7) as ?xF)
+       ((30 + (?depF - 1) * 16 + (?rowsBeforeF + ?rowF) * 16) as ?yF) where {
+      { select ?aF ?depF ?outF (count(distinct ?a2F) as ?rankF) where {
+      { select ?aFa (min(?dFa) as ?depFa) (count(distinct ?tFa) as ?outFa) where {
+          npa:thisRepo npa:hasCurrentTrustState ?tsFa .
+          graph ?tsFa { ?stFa a npa:AccountState ; npa:agent ?aFa ; npa:depth ?dFa }
+          optional { graph ?tsFa { ?lFa a npa:EndorsementLink ; npa:fromAgent ?aFa ; npa:toAgent ?tFa } }
+        } group by ?aFa }
+        bind(str(1000 - ?outFa) as ?pnFa)
+        bind(concat(substr(concat(\"0000\", ?pnFa), strlen(?pnFa) + 1), str(?aFa)) as ?kFa)
+        bind(?aFa as ?aF) bind(?depFa as ?depF) bind(?outFa as ?outF)
+      { select ?aFb (min(?dFb) as ?depFb) (count(distinct ?tFb) as ?outFb) where {
+          npa:thisRepo npa:hasCurrentTrustState ?tsFb .
+          graph ?tsFb { ?stFb a npa:AccountState ; npa:agent ?aFb ; npa:depth ?dFb }
+          optional { graph ?tsFb { ?lFb a npa:EndorsementLink ; npa:fromAgent ?aFb ; npa:toAgent ?tFb } }
+        } group by ?aFb }
+        bind(str(1000 - ?outFb) as ?pnFb)
+        bind(concat(substr(concat(\"0000\", ?pnFb), strlen(?pnFb) + 1), str(?aFb)) as ?kFb)
+        bind(?aFb as ?a2F)
+        filter(?depFb = ?depF && ?kFb <= ?kFa)
+      } group by ?aF ?depF ?outF }
+      bind(xsd:integer(floor((?rankF - 1) / 83)) as ?rowF)
+      { select ?depRF (sum(?r2F) as ?rowsBeforeF) ?cntDF where {
+        { select ?dAF (count(*) as ?cAF) where {
+      { select ?aFp (min(?dFp) as ?depFp) where {
+          npa:thisRepo npa:hasCurrentTrustState ?tsFp .
+          graph ?tsFp { ?stFp a npa:AccountState ; npa:agent ?aFp ; npa:depth ?dFp }
+        } group by ?aFp }
+            bind(?depFp as ?dAF)
+          } group by ?dAF }
+        bind(?dAF as ?depRF)
+        bind(?cAF as ?cntDF)
+        { select ?dBF (count(*) as ?cBF) where {
+      { select ?aFq (min(?dFq) as ?depFq) where {
+          npa:thisRepo npa:hasCurrentTrustState ?tsFq .
+          graph ?tsFq { ?stFq a npa:AccountState ; npa:agent ?aFq ; npa:depth ?dFq }
+        } group by ?aFq }
+            bind(?depFq as ?dBF)
+          } group by ?dBF }
+        filter(?dBF <= ?depRF)
+        bind(if(?dBF = ?depRF, 0, xsd:integer(ceil(?cBF / 83))) as ?r2F)
+      } group by ?depRF ?cntDF }
+      filter(?depRF = ?depF)
+      bind(xsd:integer(ceil(?cntDF / 83)) as ?nrowsF)
+      bind(if(?rowF < ?nrowsF - 1, 83, ?cntDF - (?nrowsF - 1) * 83) as ?nrowF)
+   } }
+  { select ?aT ?depT ?outT
+       ((round((1200 - ?nrowT * 14) / 2) + (?rankT - 1 - ?rowT * 83) * 14 + 7) as ?xT)
+       ((30 + (?depT - 1) * 16 + (?rowsBeforeT + ?rowT) * 16) as ?yT) where {
+      { select ?aT ?depT ?outT (count(distinct ?a2T) as ?rankT) where {
+      { select ?aTa (min(?dTa) as ?depTa) (count(distinct ?tTa) as ?outTa) where {
+          npa:thisRepo npa:hasCurrentTrustState ?tsTa .
+          graph ?tsTa { ?stTa a npa:AccountState ; npa:agent ?aTa ; npa:depth ?dTa }
+          optional { graph ?tsTa { ?lTa a npa:EndorsementLink ; npa:fromAgent ?aTa ; npa:toAgent ?tTa } }
+        } group by ?aTa }
+        bind(str(1000 - ?outTa) as ?pnTa)
+        bind(concat(substr(concat(\"0000\", ?pnTa), strlen(?pnTa) + 1), str(?aTa)) as ?kTa)
+        bind(?aTa as ?aT) bind(?depTa as ?depT) bind(?outTa as ?outT)
+      { select ?aTb (min(?dTb) as ?depTb) (count(distinct ?tTb) as ?outTb) where {
+          npa:thisRepo npa:hasCurrentTrustState ?tsTb .
+          graph ?tsTb { ?stTb a npa:AccountState ; npa:agent ?aTb ; npa:depth ?dTb }
+          optional { graph ?tsTb { ?lTb a npa:EndorsementLink ; npa:fromAgent ?aTb ; npa:toAgent ?tTb } }
+        } group by ?aTb }
+        bind(str(1000 - ?outTb) as ?pnTb)
+        bind(concat(substr(concat(\"0000\", ?pnTb), strlen(?pnTb) + 1), str(?aTb)) as ?kTb)
+        bind(?aTb as ?a2T)
+        filter(?depTb = ?depT && ?kTb <= ?kTa)
+      } group by ?aT ?depT ?outT }
+      bind(xsd:integer(floor((?rankT - 1) / 83)) as ?rowT)
+      { select ?depRT (sum(?r2T) as ?rowsBeforeT) ?cntDT where {
+        { select ?dAT (count(*) as ?cAT) where {
+      { select ?aTp (min(?dTp) as ?depTp) where {
+          npa:thisRepo npa:hasCurrentTrustState ?tsTp .
+          graph ?tsTp { ?stTp a npa:AccountState ; npa:agent ?aTp ; npa:depth ?dTp }
+        } group by ?aTp }
+            bind(?depTp as ?dAT)
+          } group by ?dAT }
+        bind(?dAT as ?depRT)
+        bind(?cAT as ?cntDT)
+        { select ?dBT (count(*) as ?cBT) where {
+      { select ?aTq (min(?dTq) as ?depTq) where {
+          npa:thisRepo npa:hasCurrentTrustState ?tsTq .
+          graph ?tsTq { ?stTq a npa:AccountState ; npa:agent ?aTq ; npa:depth ?dTq }
+        } group by ?aTq }
+            bind(?depTq as ?dBT)
+          } group by ?dBT }
+        filter(?dBT <= ?depRT)
+        bind(if(?dBT = ?depRT, 0, xsd:integer(ceil(?cBT / 83))) as ?r2T)
+      } group by ?depRT ?cntDT }
+      filter(?depRT = ?depT)
+      bind(xsd:integer(ceil(?cntDT / 83)) as ?nrowsT)
+      bind(if(?rowT < ?nrowsT - 1, 83, ?cntDT - (?nrowsT - 1) * 83) as ?nrowT)
+   } }
+    { select distinct ?aF ?aT where {
+        npa:thisRepo npa:hasCurrentTrustState ?tsE .
+        graph ?tsE { ?lE a npa:EndorsementLink ; npa:fromAgent ?aF ; npa:toAgent ?aT }
+        filter(?aF != ?aT)
+      } }
+    bind(concat(\"<line x1='\", str(?xF), \"' y1='\", str(?yF + 4.86),
+                \"' x2='\", str(?xT), \"' y2='\", str(?yT - 4.86),
+                \"' stroke='#7aa7d0' stroke-opacity='0.22' stroke-width='0.7'></line>\") as ?eline)
+  } }
+
+  { select (group_concat(?nline; separator=\"\") as ?nodesvg) where {
+  { select ?aN ?depN ?outN
+       ((round((1200 - ?nrowN * 14) / 2) + (?rankN - 1 - ?rowN * 83) * 14 + 7) as ?xN)
+       ((30 + (?depN - 1) * 16 + (?rowsBeforeN + ?rowN) * 16) as ?yN) where {
+      { select ?aN ?depN ?outN (count(distinct ?a2N) as ?rankN) where {
+      { select ?aNa (min(?dNa) as ?depNa) (count(distinct ?tNa) as ?outNa) where {
+          npa:thisRepo npa:hasCurrentTrustState ?tsNa .
+          graph ?tsNa { ?stNa a npa:AccountState ; npa:agent ?aNa ; npa:depth ?dNa }
+          optional { graph ?tsNa { ?lNa a npa:EndorsementLink ; npa:fromAgent ?aNa ; npa:toAgent ?tNa } }
+        } group by ?aNa }
+        bind(str(1000 - ?outNa) as ?pnNa)
+        bind(concat(substr(concat(\"0000\", ?pnNa), strlen(?pnNa) + 1), str(?aNa)) as ?kNa)
+        bind(?aNa as ?aN) bind(?depNa as ?depN) bind(?outNa as ?outN)
+      { select ?aNb (min(?dNb) as ?depNb) (count(distinct ?tNb) as ?outNb) where {
+          npa:thisRepo npa:hasCurrentTrustState ?tsNb .
+          graph ?tsNb { ?stNb a npa:AccountState ; npa:agent ?aNb ; npa:depth ?dNb }
+          optional { graph ?tsNb { ?lNb a npa:EndorsementLink ; npa:fromAgent ?aNb ; npa:toAgent ?tNb } }
+        } group by ?aNb }
+        bind(str(1000 - ?outNb) as ?pnNb)
+        bind(concat(substr(concat(\"0000\", ?pnNb), strlen(?pnNb) + 1), str(?aNb)) as ?kNb)
+        bind(?aNb as ?a2N)
+        filter(?depNb = ?depN && ?kNb <= ?kNa)
+      } group by ?aN ?depN ?outN }
+      bind(xsd:integer(floor((?rankN - 1) / 83)) as ?rowN)
+      { select ?depRN (sum(?r2N) as ?rowsBeforeN) ?cntDN where {
+        { select ?dAN (count(*) as ?cAN) where {
+      { select ?aNp (min(?dNp) as ?depNp) where {
+          npa:thisRepo npa:hasCurrentTrustState ?tsNp .
+          graph ?tsNp { ?stNp a npa:AccountState ; npa:agent ?aNp ; npa:depth ?dNp }
+        } group by ?aNp }
+            bind(?depNp as ?dAN)
+          } group by ?dAN }
+        bind(?dAN as ?depRN)
+        bind(?cAN as ?cntDN)
+        { select ?dBN (count(*) as ?cBN) where {
+      { select ?aNq (min(?dNq) as ?depNq) where {
+          npa:thisRepo npa:hasCurrentTrustState ?tsNq .
+          graph ?tsNq { ?stNq a npa:AccountState ; npa:agent ?aNq ; npa:depth ?dNq }
+        } group by ?aNq }
+            bind(?depNq as ?dBN)
+          } group by ?dBN }
+        filter(?dBN <= ?depRN)
+        bind(if(?dBN = ?depRN, 0, xsd:integer(ceil(?cBN / 83))) as ?r2N)
+      } group by ?depRN ?cntDN }
+      filter(?depRN = ?depN)
+      bind(xsd:integer(ceil(?cntDN / 83)) as ?nrowsN)
+      bind(if(?rowN < ?nrowsN - 1, 83, ?cntDN - (?nrowsN - 1) * 83) as ?nrowN)
+   } }
+    { select (concat(\" \", group_concat(distinct str(?bot); separator=\" \"), \" \") as ?bots) where {
+        service <https://w3id.org/np/l/nanopub-query-1.1/repo/full> {
+          graph ?bg { ?bot a ?bt }
+          filter(?bt in (npx:Bot, npx:SoftwareAgent))
+        }
+      } }
+    { select ?aN (min(?statN0) as ?statN) (min(?nmN0) as ?nmN) where {
+        npa:thisRepo npa:hasCurrentTrustState ?tsN .
+        graph ?tsN { ?stN0 a npa:AccountState ; npa:agent ?aN ; npa:trustStatus ?statN0 }
+        optional { graph ?tsN { ?aN foaf:name ?nmN0 } }
+      } group by ?aN }
+    bind(contains(?bots, concat(\" \", str(?aN), \" \")) as ?isBot)
+    bind(if(?statN = npa:contested, \"#c8553d\",
+         if(?statN = npa:skipped, \"#8a8a8a\",
+         if(?isBot, \"#8a4fbd\",
+         if(?depN = 1, \"#0d4f8b\",
+         if(?depN = 2, \"#2f7fc4\",
+         if(?depN = 3, \"#5fa3da\",
+         if(?depN = 4, \"#8fc0e8\", \"#bcd9f0\"))))))) as ?fill)
+    bind(coalesce(?nmN, str(?aN)) as ?lbl0)
+    bind(replace(replace(replace(?lbl0, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\") as ?lbl)
+    bind(concat(
+      \"<a href='/user?id=\", encode_for_uri(str(?aN)), \"'>\",
+      \"<polygon points='\", str(?xN - 2.89), \",\", str(?yN - 4.86),
+        \" \", str(?xN + 4.86), \",\", str(?yN - 2.89),
+        \" \", str(?xN + 2.89), \",\", str(?yN + 4.86),
+        \" \", str(?xN - 4.86), \",\", str(?yN + 2.89),
+        \"' fill='\", ?fill, \"' stroke='#000000' stroke-width='0.3'><title>\", ?lbl, \"</title></polygon>\",
+      \"</a>\") as ?nline)
+  } }
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-25T17:57:29Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-trust-network-overview-svg;
+    npx:supersedes <https://w3id.org/np/RAebm_nzzKOncNC4eTvUM2mpiEK3DSmN096lo_Xd7UWxM>;
+    rdfs:label "Get trust network overview diagram as SVG";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "UitpxBQZe5DgHvZiMhHEgrYZ4c798rAT/qFU5eEi0pq3kmYRZYaesjOyC/AVyU55udqcLjF/aBElhzAWR/dtRgYPoK7p4goUXjFWZRq8b7iY+muICKuFbAki3DdfA7WUjf+BfmiO0n3kR1TrHx8xrnCFooRUBoWyF/pBFrBZ25o=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}

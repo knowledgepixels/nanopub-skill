@@ -1,0 +1,72 @@
+@prefix this: <https://w3id.org/np/RABx3zMAR6L9_EPQ8JwHD2GLLPPQJkiAHJ5WgoUCdEzUg> .
+@prefix sub: <https://w3id.org/np/RABx3zMAR6L9_EPQ8JwHD2GLLPPQJkiAHJ5WgoUCdEzUg/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-pinned-resources a grlc:grlc-query;
+    dct:description "This query returns the pinned resources for a given entity (e.g. a Space).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get pinned resources";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/9c7a26ffc0dbf578c976ef2d16ad50734b357fc411557ac884d646e5fd5570b8>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?resource ?resource_label ?comment ?np (\"^\" as ?np_label) where {
+  graph npa:graph {
+    ?np npx:hasNanopubType gen:hasPinnedResource .
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np np:hasAssertion ?a .
+  }
+  values ?_entity_multi_iri {}
+  graph ?a {
+    ?_entity_multi_iri gen:hasPinnedResource ?resource .
+    optional { ?resource rdfs:label ?resource_label . }
+    optional { ?resource rdfs:comment ?comment . }
+  }
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-25T11:14:10Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-pinned-resources;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "cJbwRog8hq/J15hfu4SfQN0vIGRBRpfwsl1YDjBWGuHvFufCp5n4R/sqmcsQP9mLWwm79gfSup850u9p+AN0LBU8hZRVJV7ZbJ3vPGJmKK5HwI9lxBL1X2HlZWCNW1l68ZERYGcl/bPlNkLzWBtVwHP1zGMsUoqdUbve8GgJG6k=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

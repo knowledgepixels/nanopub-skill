@@ -1,0 +1,88 @@
+@prefix this: <https://w3id.org/np/RA8lPVuNJ1OI05hN59r-typtOu-nG2s_YZZ5UXJK6ay-8> .
+@prefix sub: <https://w3id.org/np/RA8lPVuNJ1OI05hN59r-typtOu-nG2s_YZZ5UXJK6ay-8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix frbr: <http://purl.org/vocab/frbr/core#> .
+@prefix cito: <http://purl.org/spar/cito/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  cito:cites rdfs:label "cites" .
+  
+  cito:isDocumentedBy rdfs:label "is documented by" .
+  
+  frbr:partOf rdfs:label "is part of" .
+  
+  frbr:revisionOf rdfs:label "is a revision of" .
+  
+  frbr:supplement rdfs:label "is supplemented by" .
+  
+  skos:exactMatch rdfs:label "is the same work as" .
+  
+  prov:wasDerivedFrom rdfs:label "was derived from" .
+  
+  sub:object a nt:GuidedChoicePlaceholder;
+    rdfs:label "research product";
+    nt:possibleValuesFromApi "https://api.openaire.eu/graph/v3/research-products?search=" .
+  
+  sub:relation a nt:RestrictedChoicePlaceholder;
+    rdfs:label "relation";
+    nt:possibleValue cito:cites, cito:isDocumentedBy, frbr:partOf, frbr:revisionOf, frbr:supplement,
+      skos:exactMatch, prov:wasDerivedFrom .
+  
+  sub:st1 rdf:object sub:object;
+    rdf:predicate sub:relation;
+    rdf:subject sub:subject .
+  
+  sub:subject a nt:GuidedChoicePlaceholder;
+    rdfs:label "research product";
+    nt:possibleValuesFromApi "https://api.openaire.eu/graph/v3/research-products?search=" .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Such a nanopublication expresses a typed relation between two research products, with the relation selected from a curated list. Each relation reads in one direction only; if the relation you have in mind points the other way, simply swap the two records.";
+    rdfs:label "OpenAIRE: Relation between two research products";
+    nt:hasNanopubLabelPattern "${subject} ${relation} ${object}";
+    nt:hasStatement sub:st1;
+    nt:hasTag "OpenAIRE";
+    nt:hasTargetNanopubType frbr:relatedEndeavour .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-28T11:15:47Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    rdfs:label "OpenAIRE: Relation between two research products";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Pe2qST+NrmUwJ49IBqEy3h5+IN/EbSLMwp74YB0QffEWZ8SF8fkv6MHTGCs4kpupfmAogQ13Cq9mJNlUZ73z1/pil01v2st/rcvpQqEWcITHIk+W1z+83bDACbZHNw67NZaImweDTSzjv9ZIiwM8mjT/Cz8e9ZfHOtakPVV3+TA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

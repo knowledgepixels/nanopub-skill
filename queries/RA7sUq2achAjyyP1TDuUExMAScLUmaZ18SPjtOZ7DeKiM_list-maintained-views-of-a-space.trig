@@ -1,0 +1,95 @@
+@prefix this: <https://w3id.org/np/RA7sUq2achAjyyP1TDuUExMAScLUmaZ18SPjtOZ7DeKiM> .
+@prefix sub: <https://w3id.org/np/RA7sUq2achAjyyP1TDuUExMAScLUmaZ18SPjtOZ7DeKiM/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:list-maintained-views a grlc:grlc-query;
+    dct:description "Lists the resource views maintained by a given space, i.e. the view kinds registered as maintained resources of the space, each shown with the label and title of its current governed version and a link to that version's nanopublication. The current governed version of a (kind, space) pair is the newest non-invalidated version signed by a current member+ (admin/maintainer/member) of the governing space, mirroring the get-latest-governed-version resolver: winners are materialized per kind in a sub-select that federates to the spaces repo (checking npa:isMaintainedBy and the signer's validated role tier), then joined back to the view data by an exact date+nanopub match. Kinds without a validating governed version are not listed. Ordered alphabetically by label.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "List maintained views of a space";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/ec6722efa3b44e0a18aa63afe5964158a1fdb7f0413ea5f23bfddf5c03ca0221>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?resource ?resource_label ?title ?np (\"^\" as ?np_label) where {
+  {
+    select ?resource ?np (coalesce(min(if(lang(?label) = \"\", ?label, ?nolabel)), min(?label)) as ?resource_label) (min(?titlex) as ?title) where {
+      {
+        select ?resource (max(concat(str(?gDate), \">\", str(?gNp))) as ?maxW) where {
+          values ?_space_multi_iri {}
+          graph npa:graph {
+            ?gNp npa:hasValidSignatureForPublicKeyHash ?gPubkeyhash ;
+                 dct:created ?gDate ;
+                 npx:embeds ?gVersion ;
+                 np:hasAssertion ?gA .
+            filter not exists { ?gInv npx:invalidates ?gNp ; npa:hasValidSignatureForPublicKeyHash ?gPubkeyhash . }
+          }
+          graph ?gA { ?gVersion a gen:ResourceView ; dct:isVersionOf ?resource ; gen:governedBy ?_space_multi_iri . }
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+            graph ?stateG {
+              ?resource npa:isMaintainedBy ?_space_multi_iri ; npa:hasGoverningSpaceRef ?gRef .
+              ?gRi a gen:RoleInstantiation ; npa:forSpace ?_space_multi_iri ; npa:forSpaceRef ?gRef ;
+                   npa:hasRoleType ?gTier ; npa:forAgent ?gAgent .
+              filter(?gTier = gen:AdminRole || ?gTier = gen:MaintainerRole || ?gTier = gen:MemberRole)
+              ?gAcct a npa:AccountState ; npa:agent ?gAgent ; npa:pubkey ?gPubkeyhash .
+            }
+          }
+        } group by ?resource
+      }
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pubkeyhash ;
+            dct:created ?date ;
+            npx:embeds ?version ;
+            np:hasAssertion ?a .
+      }
+      filter(concat(str(?date), \">\", str(?np)) = ?maxW)
+      graph ?a { ?version a gen:ResourceView ; dct:isVersionOf ?resource . }
+      optional { graph ?a { ?version rdfs:label ?label } }
+      optional { graph ?a { ?version dct:title ?titlex } }
+    } group by ?resource ?np
+  }
+} order by lcase(str(?resource_label))""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-08-25T11:31:32Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:list-maintained-views;
+    rdfs:label "List maintained views of a space";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "V1keK/0D0vHnOLIwLzeHfJKt2AwmgKm3t95pRPvgK+dCs4AxNUWG3KOHWoRTrhs/HpvjCHyCp5XgtiSArQiAaFlmFTHKXWJHXeGkeO3KNaB1wKtB85zqq+NUtFkImE3nDmDW6vPc6CZjdUIvcRoZf9kbaEqsTi1yDc9mNeuHNP4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

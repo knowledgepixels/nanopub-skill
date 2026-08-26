@@ -1,0 +1,211 @@
+@prefix this: <https://w3id.org/np/RAaDCZdks63HkuTIupKPdVvKlN6TVm8oX7IDxZgq28aro> .
+@prefix sub: <https://w3id.org/np/RAaDCZdks63HkuTIupKPdVvKlN6TVm8oX7IDxZgq28aro/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-statement-info a grlc:grlc-query;
+    dct:description "Returns the basic information known about a statement expressed as an AIDA sentence, as property/value rows: the statements it is more general than, the statement it is more specific than, the sources it obtains support from, what it is about, the projects it is relevant for, who it is attributed to, whether it has been approved, and the source nanopublication. What is known about a statement is spread over several nanopublications - the sentence and its support in one, each generalisation link in its own - so the rows are gathered from every still-current nanopublication about it, not only from the one shown as the source. That source is the most recent still-current nanopublication declaring the statement that was published by somebody holding a role in a project the statement belongs to, reached either through gen:isRelevantFor or through a finding it generalises. Membership is taken from the validated space-role state (admin, maintainer or member tier).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get basic information about a statement";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix obo: <http://purl.obolibrary.org/obo/>
+prefix hycl: <http://purl.org/petapico/o/hycl#>
+prefix cito: <http://purl.org/spar/cito/>
+prefix schema: <http://schema.org/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+
+select ?Property_noheader ?Property_label ?Value_multi_val_noheader ?Value_label_multi
+  ?np ?target_np ?approve_target
+where {
+  {
+    select ?np (sample(?npT) as ?npTitle)
+      (group_concat(distinct str(?gen); separator=\"\\n\") as ?gen_vals)
+      (group_concat(distinct ?genL; separator=\"\\n\") as ?gen_labels)
+      (group_concat(distinct str(?abv); separator=\"\\n\") as ?abv_vals)
+      (group_concat(distinct ?abvL; separator=\"\\n\") as ?abv_labels)
+      (group_concat(distinct str(?src); separator=\"\\n\") as ?src_vals)
+      (group_concat(distinct str(?top); separator=\"\\n\") as ?top_vals)
+      (group_concat(distinct ?topL; separator=\"\\n\") as ?top_labels)
+      (group_concat(distinct str(?rel); separator=\"\\n\") as ?rel_vals)
+      (group_concat(distinct ?relL; separator=\"\\n\") as ?rel_labels)
+      (group_concat(distinct str(?att); separator=\"\\n\") as ?att_vals)
+      (group_concat(distinct ?attName; separator=\"\\n\") as ?att_labels)
+    where {
+      values ?_statement_multi_iri {}
+      # the most recent still-current nanopub declaring this statement, published by
+      # somebody holding a role in a project the statement belongs to
+      {
+        select ?np where {
+          values ?_statement_multi_iri {}
+          graph npa:graph {
+            ?np npa:hasValidSignatureForPublicKeyHash ?pk0 ; np:hasAssertion ?a0 ; np:hasPublicationInfo ?pi0 .
+            filter not exists { ?inv0 npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk0 . }
+            filter not exists { ?sup0 npx:supersedes ?np . }
+          }
+          graph ?a0 { ?_statement_multi_iri a hycl:AIDA-Sentence . }
+          optional {
+            graph npa:graph { ?rnp0 np:hasAssertion ?ra0 . filter not exists { ?rsup0 npx:supersedes ?rnp0 . } }
+            graph ?ra0 { ?_statement_multi_iri (gen:isRelevantFor|skos:related) ?projA }
+          }
+          optional {
+            graph npa:graph { ?gnp0 np:hasAssertion ?ga0 . filter not exists { ?gsup0 npx:supersedes ?gnp0 . } }
+            graph ?ga0 { ?_statement_multi_iri hycl:hasMoreGeneralMeaningThan ?fnd0 }
+            graph npa:graph { ?fnp0 np:hasAssertion ?fa0 . filter not exists { ?fsup0 npx:supersedes ?fnp0 . } }
+            graph ?fa0 { ?fnd0 cito:obtainsSupportFrom ?st0 }
+            graph npa:graph { ?snp0 np:hasAssertion ?sa0 . filter not exists { ?ssup0 npx:supersedes ?snp0 . } }
+            graph ?sa0 { ?st0 a obo:OBI_0000066 ; dct:isPartOf ?projB }
+          }
+          bind(coalesce(?projA, ?projB) as ?project0)
+          # The membership lookup is wrapped in its own sub-select, and the variables it
+          # projects deliberately appear nowhere above it. Written as a bare SERVICE with
+          # ?project0 already bound, RDF4J pushes the outer bindings into the federated
+          # request, and with more than one distinct binding it serialises a malformed
+          # remote query -- the endpoint answers HTTP 500 with a lexical error at \"PREFI\",
+          # so every statement generalising two or more supported findings failed while
+          # single-link ones worked. Isolated like this the sub-request is constant, is
+          # evaluated once, and is joined locally by the filter below.
+          {
+            select distinct ?svcProject ?svcMember where {
+              service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+                select distinct ?svcProject ?svcMember where {
+                  graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+                  graph ?stateG {
+                    ?ri0 a gen:RoleInstantiation ; npa:forSpace ?svcProject ; npa:forAgent ?svcMember ;
+                         npa:hasRoleType ?rt0 .
+                    filter(?rt0 in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                  }
+                }
+              }
+            }
+          }
+          filter(?svcProject = ?project0)
+          graph ?pi0 { ?np dct:creator ?svcMember ; dct:created ?created . }
+        } order by desc(?created) limit 1
+      }
+      graph npa:graph { ?np np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; np:hasProvenance ?prov . }
+      # what is known about the statement is spread over several nanopubs -- the sentence
+      # and its support in one, each generalisation link in its own -- so these read from
+      # every still-current nanopub about it, not only from ?np
+      optional {
+        graph npa:graph { ?xnp np:hasAssertion ?xa . filter not exists { ?xsup npx:supersedes ?xnp . } }
+        graph ?xa { ?_statement_multi_iri hycl:hasMoreGeneralMeaningThan ?gen }
+        bind(replace(replace(replace(replace(replace(replace(strafter(str(?gen), \"http://purl.org/aida/\"), \"[+]\", \" \"), \"%2C\", \",\"), \"%3A\", \":\"), \"%28\", \"(\"), \"%29\", \")\"), \"%25\", \"%\") as ?genL)
+      }
+      optional {
+        graph npa:graph { ?vnp np:hasAssertion ?va . filter not exists { ?vsup npx:supersedes ?vnp . } }
+        graph ?va { ?spc hycl:hasMoreGeneralMeaningThan ?_statement_multi_iri }
+        bind(?spc as ?abv)
+        bind(replace(replace(replace(replace(replace(replace(strafter(str(?abv), \"http://purl.org/aida/\"), \"[+]\", \" \"), \"%2C\", \",\"), \"%3A\", \":\"), \"%28\", \"(\"), \"%29\", \")\"), \"%25\", \"%\") as ?abvL)
+      }
+      optional {
+        graph npa:graph { ?ynp np:hasAssertion ?ya . filter not exists { ?ysup npx:supersedes ?ynp . } }
+        graph ?ya { ?_statement_multi_iri cito:obtainsSupportFrom ?src }
+      }
+      optional {
+        graph npa:graph { ?znp np:hasAssertion ?za ; np:hasPublicationInfo ?zpi . filter not exists { ?zsup npx:supersedes ?znp . } }
+        graph ?za { ?_statement_multi_iri schema:about ?top }
+        optional { graph ?zpi { ?top rdfs:label|nt:hasLabelFromApi ?topL } }
+      }
+      optional {
+        graph npa:graph { ?wnp np:hasAssertion ?wa ; np:hasPublicationInfo ?wpi . filter not exists { ?wsup npx:supersedes ?wnp . } }
+        graph ?wa { ?_statement_multi_iri (gen:isRelevantFor|skos:related) ?rel }
+        optional { graph ?wpi { ?rel rdfs:label|nt:hasLabelFromApi ?relL } }
+      }
+      optional {
+        graph ?prov { ?a prov:wasAttributedTo ?att }
+        optional { graph ?pi { ?att foaf:name ?attName } }
+      }
+      optional { graph ?pi { ?np rdfs:label ?npT } }
+    }
+    group by ?np
+  }
+  bind(exists {
+    graph npa:graph {
+      ?anp npa:hasValidSignatureForPublicKeyHash ?apk ; np:hasAssertion ?aa .
+      filter not exists { ?ainv npx:invalidates ?anp ; npa:hasValidSignatureForPublicKeyHash ?apk . }
+      filter not exists { ?asup npx:supersedes ?anp . }
+    }
+    graph ?aa { ?approver npx:approvesOf ?np }
+  } as ?isApproved)
+  values (?key ?Property_noheader ?Property_label) {
+    ('Gen' hycl:hasMoreGeneralMeaningThan 'More general than:')
+    ('Abv' hycl:hasMoreSpecificMeaningThan 'More specific than:')
+    ('Src' cito:obtainsSupportFrom 'Supported by:')
+    ('Top' schema:about 'About:')
+    ('Rel' gen:isRelevantFor 'Relevant for:')
+    ('Att' prov:wasAttributedTo 'Stated by:')
+    ('Status' npx:approvesOf 'Status:')
+    ('Source' dct:source 'Source:')
+  }
+  bind(if(?key = 'Gen', ?gen_vals,
+       if(?key = 'Abv', ?abv_vals,
+       if(?key = 'Src', ?src_vals,
+       if(?key = 'Top', ?top_vals,
+       if(?key = 'Rel', ?rel_vals,
+       if(?key = 'Att', ?att_vals,
+       if(?key = 'Status', if(?isApproved, \"approved\", \"not approved\"), str(?np)))))))) as ?rawVal)
+  filter(bound(?rawVal) && ?rawVal != \"\")
+  bind(?rawVal as ?Value_multi_val_noheader)
+  bind(if(?key = 'Source', str(?np), ?nothing) as ?target_np)
+  bind(if(?key = 'Status' && !?isApproved, str(?np), \"\") as ?approve_target)
+  bind(if(?key = 'Gen', ?gen_labels,
+       if(?key = 'Abv', ?abv_labels,
+       if(?key = 'Top', ?top_labels,
+       if(?key = 'Rel', ?rel_labels,
+       if(?key = 'Att', ?att_labels,
+       if(?key = 'Source', coalesce(?npTitle, \"\"), \"\")))))) as ?Value_label_multi)
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-21T10:02:30Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-statement-info;
+    npx:supersedes <https://w3id.org/np/RAXm4F0wuRdzAtYjNAofgYdEIz0LsXlRHHBCraMVC0mc8>;
+    rdfs:label "Get basic information about a statement";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RAcm8OurwUk15WOgBM9wySo-T3a5h6as4K8YR5MBrrxUc>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "gfp7WTFfo8+hTFJS1BKW+oFfsfxY0akuA6H+9sXFUz6tf7T318W6V5XhkvDl5jT9gkwPZrDOKJ3y2oX3XH1/IswBHx0EwZr2k9ph9qh9kzAb0H9LUBp2AgXuEynh4wiD/feG7UtpOlw4FNwL0BMhkCJmLzab+Gm6ymdJBhA0ZNU=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

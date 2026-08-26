@@ -1,0 +1,132 @@
+@prefix this: <https://w3id.org/np/RAoRTt8d9PEgve7DQtDDqvQdfYU_Kz0AglyhkWrAT7BlU> .
+@prefix sub: <https://w3id.org/np/RAoRTt8d9PEgve7DQtDDqvQdfYU_Kz0AglyhkWrAT7BlU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "can be described as follows: - gives a thing (left) a human-readable description (right)" .
+  
+  dct:isPartOf rdfs:label "is part of" .
+  
+  rdf:type rdfs:label "is a - asserts that the given thing (left) belongs to the given class (right)" .
+  
+  rdfs:label rdfs:label "is called - connects an identifier to a human-readable name for it" .
+  
+  rdfs:seeAlso rdfs:label "is further explained at - connects an identifier to a link with further information about it" .
+  
+  <http://www.w3.org/2002/07/owl#NamedIndividual> rdfs:label "named individual - a concrete or abstract thing that is given an identifier and a name" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "<p>This template defines a new chorotype individual. A chorotype represents a biogeographic distribution pattern or area category used to classify species by their geographic range.</p>";
+    rdfs:label "Defining a new chorotype";
+    nt:hasNanopubLabelPattern "${name}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6, sub:st7;
+    nt:hasTag "Terms" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the chorotype" .
+  
+  sub:individual a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix - the formal identifier of the chorotype" .
+  
+  sub:letterCode a nt:LiteralPlaceholder;
+    rdfs:label "the letter code of the chorotype" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the chorotype" .
+  
+  sub:numericalCode a nt:LiteralPlaceholder;
+    rdfs:label "the numerical code of the chorotype" .
+  
+  sub:seeAlsoLink a nt:UriPlaceholder;
+    rdfs:label "a URL where more information about this chorotype can be found" .
+  
+  sub:st0 rdf:object <http://www.w3.org/2002/07/owl#NamedIndividual>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:individual .
+  
+  sub:st1 rdf:object <https://w3id.org/spaces/carabid-beetles/r/ontology/Chorotype>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:individual .
+  
+  sub:st2 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:individual .
+  
+  sub:st3 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:individual .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:seeAlsoLink;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:individual .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:vocabulary;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:individual .
+  
+  sub:st6 rdf:object sub:numericalCode;
+    rdf:predicate <https://w3id.org/spaces/carabid-beetles/r/ontology/hasChorotypeNumericalCode>;
+    rdf:subject sub:individual .
+  
+  sub:st7 rdf:object sub:letterCode;
+    rdf:predicate <https://w3id.org/spaces/carabid-beetles/r/ontology/hasChorotypeLetterCode>;
+    rdf:subject sub:individual .
+  
+  sub:vocabulary a nt:GuidedChoicePlaceholder;
+    rdfs:label "vocabulary / ontology";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http://www.w3.org/2002/07/owl%23Ontology&searchterm=" .
+  
+  <https://w3id.org/spaces/carabid-beetles/r/ontology/Chorotype> rdfs:label "chorotype - a biogeographic distribution pattern category" .
+  
+  <https://w3id.org/spaces/carabid-beetles/r/ontology/hasChorotypeLetterCode> rdfs:label
+      "has chorotype letter code" .
+  
+  <https://w3id.org/spaces/carabid-beetles/r/ontology/hasChorotypeNumericalCode> rdfs:label
+      "has chorotype numerical code" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-20T20:08:27.434+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:assertion;
+    npx:supersedes <https://w3id.org/np/RAAEgC2LqnWZdJeKJx131M2vv9M0pgA9Hi01Rt3qU2aXg>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Defining a new chorotype";
+    nt:wasCreatedFromProvenanceTemplate ns1:RAcm8OurwUk15WOgBM9wySo-T3a5h6as4K8YR5MBrrxUc;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "UQAKDxt7J/91X0Owzp8c5H9hWsXnjABIvao8J08WO6SyTRAve7D0qD2tek+15LtikeYphsQZBOKGb4GRBC33QXdsk4pkH8tis9RFOxIpIagucqNnxZk5jKKwybjQDcSerg9arTM2ECFQJeCnjB0KE1+UuFww5d9QMSdLdIxav18=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

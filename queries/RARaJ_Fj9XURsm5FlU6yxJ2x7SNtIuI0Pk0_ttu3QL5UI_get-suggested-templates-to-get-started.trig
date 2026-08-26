@@ -1,0 +1,90 @@
+@prefix this: <https://w3id.org/np/RARaJ_Fj9XURsm5FlU6yxJ2x7SNtIuI0Pk0_ttu3QL5UI> .
+@prefix sub: <https://w3id.org/np/RARaJ_Fj9XURsm5FlU6yxJ2x7SNtIuI0Pk0_ttu3QL5UI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-suggested-templates-to-get-started a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns a list of suggested templates to get started, as published by members of the space of the given resource (admins, maintainers, or regular members; observers excluded), so it can be shown e.g. on Nanodash.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get suggested templates to get started";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?template_iri ?template_iri_label where {
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+    select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+      graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+      values ?_resource_multi_iri {}
+      graph ?stateG {
+        ?_resource_multi_iri npa:isMaintainedBy? ?space .
+        ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?roleType .
+        filter(?roleType in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+        ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+      }
+    }
+  }
+  graph npa:graph {
+    ?np npx:hasNanopubType gen:SuggestedTemplateToGetStarted .
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkeyHash .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkeyHash . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np dct:created ?date .
+    ?np np:hasAssertion ?a .
+  }
+  filter(contains(?memberPubkeys, ?pubkeyHash))
+  graph ?a {
+    ?template_iri a gen:SuggestedTemplateToGetStarted .
+  }
+  optional {
+    graph npa:graph {
+      ?template_iri rdfs:label ?raw_label .
+    }
+    bind(replace(str(?raw_label), \"^Template: \", \"\") as ?template_iri_label)
+  }
+} order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-13T11:44:48Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-suggested-templates-to-get-started;
+    npx:supersedes <https://w3id.org/np/RACtrpz5w6egoLdx61qRMVza82Rc7wThen-RMyG_5NC1k>;
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <http://purl.org/np/RAjpBMlw3owYhJUBo3DtsuDlXsNAJ8cnGeWAutDVjuAuI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "nggFN4HsVDTHiTdGf9igKGOtYpMHTXnPTUQIHHQRerr63lySYnXV+JUNaF3WzgNXSI8gkz10kKo4xLG7aHj8P5AZSAqkqAJJfqrsVES8MNUOI+f0XzxsO50XTf9b2lE+DHZKXEwRinlKT+ZZV/qDpBH8QyAyideCrj4mQbcpCZI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

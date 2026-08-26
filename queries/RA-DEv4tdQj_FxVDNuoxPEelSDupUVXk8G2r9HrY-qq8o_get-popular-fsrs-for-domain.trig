@@ -1,0 +1,123 @@
+@prefix this: <https://w3id.org/np/RA-DEv4tdQj_FxVDNuoxPEelSDupUVXk8G2r9HrY-qq8o> .
+@prefix sub: <https://w3id.org/np/RA-DEv4tdQj_FxVDNuoxPEelSDupUVXk8G2r9HrY-qq8o/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-popular-fsrs-for-domain a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the most popular FAIR Supporting Resources (FSRs) for a given research domain, based on the current FIP declarations of the FAIR Implementation Communities in that domain (including its subdomains), across all FIP questions. For each FSR it shows the declaring communities (by the short name of their identifier), the FIP questions it was declared under, the matched (sub)domains, and the number of distinct declaring communities. This query backs the 'Most used FSRs' resource view shown on domain part pages.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get popular FSRs for domain";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+
+select ?fsr (min(?fsr_label_x) as ?fsr_label)
+       (group_concat(distinct str(?community); separator=\" \") as ?communities_multi_iri)
+       (group_concat(distinct replace(str(?community), \"^.*[#/]\", \"\"); separator=\"\\n\") as ?communities_label_multi)
+       (group_concat(distinct ?qcode; separator=\", \") as ?questions)
+       (group_concat(distinct str(?subdomain); separator=\" \") as ?subdomains_multi_iri)
+       (group_concat(distinct replace(str(?subdomain), \"^.*[#/]\", \"\"); separator=\"\\n\") as ?subdomains_label_multi)
+       (count(distinct ?community) as ?count)
+       (min(?fsrnp_x) as ?np) (min(\"^\") as ?np_label)
+where {
+  { select distinct ?community ?subdomain where {
+    graph npa:graph {
+      ?cnp npa:hasValidSignatureForPublicKey ?cpubkey ;
+        npx:hasNanopubType fip:FAIR-Implementation-Community ;
+        np:hasAssertion ?ca .
+      ?cnp npx:introduces|npx:describes ?community .
+      filter not exists { ?cnp npx:hasNanopubType npx:ExampleNanopub . }
+      filter not exists { ?cnpx npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKey ?cpubkey . }
+    }
+    graph ?ca {
+      ?community a fip:FAIR-Implementation-Community ;
+        fip:has-research-domain ?subdomain .
+    }
+    graph <http://purl.org/np/RArRAOwj4QOppEPCR8WVvOBmrX7oRKOrPi-asX-7AY66I#assertion> {
+      ?subdomain rdfs:subClassOf* ?_domain_iri .
+    }
+  } }
+  graph ?fa {
+    ?fip fip:declared-by ?community ;
+      fip:has-declaration-index ?index .
+  }
+  graph npa:graph {
+    ?fipnp np:hasAssertion ?fa ;
+      npx:hasNanopubType fip:FAIR-Implementation-Profile ;
+      npa:hasValidSignatureForPublicKey ?fippubkey .
+    filter not exists { ?fipnp npx:hasNanopubType npx:ExampleNanopub . }
+    filter not exists { ?fipnpx npx:invalidates ?fipnp ; npa:hasValidSignatureForPublicKey ?fippubkey . }
+    ?index npa:hasValidSignatureForPublicKey ?ipubkey .
+    filter not exists { ?indexx npx:invalidates ?index ; npa:hasValidSignatureForPublicKey ?ipubkey . }
+  }
+  graph npa:networkGraph {
+    ?index npx:includesElement ?dnp .
+  }
+  graph npa:graph {
+    ?dnp npx:hasNanopubType fip:FIP-Declaration ;
+      np:hasAssertion ?da .
+  }
+  graph ?da {
+    ?decl fip:declared-by ?community ;
+      fip:refers-to-question ?question ;
+      (fip:declares-current-use-of|fip:declares-planned-use-of) ?fsr .
+  }
+  bind(replace(str(?question), \"^.*-([^-MD]+(-[MD]+)?)$\", \"$1\") as ?qcode)
+  optional {
+    graph npa:graph {
+      ?fsrnp_x npx:introduces|npx:describes ?fsr ;
+        rdfs:label ?fsr_label_x ;
+        npa:hasValidSignatureForPublicKey ?fpubkey .
+      filter not exists { ?fsrnp_x npx:hasNanopubType npx:ExampleNanopub . }
+      filter not exists { ?fsrnpx npx:invalidates ?fsrnp_x ; npa:hasValidSignatureForPublicKey ?fpubkey . }
+    }
+  }
+  filter( bound(?fsrnp_x) || not exists { graph npa:graph { ?onp npx:introduces|npx:describes ?fsr . } } )
+}
+group by ?fsr
+order by desc(?count)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-18T11:43:40Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-popular-fsrs-for-domain;
+    npx:supersedes <https://w3id.org/np/RACTW-kR3O5Htiw9aEHEIulVK6mzpfwCNLc4H5IKarglk>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "fUzq8/ftGGsdzpojIqDtuAp9Ea+9r6obXLbMIt7cO4FYhONIAPTKjLMxP5ks2KDM6DmcmCua8wZDeSN77fXACmwEAMCI+F2JfiSjUqQpPegc1AW88pEUhCmLBvFDhTnzcpRYeYFWP7Ux5t3InERQDuvc6ijG0UBPsAFT3E6jIsM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

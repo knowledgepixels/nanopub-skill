@@ -1,0 +1,170 @@
+@prefix this: <https://w3id.org/np/RAWaGj1HOf1_9D-zgvejQ3GCcCIFu4qBArSYKguPU0r5Y> .
+@prefix sub: <https://w3id.org/np/RAWaGj1HOf1_9D-zgvejQ3GCcCIFu4qBArSYKguPU0r5Y/> .
+@prefix schema: <https://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix disco: <http://rdf-vocabulary.ddialliance.org/discovery#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix obo: <http://purl.obolibrary.org/obo/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  obo:OBI_0000066 rdfs:label "study" .
+  
+  obo:OBI_0000355 rdfs:label "hypothesis-driven investigation" .
+  
+  obo:OBI_0000356 rdfs:label "hypothesis generating investigation" .
+  
+  obo:OBI_0002897 rdfs:label "surveillance process" .
+  
+  obo:OBI_0003692 rdfs:label "case-control investigation" .
+  
+  obo:OBI_0003693 rdfs:label "observational investigation" .
+  
+  obo:OBI_0003694 rdfs:label "longitudinal investigation" .
+  
+  obo:OBI_0003695 rdfs:label "nested case-control investigation" .
+  
+  obo:OBI_0003696 rdfs:label "animal investigation" .
+  
+  obo:OBI_0003697 rdfs:label "clinical investigation" .
+  
+  obo:OBI_0003698 rdfs:label "observational clinical investigation" .
+  
+  obo:OBI_0003699 rdfs:label "clinical trial" .
+  
+  obo:OBI_0003700 rdfs:label "phase I clinical trial" .
+  
+  obo:OBI_0003701 rdfs:label "phase II clinical trial" .
+  
+  obo:OBI_0003702 rdfs:label "phase III clinical trial" .
+  
+  obo:OBI_0004001 rdfs:label "randomized clinical trial" .
+  
+  obo:OBI_0004002 rdfs:label "non-randomized clinical trial" .
+  
+  dct:description rdfs:label "has as description" .
+  
+  dct:isPartOf rdfs:label "is part of" .
+  
+  disco:Study rdfs:label "data-collection study (DDI)" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the title" .
+  
+  rdfs:seeAlso rdfs:label "has further information at" .
+  
+  prov:wasAssociatedWith rdfs:label "is/was conducted by" .
+  
+  schema:MedicalObservationalStudy rdfs:label "medical observational study" .
+  
+  schema:MedicalStudy rdfs:label "medical study" .
+  
+  schema:MedicalTrial rdfs:label "medical trial (interventional study)" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Defines a scientific study, in any field of research: a planned investigation that generates knowledge, such as an experiment, an observational study, a survey, a clinical trial, or a simulation study. Give the study a short identifier and a title, and optionally pick more specific study types, describe it, link it to the project it is part of, name the people conducting it, and point to a webpage or registration with further information.";
+    rdfs:label "Defining a study";
+    nt:hasNanopubLabelPattern "Study: ${title}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6;
+    nt:hasTag "Science";
+    nt:hasTargetNanopubType obo:OBI_0000066 .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the study (optional)" .
+  
+  sub:link a nt:UriPlaceholder;
+    rdfs:label "webpage or registration with more information (optional)" .
+  
+  sub:person a nt:AgentPlaceholder;
+    rdfs:label "who conducts or conducted the study (optional)" .
+  
+  sub:project a nt:GuidedChoicePlaceholder;
+    rdfs:label "the project this study is part of (optional)";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Project" .
+  
+  sub:st0 rdf:object obo:OBI_0000066;
+    rdf:predicate rdf:type;
+    rdf:subject sub:study .
+  
+  sub:st1 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:subtype;
+    rdf:predicate rdf:type;
+    rdf:subject sub:study .
+  
+  sub:st2 rdf:object sub:title;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:study .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:study .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:project;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:study .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:person;
+    rdf:predicate prov:wasAssociatedWith;
+    rdf:subject sub:study .
+  
+  sub:st6 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:link;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:study .
+  
+  sub:study a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name for the study, used as URI suffix" .
+  
+  sub:subtype a nt:RestrictedChoicePlaceholder;
+    rdfs:label "more specific type of study (optional)";
+    nt:possibleValue obo:OBI_0000355, obo:OBI_0000356, obo:OBI_0002897, obo:OBI_0003692,
+      obo:OBI_0003693, obo:OBI_0003694, obo:OBI_0003695, obo:OBI_0003696, obo:OBI_0003697,
+      obo:OBI_0003698, obo:OBI_0003699, obo:OBI_0003700, obo:OBI_0003701, obo:OBI_0003702,
+      obo:OBI_0004001, obo:OBI_0004002, disco:Study, schema:MedicalObservationalStudy, schema:MedicalStudy,
+      schema:MedicalTrial .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title of the study" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-14T05:00:00Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Defining a study";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "QgIPgfJH8cDilL+xqe9Yw+2f0xMo73242IwLGnylOyGuCHdv0lAajkqeFOKLoAOenAl2KcKrwgwbQlui+NYUx1+8+H0Zmb6yRN7/xfqHQG56An1qAjyeuZqiwTMfd4Q+UhY/tHPtZjsKkbi0o/7tIOZ1yKlS+HA0VjPCNbfIY8w=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

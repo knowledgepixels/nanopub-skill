@@ -1,0 +1,139 @@
+@prefix this: <https://w3id.org/np/RAJ0uXDeHVTZwYIy1Ck1ZtPEDd1Y3HbHP1DBl2AZOdh-Q> .
+@prefix sub: <https://w3id.org/np/RAJ0uXDeHVTZwYIy1Ck1ZtPEDd1Y3HbHP1DBl2AZOdh-Q/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-project-statements a grlc:grlc-query;
+    dct:description "Returns the statements of a given project, expressed as AIDA sentences, reached three ways: a finding declares support from a study (OBI investigation) that is part of the project; a general statement has a more general meaning than one of those findings; or a statement is declared relevant for the project with gen:isRelevantFor. The kind column says which route the row came in by. Shows the sentence, the study it came out of where there is one, the other sources it obtains support from, and who the statement is attributed to.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get statements for project";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix obo: <http://purl.obolibrary.org/obo/>
+prefix hycl: <http://purl.org/petapico/o/hycl#>
+prefix cito: <http://purl.org/spar/cito/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?statement ?statement_label ?kind ?study ?study_label
+  (group_concat(distinct str(?source); separator=\"\\n\") as ?source_multi_iri)
+  (group_concat(distinct ?authorLabel; separator=\"\\n\") as ?author_label_multi)
+  (sample(?np) as ?np) (\"^\" as ?np_label)
+where {
+  values ?_project_multi_iri {}
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+    select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+      graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+      values ?_project_multi_iri {}
+      graph ?stateG {
+        ?_project_multi_iri npa:isMaintainedBy? ?space .
+        ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?roleType .
+        filter(?roleType in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+        ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+      }
+    }
+  }
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?npPubkey .
+    filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?npPubkey . }
+    filter not exists { ?sup npx:supersedes ?np . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np np:hasAssertion ?a .
+    ?np np:hasProvenance ?prov .
+    ?np np:hasPublicationInfo ?pi .
+  }
+  filter(contains(?memberPubkeys, ?npPubkey))
+  graph ?a { ?statement (cito:obtainsSupportFrom|hycl:hasMoreGeneralMeaningThan|gen:isRelevantFor) ?anchor }
+  filter(strstarts(str(?statement), \"http://purl.org/aida/\"))
+  optional {
+    graph ?a { ?statement cito:obtainsSupportFrom ?study }
+    graph npa:graph {
+      ?sNp npa:hasValidSignatureForPublicKeyHash ?sPk ; np:hasAssertion ?sa .
+      filter not exists { ?sInv npx:invalidates ?sNp ; npa:hasValidSignatureForPublicKeyHash ?sPk . }
+      filter not exists { ?sSup npx:supersedes ?sNp . }
+    }
+    filter(contains(?memberPubkeys, ?sPk))
+    graph ?sa { ?study a obo:OBI_0000066 ; dct:isPartOf ?_project_multi_iri }
+    optional { graph ?sa { ?study rdfs:label ?study_label } }
+  }
+  optional {
+    graph ?a { ?statement hycl:hasMoreGeneralMeaningThan ?fnd }
+    graph npa:graph {
+      ?fNp npa:hasValidSignatureForPublicKeyHash ?fPk ; np:hasAssertion ?fa .
+      filter not exists { ?fInv npx:invalidates ?fNp ; npa:hasValidSignatureForPublicKeyHash ?fPk . }
+      filter not exists { ?fSup npx:supersedes ?fNp . }
+    }
+    filter(contains(?memberPubkeys, ?fPk))
+    graph ?fa { ?fnd cito:obtainsSupportFrom ?fStudy }
+    graph npa:graph {
+      ?vNp npa:hasValidSignatureForPublicKeyHash ?vPk ; np:hasAssertion ?va .
+      filter not exists { ?vInv npx:invalidates ?vNp ; npa:hasValidSignatureForPublicKeyHash ?vPk . }
+      filter not exists { ?vSup npx:supersedes ?vNp . }
+    }
+    filter(contains(?memberPubkeys, ?vPk))
+    graph ?va { ?fStudy a obo:OBI_0000066 ; dct:isPartOf ?_project_multi_iri }
+  }
+  optional { graph ?a { ?statement gen:isRelevantFor ?_project_multi_iri . bind(true as ?rel) } }
+  filter(bound(?study) || bound(?fnd) || bound(?rel))
+  bind(if(bound(?study), \"finding\", if(bound(?fnd), \"general statement\", \"relevant\")) as ?kind)
+  bind(replace(replace(replace(replace(replace(replace(strafter(str(?statement), \"http://purl.org/aida/\"), \"[+]\", \" \"), \"%2C\", \",\"), \"%3A\", \":\"), \"%28\", \"(\"), \"%29\", \")\"), \"%25\", \"%\") as ?statement_label)
+  optional {
+    graph ?a { ?statement cito:obtainsSupportFrom ?source }
+    filter(coalesce(?source != ?study, true))
+  }
+  optional {
+    graph ?prov { ?a prov:wasAttributedTo ?author }
+    graph ?pi { ?author foaf:name ?authorLabel }
+  }
+}
+group by ?statement ?statement_label ?kind ?study ?study_label
+order by ?kind ?study_label ?statement_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-21T07:44:10Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-project-statements;
+    npx:supersedes <https://w3id.org/np/RAiYU5lrOlAsgl1dDzP6ZJ_BYrG04lLkz9e8GNkqofwL8>;
+    rdfs:label "Get statements for project";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RAcm8OurwUk15WOgBM9wySo-T3a5h6as4K8YR5MBrrxUc>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Dy/Prx2U7tMtFhdp7H6D1u3NychXM7YuLZgkrL8oKLsED/PjEDoihFUXISV5Qla/KuRip6nRQkb/dGzEvztu7dq+3YskhKAadkELexgrWc5uvMGMyojuvSVZHpUolfOV7zBMWcqbWwr8KKOjQ+DajQHXR3K6zHtwo0zh0+ux0PM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

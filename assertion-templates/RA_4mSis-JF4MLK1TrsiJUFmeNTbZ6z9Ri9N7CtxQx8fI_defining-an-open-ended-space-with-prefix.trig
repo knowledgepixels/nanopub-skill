@@ -1,0 +1,152 @@
+@prefix this: <https://w3id.org/np/RA_4mSis-JF4MLK1TrsiJUFmeNTbZ6z9Ri9N7CtxQx8fI> .
+@prefix sub: <https://w3id.org/np/RA_4mSis-JF4MLK1TrsiJUFmeNTbZ6z9Ri9N7CtxQx8fI/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <http://www.w3.org/2002/07/owl#sameAs> rdfs:label "has the alternative ID" .
+  
+  gen:Alliance rdfs:label "Alliance - (with focus on bringing units together)" .
+  
+  gen:Community rdfs:label "Community - (with focus on exchange)" .
+  
+  gen:Division rdfs:label "Division - (with focus on structuring into sub-units)" .
+  
+  gen:Group rdfs:label "Group - (with focus on getting work done)" .
+  
+  gen:Organization rdfs:label "Organization - (with focus on formal vessel)" .
+  
+  gen:Outlet rdfs:label "Outlet - (with focus on outreach)" .
+  
+  gen:Program rdfs:label "Program - (with focus on coordination)" .
+  
+  gen:Space rdfs:label "Space" .
+  
+  gen:hasAdmin rdfs:label "has as admin" .
+  
+  gen:hasRootDefinition rdfs:label "has as root definition" .
+  
+  gen:isSubSpaceOf rdfs:label "is a sub-space of" .
+  
+  sub:admin a nt:AgentPlaceholder;
+    rdfs:label "an admin of the Space" .
+  
+  sub:altId a nt:ExternalUriPlaceholder;
+    rdfs:label "alternative URI" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such nanopublications defines an open-ended Space, i.e. a group, program, outlet, or community.";
+    rdfs:label "Defining an open-ended Space (with prefix)";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st90,
+      sub:st99;
+    nt:hasTag "Spaces" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "the description of the Space" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the name of the Space" .
+  
+  sub:parentSpace a nt:GuidedChoicePlaceholder;
+    rdfs:label "the parent Space";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:rootDefinition a nt:RootNanopubPlaceholder .
+  
+  sub:space a nt:ExternalUriPlaceholder, nt:IntroducedResource;
+    rdfs:label "Space identifier";
+    nt:hasPrefix "~~SPACE~~/";
+    nt:hasPrefixLabel "Space" .
+  
+  sub:st00 rdf:object gen:Space;
+    rdf:predicate rdf:type;
+    rdf:subject sub:space .
+  
+  sub:st01 rdf:object sub:type;
+    rdf:predicate rdf:type;
+    rdf:subject sub:space .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:space .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:space .
+  
+  sub:st04 a nt:RepeatableStatement;
+    rdf:object sub:admin;
+    rdf:predicate gen:hasAdmin;
+    rdf:subject sub:space .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:parentSpace;
+    rdf:predicate gen:isSubSpaceOf;
+    rdf:subject sub:space .
+  
+  sub:st90 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:altId;
+    rdf:predicate <http://www.w3.org/2002/07/owl#sameAs>;
+    rdf:subject sub:space .
+  
+  sub:st99 rdf:object sub:rootDefinition;
+    rdf:predicate gen:hasRootDefinition;
+    rdf:subject sub:space .
+  
+  sub:type a nt:RestrictedChoicePlaceholder;
+    rdfs:label "type of the Space";
+    nt:possibleValue gen:Alliance, gen:Community, gen:Division, gen:Group, gen:Organization,
+      gen:Outlet, gen:Program .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-31T13:29:21.916Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354, orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA30gTw2FW5e0MtvTtryINGobnFWI-QsdNmuH6BZ3Wbgg>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Defining an open-ended Space (with prefix)";
+    prov:wasDerivedFrom <https://w3id.org/np/RAvJQeFr6Sjzy2tmNXAm69n_JNiuWvs3S2VwVgmj9OT5o>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCaQXE2B2hJ6QdWxaWerU4F/XOtCQdj2OkdrIYd1kpMY9hIUh8boxaO3uOBeqvvqKLf5HjpRF4DT1eghOSsa2Dhd5HRTM/XIamvwWkHpN4oB3Ml19pAAzjTqczYmFLfgG67mGL5+vSA8VEdHtKQCrvP4SpTibMBP1qaxt3k1tqD6wIDAQAB";
+    npx:hasSignature "Lcdjv15qASa/Ygj9mrzzri2TE3QdEZbuUqJ0WHljg7PTvSd5mglbZxhkiVAhPa1tEGVyQn29zIfk6YhgovSn4GfVynThjKfh+XdR1Bqq0IDRdmUnrKuBEPg3mqK7t3eii8VYX+8R5W0GFnHMX+xFM2eK/sxnHWFdqd9SyHFJZLk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

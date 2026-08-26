@@ -1,0 +1,120 @@
+@prefix this: <https://w3id.org/np/RA5GbS1FtyYc-wTxgM2yR3ss35KxUL0QPrYJdm91p8lPs> .
+@prefix sub: <https://w3id.org/np/RA5GbS1FtyYc-wTxgM2yR3ss35KxUL0QPrYJdm91p8lPs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  dct:issued rdfs:label "has the publication date" .
+  
+  dct:title rdfs:label "has the title" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has the explanation" .
+  
+  owl:NegativePropertyAssertion rdfs:label "incorrect-value report" .
+  
+  owl:assertionProperty rdfs:label "concerns the field" .
+  
+  owl:sourceIndividual rdfs:label "has as subject" .
+  
+  owl:targetValue rdfs:label "has as incorrect value" .
+  
+  sub:correctValue a nt:LongLiteralPlaceholder;
+    rdfs:label "the corrected value" .
+  
+  sub:explanation a nt:LongLiteralPlaceholder;
+    rdfs:label "explanation of the error" .
+  
+  sub:field a nt:RestrictedChoicePlaceholder;
+    rdfs:label "field";
+    nt:possibleValue dct:description, dct:issued, dct:title .
+  
+  sub:record a nt:GuidedChoicePlaceholder;
+    rdfs:label "record with the incorrect value";
+    nt:possibleValuesFromApi "https://api.openaire.eu/graph/v3/research-products?search=" .
+  
+  sub:report a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this report" .
+  
+  sub:st01 rdf:object owl:NegativePropertyAssertion;
+    rdf:predicate rdf:type;
+    rdf:subject sub:report .
+  
+  sub:st02 rdf:object sub:record;
+    rdf:predicate owl:sourceIndividual;
+    rdf:subject sub:report .
+  
+  sub:st03 rdf:object sub:field;
+    rdf:predicate owl:assertionProperty;
+    rdf:subject sub:report .
+  
+  sub:st04 rdf:object sub:wrongValue;
+    rdf:predicate owl:targetValue;
+    rdf:subject sub:report .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:explanation;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:report .
+  
+  sub:st06 a nt:OptionalStatement;
+    rdf:object sub:correctValue;
+    rdf:predicate sub:field;
+    rdf:subject sub:record .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Such a nanopublication reports that a metadata value shown for a record in the OpenAIRE Graph is incorrect (for example, a typo in a title or a wrong publication date), using a standard OWL negative property assertion. Optionally, the corrected value can be given, which is stated as a plain positive statement. In the provenance part, link the page where the incorrect value can be seen as the entity this report was derived from.";
+    rdfs:label "OpenAIRE: Reporting an incorrect metadata value";
+    nt:hasDefaultProvenance <http://purl.org/np/RAGXx_k9eQMnXaCbsXMsJbGClwZtQEGNg0GVJu6amdAVw>;
+    nt:hasNanopubLabelPattern "Incorrect ${field} of ${record}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06;
+    nt:hasTag "OpenAIRE";
+    nt:hasTargetNanopubType owl:NegativePropertyAssertion .
+  
+  sub:wrongValue a nt:LongLiteralPlaceholder;
+    rdfs:label "the current, incorrect value" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-29T08:31:13Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    rdfs:label "OpenAIRE: Reporting an incorrect metadata value";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Ep1V/6untQeQEOe9fwfv+wT+HNBNTSllUuEwG+irh2CpMVAu0LIEWMoijl4onquOQzs3wmQXxK2/mvVHV8BKKKjYE5aziv8tulPlvZN/8FopmPO7DcsF9BrzTd4M57tsGymyUahO9UnDk61PbzomEw3qrbBUo8hB39DnSc34Bc4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

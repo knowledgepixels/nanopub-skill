@@ -1,0 +1,110 @@
+@prefix this: <https://w3id.org/np/RAUIWmowDJ3EZeVV7DXcPmyxA4TJp35UyowWY5r6LEyM8> .
+@prefix sub: <https://w3id.org/np/RAUIWmowDJ3EZeVV7DXcPmyxA4TJp35UyowWY5r6LEyM8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-project-studies a grlc:grlc-query;
+    dct:description "Returns the studies (OBI investigations) that are part of a given project, with each study's title, more specific study types, conductors, and further-information links, restricted to studies published by a member, maintainer, or admin of the project's space.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get studies for project";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix obo: <http://purl.obolibrary.org/obo/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?study ?study_label
+  (group_concat(distinct str(?subtype); separator=\"\\n\") as ?subtype_multi_iri)
+  (group_concat(distinct ?subtypeLabel; separator=\"\\n\") as ?subtype_label_multi)
+  (group_concat(distinct str(?person); separator=\"\\n\") as ?person_multi_iri)
+  (group_concat(distinct ?personLabel; separator=\"\\n\") as ?person_label_multi)
+  (group_concat(distinct str(?link); separator=\"\\n\") as ?link_multi_iri)
+  ?np (\"^\" as ?np_label)
+where {
+  values ?_project_multi_iri {}
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+    select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+      graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+      values ?_project_multi_iri {}
+      graph ?stateG {
+        ?_project_multi_iri npa:isMaintainedBy? ?space .
+        ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?roleType .
+        filter(?roleType in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+        ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+      }
+    }
+  }
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?npPubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?npPubkey . }
+    filter not exists { ?supNp npx:supersedes ?np . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np np:hasAssertion ?a .
+    ?np np:hasPublicationInfo ?pi .
+  }
+  filter(contains(?memberPubkeys, ?npPubkey))
+  graph ?a {
+    ?study a obo:OBI_0000066 ;
+      dct:isPartOf ?_project_multi_iri .
+    optional { ?study rdfs:label ?study_label }
+  }
+  optional {
+    graph ?a { ?study a ?subtype . filter(?subtype != obo:OBI_0000066) }
+    optional { graph ?pi { ?subtype rdfs:label ?subtypeLabel } }
+  }
+  optional {
+    graph ?a { ?study prov:wasAssociatedWith ?person }
+    optional { graph ?pi { ?person foaf:name ?personLabel } }
+  }
+  optional { graph ?a { ?study rdfs:seeAlso ?link } }
+}
+group by ?study ?study_label ?np
+order by ?study_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-14T07:00:00Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-project-studies;
+    rdfs:label "Get studies for project";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RAcm8OurwUk15WOgBM9wySo-T3a5h6as4K8YR5MBrrxUc>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "L1kltuton4UUUghN1KWptYDno5S19gclgFyWaxVVz6plxWJNBdj54X+A8gYP+Bhe0GXLet6ahK9if4JiDst1xk4XCWPSNn9HvW8+YQEWUk95ojHxWb3uJv6fzBlssfhyh19o46ad4g0KxNh1IXbEpCUiTo+GOjr6YgiTWseOpJo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

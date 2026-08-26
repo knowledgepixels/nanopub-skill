@@ -1,0 +1,121 @@
+@prefix this: <https://w3id.org/np/RAUEWFWLBntdwIbOq9kvsGY8r183GoE5u5aUB8WAWOQNw> .
+@prefix sub: <https://w3id.org/np/RAUEWFWLBntdwIbOq9kvsGY8r183GoE5u5aUB8WAWOQNw/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.org/spar/cito/citesAsEvidence> rdfs:label "cites as evidence" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdf:value rdfs:label "has the text" .
+  
+  <https://schema.org/Statement> rdfs:label "statement" .
+  
+  sub:evidence a nt:ExternalUriPlaceholder;
+    rdfs:label "evidence URL" .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object <https://schema.org/Statement>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:statement .
+  
+  sub:st2 a rdf:Statement;
+    rdf:object sub:statementText;
+    rdf:predicate rdf:value;
+    rdf:subject sub:statement .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:target;
+    rdf:predicate sub:stance;
+    rdf:subject sub:statement .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:target;
+    rdf:predicate <https://www.w3.org/ns/activitystreams#inReplyTo>;
+    rdf:subject sub:statement .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:evidence;
+    rdf:predicate <http://purl.org/spar/cito/citesAsEvidence>;
+    rdf:subject sub:statement .
+  
+  sub:stance a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose the stance";
+    nt:possibleValuesFrom <https://w3id.org/np/RAZt5kzfoJg2m4dMRdMm2SP6JeUDD_GMzSq9xyRPMgP5k> .
+  
+  sub:statement a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this" .
+  
+  sub:statementText a nt:LongLiteralPlaceholder;
+    rdfs:label "statement text" .
+  
+  sub:target a nt:ExternalUriPlaceholder;
+    rdfs:label "target URL" .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "A discourse statement that takes a typed (CiTO) stance toward, and/or replies to, another contribution, and may cite evidence. A statement with no stance, reply, or evidence is a valid standalone claim (e.g. a thread root).";
+    dct:isVersionOf <https://w3id.org/np/RAFpID-NunXGUAZebXPfhD9efjvfpZqB5gDBrgP2Lp5N8/templateKind>;
+    rdfs:label "Discourse contribution";
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels/nanoarguments>;
+    nt:hasNanopubLabelPattern "${statementText}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st4, sub:st5;
+    nt:hasTag "Discourse" .
+  
+  <https://www.w3.org/ns/activitystreams#inReplyTo> rdfs:label "is in reply to" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0009-0118-9195 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0009-0009-0118-9195 foaf:name "Virginia Balseiro" .
+  
+  this: dct:created "2026-08-21T15:15:59.418Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0009-0009-0118-9195;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:introduces <https://w3id.org/np/RAFpID-NunXGUAZebXPfhD9efjvfpZqB5gDBrgP2Lp5N8/templateKind>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Discourse contribution";
+    skos:changeNote "Use statementText as nanopub label.";
+    prov:wasDerivedFrom <https://w3id.org/np/RAFpID-NunXGUAZebXPfhD9efjvfpZqB5gDBrgP2Lp5N8>,
+      <https://w3id.org/np/RAJBTtnhsCLEOzvcSq8gZg5jhxO1lHelqpqpZ-QkYvra8>, <https://w3id.org/np/RAnB5P-p6y_rBAY9cT1QayBCjVkHAGqpQauBRLc_bDrV8>,
+      <https://w3id.org/np/RAsHohypO12gewyyusDEH_aI3z7GE-36tXIkr_ev8eITc>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAVXmu2rj-pkWoDjHH4n1oAHbseAf3RcUYpYiwI1WXDmY>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "Z/Tqnl9veK65ycw5pSctVBDEFNKwxh2KKT9Pc1cNVSj3bnhu8cWM8C/wfewhc0r8ew8k1Bo0/2oBbThMPOMNq9plWooH09/Tg+8+HSZrw7M7UI7nA03maJqUllb+DCrgKszGwKz1Qtwq7FLSTF3upew6QIboOZjpmu1EBblkgF0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/spaces/knowledgepixels/nanoarguments> nt:hasLabelFromApi """Nanoarguments - <p>Global, federated graph of scientific claims as LinkedData</p>
+
+<p>Scienti...""" .
+}
+

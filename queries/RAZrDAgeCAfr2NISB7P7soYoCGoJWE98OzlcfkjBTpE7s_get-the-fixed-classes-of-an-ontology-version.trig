@@ -1,0 +1,137 @@
+@prefix this: <https://w3id.org/np/RAZrDAgeCAfr2NISB7P7soYoCGoJWE98OzlcfkjBTpE7s> .
+@prefix sub: <https://w3id.org/np/RAZrDAgeCAfr2NISB7P7soYoCGoJWE98OzlcfkjBTpE7s/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-fixed-classes-of-an-ontology-version a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns the fixed set of classes (owl:Class) of the given ontology version. The ontology version (an IRI typed gen:OntologyVersion, e.g. https://w3id.org/spaces/biochementity/r/vocabulary/version/0.0.2) is resolved to its non-invalidated introducing nanopublication, whose assertion points via gen:hasContentIndex to a nanopublication index; the returned classes are the ones introduced by the nanopublications listed as npx:includesElement of that index. One level of npx:appendsIndex / npx:includesSubindex is followed, so chained or split indexes of up to about two thousand elements are covered; deeper chains would need a query update. Because a released version pins exact nanopublication versions, the listed class nanopublications are shown exactly as pinned: no invalidation filtering, no latest-version resolution, no approval logic, and no member gating is applied, so classes stay listed even if their definition has since been superseded or retracted, and all displayed information (labels, definitions, superclasses, status) comes from the pinned versions. Superclass labels are taken from the superclass' own rdfs:label when its defining nanopublication is part of the same version's index; otherwise the IRI is shown. The status column is a multi-value literal listing the curation states of the pinned definition: \"deprecated\" (owl:DeprecatedClass), \"withdrawn\" (gen:WithdrawnTerm) and \"example\" (npx:ExampleNanopub), in that order. The last_modified_by/last_modified columns give the signer and timestamp of the pinned definition; the signer name is resolved from the trust repo (/repo/trust) or left blank. Companion of 'Get the approved classes of an ontology from space members', which shows the live (latest, approved) classes of the ontology itself; this query runs on /repo/full because ontology-version and index nanopublications do not carry the owl:Class type.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the fixed classes of an ontology version";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix owl: <http://www.w3.org/2002/07/owl#>
+  prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+  prefix dct: <http://purl.org/dc/terms/>
+  prefix np: <http://www.nanopub.org/nschema#>
+  prefix npa: <http://purl.org/nanopub/admin/>
+  prefix npx: <http://purl.org/nanopub/x/>
+  prefix skos: <http://www.w3.org/2004/02/skos/core#>
+  prefix gen: <https://w3id.org/kpxl/gen/terms/>
+  prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+  select ?class ?class_label ?description ?superclasses_multi_iri ?superclasses_label_multi
+         ?status_multi
+         ?last_modified_by (sample(?lmbl) as ?last_modified_by_label) ?last_modified
+         ?np ?np_label where {
+    {
+      select ?class ?class_label (?definition as ?description)
+             (group_concat(distinct str(?superclass); separator=\" \") as ?superclasses_multi_iri)
+             (group_concat(distinct replace(replace(coalesce(?superclass_lbl, str(?superclass)), \"\\\\\\\\\", \"\\\\\\\\\\\\\\\\\"), \"[\\r\\n]+\", \"\\\\\\\\n\"); separator=\"\\n\") as ?superclasses_label_multi)
+             ?status_multi
+             (sample(?user) as ?last_modified_by) (sample(?date) as ?last_modified)
+             ?np (\"^\" as ?np_label) where {
+        graph npa:graph {
+          ?vnp npx:introduces ?_ontologyversion_iri .
+          filter not exists { ?vinv npx:invalidates ?vnp . }
+          ?vnp np:hasAssertion ?vA .
+        }
+        graph ?vA { ?_ontologyversion_iri gen:hasContentIndex ?contentIndex . }
+        graph npa:graph { ?contentIndex np:hasAssertion ?ciA . }
+        {
+          graph ?ciA { ?contentIndex npx:includesElement ?np . }
+        } union {
+          graph ?ciA { ?contentIndex npx:appendsIndex|npx:includesSubindex ?subIndex . }
+          graph npa:graph { ?subIndex np:hasAssertion ?siA . }
+          graph ?siA { ?subIndex npx:includesElement ?np . }
+        }
+        graph npa:graph {
+          ?np dct:created ?date .
+          ?np npx:introduces ?class .
+          ?np np:hasAssertion ?a .
+          optional { ?np npx:signedBy ?user . }
+        }
+        graph ?a {
+          ?class a owl:Class .
+          optional { ?class rdfs:label ?class_label . filter(lang(?class_label) = \"\") }
+          optional { ?class skos:definition ?definition . }
+          optional { ?class rdfs:subClassOf ?superclass . filter(isIRI(?superclass)) }
+        }
+        bind(replace(concat(
+          if(exists { graph ?a { ?class a owl:DeprecatedClass } }, \"deprecated\\n\", \"\"),
+          if(exists { graph ?a { ?class a gen:WithdrawnTerm } }, \"withdrawn\\n\", \"\"),
+          if(exists { graph npa:graph { ?np npx:hasNanopubType npx:ExampleNanopub } }, \"example\\n\", \"\")
+        ), \"\\n$\", \"\") as ?status_multi)
+        optional {
+          select ?superclass (sample(?sclbl) as ?superclass_lbl) where {
+            graph npa:graph {
+              ?svnp npx:introduces ?_ontologyversion_iri .
+              filter not exists { ?svinv npx:invalidates ?svnp . }
+              ?svnp np:hasAssertion ?svA .
+            }
+            graph ?svA { ?_ontologyversion_iri gen:hasContentIndex ?sci . }
+            graph npa:graph { ?sci np:hasAssertion ?sciA . }
+            {
+              graph ?sciA { ?sci npx:includesElement ?scnp . }
+            } union {
+              graph ?sciA { ?sci npx:appendsIndex|npx:includesSubindex ?ssubIndex . }
+              graph npa:graph { ?ssubIndex np:hasAssertion ?ssiA . }
+              graph ?ssiA { ?ssubIndex npx:includesElement ?scnp . }
+            }
+            graph npa:graph { ?scnp npx:introduces ?superclass ; np:hasAssertion ?sca . }
+            graph ?sca { ?superclass rdfs:label ?sclbl . filter(lang(?sclbl) = \"\") }
+          } group by ?superclass
+        }
+      } group by ?class ?class_label ?definition ?status_multi ?np
+    }
+    optional {
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/trust> {
+        select ?last_modified_by ?lmbl where {
+          graph npa:graph { npa:thisRepo npa:hasCurrentTrustState ?tg . }
+          graph ?tg { ?last_modified_by foaf:name ?lmbl . }
+        }
+      }
+    }
+  }
+  group by ?class ?class_label ?description ?superclasses_multi_iri ?superclasses_label_multi ?status_multi ?last_modified_by ?last_modified ?np ?np_label
+  order by ?class_label
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-19T06:59:06Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:get-fixed-classes-of-an-ontology-version;
+    rdfs:label "Get the fixed classes of an ontology version";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "hPoNsBeqF38FB6BQRunDM2MLRv8Fnluxw2axfNm/7sp2AyUyA7iWAotnEkX5piig103b98qcGKXgBdnso+Q5sFiNH4bibtsn1uLH0yLfWSu+WuqZq40hz/LY/qxSEe02nYs1xoppAro4PNEf9T8d+IZB9q+MhnugdKBNHjTSjf8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

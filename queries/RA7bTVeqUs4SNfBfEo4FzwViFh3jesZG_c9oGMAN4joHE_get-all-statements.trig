@@ -1,0 +1,93 @@
+@prefix this: <https://w3id.org/np/RA7bTVeqUs4SNfBfEo4FzwViFh3jesZG_c9oGMAN4joHE> .
+@prefix sub: <https://w3id.org/np/RA7bTVeqUs4SNfBfEo4FzwViFh3jesZG_c9oGMAN4joHE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-all-statements a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns all nanopublished things of type schema:Statement, with their text, the argumentative relations they declare (supports, disputes, qualifies, inReplyTo, ...), their author and their date. Retracted and superseded nanopublications are left out; example nanopublications are included.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get all statements";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/29e2f808e4864fca4930806dee70c4a32df54a63ee90156244910a47d3443736>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix schema: <https://schema.org/>
+
+select ?statement ?statement_label ?relations_multi ?author ?author_label ?date ?np (\"^\" as ?np_label)
+where {
+  {
+    select ?np ?a ?pi ?created ?statement ?text
+           (group_concat(distinct ?rel; separator=\"\\n\") as ?relations_multi)
+    where {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pubkey ;
+            np:hasAssertion ?a ;
+            np:hasPublicationInfo ?pi ;
+            dct:created ?created .
+        filter not exists { ?npi npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+      }
+      graph ?a { ?statement a schema:Statement . }
+      optional { graph ?a { ?statement rdf:value ?value . } }
+      optional { graph ?a { ?statement schema:text ?schemaText . } }
+      bind(coalesce(?value, ?schemaText) as ?text)
+      optional {
+        graph ?a {
+          ?statement ?relPred ?relObj .
+          filter(isIRI(?relObj) && ?relPred != rdf:type)
+        }
+        bind(concat(replace(str(?relPred), \"^.*[/#]\", \"\"), \" → \",
+                    replace(str(?relObj), \"^.*[/#]\", \"\")) as ?rel)
+      }
+    }
+    group by ?np ?a ?pi ?created ?statement ?text
+  }
+  optional { graph ?pi { ?np dct:creator ?author . } }
+  optional { graph ?pi { ?author foaf:name ?author_label . } }
+  bind(coalesce(?text, replace(str(?statement), \"^.*[/#]\", \"\")) as ?statement_label)
+  bind(substr(str(?created), 1, 10) as ?date)
+}
+order by desc(?created)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-08-24T14:21:36.238Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:get-all-statements;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCaQXE2B2hJ6QdWxaWerU4F/XOtCQdj2OkdrIYd1kpMY9hIUh8boxaO3uOBeqvvqKLf5HjpRF4DT1eghOSsa2Dhd5HRTM/XIamvwWkHpN4oB3Ml19pAAzjTqczYmFLfgG67mGL5+vSA8VEdHtKQCrvP4SpTibMBP1qaxt3k1tqD6wIDAQAB";
+    npx:hasSignature "HGp7+o2CDBTDk4toudFnTzbU2fD0B6PDogxIvw2LQmWi0sqvnDbV8XtF9sg8KgE5lgUnq84HeZO0kNPk4sPe6jtpcjDL3YJvG7kQviyiyO2ZrPTRB2f3rJtihZ2ST8Kt7IMNNsR9iLpFdwZv2LzQwNlMEgWjLiyqYbqFR2k6zFk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

@@ -1,0 +1,136 @@
+@prefix this: <https://w3id.org/np/RAgbbHS0mgy-ga3CTTZLV5GC9J5vV1CHMtp_SVrxhvlpM> .
+@prefix sub: <https://w3id.org/np/RAgbbHS0mgy-ga3CTTZLV5GC9J5vV1CHMtp_SVrxhvlpM/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix obo: <http://purl.obolibrary.org/obo/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  obo:OBI_0000066 rdfs:label "investigation (study)" .
+  
+  obo:OBI_0000355 rdfs:label "hypothesis-driven investigation" .
+  
+  obo:OBI_0000356 rdfs:label "hypothesis generating investigation" .
+  
+  obo:OBI_0002897 rdfs:label "surveillance process" .
+  
+  obo:OBI_0003692 rdfs:label "case-control investigation" .
+  
+  obo:OBI_0003693 rdfs:label "observational investigation" .
+  
+  obo:OBI_0003694 rdfs:label "longitudinal investigation" .
+  
+  obo:OBI_0003697 rdfs:label "clinical investigation" .
+  
+  obo:OBI_0003699 rdfs:label "clinical trial" .
+  
+  dct:description rdfs:label "has the description" .
+  
+  dct:isPartOf rdfs:label "is part of" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  rdfs:seeAlso rdfs:label "see also" .
+  
+  prov:wasAssociatedWith rdfs:label "was conducted by" .
+  
+  sub:activity a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name of the study, used as its identifier" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication declares a study, experiment, survey, campaign or other planned activity undertaken to produce knowledge, and links it to the project it is part of. Name the piece of work and include the word that says what kind of work it was, for example 'Live trust network snapshot analysis'; do not use an article-style title, and put the detail in the description.";
+    rdfs:label "Declaring a study of a project";
+    nt:hasNanopubLabelPattern "Study: ${title}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6;
+    nt:hasTag "Spaces";
+    nt:hasTargetNanopubType obo:OBI_0000066 .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "what the study did" .
+  
+  sub:link a nt:UriPlaceholder;
+    rdfs:label "a URL with more information (registration, page, DOI)" .
+  
+  sub:person a nt:AgentPlaceholder;
+    rdfs:label "somebody who conducted the study" .
+  
+  sub:project a nt:GuidedChoicePlaceholder;
+    rdfs:label "the project this study is part of";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st0 rdf:object obo:OBI_0000066;
+    rdf:predicate rdf:type;
+    rdf:subject sub:activity .
+  
+  sub:st1 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:subtype;
+    rdf:predicate rdf:type;
+    rdf:subject sub:activity .
+  
+  sub:st2 rdf:object sub:title;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:activity .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:activity .
+  
+  sub:st4 rdf:object sub:project;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:activity .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:person;
+    rdf:predicate prov:wasAssociatedWith;
+    rdf:subject sub:activity .
+  
+  sub:st6 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:link;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:activity .
+  
+  sub:subtype a nt:RestrictedChoicePlaceholder;
+    rdfs:label "a more specific kind of investigation, if one fits";
+    nt:possibleValue obo:OBI_0000355, obo:OBI_0000356, obo:OBI_0002897, obo:OBI_0003692,
+      obo:OBI_0003693, obo:OBI_0003694, obo:OBI_0003697, obo:OBI_0003699 .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "short name of the study, as shown in listings and diagrams" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo <https://w3id.org/np/RA0SDqJIc3dtX2AihcvcSzBR7QIWfVl5lwk6U_MbH5RoA/nanopub-ecosystem-paper-bot> .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-08-18T08:33:37Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RA0SDqJIc3dtX2AihcvcSzBR7QIWfVl5lwk6U_MbH5RoA/nanopub-ecosystem-paper-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Declaring a study of a project";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxxo+arlpyxYYoHYYVTNSOWe/es90yVMBA8vaDyaAQk4pnOjTlpPptP5IkGg6zuCRIlm11QrHKkiU536witBT6gdh9kP9ay3S6m7wZ3iM7YcPMfhVHUXN6TBnuiKHHyJdVeK6RxMZlfXRKEz9HYcND+PGCXMVp8BofpKBKke3y4m8FTt+8aMEcgVcFBHFdrkWXoIIvkMlodtXkMgSwuGK8yXt/9lXqChIWpsbzu2juuX6pktMkfexkfQTwIH7oNSr/ma4KzZXERuLrCSO6IH5SfWXwjQUery6rKHiEMyie58mgBf0ssKh+uJoaZOqgbmj0f+EDwTIzq0dNsPA0A+n2QIDAQAB";
+    npx:hasSignature "AxarBVXzkT5ej/spldH980NDNteOiKPqKWVqOeMFy8OBO4onmCA2PTGOHccpcZu0oPy+BDv9ddLcvbihM0btKSV96bpyNYdauy+WQzZNVtODhVyPbxtqK2tcwDK4qE0+9PYnMrWyEUOSTj+ww+0ka+TCZpekBjy+094nsQZcY8JNvTf3M+QGh+IbjoL+Crw9WUA5nPv0urbOiuNpdbLxgJjPU9E7MD26X75yOt/j4F0L9veKqaiBn/yOZs+TnvlJY8KJmyJq81Rsh9QkDwSXWxSgZNrCOdR6kf7Usv18FXRJN0IEKKCtLRsTBx4xy0aXms86NDUkw7VVW3Bd6iSa7A==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RA0SDqJIc3dtX2AihcvcSzBR7QIWfVl5lwk6U_MbH5RoA/nanopub-ecosystem-paper-bot> .
+}
+

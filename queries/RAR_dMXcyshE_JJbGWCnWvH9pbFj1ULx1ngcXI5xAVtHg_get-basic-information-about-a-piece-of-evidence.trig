@@ -1,0 +1,158 @@
+@prefix this: <https://w3id.org/np/RAR_dMXcyshE_JJbGWCnWvH9pbFj1ULx1ngcXI5xAVtHg> .
+@prefix sub: <https://w3id.org/np/RAR_dMXcyshE_JJbGWCnWvH9pbFj1ULx1ngcXI5xAVtHg/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-evidence-info a grlc:grlc-query;
+    dct:description "Returns the basic information known about a piece of evidence or an argument as property/value rows: its kind, description, the study that generated it, the publication or dataset documenting it, who the statement is attributed to, whether it has been approved, and the source nanopublication it all comes from. Takes the most recent still-current nanopub about the evidence that was published by somebody holding a role in the project its study belongs to.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    npx:supersedes <https://w3id.org/np/RASVInOnRcLFo2RPVVQ7dc8ACbijl6LS0kCyCdkkman_M>;
+    rdfs:label "Get basic information about a piece of evidence";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix ff: <https://w3id.org/fair/ff/terms/>
+prefix obo: <http://purl.obolibrary.org/obo/>
+prefix cito: <http://purl.org/spar/cito/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?Property_noheader ?Property_label ?Value_multi_val_noheader ?Value_label_multi
+  ?np ?target_np ?approve_target
+where {
+  {
+    select ?np (sample(?npT) as ?npTitle) ?kind ?kind_label ?description ?study ?study_label
+      (group_concat(distinct str(?source); separator=\"\\n\") as ?documented_in_multi_iri)
+      (group_concat(distinct str(?att); separator=\"\\n\") as ?att_vals)
+      (group_concat(distinct ?attName; separator=\"\\n\") as ?att_labels)
+    where {
+      values ?_evidence_multi_iri {}
+      # the most recent still-current nanopub about this evidence, published by somebody
+      # holding a role in the project the evidence's study belongs to
+      {
+        select ?np where {
+          values ?_evidence_multi_iri {}
+          graph npa:graph {
+            ?np npa:hasValidSignatureForPublicKeyHash ?pk0 ; np:hasAssertion ?a0 ; np:hasPublicationInfo ?pi0 .
+          }
+          filter not exists { graph npa:graph { ?inv0 npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk0 . } }
+          filter not exists { graph npa:graph { ?sup0 npx:supersedes ?np . } }
+          graph ?a0 { ?_evidence_multi_iri a obo:ECO_0000000 ; prov:wasGeneratedBy ?study0 . }
+          graph npa:graph { ?snp0 np:hasAssertion ?sa0 . }
+          filter not exists { graph npa:graph { ?ssup0 npx:supersedes ?snp0 . } }
+          graph ?sa0 { ?study0 a obo:OBI_0000066 ; dct:isPartOf ?project0 . }
+          graph npa:graph { ?mnp0 np:hasAssertion ?ma0 . }
+          filter not exists { graph npa:graph { ?msup0 npx:supersedes ?mnp0 . } }
+          graph ?ma0 {
+            ?project0 ?mrel0 ?member0 .
+            values ?mrel0 { gen:hasAdmin gen:hasProjectLead ff:has-principal-investigator ff:has-participant ff:has-data-steward }
+          }
+          graph ?pi0 { ?np dct:creator ?member0 ; dct:created ?created . }
+        } order by desc(?created) limit 1
+      }
+      graph npa:graph { ?np np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; np:hasProvenance ?prov . }
+      optional { graph ?a { ?_evidence_multi_iri dct:description ?description } }
+      optional {
+        graph ?a { ?_evidence_multi_iri a ?kind }
+        filter(?kind != obo:ECO_0000000)
+        optional { graph ?pi { ?kind rdfs:label ?kind_label } }
+      }
+      optional {
+        graph ?a { ?_evidence_multi_iri prov:wasGeneratedBy ?study }
+        optional {
+          graph npa:graph { ?snp np:hasAssertion ?sa . }
+          filter not exists { graph npa:graph { ?ssup npx:supersedes ?snp . } }
+          graph ?sa { ?study a obo:OBI_0000066 ; rdfs:label ?study_label . }
+        }
+      }
+      optional { graph ?a { ?_evidence_multi_iri cito:isDocumentedBy ?source } }
+      optional {
+        graph ?prov { ?a prov:wasAttributedTo ?att }
+        optional { graph ?pi { ?att foaf:name ?attName } }
+      }
+      optional { graph ?pi { ?np rdfs:label ?npT } }
+    }
+    group by ?kind ?kind_label ?description ?study ?study_label ?np
+  }
+  bind(exists {
+    graph npa:graph {
+      ?anp npa:hasValidSignatureForPublicKeyHash ?apk ; np:hasAssertion ?aa .
+    }
+    filter not exists { graph npa:graph { ?ainv npx:invalidates ?anp ; npa:hasValidSignatureForPublicKeyHash ?apk . } }
+    filter not exists { graph npa:graph { ?asup npx:supersedes ?anp . } }
+    graph ?aa { ?approver npx:approvesOf ?np }
+  } as ?isApproved)
+  values (?key ?Property_noheader ?Property_label) {
+    ('Kind' rdf:type 'Kind:')
+    ('Desc' dct:description 'Description:')
+    ('Study' prov:wasGeneratedBy 'Generated by:')
+    ('Src' cito:isDocumentedBy 'Documented by:')
+    ('Att' prov:wasAttributedTo 'Stated by:')
+    ('Status' npx:approvesOf 'Status:')
+    ('Source' dct:source 'Source:')
+  }
+  bind(if(?key = 'Kind', str(?kind),
+       if(?key = 'Desc', str(?description),
+       if(?key = 'Study', str(?study),
+       if(?key = 'Src', ?documented_in_multi_iri,
+       if(?key = 'Att', ?att_vals,
+       if(?key = 'Status', if(?isApproved, \"approved\", \"not approved\"), str(?np))))))) as ?rawVal)
+  filter(bound(?rawVal) && ?rawVal != \"\")
+  bind(?rawVal as ?Value_multi_val_noheader)
+  bind(if(?key = 'Source', str(?np), ?nothing) as ?target_np)
+  bind(if(?key = 'Status' && !?isApproved, str(?np), \"\") as ?approve_target)
+  bind(if(?key = 'Kind', ?kind_label,
+       if(?key = 'Study', ?study_label,
+       if(?key = 'Att', ?att_labels,
+       if(?key = 'Source', coalesce(?npTitle, \"\"), \"\")))) as ?Value_label_multi)
+}
+order by (if(?key = 'Kind', 1, if(?key = 'Desc', 2, if(?key = 'Study', 3, if(?key = 'Src', 4, if(?key = 'Att', 5, if(?key = 'Status', 6, 7)))))))""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-24T10:41:40Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-evidence-info;
+    npx:supersedes <https://w3id.org/np/RASVInOnRcLFo2RPVVQ7dc8ACbijl6LS0kCyCdkkman_M>;
+    rdfs:label "Get basic information about a piece of evidence";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RAcm8OurwUk15WOgBM9wySo-T3a5h6as4K8YR5MBrrxUc>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "fJDlVe8amuiywcOP3jOeUOfB6xNdlg1C3pRssoYIUIIoFB/77GICIoZmGd2XTTndhXb89peI/AXskes+3gP7lECggYWLLjBq6ruX42kZ/60rhsUha5U6vUl/7GUR4h3aokc3XjUI22O+nyNGNAZd30Rw77NJexfOql33x7ZEhaQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

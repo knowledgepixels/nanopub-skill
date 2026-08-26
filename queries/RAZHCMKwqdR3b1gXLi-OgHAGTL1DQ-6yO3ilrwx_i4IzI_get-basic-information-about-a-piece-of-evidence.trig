@@ -1,0 +1,157 @@
+@prefix this: <https://w3id.org/np/RAZHCMKwqdR3b1gXLi-OgHAGTL1DQ-6yO3ilrwx_i4IzI> .
+@prefix sub: <https://w3id.org/np/RAZHCMKwqdR3b1gXLi-OgHAGTL1DQ-6yO3ilrwx_i4IzI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-evidence-info a grlc:grlc-query;
+    dct:description "Returns the basic information known about a piece of evidence or an argument as property/value rows: its kind, description, the study that generated it, the publication or dataset documenting it, who the statement is attributed to, whether it has been approved, and the source nanopublication it all comes from. Takes the most recent still-current nanopub about the evidence that was published by somebody holding a role in the project its study belongs to. Membership is taken from the validated space-role state (admin, maintainer or member tier) rather than from a fixed list of role predicates, so a nanopub counts whenever its creator holds any member-level role in the space.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get basic information about a piece of evidence";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix ff: <https://w3id.org/fair/ff/terms/>
+prefix obo: <http://purl.obolibrary.org/obo/>
+prefix cito: <http://purl.org/spar/cito/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?Property_noheader ?Property_label ?Value_multi_val_noheader ?Value_label_multi
+  ?np ?target_np ?approve_target
+where {
+  {
+    select ?np (sample(?npT) as ?npTitle) ?kind ?kind_label ?description ?study ?study_label
+      (group_concat(distinct str(?source); separator=\"\\n\") as ?documented_in_multi_iri)
+      (group_concat(distinct str(?att); separator=\"\\n\") as ?att_vals)
+      (group_concat(distinct ?attName; separator=\"\\n\") as ?att_labels)
+    where {
+      values ?_evidence_multi_iri {}
+      # the most recent still-current nanopub about this evidence, published by somebody
+      # holding a role in the project the evidence's study belongs to
+      {
+        select ?np where {
+          values ?_evidence_multi_iri {}
+          graph npa:graph {
+            ?np npa:hasValidSignatureForPublicKeyHash ?pk0 ; np:hasAssertion ?a0 ; np:hasPublicationInfo ?pi0 .
+          }
+          filter not exists { graph npa:graph { ?inv0 npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk0 . } }
+          filter not exists { graph npa:graph { ?sup0 npx:supersedes ?np . } }
+          graph ?a0 { ?_evidence_multi_iri a obo:ECO_0000000 ; prov:wasGeneratedBy ?study0 . }
+          graph npa:graph { ?snp0 np:hasAssertion ?sa0 . }
+          filter not exists { graph npa:graph { ?ssup0 npx:supersedes ?snp0 . } }
+          graph ?sa0 { ?study0 a obo:OBI_0000066 ; dct:isPartOf ?project0 . }
+          service <http://query:9393/repo/spaces> {
+            select ?project0 ?member0 where {
+              graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+              graph ?stateG {
+                ?ri0 a gen:RoleInstantiation ; npa:forSpace ?project0 ; npa:forAgent ?member0 ;
+                     npa:hasRoleType ?rt0 .
+                filter(?rt0 in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+              }
+            }
+          }
+          graph ?pi0 { ?np dct:creator ?member0 ; dct:created ?created . }
+        } order by desc(?created) limit 1
+      }
+      graph npa:graph { ?np np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; np:hasProvenance ?prov . }
+      optional { graph ?a { ?_evidence_multi_iri dct:description ?description } }
+      optional {
+        graph ?a { ?_evidence_multi_iri a ?kind }
+        filter(?kind != obo:ECO_0000000)
+        optional { graph ?pi { ?kind rdfs:label ?kind_label } }
+      }
+      optional {
+        graph ?a { ?_evidence_multi_iri prov:wasGeneratedBy ?study }
+        optional {
+          graph npa:graph { ?snp np:hasAssertion ?sa . }
+          filter not exists { graph npa:graph { ?ssup npx:supersedes ?snp . } }
+          graph ?sa { ?study a obo:OBI_0000066 ; rdfs:label ?study_label . }
+        }
+      }
+      optional { graph ?a { ?_evidence_multi_iri cito:isDocumentedBy ?source } }
+      optional {
+        graph ?prov { ?a prov:wasAttributedTo ?att }
+        optional { graph ?pi { ?att foaf:name ?attName } }
+      }
+      optional { graph ?pi { ?np rdfs:label ?npT } }
+    }
+    group by ?kind ?kind_label ?description ?study ?study_label ?np
+  }
+  bind(exists {
+    graph ?aa { ?approver npx:approvesOf ?np }
+    graph npa:graph {
+      ?anp npa:hasValidSignatureForPublicKeyHash ?apk ; np:hasAssertion ?aa .
+    }
+    filter not exists { graph npa:graph { ?ainv npx:invalidates ?anp ; npa:hasValidSignatureForPublicKeyHash ?apk . } }
+    filter not exists { graph npa:graph { ?asup npx:supersedes ?anp . } }
+  } as ?isApproved)
+  values (?key ?Property_noheader ?Property_label) {
+    ('Kind' rdf:type 'Kind:')
+    ('Desc' dct:description 'Description:')
+    ('Study' prov:wasGeneratedBy 'Generated by:')
+    ('Src' cito:isDocumentedBy 'Documented by:')
+    ('Att' prov:wasAttributedTo 'Stated by:')
+    ('Status' npx:approvesOf 'Status:')
+    ('Source' dct:source 'Source:')
+  }
+  bind(if(?key = 'Kind', str(?kind),
+       if(?key = 'Desc', str(?description),
+       if(?key = 'Study', str(?study),
+       if(?key = 'Src', ?documented_in_multi_iri,
+       if(?key = 'Att', ?att_vals,
+       if(?key = 'Status', if(?isApproved, \"approved\", \"not approved\"), str(?np))))))) as ?rawVal)
+  filter(bound(?rawVal) && ?rawVal != \"\")
+  bind(?rawVal as ?Value_multi_val_noheader)
+  bind(if(?key = 'Source', str(?np), ?nothing) as ?target_np)
+  bind(if(?key = 'Status' && !?isApproved, str(?np), \"\") as ?approve_target)
+  bind(if(?key = 'Kind', ?kind_label,
+       if(?key = 'Study', ?study_label,
+       if(?key = 'Att', ?att_labels,
+       if(?key = 'Source', coalesce(?npTitle, \"\"), \"\")))) as ?Value_label_multi)
+}
+order by (if(?key = 'Kind', 1, if(?key = 'Desc', 2, if(?key = 'Study', 3, if(?key = 'Src', 4, if(?key = 'Att', 5, if(?key = 'Status', 6, 7)))))))""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo <https://w3id.org/np/RA0SDqJIc3dtX2AihcvcSzBR7QIWfVl5lwk6U_MbH5RoA/nanopub-ecosystem-paper-bot>;
+    prov:wasDerivedFrom <https://w3id.org/np/RA0mDItHSFwWycuI9WkAwzrv8AeSn8xn9rmJjAH5hKS9A> .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-08-24T10:39:10Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RA0SDqJIc3dtX2AihcvcSzBR7QIWfVl5lwk6U_MbH5RoA/nanopub-ecosystem-paper-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-evidence-info;
+    npx:supersedes <https://w3id.org/np/RA0mDItHSFwWycuI9WkAwzrv8AeSn8xn9rmJjAH5hKS9A>;
+    rdfs:label "Get basic information about a piece of evidence";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RAmRxSMXuHZWtDXqTXqTK_aM1KBPauATJg4_KqixamLiE>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxxo+arlpyxYYoHYYVTNSOWe/es90yVMBA8vaDyaAQk4pnOjTlpPptP5IkGg6zuCRIlm11QrHKkiU536witBT6gdh9kP9ay3S6m7wZ3iM7YcPMfhVHUXN6TBnuiKHHyJdVeK6RxMZlfXRKEz9HYcND+PGCXMVp8BofpKBKke3y4m8FTt+8aMEcgVcFBHFdrkWXoIIvkMlodtXkMgSwuGK8yXt/9lXqChIWpsbzu2juuX6pktMkfexkfQTwIH7oNSr/ma4KzZXERuLrCSO6IH5SfWXwjQUery6rKHiEMyie58mgBf0ssKh+uJoaZOqgbmj0f+EDwTIzq0dNsPA0A+n2QIDAQAB";
+    npx:hasSignature "Ot7idaI54EOcLTtE1GESnMbo3uZmWmbhIPvRwOfAv8XSOY7UIJXNcHq3qqTYXp22AfkQ90QE/Qhr1HkDo8pgKyTYtNbwQzDg/HoHqR/4SFZhwBIwpJXA7/XW+VfG3/3sazb1mt07C4CIcw28Zka1WMJELde4ZP4saQs+E2MeUjU+n9JBMZb20pA9hCY5E+4bPRmHcY5kCdbAcj3SjHdY81alrmug0sclMwC1fJXTDG27IR2s049Ge7qLp+UgGambk6RKUgIoJzfgjOIl7Bo6L+ppGtDP28KCRRwDIe/nfdX/tKlDaNmL+MYVSNkeiKUCV/v3zpC4wDg0LKwYBuuPMA==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RA0SDqJIc3dtX2AihcvcSzBR7QIWfVl5lwk6U_MbH5RoA/nanopub-ecosystem-paper-bot> .
+}
+

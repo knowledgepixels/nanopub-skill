@@ -1,0 +1,254 @@
+@prefix this: <https://w3id.org/np/RAmq7WIPhUTCEyiYIXyEX59n58STMug9vlWAf29S3l8oY> .
+@prefix sub: <https://w3id.org/np/RAmq7WIPhUTCEyiYIXyEX59n58STMug9vlWAf29S3l8oY/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.obolibrary.org/obo/RO_0000087> rdfs:label "has role" .
+  
+  dct:isPartOf rdfs:label "is part of" .
+  
+  <http://schema.org/alternateName> rdfs:label "has alternative name" .
+  
+  <http://schema.org/comment> rdfs:label "has comment" .
+  
+  <http://schema.org/identifier> rdfs:label "identifier type" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  rdfs:subClassOf rdfs:label "is a subclass of" .
+  
+  <http://www.w3.org/2002/07/owl#Class> rdfs:label "class" .
+  
+  <http://www.w3.org/2002/07/owl#DeprecatedClass> rdfs:label "deprecated class - discouraged for new data, but still listed in the vocabulary" .
+  
+  <http://www.w3.org/2004/02/skos/core#exactMatch> rdfs:label "is exactly the same as (external identifier)" .
+  
+  gen:WithdrawnTerm rdfs:label "withdrawn term - withdrawn from the vocabulary and hidden from its term listings" .
+  
+  sub:aliasname a nt:LiteralPlaceholder;
+    rdfs:label "the alias (short name) used in the given context" .
+  
+  sub:aliastype a nt:LiteralPlaceholder;
+    rdfs:label "the alias type, e.g. \"short_name\"" .
+  
+  sub:altname a nt:LiteralPlaceholder;
+    rdfs:label "an alternative name" .
+  
+  sub:altname_lang a nt:LanguageTaggedLiteralPlaceholder;
+    rdfs:label "an alternative name (Dutch, nl-be)";
+    nt:hasLanguageTag "nl-be" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "<p>Such a nanopublication defines a <em>biochementity</em>: a chemical entity (compound, metabolite, isomer, group, …) as a subclass of BioChemEntity, with its names (including Dutch/nl-be variants), external identifiers, chemical roles, inter-entity relations and context-specific aliases.</p>";
+    rdfs:label "Defining a biochementity";
+    nt:hasStatement sub:st0, sub:st0b, sub:st1, sub:st10, sub:st11, sub:st1nl, sub:st2,
+      sub:st3, sub:st3nl, sub:st4, sub:st5, sub:st6, sub:st7, sub:st8, sub:st9, sub:st9a,
+      sub:st9b, sub:st9c, sub:st9d, sub:st9e;
+    nt:hasTag "Terms";
+    nt:hasTargetNanopubType <https://w3id.org/peh/terms/BioChemEntity> .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "a comment" .
+  
+  sub:context a nt:GuidedChoicePlaceholder;
+    rdfs:label "context: organization (ROR id)";
+    nt:possibleValuesFromApi "https://api.ror.org/organizations?query=" .
+  
+  sub:contextalias a nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "a context-specific alias";
+    nt:hasDefaultValue sub:contextalias .
+  
+  sub:externalid a nt:ExternalUriPlaceholder;
+    rdfs:label "external identifier (identifiers.org: InChIKey, CHEBI, CAS, PubChem, …)" .
+  
+  sub:grouplabel a nt:LiteralPlaceholder;
+    rdfs:label "the group label" .
+  
+  sub:isomer a nt:GuidedChoicePlaceholder;
+    rdfs:label "the biochementity this one is an isomer of";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Fpeh%2Fterms%2FBioChemEntity&searchterm=" .
+  
+  sub:metaboliteparent a nt:GuidedChoicePlaceholder;
+    rdfs:label "the biochementity this one is a metabolite of";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Fpeh%2Fterms%2FBioChemEntity&searchterm=" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the biochementity" .
+  
+  sub:name_lang a nt:LanguageTaggedLiteralPlaceholder;
+    rdfs:label "the name of the biochementity (Dutch, nl-be)";
+    nt:hasLanguageTag "nl-be" .
+  
+  sub:parent a nt:GuidedChoicePlaceholder;
+    rdfs:label "the parent class (BioChemEntity, or another biochementity)";
+    nt:hasDefaultValue <https://w3id.org/peh/terms/BioChemEntity>;
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https%3A%2F%2Fw3id.org%2Fpeh%2Fterms%2FBioChemEntity&searchterm=" .
+  
+  sub:role a nt:ExternalUriPlaceholder;
+    rdfs:label "a chemical role (e.g. an obo/CHEBI role such as flame retardant)" .
+  
+  sub:st0 a rdf:Statement;
+    rdf:object <http://www.w3.org/2002/07/owl#Class>;
+    rdf:predicate rdf:type;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st0b a nt:OptionalStatement;
+    rdf:object sub:status;
+    rdf:predicate rdf:type;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st10 a nt:OptionalStatement;
+    rdf:object sub:vocabulary;
+    rdf:predicate dct:isPartOf;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st11 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:role;
+    rdf:predicate <http://purl.obolibrary.org/obo/RO_0000087>;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st1nl a nt:OptionalStatement;
+    rdf:object sub:name_lang;
+    rdf:predicate rdfs:label;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st2 a rdf:Statement, nt:RepeatableStatement;
+    rdf:object sub:parent;
+    rdf:predicate rdfs:subClassOf;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st3 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:altname;
+    rdf:predicate <http://schema.org/alternateName>;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st3nl a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:altname_lang;
+    rdf:predicate <http://schema.org/alternateName>;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate <http://schema.org/comment>;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:externalid;
+    rdf:predicate <http://www.w3.org/2004/02/skos/core#exactMatch>;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st6 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:grouplabel;
+    rdf:predicate <https://w3id.org/peh/terms/hasGroupLabel>;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st7 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:metaboliteparent;
+    rdf:predicate <https://w3id.org/peh/terms/isMetaboliteOf>;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st8 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:isomer;
+    rdf:predicate <https://w3id.org/peh/terms/isIsomerOf>;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st9 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st9a, sub:st9b, sub:st9c, sub:st9d, sub:st9e .
+  
+  sub:st9a rdf:object sub:contextalias;
+    rdf:predicate <https://w3id.org/peh/terms/hasContextAlias>;
+    rdf:subject <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> .
+  
+  sub:st9b rdf:object <https://w3id.org/peh/terms/ContextAlias>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:contextalias .
+  
+  sub:st9c rdf:object sub:aliasname;
+    rdf:predicate <http://schema.org/alternateName>;
+    rdf:subject sub:contextalias .
+  
+  sub:st9d rdf:object sub:aliastype;
+    rdf:predicate <http://schema.org/identifier>;
+    rdf:subject sub:contextalias .
+  
+  sub:st9e rdf:object sub:context;
+    rdf:predicate <https://w3id.org/peh/terms/hasContext>;
+    rdf:subject sub:contextalias .
+  
+  sub:status a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select term status, if appropriate";
+    nt:possibleValue <http://www.w3.org/2002/07/owl#DeprecatedClass>, gen:WithdrawnTerm .
+  
+  sub:vocabulary a nt:GuidedChoicePlaceholder;
+    rdfs:label "the vocabulary / ontology this biochementity is part of";
+    nt:hasDefaultValue <https://w3id.org/spaces/biochementity/r/vocabulary>;
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http://www.w3.org/2002/07/owl%23Ontology&searchterm=" .
+  
+  <https://w3id.org/peh/biochementities/~~ARTIFACTCODE~~> a nt:IntroducedResource;
+    rdfs:label "this biochementity" .
+  
+  <https://w3id.org/peh/terms/BioChemEntity> rdfs:label "BioChemEntity (top class)" .
+  
+  <https://w3id.org/peh/terms/ContextAlias> rdfs:label "context alias" .
+  
+  <https://w3id.org/peh/terms/hasContext> rdfs:label "has context (organization)" .
+  
+  <https://w3id.org/peh/terms/hasContextAlias> rdfs:label "has context alias" .
+  
+  <https://w3id.org/peh/terms/hasGroupLabel> rdfs:label "has group label" .
+  
+  <https://w3id.org/peh/terms/isIsomerOf> rdfs:label "is an isomer of" .
+  
+  <https://w3id.org/peh/terms/isMetaboliteOf> rdfs:label "is a metabolite of" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-11T11:01:29Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:assertion;
+    npx:supersedes <https://w3id.org/np/RA3rys78OSQ6lVJLf4y28tbxzEkr1xWd1j3QLOticvY8w>;
+    rdfs:label "Defining a biochementity";
+    nt:wasCreatedFromProvenanceTemplate ns1:RAcm8OurwUk15WOgBM9wySo-T3a5h6as4K8YR5MBrrxUc;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "RewFejz4ghl0w1vspRr2rUk5zhSYkRVH+AZWSY9NRD8PTbAibj7HrmDBlReVjzp6+h9m0qe3AK3M3v6ehGMcuOxr4ilXRkzRuQvMMSbn9MVqmsRs5Zv9k85W0oR+QU0MXAREWNZ7ayg+h2Zy4PCCSblgh+pS8bw7jpDFwfcd7Zs=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

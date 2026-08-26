@@ -1,0 +1,84 @@
+@prefix this: <https://w3id.org/np/RAkhTlKa-i0miq_DN3V4HSv-btlDgwzg8qPUesrsJ0k9Q> .
+@prefix sub: <https://w3id.org/np/RAkhTlKa-i0miq_DN3V4HSv-btlDgwzg8qPUesrsJ0k9Q/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  npx:approvesOf rdfs:label "approves of" .
+  
+  npx:disapprovesOf rdfs:label "disapproves of" .
+  
+  rdfs:comment rdfs:label "has the comment" .
+  
+  sub:approveOrDisapprove a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose approve or disapprove";
+    nt:possibleValue npx:approvesOf, npx:disapprovesOf .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "optional free-text comment about the (dis)approval" .
+  
+  sub:nanopub a nt:TrustyUriPlaceholder;
+    rdfs:label "nanopublication URI" .
+  
+  sub:st1 rdf:object sub:nanopub;
+    rdf:predicate sub:approveOrDisapprove;
+    rdf:subject nt:CREATOR .
+  
+  sub:st2 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject nt:ASSERTION .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:isVersionOf sub:templateKind;
+    rdfs:label "Approving or disapproving of a nanopublication";
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels/nanodash>;
+    nt:hasNanopubLabelPattern "${approveOrDisapprove} ${nanopub}";
+    nt:hasStatement sub:st1, sub:st2;
+    nt:hasTag "Meta" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-07-22T07:38:35.610Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:template;
+    npx:introduces sub:templateKind;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Approving or disapproving of a nanopublication";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAKmcrbEVkxF0ivA0_yGg8bnl6iKkwVDp_2SSHvPBrkPw/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCaQXE2B2hJ6QdWxaWerU4F/XOtCQdj2OkdrIYd1kpMY9hIUh8boxaO3uOBeqvvqKLf5HjpRF4DT1eghOSsa2Dhd5HRTM/XIamvwWkHpN4oB3Ml19pAAzjTqczYmFLfgG67mGL5+vSA8VEdHtKQCrvP4SpTibMBP1qaxt3k1tqD6wIDAQAB";
+    npx:hasSignature "QdmDvHFZLGrJnTxvGy9nMQckb9z+g7O+l4UpRab0Q3zvy/krGElWZtKhtewtQQwOeJcNYfvDbgIIX3fARw7tIsSHUBOUkTZ0Z2ksoJaCkXesGWuTz0bfM8vN3cL3AMI7kypHcgyIxHr/A57r2WBm2AhCnMOiqDCg4QApcvTwIRQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+  
+  <https://w3id.org/spaces/knowledgepixels/nanodash> nt:hasLabelFromApi "Nanodash - The group maintaining Nanodash." .
+}
+

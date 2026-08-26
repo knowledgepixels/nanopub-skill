@@ -1,0 +1,90 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix ntemplate: <https://w3id.org/np/o/ntemplate/> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <https://schema.org/> .
+@prefix sub: <https://w3id.org/np/RAWy6z_pULiaGYdk0GFQMxtnOog1KZRCkR9ywqX0YF84M/> .
+@prefix this: <https://w3id.org/np/RAWy6z_pULiaGYdk0GFQMxtnOog1KZRCkR9ywqX0YF84M> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dcterms:creator rdfs:label "is written by" .
+  
+  rdfs:comment rdfs:label "summary text - the plain-language retelling" .
+  
+  schema:about rdfs:label "is about - the nanopublication this summary retells" .
+  
+  schema:audience rdfs:label "for audience - the intended readership" .
+  
+  sub:assertion a ntemplate:AssertionTemplate;
+    dcterms:description "An AI-generated, plain-language summary of an existing nanopublication, written for a specific audience. It is a faithful RETELLING of the record and must not add facts beyond the nanopublication it is about. Framed as rdfs:comment (interpretation), not an authoritative abstract.";
+    rdfs:label "AI plain-language summary of a nanopublication (for an audience)";
+    ntemplate:hasNanopubLabelPattern "Plain-language summary of ${subject} for ${audience}";
+    ntemplate:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4;
+    ntemplate:hasTag "AI-generated", "Science communication", "Summary";
+    ntemplate:hasTargetNanopubType schema:CreativeWork .
+  
+  sub:audience a ntemplate:RestrictedChoicePlaceholder;
+    rdfs:label "intended audience";
+    ntemplate:possibleValuesFrom <https://w3id.org/np/RAHrBp6pVKHi4icalxhDptDJvQ4ObEKCBOcnzvEhiZhxs> .
+  
+  sub:st0 rdf:object schema:CreativeWork;
+    rdf:predicate rdf:type;
+    rdf:subject ntemplate:ASSERTION .
+  
+  sub:st1 rdf:object ntemplate:CREATOR;
+    rdf:predicate dcterms:creator;
+    rdf:subject ntemplate:ASSERTION .
+  
+  sub:st2 rdf:object sub:subject;
+    rdf:predicate schema:about;
+    rdf:subject ntemplate:ASSERTION .
+  
+  sub:st3 rdf:object sub:audience;
+    rdf:predicate schema:audience;
+    rdf:subject ntemplate:ASSERTION .
+  
+  sub:st4 rdf:object sub:text;
+    rdf:predicate rdfs:comment;
+    rdf:subject ntemplate:ASSERTION .
+  
+  sub:subject a ntemplate:UriPlaceholder;
+    rdfs:label "URI of the nanopublication this summary is about";
+    ntemplate:hasPrefix "https://w3id.org/np/";
+    ntemplate:hasPrefixLabel "nanopub" .
+  
+  sub:text a ntemplate:LongLiteralPlaceholder;
+    rdfs:label "plain-language summary (plain text, max 2000 characters)";
+    ntemplate:hasRegex "[\\s\\S]{0,2000}" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1784-2920;
+    prov:wasDerivedFrom <http://purl.org/np/RAVEpTdLrX5XrhNl_gnvTaBcjRRSDu_hhZix8gu2HO7jI> .
+}
+
+sub:pubinfo {
+  this: dcterms:creator orcid:0000-0002-1784-2920;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/>;
+    dcterms:title "AI plain-language summary template";
+    npx:hasNanopubType ntemplate:AssertionTemplate;
+    prov:generatedAtTime "2026-07-26T14:32:18.141340+00:00"^^xsd:dateTime .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyuQ7Hi/zQ7hDZtMtLWK1JKU83Kgo8NqC+b8sxD5IoiekPctXVA8iM0zD/9pcp1txGXjX/fUj5HRUkOn4RVHP3fFa/3irQYpZFQ5fHRj8MQ7kJ6AEd1oggfajDevZGz63hj6Vigo+BNYBXqhcbWVAfLfbzQPAegce9zH6n9vTqKYMrwrSxPQdhoAcoaKOqY8gRiJgzekeEr+iEqa63X1HwWtYDs7X25a9xWbgaDSsRjzZGVUVOn1vYdSfWAaIw+EB9CiJfKm1zuXcur5PDziMW1pnZG6/NQtrA7AM3gLnoSoU3glkm5UhksGNqu2SV+j8oZLg7v6C5/sg2f6LIJMeFwIDAQAB";
+    npx:hasSignature "Sl1UypuLjA2vuHJ6nPMOg61dOoOg5sinL15pGx9RQ3C3aBPnQXVQghtFiXpQ8+qARrtc9nd+/GLcntixBXN1EBtm1P1JJXaemQyxtdawik/tkJMLepwd0o1kcQFmsZMtr+G4WIHCxE+/uc3wqK7aTiQim/vck4E9avFZzVs+xO4itJL85XzWq95I4DXPVvpmmFXFm6sGkiZpt3MLaNDWUTttpqIDVf5UnjW0jVQbA+PgcoPjESKzE1VqMhLUQPFs+4nOj4jLUC6CR2WEKWyRzezFDy0TSbLxm/Kq0KSlbUr0ZpmaCLm72IdMt7aZKaUiQzfI5z+bUXUGoqkPyahAjA==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAIA9ECaN2ypOVvl4YeNjT6nbpwko9xMcctxB_uYscLG4/claude-ai-agent> .
+}
+

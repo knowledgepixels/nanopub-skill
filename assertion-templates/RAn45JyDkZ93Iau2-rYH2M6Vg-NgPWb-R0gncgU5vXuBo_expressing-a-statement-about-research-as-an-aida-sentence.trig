@@ -1,0 +1,158 @@
+@prefix this: <https://w3id.org/np/RAn45JyDkZ93Iau2-rYH2M6Vg-NgPWb-R0gncgU5vXuBo> .
+@prefix sub: <https://w3id.org/np/RAn45JyDkZ93Iau2-rYH2M6Vg-NgPWb-R0gncgU5vXuBo/> .
+@prefix schema: <http://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix hycl: <http://purl.org/petapico/o/hycl#> .
+@prefix cito: <http://purl.org/spar/cito/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  hycl:AIDA-Sentence rdfs:label "AIDA sentence - an English sentence that is Atomic, Independent, Declarative, and Absolute" .
+  
+  hycl:hasConflictingMeaning rdfs:label "has a conflicting meaning with" .
+  
+  hycl:hasConsistentMeaning rdfs:label "has a consistent meaning with" .
+  
+  hycl:hasDifferentMeaning rdfs:label "has a different meaning than" .
+  
+  hycl:hasMoreGeneralMeaningThan rdfs:label "has a more general meaning than" .
+  
+  hycl:hasMoreSpecificMeaningThan rdfs:label "has a more specific meaning than" .
+  
+  hycl:hasNonoppositeMeaning rdfs:label "has a non-opposite meaning of" .
+  
+  hycl:hasOppositeMeaning rdfs:label "has the opposite meaning of" .
+  
+  hycl:hasRelatedMeaning rdfs:label "has a related meaning as" .
+  
+  hycl:hasSameMeaning rdfs:label "has the same meaning as" .
+  
+  hycl:hasUnrelatedMeaning rdfs:label "has a unrelated meaning as" .
+  
+  hycl:isImprovedVersionOf rdfs:label "is a improved version of" .
+  
+  cito:obtainsSupportFrom rdfs:label "is supported by" .
+  
+  schema:about rdfs:label "is about - connects a thing (left) to a subject matter that this thing is about (right)" .
+  
+  rdf:type rdfs:label "is an - connects a thing (left) to a class it belongs to (right)" .
+  
+  gen:isRelevantFor rdfs:label "is relevant for" .
+  
+  sub:aida a nt:AutoEscapeUriPlaceholder, nt:IntroducedResource;
+    rdfs:label "Type your AIDA sentence here (ending with a full stop)";
+    nt:hasPrefix "http://purl.org/aida/";
+    nt:hasPrefixLabel "The sentence";
+    nt:hasRegex "[\\S ]{5,500}\\." .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description """<p> Template for expressing a statement about research as an AIDA sentence, linking it to the projects it is relevant for, and relating it to other statements. Such nanopublications use the concept of an AIDA sentence to express a (scientific) statement in an informal or semi-formal manner, which can be formally linked.</p>
+
+<p>AIDA sentences are:<p>
+
+<ul>
+<li><strong>Atomic:</strong> a sentence describing one thought that cannot be further broken down in a practical way</li>
+<li><strong>Independent:</strong> a sentence that can stand on its own, without external references like \"this effect\" or \"we\"</li>
+<li><strong>Declarative:</strong> a complete sentence ending with a full stop that could in theory be either true or false</li>
+<li><strong>Absolute:</strong> a sentence describing the core of a claim ignoring the (un)certainty about its truth and ignoring how it was discovered (no \"probably\" or \"evaluation showed that\"); typically in present tense</li>
+</ul>
+
+<p>You can find more information about AIDA sentences <a href=\"https://github.com/tkuhn/aida\" target=\"_blank\">here</a>.</p>
+
+<p>All links are optional. Use <em>is relevant for</em> to point at the research project(s) the statement belongs to. Use the relation field at the bottom to connect this sentence to another AIDA sentence, for example to state that a general sentence <em>has a more general meaning than</em> a specific finding.</p>""";
+    rdfs:label "Expressing a statement about research as an AIDA sentence";
+    nt:hasNanopubLabelPattern "AIDA sentence: ${aida}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4;
+    nt:hasTag "Claims";
+    nt:hasTargetNanopubType hycl:AIDA-Sentence, <http://purl.org/petapico/o/hycl> .
+  
+  sub:project a nt:GuidedChoicePlaceholder;
+    rdfs:label "the project this statement is relevant for";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Project" .
+  
+  sub:relatedStatement a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the other AIDA sentence (starting with \"http://purl.org/aida/\")";
+    nt:hasRegex "http://purl\\.org/aida/.+\\." .
+  
+  sub:relationPredicate a nt:RestrictedChoicePlaceholder;
+    rdfs:label "kind of relation to the other statement";
+    nt:hasDefaultValue hycl:hasMoreGeneralMeaningThan;
+    nt:possibleValue hycl:hasConflictingMeaning, hycl:hasConsistentMeaning, hycl:hasDifferentMeaning,
+      hycl:hasMoreGeneralMeaningThan, hycl:hasMoreSpecificMeaningThan, hycl:hasNonoppositeMeaning,
+      hycl:hasOppositeMeaning, hycl:hasRelatedMeaning, hycl:hasSameMeaning, hycl:hasUnrelatedMeaning,
+      hycl:isImprovedVersionOf .
+  
+  sub:st0 rdf:object hycl:AIDA-Sentence;
+    rdf:predicate rdf:type;
+    rdf:subject sub:aida .
+  
+  sub:st1 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:topic;
+    rdf:predicate schema:about;
+    rdf:subject sub:aida .
+  
+  sub:st2 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:project;
+    rdf:predicate gen:isRelevantFor;
+    rdf:subject sub:aida .
+  
+  sub:st3 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:support;
+    rdf:predicate cito:obtainsSupportFrom;
+    rdf:subject sub:aida .
+  
+  sub:st4 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:relatedStatement;
+    rdf:predicate sub:relationPredicate;
+    rdf:subject sub:aida .
+  
+  sub:support a nt:UriPlaceholder;
+    rdfs:label "URI of a dataset, publication, or other resource that supports the statement" .
+  
+  sub:topic a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of concept or topic the sentence is about";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234;
+    prov:wasDerivedFrom <https://w3id.org/np/RALmXhDw3rHcMveTgbv8VtWxijUHwnSqhCmtJFIPKWVaA> .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-21T07:23:49Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAJTyR7erp56a3eSlZ8F-iJ6c1WkGAzp9HQ6xzqDsfCVw>;
+    rdfs:label "Expressing a statement about research as an AIDA sentence";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ER9/rmVRhcM/kiYP5FfIj6kPMexR26LRin0EZfe5pbg3AYAyhASiJlTFXquNrPdpnldcTwEV2L+h1uaS6HzI2W9wU0QEymiGej1ui1HZJIlOmqFW11ONdvaVoVRO1ZalAvZEG1X+KQSpxRLLJ5okpz2nJ+EDDcQUVlcFWjOivYM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

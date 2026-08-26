@@ -1,0 +1,71 @@
+@prefix this: <https://w3id.org/np/RAaqrSEatLCNYWZb6VigZk_ttPrtNSyvhhFSgunSybPEs> .
+@prefix sub: <https://w3id.org/np/RAaqrSEatLCNYWZb6VigZk_ttPrtNSyvhhFSgunSybPEs/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdfs:comment rdfs:label "has my comment - connects an identifier (left) to a human-readable comment (right)" .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "your comment" .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:thing .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:isVersionOf sub:templateKind;
+    rdfs:label "Commenting on something";
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels/nanodash>;
+    nt:hasNanopubLabelPattern "Comment on: ${thing}";
+    nt:hasStatement sub:st1 .
+  
+  sub:thing a nt:UriPlaceholder;
+    rdfs:label "The URL/URI of the thing you want to comment on" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-07-21T10:05:30.417Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:template;
+    npx:introduces sub:templateKind;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Commenting on something";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAKmcrbEVkxF0ivA0_yGg8bnl6iKkwVDp_2SSHvPBrkPw/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCaQXE2B2hJ6QdWxaWerU4F/XOtCQdj2OkdrIYd1kpMY9hIUh8boxaO3uOBeqvvqKLf5HjpRF4DT1eghOSsa2Dhd5HRTM/XIamvwWkHpN4oB3Ml19pAAzjTqczYmFLfgG67mGL5+vSA8VEdHtKQCrvP4SpTibMBP1qaxt3k1tqD6wIDAQAB";
+    npx:hasSignature "JECoJ82EBf426qEKYnf7nBuK07YTWPfL7KAfGXNc/nGk0ekmWukdqf3fhU16YzMHrcf1PxU+9JNkaRFpAsTgi99g7AEmue9j/Gpj3mnlRPiCkfiNyzdjSZvcv2W5ZyhcWc1PAGT230MeNDpgv4JMRg056Gk4STZN17Wjr7UXvfk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+  
+  <https://w3id.org/spaces/knowledgepixels/nanodash> nt:hasLabelFromApi "Nanodash - The group maintaining Nanodash." .
+}
+

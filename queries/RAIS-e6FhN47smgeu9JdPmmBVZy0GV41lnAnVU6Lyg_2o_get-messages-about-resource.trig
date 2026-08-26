@@ -1,0 +1,136 @@
+@prefix this: <https://w3id.org/np/RAIS-e6FhN47smgeu9JdPmmBVZy0GV41lnAnVU6Lyg_2o> .
+@prefix sub: <https://w3id.org/np/RAIS-e6FhN47smgeu9JdPmmBVZy0GV41lnAnVU6Lyg_2o/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-messages-about-resource a grlc:grlc-query;
+    dct:description "This query returns plain-text messages and discourse statements (schema:Statement) about the given resource, about its sub-spaces and maintained resources, as well as replies (via as:inReplyTo) to any of these. The 'about' column shows the specific (sub-)space or resource each message is about.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get messages about resource";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix schema: <https://schema.org/>
+prefix schemah: <http://schema.org/>
+prefix as: <https://www.w3.org/ns/activitystreams#>
+
+select ?text (group_concat(distinct concat('<span><a href=\"', str(?link), '\">link</a></span>'); separator=\", \") as ?link) ?about_multi_iri ?about_label_multi ?user ?date ?np (\"^\" as ?np_label) where {
+  {
+    select ?a ?s ?text (group_concat(?target; separator=\" \") as ?about_multi_iri) (group_concat(replace(replace(?target_label, \"\\\\\\\\\", \"\\\\\\\\\\\\\\\\\"), \"[\\r\\n]+\", \"\\\\\\\\n\"); separator=\"\\n\") as ?about_label_multi) where {
+      select distinct ?a ?s ?text ?target ?target_label where {
+        {
+          select distinct ?target where {
+            service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+              graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?g . }
+              graph ?g {
+                values ?_resource_multi_iri {}
+                ?target (npa:isSubSpaceOf|npa:isMaintainedBy)* ?_resource_multi_iri .
+              }
+            }
+          }
+        }
+        optional {
+          {
+            select ?target (max(concat(str(?tdate), \" \", ?tl)) as ?tagged) where {
+              graph ?tg { ?target rdfs:label|dct:title|foaf:name ?tl . }
+              graph npa:graph {
+                ?tnp np:hasAssertion ?tg .
+                ?tnp dct:created ?tdate .
+                ?tnp npa:hasValidSignatureForPublicKeyHash ?tpubkey .
+                filter not exists { ?tnpx npx:invalidates ?tnp ; npa:hasValidSignatureForPublicKeyHash ?tpubkey . }
+              }
+              service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+                graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?g2 . }
+                graph ?g2 {
+                  values ?_resource_multi_iri {}
+                  ?target (npa:isSubSpaceOf|npa:isMaintainedBy)* ?_resource_multi_iri .
+                }
+              }
+            }
+            group by ?target
+          }
+        }
+        bind(coalesce(strafter(?tagged, \" \"), replace(str(?target), \"^.*[/#]([^/#]+)$\", \"$1\")) as ?target_label)
+        {
+          graph ?a {
+            {
+              ?a rdfs:label ?text .
+              ?a schema:about|schemah:about ?target .
+              bind(?a as ?s)
+            } union {
+              ?s a ?stype .
+              filter(?stype in (schema:Statement, schemah:Statement))
+              ?s rdf:value ?text .
+              ?s schema:about|schemah:about ?target .
+            }
+          }
+        } union {
+          ?anchor schema:about|schemah:about ?target .
+          ?s as:inReplyTo+ ?anchor .
+          graph ?a {
+            ?s a ?stype2 .
+            filter(?stype2 in (schema:Statement, schemah:Statement))
+            ?s rdf:value ?text .
+          }
+        }
+      }
+    }
+    group by ?a ?s ?text
+  }
+  optional { graph ?a { ?s rdfs:seeAlso ?link . } }
+  graph npa:graph {
+    ?np np:hasAssertion ?a .
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+  }
+  optional { graph npa:graph { ?np dct:created ?date . } }
+  optional { graph npa:graph { ?np dct:creator ?user . } }
+}
+group by ?text ?about_multi_iri ?about_label_multi ?user ?date ?np
+order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 <http://xmlns.com/foaf/0.1/name> "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-21T09:33:15Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-messages-about-resource;
+    npx:supersedes <https://w3id.org/np/RAQmm5lBnj_mxbPdbr6cS_bBG_-4Ye6vKw8Q5R2vxX5p4>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "CnlAJyUcfO7Q0dB+CS7PvrnyV1C7HgxbschR4r/fjswSvpmT5+BYLTYMkhMyMB1iWrnJgt+yTltl6mL8m4FN2OKkzoJDjVVmienvBk3ApNj7akGYXASeQXzEKARYh9AuH3yzl7v6cNnL/WJI4yJ94MIadN8XflLz6DmNaAUhpwo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

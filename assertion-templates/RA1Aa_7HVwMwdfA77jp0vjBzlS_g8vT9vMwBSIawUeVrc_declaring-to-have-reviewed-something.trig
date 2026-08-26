@@ -1,0 +1,121 @@
+@prefix this: <https://w3id.org/np/RA1Aa_7HVwMwdfA77jp0vjBzlS_g8vT9vMwBSIawUeVrc> .
+@prefix sub: <https://w3id.org/np/RA1Aa_7HVwMwdfA77jp0vjBzlS_g8vT9vMwBSIawUeVrc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://schema.org/ReviewAction> rdfs:label "review action" .
+  
+  <http://schema.org/agent> rdfs:label "has reviewer" .
+  
+  <http://schema.org/endTime> rdfs:label "has review date" .
+  
+  <http://schema.org/object> rdfs:label "has the review item" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has comment" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "The creator of such a nanopublication declares to have reviewed a resource (article, dataset, etc.).";
+    rdfs:label "Declaring to have reviewed something";
+    nt:hasNanopubLabelPattern "Review: ${label}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6, sub:st7;
+    nt:hasTag "Review";
+    nt:hasTargetNanopubType <http://schema.org/ReviewAction> .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "comment or note about the review" .
+  
+  sub:item a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the reviewed item" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "short label" .
+  
+  sub:reviewAction a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this" .
+  
+  sub:reviewDate a nt:LiteralPlaceholder;
+    rdfs:label "date of the review (YYYY, YYYY-MM, or YYYY-MM-DD)";
+    nt:hasDatatype xsd:dateTime .
+  
+  sub:reviewer a nt:AgentPlaceholder;
+    rdfs:label "who reviewed it";
+    nt:hasDefaultValue nt:CREATOR .
+  
+  sub:st1 rdf:object <http://schema.org/ReviewAction>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:reviewAction .
+  
+  sub:st2 rdf:object sub:item;
+    rdf:predicate <http://schema.org/object>;
+    rdf:subject sub:reviewAction .
+  
+  sub:st3 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:item .
+  
+  sub:st4 rdf:object sub:reviewer;
+    rdf:predicate <http://schema.org/agent>;
+    rdf:subject sub:reviewAction .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:reviewAction .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:reviewDate;
+    rdf:predicate <http://schema.org/endTime>;
+    rdf:subject sub:reviewAction .
+  
+  sub:st7 a nt:OptionalStatement;
+    rdf:object sub:journal;
+    rdf:predicate <http://purl.org/spar/fabio/Journal>;
+    rdf:subject sub:reviewAction .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-08-05T12:41:42.858Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354, orcid:0000-0001-9488-1870;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:supersedes <https://w3id.org/np/RALVlwnla2bZdKMQbzqReT-F1tz0x-Ts1Gr8XbXkfHBJg>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Declaring to have reviewed something";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAN86BgF4vKkLCClXc6YfvswozBLXKscQ3iFi53FfjlXc>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCaQXE2B2hJ6QdWxaWerU4F/XOtCQdj2OkdrIYd1kpMY9hIUh8boxaO3uOBeqvvqKLf5HjpRF4DT1eghOSsa2Dhd5HRTM/XIamvwWkHpN4oB3Ml19pAAzjTqczYmFLfgG67mGL5+vSA8VEdHtKQCrvP4SpTibMBP1qaxt3k1tqD6wIDAQAB";
+    npx:hasSignature "PAoL25DxK9a91O6eVwEPu/0y9ZcrWKCrLLuwNTlINu8BJl0kbPCjAUQr1a9izl2x4SjpqtOwqdmp4z249tOo7VyjCz++dmlfF9HWEVxdPigu/WNZLH2v7Pi7GTJEVWquGdimM2ye7WjaIC07iWOXOY1tEz70zeIPlyWQbaSHY2o=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

@@ -1,0 +1,133 @@
+@prefix this: <https://w3id.org/np/RA3VwQFcMoUu1Y6sdXWMCFJI7RKXnYhrZ3-gWr4J5DOns> .
+@prefix sub: <https://w3id.org/np/RA3VwQFcMoUu1Y6sdXWMCFJI7RKXnYhrZ3-gWr4J5DOns/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.org/dc/dcmitype/Collection> rdfs:label "collection" .
+  
+  dct:description rdfs:label "has the description" .
+  
+  <http://purl.org/spar/fabio/SystematicReview> rdfs:label "systematic review" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <http://www.w3.org/2002/07/owl#Ontology> rdfs:label "OWL ontology" .
+  
+  <http://www.w3.org/2008/05/skos#ConceptScheme> rdfs:label "SKOS concept scheme" .
+  
+  gen:MaintainedResource rdfs:label "maintained resource" .
+  
+  gen:hasNamespace rdfs:label "has the namespace" .
+  
+  gen:isMaintainedBy rdfs:label "is maintained by" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such nanopublications declares a resource maintanced by a space (e.g. organization, group, community).";
+    rdfs:label "Defining a maintained resource - test";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st03, sub:st04, sub:st05;
+    nt:hasTag "Spaces" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "the description of the resource" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the name of the resource" .
+  
+  sub:namespace a nt:ExternalUriPlaceholder;
+    rdfs:label "namespace URI prefix" .
+  
+  sub:resource a nt:ExternalUriPlaceholder, nt:IntroducedResource;
+    rdfs:label "resource identifier";
+    nt:hasPrefix "~~SPACE~~/r/";
+    nt:hasPrefixLabel "Resource" .
+  
+  sub:space a nt:GuidedChoicePlaceholder;
+    rdfs:label "the space maintaining this resource";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st00 rdf:object gen:MaintainedResource;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st01 a nt:OptionalStatement;
+    rdf:object sub:type;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:resource .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:resource .
+  
+  sub:st04 rdf:object sub:space;
+    rdf:predicate gen:isMaintainedBy;
+    rdf:subject sub:resource .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:namespace;
+    rdf:predicate gen:hasNamespace;
+    rdf:subject sub:resource .
+  
+  sub:type a nt:GuidedChoicePlaceholder;
+    rdfs:label "type of the resource";
+    nt:possibleValue <http://purl.org/dc/dcmitype/Collection>, <http://purl.org/spar/fabio/SystematicReview>,
+      <http://www.w3.org/2002/07/owl#Ontology>, <http://www.w3.org/2008/05/skos#ConceptScheme>,
+      nt:AssertionTemplate .
+  
+  nt:AssertionTemplate rdfs:label "assertion template" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0000-0000-0001 foaf:name "Test" .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: a npx:ExampleNanopub;
+    dct:created "2026-07-30T16:36:22.985+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0000-0000-0001, orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA2-IrNAmTpQOm0409zHK6c3ZtLGT3gNdRzk0iSQeT0Sg>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Defining a maintained resource - test";
+    prov:wasDerivedFrom <https://w3id.org/np/RAuoIiBPtkpMCALeI5AWNlQHoXdBfqZwqj_sVHiBGbfQo>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAXflINqt3smqxV5Aq7E9lzje4uLdkKIOefa6Bp8oJ8CY,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnpUjy9tBbM/dGGpye5PqATG5pVoic2XrNTmN5184yGhkbTSOeiDYsP8FaEx6slh2Zhhdqwu9cJ0YU9z4WyGdjFijI0IuaKkcnlHzQsAAB7Vip25bWmzCRfjmTrLvS0PN/aPy5CHcaYHCUyxw4UyJHpVVkmXIoAHIV7VSkxZnrGPA4AmHfoRl4ZBC6ljvVqkpj9GC9emSLE/VxuWtALKIcP34pqlhIDlORwz4SrLwckyPR1ARk4jCpXZxMX7xFWToB1v7iOVhr/RStXkcOHq+/L1bG7MTNfmFrgxIXXZyS2rv4Lf5LhE2Ioj5j5Eqb/pn3P273okVsdSjgA/VoTZzoQIDAQAB";
+    npx:hasSignature "Y4EcaJQhRtbzxLuSoFkj0mUDPZEpO8heK1Nuc2+ZZHq0RWmJzVbJeSDj/5tbwYgUe7D4pWnME+rOcmv++QBsIUTnBTEQp+Ge7JSpjK74ZI+614UpTqFJ1W/dZgUT+hnm1YhtgT7mHveBoYTceN7vDnO7WzxzEVDSjII9B0NJv8mwFyJd10CpvMDGOFN/VqV2I3S5/5TSQuQZuZt7mMDluK0zfxKkUJ3frWn0LWn32jSMo87JZY5dxKEvOIgZe8xrT7dATMj96AVedKvdZwFvPHMA1+0/MMeYjXh0UPWq5R+SsPQoxdRixi3qTUhWIpBuzDI63rNrSo4r6C4Ls0sBzQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0000-0000-0001 .
+}
+

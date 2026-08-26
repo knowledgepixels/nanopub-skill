@@ -1,0 +1,69 @@
+@prefix this: <https://w3id.org/np/RACUBkex_xaCD6ZmJ4_4xB_KuiKhvlfCzdEsHLN5HQQ9M> .
+@prefix sub: <https://w3id.org/np/RACUBkex_xaCD6ZmJ4_4xB_KuiKhvlfCzdEsHLN5HQQ9M/> .
+@prefix ff: <https://w3id.org/fair/ff/terms/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  ff:has-participant a gen:InverseRoleProperty;
+    rdfs:label "has participant" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication declares that somebody is a participant of a given Space.";
+    rdfs:label "Declaring a participant of a space";
+    nt:hasNanopubLabelPattern "${space} has participant: ${user}";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Spaces";
+    nt:hasTargetNanopubType gen:RoleInstantiation .
+  
+  sub:space a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the space";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st1 rdf:object sub:user;
+    rdf:predicate ff:has-participant;
+    rdf:subject sub:space .
+  
+  sub:user a nt:AgentPlaceholder;
+    rdfs:label "choose the participant" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-11T07:50:39Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Declaring a participant of a space";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "hkEUcCmJvhsTLp14erYufy1jw/OYnqIvH1uwe76jLxk1r87nk4JMXUDm2BpYJ1KXUjX0IE8VuqI+F47KLkPHaWNfil9zmqsEmQ6dVt6YNI9/LKxEEtLFTzRnkiXlgoug3EDrSXDpG8ZdJB1z0mtKHSYGUNenNZT4TKDhBPCER4o=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

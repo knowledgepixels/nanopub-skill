@@ -1,0 +1,107 @@
+@prefix this: <https://w3id.org/np/RAaJUR8YijcD0BnYQkIvjmA2EJxWTeQNzTke9quasmj-8> .
+@prefix sub: <https://w3id.org/np/RAaJUR8YijcD0BnYQkIvjmA2EJxWTeQNzTke9quasmj-8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-parts a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the things denoted as parts of the given thing.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get parts of a thing";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix dct: <http://purl.org/dc/terms/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+
+select distinct ?part (sample(?partLabel) as ?partLabel) ?np ?npLabel ?date ?pubkey where {
+  { graph ?g {
+      ?_thing_iri dct:hasPart ?part .
+    }
+    filter not exists {
+      graph npa:graph {
+        ?part npx:hasNanopubType npx:NanopubIndex .
+      }
+    }
+  } union
+  { graph ?g {
+      ?part (dct:partOf|dct:isPartOf) ?_thing_iri .
+    }
+  } union
+  { graph ?gx {
+      ?_thing_iri dct:hasPart ?index .
+    }
+    graph npa:graph {
+      ?index npx:hasNanopubType npx:NanopubIndex .
+      ?index np:hasAssertion ?a .
+    }
+    graph ?a {
+      ?index npx:includesElement ?np .
+    }
+    graph npa:graph {
+      ?np npx:introduces ?part .
+    }
+  }
+  graph npa:graph {
+    ?np npa:hasGraph ?g .
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+    ?np np:hasPublicationInfo ?i .
+    ?np dct:created ?date .
+    optional { ?np rdfs:label ?npLabel . }
+  }
+  optional { graph ?g {  ?part rdfs:label ?partLabel1 . } }
+  optional { graph ?g {  ?part dct:title ?partLabel2 . } }
+  optional { graph ?i {  ?part rdfs:label ?partLabel3 . } }
+  optional { graph ?i {  ?part nt:hasLabelFromApi ?partLabel4 . } }
+  optional { graph ?x { ?part rdfs:label ?partLabel5 . } }
+  bind(coalesce(?partLabel1, ?partLabel2, ?partLabel3, ?partLabel4, ?partLabel5) as ?partLabel)
+}
+group by ?part ?np ?npLabel ?date ?pubkey
+limit 1000""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-20T14:47:49.998Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354, orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-parts;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAJmZoM0xCGE8OL6EgmQBOd1M58ggNkwZ0IUqHOAPRfvE>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCaQXE2B2hJ6QdWxaWerU4F/XOtCQdj2OkdrIYd1kpMY9hIUh8boxaO3uOBeqvvqKLf5HjpRF4DT1eghOSsa2Dhd5HRTM/XIamvwWkHpN4oB3Ml19pAAzjTqczYmFLfgG67mGL5+vSA8VEdHtKQCrvP4SpTibMBP1qaxt3k1tqD6wIDAQAB";
+    npx:hasSignature "LVFT7qWgP/Qi3/4drzinu2jgpgJADOhrxknj5Bw+cdtv+hjTdPYRp7oSsV2aienN9roXwN1Rz179K7BfvZmS4Y63w7volgN99p4UepAjHOv31bIdaOycPvc3iqChFacUIQQF7UGkwFwQvS7w/OHV7f4mtt8oKs88tKJxmDiwj48=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

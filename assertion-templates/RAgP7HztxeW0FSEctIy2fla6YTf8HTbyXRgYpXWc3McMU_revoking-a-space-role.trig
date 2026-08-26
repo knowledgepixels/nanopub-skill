@@ -1,0 +1,93 @@
+@prefix this: <https://w3id.org/np/RAgP7HztxeW0FSEctIy2fla6YTf8HTbyXRgYpXWc3McMU> .
+@prefix sub: <https://w3id.org/np/RAgP7HztxeW0FSEctIy2fla6YTf8HTbyXRgYpXWc3McMU/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  gen:RevokedRoleInstantiation rdfs:label "role revocation" .
+  
+  gen:forAgent rdfs:label "revokes the role from" .
+  
+  gen:forSpace rdfs:label "applies to the space" .
+  
+  gen:hasRole rdfs:label "revokes the role" .
+  
+  sub:agent a nt:AgentPlaceholder;
+    rdfs:label "choose the user whose role is revoked" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Revoking a space role";
+    nt:hasNanopubLabelPattern "Revoking role ${role} of ${agent} in ${space}";
+    nt:hasStatement sub:st10, sub:st20, sub:st30, sub:st40;
+    nt:hasTag "Spaces";
+    nt:hasTargetNanopubType gen:RevokedRoleInstantiation .
+  
+  sub:revocation a nt:EmbeddedResource, nt:LocalResource;
+    rdfs:label "this" .
+  
+  sub:role a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the role (for revoking adminship, use the built-in admin role)";
+    nt:possibleValue gen:AdminRole;
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAs7Q2IMbb7C2WzFa98bVwlDMhN3kJ0rrF9cSEybtvLaA/find-embedded-things?type=https://w3id.org/kpxl/gen/terms/SpaceMemberRole" .
+  
+  sub:space a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the space";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st10 rdf:object gen:RevokedRoleInstantiation;
+    rdf:predicate rdf:type;
+    rdf:subject sub:revocation .
+  
+  sub:st20 rdf:object sub:space;
+    rdf:predicate gen:forSpace;
+    rdf:subject sub:revocation .
+  
+  sub:st30 rdf:object sub:agent;
+    rdf:predicate gen:forAgent;
+    rdf:subject sub:revocation .
+  
+  sub:st40 rdf:object sub:role;
+    rdf:predicate gen:hasRole;
+    rdf:subject sub:revocation .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  gen:AdminRole rdfs:label "built-in admin role" .
+  
+  this: dct:created "2026-08-25T10:43:30Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Revoking a space role";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "coXFrbL2qae+Z9JarH87kze1TZ6vTSOi3Dxe5iEvYtu41pnSODi5BDKQ5Pchoe8gF6ZMbfUt9HcV1ceYVEuwiPtpo64erYFhghU06D2GyLvGRFcBK3S1yVnMkboALr50tpMKpDx792grbSrAxTtoX8afNcvDfgzqkEvV/cMOxs4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

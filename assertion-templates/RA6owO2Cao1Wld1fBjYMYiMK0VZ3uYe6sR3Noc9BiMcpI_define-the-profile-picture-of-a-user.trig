@@ -1,0 +1,56 @@
+@prefix this: <https://w3id.org/np/RA6owO2Cao1Wld1fBjYMYiMK0VZ3uYe6sR3Noc9BiMcpI> .
+@prefix sub: <https://w3id.org/np/RA6owO2Cao1Wld1fBjYMYiMK0VZ3uYe6sR3Noc9BiMcpI/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  gen:MaintainedResource rdfs:label "maintained resource" .
+  
+  gen:isMaintainedBy rdfs:label "is maintained by" .
+  
+  <https://w3id.org/np/RAz5tNdG4uiRWPcSLkHIPM5SFboQES51mrTEq3w2hAqfs/templateKind> a
+      gen:MaintainedResource, nt:AssertionTemplate;
+    dct:description "Template for declaring the profile picture of a user, given either as the URL of an image file or as SVG markup in a quoted literal (nanodash issues #632 and #634).";
+    rdfs:label "Define the profile picture of a User";
+    gen:isMaintainedBy <https://w3id.org/spaces/knowledgepixels/nanodash> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-24T13:54:33Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces <https://w3id.org/np/RAz5tNdG4uiRWPcSLkHIPM5SFboQES51mrTEq3w2hAqfs/templateKind>;
+    rdfs:label "Define the profile picture of a User";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAuoIiBPtkpMCALeI5AWNlQHoXdBfqZwqj_sVHiBGbfQo> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "pYtZLRJA13o3uTx9SSgzWoqoV9PeTmeVP/9GbqhaYrfxZlJE+yWYfFjY2jGhmcBRpgJfYs2s4t+3tf3jM2pzePjezV/1LdXrGv+199/nvjrzQ4n7LD9XNsTuj6J+1yGwLm9FAO2MaC8xOkF7w2URFacnIIMNaoXLHGM4uM8L1xg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

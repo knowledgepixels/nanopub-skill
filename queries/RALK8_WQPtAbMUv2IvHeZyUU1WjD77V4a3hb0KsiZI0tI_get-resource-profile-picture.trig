@@ -1,0 +1,86 @@
+@prefix this: <https://w3id.org/np/RALK8_WQPtAbMUv2IvHeZyUU1WjD77V4a3hb0KsiZI0tI> .
+@prefix sub: <https://w3id.org/np/RALK8_WQPtAbMUv2IvHeZyUU1WjD77V4a3hb0KsiZI0tI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-resource-profile-picture a grlc:grlc-query;
+    dct:description "Returns the profile picture(s) declared for the given space(s) or maintained resource(s) as 'schema:image', restricted to declarations that are SIGNED BY AN ADMIN of the governing space (nanodash issue #632). Pass one or more resource IRIs; results are ordered newest first, so the caller takes the first row per resource. The authority gate is a single federated hop to the spaces repo, mirroring get-view-displays-unresolved: the resource's npa:hasGoverningSpaceRef edge in the current space state (reflexive for a space itself, the maintainer space for a maintained resource) is joined to the admin RoleInstantiations of that ref and on to npa:AccountState, so only the trust-state-validated public keys of current admins are accepted; the maintainer tier is deliberately NOT accepted here. Everything else is local on the repo/full endpoint: candidate declarations are found subject-first (bound resource IRI in an unbound assertion graph), then their signing key is checked, so the federated hop sees only the handful of candidates. Retracted or superseded declarations drop out via the usual npx:invalidates filter. The gate is not pinned to a single space ref: for an identifier claimed by rival refs, an admin of any claiming ref can declare a picture (see nanodash docs/space-ref-identity.md). Users' own profile pictures are NOT covered by this query -- they are self-declared and read through the subject-agnostic get-all-user-profile-pics.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get resource profile picture";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix dct:  <http://purl.org/dc/terms/>
+prefix np:   <http://www.nanopub.org/nschema#>
+prefix npa:  <http://purl.org/nanopub/admin/>
+prefix npx:  <http://purl.org/nanopub/x/>
+prefix gen:  <https://w3id.org/kpxl/gen/terms/>
+prefix schema: <https://schema.org/>
+
+select distinct (?_resource_multi_iri as ?resource) ?imageUrl ?np ?date ?pubkey where {
+  values ?_resource_multi_iri {}
+  # Candidate declarations, local on repo/full: subject-first lookup of the image
+  # triple, then the signing key of the nanopub that asserts it.
+  graph npa:graph {
+    ?np np:hasAssertion ?a ;
+        npa:hasValidSignatureForPublicKeyHash ?pubkey ;
+        dct:created ?date .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+  }
+  graph ?a { ?_resource_multi_iri schema:image ?imageUrl . }
+  # Authority gate (single federated hop): the signing key must be a current admin
+  # key of a space ref governing the resource -- reflexive for a space itself, the
+  # maintainer space for a maintained resource.
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+    graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+    graph ?stateG {
+      ?_resource_multi_iri npa:hasGoverningSpaceRef ?ref .
+      ?ri a gen:RoleInstantiation ;
+          npa:forSpaceRef ?ref ;
+          npa:hasRoleType gen:AdminRole ;
+          npa:forAgent ?admin .
+      ?acct a npa:AccountState ; npa:agent ?admin ; npa:pubkey ?pubkey .
+    }
+  }
+}
+order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-24T13:15:55Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-resource-profile-picture;
+    rdfs:label "Get resource profile picture";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "cwuONP+OEq+9jeiQzCnT/RRhRNDFy3NXpfZJ/nSx6ddNV9tnesU241tjtWcXyRpz/L0l5CytV4TQoKT+2VPYbtN0g7Ok4EgHFLErmxcjhSPVfWrJ8RlHRyApI8Rb2O+1zwRjbRrRElNo61ateUthrY/ix0EvQFVjFWz4oRm5wko=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

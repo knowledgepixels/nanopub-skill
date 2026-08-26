@@ -1,0 +1,81 @@
+@prefix this: <https://w3id.org/np/RAj64iSjPSb5EJYCo49L7R8kjQOemEGkCiZXDgDZGoArY> .
+@prefix sub: <https://w3id.org/np/RAj64iSjPSb5EJYCo49L7R8kjQOemEGkCiZXDgDZGoArY/> .
+@prefix ff: <https://w3id.org/fair/ff/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdfs:label rdfs:label "has the label" .
+  
+  ff:has-funder rdfs:label "has funder" .
+  
+  ff:has-lead-institution rdfs:label "has lead institution" .
+  
+  ff:has-partner-institution rdfs:label "has partner institution" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication declares that an institution is the lead institution, a partner institution, or a funder of a given Space. Institutions are identified by their ROR identifier where they have one, and by a Wikidata entity or their official web address otherwise.";
+    rdfs:label "Declaring an institution of a space";
+    nt:hasNanopubLabelPattern "${space} ${relation}: ${institutionLabel}";
+    nt:hasStatement sub:st1, sub:st2;
+    nt:hasTag "Spaces" .
+  
+  sub:institution a nt:GuidedChoicePlaceholder;
+    rdfs:label "the institution (search by name to find its ROR or Wikidata identifier)";
+    nt:possibleValuesFromApi "https://api.ror.org/organizations?query=", "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:institutionLabel a nt:LiteralPlaceholder;
+    rdfs:label "name of the institution" .
+  
+  sub:relation a nt:RestrictedChoicePlaceholder;
+    rdfs:label "kind of institution";
+    nt:possibleValue ff:has-funder, ff:has-lead-institution, ff:has-partner-institution .
+  
+  sub:space a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the space";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st1 rdf:object sub:institution;
+    rdf:predicate sub:relation;
+    rdf:subject sub:space .
+  
+  sub:st2 a nt:OptionalStatement;
+    rdf:object sub:institutionLabel;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:institution .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo <https://w3id.org/np/RA0SDqJIc3dtX2AihcvcSzBR7QIWfVl5lwk6U_MbH5RoA/nanopub-ecosystem-paper-bot> .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-08-18T08:30:26Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RA0SDqJIc3dtX2AihcvcSzBR7QIWfVl5lwk6U_MbH5RoA/nanopub-ecosystem-paper-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Declaring an institution of a space";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAxxo+arlpyxYYoHYYVTNSOWe/es90yVMBA8vaDyaAQk4pnOjTlpPptP5IkGg6zuCRIlm11QrHKkiU536witBT6gdh9kP9ay3S6m7wZ3iM7YcPMfhVHUXN6TBnuiKHHyJdVeK6RxMZlfXRKEz9HYcND+PGCXMVp8BofpKBKke3y4m8FTt+8aMEcgVcFBHFdrkWXoIIvkMlodtXkMgSwuGK8yXt/9lXqChIWpsbzu2juuX6pktMkfexkfQTwIH7oNSr/ma4KzZXERuLrCSO6IH5SfWXwjQUery6rKHiEMyie58mgBf0ssKh+uJoaZOqgbmj0f+EDwTIzq0dNsPA0A+n2QIDAQAB";
+    npx:hasSignature "sbycwPJ5Itvoe6yRU+nwRGXc/IV6O9ao7lDkAOjamGyV8kq5JH2T2ZQApQlBvJqIWcnb8Mmjvk9wwz5FfVvuQUUgq3uWfGLfe9WYfZuSrBQez2u3P3rATWV1aCKZ+8YqCJShXEk27A7xL3SvW3hIQFBQ4NWkOTrwxfHTmVAqqJAS8/X1evh/tvBb/4PKMzzP7pNuMQTXBoUQ58M0HrH/X5rXnA1jPN5Evo8NskXrq/yVu62lKq9LXUDI9DihyNexLVNAC3igHdxINU9a9Mt5S0J58nQOAvV9RLZcIQk+c5acFx1X0bxANUvbwkEAGKClPkWKIx6+kgzuGqCLD4TtJA==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RA0SDqJIc3dtX2AihcvcSzBR7QIWfVl5lwk6U_MbH5RoA/nanopub-ecosystem-paper-bot> .
+}
+

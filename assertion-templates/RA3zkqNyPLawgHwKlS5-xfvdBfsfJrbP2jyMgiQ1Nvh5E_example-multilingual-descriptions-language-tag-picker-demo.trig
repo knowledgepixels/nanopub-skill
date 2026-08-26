@@ -1,0 +1,104 @@
+@prefix this: <https://w3id.org/np/RA3zkqNyPLawgHwKlS5-xfvdBfsfJrbP2jyMgiQ1Nvh5E> .
+@prefix sub: <https://w3id.org/np/RA3zkqNyPLawgHwKlS5-xfvdBfsfJrbP2jyMgiQ1Nvh5E/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:altlabel a nt:LiteralPlaceholder;
+    rdfs:label "alternative label";
+    nt:hasLanguageTag "en" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Demo template for the language-tag picker on literal placeholders (nanodash PR #559). It shows all cases: 'name' has a restricted picker (en/de/fr) with default en and is repeatable (one name per language); 'comment' has an unrestricted picker with free BCP 47 entry (full tags like en-GB or de-CH can be typed) and, being optional, demonstrates that entering text without picking a language blocks submission; 'description' shows the picker on a long-literal textarea; 'regional name' has a restricted picker of full region-subtag languages (de-CH, de-DE, de-AT, fr-CH, it-CH) with no default; 'alternative label' has a fixed en tag for contrast (no picker).";
+    rdfs:label "Example: Multilingual descriptions (language-tag picker demo)";
+    nt:hasNanopubLabelPattern "Example: multilingual descriptions of ${thing}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st4, sub:st5 .
+  
+  sub:comment a nt:LanguageTaggedLiteralPlaceholder, nt:LiteralPlaceholder;
+    rdfs:label "comment" .
+  
+  sub:description a nt:LanguageTaggedLiteralPlaceholder, nt:LongLiteralPlaceholder;
+    rdfs:label "description" .
+  
+  sub:name a nt:LanguageTaggedLiteralPlaceholder, nt:LiteralPlaceholder;
+    rdfs:label "name";
+    nt:hasLanguageTag "en";
+    nt:possibleLanguageTag "de", "en", "fr" .
+  
+  sub:regionalname a nt:LanguageTaggedLiteralPlaceholder, nt:LiteralPlaceholder;
+    rdfs:label "regional name";
+    nt:possibleLanguageTag "de-AT", "de-CH", "de-DE", "fr-CH", "it-CH" .
+  
+  sub:st1 a nt:RepeatableStatement;
+    rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:thing;
+    nt:statementOrder "1"^^xsd:integer .
+  
+  sub:st2 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:thing;
+    nt:statementOrder "2"^^xsd:integer .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:thing;
+    nt:statementOrder "3"^^xsd:integer .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:regionalname;
+    rdf:predicate skos:prefLabel;
+    rdf:subject sub:thing;
+    nt:statementOrder "4"^^xsd:integer .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:altlabel;
+    rdf:predicate skos:altLabel;
+    rdf:subject sub:thing;
+    nt:statementOrder "5"^^xsd:integer .
+  
+  sub:thing a nt:UriPlaceholder;
+    rdfs:label "thing being described" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-15T07:23:07Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:supersedes <https://w3id.org/np/RAKnRUxxzGvWb7-dTrxx8-aT8brQezEZEd3UlLNZIXc68>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAuoIiBPtkpMCALeI5AWNlQHoXdBfqZwqj_sVHiBGbfQo> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "On8qpNd4uYGgW93Jko9i7J38XezHE3HRNvrBmBiGpfWr2JvdFkb4qdbk4sfXSD48kJVVR0zJzZt7W5xtIQ9AZCcUQHVGx4mmYD1SKrMJUyibSLJu8RAZdtzMx+bjf6MljKggyv99DCF0XHtVNSoyih19L0Y7kopDvMmCVjIEQa4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

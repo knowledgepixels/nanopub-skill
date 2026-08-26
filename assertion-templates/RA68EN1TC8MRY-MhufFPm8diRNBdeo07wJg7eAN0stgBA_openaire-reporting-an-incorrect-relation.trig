@@ -1,0 +1,137 @@
+@prefix this: <https://w3id.org/np/RA68EN1TC8MRY-MhufFPm8diRNBdeo07wJg7eAN0stgBA> .
+@prefix sub: <https://w3id.org/np/RA68EN1TC8MRY-MhufFPm8diRNBdeo07wJg7eAN0stgBA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix frapo: <http://purl.org/cerif/frapo/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix frbr: <http://purl.org/vocab/frbr/core#> .
+@prefix cito: <http://purl.org/spar/cito/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  frapo:isOutputOf rdfs:label "is output of" .
+  
+  cito:cites rdfs:label "cites" .
+  
+  cito:isDocumentedBy rdfs:label "is documented by" .
+  
+  frbr:partOf rdfs:label "is part of" .
+  
+  frbr:revisionOf rdfs:label "is a revision of" .
+  
+  frbr:supplement rdfs:label "is supplemented by" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has the explanation" .
+  
+  owl:NegativePropertyAssertion rdfs:label "incorrect-relation report" .
+  
+  owl:assertionProperty rdfs:label "concerns the relation" .
+  
+  owl:sourceIndividual rdfs:label "has as subject" .
+  
+  owl:targetIndividual rdfs:label "has as incorrect target" .
+  
+  skos:exactMatch rdfs:label "is the same work as" .
+  
+  prov:wasDerivedFrom rdfs:label "was derived from" .
+  
+  sub:correctTarget a nt:GuidedChoicePlaceholder;
+    rdfs:label "correct target of the relation";
+    nt:possibleValuesFromApi "https://api.openaire.eu/graph/v3/projects?search=", "https://api.openaire.eu/graph/v3/research-products?search=" .
+  
+  sub:explanation a nt:LongLiteralPlaceholder;
+    rdfs:label "explanation of the error" .
+  
+  sub:record a nt:GuidedChoicePlaceholder;
+    rdfs:label "record that is the subject of the incorrect relation";
+    nt:possibleValuesFromApi "https://api.openaire.eu/graph/v3/research-products?search=" .
+  
+  sub:relation a nt:RestrictedChoicePlaceholder;
+    rdfs:label "relation";
+    nt:possibleValue frapo:isOutputOf, cito:cites, cito:isDocumentedBy, frbr:partOf, frbr:revisionOf,
+      frbr:supplement, skos:exactMatch, prov:wasDerivedFrom .
+  
+  sub:report a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this report" .
+  
+  sub:st01 rdf:object owl:NegativePropertyAssertion;
+    rdf:predicate rdf:type;
+    rdf:subject sub:report .
+  
+  sub:st02 rdf:object sub:record;
+    rdf:predicate owl:sourceIndividual;
+    rdf:subject sub:report .
+  
+  sub:st03 rdf:object sub:relation;
+    rdf:predicate owl:assertionProperty;
+    rdf:subject sub:report .
+  
+  sub:st04 rdf:object sub:wrongTarget;
+    rdf:predicate owl:targetIndividual;
+    rdf:subject sub:report .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:explanation;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:report .
+  
+  sub:st06 a nt:OptionalStatement;
+    rdf:object sub:correctTarget;
+    rdf:predicate sub:relation;
+    rdf:subject sub:record .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Such a nanopublication reports that a relation shown in the OpenAIRE Graph does not hold, using a standard OWL negative property assertion. Optionally, the correct target of the relation can be given, which is stated as a plain positive statement of the same shape that the contribution templates produce. If the relation should not exist at all, leave the correction statement empty. Relations read in one direction only; swap subject and target if the relation you dispute points the other way. In the provenance part, link the page where the incorrect relation can be seen as the entity this report was derived from.";
+    rdfs:label "OpenAIRE: Reporting an incorrect relation";
+    nt:hasDefaultProvenance <http://purl.org/np/RAGXx_k9eQMnXaCbsXMsJbGClwZtQEGNg0GVJu6amdAVw>;
+    nt:hasNanopubLabelPattern "Incorrect: ${record} ${relation} ${wrongTarget}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06;
+    nt:hasTag "OpenAIRE";
+    nt:hasTargetNanopubType owl:NegativePropertyAssertion .
+  
+  sub:wrongTarget a nt:GuidedChoicePlaceholder;
+    rdfs:label "incorrectly related record or project";
+    nt:possibleValuesFromApi "https://api.openaire.eu/graph/v3/projects?search=", "https://api.openaire.eu/graph/v3/research-products?search=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-29T08:31:13Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    rdfs:label "OpenAIRE: Reporting an incorrect relation";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "WFgPrCxZ7wRIsiR8n5AEVjmBv6SJiBtsJsLCkBjQTcm1/AIt6KzR1/ly1JVjRPADkicERsAmxnqQqQoC9LwhtljMDSWcsg3MwSkLE47EkOQ2Z+4qjjf7LhBxbexLzNPQaBqqZ8sj6mmw5i8sVOy/kYWeJtiDeK/hoXdx5EuUQ+o=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

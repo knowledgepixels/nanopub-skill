@@ -1,0 +1,62 @@
+@prefix this: <https://w3id.org/np/RAx7SvmtZ4jMiYh7Ony0xN1Ska2r12YpNnKjql4My6yHE> .
+@prefix sub: <https://w3id.org/np/RAx7SvmtZ4jMiYh7Ony0xN1Ska2r12YpNnKjql4My6yHE/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:revoke-role-action a gen:ViewEntryAction;
+    rdfs:label "🚫 revoke role...";
+    gen:hasActionTemplate <https://w3id.org/np/RAgP7HztxeW0FSEctIy2fla6YTf8HTbyXRgYpXWc3McMU>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "revokeAgent:agent";
+    gen:hasActionTemplateTargetField "space";
+    gen:isVisibleTo gen:MemberRole .
+  
+  sub:view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RA8EAXZS-LvobWOlpYxbLveTPXpj3eHeVah18xtbaRPqQ/space-observers-view-kind>;
+    dct:title "👤 Self-Assigned/Observers";
+    rdfs:label "Space observers view";
+    gen:hasDisplayWidth gen:ColumnWidth06of12;
+    gen:hasStructuralPosition "5.7.spaceObservers";
+    gen:hasViewAction sub:revoke-role-action;
+    gen:hasViewQuery <https://w3id.org/np/RAVZskcsPfH8bf5-cdIBWipN85tptp3PpxUfpIszwz7Pg/list-space-observers>;
+    gen:hasViewQueryTargetField "space" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-08-25T11:37:46Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:view;
+    npx:introduces <https://w3id.org/np/RA8EAXZS-LvobWOlpYxbLveTPXpj3eHeVah18xtbaRPqQ/space-observers-view-kind>;
+    npx:supersedes <https://w3id.org/np/RADW4rDxlnkF7cAInPjmUGnRBktsZkr46K9-6dkI0YsWE>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "OJZYPkrO8aQ/42zaNweRKu2JKZPghnecTF+Jprg4kcVApgq80jExGwsmWotoIH4QXU31I2zPHSskWAfv7rZr0JVob6llR0v7siQOy9+MqoRpQrUor2nKfKZD6EQdSwCTY/qOPiIU/GNMWR+RZ+pprFweDYYgLrd9AJ32duq0LoQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

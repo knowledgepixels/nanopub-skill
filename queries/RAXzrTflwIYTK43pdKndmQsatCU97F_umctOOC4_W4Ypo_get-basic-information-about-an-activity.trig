@@ -1,0 +1,150 @@
+@prefix this: <https://w3id.org/np/RAXzrTflwIYTK43pdKndmQsatCU97F_umctOOC4_W4Ypo> .
+@prefix sub: <https://w3id.org/np/RAXzrTflwIYTK43pdKndmQsatCU97F_umctOOC4_W4Ypo/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-activity-info a grlc:grlc-query;
+    dct:description "Returns the basic information known about an activity such as a study, as property/value rows: its kind, description, the project it is part of, who conducted it, where to find more information, whether it has been approved, and the source nanopublication it all comes from. Takes the most recent still-current nanopub about the evidence that was published by somebody holding a role in the project its study belongs to.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get basic information about an activity";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix ff: <https://w3id.org/fair/ff/terms/>
+prefix obo: <http://purl.obolibrary.org/obo/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+
+select ?Property_noheader ?Property_label ?Value_multi_val_noheader ?Value_label_multi
+  ?np ?target_np ?approve_target
+where {
+  values ?_activity_multi_iri {}
+  {
+    select ?np (sample(?npT) as ?npTitle) ?project ?project_label ?description
+      (group_concat(distinct str(?kind); separator=\"\\n\") as ?kind_vals)
+      (group_concat(distinct ?kindL; separator=\"\\n\") as ?kind_labels)
+      (group_concat(distinct str(?agent); separator=\"\\n\") as ?agent_vals)
+      (group_concat(distinct ?agentName; separator=\"\\n\") as ?agent_labels)
+      (group_concat(distinct str(?link); separator=\"\\n\") as ?link_vals)
+    where {
+      values ?_activity_multi_iri {}
+      # the most recent still-current nanopub about this activity, published by somebody
+      # holding a role in the project it belongs to
+      {
+        select ?np where {
+          values ?_activity_multi_iri {}
+          graph npa:graph {
+            ?np npa:hasValidSignatureForPublicKeyHash ?pk0 ; np:hasAssertion ?a0 ; np:hasPublicationInfo ?pi0 .
+            filter not exists { ?inv0 npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk0 . }
+            filter not exists { ?sup0 npx:supersedes ?np . }
+          }
+          graph ?a0 { ?_activity_multi_iri a obo:OBI_0000066 ; dct:isPartOf ?project0 . }
+          graph npa:graph { ?mnp0 np:hasAssertion ?ma0 . filter not exists { ?msup0 npx:supersedes ?mnp0 . } }
+          graph ?ma0 {
+            ?project0 ?mrel0 ?member0 .
+            values ?mrel0 { gen:hasAdmin gen:hasProjectLead ff:has-principal-investigator ff:has-participant ff:has-data-steward }
+          }
+          graph ?pi0 { ?np dct:creator ?member0 ; dct:created ?created . }
+        } order by desc(?created) limit 1
+      }
+      graph npa:graph { ?np np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; np:hasProvenance ?prov . }
+      optional { graph ?a { ?_activity_multi_iri dct:description ?description } }
+      optional {
+        graph ?a { ?_activity_multi_iri a ?kind }
+        filter(?kind != obo:OBI_0000066)
+        optional { graph ?pi { ?kind rdfs:label ?kindL } }
+      }
+      optional {
+        graph ?a { ?_activity_multi_iri dct:isPartOf ?project }
+        optional { graph ?pi { ?project nt:hasLabelFromApi ?project_label } }
+      }
+      optional {
+        graph ?a { ?_activity_multi_iri prov:wasAssociatedWith ?agent }
+        optional { graph ?pi { ?agent foaf:name ?agentName } }
+      }
+      optional { graph ?a { ?_activity_multi_iri rdfs:seeAlso ?link } }
+      optional { graph ?pi { ?np rdfs:label ?npT } }
+    } group by ?np ?project ?project_label ?description
+  }
+  bind(exists {
+    graph npa:graph {
+      ?anp npa:hasValidSignatureForPublicKeyHash ?apk ; np:hasAssertion ?aa .
+      filter not exists { ?ainv npx:invalidates ?anp ; npa:hasValidSignatureForPublicKeyHash ?apk . }
+      filter not exists { ?asup npx:supersedes ?anp . }
+    }
+    graph ?aa { ?approver npx:approvesOf ?np }
+  } as ?isApproved)
+  values (?key ?Property_noheader ?Property_label) {
+    ('Kind' rdf:type 'Kind:')
+    ('Desc' dct:description 'Description:')
+    ('Project' dct:isPartOf 'Part of:')
+    ('Who' prov:wasAssociatedWith 'Conducted by:')
+    ('Link' rdfs:seeAlso 'More information:')
+    ('Status' npx:approvesOf 'Status:')
+    ('Source' dct:source 'Source:')
+  }
+  bind(if(?key = 'Kind', ?kind_vals,
+       if(?key = 'Desc', str(?description),
+       if(?key = 'Project', str(?project),
+       if(?key = 'Who', ?agent_vals,
+       if(?key = 'Link', ?link_vals,
+       if(?key = 'Status', if(?isApproved, \"approved\", \"not approved\"), str(?np)))))))  as ?rawVal)
+  filter(bound(?rawVal) && ?rawVal != \"\")
+  bind(?rawVal as ?Value_multi_val_noheader)
+  bind(if(?key = 'Kind', ?kind_labels,
+       if(?key = 'Project', coalesce(?project_label, \"\"),
+       if(?key = 'Who', ?agent_labels,
+       if(?key = 'Source', coalesce(?npTitle, \"\"), \"\")))) as ?Value_label_multi)
+  bind(if(?key = 'Source', str(?np), ?nothing) as ?target_np)
+  bind(if(?key = 'Status' && !?isApproved, str(?np), \"\") as ?approve_target)
+}
+order by (if(?key = 'Kind', 1, if(?key = 'Desc', 2, if(?key = 'Project', 3, if(?key = 'Who', 4, if(?key = 'Link', 5, if(?key = 'Status', 6, 7)))))))""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-17T12:59:41Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-activity-info;
+    rdfs:label "Get basic information about an activity";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RAcm8OurwUk15WOgBM9wySo-T3a5h6as4K8YR5MBrrxUc>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ITtzdvifEUlVUl9oHu54iVwWtfx19XSYCFaKx8rHZL7kOkbrHRv4mBhJZZhM0b2cfOXGuyC+PNFhZp66JiyRo8OPtQPSKQao5/jNBUrCzvK+Ts0WnqQz4nTTtB4Bx8sTWslc90APR6x0gIGtv9Nnx2pn3Wxkuvw1osSF0Dvfy0w=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

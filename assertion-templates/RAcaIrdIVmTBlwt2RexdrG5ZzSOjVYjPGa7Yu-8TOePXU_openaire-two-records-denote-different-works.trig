@@ -1,0 +1,68 @@
+@prefix this: <https://w3id.org/np/RAcaIrdIVmTBlwt2RexdrG5ZzSOjVYjPGa7Yu-8TOePXU> .
+@prefix sub: <https://w3id.org/np/RAcaIrdIVmTBlwt2RexdrG5ZzSOjVYjPGa7Yu-8TOePXU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  owl:differentFrom rdfs:label "is a different work from" .
+  
+  sub:st1 rdf:object sub:workB;
+    rdf:predicate owl:differentFrom;
+    rdf:subject sub:workA .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Such a nanopublication declares that two scholarly records denote different works. This is useful, for example, to report that automatic deduplication has wrongly merged distinct works into a single record. Identify the two works by their DOIs (or other persistent identifier URLs); for a wrongly merged record, these can be found in the identifier list on the merged record's page. In the provenance part, link the page where the wrong merge can be seen as the entity this assertion was derived from.";
+    rdfs:label "OpenAIRE: Two records denote different works";
+    nt:hasDefaultProvenance <http://purl.org/np/RAGXx_k9eQMnXaCbsXMsJbGClwZtQEGNg0GVJu6amdAVw>;
+    nt:hasNanopubLabelPattern "${workA} is a different work from ${workB}";
+    nt:hasStatement sub:st1;
+    nt:hasTag "OpenAIRE";
+    nt:hasTargetNanopubType owl:differentFrom .
+  
+  sub:workA a nt:ExternalUriPlaceholder;
+    rdfs:label "DOI of the first work" .
+  
+  sub:workB a nt:ExternalUriPlaceholder;
+    rdfs:label "DOI of the wrongly merged work" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-29T07:11:40Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    rdfs:label "OpenAIRE: Two records denote different works";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "sEGZAFVyzZa3jv8gEbXj8mt/a25is+NLWs4PjoGR8EEw+v4YVtQWXFVn+bu+P37OyJuZXGXfpBXvcWEQD9eSUrKEV2ApPHrLTUYvwFSr3GxNIrIcIZzTpVhuUBzwGbbSkQBp5nmGv1uQatzuq00DX/QmPRs3pE3CXl88TK8ZQRM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,628 @@
+@prefix this: <https://w3id.org/np/RAHIwzJgrR6Ft5qD7Hmfm8ce7Bw1srAE9jwpiP2wMRifM> .
+@prefix sub: <https://w3id.org/np/RAHIwzJgrR6Ft5qD7Hmfm8ce7Bw1srAE9jwpiP2wMRifM/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-project-summary-svg a grlc:grlc-query;
+    dct:description "Computes an SVG summary diagram of a FAIR project: the studies and other activities on the left, the outputs they produced on the right, the evidence and arguments they yielded above that, the reused datasets that feed them on the left, the outputs they produce on the right, the higher-level statements they increased the evidence for above, and the people and their institutions below. Every box links to the resource it stands for, on its part page within the project space.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get project summary diagram as SVG";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix ff: <https://w3id.org/fair/ff/terms/>
+prefix obo: <http://purl.obolibrary.org/obo/>
+prefix hycl: <http://purl.org/petapico/o/hycl#>
+prefix cito: <http://purl.org/spar/cito/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+select (concat(
+    '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 871 ', str((((((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) + ((if(?nact > ?nout, ?nact, ?nout)) * 20 + 14) + 26) + (floor((?nppl + 3) / 4) * 20 + 14) + 26) + (floor((?ninst + 1) / 2) * 20 + 14) + 12)),
+      '\" width=\"1393\" height=\"', str(round(((((((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) + ((if(?nact > ?nout, ?nact, ?nout)) * 20 + 14) + 26) + (floor((?nppl + 3) / 4) * 20 + 14) + 26) + (floor((?ninst + 1) / 2) * 20 + 14) + 12)) * 8 / 5)), '\" font-family=\"Noto Emoji, Inter, Verdana, Helvetica, sans-serif\">',
+    '<text x=\"22\" y=\"', str(26 - 8), '\" font-size=\"11\" font-weight=\"bold\" fill=\"#444\">💡  Knowledge</text>',
+    '<rect x=\"10\" y=\"', str(26), '\" width=\"851\" height=\"', str((floor((?nkno + 0) / 1) * 20 + 14)),
+      '\" rx=\"4\" fill=\"#f4f4f4\" stroke=\"#888\"></rect>',
+    '<g transform=\"translate(22,', str(26 + 6), ')\">', ?boxeskno, '</g>',
+    '<text x=\"22\" y=\"', str((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) - 8), '\" font-size=\"11\" font-weight=\"bold\" fill=\"#444\">⚖  Evidence &amp; Arguments</text>',
+    '<rect x=\"10\" y=\"', str((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28)), '\" width=\"850\" height=\"', str((floor((?nev + 1) / 2) * 20 + 14)),
+      '\" rx=\"4\" fill=\"#f4f4f4\" stroke=\"#888\"></rect>',
+    '<g transform=\"translate(22,', str((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + 6), ')\">', ?boxesev, '</g>',
+    '<text x=\"22\" y=\"', str(((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) - 8), '\" font-size=\"11\" font-weight=\"bold\" fill=\"#444\">🔬  Activities</text>',
+    '<rect x=\"10\" y=\"', str(((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28)), '\" width=\"409\" height=\"', str(((if(?nact > ?nout, ?nact, ?nout)) * 20 + 14)),
+      '\" rx=\"4\" fill=\"#f4f4f4\" stroke=\"#888\"></rect>',
+    '<g transform=\"translate(22,', str(((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) + 6), ')\">', ?boxesact, '</g>',
+    '<text x=\"463\" y=\"', str(((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) - 8), '\" font-size=\"11\" font-weight=\"bold\" fill=\"#444\">📦  Outputs</text>',
+    '<rect x=\"451\" y=\"', str(((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28)), '\" width=\"409\" height=\"', str(((if(?nact > ?nout, ?nact, ?nout)) * 20 + 14)),
+      '\" rx=\"4\" fill=\"#f4f4f4\" stroke=\"#888\"></rect>',
+    '<g transform=\"translate(463,', str(((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) + 6), ')\">', ?boxesout, '</g>',
+    '<text x=\"23\" y=\"', str((((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) + ((if(?nact > ?nout, ?nact, ?nout)) * 20 + 14) + 26) - 8), '\" font-size=\"11\" font-weight=\"bold\" fill=\"#444\">👥  People</text>',
+    '<rect x=\"11\" y=\"', str((((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) + ((if(?nact > ?nout, ?nact, ?nout)) * 20 + 14) + 26)), '\" width=\"848\" height=\"', str((floor((?nppl + 3) / 4) * 20 + 14)),
+      '\" rx=\"4\" fill=\"#f4f4f4\" stroke=\"#888\"></rect>',
+    '<g transform=\"translate(23,', str((((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) + ((if(?nact > ?nout, ?nact, ?nout)) * 20 + 14) + 26) + 6), ')\">', ?boxesppl, '</g>',
+    '<text x=\"22\" y=\"', str(((((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) + ((if(?nact > ?nout, ?nact, ?nout)) * 20 + 14) + 26) + (floor((?nppl + 3) / 4) * 20 + 14) + 26) - 8), '\" font-size=\"11\" font-weight=\"bold\" fill=\"#444\">🏛  Institutions</text>',
+    '<rect x=\"10\" y=\"', str(((((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) + ((if(?nact > ?nout, ?nact, ?nout)) * 20 + 14) + 26) + (floor((?nppl + 3) / 4) * 20 + 14) + 26)), '\" width=\"850\" height=\"', str((floor((?ninst + 1) / 2) * 20 + 14)),
+      '\" rx=\"4\" fill=\"#f4f4f4\" stroke=\"#888\"></rect>',
+    '<g transform=\"translate(22,', str(((((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) + ((if(?nact > ?nout, ?nact, ?nout)) * 20 + 14) + 26) + (floor((?nppl + 3) / 4) * 20 + 14) + 26) + 6), ')\">', ?boxesinst, '</g>',
+    '<text x=\"435\" y=\"', str((((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) + ((if(?nact > ?nout, ?nact, ?nout)) * 20 + 14) / 2) + 7), '\" text-anchor=\"middle\" font-size=\"22\" fill=\"#888\">➤</text>',
+    '<text x=\"221\" y=\"', str(((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) - 14), '\" text-anchor=\"middle\" font-size=\"22\" fill=\"#888\" transform=\"rotate(-90 221 ', str(((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) - 14), ')\">➤</text>',
+    '<text x=\"662\" y=\"', str(((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) - 14), '\" text-anchor=\"middle\" font-size=\"22\" fill=\"#888\" transform=\"rotate(-90 662 ', str(((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) - 14), ')\">➤</text>',
+    '<text x=\"442\" y=\"', str((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) - 14), '\" text-anchor=\"middle\" font-size=\"22\" fill=\"#888\" transform=\"rotate(-90 442 ', str((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) - 14), ')\">➤</text>',
+    '<text x=\"221\" y=\"', str((((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) + ((if(?nact > ?nout, ?nact, ?nout)) * 20 + 14) + 26) - 13), '\" text-anchor=\"middle\" font-size=\"22\" fill=\"#888\" transform=\"rotate(-90 221 ', str((((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) + ((if(?nact > ?nout, ?nact, ?nout)) * 20 + 14) + 26) - 13), ')\">➤</text>',
+    '<text x=\"662\" y=\"', str((((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) + ((if(?nact > ?nout, ?nact, ?nout)) * 20 + 14) + 26) - 13), '\" text-anchor=\"middle\" font-size=\"22\" fill=\"#888\" transform=\"rotate(-90 662 ', str((((26 + (floor((?nkno + 0) / 1) * 20 + 14) + 28) + (floor((?nev + 1) / 2) * 20 + 14) + 28) + ((if(?nact > ?nout, ?nact, ?nout)) * 20 + 14) + 26) - 13), ')\">➤</text>',
+    '</svg>') as ?svg)
+where {
+  {
+    select (group_concat(distinct ?boxkno; separator=\"\") as ?boxeskno) (count(*) as ?nkno) where {
+      {
+        select ?irikno ?lblkno ?icokno ?typkno ?rrankkno (count(distinct ?okno) as ?iykno) where {
+          values ?_project_multi_iri {}
+          {
+            select ?irikno (min(?labelkno) as ?lblkno) (min(?iconkno) as ?icokno)
+                (group_concat(distinct ?typekno; separator=\", \") as ?typkno) (min(?rrkno) as ?rrankkno)
+                (sample(?memberPubkeys) as ?mpkkno) where {
+              values ?_project_multi_iri {}
+
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+              graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+              values ?_project_multi_iri {}
+              graph ?stateG {
+                ?_project_multi_iri npa:isMaintainedBy? ?space .
+                ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?roleType .
+                filter(?roleType in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+              }
+            }
+          }
+          graph npa:graph {
+            ?npsgkno np:hasAssertion ?asgkno ;
+              npa:hasValidSignatureForPublicKeyHash ?pksgkno .
+            filter not exists { ?ixsgkno npx:invalidates ?npsgkno ; npa:hasValidSignatureForPublicKeyHash ?pksgkno . }
+            filter not exists { ?sxsgkno npx:supersedes ?npsgkno . }
+          }
+          filter(contains(?memberPubkeys, ?pksgkno))
+          graph ?asgkno {
+            ?studygkno a obo:OBI_0000066 ; dct:isPartOf ?_project_multi_iri .
+          }
+          graph npa:graph {
+            ?npfgkno np:hasAssertion ?afgkno ;
+              npa:hasValidSignatureForPublicKeyHash ?pkfgkno .
+            filter not exists { ?ixfgkno npx:invalidates ?npfgkno ; npa:hasValidSignatureForPublicKeyHash ?pkfgkno . }
+            filter not exists { ?sxfgkno npx:supersedes ?npfgkno . }
+          }
+          filter(contains(?memberPubkeys, ?pkfgkno))
+          graph ?afgkno {
+            ?fndkno a hycl:AIDA-Sentence ; cito:obtainsSupportFrom ?studygkno .
+          }
+          graph npa:graph {
+            ?nprgkno np:hasAssertion ?argkno ;
+              npa:hasValidSignatureForPublicKeyHash ?pkrgkno .
+            filter not exists { ?ixrgkno npx:invalidates ?nprgkno ; npa:hasValidSignatureForPublicKeyHash ?pkrgkno . }
+            filter not exists { ?sxrgkno npx:supersedes ?nprgkno . }
+          }
+          filter(contains(?memberPubkeys, ?pkrgkno))
+          graph ?argkno {
+            ?irikno hycl:hasMoreGeneralMeaningThan ?fndkno .
+          }
+          optional {
+          graph npa:graph {
+            ?npogkno np:hasAssertion ?aogkno ;
+              npa:hasValidSignatureForPublicKeyHash ?pkogkno .
+            filter not exists { ?ixogkno npx:invalidates ?npogkno ; npa:hasValidSignatureForPublicKeyHash ?pkogkno . }
+            filter not exists { ?sxogkno npx:supersedes ?npogkno . }
+          }
+            graph ?aogkno { ?irikno hycl:hasMoreGeneralMeaningThan ?ofndkno . }
+          graph npa:graph {
+            ?nppgkno np:hasAssertion ?apgkno ;
+              npa:hasValidSignatureForPublicKeyHash ?pkpgkno .
+            filter not exists { ?ixpgkno npx:invalidates ?nppgkno ; npa:hasValidSignatureForPublicKeyHash ?pkpgkno . }
+            filter not exists { ?sxpgkno npx:supersedes ?nppgkno . }
+          }
+            graph ?apgkno { ?ofndkno skos:related ?oprojkno . }
+            filter(?oprojkno != ?_project_multi_iri)
+          }
+          bind(replace(replace(replace(replace(replace(strafter(str(?irikno), \"http://purl.org/aida/\"), \"[+]\", \" \"), \"%2C\", \",\"), \"%3A\", \":\"), \"%28\", \"(\"), \"%29\", \")\") as ?labelkno)
+          bind(if(bound(?oprojkno), \"increased evidence\", \"first evidence\") as ?typekno)
+          bind(0 as ?rrkno)
+          bind(if(?typekno = \"first evidence\", \"🌱\", \"📈\") as ?iconkno)
+            } group by ?irikno
+          }
+          optional {
+
+          graph npa:graph {
+            ?onpsgkno np:hasAssertion ?oasgkno ;
+              npa:hasValidSignatureForPublicKeyHash ?opksgkno .
+            filter not exists { ?oixsgkno npx:invalidates ?onpsgkno ; npa:hasValidSignatureForPublicKeyHash ?opksgkno . }
+            filter not exists { ?osxsgkno npx:supersedes ?onpsgkno . }
+          }
+          graph ?oasgkno {
+            ?ostudygkno a obo:OBI_0000066 ; dct:isPartOf ?_project_multi_iri .
+          }
+          graph npa:graph {
+            ?onpfgkno np:hasAssertion ?oafgkno ;
+              npa:hasValidSignatureForPublicKeyHash ?opkfgkno .
+            filter not exists { ?oixfgkno npx:invalidates ?onpfgkno ; npa:hasValidSignatureForPublicKeyHash ?opkfgkno . }
+            filter not exists { ?osxfgkno npx:supersedes ?onpfgkno . }
+          }
+          graph ?oafgkno {
+            ?ofndkno a hycl:AIDA-Sentence ; cito:obtainsSupportFrom ?ostudygkno .
+          }
+          graph npa:graph {
+            ?onprgkno np:hasAssertion ?oargkno ;
+              npa:hasValidSignatureForPublicKeyHash ?opkrgkno .
+            filter not exists { ?oixrgkno npx:invalidates ?onprgkno ; npa:hasValidSignatureForPublicKeyHash ?opkrgkno . }
+            filter not exists { ?osxrgkno npx:supersedes ?onprgkno . }
+          }
+          graph ?oargkno {
+            ?okno hycl:hasMoreGeneralMeaningThan ?ofndkno .
+          }
+          bind(0 as ?orrkno)
+            filter(concat(str(?orrkno), \"|\", str(?okno)) < concat(str(?rrankkno), \"|\", str(?irikno))
+              && (!bound(?opkfgkno) || contains(?mpkkno, ?opkfgkno))
+              && (!bound(?opkrgkno) || contains(?mpkkno, ?opkrgkno))
+              && (!bound(?opksgkno) || contains(?mpkkno, ?opksgkno)))
+          }
+        } group by ?irikno ?lblkno ?icokno ?typkno ?rrankkno
+      }
+      bind((?iykno - floor(?iykno / 1) * 1) * 843 as ?bxkno)
+      bind(floor(?iykno / 1) * 20 as ?bykno)
+      bind(xsd:integer(floor((827 - 26 - strlen(?typkno) * 4.6) / 5.15)) as ?cap0kno)
+      bind(if(?cap0kno < 8, 8, ?cap0kno) as ?capkno)
+      bind(if(strlen(?lblkno) > ?capkno, concat(substr(?lblkno, 1, ?capkno - 1), \"…\"), ?lblkno) as ?tkno)
+      bind(replace(replace(replace(?tkno, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\") as ?esckno)
+      bind(replace(replace(replace(?lblkno, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\") as ?fullkno)
+
+      bind(concat('<text x=\"', str(?bxkno), '\" y=\"', str(?bykno + 12), '\" font-size=\"10\" fill=\"#111\">',
+          '<a href=\"/part?id=', encode_for_uri(str(?irikno)), '\">', '<title>', ?fullkno, '</title><tspan>', ?icokno, '  ', ?esckno, '</tspan></a>',
+          '<tspan dx=\"9\" font-size=\"9\">', ?typkno, '</tspan></text>') as ?boxkno)
+    }
+  }
+  {
+    select (group_concat(distinct ?boxev; separator=\"\") as ?boxesev) (count(*) as ?nev) where {
+      {
+        select ?iriev ?lblev ?icoev ?typev ?rrankev (count(distinct ?oev) as ?iyev) where {
+          values ?_project_multi_iri {}
+          {
+            select ?iriev (min(?labelev) as ?lblev) (min(?iconev) as ?icoev)
+                (group_concat(distinct ?typeev; separator=\", \") as ?typev) (min(?rrev) as ?rrankev)
+                (sample(?memberPubkeys) as ?mpkev) where {
+              values ?_project_multi_iri {}
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+              graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+              values ?_project_multi_iri {}
+              graph ?stateG {
+                ?_project_multi_iri npa:isMaintainedBy? ?space .
+                ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?roleType .
+                filter(?roleType in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+              }
+            }
+          }
+          graph npa:graph {
+            ?npsev np:hasAssertion ?asev ;
+              npa:hasValidSignatureForPublicKeyHash ?pksev .
+            filter not exists { ?ixsev npx:invalidates ?npsev ; npa:hasValidSignatureForPublicKeyHash ?pksev . }
+            filter not exists { ?sxsev npx:supersedes ?npsev . }
+          }
+          filter(contains(?memberPubkeys, ?pksev))
+          graph ?asev {
+            ?studyev a obo:OBI_0000066 ; dct:isPartOf ?_project_multi_iri .
+          }
+          graph npa:graph {
+            ?npev np:hasAssertion ?aev ;
+              np:hasPublicationInfo ?piev ;
+              npa:hasValidSignatureForPublicKeyHash ?pkev .
+            filter not exists { ?ixev npx:invalidates ?npev ; npa:hasValidSignatureForPublicKeyHash ?pkev . }
+            filter not exists { ?sxev npx:supersedes ?npev . }
+          }
+          filter(contains(?memberPubkeys, ?pkev))
+          graph ?aev {
+            ?iriev a obo:ECO_0000000 ; prov:wasGeneratedBy ?studyev .
+          }
+          optional { graph ?aev { ?iriev rdfs:label ?laev } }
+          optional {
+            graph ?aev {
+              ?iriev a ?subev .
+              filter(?subev != obo:ECO_0000000 && strstarts(str(?subev), \"http://purl.obolibrary.org/obo/ECO_\"))
+            }
+            graph ?piev { ?subev rdfs:label ?sublev }
+          }
+          bind(coalesce(?laev, replace(str(?iriev), \"^.*[/#]\", \"\")) as ?labelev)
+          bind(coalesce(?sublev, \"evidence\") as ?typeev)
+          bind(0 as ?rrev)
+          bind(if(contains(?typeev, \"combinatorial\"), \"🧩\", if(contains(?typeev, \"similarity\"), \"🧬\", if(contains(?typeev, \"computational\"), \"🖥\", if(contains(?typeev, \"documented\"), \"📑\", if(contains(?typeev, \"high throughput\"), \"🧫\", if(contains(?typeev, \"inferential\"), \"🧠\", \"🔎\")))))) as ?iconev)
+            } group by ?iriev
+          }
+          optional {
+          graph npa:graph {
+            ?onpsev np:hasAssertion ?oasev ;
+              npa:hasValidSignatureForPublicKeyHash ?opksev .
+            filter not exists { ?oixsev npx:invalidates ?onpsev ; npa:hasValidSignatureForPublicKeyHash ?opksev . }
+            filter not exists { ?osxsev npx:supersedes ?onpsev . }
+          }
+          graph ?oasev {
+            ?ostudyev a obo:OBI_0000066 ; dct:isPartOf ?_project_multi_iri .
+          }
+          graph npa:graph {
+            ?onpev np:hasAssertion ?oaev ;
+              np:hasPublicationInfo ?opiev ;
+              npa:hasValidSignatureForPublicKeyHash ?opkev .
+            filter not exists { ?oixev npx:invalidates ?onpev ; npa:hasValidSignatureForPublicKeyHash ?opkev . }
+            filter not exists { ?osxev npx:supersedes ?onpev . }
+          }
+          graph ?oaev {
+            ?oev a obo:ECO_0000000 ; prov:wasGeneratedBy ?ostudyev .
+          }
+          bind(0 as ?orrev)
+            filter(concat(str(?orrev), \"|\", str(?oev)) < concat(str(?rrankev), \"|\", str(?iriev))
+              && (!bound(?opkev) || contains(?mpkev, ?opkev))
+              && (!bound(?opksev) || contains(?mpkev, ?opksev)))
+          }
+        } group by ?iriev ?lblev ?icoev ?typev ?rrankev
+      }
+      bind((?iyev - floor(?iyev / 2) * 2) * 421 as ?bxev)
+      bind(floor(?iyev / 2) * 20 as ?byev)
+      bind(xsd:integer(floor((405 - 26 - strlen(?typev) * 4.6) / 5.15)) as ?cap0ev)
+      bind(if(?cap0ev < 8, 8, ?cap0ev) as ?capev)
+      bind(if(strlen(?lblev) > ?capev, concat(substr(?lblev, 1, ?capev - 1), \"…\"), ?lblev) as ?tev)
+      bind(replace(replace(replace(?tev, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\") as ?escev)
+      bind(replace(replace(replace(?lblev, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\") as ?fullev)
+
+      bind(concat('<text x=\"', str(?bxev), '\" y=\"', str(?byev + 12), '\" font-size=\"10\" fill=\"#111\">',
+          '<a href=\"/part?id=', encode_for_uri(str(?iriev)), '\">', '<title>', ?fullev, '</title><tspan>', ?icoev, '  ', ?escev, '</tspan></a>',
+          '<tspan dx=\"9\" font-size=\"9\">', ?typev, '</tspan></text>') as ?boxev)
+    }
+  }
+  {
+    select (group_concat(distinct ?boxact; separator=\"\") as ?boxesact) (count(*) as ?nact) where {
+      {
+        select ?iriact ?lblact ?icoact ?typact ?rrankact (count(distinct ?oact) as ?iyact) where {
+          values ?_project_multi_iri {}
+          {
+            select ?iriact (min(?labelact) as ?lblact) (min(?iconact) as ?icoact)
+                (group_concat(distinct ?typeact; separator=\", \") as ?typact) (min(?rract) as ?rrankact)
+                (sample(?memberPubkeys) as ?mpkact) where {
+              values ?_project_multi_iri {}
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+              graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+              values ?_project_multi_iri {}
+              graph ?stateG {
+                ?_project_multi_iri npa:isMaintainedBy? ?space .
+                ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?roleType .
+                filter(?roleType in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+              }
+            }
+          }
+          graph npa:graph {
+            ?npact np:hasAssertion ?aact ;
+              np:hasPublicationInfo ?piact ;
+              npa:hasValidSignatureForPublicKeyHash ?pkact .
+            filter not exists { ?ixact npx:invalidates ?npact ; npa:hasValidSignatureForPublicKeyHash ?pkact . }
+            filter not exists { ?sxact npx:supersedes ?npact . }
+          }
+          filter(contains(?memberPubkeys, ?pkact))
+          graph ?aact {
+            ?iriact a obo:OBI_0000066 ; dct:isPartOf ?_project_multi_iri .
+          }
+          optional { graph ?aact { ?iriact rdfs:label ?laact } }
+          optional {
+            graph ?aact {
+              ?iriact a ?subact .
+              filter(?subact != obo:OBI_0000066 && strstarts(str(?subact), \"http://purl.obolibrary.org/obo/OBI_\"))
+            }
+            graph ?piact { ?subact rdfs:label ?sublact }
+          }
+          bind(coalesce(?laact, replace(str(?iriact), \"^.*[/#]\", \"\")) as ?labelact)
+          bind(coalesce(replace(?sublact, \"investigation\", \"study\"), \"study\") as ?typeact)
+          bind(0 as ?rract)
+          bind(if(contains(?typeact, \"observational\"), \"👁\", if(contains(?typeact, \"surveillance\"), \"📡\", if(contains(?typeact, \"trial\"), \"💉\", \"🧪\"))) as ?iconact)
+            } group by ?iriact
+          }
+          optional {
+          graph npa:graph {
+            ?onpact np:hasAssertion ?oaact ;
+              np:hasPublicationInfo ?opiact ;
+              npa:hasValidSignatureForPublicKeyHash ?opkact .
+            filter not exists { ?oixact npx:invalidates ?onpact ; npa:hasValidSignatureForPublicKeyHash ?opkact . }
+            filter not exists { ?osxact npx:supersedes ?onpact . }
+          }
+          graph ?oaact {
+            ?oact a obo:OBI_0000066 ; dct:isPartOf ?_project_multi_iri .
+          }
+          bind(0 as ?orract)
+            filter(concat(str(?orract), \"|\", str(?oact)) < concat(str(?rrankact), \"|\", str(?iriact))
+              && (!bound(?opkact) || contains(?mpkact, ?opkact)))
+          }
+        } group by ?iriact ?lblact ?icoact ?typact ?rrankact
+      }
+      bind((?iyact - floor(?iyact / 1) * 1) * 401 as ?bxact)
+      bind(floor(?iyact / 1) * 20 as ?byact)
+      bind(xsd:integer(floor((385 - 26 - strlen(?typact) * 4.6) / 5.15)) as ?cap0act)
+      bind(if(?cap0act < 8, 8, ?cap0act) as ?capact)
+      bind(if(strlen(?lblact) > ?capact, concat(substr(?lblact, 1, ?capact - 1), \"…\"), ?lblact) as ?tact)
+      bind(replace(replace(replace(?tact, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\") as ?escact)
+      bind(replace(replace(replace(?lblact, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\") as ?fullact)
+
+      bind(concat('<text x=\"', str(?bxact), '\" y=\"', str(?byact + 12), '\" font-size=\"10\" fill=\"#111\">',
+          '<a href=\"/part?id=', encode_for_uri(str(?iriact)), '\">', '<title>', ?fullact, '</title><tspan>', ?icoact, '  ', ?escact, '</tspan></a>',
+          '<tspan dx=\"9\" font-size=\"9\">', ?typact, '</tspan></text>') as ?boxact)
+    }
+  }
+  {
+    select (group_concat(distinct ?boxout; separator=\"\") as ?boxesout) (count(*) as ?nout) where {
+      {
+        select ?iriout ?lblout ?icoout ?typout ?rrankout (count(distinct ?oout) as ?iyout) where {
+          values ?_project_multi_iri {}
+          {
+            select ?iriout (min(?labelout) as ?lblout) (min(?iconout) as ?icoout)
+                (group_concat(distinct ?typeout; separator=\", \") as ?typout) (min(?rrout) as ?rrankout)
+                (sample(?memberPubkeys) as ?mpkout) where {
+              values ?_project_multi_iri {}
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+              graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+              values ?_project_multi_iri {}
+              graph ?stateG {
+                ?_project_multi_iri npa:isMaintainedBy? ?space .
+                ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?roleType .
+                filter(?roleType in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+              }
+            }
+          }
+          graph npa:graph {
+            ?npout np:hasAssertion ?aout ;
+              np:hasPublicationInfo ?piout ;
+              npa:hasValidSignatureForPublicKeyHash ?pkout .
+            filter not exists { ?ixout npx:invalidates ?npout ; npa:hasValidSignatureForPublicKeyHash ?pkout . }
+            filter not exists { ?sxout npx:supersedes ?npout . }
+          }
+          filter(contains(?memberPubkeys, ?pkout))
+          graph ?aout {
+            ?_project_multi_iri ?relout ?iriout .
+            values ?relout { ff:has-article ff:has-dataset ff:has-software ff:has-method ff:has-dmp ff:has-presentation ff:has-blog-post ff:has-media-coverage ff:has-social-post ff:has-podcast ff:has-discussion }
+          }
+          optional { graph ?aout { ?iriout rdfs:label ?laout } }
+          optional { graph ?piout { ?iriout foaf:name ?lfout } }
+          optional { graph ?piout { ?iriout rdfs:label ?lqout } }
+          bind(coalesce(?laout, ?lfout, ?lqout, replace(str(?iriout), \"^.*[/#]\", \"\")) as ?labelout)
+          bind(strafter(str(?relout), \"https://w3id.org/fair/ff/terms/has-\") as ?rawout)
+          bind(replace(?rawout, \"-\", \" \") as ?typeout)
+          bind(if(?rawout = \"article\", 0, if(?rawout = \"dataset\", 1, if(?rawout = \"software\", 2, if(?rawout = \"method\", 3, if(?rawout = \"dmp\", 4, if(?rawout = \"presentation\", 5, if(?rawout = \"blog-post\", 6, 7))))))) as ?rrout)
+          bind(if(?rawout = \"article\", \"📄\", if(?rawout = \"software\", \"💻\", if(?rawout = \"dataset\", \"💾\", if(?rawout = \"presentation\", \"🎤\", if(?rawout = \"blog-post\", \"📝\", if(?rawout = \"podcast\", \"🎧\", if(?rawout = \"media-coverage\", \"📰\", if(?rawout = \"social-post\", \"💬\", if(?rawout = \"discussion\", \"💬\", if(?rawout = \"method\", \"🔧\", if(?rawout = \"dmp\", \"📋\", \"🔗\"))))))))))) as ?iconout)
+            } group by ?iriout
+          }
+          optional {
+          graph npa:graph {
+            ?onpout np:hasAssertion ?oaout ;
+              np:hasPublicationInfo ?opiout ;
+              npa:hasValidSignatureForPublicKeyHash ?opkout .
+            filter not exists { ?oixout npx:invalidates ?onpout ; npa:hasValidSignatureForPublicKeyHash ?opkout . }
+            filter not exists { ?osxout npx:supersedes ?onpout . }
+          }
+          graph ?oaout {
+            ?_project_multi_iri ?orelout ?oout .
+            values ?orelout { ff:has-article ff:has-dataset ff:has-software ff:has-method ff:has-dmp ff:has-presentation ff:has-blog-post ff:has-media-coverage ff:has-social-post ff:has-podcast ff:has-discussion }
+          }
+          bind(strafter(str(?orelout), \"https://w3id.org/fair/ff/terms/has-\") as ?orawout)
+          bind(if(?orawout = \"article\", 0, if(?orawout = \"dataset\", 1, if(?orawout = \"software\", 2, if(?orawout = \"method\", 3, if(?orawout = \"dmp\", 4, if(?orawout = \"presentation\", 5, if(?orawout = \"blog-post\", 6, 7))))))) as ?orrout)
+            filter(concat(str(?orrout), \"|\", str(?oout)) < concat(str(?rrankout), \"|\", str(?iriout))
+              && (!bound(?opkout) || contains(?mpkout, ?opkout)))
+          }
+        } group by ?iriout ?lblout ?icoout ?typout ?rrankout
+      }
+      bind((?iyout - floor(?iyout / 1) * 1) * 401 as ?bxout)
+      bind(floor(?iyout / 1) * 20 as ?byout)
+      bind(xsd:integer(floor((385 - 26 - strlen(?typout) * 4.6) / 5.15)) as ?cap0out)
+      bind(if(?cap0out < 8, 8, ?cap0out) as ?capout)
+      bind(if(strlen(?lblout) > ?capout, concat(substr(?lblout, 1, ?capout - 1), \"…\"), ?lblout) as ?tout)
+      bind(replace(replace(replace(?tout, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\") as ?escout)
+      bind(replace(replace(replace(?lblout, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\") as ?fullout)
+
+      bind(concat('<text x=\"', str(?bxout), '\" y=\"', str(?byout + 12), '\" font-size=\"10\" fill=\"#111\">',
+          '<a href=\"/part?id=', encode_for_uri(str(?iriout)), '\">', '<title>', ?fullout, '</title><tspan>', ?icoout, '  ', ?escout, '</tspan></a>',
+          '<tspan dx=\"9\" font-size=\"9\">', ?typout, '</tspan></text>') as ?boxout)
+    }
+  }
+  {
+    select (group_concat(distinct ?boxppl; separator=\"\") as ?boxesppl) (count(*) as ?nppl) where {
+      {
+        select ?irippl ?lblppl ?icoppl ?typppl ?rrankppl (count(distinct ?oppl) as ?iyppl) where {
+          values ?_project_multi_iri {}
+          {
+            select ?irippl (min(?labelppl) as ?lblppl) (min(?iconppl) as ?icoppl)
+                (group_concat(distinct ?typeppl; separator=\", \") as ?typppl) (min(?rrppl) as ?rrankppl)
+                (sample(?memberPubkeys) as ?mpkppl) where {
+              values ?_project_multi_iri {}
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+              graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+              values ?_project_multi_iri {}
+              graph ?stateG {
+                ?_project_multi_iri npa:isMaintainedBy? ?space .
+                ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?roleType .
+                filter(?roleType in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+              }
+            }
+          }
+          graph npa:graph {
+            ?npppl np:hasAssertion ?appl ;
+              np:hasPublicationInfo ?pippl ;
+              npa:hasValidSignatureForPublicKeyHash ?pkppl .
+            filter not exists { ?ixppl npx:invalidates ?npppl ; npa:hasValidSignatureForPublicKeyHash ?pkppl . }
+            filter not exists { ?sxppl npx:supersedes ?npppl . }
+          }
+          filter(contains(?memberPubkeys, ?pkppl))
+          graph ?appl {
+            ?_project_multi_iri ?relppl ?irippl .
+            values ?relppl { ff:has-principal-investigator ff:has-participant ff:has-data-steward gen:hasProjectLead }
+          }
+          optional { graph ?appl { ?irippl rdfs:label ?lappl } }
+          optional { graph ?pippl { ?irippl foaf:name ?lfppl } }
+          optional { graph ?pippl { ?irippl rdfs:label ?lqppl } }
+          bind(coalesce(?lappl, ?lfppl, ?lqppl, replace(str(?irippl), \"^.*[/#]\", \"\")) as ?labelppl)
+          bind(if(?relppl = ff:has-principal-investigator, \"PI\", if(?relppl = gen:hasProjectLead, \"project lead\", if(?relppl = ff:has-data-steward, \"data steward\", \"participant\"))) as ?typeppl)
+          bind(if(?relppl = ff:has-principal-investigator, 0, if(?relppl = gen:hasProjectLead, 1, if(?relppl = ff:has-data-steward, 2, 3))) as ?rrppl)
+          bind(\"👤\" as ?iconppl)
+            } group by ?irippl
+          }
+          optional {
+          graph npa:graph {
+            ?onpppl np:hasAssertion ?oappl ;
+              np:hasPublicationInfo ?opippl ;
+              npa:hasValidSignatureForPublicKeyHash ?opkppl .
+            filter not exists { ?oixppl npx:invalidates ?onpppl ; npa:hasValidSignatureForPublicKeyHash ?opkppl . }
+            filter not exists { ?osxppl npx:supersedes ?onpppl . }
+          }
+          graph ?oappl {
+            ?_project_multi_iri ?orelppl ?oppl .
+            values ?orelppl { ff:has-principal-investigator ff:has-participant ff:has-data-steward gen:hasProjectLead }
+          }
+          bind(if(?orelppl = ff:has-principal-investigator, 0, if(?orelppl = gen:hasProjectLead, 1, if(?orelppl = ff:has-data-steward, 2, 3))) as ?orrppl)
+            filter(concat(str(?orrppl), \"|\", str(?oppl)) < concat(str(?rrankppl), \"|\", str(?irippl))
+              && (!bound(?opkppl) || contains(?mpkppl, ?opkppl)))
+          }
+        } group by ?irippl ?lblppl ?icoppl ?typppl ?rrankppl
+      }
+      bind((?iyppl - floor(?iyppl / 4) * 4) * 210 as ?bxppl)
+      bind(floor(?iyppl / 4) * 20 as ?byppl)
+      bind(xsd:integer(floor((194 - 26 - strlen(?typppl) * 4.6) / 5.15)) as ?cap0ppl)
+      bind(if(?cap0ppl < 8, 8, ?cap0ppl) as ?capppl)
+      bind(if(strlen(?lblppl) > ?capppl, concat(substr(?lblppl, 1, ?capppl - 1), \"…\"), ?lblppl) as ?tppl)
+      bind(replace(replace(replace(?tppl, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\") as ?escppl)
+      bind(replace(replace(replace(?lblppl, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\") as ?fullppl)
+
+      bind(concat('<text x=\"', str(?bxppl), '\" y=\"', str(?byppl + 12), '\" font-size=\"10\" fill=\"#111\">',
+          '<a href=\"/part?id=', encode_for_uri(str(?irippl)), '\">', '<title>', ?fullppl, '</title><tspan>', ?icoppl, '  ', ?escppl, '</tspan></a>',
+          '<tspan dx=\"9\" font-size=\"9\">', ?typppl, '</tspan></text>') as ?boxppl)
+    }
+  }
+  {
+    select (group_concat(distinct ?boxinst; separator=\"\") as ?boxesinst) (count(*) as ?ninst) where {
+      {
+        select ?iriinst ?lblinst ?icoinst ?typinst ?rrankinst (count(distinct ?oinst) as ?iyinst) where {
+          values ?_project_multi_iri {}
+          {
+            select ?iriinst (min(?labelinst) as ?lblinst) (min(?iconinst) as ?icoinst)
+                (group_concat(distinct ?typeinst; separator=\", \") as ?typinst) (min(?rrinst) as ?rrankinst)
+                (sample(?memberPubkeys) as ?mpkinst) where {
+              values ?_project_multi_iri {}
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+              graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+              values ?_project_multi_iri {}
+              graph ?stateG {
+                ?_project_multi_iri npa:isMaintainedBy? ?space .
+                ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?roleType .
+                filter(?roleType in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+              }
+            }
+          }
+          graph npa:graph {
+            ?npinst np:hasAssertion ?ainst ;
+              np:hasPublicationInfo ?piinst ;
+              npa:hasValidSignatureForPublicKeyHash ?pkinst .
+            filter not exists { ?ixinst npx:invalidates ?npinst ; npa:hasValidSignatureForPublicKeyHash ?pkinst . }
+            filter not exists { ?sxinst npx:supersedes ?npinst . }
+          }
+          filter(contains(?memberPubkeys, ?pkinst))
+          graph ?ainst {
+            ?_project_multi_iri ?relinst ?iriinst .
+            values ?relinst { ff:has-lead-institution ff:has-partner-institution ff:has-funder }
+          }
+          optional { graph ?ainst { ?iriinst rdfs:label ?lainst } }
+          optional { graph ?piinst { ?iriinst foaf:name ?lfinst } }
+          optional { graph ?piinst { ?iriinst rdfs:label ?lqinst } }
+          bind(coalesce(?lainst, ?lfinst, ?lqinst, replace(str(?iriinst), \"^.*[/#]\", \"\")) as ?labelinst)
+          bind(if(?relinst = ff:has-lead-institution, \"lead institution\", if(?relinst = ff:has-partner-institution, \"partner\", \"funder\")) as ?typeinst)
+          bind(if(?relinst = ff:has-lead-institution, 0, if(?relinst = ff:has-partner-institution, 1, 2)) as ?rrinst)
+          bind(if(?relinst = ff:has-funder, \"💶\", \"🏛\") as ?iconinst)
+            } group by ?iriinst
+          }
+          optional {
+          graph npa:graph {
+            ?onpinst np:hasAssertion ?oainst ;
+              np:hasPublicationInfo ?opiinst ;
+              npa:hasValidSignatureForPublicKeyHash ?opkinst .
+            filter not exists { ?oixinst npx:invalidates ?onpinst ; npa:hasValidSignatureForPublicKeyHash ?opkinst . }
+            filter not exists { ?osxinst npx:supersedes ?onpinst . }
+          }
+          graph ?oainst {
+            ?_project_multi_iri ?orelinst ?oinst .
+            values ?orelinst { ff:has-lead-institution ff:has-partner-institution ff:has-funder }
+          }
+          bind(if(?orelinst = ff:has-lead-institution, 0, if(?orelinst = ff:has-partner-institution, 1, 2)) as ?orrinst)
+            filter(concat(str(?orrinst), \"|\", str(?oinst)) < concat(str(?rrankinst), \"|\", str(?iriinst))
+              && (!bound(?opkinst) || contains(?mpkinst, ?opkinst)))
+          }
+        } group by ?iriinst ?lblinst ?icoinst ?typinst ?rrankinst
+      }
+      bind((?iyinst - floor(?iyinst / 2) * 2) * 421 as ?bxinst)
+      bind(floor(?iyinst / 2) * 20 as ?byinst)
+      bind(xsd:integer(floor((405 - 26 - strlen(?typinst) * 4.6) / 5.15)) as ?cap0inst)
+      bind(if(?cap0inst < 8, 8, ?cap0inst) as ?capinst)
+      bind(if(strlen(?lblinst) > ?capinst, concat(substr(?lblinst, 1, ?capinst - 1), \"…\"), ?lblinst) as ?tinst)
+      bind(replace(replace(replace(?tinst, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\") as ?escinst)
+      bind(replace(replace(replace(?lblinst, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\") as ?fullinst)
+
+      bind(concat('<text x=\"', str(?bxinst), '\" y=\"', str(?byinst + 12), '\" font-size=\"10\" fill=\"#111\">',
+          '<a href=\"/part?id=', encode_for_uri(str(?iriinst)), '\">', '<title>', ?fullinst, '</title><tspan>', ?icoinst, '  ', ?escinst, '</tspan></a>',
+          '<tspan dx=\"9\" font-size=\"9\">', ?typinst, '</tspan></text>') as ?boxinst)
+    }
+  }
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-18T08:03:39Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-project-summary-svg;
+    npx:supersedes <https://w3id.org/np/RA790DnGtSg4IwhL7SM2Q36h744Kcy_YX33B3FWJVlysE>;
+    rdfs:label "Get project summary diagram as SVG";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RAcm8OurwUk15WOgBM9wySo-T3a5h6as4K8YR5MBrrxUc>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Cn0S8JamkAHB5qS8fe2yT+l0+YkEaWrWMovoBfKmhLbNakpdkOmvjIH2jqIN1HM9PjdMyZ3dwz5Qckz+d6wvRDip1NN2DOhiGKFd1Bn94eR5l2PWSOKNtyKKkWlaECBLejS31fHYnsAMbFhHKdK9YLHR7T8YRDpED36RGak9LQg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

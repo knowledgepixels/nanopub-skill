@@ -1,0 +1,84 @@
+@prefix this: <https://w3id.org/np/RAH0w6SS8WdijfB_PKFcFZeq_6DhvuwatPSDKPsIpqPRo> .
+@prefix sub: <https://w3id.org/np/RAH0w6SS8WdijfB_PKFcFZeq_6DhvuwatPSDKPsIpqPRo/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-statements-with-evidence a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns all nanopublications typed as schema:Statement (npx:hasNanopubType), with the statement text (rdf:value) and the evidence it cites (cito:citesAsEvidence). Retracted and superseded nanopublications are left out.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get statements with evidence";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/29e2f808e4864fca4930806dee70c4a32df54a63ee90156244910a47d3443736>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix cito: <http://purl.org/spar/cito/>
+prefix schema: <https://schema.org/>
+
+select ?Statement ?Evidence_multi_iri ?Evidence_label_multi ?np (\"^\" as ?np_label)
+where {
+  select ?np ?created ?Statement
+         (group_concat(distinct str(?evidence); separator=\" \") as ?Evidence_multi_iri)
+         (group_concat(distinct ?evidenceLabel; separator=\"\\n\") as ?Evidence_label_multi)
+  where {
+    graph npa:graph {
+      ?np npx:hasNanopubType schema:Statement ;
+          npa:hasValidSignatureForPublicKeyHash ?pubkey ;
+          np:hasAssertion ?a ;
+          np:hasPublicationInfo ?pi ;
+          dct:created ?created .
+      filter not exists { ?npi npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    }
+    graph ?pi { ?np npx:hasNanopubType schema:Statement . }
+    graph ?a { ?s rdf:value ?Statement . }
+    optional {
+      graph ?a { ?s cito:citesAsEvidence ?evidence . }
+      bind(replace(str(?evidence), \"^.*[/#]\", \"\") as ?evidenceLabel)
+    }
+  }
+  group by ?np ?created ?Statement
+}
+order by desc(?created)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-08-24T16:02:56.459Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:get-statements-with-evidence;
+    npx:supersedes <https://w3id.org/np/RAKyYvWsK9b_twoR5Yk7EpdgsXTgLtYNyOhLiCRzOkGCk>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCaQXE2B2hJ6QdWxaWerU4F/XOtCQdj2OkdrIYd1kpMY9hIUh8boxaO3uOBeqvvqKLf5HjpRF4DT1eghOSsa2Dhd5HRTM/XIamvwWkHpN4oB3Ml19pAAzjTqczYmFLfgG67mGL5+vSA8VEdHtKQCrvP4SpTibMBP1qaxt3k1tqD6wIDAQAB";
+    npx:hasSignature "O67rb3NXML4gP4B/dl1j5TPm0JoSW0KEUEi+2ixMaNHTzpXfMAgh1H1dFuKSCdYHNbogJ4/vKWBSaM2tf50jtgPXgMm1uLR5Ia8pc75W0ghgv5U8seM8A0d1nyRb+5WWdzf6ISOYteow35KIr6rAZr7jOhdfAByCl7DNxghl7wM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

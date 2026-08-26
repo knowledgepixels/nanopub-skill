@@ -1,0 +1,54 @@
+@prefix this: <https://w3id.org/np/RAzSSBZ5Woj6Ju_AXi1ThyNv60EtaGxnEtqCbOqEMDOxY> .
+@prefix sub: <https://w3id.org/np/RAzSSBZ5Woj6Ju_AXi1ThyNv60EtaGxnEtqCbOqEMDOxY/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <https://w3id.org/np/RAOp9i7XUKKJhT4qIvtCA6LpXj9Hq7qkhsZ1MrLP7UfHE/templateKind> a
+      gen:MaintainedResource, nt:AssertionTemplate;
+    dct:description "A question posed to the discourse graph: a schema:Question carrying its text in rdf:value. It may reply to a prior contribution (as:inReplyTo), or carry a rhetorical CiTO stance toward one when the question implicitly challenges its target (e.g. cito:disputes), and may cite evidence. Answers are separate contributions that target this question. A standalone question with no target is valid.";
+    rdfs:label "Question Template";
+    gen:isMaintainedBy <https://w3id.org/spaces/knowledgepixels/nanoarguments> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234, orcid:0009-0009-0118-9195 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-14T09:25:13.145Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:introduces <https://w3id.org/np/RAOp9i7XUKKJhT4qIvtCA6LpXj9Hq7qkhsZ1MrLP7UfHE/templateKind>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAuoIiBPtkpMCALeI5AWNlQHoXdBfqZwqj_sVHiBGbfQo> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "5xIrHh1G1YYWBIFMoN/w6g8WEtksR0WK29NJ1l2gJGdr+E2540ZqRb016TC/EBXlUPxg0GuEgujj6qXkVKxAA49whei0DABwvo0QCyBf2HDZdb1yH84XUZZ05LEl43kygJ5HFFYqngFW7j3EY/pRV/94kT6auh2b4O9nanw/By8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/spaces/knowledgepixels/nanoarguments> nt:hasLabelFromApi "Nanoarguments" .
+}
+

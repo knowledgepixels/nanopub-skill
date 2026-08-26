@@ -1,0 +1,106 @@
+@prefix this: <https://w3id.org/np/RA37ziOe7Js7sUaGV3z_TwIsn_q9SY9fJRuTp4p-xj54U> .
+@prefix sub: <https://w3id.org/np/RA37ziOe7Js7sUaGV3z_TwIsn_q9SY9fJRuTp4p-xj54U/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://semanticscience.org/resource/SIO_001394> rdfs:label "evidence" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdf:value rdfs:label "has the text" .
+  
+  <https://schema.org/Statement> rdfs:label "statement" .
+  
+  sub:claim a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the claim" .
+  
+  sub:finding a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID of this finding" .
+  
+  sub:findingText a nt:LongLiteralPlaceholder;
+    rdfs:label "text of the finding presented as evidence" .
+  
+  sub:st1 rdf:object <https://schema.org/Statement>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:finding .
+  
+  sub:st2 rdf:object <http://semanticscience.org/resource/SIO_001394>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:finding .
+  
+  sub:st3 rdf:object sub:findingText;
+    rdf:predicate rdf:value;
+    rdf:subject sub:finding .
+  
+  sub:st4 rdf:object sub:claim;
+    rdf:predicate sub:stance;
+    rdf:subject sub:finding .
+  
+  sub:stance a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose the stance relation";
+    nt:possibleValuesFrom <https://w3id.org/np/RAZt5kzfoJg2m4dMRdMm2SP6JeUDD_GMzSq9xyRPMgP5k> .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "A finding presented as evidence: a statement typed as the SIO evidence class that bears on a claim through a typed (CiTO) relation. It is an ordinary discourse contribution (a schema:Statement carrying rdf:value and a CiTO stance) additionally typed as evidence, so it flows through the same discourse queries as any other contribution.";
+    dct:isVersionOf <https://w3id.org/np/RAdGQVeqqUoTNJe52OSMhY8EX1MkFA1LI4oQh-NAgrYV8/templateKind>;
+    rdfs:label "Evidence finding";
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels/nanoarguments>;
+    nt:hasNanopubLabelPattern "${findingText}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st4;
+    nt:hasTag "Discourse" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0009-0118-9195 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0009-0009-0118-9195 foaf:name "Virginia Balseiro" .
+  
+  this: dct:created "2026-08-21T17:53:26.868Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234, orcid:0009-0009-0118-9195;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:introduces <https://w3id.org/np/RAdGQVeqqUoTNJe52OSMhY8EX1MkFA1LI4oQh-NAgrYV8/templateKind>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Evidence finding";
+    skos:changeNote "Use findingText for nanopub label";
+    prov:wasDerivedFrom <https://w3id.org/np/RAl7AvOUp8xHiwnoge8mbV33Y2BGQe7bRnB4Ef6ludfEs>,
+      <https://w3id.org/np/RAvh4S1bTIg_sDSNuice65xk7nblns848NFAw8zfB_KB0>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAVXmu2rj-pkWoDjHH4n1oAHbseAf3RcUYpYiwI1WXDmY>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "Gmp9cralpI2nX2Yko5/OfDyXl142Z2gfpip1DUSBeq5vRIriQSSnG+1QLzUUc6hP0RSIIL3bWLQgA3JqELifjLLWqWn/xLIr0BhmcH/uudksbzhIF4ixU6VpuPHOFLhU88k/gF7B3MKyo26ZcRcMWml/w0G6AkJNbVQg3omu+WI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/spaces/knowledgepixels/nanoarguments> nt:hasLabelFromApi """Nanoarguments - <p>Global, federated graph of scientific claims as LinkedData</p>
+
+<p>Scienti...""" .
+}
+

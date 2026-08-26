@@ -1,0 +1,192 @@
+@prefix this: <https://w3id.org/np/RAKt5SG8y-wWWEm6wDmJM_ApDi1JDYCKo2ok30ClAu9sw> .
+@prefix sub: <https://w3id.org/np/RAKt5SG8y-wWWEm6wDmJM_ApDi1JDYCKo2ok30ClAu9sw/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  <http://schema.org/endDate> rdfs:label "has the end date" .
+  
+  <http://schema.org/location> rdfs:label "has the location" .
+  
+  <http://schema.org/startDate> rdfs:label "has the start date" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  owl:sameAs rdfs:label "has the alternative ID" .
+  
+  gen:ActivatedPresetAssignment rdfs:label "activated preset assignment" .
+  
+  gen:Event rdfs:label "Event" .
+  
+  gen:PresetAssignment rdfs:label "preset assignment" .
+  
+  gen:Space rdfs:label "Space" .
+  
+  gen:hasAdmin rdfs:label "has as admin" .
+  
+  gen:hasRootDefinition rdfs:label "has as root definition" .
+  
+  gen:isAssignmentFor rdfs:label "is an assignment for" .
+  
+  gen:isAssignmentOfPreset rdfs:label "is an assignment of the preset" .
+  
+  sub:admin a nt:AgentPlaceholder;
+    rdfs:label "an admin of the conference Space" .
+  
+  sub:altId a nt:ExternalUriPlaceholder;
+    rdfs:label "alternative URI" .
+  
+  sub:assignment a nt:EmbeddedResource, nt:LocalResource;
+    rdfs:label "this assignment" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "the description of the conference" .
+  
+  sub:endDate a nt:LiteralPlaceholder;
+    rdfs:label "end date (and optionally time)";
+    nt:hasDatatype xsd:dateTime .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the name of the conference" .
+  
+  sub:location a nt:ExternalUriPlaceholder;
+    rdfs:label "the location as a URI (e.g. a web page or map link)" .
+  
+  sub:rootDefinition a nt:RootNanopubPlaceholder .
+  
+  sub:space a nt:ExternalUriPlaceholder, nt:IntroducedResource;
+    rdfs:label "Space identifier";
+    nt:hasPrefix "https://w3id.org/spaces/";
+    nt:hasPrefixLabel "https://w3id.org/spaces/" .
+  
+  sub:st00 a nt:AdvancedStatement;
+    rdf:object gen:Space;
+    rdf:predicate rdf:type;
+    rdf:subject sub:space .
+  
+  sub:st01 rdf:object gen:Event;
+    rdf:predicate rdf:type;
+    rdf:subject sub:space .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:space .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:space .
+  
+  sub:st04 a nt:RepeatableStatement;
+    rdf:object sub:admin;
+    rdf:predicate gen:hasAdmin;
+    rdf:subject sub:space .
+  
+  sub:st11 rdf:object sub:startDate;
+    rdf:predicate <http://schema.org/startDate>;
+    rdf:subject sub:space .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:endDate;
+    rdf:predicate <http://schema.org/endDate>;
+    rdf:subject sub:space .
+  
+  sub:st13 a nt:OptionalStatement;
+    rdf:object sub:location;
+    rdf:predicate <http://schema.org/location>;
+    rdf:subject sub:space .
+  
+  sub:st90 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:altId;
+    rdf:predicate owl:sameAs;
+    rdf:subject sub:space .
+  
+  sub:st99 a nt:AdvancedStatement;
+    rdf:object sub:rootDefinition;
+    rdf:predicate gen:hasRootDefinition;
+    rdf:subject sub:space .
+  
+  sub:startDate a nt:LiteralPlaceholder;
+    rdfs:label "start date (and optionally time)";
+    nt:hasDatatype xsd:dateTime .
+  
+  sub:stp0 a nt:AdvancedStatement;
+    rdf:object gen:PresetAssignment;
+    rdf:predicate rdf:type;
+    rdf:subject sub:assignment .
+  
+  sub:stp1 a nt:AdvancedStatement;
+    rdf:object gen:ActivatedPresetAssignment;
+    rdf:predicate rdf:type;
+    rdf:subject sub:assignment .
+  
+  sub:stp2 a nt:AdvancedStatement;
+    rdf:object <https://w3id.org/np/RAkpkmrJ9l1WSeo1KmbLDEy7FFqBpmxnfaCsNSrSfxjjk/scientificConferencePreset>;
+    rdf:predicate gen:isAssignmentOfPreset;
+    rdf:subject sub:assignment .
+  
+  sub:stp3 a nt:AdvancedStatement;
+    rdf:object sub:space;
+    rdf:predicate gen:isAssignmentFor;
+    rdf:subject sub:assignment .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description """<p>Such nanopublications define a <strong>scientific conference</strong> as a time-limited Space.</p>
+
+<p>The Space is typed as an <code>Event</code>, and the <em>Scientific conference preset</em> is automatically assigned to it in the same nanopublication, activating conference-related roles and views (organizers, program committee, participants, planned attendance, presentations, etc.).</p>""";
+    rdfs:label "Defining a scientific conference";
+    nt:hasNanopubLabelPattern "${label}";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st03, sub:st04, sub:st11, sub:st12,
+      sub:st13, sub:st90, sub:st99, sub:stp0, sub:stp1, sub:stp2, sub:stp3;
+    nt:hasTag "Spaces";
+    nt:hasTargetNanopubType gen:Event, gen:PresetAssignment, gen:Space .
+  
+  <https://w3id.org/np/RAkpkmrJ9l1WSeo1KmbLDEy7FFqBpmxnfaCsNSrSfxjjk/scientificConferencePreset>
+    rdfs:label "Scientific conference preset" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-13T11:33:08Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    rdfs:label "Defining a scientific conference";
+    prov:wasDerivedFrom <https://w3id.org/np/RAKZJOvcZ5GSBXYBIq3yeP_LOVTvGiqKN7_2voTmLAxII>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "pOfCBW+qTgJ9bWwY8+H8uPy+pzPgRjn1mAonVbdBvzIEgW4hYUHPn+Z2+upg35TRIQelHxpf1W9CIn2hkOuAwUij6g3QIIjIUirn0KfO+DzETf8BPLP/WVUvVOQ/jkkNVfdnud269VPGnmVB1XBwJS54/R0z5lhToqPZQT7Na58=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

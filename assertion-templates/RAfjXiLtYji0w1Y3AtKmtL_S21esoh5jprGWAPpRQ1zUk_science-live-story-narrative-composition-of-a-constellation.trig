@@ -1,0 +1,194 @@
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix ntemplate: <https://w3id.org/np/o/ntemplate/> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix schema: <https://schema.org/> .
+@prefix sub: <https://w3id.org/np/RAfjXiLtYji0w1Y3AtKmtL_S21esoh5jprGWAPpRQ1zUk/> .
+@prefix this: <https://w3id.org/np/RAfjXiLtYji0w1Y3AtKmtL_S21esoh5jprGWAPpRQ1zUk> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  schema:about rdfs:label "is about — the constellation this story tells" .
+  
+  schema:abstract rdfs:label "framing / introduction (human-authored)" .
+  
+  schema:associatedMedia rdfs:label "figure (evidence image)" .
+  
+  schema:caption rdfs:label "caption / alt text" .
+  
+  schema:hasPart rdfs:label "includes summary — an AI plain-language summary nanopublication (a reader tab)" .
+  
+  schema:headline rdfs:label "title / headline" .
+  
+  schema:image rdfs:label "hero image" .
+  
+  schema:isBasedOn rdfs:label "source DOI (credit)" .
+  
+  schema:position rdfs:label "display order" .
+  
+  sub:apex a ntemplate:UriPlaceholder;
+    rdfs:label "URI of the constellation apex (nanopublication) this story is about" .
+  
+  sub:assertion a ntemplate:AssertionTemplate;
+    dcterms:description "A reader-facing narrative ('story') about a constellation or nanopublication. It COMPOSES existing signed artifacts: it references (does NOT restate) the scientific record, pins AI plain-language summary nanopublications as audience tabs, and carries a hero image plus evidence figures (each with a renderable content URL, caption, persistent version-DOI credit, and the outcome it depicts). The story adds only a human-authored title, framing and figure selection; it never asserts new scientific facts. The record, synthesis, responses and references render live from the constellation it is about. It grows by superseding (npx:supersedes) to add tabs, figures or an updated framing.";
+    rdfs:label "Science Live story (narrative composition of a constellation)";
+    ntemplate:hasNanopubLabelPattern "Story: ${headline}";
+    ntemplate:hasStatement sub:figGroup, sub:heroGroup, sub:st_about, sub:st_framing,
+      sub:st_headline, sub:st_type, sub:summaryGroup;
+    ntemplate:hasTag "Constellation", "Narrative", "Science communication", "Story";
+    ntemplate:hasTargetNanopubType schema:Article .
+  
+  sub:figAbout a ntemplate:UriPlaceholder;
+    rdfs:label "the outcome / claim nanopublication this figure depicts (full URI)" .
+  
+  sub:figCaption a ntemplate:LiteralPlaceholder;
+    rdfs:label "figure caption / alt text" .
+  
+  sub:figDoi a ntemplate:UriPlaceholder;
+    rdfs:label "figure source DOI (full URI, e.g. a Zenodo version DOI)" .
+  
+  sub:figGroup a ntemplate:GroupedStatement, ntemplate:OptionalStatement, ntemplate:RepeatableStatement;
+    ntemplate:hasStatement sub:fig_about, sub:fig_caption, sub:fig_doi, sub:fig_link,
+      sub:fig_pos, sub:fig_type .
+  
+  sub:figPos a ntemplate:LiteralPlaceholder;
+    rdfs:label "display order (integer)";
+    ntemplate:hasRegex "\\d{1,4}" .
+  
+  sub:figUrl a ntemplate:UriPlaceholder;
+    rdfs:label "figure image URL (identifies the image and where it renders from)" .
+  
+  sub:fig_about a ntemplate:OptionalStatement;
+    rdf:object sub:figAbout;
+    rdf:predicate schema:about;
+    rdf:subject sub:figUrl .
+  
+  sub:fig_caption rdf:object sub:figCaption;
+    rdf:predicate schema:caption;
+    rdf:subject sub:figUrl .
+  
+  sub:fig_doi a ntemplate:OptionalStatement;
+    rdf:object sub:figDoi;
+    rdf:predicate schema:isBasedOn;
+    rdf:subject sub:figUrl .
+  
+  sub:fig_link rdf:object sub:figUrl;
+    rdf:predicate schema:associatedMedia;
+    rdf:subject sub:story .
+  
+  sub:fig_pos a ntemplate:OptionalStatement;
+    rdf:object sub:figPos;
+    rdf:predicate schema:position;
+    rdf:subject sub:figUrl .
+  
+  sub:fig_type rdf:object schema:ImageObject;
+    rdf:predicate rdf:type;
+    rdf:subject sub:figUrl .
+  
+  sub:framing a ntemplate:LongLiteralPlaceholder;
+    rdfs:label "framing / introduction (plain text, max 5000 characters)";
+    ntemplate:hasRegex "[\\s\\S]{0,5000}" .
+  
+  sub:headline a ntemplate:LiteralPlaceholder;
+    rdfs:label "story title / headline";
+    ntemplate:hasRegex ".{0,200}" .
+  
+  sub:heroCaption a ntemplate:LiteralPlaceholder;
+    rdfs:label "hero image caption / alt text" .
+  
+  sub:heroDoi a ntemplate:UriPlaceholder;
+    rdfs:label "hero image source DOI (full URI, e.g. a Zenodo version DOI)" .
+  
+  sub:heroGroup a ntemplate:GroupedStatement, ntemplate:OptionalStatement;
+    ntemplate:hasStatement sub:hero_caption, sub:hero_doi, sub:hero_link, sub:hero_type .
+  
+  sub:heroUrl a ntemplate:UriPlaceholder;
+    rdfs:label "hero image URL (identifies the image and where it renders from)" .
+  
+  sub:hero_caption rdf:object sub:heroCaption;
+    rdf:predicate schema:caption;
+    rdf:subject sub:heroUrl .
+  
+  sub:hero_doi a ntemplate:OptionalStatement;
+    rdf:object sub:heroDoi;
+    rdf:predicate schema:isBasedOn;
+    rdf:subject sub:heroUrl .
+  
+  sub:hero_link rdf:object sub:heroUrl;
+    rdf:predicate schema:image;
+    rdf:subject sub:story .
+  
+  sub:hero_type rdf:object schema:ImageObject;
+    rdf:predicate rdf:type;
+    rdf:subject sub:heroUrl .
+  
+  sub:st_about rdf:object sub:apex;
+    rdf:predicate schema:about;
+    rdf:subject sub:story .
+  
+  sub:st_framing a ntemplate:OptionalStatement;
+    rdf:object sub:framing;
+    rdf:predicate schema:abstract;
+    rdf:subject sub:story .
+  
+  sub:st_headline rdf:object sub:headline;
+    rdf:predicate schema:headline;
+    rdf:subject sub:story .
+  
+  sub:st_type rdf:object schema:Article;
+    rdf:predicate rdf:type;
+    rdf:subject sub:story .
+  
+  sub:story a ntemplate:UriPlaceholder;
+    rdfs:label "the story resource (a full URI; the wizard passes <apex>/story)" .
+  
+  sub:sum_link rdf:object sub:summaryUri;
+    rdf:predicate schema:hasPart;
+    rdf:subject sub:story .
+  
+  sub:sum_pos a ntemplate:OptionalStatement;
+    rdf:object sub:summaryPos;
+    rdf:predicate schema:position;
+    rdf:subject sub:summaryUri .
+  
+  sub:summaryGroup a ntemplate:GroupedStatement, ntemplate:OptionalStatement, ntemplate:RepeatableStatement;
+    ntemplate:hasStatement sub:sum_link, sub:sum_pos .
+  
+  sub:summaryPos a ntemplate:LiteralPlaceholder;
+    rdfs:label "display order within the audience tab (integer)";
+    ntemplate:hasRegex "\\d{1,4}" .
+  
+  sub:summaryUri a ntemplate:TrustyUriPlaceholder;
+    rdfs:label "AI plain-language summary nanopublication (a reader tab / section), pinned by trusty URI" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1784-2920 .
+}
+
+sub:pubinfo {
+  this: dcterms:creator orcid:0000-0002-1784-2920;
+    dcterms:license <https://creativecommons.org/licenses/by/4.0/>;
+    dcterms:title "Science Live story template";
+    npx:hasNanopubType ntemplate:AssertionTemplate;
+    npx:supersedes <https://w3id.org/np/RADCXU2CySzD6H8FxmSr-w3a0sFiEWszmSlbM0VlTwABs>;
+    prov:generatedAtTime "2026-07-27T14:23:46.825274+00:00"^^xsd:dateTime .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyuQ7Hi/zQ7hDZtMtLWK1JKU83Kgo8NqC+b8sxD5IoiekPctXVA8iM0zD/9pcp1txGXjX/fUj5HRUkOn4RVHP3fFa/3irQYpZFQ5fHRj8MQ7kJ6AEd1oggfajDevZGz63hj6Vigo+BNYBXqhcbWVAfLfbzQPAegce9zH6n9vTqKYMrwrSxPQdhoAcoaKOqY8gRiJgzekeEr+iEqa63X1HwWtYDs7X25a9xWbgaDSsRjzZGVUVOn1vYdSfWAaIw+EB9CiJfKm1zuXcur5PDziMW1pnZG6/NQtrA7AM3gLnoSoU3glkm5UhksGNqu2SV+j8oZLg7v6C5/sg2f6LIJMeFwIDAQAB";
+    npx:hasSignature "QXzG6G0RXDWHIKlp6GIHxuaSuP/Q1BGQ9AFHnFUsNS7EKWk24cNN9ZuyY6C/B0yaKl80bNTxf3RvGSaTEIi3W2iNFZnEGDnoxhdlZEfvoqCh+ZQxAZJGrs5V/JGZhE1hTRRmdyDeUMxOWdiVvEFEb797Q3qpFvdFmlld8zYzwZ5nW5cqCCU/GWC/nne0AVRvf133UQ1GMLn6Rk5GTmhoiKhFMlU6z94uwImhcwe2h+QV6bfznRmOBNEjMCwg13WqApuvBnaysqTwVWKr6Hv5MMnPKDaKbmJVw5V2q7yljXtBgcritVrVU+ZQ+PFRIZWAoW+Y475ODncE7sY0u0JI0g==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAIA9ECaN2ypOVvl4YeNjT6nbpwko9xMcctxB_uYscLG4/claude-ai-agent> .
+}
+

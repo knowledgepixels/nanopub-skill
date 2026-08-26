@@ -1,0 +1,69 @@
+@prefix this: <https://w3id.org/np/RA1aHHI-wrQu1aOzXNHHAhP5Ze5blfn55TtEB5KYOrYrc> .
+@prefix sub: <https://w3id.org/np/RA1aHHI-wrQu1aOzXNHHAhP5Ze5blfn55TtEB5KYOrYrc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix frbr: <http://purl.org/vocab/frbr/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  frbr:supplement rdfs:label "is supplemented by" .
+  
+  sub:dataset a nt:GuidedChoicePlaceholder;
+    rdfs:label "dataset";
+    nt:possibleValuesFromApi "https://api.openaire.eu/graph/v3/research-products?search=" .
+  
+  sub:publication a nt:GuidedChoicePlaceholder;
+    rdfs:label "publication";
+    nt:possibleValuesFromApi "https://api.openaire.eu/graph/v3/research-products?search=" .
+  
+  sub:st1 rdf:object sub:dataset;
+    rdf:predicate frbr:supplement;
+    rdf:subject sub:publication .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Such a nanopublication declares that a dataset is supplementary material to a publication. The publication is the subject and the dataset is the supplement, following the FRBR property frbr:supplement, which is what the SKG-IF relation 'is_supplemented_by' maps to. If the relation you have in mind points the other way, simply swap the two records.";
+    rdfs:label "OpenAIRE: Publication supplemented by dataset";
+    nt:hasNanopubLabelPattern "${publication} is supplemented by ${dataset}";
+    nt:hasStatement sub:st1;
+    nt:hasTag "OpenAIRE";
+    nt:hasTargetNanopubType frbr:supplement .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-28T11:15:47Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    rdfs:label "OpenAIRE: Publication supplemented by dataset";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "FO9LYk2dYcgZ3WPC5K/GXnngNge43fLchoFKd+vpD24jFYtQhN9aHNqvqYkwn9yu2U8v/9G/EAwfWa/wJNAYBiDLLZFYPcqr610Woun6b6bcE5NmGrwd6xulO/bFsCgVPqbBAucOh2mQ1HS9P9avx8o3tjRe0oa51XJ6HV67DJQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

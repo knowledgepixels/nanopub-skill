@@ -1,0 +1,321 @@
+@prefix this: <https://w3id.org/np/RANH1s_swxo5c4w45nrew4OVXDX5xxnFpz_zlfOMcRKc0> .
+@prefix sub: <https://w3id.org/np/RANH1s_swxo5c4w45nrew4OVXDX5xxnFpz_zlfOMcRKc0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-fsr-typology-svg a grlc:grlc-query;
+    dct:description "Returns a single result row with one 'svg' column holding a complete SVG document rendering the FSR typology of the FAIR Implementation Profile (FIP) Ontology, computed dynamically from the published class definitions. This is the query behind the 'FSR typology' SVG view (gen:SvgView) and is specific to the FIP Ontology: it mirrors the hand-drawn FSR typology diagram with three fixed columns headed by FAIR Data Policy, FAIR Specification, and FAIR Supporting Technology, listing each column's subclasses (and their subclasses, indented; classes marked owl:DeprecatedClass are omitted) as boxes hanging off a vertical spine with a subtype triangle. Classes that are also FAIR-Enabling Resources (directly, or via their parent for nested entries) get a gray background; a legend below the columns explains the FSR/FER distinction. Box labels link root-relatively (/part?id=...) so they resolve inside the rendering Nanodash instance, which appends the page context; labels are shown in full. Box labels are shown in full, wrapping to two lines when needed. Each class that declares the FAIR (sub-)principles it enables (fip:enables, for FAIR-Enabling Resources) or supports (fip:supports, for other FSRs) in its current class-definition nanopub gets a badge box attached on the right, as in the hand-drawn original; each principle code links root-relatively (/part?id=...) to the principle term. The FSR/FER legend boxes link to their class terms likewise. Link text carries a neutral fill that the rendering page's stylesheet overrides with its own link colors. Positions are computed via rank subqueries, so the output is deterministic. The 'resource' parameter (the ontology) is used to derive the class namespace filter.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get FSR typology diagram as SVG";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/e8cc5bb29ec5597303f8f101c65c545dc124ee0df68ce733764b03adc3237184>;
+    grlc:sparql """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+select (concat(
+    '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 860 ', str(96 + max(?iy) * 38 + 24 + 132), '\" width=\"1290\" height=\"', str((96 + max(?iy) * 38 + 24 + 132) * 3 / 2), '\" font-family=\"sans-serif\">',
+    group_concat(?frag; separator=\"\"),
+    '<g transform=\"translate(20,', str((96 + max(?iy) * 38 + 24)), ')\">','<rect width=\"480\" height=\"116\" fill=\"none\" stroke=\"#444\" stroke-dasharray=\"6 4\"></rect>','<a href=\"/part?id=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FFAIR-Supporting-Resource\"><rect x=\"16\" y=\"14\" width=\"180\" height=\"30\" fill=\"#ffffff\" stroke=\"#444\"></rect>','<text x=\"106\" y=\"33\" text-anchor=\"middle\" font-size=\"10\" font-weight=\"bold\" fill=\"#111\">FAIR Supporting Resource (FSR)</text></a>','<path d=\"M 41 44 L 36 54 L 46 54 Z\" fill=\"#ffffff\" stroke=\"#444\"></path>','<line x1=\"41\" y1=\"54\" x2=\"41\" y2=\"72\" stroke=\"#444\"></line>','<a href=\"/part?id=https%3A%2F%2Fw3id.org%2Ffair%2Ffip%2Fterms%2FFAIR-Enabling-Resource\"><rect x=\"32\" y=\"72\" width=\"180\" height=\"30\" fill=\"#d8d8d8\" stroke=\"#444\"></rect>','<text x=\"122\" y=\"91\" text-anchor=\"middle\" font-size=\"10\" font-weight=\"bold\" fill=\"#111\">FAIR-Enabling Resource (FER)</text></a>','<text x=\"228\" y=\"28\" font-size=\"10\" fill=\"#111\">','<tspan x=\"228\" y=\"28\">All resources in this typology are</tspan>','<tspan x=\"228\" y=\"42\">FAIR Supporting Resources (FSR), but</tspan>','<tspan x=\"228\" y=\"56\">the FAIR-Enabling Resources (FER,</tspan>','<tspan x=\"228\" y=\"70\">gray background) among them are</tspan>','<tspan x=\"228\" y=\"84\">essential for the FAIR Principles.</tspan>','</text></g>',
+    '</svg>') as ?svg) where {
+
+  # --- one row per rendered box, with rank ?iy inside its column
+  { select ?b ?bx ?c ?clbl ?ind ?fer (count(*) as ?iy) where {
+    { 
+    {
+      { select ?b ?bx ?c (coalesce(min(?lu1), min(?la1), replace(str(?c), \"^.*[/#]\", \"\")) as ?clbl) where {
+        values (?b ?bx) { (<https://w3id.org/fair/fip/terms/FAIR-Data-Policy> 0) (<https://w3id.org/fair/fip/terms/FAIR-Specification> 1) (<https://w3id.org/fair/fip/terms/FAIR-Supporting-Technology> 2) }
+        
+      graph npa:graph {
+        ?np1 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pk1 ; npx:introduces ?c ; np:hasAssertion ?a1 .
+        filter not exists { ?npi1 npx:invalidates ?np1 ; npa:hasValidSignatureForPublicKeyHash ?pk1 . }
+      }
+      graph ?a1 {
+        ?c a owl:Class ; rdfs:subClassOf ?b .
+        optional { ?c rdfs:label ?lu1 . filter(lang(?lu1) = \"\") }
+        optional { ?c rdfs:label ?la1 . }
+      }
+      filter(strstarts(str(?c), replace(str(?_resource_iri), \"[^/#]*$\", \"\")))
+      } group by ?b ?bx ?c }
+      filter not exists {
+        graph npa:graph {
+          ?npd2 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pkd2 ; npx:introduces ?c ; np:hasAssertion ?ad2 .
+          filter not exists { ?npdi2 npx:invalidates ?npd2 ; npa:hasValidSignatureForPublicKeyHash ?pkd2 . }
+        }
+        graph ?ad2 { ?c a owl:DeprecatedClass . }
+      }
+      bind(0 as ?ind)
+      bind(concat(?clbl, \"|\", str(?c)) as ?sk)
+      bind(if(exists {
+        graph npa:graph {
+          ?npf3 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pkf3 ; npx:introduces ?c ; np:hasAssertion ?af3 .
+          filter not exists { ?npfi3 npx:invalidates ?npf3 ; npa:hasValidSignatureForPublicKeyHash ?pkf3 . }
+        }
+        graph ?af3 { ?c rdfs:subClassOf <https://w3id.org/fair/fip/terms/FAIR-Enabling-Resource> . }
+      }, 1, 0) as ?fer)
+    } union {
+      { select ?b ?bx ?m ?c
+                (coalesce(min(?lu2), min(?la2), replace(str(?m), \"^.*[/#]\", \"\")) as ?mlbl)
+                (coalesce(min(?lu3), min(?la3), replace(str(?c), \"^.*[/#]\", \"\")) as ?clbl) where {
+        values (?b ?bx) { (<https://w3id.org/fair/fip/terms/FAIR-Data-Policy> 0) (<https://w3id.org/fair/fip/terms/FAIR-Specification> 1) (<https://w3id.org/fair/fip/terms/FAIR-Supporting-Technology> 2) }
+        
+      graph npa:graph {
+        ?np4 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pk4 ; npx:introduces ?m ; np:hasAssertion ?a4 .
+        filter not exists { ?npi4 npx:invalidates ?np4 ; npa:hasValidSignatureForPublicKeyHash ?pk4 . }
+      }
+      graph ?a4 {
+        ?m a owl:Class ; rdfs:subClassOf ?b .
+        optional { ?m rdfs:label ?lu2 . filter(lang(?lu2) = \"\") }
+        optional { ?m rdfs:label ?la2 . }
+      }
+      filter(strstarts(str(?m), replace(str(?_resource_iri), \"[^/#]*$\", \"\")))
+        
+      graph npa:graph {
+        ?np5 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pk5 ; npx:introduces ?c ; np:hasAssertion ?a5 .
+        filter not exists { ?npi5 npx:invalidates ?np5 ; npa:hasValidSignatureForPublicKeyHash ?pk5 . }
+      }
+      graph ?a5 {
+        ?c a owl:Class ; rdfs:subClassOf ?m .
+        optional { ?c rdfs:label ?lu3 . filter(lang(?lu3) = \"\") }
+        optional { ?c rdfs:label ?la3 . }
+      }
+      filter(strstarts(str(?c), replace(str(?_resource_iri), \"[^/#]*$\", \"\")))
+      } group by ?b ?bx ?m ?c }
+      filter not exists {
+        graph npa:graph {
+          ?npd6 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pkd6 ; npx:introduces ?c ; np:hasAssertion ?ad6 .
+          filter not exists { ?npdi6 npx:invalidates ?npd6 ; npa:hasValidSignatureForPublicKeyHash ?pkd6 . }
+        }
+        graph ?ad6 { ?c a owl:DeprecatedClass . }
+      }
+      filter not exists {
+        graph npa:graph {
+          ?npd7 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pkd7 ; npx:introduces ?m ; np:hasAssertion ?ad7 .
+          filter not exists { ?npdi7 npx:invalidates ?npd7 ; npa:hasValidSignatureForPublicKeyHash ?pkd7 . }
+        }
+        graph ?ad7 { ?m a owl:DeprecatedClass . }
+      }
+      bind(1 as ?ind)
+      bind(concat(?mlbl, \"~|\", ?clbl, \"|\", str(?c)) as ?sk)
+      bind(if(exists {
+        graph npa:graph {
+          ?npf8 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pkf8 ; npx:introduces ?c ; np:hasAssertion ?af8 .
+          filter not exists { ?npfi8 npx:invalidates ?npf8 ; npa:hasValidSignatureForPublicKeyHash ?pkf8 . }
+        }
+        graph ?af8 { ?c rdfs:subClassOf <https://w3id.org/fair/fip/terms/FAIR-Enabling-Resource> . }
+      } || exists {
+        graph npa:graph {
+          ?npf9 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pkf9 ; npx:introduces ?m ; np:hasAssertion ?af9 .
+          filter not exists { ?npfi9 npx:invalidates ?npf9 ; npa:hasValidSignatureForPublicKeyHash ?pkf9 . }
+        }
+        graph ?af9 { ?m rdfs:subClassOf <https://w3id.org/fair/fip/terms/FAIR-Enabling-Resource> . }
+      }, 1, 0) as ?fer)
+    } }
+    { select distinct (?b as ?bR) (?sk as ?skR) where { 
+    {
+      { select ?b ?bx ?c (coalesce(min(?lu1), min(?la1), replace(str(?c), \"^.*[/#]\", \"\")) as ?clbl) where {
+        values (?b ?bx) { (<https://w3id.org/fair/fip/terms/FAIR-Data-Policy> 0) (<https://w3id.org/fair/fip/terms/FAIR-Specification> 1) (<https://w3id.org/fair/fip/terms/FAIR-Supporting-Technology> 2) }
+        
+      graph npa:graph {
+        ?np10 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pk10 ; npx:introduces ?c ; np:hasAssertion ?a10 .
+        filter not exists { ?npi10 npx:invalidates ?np10 ; npa:hasValidSignatureForPublicKeyHash ?pk10 . }
+      }
+      graph ?a10 {
+        ?c a owl:Class ; rdfs:subClassOf ?b .
+        optional { ?c rdfs:label ?lu1 . filter(lang(?lu1) = \"\") }
+        optional { ?c rdfs:label ?la1 . }
+      }
+      filter(strstarts(str(?c), replace(str(?_resource_iri), \"[^/#]*$\", \"\")))
+      } group by ?b ?bx ?c }
+      filter not exists {
+        graph npa:graph {
+          ?npd11 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pkd11 ; npx:introduces ?c ; np:hasAssertion ?ad11 .
+          filter not exists { ?npdi11 npx:invalidates ?npd11 ; npa:hasValidSignatureForPublicKeyHash ?pkd11 . }
+        }
+        graph ?ad11 { ?c a owl:DeprecatedClass . }
+      }
+      bind(0 as ?ind)
+      bind(concat(?clbl, \"|\", str(?c)) as ?sk)
+      bind(if(exists {
+        graph npa:graph {
+          ?npf12 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pkf12 ; npx:introduces ?c ; np:hasAssertion ?af12 .
+          filter not exists { ?npfi12 npx:invalidates ?npf12 ; npa:hasValidSignatureForPublicKeyHash ?pkf12 . }
+        }
+        graph ?af12 { ?c rdfs:subClassOf <https://w3id.org/fair/fip/terms/FAIR-Enabling-Resource> . }
+      }, 1, 0) as ?fer)
+    } union {
+      { select ?b ?bx ?m ?c
+                (coalesce(min(?lu2), min(?la2), replace(str(?m), \"^.*[/#]\", \"\")) as ?mlbl)
+                (coalesce(min(?lu3), min(?la3), replace(str(?c), \"^.*[/#]\", \"\")) as ?clbl) where {
+        values (?b ?bx) { (<https://w3id.org/fair/fip/terms/FAIR-Data-Policy> 0) (<https://w3id.org/fair/fip/terms/FAIR-Specification> 1) (<https://w3id.org/fair/fip/terms/FAIR-Supporting-Technology> 2) }
+        
+      graph npa:graph {
+        ?np13 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pk13 ; npx:introduces ?m ; np:hasAssertion ?a13 .
+        filter not exists { ?npi13 npx:invalidates ?np13 ; npa:hasValidSignatureForPublicKeyHash ?pk13 . }
+      }
+      graph ?a13 {
+        ?m a owl:Class ; rdfs:subClassOf ?b .
+        optional { ?m rdfs:label ?lu2 . filter(lang(?lu2) = \"\") }
+        optional { ?m rdfs:label ?la2 . }
+      }
+      filter(strstarts(str(?m), replace(str(?_resource_iri), \"[^/#]*$\", \"\")))
+        
+      graph npa:graph {
+        ?np14 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pk14 ; npx:introduces ?c ; np:hasAssertion ?a14 .
+        filter not exists { ?npi14 npx:invalidates ?np14 ; npa:hasValidSignatureForPublicKeyHash ?pk14 . }
+      }
+      graph ?a14 {
+        ?c a owl:Class ; rdfs:subClassOf ?m .
+        optional { ?c rdfs:label ?lu3 . filter(lang(?lu3) = \"\") }
+        optional { ?c rdfs:label ?la3 . }
+      }
+      filter(strstarts(str(?c), replace(str(?_resource_iri), \"[^/#]*$\", \"\")))
+      } group by ?b ?bx ?m ?c }
+      filter not exists {
+        graph npa:graph {
+          ?npd15 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pkd15 ; npx:introduces ?c ; np:hasAssertion ?ad15 .
+          filter not exists { ?npdi15 npx:invalidates ?npd15 ; npa:hasValidSignatureForPublicKeyHash ?pkd15 . }
+        }
+        graph ?ad15 { ?c a owl:DeprecatedClass . }
+      }
+      filter not exists {
+        graph npa:graph {
+          ?npd16 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pkd16 ; npx:introduces ?m ; np:hasAssertion ?ad16 .
+          filter not exists { ?npdi16 npx:invalidates ?npd16 ; npa:hasValidSignatureForPublicKeyHash ?pkd16 . }
+        }
+        graph ?ad16 { ?m a owl:DeprecatedClass . }
+      }
+      bind(1 as ?ind)
+      bind(concat(?mlbl, \"~|\", ?clbl, \"|\", str(?c)) as ?sk)
+      bind(if(exists {
+        graph npa:graph {
+          ?npf17 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pkf17 ; npx:introduces ?c ; np:hasAssertion ?af17 .
+          filter not exists { ?npfi17 npx:invalidates ?npf17 ; npa:hasValidSignatureForPublicKeyHash ?pkf17 . }
+        }
+        graph ?af17 { ?c rdfs:subClassOf <https://w3id.org/fair/fip/terms/FAIR-Enabling-Resource> . }
+      } || exists {
+        graph npa:graph {
+          ?npf18 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pkf18 ; npx:introduces ?m ; np:hasAssertion ?af18 .
+          filter not exists { ?npfi18 npx:invalidates ?npf18 ; npa:hasValidSignatureForPublicKeyHash ?pkf18 . }
+        }
+        graph ?af18 { ?m rdfs:subClassOf <https://w3id.org/fair/fip/terms/FAIR-Enabling-Resource> . }
+      }, 1, 0) as ?fer)
+    } } }
+    filter(?bR = ?b && ?skR <= ?sk)
+  } group by ?b ?bx ?c ?clbl ?ind ?fer }
+
+  # --- root labels from their own definition nanopubs
+  { select ?b (coalesce(min(?blu), min(?bla), replace(str(?b), \"^.*[/#]\", \"\")) as ?blbl) where {
+    values ?b { <https://w3id.org/fair/fip/terms/FAIR-Data-Policy> <https://w3id.org/fair/fip/terms/FAIR-Specification> <https://w3id.org/fair/fip/terms/FAIR-Supporting-Technology> }
+    
+      graph npa:graph {
+        ?np900 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pk900 ; npx:introduces ?b ; np:hasAssertion ?a900 .
+        filter not exists { ?npi900 npx:invalidates ?np900 ; npa:hasValidSignatureForPublicKeyHash ?pk900 . }
+      }
+    graph ?a900 {
+      ?b a owl:Class .
+      optional { ?b rdfs:label ?blu . filter(lang(?blu) = \"\") }
+      optional { ?b rdfs:label ?bla . }
+    }
+  } group by ?b }
+
+  # --- FAIR (sub-)principle badges from fip:enables / fip:supports in the
+  # classes' own valid definition nanopubs
+  optional {
+    { select ?c (group_concat(distinct replace(str(?prE), \"^.*[/#]\", \"\"); separator=\" \") as ?codes)
+                (group_concat(distinct concat('<a href=\"/part?id=', encode_for_uri(str(?prE)), '\"><tspan>', replace(str(?prE), \"^.*[/#]\", \"\"), '</tspan></a>'); separator=\"<tspan>&#160;</tspan>\") as ?codesFrag) where {
+      graph npa:graph {
+        ?npP npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pkP ; npx:introduces ?c ; np:hasAssertion ?aP .
+        filter not exists { ?npPi npx:invalidates ?npP ; npa:hasValidSignatureForPublicKeyHash ?pkP . }
+      }
+      graph ?aP { ?c ?prProp ?prE . }
+      values ?prProp { <https://w3id.org/fair/fip/terms/enables> <https://w3id.org/fair/fip/terms/supports> }
+      filter(strstarts(str(?c), replace(str(?_resource_iri), \"[^/#]*$\", \"\")))
+    } group by ?c }
+  }
+
+  bind(20 + ?bx * 280 as ?colX)
+  bind(?colX + 24 as ?spineX)
+  bind(96 + (?iy - 1) * 38 as ?boxY)
+  bind(?boxY + 15 as ?midY)
+  bind(?colX + 38 + ?ind * 14 as ?boxX)
+  bind(175 - ?ind * 14 as ?boxW)
+  bind(if(?fer = 1, \"#d8d8d8\", \"#ffffff\") as ?boxFill)
+
+  # column header (root box + subtype triangle), attached to the first item row
+  bind(if(?iy = 1, concat(
+    '<a href=\"/part?id=', encode_for_uri(str(?b)), '\"><rect x=\"', str(?colX + 16), '\" y=\"20\" width=\"200\" height=\"36\" fill=\"#ffffff\" stroke=\"#444\"></rect>',
+    '<text x=\"', str(?colX + 116), '\" y=\"42\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#111\">', replace(replace(replace(?blbl, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"), '</text></a>',
+    '<path d=\"M ', str(?spineX - 5), ' 66 L ', str(?spineX), ' 56 L ', str(?spineX + 5), ' 66 Z\" fill=\"#ffffff\" stroke=\"#444\"></path>'
+  ), '') as ?headerFrag)
+
+  # two-line wrap for labels wider than the box: break at the last space in the
+  # first 21 characters (balanced split); labels are shown in full, no truncation
+  bind(strlen(?clbl) > 30 && regex(?clbl, \"^.{1,20}\\\\s\") as ?wrap)
+  bind(if(?wrap, replace(?clbl, \"^(.{1,20})\\\\s.*$\", \"$1\"), ?clbl) as ?l1)
+  bind(if(?wrap, replace(?clbl, \"^.{1,20}\\\\s\", \"\"), \"\") as ?l2)
+
+  bind(if(bound(?codes) && ?codes != \"\", concat(
+    '<rect x=\"', str(?boxX + ?boxW), '\" y=\"', str(?boxY + 7), '\" width=\"', str(12 + strlen(?codes) * 5), '\" height=\"16\" fill=\"#ffffff\" stroke=\"#444\"></rect>',
+    '<text x=\"', str(?boxX + ?boxW + (12 + strlen(?codes) * 5) / 2), '\" y=\"', str(?boxY + 19), '\" text-anchor=\"middle\" font-size=\"9\" fill=\"#111\">', ?codesFrag, '</text>'
+  ), '') as ?badgeFrag)
+
+  bind(concat(
+    ?headerFrag,
+    '<line x1=\"', str(?spineX), '\" y1=\"', str(if(?iy = 1, 66, ?midY - 38)), '\" x2=\"', str(?spineX), '\" y2=\"', str(?midY), '\" stroke=\"#444\"></line>',
+    '<line x1=\"', str(?spineX), '\" y1=\"', str(?midY), '\" x2=\"', str(?boxX), '\" y2=\"', str(?midY), '\" stroke=\"#444\"></line>',
+    '<a href=\"/part?id=', encode_for_uri(str(?c)), '\">',
+    '<rect x=\"', str(?boxX), '\" y=\"', str(?boxY), '\" width=\"', str(?boxW), '\" height=\"30\" fill=\"', ?boxFill, '\" stroke=\"#444\"></rect>',
+    if(?l2 = \"\",
+      concat('<text x=\"', str(?boxX + ?boxW / 2), '\" y=\"', str(?boxY + 19), '\" text-anchor=\"middle\" font-size=\"10\" fill=\"#111\">', replace(replace(replace(?clbl, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"), '</text>'),
+      concat('<text x=\"', str(?boxX + ?boxW / 2), '\" y=\"', str(?boxY + 13), '\" text-anchor=\"middle\" font-size=\"10\" fill=\"#111\">', replace(replace(replace(?l1, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"),
+             '<tspan x=\"', str(?boxX + ?boxW / 2), '\" y=\"', str(?boxY + 25), '\">', replace(replace(replace(?l2, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"), '</tspan></text>')),
+    '</a>',
+    ?badgeFrag
+  ) as ?frag)
+
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-25T18:53:10Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-fsr-typology-svg;
+    npx:supersedes <https://w3id.org/np/RAEEY2uGVfrgE_855_shsFj651CbRDOdKcnM_fjUtXGGY>,
+      <https://w3id.org/np/RAh83BCbv8H_4sy5y24ybtiI3w4eQ848U02RHEOQAb-tQ>, <https://w3id.org/np/RApKj3Totz_TyxG0xQKcURoW2fNXbmVJTluDR6TF-S5Rw>;
+    rdfs:label "Get FSR typology diagram as SVG";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "KYxixRbwSs6fqAOnD4BPLI6inqwlPfGrHR2WRXBS3Ub106kUb0XvWKbNiwwPhFqlDnxqZhEX4h7DMgUaN3nAb0aLW38IRwcX2oqy/Fv36vj/4H55cVnrhPeWO+R7cE46gjcLwz7/NgA6e9LxgJO6k1zqOT28PAlC1sKC8D1oqt0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}

@@ -1,0 +1,181 @@
+@prefix this: <https://w3id.org/np/RATXFYzTRbbfUm05kfZ61pJD0LsTj4qYAtnPhb7B_GoR0> .
+@prefix sub: <https://w3id.org/np/RATXFYzTRbbfUm05kfZ61pJD0LsTj4qYAtnPhb7B_GoR0/> .
+@prefix ff: <https://w3id.org/fair/ff/terms/> .
+@prefix schema: <http://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  schema:endDate rdfs:label "has the end date" .
+  
+  schema:startDate rdfs:label "has the start date" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <http://www.w3.org/2002/07/owl#sameAs> rdfs:label "has the alternative ID" .
+  
+  <https://ror.org/01yaj9a77> rdfs:label "ZonMw - Netherlands Organisation for Health Research and Development" .
+  
+  ff:has-funder rdfs:label "has as funder" .
+  
+  ff:has-grant-id rdfs:label "has the ZonMw project number" .
+  
+  ff:has-lead-institution rdfs:label "has as lead institution" .
+  
+  ff:has-partner-institution rdfs:label "has as partner institution" .
+  
+  gen:Project rdfs:label "Project" .
+  
+  gen:Space rdfs:label "Space" .
+  
+  gen:hasAdmin rdfs:label "has as admin" .
+  
+  gen:hasRootDefinition rdfs:label "has as root definition" .
+  
+  sub:admin a nt:AgentPlaceholder;
+    rdfs:label "an admin of the project" .
+  
+  sub:altId a nt:ExternalUriPlaceholder;
+    rdfs:label "alternative URI" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such nanopublications define a project funded by ZonMw (the Netherlands Organisation for Health Research and Development) as a Space, recording its title, description, duration, the institutions carrying it out, and the ZonMw project number. The funder is fixed to ZonMw. Institutions are identified by their ROR identifiers, which can be looked up by name.";
+    rdfs:label "Defining a ZonMw-funded project";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st03, sub:st04, sub:st11, sub:st12,
+      sub:st14, sub:st15, sub:st16, sub:st17, sub:st90, sub:st99;
+    nt:hasTag "Spaces" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "the description of the project" .
+  
+  sub:endDate a nt:LiteralPlaceholder;
+    rdfs:label "end date";
+    nt:hasDatatype xsd:date .
+  
+  sub:grantId a nt:LiteralPlaceholder;
+    rdfs:label "the ZonMw project number" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the title of the project" .
+  
+  sub:leadInstitution a nt:GuidedChoicePlaceholder;
+    rdfs:label "the lead institution (search by name to find its ROR identifier)";
+    nt:possibleValuesFromApi "https://api.ror.org/organizations?query=" .
+  
+  sub:partnerInstitution a nt:GuidedChoicePlaceholder;
+    rdfs:label "a partner institution (search by name to find its ROR identifier)";
+    nt:possibleValuesFromApi "https://api.ror.org/organizations?query=" .
+  
+  sub:rootDefinition a nt:RootNanopubPlaceholder .
+  
+  sub:space a nt:ExternalUriPlaceholder, nt:IntroducedResource;
+    rdfs:label "project identifier";
+    nt:hasPrefix "https://w3id.org/spaces/zonmw/";
+    nt:hasPrefixLabel "https://w3id.org/spaces/zonmw/" .
+  
+  sub:st00 rdf:object gen:Space;
+    rdf:predicate rdf:type;
+    rdf:subject sub:space .
+  
+  sub:st01 rdf:object gen:Project;
+    rdf:predicate rdf:type;
+    rdf:subject sub:space .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:space .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:space .
+  
+  sub:st04 a nt:RepeatableStatement;
+    rdf:object sub:admin;
+    rdf:predicate gen:hasAdmin;
+    rdf:subject sub:space .
+  
+  sub:st11 rdf:object sub:startDate;
+    rdf:predicate schema:startDate;
+    rdf:subject sub:space .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:endDate;
+    rdf:predicate schema:endDate;
+    rdf:subject sub:space .
+  
+  sub:st14 a nt:OptionalStatement;
+    rdf:object sub:leadInstitution;
+    rdf:predicate ff:has-lead-institution;
+    rdf:subject sub:space .
+  
+  sub:st15 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:partnerInstitution;
+    rdf:predicate ff:has-partner-institution;
+    rdf:subject sub:space .
+  
+  sub:st16 rdf:object <https://ror.org/01yaj9a77>;
+    rdf:predicate ff:has-funder;
+    rdf:subject sub:space .
+  
+  sub:st17 rdf:object sub:grantId;
+    rdf:predicate ff:has-grant-id;
+    rdf:subject sub:space .
+  
+  sub:st90 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:altId;
+    rdf:predicate <http://www.w3.org/2002/07/owl#sameAs>;
+    rdf:subject sub:space .
+  
+  sub:st99 rdf:object sub:rootDefinition;
+    rdf:predicate gen:hasRootDefinition;
+    rdf:subject sub:space .
+  
+  sub:startDate a nt:LiteralPlaceholder;
+    rdfs:label "start date";
+    nt:hasDatatype xsd:date .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-11T07:34:20Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Defining a ZonMw-funded project";
+    prov:wasDerivedFrom <https://w3id.org/np/RAKZJOvcZ5GSBXYBIq3yeP_LOVTvGiqKN7_2voTmLAxII>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "MeMFgCDOe+CanoaOI/lqSAAP86tVKi10JnvzpeLjaoy8IutJomWgtx38hRyAC8ao/wtnCJLz99L+bTiUjEVtZbwMHp5HSrFYJYyuRL23tLmNcf9AI0ZJV9vAoXkSfv446bg5HXd+ojWr1pFcpkPGdbvRsc0nhBCF/o8QcAschVY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+
