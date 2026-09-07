@@ -1,0 +1,66 @@
+@prefix this: <https://w3id.org/np/RA7vwC0g_WOMKyCy_e0gV97PUgZ9ehZ5kaIZh-dCE9x14> .
+@prefix sub: <https://w3id.org/np/RA7vwC0g_WOMKyCy_e0gV97PUgZ9ehZ5kaIZh-dCE9x14/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://www.wikidata.org/entity/P1344> rdfs:label "participates in" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "The creator of such a nanopublication declares to be a participant in the specified Space.";
+    rdfs:label "Declaring the participation in a Space";
+    nt:hasNanopubLabelPattern "${participant} is participant in ${space}";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Events" .
+  
+  sub:participant a nt:AgentPlaceholder;
+    rdfs:label "choose the participant" .
+  
+  sub:space a nt:UriPlaceholder;
+    rdfs:label "identifier of space" .
+  
+  sub:st1 rdf:object sub:space;
+    rdf:predicate <http://www.wikidata.org/entity/P1344>;
+    rdf:subject sub:participant .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-10-29T12:45:48.931Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Declaring the participation in a Space";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "RpV5E+wosHBiCiUoGBArzYiOC2qv3a1shx4nk1a/oWUyJGkvgM2JAstK/DZGfsvP8H/Zr28ZQxx/MaGYKE1t6Jm2aDhB0ZsJgBLN8k/q22TZw+gjDbkWmG8D+VTM5MR6Ttu/k4cxYlKWkRWK3uQAN7WNiWZ4AMyMl4+SsG0ogUs=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

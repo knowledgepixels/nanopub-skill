@@ -1,0 +1,74 @@
+@prefix this: <https://w3id.org/np/RAz_p_Eg5Xxc0T-MBmhmqFrB0IPb6BKUvnuCoDaQB1jWI> .
+@prefix sub: <https://w3id.org/np/RAz_p_Eg5Xxc0T-MBmhmqFrB0IPb6BKUvnuCoDaQB1jWI/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:action a gen:ViewResultAction;
+    rdfs:label "add...";
+    gen:hasActionTemplate <https://w3id.org/np/RAFr0RyK-ATWGUnJzKXeRTL0_OrW-mEzoKCaJz0TE8Ao0>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "resource";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:simple-message-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAwkZL45-jGqVt9hz0vB01rcp-x6bHzpmxJLKePwwGpdI/simple-message-view-kind>;
+    dct:title "💬 Messages";
+    rdfs:label "Simple message view";
+    gen:appliesToInstancesOf gen:IndividualAgent, gen:MaintainedResource, gen:Space;
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels>;
+    gen:hasStructuralPosition "6.2.messages.1";
+    gen:hasViewAction sub:action;
+    gen:hasViewQuery <https://w3id.org/np/RApqpCItSUMFf82LaeQs8qFPo-GA8d8g4o-Apfypgyjx8/get-messages-about-this-resource-only>;
+    gen:hasViewQueryTargetField "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RAFr0RyK-ATWGUnJzKXeRTL0_OrW-mEzoKCaJz0TE8Ao0> nt:hasLabelFromApi
+      "Publish a plain-text message for a resource" .
+  
+  <https://w3id.org/np/RApqpCItSUMFf82LaeQs8qFPo-GA8d8g4o-Apfypgyjx8/get-messages-about-this-resource-only>
+    nt:hasLabelFromApi "Get messages about this resource only - This query returns plain-text messages and discourse statements (schema:Statement) about the given resource itself (not about its sub-spaces or maintained resources)." .
+  
+  this: dct:created "2026-08-28T12:17:23Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:simple-message-view;
+    npx:introduces <https://w3id.org/np/RAwkZL45-jGqVt9hz0vB01rcp-x6bHzpmxJLKePwwGpdI/simple-message-view-kind>;
+    npx:supersedes <https://w3id.org/np/RA09HCBOHjHKG0khREDvmxFjtIFYkJ2_8msajLI2R3m44>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAr1Krh98VGXbIc7JVSJpH24bWi2JEVRYfvJ_KJq0wJtc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "m60voiujfabMs74IwNdFZ4tC8hFEaqtsTOhwTSqczJ8+9wIfP3Iu5Fkdd6X5MUjN6gzsm4lFPkMdT6ftsJywk0TY+or36u6U9h75hDHqRmDjOIkUr/zJh4yuq+ecY1gnd0f+sljpyrJWThSsNTTMRRyKcfMS0rQP3fUS6rewlk4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/spaces/knowledgepixels> nt:hasLabelFromApi "Knowledge Pixels" .
+}
+

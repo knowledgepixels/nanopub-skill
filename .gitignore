@@ -1,3 +1,7 @@
 tmp/
 *.jar
 *.csv
+
+# Python bytecode
+__pycache__/
+*.py[cod]

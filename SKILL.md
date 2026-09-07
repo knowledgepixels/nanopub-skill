@@ -213,6 +213,25 @@ curl -s "https://query.knowledgepixels.com/api/RAcyg9La3L2Xuig-jEXicmdmEgUGYfHda
 
 The current view-creation template is `RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM` ("Declaring a resource view", in [assertion-templates/](assertion-templates/)); prefer replicating its statement shapes when hand-authoring a view. For a view declaring `gen:governedBy` (space-governed versions, see below), use the derived variant `RAr1Krh98VGXbIc7JVSJpH24bWi2JEVRYfvJ_KJq0wJtc` ("Declaring a resource view (with governed-by)"). For a query-less **header view**, use `RAZYU_kQZ0B3ruoNSeZOaKR6M93PJ-z1jlArXl7_H4EEU` ("Declaring a header view") — see the dedicated "Header views" section below. For a view whose query computes an inline diagram, see the "SVG views" section below.
 
+**Checking a nanopub against its template:**
+
+Three helper scripts sit next to the download scripts. The two checkers take TriG files, signed or unsigned, and fetch whatever they need from the network, so they work **before** publishing:
+
+```bash
+python3 scripts/check-nanopub-conformance.py <file.trig> [...]   # a nanopub vs. the template it declares
+python3 scripts/check-template-conformance.py <template.trig>    # a template vs. the meta-template
+python3 scripts/show-template.py <artifact-code>                 # a template's statements, author-friendly
+```
+
+`show-template.py` takes a published template's artifact code (`RAxxx…`, not a URI) and prints one line per statement with the placeholder types, their labels, and an `OPT` marker — the quickest way to see what a template expects before hand-authoring against it.
+
+`check-nanopub-conformance.py` reads each `nt:wasCreatedFromTemplate` in pubinfo, fetches that template (cached under `$TPL_CACHE`, default `/tmp/nptpl`) and reports assertion triples matching no statement of the template — what Nanodash shows as "unmatched statements" — plus non-optional template statements with no matching triple, and `nt:RestrictedChoicePlaceholder` values outside the allowed set. **It is not for template nanopubs**: the meta-template's grouped, role-restricted patterns produce false positives, which is what the separate `check-template-conformance.py` is for.
+
+Two things it deliberately tolerates, because they are correct and were once reported as errors: `nt:CREATOR` and `nt:ASSERTION` are substituted by Nanodash at publish time, so they match like placeholders rather than fixed IRIs; and the members of an **optional grouped statement** that was left empty (e.g. a view with no `gen:hasViewAction`) are excused rather than reported missing. "Left empty" is judged only on the group's *distinctive* members — those whose fixed predicate occurs in exactly one statement of the template — because generic members such as `(?x rdf:type ?y)` match almost any triple. A group that is *partly* filled stays fully required, so half-filled pairs like `dct:isVersionOf` + `gen:governedBy` are still caught.
+
+When a checker fails on something you believe is correct, run it against a **published, working** nanopub of the same shape from another space before changing your own file — that is what identifies a checker bug rather than a data bug.
+
+
 **View layout properties:** A view can declare `gen:hasDisplayWidth` with one of `gen:ColumnWidth01of12` … `gen:ColumnWidth12of12` (e.g. `gen:ColumnWidth06of12` renders the view half-width; omitted means full width), `gen:hasPageSize` (an integer literal), and `gen:hasStructuralPosition` (a sort-key string such as `"5.5.spaceRoles"` that orders views on the page). The same predicates can be set on a `gen:ViewDisplay` to override the view's own values for one specific resource.
 
 **Structural position format** (`gen:hasStructuralPosition`, [details in nanodash `docs/structural-position.md`](https://github.com/knowledgepixels/nanodash/blob/master/docs/structural-position.md)): a string literal of the **strict** form `<section>.<sub>.<label>`, regex `[1-9]\.[1-9]\.[a-zA-Z0-9._-]+`. The first digit (`<section>`) is the page section and is the **grouping key** — views sharing it render in one horizontal stripe. The second digit (`<sub>`) orders within the section. `<label>` is a free identifier that may contain letters, digits, hyphens, underscores, **and dots** (so siblings like `4.5.concepts.1` / `4.5.concepts.2` stay adjacent). Ordering is plain lexicographic over the whole string, so keep both leading components single digits (`1`–`9`, never `0`); zero-pad numeric label tails if exact numeric order across 10+ siblings matters. Section digits map to: 1 preamble, 2 header, **3 intro, 4 primary, 5 secondary, 6 tertiary, 7 outro**, 8 appendix, 9 footer — but **only 3–7 (intro…outro) are in use today**; 1, 2, 8, 9 are reserved. The default when unset is `"5.5.default"`. The format is a convention (not yet validated in code), so a malformed position still sorts — just not where expected.
