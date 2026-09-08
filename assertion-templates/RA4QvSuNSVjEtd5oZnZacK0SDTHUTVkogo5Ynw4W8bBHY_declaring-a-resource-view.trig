@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAJ2SsntOHN7leMyEXoyBoUp6l2sd-VAPCpPrHVQa2QVM> .
-@prefix sub: <https://w3id.org/np/RAJ2SsntOHN7leMyEXoyBoUp6l2sd-VAPCpPrHVQa2QVM/> .
+@prefix this: <https://w3id.org/np/RA4QvSuNSVjEtd5oZnZacK0SDTHUTVkogo5Ynw4W8bBHY> .
+@prefix sub: <https://w3id.org/np/RA4QvSuNSVjEtd5oZnZacK0SDTHUTVkogo5Ynw4W8bBHY/> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -74,6 +74,12 @@ sub:assertion {
   
   gen:appliesToNamespace rdfs:label "applies to the namespace" .
   
+  gen:hasActionFillQuery rdfs:label "has the fill query" .
+  
+  gen:hasActionFillQueryMapping rdfs:label "has the fill query mapping" .
+  
+  gen:hasActionFillQueryTargetField rdfs:label "has the fill query target field" .
+  
   gen:hasActionTemplate rdfs:label "has the template" .
   
   gen:hasActionTemplatePartField rdfs:label "has the template part field" .
@@ -99,6 +105,16 @@ sub:assertion {
   sub:action a nt:LocalResource, nt:UriPlaceholder;
     rdfs:label "short ID suffix for the action";
     nt:hasDefaultValue sub:action .
+  
+  sub:actionFillQuery a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the fill query";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/grlc/grlc-query" .
+  
+  sub:actionFillQueryMapping a nt:LiteralPlaceholder;
+    rdfs:label "fill query column to param mapping like 'col:param'" .
+  
+  sub:actionFillQueryTargetField a nt:LiteralPlaceholder;
+    rdfs:label "the fill query placeholder name" .
   
   sub:actionLabel a nt:LiteralPlaceholder;
     rdfs:label "text shown on the action button" .
@@ -211,7 +227,7 @@ sub:assertion {
   
   sub:st50 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
     nt:hasStatement sub:st51, sub:st51b, sub:st52, sub:st53, sub:st53b, sub:st53c, sub:st54,
-      sub:st55 .
+      sub:st55, sub:st56, sub:st57, sub:st58 .
   
   sub:st51 rdf:object sub:action;
     rdf:predicate gen:hasViewAction;
@@ -248,6 +264,21 @@ sub:assertion {
     rdf:predicate gen:isVisibleTo;
     rdf:subject sub:action .
   
+  sub:st56 a nt:OptionalStatement;
+    rdf:object sub:actionFillQuery;
+    rdf:predicate gen:hasActionFillQuery;
+    rdf:subject sub:action .
+  
+  sub:st57 a nt:OptionalStatement;
+    rdf:object sub:actionFillQueryTargetField;
+    rdf:predicate gen:hasActionFillQueryTargetField;
+    rdf:subject sub:action .
+  
+  sub:st58 a nt:OptionalStatement;
+    rdf:object sub:actionFillQueryMapping;
+    rdf:predicate gen:hasActionFillQueryMapping;
+    rdf:subject sub:action .
+  
   sub:structuralPosition a nt:LiteralPlaceholder;
     rdfs:label "digits for section/subsection + short id like '5.5.thing'";
     nt:hasRegex "[1-9]\\.[1-9]\\..*" .
@@ -280,10 +311,10 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-07T14:46:38.702Z"^^xsd:dateTime;
+  this: dct:created "2026-09-08T10:08:26.712Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:supersedes <https://w3id.org/np/RA7j_m2mlg_mJaCD0mvB2POXSa9rGjW3fiJa0AKmmQJGc>;
+    npx:supersedes <https://w3id.org/np/RAJ2SsntOHN7leMyEXoyBoUp6l2sd-VAPCpPrHVQa2QVM>;
     npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
     rdfs:label "Declaring a resource view";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
@@ -294,7 +325,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
-    npx:hasSignature "6ibBirWUdNonxqpypAXAStmith38zZktTeUPCVqDR2fFrhcyKihSJbDvSRCIZbGwGdvTyVDLCQsmWmyqDRbYSXculDVS5ipFFgG1XWX5x3ZrJ0bv6+3E88ILij3vStTqcuwt+OdDpRtZDUpcoPnkrbWPc6WRfqg/YBFUd/yc1V4=";
+    npx:hasSignature "OLesTCW2xezePzJztPD7EFOhnQdRibZn/gC+oXh5jboW4KLYBsGWWqXbdT5rTHnT3YczCv6FHjZoUCxG19cjiCZXyDTKebMCPJUypvZkTRBVJsQTbHPWCCUdywS8714ROSk78XlVnpW5X6sbcAO5DGUJFGPm7uTD4ely0Lo0ufE=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

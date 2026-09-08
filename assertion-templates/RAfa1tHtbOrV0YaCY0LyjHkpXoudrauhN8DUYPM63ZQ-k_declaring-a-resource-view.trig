@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RA7FuFF5RWV_iVg2IQNcFITP-ReH8Py1QQQcvD3mtku5g> .
-@prefix sub: <https://w3id.org/np/RA7FuFF5RWV_iVg2IQNcFITP-ReH8Py1QQQcvD3mtku5g/> .
+@prefix this: <https://w3id.org/np/RAfa1tHtbOrV0YaCY0LyjHkpXoudrauhN8DUYPM63ZQ-k> .
+@prefix sub: <https://w3id.org/np/RAfa1tHtbOrV0YaCY0LyjHkpXoudrauhN8DUYPM63ZQ-k/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -73,6 +73,12 @@ sub:assertion {
   
   <https://w3id.org/kpxl/gen/terms/governedBy> rdfs:label "is governed by" .
   
+  <https://w3id.org/kpxl/gen/terms/hasActionFillQuery> rdfs:label "has the fill query" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasActionFillQueryMapping> rdfs:label "has the fill query mapping" .
+  
+  <https://w3id.org/kpxl/gen/terms/hasActionFillQueryTargetField> rdfs:label "has the fill query target field" .
+  
   <https://w3id.org/kpxl/gen/terms/hasActionTemplate> rdfs:label "has the template" .
   
   <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> rdfs:label "has the template part field" .
@@ -99,6 +105,16 @@ sub:assertion {
     rdfs:label "short ID suffix for the action";
     nt:hasDefaultValue sub:action .
   
+  sub:actionFillQuery a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the fill query";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/grlc/grlc-query" .
+  
+  sub:actionFillQueryMapping a nt:LiteralPlaceholder;
+    rdfs:label "fill query column to param mapping like 'col:param'" .
+  
+  sub:actionFillQueryTargetField a nt:LiteralPlaceholder;
+    rdfs:label "the fill query placeholder name" .
+  
   sub:actionLabel a nt:LiteralPlaceholder;
     rdfs:label "text shown on the action button" .
   
@@ -111,12 +127,10 @@ sub:assertion {
     nt:hasDefaultValue "resource" .
   
   sub:actionTemplatePartField a nt:LiteralPlaceholder;
-    rdfs:label "put \"void\" if not applicable";
-    nt:hasDefaultValue "void" .
+    rdfs:label "template field for child URI" .
   
   sub:actionTemplateQueryMapping a nt:LiteralPlaceholder;
-    rdfs:label "table column to template param mapping like 'col:param'";
-    nt:hasDefaultValue "void" .
+    rdfs:label "table column to template param mapping like 'col:param'" .
   
   sub:actionType a nt:RestrictedChoicePlaceholder;
     rdfs:label "the type of the action";
@@ -139,7 +153,7 @@ sub:assertion {
   
   sub:assertion a nt:AssertionTemplate;
     dct:description "Declaring a view that is to be shown on a resource page (i.e. user/space/maintained resource page), optionally governed by a space: declaring 'is governed by' makes the newest version of this view's kind published by a current member of that space the canonical one (authority-scoped latest-wins; the kind needs to be a maintained resource of the space).";
-    rdfs:label "Declaring a resource view (with governed-by)";
+    rdfs:label "Declaring a resource view";
     nt:hasStatement sub:st10, sub:st10b, sub:st10c, sub:st11, sub:st20, sub:st21, sub:st30,
       sub:st31, sub:st35, sub:st36, sub:st40, sub:st43, sub:st44, sub:st50;
     nt:hasTag "Spaces" .
@@ -222,7 +236,7 @@ sub:assertion {
   
   sub:st50 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
     nt:hasStatement sub:st51, sub:st51b, sub:st52, sub:st53, sub:st53b, sub:st53c, sub:st54,
-      sub:st55 .
+      sub:st55, sub:st56, sub:st57, sub:st58 .
   
   sub:st51 rdf:object sub:action;
     rdf:predicate <https://w3id.org/kpxl/gen/terms/hasViewAction>;
@@ -236,15 +250,18 @@ sub:assertion {
     rdf:predicate <https://w3id.org/kpxl/gen/terms/hasActionTemplate>;
     rdf:subject sub:action .
   
-  sub:st53 rdf:object sub:actionTemplateField;
+  sub:st53 a nt:OptionalStatement;
+    rdf:object sub:actionTemplateField;
     rdf:predicate <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField>;
     rdf:subject sub:action .
   
-  sub:st53b rdf:object sub:actionTemplatePartField;
+  sub:st53b a nt:OptionalStatement;
+    rdf:object sub:actionTemplatePartField;
     rdf:predicate <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField>;
     rdf:subject sub:action .
   
-  sub:st53c rdf:object sub:actionTemplateQueryMapping;
+  sub:st53c a nt:OptionalStatement;
+    rdf:object sub:actionTemplateQueryMapping;
     rdf:predicate <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping>;
     rdf:subject sub:action .
   
@@ -252,8 +269,24 @@ sub:assertion {
     rdf:predicate rdfs:label;
     rdf:subject sub:action .
   
-  sub:st55 rdf:object sub:actionVisibilityRole;
+  sub:st55 a nt:OptionalStatement;
+    rdf:object sub:actionVisibilityRole;
     rdf:predicate <https://w3id.org/kpxl/gen/terms/isVisibleTo>;
+    rdf:subject sub:action .
+  
+  sub:st56 a nt:OptionalStatement;
+    rdf:object sub:actionFillQuery;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasActionFillQuery>;
+    rdf:subject sub:action .
+  
+  sub:st57 a nt:OptionalStatement;
+    rdf:object sub:actionFillQueryTargetField;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasActionFillQueryTargetField>;
+    rdf:subject sub:action .
+  
+  sub:st58 a nt:OptionalStatement;
+    rdf:object sub:actionFillQueryMapping;
+    rdf:predicate <https://w3id.org/kpxl/gen/terms/hasActionFillQueryMapping>;
     rdf:subject sub:action .
   
   sub:structuralPosition a nt:LiteralPlaceholder;
@@ -295,11 +328,12 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-08-28T16:49:24Z"^^xsd:dateTime;
+  this: dct:created "2026-09-08T11:08:53.000Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:supersedes <https://w3id.org/np/RAr1Krh98VGXbIc7JVSJpH24bWi2JEVRYfvJ_KJq0wJtc>;
-    rdfs:label "Declaring a resource view (with governed-by)";
+    npx:supersedes <https://w3id.org/np/RA-BTeRkx7uhLHRRQVUlsaHaD69QhHw2sbuhtCLu5KOas>,
+      <https://w3id.org/np/RAOE6Y3qXhtqRYNiE9QdWO3X0h2Mc1EkzsK-0bSA_fd1U>;
+    rdfs:label "Declaring a resource view";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
@@ -307,7 +341,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "CUa9Xuje05+Ng4VaUgPBEKpp6zvoIdxY3RoxvY9Ibeds+Lc4xWhP630ZVP+8U25pa8ymgl89r+nhA9xdoUFy9o1GotQmMPyjZSLMGN9B4jtdjM9bTfn4KYULr/oP1OA5blmzmBbPt+AkyPe1/1XuOGLnjAu1TFBbntv/Vi43aRY=";
+    npx:hasSignature "GXFkUNo0n7vgOM+4VgivAKY0ECvZk8Ea4/TzGZpOJ1IqCetBS7EJThBQkeHIIAHUSjnrLVqytoZK2m9nRl4OQpgH5tz2Q4EnssryAXpwRDU8vjSWwJtRlT637aKcxlvFpYnGT/qCk+tBlghJTft9WoQt3U2w+d8Cn9tEXXDkA0M=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

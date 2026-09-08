@@ -1,0 +1,74 @@
+@prefix this: <https://w3id.org/np/RA7b5s9_6L7vjbGU81JgZ0bMO3Jcxh7hkEPf0LhxJsgCo> .
+@prefix sub: <https://w3id.org/np/RA7b5s9_6L7vjbGU81JgZ0bMO3Jcxh7hkEPf0LhxJsgCo/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-presentation-defaults a grlc:grlc-query;
+    dct:description "A fill query for the add-a-presentation action: given an event or space, returns its own start date, so that the publish form opens with the presentation's start date already set to when the event begins and the user only adjusts the time. Returns a single row, or none at all when the resource has no start date, which the form treats as a no-op. The date is read only from the resource's own current defining nanopublication - validly signed, not invalidated and not superseded - rather than from any assertion about it anywhere in the store, so that a third party cannot decide what the form suggests. Both the http:// and https:// schema.org spellings are accepted, Spaces conventionally using the former, and a fractional-second part is trimmed so the default matches the lexical form these events are normally written in.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the form defaults for a presentation at an event";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix schema: <https://schema.org/>
+prefix schemaold: <http://schema.org/>
+
+select ?startDate where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey ;
+        np:hasAssertion ?a ;
+        npx:introduces ?_resource_iri .
+    filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    filter not exists { ?newer npx:supersedes ?np . }
+  }
+  optional { graph ?a { ?_resource_iri schemaold:startDate ?sdA . } }
+  optional { graph ?a { ?_resource_iri schema:startDate ?sdB . } }
+  bind(coalesce(?sdA, ?sdB) as ?sd)
+  filter(bound(?sd))
+  bind(replace(str(?sd), \"[.][0-9]+\", \"\") as ?startDate)
+}
+limit 1""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-08T10:32:24.000Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-presentation-defaults;
+    npx:supersedes <https://w3id.org/np/RA5KoJwo5z6Ap1Rzt-n2TkUOWV0CpgNEeaItCNB3g66xk>;
+    rdfs:label "Get the form defaults for a presentation at an event";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "X1cnIClLmZSqI28ee2H8BInYhXi953VXYRXWc1Q6vapGK2IihOjU0Dv/NuqChK0SNJu+6cudPkK5U+4h1LxBKOKj9+3z6W+e9EBJzvYNiaxMwoeZ3d1cAh1s8n5AYiWjxOyxpHfEnBwbxom1wrBQ98zruZ1YVCPPEkw1HGfeQbQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+
