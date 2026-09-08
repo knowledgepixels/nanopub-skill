@@ -1,0 +1,114 @@
+@prefix this: <https://w3id.org/np/RAhdldevdeHe4nb9fM3CKA_cUnufQPq_xj4fuRyjTkq1o> .
+@prefix sub: <https://w3id.org/np/RAhdldevdeHe4nb9fM3CKA_cUnufQPq_xj4fuRyjTkq1o/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-thread a grlc:grlc-query;
+    dct:description "Lists the whole thread under a discourse contribution: the replies to it, the replies to those, and so on. as:inReplyTo is followed both to the contribution node and to a whole nanopublication, as both are in use. Reply texts are indented by nesting level, and rows are ordered by thread. Retracted nanopublications are skipped.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the thread under a contribution";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix as: <https://www.w3.org/ns/activitystreams#>
+
+select ?level ?reply ?reply_label ?relation ?in_reply_to ?in_reply_to_label ?by ?by_label ?date ?reply_target ?np ?np_label
+where {
+  {
+    select ?reply ?in_reply_to ?by ?created ?np
+      (count(distinct ?up) as ?level)
+      (min(?upcreated) as ?start)
+      (coalesce(min(?value), min(?label), str(?reply)) as ?text)
+      (coalesce(min(?ptext), str(?in_reply_to)) as ?parenttext)
+      (min(?cito) as ?relation)
+      (coalesce(min(?name), str(?by)) as ?by_label)
+    where {
+      values ?_resource_multi_iri {}
+      graph npa:graph {
+        ?np np:hasAssertion ?a ; np:hasProvenance ?prov ; np:hasPublicationInfo ?pi ;
+          npa:hasValidSignatureForPublicKeyHash ?key ; dct:created ?created .
+        filter not exists { ?x npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?key }
+      }
+      graph ?a { ?reply as:inReplyTo ?target }
+      ?reply (as:inReplyTo|np:hasAssertion|npx:introduces)+ ?_resource_multi_iri .
+      optional { graph npa:graph { ?target np:hasAssertion ?targetassertion } }
+      bind(coalesce(?targetassertion, ?target) as ?in_reply_to)
+      optional { graph ?a { ?reply rdf:value ?value } }
+      optional { graph ?a { ?reply rdfs:label ?label } }
+      optional {
+        graph ?a { ?reply ?citoprop ?target }
+        filter(strstarts(str(?citoprop), \"http://purl.org/spar/cito/\"))
+        bind(strafter(str(?citoprop), \"cito/\") as ?cito)
+      }
+      optional { graph ?prov { ?a prov:wasAttributedTo ?by } }
+      optional { graph ?pi { ?by foaf:name ?name } }
+      optional {
+        graph npa:graph {
+          ?pnp np:hasAssertion ?pa ; npa:hasValidSignatureForPublicKeyHash ?pkey .
+          filter not exists { ?y npx:invalidates ?pnp ; npa:hasValidSignatureForPublicKeyHash ?pkey }
+        }
+        graph ?pa { ?in_reply_to ?ptextprop ?ptext }
+        filter(?ptextprop in (rdf:value, rdfs:label))
+      }
+      ?reply (as:inReplyTo|np:hasAssertion)* ?up .
+      ?up (as:inReplyTo|np:hasAssertion|npx:introduces)+ ?_resource_multi_iri .
+      graph npa:graph { ?upnp np:hasAssertion ?upa ; dct:created ?upcreated }
+      graph ?upa { ?up as:inReplyTo ?upparent }
+    }
+    group by ?reply ?in_reply_to ?by ?created ?np
+  }
+  bind(concat(substr(\"· · · · · · · \", 1, 2 * (?level - 1)), ?text) as ?reply_label)
+  bind(if(strlen(?parenttext) > 60, concat(substr(?parenttext, 1, 60), \"...\"), ?parenttext) as ?in_reply_to_label)
+  bind(substr(str(?created), 1, 10) as ?date)
+  bind(str(?reply) as ?reply_target)
+  bind(\"^\" as ?np_label)
+}
+order by ?start ?created""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-01T12:31:41Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-thread;
+    rdfs:label "Get the thread under a contribution";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "KsxJEqhR30NXrdRRAu4OumpyNSB55abcmuyCRuU2A0Ua6WA8r9nvEQj6YXNlTt9lVs1hxRhJcficHaD7G7KKC6Q4rC1qDKFB+wDer0XNiA51BuF3OUwWL8Q4jW3faZ62Misq33P9vrb+2NgAquQBDfe5YJJ2Us/5I/nTpbRy6Ws=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

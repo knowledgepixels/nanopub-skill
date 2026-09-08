@@ -1,0 +1,184 @@
+@prefix this: <https://w3id.org/np/RAbqq0iRlZCN2sW48oC7A_eVRQ7NKJF6vdPxdlO4nw9j4> .
+@prefix sub: <https://w3id.org/np/RAbqq0iRlZCN2sW48oC7A_eVRQ7NKJF6vdPxdlO4nw9j4/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-presentation-details a grlc:grlc-query;
+    dct:description "Returns the details of a presentation or poster, laid out for reading rather than as a raw property dump: authors (and speakers) are resolved to names and joined into a single row, and the start and end date/time are combined into one 'When' value - a plain date and time range when both fall on the same day, both dates spelled out when they do not. Legacy predicates (dct:date, dct:creator, and the http://schema.org/ forms) are recognised alongside the current ones, and any predicate not recognised is still listed, so nothing in the assertion is hidden. Known properties are shown first. The rdf:type row is omitted for a plain presentation, whose type the panel's own title already gives, and kept for anything else such as a poster. Where a talk records a schema:position - its place in the running order of a session whose talks all share the session's start and end - that is shown as an Order row directly after When, with the highest position in the same slot as the total, so a session whose first talk is not yet published still reads correctly. A final row links to the nanopublication that defines the presentation, labelled with the first ten characters of its trusty URI.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get presentation details";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix wd: <http://www.wikidata.org/entity/>
+prefix schema: <https://schema.org/>
+prefix pav: <http://purl.org/pav/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?property ?property_label ?value ?value_label where {
+  bind(?_resourceNp_iri as ?np)
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np np:hasAssertion ?a .
+    ?np npx:introduces ?_resource_iri .
+  }
+  {
+    graph ?a { ?_resource_iri rdf:type ?value }
+    filter(?value != wd:Q604733)
+    bind(0 as ?sort) bind(rdf:type as ?property) bind(\"Type\" as ?property_label)
+    bind(if(?value = gen:PosterPresentation, \"Poster presentation\", \"\") as ?value_label)
+  } union {
+    graph ?a { ?_resource_iri rdfs:label ?value }
+    bind(10 as ?sort) bind(rdfs:label as ?property) bind(\"Title\" as ?property_label)
+  } union {
+    select ?sort ?property ?property_label
+           (group_concat(distinct ?who ; separator=\", \") as ?value)
+    where {
+      graph npa:graph { ?_resourceNp_iri np:hasAssertion ?spa ; np:hasPublicationInfo ?sppi . }
+      graph ?spa { ?_resource_iri wd:P823 ?person }
+      optional { graph ?sppi { ?person foaf:name ?pname } }
+      optional { graph ?spa { ?person rdfs:label ?plabel } }
+      bind(coalesce(?pname, ?plabel, str(?person)) as ?who)
+      bind(20 as ?sort) bind(wd:P823 as ?property) bind(\"Speaker\" as ?property_label)
+    } group by ?sort ?property ?property_label
+  } union {
+    select ?sort ?property ?property_label
+           (group_concat(distinct ?who ; separator=\", \") as ?value)
+    where {
+      graph npa:graph { ?_resourceNp_iri np:hasAssertion ?aua ; np:hasPublicationInfo ?aupi . }
+      values ?authorPred { pav:authoredBy dct:creator }
+      graph ?aua { ?_resource_iri ?authorPred ?person }
+      optional { graph ?aupi { ?person foaf:name ?pname } }
+      optional { graph ?aua { ?person rdfs:label ?plabel } }
+      bind(coalesce(?pname, ?plabel, str(?person)) as ?who)
+      bind(30 as ?sort) bind(pav:authoredBy as ?property) bind(\"Authors\" as ?property_label)
+    } group by ?sort ?property ?property_label
+  } union {
+    values ?startPred { schema:startDate <http://schema.org/startDate> dct:date }
+    graph ?a { ?_resource_iri ?startPred ?s }
+    optional {
+      values ?endPred { schema:endDate <http://schema.org/endDate> }
+      graph ?a { ?_resource_iri ?endPred ?e }
+    }
+    bind(40 as ?sort) bind(?startPred as ?property) bind(\"When\" as ?property_label)
+    bind(\"January  February March    April    May      June     July     August   SeptemberOctober  November December \" as ?mtab)
+    bind(replace(substr(?mtab, (month(?s) - 1) * 9 + 1, 9), \" +$\", \"\") as ?smon)
+    bind(concat(str(day(?s)), \" \", ?smon, \" \", str(year(?s))) as ?sdate)
+    bind(if(contains(str(?s), \"T\"), substr(str(?s), 12, 5), \"\") as ?stime)
+    bind(if(?stime = \"\", ?sdate, concat(?sdate, \", \", ?stime)) as ?sfull)
+    bind(if(bound(?e), replace(substr(?mtab, (month(?e) - 1) * 9 + 1, 9), \" +$\", \"\"), \"\") as ?emon)
+    bind(if(bound(?e), concat(str(day(?e)), \" \", ?emon, \" \", str(year(?e))), \"\") as ?edate)
+    bind(if(bound(?e), if(contains(str(?e), \"T\"), substr(str(?e), 12, 5), \"\"), \"\") as ?etime)
+    bind(if(bound(?e), if(?etime = \"\", ?edate, concat(?edate, \", \", ?etime)), \"\") as ?efull)
+    bind(if(!bound(?e), ?sfull,
+         if(?sfull = ?efull, ?sfull,
+         if(?sdate = ?edate,
+            if(?stime = \"\" || ?etime = \"\", ?sdate, concat(?sdate, \", \", ?stime, \"–\", ?etime)),
+            concat(?sfull, \" – \", ?efull)))) as ?value)
+  } union {
+    graph ?a { ?_resource_iri schema:position ?posv }
+    {
+      select (max(?sibpos) as ?nslot) where {
+        graph npa:graph { ?_resourceNp_iri np:hasAssertion ?sa . }
+        graph ?sa { ?_resource_iri dct:isPartOf ?sev .
+          values ?sStartPred { schema:startDate <http://schema.org/startDate> }
+          values ?sLocPred { schema:location <http://schema.org/location> }
+          ?_resource_iri ?sStartPred ?sst ; ?sLocPred ?sloc . }
+        graph npa:graph { ?snp np:hasAssertion ?sa2 ; npx:introduces ?sib .
+          filter not exists { ?snewer npx:supersedes ?snp . } }
+        graph ?sa2 { ?sib dct:isPartOf ?sev ; ?sStartPred ?sst ; ?sLocPred ?sloc ;
+            schema:position ?sibpos . }
+      }
+    }
+    bind(45 as ?sort) bind(schema:position as ?property) bind(\"Order\" as ?property_label)
+    bind(if(?posv = 1, \"1st\", if(?posv = 2, \"2nd\", if(?posv = 3, \"3rd\",
+         concat(str(?posv), \"th\")))) as ?ord)
+    bind(if(?nslot > 1, concat(?ord, \" of \", str(?nslot), \" talks in this session\"),
+            concat(?ord, \" talk of its session\")) as ?value)
+  } union {
+    values ?locPred { schema:location <http://schema.org/location> }
+    graph ?a { ?_resource_iri ?locPred ?value }
+    bind(50 as ?sort) bind(?locPred as ?property) bind(\"Room\" as ?property_label)
+    optional { graph ?a { ?value rdfs:label ?value_label } }
+  } union {
+    graph ?a { ?_resource_iri dct:isPartOf ?value }
+    bind(60 as ?sort) bind(dct:isPartOf as ?property) bind(\"Part of\" as ?property_label)
+    optional { graph ?a { ?value rdfs:label ?value_label } }
+  } union {
+    graph ?a { ?_resource_iri dct:description ?value }
+    bind(70 as ?sort) bind(dct:description as ?property) bind(\"Description\" as ?property_label)
+  } union {
+    values ?aboutPred { schema:about <http://schema.org/about> }
+    graph ?a { ?_resource_iri ?aboutPred ?value }
+    bind(80 as ?sort) bind(?aboutPred as ?property) bind(\"Topic\" as ?property_label)
+    optional { graph ?a { ?value rdfs:label ?value_label } }
+  } union {
+    graph ?a { ?_resource_iri rdfs:seeAlso ?value }
+    bind(90 as ?sort) bind(rdfs:seeAlso as ?property) bind(\"Link\" as ?property_label)
+  } union {
+    bind(1000 as ?sort) bind(<http://purl.org/nanopub/x/introduces> as ?property)
+    bind(\"Defined in\" as ?property_label)
+    bind(?_resourceNp_iri as ?value)
+    bind(substr(replace(str(?_resourceNp_iri), \"^.*/np/\", \"\"), 1, 10) as ?value_label)
+  } union {
+    graph ?a { ?_resource_iri ?pred ?value }
+    filter(?pred not in (rdf:type, rdfs:label, rdfs:seeAlso, wd:P823, pav:authoredBy, dct:creator,
+      dct:date, dct:isPartOf, dct:description,
+      schema:startDate, schema:endDate, schema:location, schema:about, schema:position,
+      <http://schema.org/startDate>, <http://schema.org/endDate>,
+      <http://schema.org/location>, <http://schema.org/about>))
+    bind(990 as ?sort) bind(?pred as ?property) bind(str(?pred) as ?property_label)
+    optional { graph ?a { ?value rdfs:label ?value_label } }
+  }
+}
+order by ?sort ?property ?value""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-07T09:44:15Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-presentation-details;
+    npx:supersedes <https://w3id.org/np/RAMLciMnYDO2_dl8Ar9ibJcPQx4JY3yAQWn6PivCxkT9o>;
+    rdfs:label "Get presentation details";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "B3ZiEGnZVyhUIhenfcC0LHT1htVG7FkM580UjAeYZL8IXbIAXRZfqgGxpA9ZriwUUPWBtbwH2QoDr+PEGFsHCUFdhbQE+eEJFaXp/Pn8MIjIK0/cf9G26hZsxyoNeClymScu2vw6qe1zeIfeKPgMoM84bJXkvqHG20Z9gB/6o/8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

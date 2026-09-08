@@ -1,0 +1,194 @@
+@prefix this: <https://w3id.org/np/RAr1JwrBsskUMSKPZxxjcKKlBEZxFsMJCX4QdteOYpNSg> .
+@prefix sub: <https://w3id.org/np/RAr1JwrBsskUMSKPZxxjcKKlBEZxFsMJCX4QdteOYpNSg/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:isPartOf rdfs:label "is a part of" .
+  
+  rdf:Property rdfs:label "property" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:domain rdfs:label "has its subject values from the class (domain)" .
+  
+  rdfs:label rdfs:label "is read as" .
+  
+  rdfs:range rdfs:label "has its object values from the class (range)" .
+  
+  rdfs:subPropertyOf rdfs:label "is a sub-property of" .
+  
+  owl:AsymmetricProperty rdfs:label "asymmetric property - if it holds from A to B, it never holds from B to A" .
+  
+  owl:DatatypeProperty rdfs:label "datatype property - a relation between an object (any entity) and a literal (a text or number)" .
+  
+  owl:DeprecatedProperty rdfs:label "deprecated property" .
+  
+  owl:FunctionalProperty rdfs:label "functional property - each subject has at most one value" .
+  
+  owl:InverseFunctionalProperty rdfs:label "inverse functional property - each value identifies at most one subject" .
+  
+  owl:IrreflexiveProperty rdfs:label "irreflexive property - it never holds from a thing to itself" .
+  
+  owl:ObjectProperty rdfs:label "object property - a relation between two objects (any kinds of entities)" .
+  
+  owl:ReflexiveProperty rdfs:label "reflexive property - it always holds from a thing to itself" .
+  
+  owl:SymmetricProperty rdfs:label "symmetric property - if it holds from A to B, it also holds from B to A" .
+  
+  owl:TransitiveProperty rdfs:label "transitive property - if it holds from A to B and from B to C, it also holds from A to C" .
+  
+  owl:inverseOf rdfs:label "is the inverse of" .
+  
+  skos:definition rdfs:label "is defined as follows:" .
+  
+  sub:characteristic a nt:RestrictedChoicePlaceholder;
+    rdfs:label "logical characteristic of the property, if applicable";
+    nt:possibleValue owl:AsymmetricProperty, owl:FunctionalProperty, owl:InverseFunctionalProperty,
+      owl:IrreflexiveProperty, owl:ReflexiveProperty, owl:SymmetricProperty, owl:TransitiveProperty .
+  
+  sub:definition a nt:LongLiteralPlaceholder;
+    rdfs:label "definition of the property" .
+  
+  sub:domain a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of the domain class";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:inverse a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of the inverse property";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23Property&searchterm=" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "how the property is read, e.g. 'contains' or 'is used by'" .
+  
+  sub:ontology a nt:GuidedChoicePlaceholder;
+    rdfs:label "ontology or vocabulary";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http://www.w3.org/2002/07/owl%23Ontology&searchterm=" .
+  
+  sub:property a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix";
+    nt:hasPrefix "~~NAMESPACE~~";
+    nt:hasPrefixLabel "Property" .
+  
+  sub:propertytype a nt:RestrictedChoicePlaceholder;
+    rdfs:label "type of property (object or datatype property)";
+    nt:possibleValue owl:DatatypeProperty, owl:ObjectProperty .
+  
+  sub:range a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of the range class";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:st0 rdf:object rdf:Property;
+    rdf:predicate rdf:type;
+    rdf:subject sub:property .
+  
+  sub:st1 a nt:OptionalStatement;
+    rdf:object sub:propertytype;
+    rdf:predicate rdf:type;
+    rdf:subject sub:property .
+  
+  sub:st2 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:property .
+  
+  sub:st3 rdf:object sub:definition;
+    rdf:predicate skos:definition;
+    rdf:subject sub:property .
+  
+  sub:st3b a nt:OptionalStatement;
+    rdf:object sub:type;
+    rdf:predicate rdf:type;
+    rdf:subject sub:property .
+  
+  sub:st3c a nt:OptionalStatement;
+    rdf:object sub:superProperty;
+    rdf:predicate rdfs:subPropertyOf;
+    rdf:subject sub:property .
+  
+  sub:st3d a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:characteristic;
+    rdf:predicate rdf:type;
+    rdf:subject sub:property .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:domain;
+    rdf:predicate rdfs:domain;
+    rdf:subject sub:property .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:range;
+    rdf:predicate rdfs:range;
+    rdf:subject sub:property .
+  
+  sub:st5b a nt:OptionalStatement;
+    rdf:object sub:inverse;
+    rdf:predicate owl:inverseOf;
+    rdf:subject sub:property .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:ontology;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:property .
+  
+  sub:superProperty a nt:GuidedChoicePlaceholder;
+    rdfs:label "super property";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F1999%2F02%2F22-rdf-syntax-ns%23Property&searchterm=" .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "This template helps to define object properties and datatype properties with domains and ranges from diverse sources. This variant mints the property in the namespace of the resource page it is published from, and additionally supports logical property characteristics and inverse properties.";
+    rdfs:label "Defining a new object/datatype property (with placeholder prefix)";
+    nt:hasNanopubLabelPattern "${label}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st3b, sub:st3c, sub:st3d,
+      sub:st4, sub:st5, sub:st5b, sub:st6;
+    nt:hasTag "Terms" .
+  
+  sub:type a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select additional type, if appropriate";
+    nt:possibleValue owl:DeprecatedProperty .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234;
+    prov:wasDerivedFrom <https://w3id.org/np/RANr4-m6QkznHSGVJzcaKQJE7k-_UQHlVnlUnc_7zCoWM> .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-04T14:46:03Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    rdfs:label "Defining a new object/datatype property (with placeholder prefix)";
+    prov:wasDerivedFrom <https://w3id.org/np/RANr4-m6QkznHSGVJzcaKQJE7k-_UQHlVnlUnc_7zCoWM>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "UBSLEv1hnqQHGnopwwydxWKO9oLZYjCTM+7g3PLw/Yz7oOdWSW/mcDECSnlm9xZLMfv2SH2hY51Mbe8J26RPXYYtT1mYHupUzYfWOw+hnZp7ETwY9sXs2rMd0Ut5TBGtXio6mooywOgYgQSA9+sA1nyuKhurm3hO5iaxATHKmOY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

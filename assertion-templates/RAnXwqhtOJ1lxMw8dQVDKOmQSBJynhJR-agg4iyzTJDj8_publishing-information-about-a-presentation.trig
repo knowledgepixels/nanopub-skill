@@ -1,0 +1,183 @@
+@prefix this: <https://w3id.org/np/RAnXwqhtOJ1lxMw8dQVDKOmQSBJynhJR-agg4iyzTJDj8> .
+@prefix sub: <https://w3id.org/np/RAnXwqhtOJ1lxMw8dQVDKOmQSBJynhJR-agg4iyzTJDj8/> .
+@prefix schema: <https://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix pav: <http://purl.org/pav/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "is described as" .
+  
+  dct:isPartOf rdfs:label "is part of" .
+  
+  pav:authoredBy rdfs:label "is authored by - an author is an agent who gave existence to the content; who of them will actually present it may not be known" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  rdfs:seeAlso rdfs:label "see also" .
+  
+  wd:P823 rdfs:label "is presented by" .
+  
+  wd:Q604733 rdfs:label "presentation" .
+  
+  schema:about rdfs:label "is about" .
+  
+  schema:endDate rdfs:label "ends at" .
+  
+  schema:location rdfs:label "is located at" .
+  
+  schema:position rdfs:label "is at the position - which place this presentation takes in the running order of its session, counting from 1" .
+  
+  schema:startDate rdfs:label "starts at" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Publish metadata about a presentation, including title, start and end time, authors, presenter, event, location, and optionally a link to the slides or a recording. Authors and presenter are separate: a programme normally lists the authors of a talk, while who of them actually speaks is often only known later, so the presenter is optional and both are repeatable. Conference programmes frequently give a time for the session rather than for each talk in it, in which case every talk of a session carries the same start and end; the optional position then records which place a talk takes in the running order, so that a schedule can put them in the right sequence without anybody having to invent per-talk times.";
+    rdfs:label "Publishing information about a presentation";
+    nt:hasNanopubLabelPattern "Presentation: ${title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st09, sub:st10, sub:st11, sub:st12;
+    nt:hasTag "Presentations" .
+  
+  sub:author a nt:AgentPlaceholder;
+    rdfs:label "an author of the presentation" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "abstract or description of the presentation" .
+  
+  sub:endDate a nt:LiteralPlaceholder;
+    rdfs:label "end date and time of the presentation";
+    nt:hasDatatype xsd:dateTime .
+  
+  sub:event a nt:GuidedChoicePlaceholder;
+    rdfs:label "event or conference";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Event" .
+  
+  sub:location a nt:ValuePlaceholder;
+    rdfs:label "location of the presentation (name or URI)" .
+  
+  sub:position a nt:LiteralPlaceholder;
+    rdfs:label "place in the running order of its session, counting from 1";
+    nt:hasDatatype xsd:integer .
+  
+  sub:presentation a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID suffix for the presentation" .
+  
+  sub:presenter a nt:AgentPlaceholder;
+    rdfs:label "the presenter, if known";
+    nt:hasDefaultValue nt:CREATOR .
+  
+  sub:slidesUrl a nt:UriPlaceholder;
+    rdfs:label "URL to slides, recording, or related resource" .
+  
+  sub:st01 rdf:object wd:Q604733;
+    rdf:predicate rdf:type;
+    rdf:subject sub:presentation .
+  
+  sub:st02 rdf:object sub:title;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:presentation .
+  
+  sub:st03 rdf:object sub:startDate;
+    rdf:predicate schema:startDate;
+    rdf:subject sub:presentation .
+  
+  sub:st04 a nt:OptionalStatement;
+    rdf:object sub:endDate;
+    rdf:predicate schema:endDate;
+    rdf:subject sub:presentation .
+  
+  sub:st05 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:presenter;
+    rdf:predicate wd:P823;
+    rdf:subject sub:presentation .
+  
+  sub:st06 a nt:OptionalStatement;
+    rdf:object sub:event;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:presentation .
+  
+  sub:st07 a nt:OptionalStatement;
+    rdf:object sub:location;
+    rdf:predicate schema:location;
+    rdf:subject sub:presentation .
+  
+  sub:st08 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:slidesUrl;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:presentation .
+  
+  sub:st09 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:presentation .
+  
+  sub:st10 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:topic;
+    rdf:predicate schema:about;
+    rdf:subject sub:presentation .
+  
+  sub:st11 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:author;
+    rdf:predicate pav:authoredBy;
+    rdf:subject sub:presentation .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:position;
+    rdf:predicate schema:position;
+    rdf:subject sub:presentation .
+  
+  sub:startDate a nt:LiteralPlaceholder;
+    rdfs:label "start date and time of the presentation";
+    nt:hasDatatype xsd:dateTime .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title of the presentation" .
+  
+  sub:topic a nt:GuidedChoicePlaceholder;
+    rdfs:label "topic or subject of the presentation";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-07T09:22:30Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAwXvkAPJVfJ3JdsOzazEKFjtInCl_ypmaofblWBYoYik>;
+    rdfs:label "Publishing information about a presentation";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "aeDrz0Fa7q2xLTk5qEl3he7vsUCRJuIluPoZkoQwszhYKBNwuiKumDS1OSsocVmobMZzUa9lDdffLv+ZQuHj7oAK75EpLA0ccig1RTj0z9Ck/YJhe39LO0If2w8GYxfiHdwW+E840HiUaeYkjdIfCLKODmL+05Is3CEkiiNkmFk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

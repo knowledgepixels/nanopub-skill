@@ -1,0 +1,118 @@
+@prefix this: <https://w3id.org/np/RAHXmKpK4SpPIu25zr4HHx0lbg5FnjFvbVou0h5lbr8-c> .
+@prefix sub: <https://w3id.org/np/RAHXmKpK4SpPIu25zr4HHx0lbg5FnjFvbVou0h5lbr8-c/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:date rdfs:label "was held in - the year the event took place" .
+  
+  dct:description rdfs:label "further details - where the event was held and what it was co-located with" .
+  
+  rdf:type rdfs:label "is a - asserts that the given thing (left) belongs to the given class (right)" .
+  
+  rdfs:label rdfs:label "is called - connects an identifier to a human-readable name for it" .
+  
+  rdfs:seeAlso rdfs:label "has the website - a page with more information about the event" .
+  
+  wd:P664 rdfs:label "was organized by - connects an event to one of the people who organized it" .
+  
+  sub:details a nt:LiteralPlaceholder;
+    rdfs:label "where it was held and what it was co-located with, e.g. at ISWC 2018, Monterey, USA (optional)" .
+  
+  sub:event a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name for this event, used as URI suffix, e.g. desemweb-2018" .
+  
+  sub:eventKind a nt:GuidedChoicePlaceholder;
+    rdfs:label "the kind of event on Wikidata, e.g. academic workshop";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:eventName a nt:LiteralPlaceholder;
+    rdfs:label "the full name of the event, e.g. DeSemWeb 2018 - Second Workshop on Decentralizing the Semantic Web" .
+  
+  sub:organizer a nt:AgentPlaceholder;
+    rdfs:label "who organized the event - add one line per organizer";
+    nt:hasDefaultValue nt:CREATOR .
+  
+  sub:st0 rdf:object sub:eventKind;
+    rdf:predicate rdf:type;
+    rdf:subject sub:event .
+  
+  sub:st1 rdf:object sub:eventName;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:event .
+  
+  sub:st2 a nt:RepeatableStatement;
+    rdf:object sub:organizer;
+    rdf:predicate wd:P664;
+    rdf:subject sub:event .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:details;
+    rdf:predicate dct:description;
+    rdf:subject sub:event .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:website;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:event .
+  
+  sub:st5 rdf:object sub:year;
+    rdf:predicate dct:date;
+    rdf:subject sub:event .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Defines an academic event, such as a workshop or a conference, and records who organized it. Give the kind of event as a Wikidata item, for example academic workshop or academic conference. The organizer statement can be repeated: most events are organized by several people, and each of them can be named. Use this to define an event that is not yet in the network; to name an organizer for an event that already exists, use the separate organizer template instead.";
+    rdfs:label "Declaring an academic event and its organizers";
+    nt:hasNanopubLabelPattern "${eventName}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5;
+    nt:hasTag "Events" .
+  
+  sub:website a nt:ExternalUriPlaceholder;
+    rdfs:label "the website of the event (optional)" .
+  
+  sub:year a nt:LiteralPlaceholder;
+    rdfs:label "the year the event was held, e.g. 2018";
+    nt:hasDatatype xsd:gYear;
+    nt:hasRegex "[0-9]{4}" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-28T18:15:05Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    rdfs:label "Declaring an academic event and its organizers";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "KvC/ZBMwK7+oOyOxP87rgpK/3wrruQjkk6J8PhtTMPgVH6igxQ42d/JxNKTVPfl5D4A0VhE58ZlOlzob6+o1IEdF6JYf7g/ay2+pPPt5NSiTdKHXH/gYwUwZjMV5IZKiLGnu2rqhi5kB/QmYI59NWzGN4eO8Zpw0AQic2UaxaIA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

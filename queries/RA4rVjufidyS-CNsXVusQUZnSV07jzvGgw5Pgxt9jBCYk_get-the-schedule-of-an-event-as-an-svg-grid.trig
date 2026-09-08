@@ -1,0 +1,613 @@
+@prefix this: <https://w3id.org/np/RA4rVjufidyS-CNsXVusQUZnSV07jzvGgw5Pgxt9jBCYk> .
+@prefix sub: <https://w3id.org/np/RA4rVjufidyS-CNsXVusQUZnSV07jzvGgw5Pgxt9jBCYk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-presentations-grid-svg a grlc:grlc-query;
+    dct:description "Renders the schedule of an event as one SVG per day: a grid with one column per room used that day, boxes placed at their real clock positions. Covers both the presentations that are part of the event and its workshop and tutorial sub-spaces, which are coloured differently and link to their own space pages. Reads both the http:// and https:// schema.org namespaces. Conference programmes often give one time for a whole session, so several talks share a start and end; those are stacked within the session box, ordered by the schema:position each talk records, falling back to the title where no position is given. The stacking divides the session box evenly, which is a layout convenience and not a claim about when each talk begins.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the schedule of an event as an SVG grid";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix wd: <http://www.wikidata.org/entity/>
+prefix schema: <https://schema.org/>
+prefix schemaold: <http://schema.org/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix pav: <http://purl.org/pav/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix conf: <https://w3id.org/scholarlydata/ontology/conference-ontology.owl#>
+
+select ?title (concat(
+    '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 ', str(?w), ' ', str(?h),
+    '\" width=\"', str(round(?w * 3 / 2)), '\" height=\"', str(round(?h * 3 / 2)), '\" font-family=\"sans-serif\">',
+    ?frags, '</svg>') as ?svg)
+where {
+  {
+    select ?day (group_concat(?frag; separator=\"\") as ?frags)
+           (max(?ybot) as ?maxy) (max(?xright) as ?maxx)
+    where {
+      # ============ talk boxes ============
+      {
+        select ?day ?frag (?by + ?bh as ?ybot) (?bx + 170 as ?xright)
+        where {
+          {
+            select ?pres ?day ?room ?smin ?emin ?tlabel ?path ?fill ?stroke
+                   (group_concat(distinct ?aname; separator=\", \") as ?authors)
+            where {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; npx:introduces ?pres .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+      }
+      filter not exists { graph ?sg { ?newer npx:supersedes ?np . } }
+      {
+        values ?_resource_multi_iri {}
+        bind(?_resource_multi_iri as ?ev)
+      } union {
+        values ?_resource_multi_iri {}
+        graph ?mg { ?_resource_multi_iri gen:isMaintainedBy ?ev }
+      }
+      {
+        graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?ev . }
+        bind(\"/part?id=\" as ?path)
+        bind(\"#eaf1f8\" as ?fill) bind(\"#9bb4cc\" as ?stroke)
+      } union {
+        graph ?a { ?pres a conf:Workshop ; gen:isSubSpaceOf ?ev . }
+        bind(\"/space?id=\" as ?path)
+        bind(\"#fdf0e2\" as ?fill) bind(\"#d9a55f\" as ?stroke)
+      } union {
+        graph ?a { ?pres a conf:Tutorial ; gen:isSubSpaceOf ?ev . }
+        bind(\"/space?id=\" as ?path)
+        bind(\"#eef7ec\" as ?fill) bind(\"#8fbf86\" as ?stroke)
+      }
+      optional { graph ?a { ?pres schema:startDate ?sdA } }
+      optional { graph ?a { ?pres schemaold:startDate ?sdB } }
+      optional { graph ?a { ?pres schema:endDate ?edA } }
+      optional { graph ?a { ?pres schemaold:endDate ?edB } }
+      optional { graph ?a { ?pres schema:location ?loA } }
+      optional { graph ?a { ?pres schemaold:location ?loB } }
+      optional { graph ?a { ?pres rdfs:label ?lb } }
+      bind(coalesce(?sdA, ?sdB) as ?sd)
+      filter(bound(?sd))
+      bind(coalesce(?edA, ?edB) as ?ed)
+      bind(coalesce(str(?loA), str(?loB), \"\") as ?room)
+      bind(substr(str(?sd), 1, 10) as ?day)
+      bind(xsd:integer(substr(str(?sd), 12, 2)) * 60 + xsd:integer(substr(str(?sd), 15, 2)) as ?smin)
+      bind(coalesce(xsd:integer(substr(str(?ed), 12, 2)) * 60 + xsd:integer(substr(str(?ed), 15, 2)), ?smin + 30) as ?emin)
+      bind(coalesce(str(?lb), \"(untitled)\") as ?tlabel)
+              optional {
+                graph ?a { ?pres pav:authoredBy ?ag }
+                optional { graph ?pi2 { ?ag foaf:name ?agn } }
+                bind(coalesce(?agn, replace(str(?ag), \"^.*/\", \"\")) as ?aname)
+              }
+            } group by ?pres ?day ?room ?smin ?emin ?tlabel ?path ?fill ?stroke
+          }
+          # Rank within the (day, room, slot) cell and how many share it, in ONE
+          # self-join: with the sub-space branch added, a second pass over the base
+          # pattern ran the query service out of budget (HTTP 503).
+          {
+            select ?pres (sum(if(?keyO <= ?keyR, 1, 0)) as ?rank)
+                         (count(distinct ?o) as ?nslot)
+            where {
+      graph npa:graph {
+        ?npR npa:hasValidSignatureForPublicKeyHash ?pkR ;
+          np:hasAssertion ?a2 ; npx:introduces ?pres .
+        filter not exists { ?invR npx:invalidates ?npR ; npa:hasValidSignatureForPublicKeyHash ?pkR . }
+        filter not exists { ?npR npx:hasNanopubType npx:ExampleNanopub . }
+      }
+      filter not exists { graph ?sgR { ?newerR npx:supersedes ?npR . } }
+      {
+        values ?_resource_multi_iri {}
+        bind(?_resource_multi_iri as ?evR)
+      } union {
+        values ?_resource_multi_iri {}
+        graph ?mgR { ?_resource_multi_iri gen:isMaintainedBy ?evR }
+      }
+      {
+        graph ?a2 { ?pres a wd:Q604733 ; dct:isPartOf ?evR . }
+        bind(\"/part?id=\" as ?pathR)
+        bind(\"#eaf1f8\" as ?fillR) bind(\"#9bb4cc\" as ?strokeR)
+      } union {
+        graph ?a2 { ?pres a conf:Workshop ; gen:isSubSpaceOf ?evR . }
+        bind(\"/space?id=\" as ?pathR)
+        bind(\"#fdf0e2\" as ?fillR) bind(\"#d9a55f\" as ?strokeR)
+      } union {
+        graph ?a2 { ?pres a conf:Tutorial ; gen:isSubSpaceOf ?evR . }
+        bind(\"/space?id=\" as ?pathR)
+        bind(\"#eef7ec\" as ?fillR) bind(\"#8fbf86\" as ?strokeR)
+      }
+      optional { graph ?a2 { ?pres schema:startDate ?sdAR } }
+      optional { graph ?a2 { ?pres schemaold:startDate ?sdBR } }
+      optional { graph ?a2 { ?pres schema:endDate ?edAR } }
+      optional { graph ?a2 { ?pres schemaold:endDate ?edBR } }
+      optional { graph ?a2 { ?pres schema:location ?loAR } }
+      optional { graph ?a2 { ?pres schemaold:location ?loBR } }
+      optional { graph ?a2 { ?pres rdfs:label ?lbR } }
+      optional { graph ?a2 { ?pres schema:position ?psR } }
+      bind(coalesce(?sdAR, ?sdBR) as ?sdR)
+      filter(bound(?sdR))
+      bind(coalesce(?edAR, ?edBR) as ?edR)
+      bind(coalesce(str(?loAR), str(?loBR), \"\") as ?roomR)
+      bind(substr(str(?sdR), 1, 10) as ?dayR)
+      bind(xsd:integer(substr(str(?sdR), 12, 2)) * 60 + xsd:integer(substr(str(?sdR), 15, 2)) as ?sminR)
+      bind(coalesce(xsd:integer(substr(str(?edR), 12, 2)) * 60 + xsd:integer(substr(str(?edR), 15, 2)), ?sminR + 30) as ?eminR)
+      bind(coalesce(str(?lbR), \"(untitled)\") as ?tlabelR)
+      bind(concat(str(1000 + coalesce(?psR, 999)), ?tlabelR) as ?keyR)
+      graph npa:graph {
+        ?npO npa:hasValidSignatureForPublicKeyHash ?pkO ;
+          np:hasAssertion ?ao ; npx:introduces ?o .
+        filter not exists { ?invO npx:invalidates ?npO ; npa:hasValidSignatureForPublicKeyHash ?pkO . }
+        filter not exists { ?npO npx:hasNanopubType npx:ExampleNanopub . }
+      }
+      filter not exists { graph ?sgO { ?newerO npx:supersedes ?npO . } }
+      {
+        values ?_resource_multi_iri {}
+        bind(?_resource_multi_iri as ?evO)
+      } union {
+        values ?_resource_multi_iri {}
+        graph ?mgO { ?_resource_multi_iri gen:isMaintainedBy ?evO }
+      }
+      {
+        graph ?ao { ?o a wd:Q604733 ; dct:isPartOf ?evO . }
+        bind(\"/part?id=\" as ?pathO)
+        bind(\"#eaf1f8\" as ?fillO) bind(\"#9bb4cc\" as ?strokeO)
+      } union {
+        graph ?ao { ?o a conf:Workshop ; gen:isSubSpaceOf ?evO . }
+        bind(\"/space?id=\" as ?pathO)
+        bind(\"#fdf0e2\" as ?fillO) bind(\"#d9a55f\" as ?strokeO)
+      } union {
+        graph ?ao { ?o a conf:Tutorial ; gen:isSubSpaceOf ?evO . }
+        bind(\"/space?id=\" as ?pathO)
+        bind(\"#eef7ec\" as ?fillO) bind(\"#8fbf86\" as ?strokeO)
+      }
+      optional { graph ?ao { ?o schema:startDate ?sdAO } }
+      optional { graph ?ao { ?o schemaold:startDate ?sdBO } }
+      optional { graph ?ao { ?o schema:endDate ?edAO } }
+      optional { graph ?ao { ?o schemaold:endDate ?edBO } }
+      optional { graph ?ao { ?o schema:location ?loAO } }
+      optional { graph ?ao { ?o schemaold:location ?loBO } }
+      optional { graph ?ao { ?o rdfs:label ?lbO } }
+      optional { graph ?ao { ?o schema:position ?psO } }
+      bind(coalesce(?sdAO, ?sdBO) as ?sdO)
+      filter(bound(?sdO))
+      bind(coalesce(?edAO, ?edBO) as ?edO)
+      bind(coalesce(str(?loAO), str(?loBO), \"\") as ?roomO)
+      bind(substr(str(?sdO), 1, 10) as ?dayO)
+      bind(xsd:integer(substr(str(?sdO), 12, 2)) * 60 + xsd:integer(substr(str(?sdO), 15, 2)) as ?sminO)
+      bind(coalesce(xsd:integer(substr(str(?edO), 12, 2)) * 60 + xsd:integer(substr(str(?edO), 15, 2)), ?sminO + 30) as ?eminO)
+      bind(coalesce(str(?lbO), \"(untitled)\") as ?tlabelO)
+      bind(concat(str(1000 + coalesce(?psO, 999)), ?tlabelO) as ?keyO)
+              filter(?dayR = ?dayO && ?roomR = ?roomO && ?sminR = ?sminO)
+            } group by ?pres
+          }
+          # column index of the room
+          {
+            select ?day ?room (count(distinct ?r2) - 1 as ?col) where {
+              { select distinct ?day ?room where {
+      graph npa:graph {
+        ?npC npa:hasValidSignatureForPublicKeyHash ?pkC ;
+          np:hasAssertion ?ac1 ; npx:introduces ?c1 .
+        filter not exists { ?invC npx:invalidates ?npC ; npa:hasValidSignatureForPublicKeyHash ?pkC . }
+        filter not exists { ?npC npx:hasNanopubType npx:ExampleNanopub . }
+      }
+      filter not exists { graph ?sgC { ?newerC npx:supersedes ?npC . } }
+      {
+        values ?_resource_multi_iri {}
+        bind(?_resource_multi_iri as ?evC)
+      } union {
+        values ?_resource_multi_iri {}
+        graph ?mgC { ?_resource_multi_iri gen:isMaintainedBy ?evC }
+      }
+      {
+        graph ?ac1 { ?c1 a wd:Q604733 ; dct:isPartOf ?evC . }
+        bind(\"/part?id=\" as ?pathC)
+        bind(\"#eaf1f8\" as ?fillC) bind(\"#9bb4cc\" as ?strokeC)
+      } union {
+        graph ?ac1 { ?c1 a conf:Workshop ; gen:isSubSpaceOf ?evC . }
+        bind(\"/space?id=\" as ?pathC)
+        bind(\"#fdf0e2\" as ?fillC) bind(\"#d9a55f\" as ?strokeC)
+      } union {
+        graph ?ac1 { ?c1 a conf:Tutorial ; gen:isSubSpaceOf ?evC . }
+        bind(\"/space?id=\" as ?pathC)
+        bind(\"#eef7ec\" as ?fillC) bind(\"#8fbf86\" as ?strokeC)
+      }
+      optional { graph ?ac1 { ?c1 schema:startDate ?sdAC } }
+      optional { graph ?ac1 { ?c1 schemaold:startDate ?sdBC } }
+      optional { graph ?ac1 { ?c1 schema:endDate ?edAC } }
+      optional { graph ?ac1 { ?c1 schemaold:endDate ?edBC } }
+      optional { graph ?ac1 { ?c1 schema:location ?loAC } }
+      optional { graph ?ac1 { ?c1 schemaold:location ?loBC } }
+      optional { graph ?ac1 { ?c1 rdfs:label ?lbC } }
+      bind(coalesce(?sdAC, ?sdBC) as ?sdC)
+      filter(bound(?sdC))
+      bind(coalesce(?edAC, ?edBC) as ?edC)
+      bind(coalesce(str(?loAC), str(?loBC), \"\") as ?room)
+      bind(substr(str(?sdC), 1, 10) as ?day)
+      bind(xsd:integer(substr(str(?sdC), 12, 2)) * 60 + xsd:integer(substr(str(?sdC), 15, 2)) as ?sminC)
+      bind(coalesce(xsd:integer(substr(str(?edC), 12, 2)) * 60 + xsd:integer(substr(str(?edC), 15, 2)), ?sminC + 30) as ?eminC)
+      bind(coalesce(str(?lbC), \"(untitled)\") as ?tlabelC) } }
+              { select distinct ?dayD ?r2 where {
+      graph npa:graph {
+        ?npD npa:hasValidSignatureForPublicKeyHash ?pkD ;
+          np:hasAssertion ?ac2 ; npx:introduces ?c2 .
+        filter not exists { ?invD npx:invalidates ?npD ; npa:hasValidSignatureForPublicKeyHash ?pkD . }
+        filter not exists { ?npD npx:hasNanopubType npx:ExampleNanopub . }
+      }
+      filter not exists { graph ?sgD { ?newerD npx:supersedes ?npD . } }
+      {
+        values ?_resource_multi_iri {}
+        bind(?_resource_multi_iri as ?evD)
+      } union {
+        values ?_resource_multi_iri {}
+        graph ?mgD { ?_resource_multi_iri gen:isMaintainedBy ?evD }
+      }
+      {
+        graph ?ac2 { ?c2 a wd:Q604733 ; dct:isPartOf ?evD . }
+        bind(\"/part?id=\" as ?pathD)
+        bind(\"#eaf1f8\" as ?fillD) bind(\"#9bb4cc\" as ?strokeD)
+      } union {
+        graph ?ac2 { ?c2 a conf:Workshop ; gen:isSubSpaceOf ?evD . }
+        bind(\"/space?id=\" as ?pathD)
+        bind(\"#fdf0e2\" as ?fillD) bind(\"#d9a55f\" as ?strokeD)
+      } union {
+        graph ?ac2 { ?c2 a conf:Tutorial ; gen:isSubSpaceOf ?evD . }
+        bind(\"/space?id=\" as ?pathD)
+        bind(\"#eef7ec\" as ?fillD) bind(\"#8fbf86\" as ?strokeD)
+      }
+      optional { graph ?ac2 { ?c2 schema:startDate ?sdAD } }
+      optional { graph ?ac2 { ?c2 schemaold:startDate ?sdBD } }
+      optional { graph ?ac2 { ?c2 schema:endDate ?edAD } }
+      optional { graph ?ac2 { ?c2 schemaold:endDate ?edBD } }
+      optional { graph ?ac2 { ?c2 schema:location ?loAD } }
+      optional { graph ?ac2 { ?c2 schemaold:location ?loBD } }
+      optional { graph ?ac2 { ?c2 rdfs:label ?lbD } }
+      bind(coalesce(?sdAD, ?sdBD) as ?sdD)
+      filter(bound(?sdD))
+      bind(coalesce(?edAD, ?edBD) as ?edD)
+      bind(coalesce(str(?loAD), str(?loBD), \"\") as ?r2)
+      bind(substr(str(?sdD), 1, 10) as ?dayD)
+      bind(xsd:integer(substr(str(?sdD), 12, 2)) * 60 + xsd:integer(substr(str(?sdD), 15, 2)) as ?sminD)
+      bind(coalesce(xsd:integer(substr(str(?edD), 12, 2)) * 60 + xsd:integer(substr(str(?edD), 15, 2)), ?sminD + 30) as ?eminD)
+      bind(coalesce(str(?lbD), \"(untitled)\") as ?tlabelD) } }
+              filter(?dayD = ?day && str(?r2) <= str(?room))
+            } group by ?day ?room
+          }
+          {
+            select ?day (min(?sminY) as ?dstart) where {
+      graph npa:graph {
+        ?npY npa:hasValidSignatureForPublicKeyHash ?pkY ;
+          np:hasAssertion ?ay1 ; npx:introduces ?y1 .
+        filter not exists { ?invY npx:invalidates ?npY ; npa:hasValidSignatureForPublicKeyHash ?pkY . }
+        filter not exists { ?npY npx:hasNanopubType npx:ExampleNanopub . }
+      }
+      filter not exists { graph ?sgY { ?newerY npx:supersedes ?npY . } }
+      {
+        values ?_resource_multi_iri {}
+        bind(?_resource_multi_iri as ?evY)
+      } union {
+        values ?_resource_multi_iri {}
+        graph ?mgY { ?_resource_multi_iri gen:isMaintainedBy ?evY }
+      }
+      {
+        graph ?ay1 { ?y1 a wd:Q604733 ; dct:isPartOf ?evY . }
+        bind(\"/part?id=\" as ?pathY)
+        bind(\"#eaf1f8\" as ?fillY) bind(\"#9bb4cc\" as ?strokeY)
+      } union {
+        graph ?ay1 { ?y1 a conf:Workshop ; gen:isSubSpaceOf ?evY . }
+        bind(\"/space?id=\" as ?pathY)
+        bind(\"#fdf0e2\" as ?fillY) bind(\"#d9a55f\" as ?strokeY)
+      } union {
+        graph ?ay1 { ?y1 a conf:Tutorial ; gen:isSubSpaceOf ?evY . }
+        bind(\"/space?id=\" as ?pathY)
+        bind(\"#eef7ec\" as ?fillY) bind(\"#8fbf86\" as ?strokeY)
+      }
+      optional { graph ?ay1 { ?y1 schema:startDate ?sdAY } }
+      optional { graph ?ay1 { ?y1 schemaold:startDate ?sdBY } }
+      optional { graph ?ay1 { ?y1 schema:endDate ?edAY } }
+      optional { graph ?ay1 { ?y1 schemaold:endDate ?edBY } }
+      optional { graph ?ay1 { ?y1 schema:location ?loAY } }
+      optional { graph ?ay1 { ?y1 schemaold:location ?loBY } }
+      optional { graph ?ay1 { ?y1 rdfs:label ?lbY } }
+      bind(coalesce(?sdAY, ?sdBY) as ?sdY)
+      filter(bound(?sdY))
+      bind(coalesce(?edAY, ?edBY) as ?edY)
+      bind(coalesce(str(?loAY), str(?loBY), \"\") as ?roomY)
+      bind(substr(str(?sdY), 1, 10) as ?day)
+      bind(xsd:integer(substr(str(?sdY), 12, 2)) * 60 + xsd:integer(substr(str(?sdY), 15, 2)) as ?sminY)
+      bind(coalesce(xsd:integer(substr(str(?edY), 12, 2)) * 60 + xsd:integer(substr(str(?edY), 15, 2)), ?sminY + 30) as ?eminY)
+      bind(coalesce(str(?lbY), \"(untitled)\") as ?tlabelY)
+            } group by ?day
+          }
+          bind(56 + ?col * 176 as ?bx)
+          bind(36 + (?smin - ?dstart + 15) * 3.0 as ?slotY)
+          bind((?emin - ?smin) * 3.0 as ?slotH)
+          bind(?slotY + (?rank - 1) * (?slotH / ?nslot) as ?by)
+          bind(?slotH / ?nslot - 3 as ?bh)
+
+      bind(replace(?tlabel, \"^(.{0,25})\\\\s.*$\", \"$1\") as ?l1raw)
+      bind(if(strlen(?l1raw) > 25, substr(?l1raw, 1, 25), ?l1raw) as ?l1)
+      bind(if(strlen(?tlabel) > strlen(?l1), substr(?tlabel, strlen(?l1) + 2), \"\") as ?r1)
+      bind(replace(?r1, \"^(.{0,25})\\\\s.*$\", \"$1\") as ?l2raw)
+      bind(if(strlen(?l2raw) > 25 || strlen(?r1) > strlen(?l2raw),
+              concat(substr(?l2raw, 1, 24), \"\\u2026\"), ?l2raw) as ?l2)
+          bind(if(strlen(?authors) > 25,
+                  concat(replace(substr(?authors, 1, 23), \",[^,]*$\", \"\"), \" …\"),
+                  ?authors) as ?authShort)
+          bind(concat(
+            '<a href=\"', ?path, encode_for_uri(str(?pres)), '\">',
+            '<rect x=\"', str(?bx), '\" y=\"', str(?by), '\" width=\"170\" height=\"', str(?bh),
+              '\" rx=\"3\" fill=\"', ?fill, '\" stroke=\"', ?stroke, '\"></rect>',
+            '<text x=\"', str(?bx + 8), '\" y=\"', str(?by + 15), '\" font-size=\"9\" font-weight=\"bold\" fill=\"#33475b\">',
+              replace(replace(replace(?authShort, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"), '</text>',
+            '<text x=\"', str(?bx + 8), '\" y=\"', str(?by + 29), '\" font-size=\"10\" fill=\"#12263a\">',
+              '<tspan x=\"', str(?bx + 8), '\" y=\"', str(?by + 29), '\">', replace(replace(replace(?l1, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"), '</tspan>',
+              if(strlen(?l2) > 0, concat('<tspan x=\"', str(?bx + 8), '\" y=\"', str(?by + 41), '\">', replace(replace(replace(?l2, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"), '</tspan>'), ''),
+            '</text></a>') as ?frag)
+        }
+      }
+      union
+      # ============ room headers ============
+      {
+        select ?day ?frag (0 as ?ybot) (?hx + 170 as ?xright)
+        where {
+          {
+            select distinct ?day ?room where {
+      graph npa:graph {
+        ?npH npa:hasValidSignatureForPublicKeyHash ?pkH ;
+          np:hasAssertion ?ah1 ; npx:introduces ?h1 .
+        filter not exists { ?invH npx:invalidates ?npH ; npa:hasValidSignatureForPublicKeyHash ?pkH . }
+        filter not exists { ?npH npx:hasNanopubType npx:ExampleNanopub . }
+      }
+      filter not exists { graph ?sgH { ?newerH npx:supersedes ?npH . } }
+      {
+        values ?_resource_multi_iri {}
+        bind(?_resource_multi_iri as ?evH)
+      } union {
+        values ?_resource_multi_iri {}
+        graph ?mgH { ?_resource_multi_iri gen:isMaintainedBy ?evH }
+      }
+      {
+        graph ?ah1 { ?h1 a wd:Q604733 ; dct:isPartOf ?evH . }
+        bind(\"/part?id=\" as ?pathH)
+        bind(\"#eaf1f8\" as ?fillH) bind(\"#9bb4cc\" as ?strokeH)
+      } union {
+        graph ?ah1 { ?h1 a conf:Workshop ; gen:isSubSpaceOf ?evH . }
+        bind(\"/space?id=\" as ?pathH)
+        bind(\"#fdf0e2\" as ?fillH) bind(\"#d9a55f\" as ?strokeH)
+      } union {
+        graph ?ah1 { ?h1 a conf:Tutorial ; gen:isSubSpaceOf ?evH . }
+        bind(\"/space?id=\" as ?pathH)
+        bind(\"#eef7ec\" as ?fillH) bind(\"#8fbf86\" as ?strokeH)
+      }
+      optional { graph ?ah1 { ?h1 schema:startDate ?sdAH } }
+      optional { graph ?ah1 { ?h1 schemaold:startDate ?sdBH } }
+      optional { graph ?ah1 { ?h1 schema:endDate ?edAH } }
+      optional { graph ?ah1 { ?h1 schemaold:endDate ?edBH } }
+      optional { graph ?ah1 { ?h1 schema:location ?loAH } }
+      optional { graph ?ah1 { ?h1 schemaold:location ?loBH } }
+      optional { graph ?ah1 { ?h1 rdfs:label ?lbH } }
+      bind(coalesce(?sdAH, ?sdBH) as ?sdH)
+      filter(bound(?sdH))
+      bind(coalesce(?edAH, ?edBH) as ?edH)
+      bind(coalesce(str(?loAH), str(?loBH), \"\") as ?room)
+      bind(substr(str(?sdH), 1, 10) as ?day)
+      bind(xsd:integer(substr(str(?sdH), 12, 2)) * 60 + xsd:integer(substr(str(?sdH), 15, 2)) as ?sminH)
+      bind(coalesce(xsd:integer(substr(str(?edH), 12, 2)) * 60 + xsd:integer(substr(str(?edH), 15, 2)), ?sminH + 30) as ?eminH)
+      bind(coalesce(str(?lbH), \"(untitled)\") as ?tlabelH) }
+          }
+          {
+            select ?day ?room (count(distinct ?r3) - 1 as ?hcol) where {
+              { select distinct ?day ?room where {
+      graph npa:graph {
+        ?npE npa:hasValidSignatureForPublicKeyHash ?pkE ;
+          np:hasAssertion ?ae1 ; npx:introduces ?e1 .
+        filter not exists { ?invE npx:invalidates ?npE ; npa:hasValidSignatureForPublicKeyHash ?pkE . }
+        filter not exists { ?npE npx:hasNanopubType npx:ExampleNanopub . }
+      }
+      filter not exists { graph ?sgE { ?newerE npx:supersedes ?npE . } }
+      {
+        values ?_resource_multi_iri {}
+        bind(?_resource_multi_iri as ?evE)
+      } union {
+        values ?_resource_multi_iri {}
+        graph ?mgE { ?_resource_multi_iri gen:isMaintainedBy ?evE }
+      }
+      {
+        graph ?ae1 { ?e1 a wd:Q604733 ; dct:isPartOf ?evE . }
+        bind(\"/part?id=\" as ?pathE)
+        bind(\"#eaf1f8\" as ?fillE) bind(\"#9bb4cc\" as ?strokeE)
+      } union {
+        graph ?ae1 { ?e1 a conf:Workshop ; gen:isSubSpaceOf ?evE . }
+        bind(\"/space?id=\" as ?pathE)
+        bind(\"#fdf0e2\" as ?fillE) bind(\"#d9a55f\" as ?strokeE)
+      } union {
+        graph ?ae1 { ?e1 a conf:Tutorial ; gen:isSubSpaceOf ?evE . }
+        bind(\"/space?id=\" as ?pathE)
+        bind(\"#eef7ec\" as ?fillE) bind(\"#8fbf86\" as ?strokeE)
+      }
+      optional { graph ?ae1 { ?e1 schema:startDate ?sdAE } }
+      optional { graph ?ae1 { ?e1 schemaold:startDate ?sdBE } }
+      optional { graph ?ae1 { ?e1 schema:endDate ?edAE } }
+      optional { graph ?ae1 { ?e1 schemaold:endDate ?edBE } }
+      optional { graph ?ae1 { ?e1 schema:location ?loAE } }
+      optional { graph ?ae1 { ?e1 schemaold:location ?loBE } }
+      optional { graph ?ae1 { ?e1 rdfs:label ?lbE } }
+      bind(coalesce(?sdAE, ?sdBE) as ?sdE)
+      filter(bound(?sdE))
+      bind(coalesce(?edAE, ?edBE) as ?edE)
+      bind(coalesce(str(?loAE), str(?loBE), \"\") as ?room)
+      bind(substr(str(?sdE), 1, 10) as ?day)
+      bind(xsd:integer(substr(str(?sdE), 12, 2)) * 60 + xsd:integer(substr(str(?sdE), 15, 2)) as ?sminE)
+      bind(coalesce(xsd:integer(substr(str(?edE), 12, 2)) * 60 + xsd:integer(substr(str(?edE), 15, 2)), ?sminE + 30) as ?eminE)
+      bind(coalesce(str(?lbE), \"(untitled)\") as ?tlabelE) } }
+              { select distinct ?dayF ?r3 where {
+      graph npa:graph {
+        ?npF npa:hasValidSignatureForPublicKeyHash ?pkF ;
+          np:hasAssertion ?ae2 ; npx:introduces ?e2 .
+        filter not exists { ?invF npx:invalidates ?npF ; npa:hasValidSignatureForPublicKeyHash ?pkF . }
+        filter not exists { ?npF npx:hasNanopubType npx:ExampleNanopub . }
+      }
+      filter not exists { graph ?sgF { ?newerF npx:supersedes ?npF . } }
+      {
+        values ?_resource_multi_iri {}
+        bind(?_resource_multi_iri as ?evF)
+      } union {
+        values ?_resource_multi_iri {}
+        graph ?mgF { ?_resource_multi_iri gen:isMaintainedBy ?evF }
+      }
+      {
+        graph ?ae2 { ?e2 a wd:Q604733 ; dct:isPartOf ?evF . }
+        bind(\"/part?id=\" as ?pathF)
+        bind(\"#eaf1f8\" as ?fillF) bind(\"#9bb4cc\" as ?strokeF)
+      } union {
+        graph ?ae2 { ?e2 a conf:Workshop ; gen:isSubSpaceOf ?evF . }
+        bind(\"/space?id=\" as ?pathF)
+        bind(\"#fdf0e2\" as ?fillF) bind(\"#d9a55f\" as ?strokeF)
+      } union {
+        graph ?ae2 { ?e2 a conf:Tutorial ; gen:isSubSpaceOf ?evF . }
+        bind(\"/space?id=\" as ?pathF)
+        bind(\"#eef7ec\" as ?fillF) bind(\"#8fbf86\" as ?strokeF)
+      }
+      optional { graph ?ae2 { ?e2 schema:startDate ?sdAF } }
+      optional { graph ?ae2 { ?e2 schemaold:startDate ?sdBF } }
+      optional { graph ?ae2 { ?e2 schema:endDate ?edAF } }
+      optional { graph ?ae2 { ?e2 schemaold:endDate ?edBF } }
+      optional { graph ?ae2 { ?e2 schema:location ?loAF } }
+      optional { graph ?ae2 { ?e2 schemaold:location ?loBF } }
+      optional { graph ?ae2 { ?e2 rdfs:label ?lbF } }
+      bind(coalesce(?sdAF, ?sdBF) as ?sdF)
+      filter(bound(?sdF))
+      bind(coalesce(?edAF, ?edBF) as ?edF)
+      bind(coalesce(str(?loAF), str(?loBF), \"\") as ?r3)
+      bind(substr(str(?sdF), 1, 10) as ?dayF)
+      bind(xsd:integer(substr(str(?sdF), 12, 2)) * 60 + xsd:integer(substr(str(?sdF), 15, 2)) as ?sminF)
+      bind(coalesce(xsd:integer(substr(str(?edF), 12, 2)) * 60 + xsd:integer(substr(str(?edF), 15, 2)), ?sminF + 30) as ?eminF)
+      bind(coalesce(str(?lbF), \"(untitled)\") as ?tlabelF) } }
+              filter(?dayF = ?day && str(?r3) <= str(?room))
+            } group by ?day ?room
+          }
+          bind(56 + ?hcol * 176 as ?hx)
+          bind(concat(
+            '<rect x=\"', str(?hx), '\" y=\"6\" width=\"170\" height=\"24\" rx=\"3\" fill=\"#1d3d5c\"></rect>',
+            '<text x=\"', str(?hx + 170 / 2), '\" y=\"22\" text-anchor=\"middle\" font-size=\"11\" font-weight=\"bold\" fill=\"#ffffff\">',
+              replace(replace(replace(?room, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"), '</text>') as ?frag)
+        }
+      }
+      union
+      # ============ hour labels on the left ============
+      {
+        select ?day ?frag (0 as ?ybot) (0 as ?xright)
+        where {
+          {
+            select ?day (min(?smin) as ?first) (max(?emin) as ?last) where {
+      graph npa:graph {
+        ?npT npa:hasValidSignatureForPublicKeyHash ?pkT ;
+          np:hasAssertion ?at1 ; npx:introduces ?t1 .
+        filter not exists { ?invT npx:invalidates ?npT ; npa:hasValidSignatureForPublicKeyHash ?pkT . }
+        filter not exists { ?npT npx:hasNanopubType npx:ExampleNanopub . }
+      }
+      filter not exists { graph ?sgT { ?newerT npx:supersedes ?npT . } }
+      {
+        values ?_resource_multi_iri {}
+        bind(?_resource_multi_iri as ?evT)
+      } union {
+        values ?_resource_multi_iri {}
+        graph ?mgT { ?_resource_multi_iri gen:isMaintainedBy ?evT }
+      }
+      {
+        graph ?at1 { ?t1 a wd:Q604733 ; dct:isPartOf ?evT . }
+        bind(\"/part?id=\" as ?pathT)
+        bind(\"#eaf1f8\" as ?fillT) bind(\"#9bb4cc\" as ?strokeT)
+      } union {
+        graph ?at1 { ?t1 a conf:Workshop ; gen:isSubSpaceOf ?evT . }
+        bind(\"/space?id=\" as ?pathT)
+        bind(\"#fdf0e2\" as ?fillT) bind(\"#d9a55f\" as ?strokeT)
+      } union {
+        graph ?at1 { ?t1 a conf:Tutorial ; gen:isSubSpaceOf ?evT . }
+        bind(\"/space?id=\" as ?pathT)
+        bind(\"#eef7ec\" as ?fillT) bind(\"#8fbf86\" as ?strokeT)
+      }
+      optional { graph ?at1 { ?t1 schema:startDate ?sdAT } }
+      optional { graph ?at1 { ?t1 schemaold:startDate ?sdBT } }
+      optional { graph ?at1 { ?t1 schema:endDate ?edAT } }
+      optional { graph ?at1 { ?t1 schemaold:endDate ?edBT } }
+      optional { graph ?at1 { ?t1 schema:location ?loAT } }
+      optional { graph ?at1 { ?t1 schemaold:location ?loBT } }
+      optional { graph ?at1 { ?t1 rdfs:label ?lbT } }
+      bind(coalesce(?sdAT, ?sdBT) as ?sdT)
+      filter(bound(?sdT))
+      bind(coalesce(?edAT, ?edBT) as ?edT)
+      bind(coalesce(str(?loAT), str(?loBT), \"\") as ?roomT)
+      bind(substr(str(?sdT), 1, 10) as ?day)
+      bind(xsd:integer(substr(str(?sdT), 12, 2)) * 60 + xsd:integer(substr(str(?sdT), 15, 2)) as ?smin)
+      bind(coalesce(xsd:integer(substr(str(?edT), 12, 2)) * 60 + xsd:integer(substr(str(?edT), 15, 2)), ?smin + 30) as ?emin)
+      bind(coalesce(str(?lbT), \"(untitled)\") as ?tlabelT)
+            } group by ?day
+          }
+          values ?hr { 8 9 10 11 12 13 14 15 16 17 18 19 20 }
+          filter(?hr * 60 >= ?first - 60 && ?hr * 60 <= ?last + 60)
+          bind(36 + (?hr * 60 - ?first + 15) * 3.0 as ?hy)
+          bind(concat(
+            '<text x=\"8\" y=\"', str(?hy + 4), '\" font-size=\"10\" fill=\"#6b7c8d\">',
+              if(?hr < 10, concat(\"0\", str(?hr)), str(?hr)), ':00</text>',
+            '<line x1=\"44\" y1=\"', str(?hy), '\" x2=\"52\" y2=\"', str(?hy),
+              '\" stroke=\"#b9c6d2\"></line>') as ?frag)
+        }
+      }
+    } group by ?day
+  }
+  bind(?day as ?title)
+  bind(?maxx + 8 as ?w)
+  bind(?maxy + 16 as ?h)
+}
+order by ?title""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-07T09:31:05Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-presentations-grid-svg;
+    npx:supersedes <https://w3id.org/np/RAiA9PiWGd61h-ROYEaTP9xD4cn8z-uwRvB2tvCmT0c4E>;
+    rdfs:label "Get the schedule of an event as an SVG grid";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Y8NuA9H4IDpbcuc1k06gvh9L5nNUxJ24VP+2Tkn7nOU/dZv+HKniRJbTnImc5e/pLjJpPESdQaA2jd0KryUDIzmRs23Na2f/hux/LFAFt/0iBHOIUcxudElnwXjzT8derjieaBEXysRaXAZ00rNsLb/5wTC7j4HJ6GdU638t4Qk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

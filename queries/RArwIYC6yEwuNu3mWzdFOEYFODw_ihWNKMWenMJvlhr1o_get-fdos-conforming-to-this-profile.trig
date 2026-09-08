@@ -1,0 +1,89 @@
+@prefix this: <https://w3id.org/np/RArwIYC6yEwuNu3mWzdFOEYFODw_ihWNKMWenMJvlhr1o> .
+@prefix sub: <https://w3id.org/np/RArwIYC6yEwuNu3mWzdFOEYFODw_ihWNKMWenMJvlhr1o/> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-fdos-conforming-to-this-profile a grlc:grlc-query;
+    dct:description "This query returns the FAIR Digital Objects (fdof:FAIRDigitalObject) that declare conformance to the given profile with dct:conformsTo, one row per FDO with the most recent non-invalidated nanopublication that states it. Handle-based profile identifiers are matched across both of their common forms, https://doi.org/... and https://hdl.handle.net/...; any other profile identifier is matched as given.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get FDOs conforming to this profile";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix fdof: <https://w3id.org/fdof/ontology#>
+
+select ?fdo ?fdo_label ?date ?np where {
+  {
+    select ?fdo (max(?row) as ?maxrow) where {
+      optional { <x:> <x:> ?_resource_iri }  # for grlc to pick up the placeholder
+      bind(str(?_resource_iri) as ?pstr)
+      bind(concat(strafter(?pstr, \"https://doi.org/\"), strafter(?pstr, \"https://hdl.handle.net/\")) as ?handle)
+      bind(if(?handle = \"\", ?_resource_iri, iri(concat(\"https://doi.org/\", ?handle))) as ?profileDoi)
+      bind(if(?handle = \"\", ?_resource_iri, iri(concat(\"https://hdl.handle.net/\", ?handle))) as ?profileHdl)
+      graph npa:graph {
+        ?npc npa:hasValidSignatureForPublicKey ?pubkey .
+        filter not exists { ?npi npx:invalidates ?npc ; npa:hasValidSignatureForPublicKey ?pubkey . }
+        ?npc dct:created ?d .
+        ?npc np:hasAssertion ?a .
+        optional { ?npc rdfs:label ?l }
+      }
+      graph ?a {
+        ?fdo a fdof:FAIRDigitalObject .
+        ?fdo dct:conformsTo ?profile .
+      }
+      filter(?profile = ?profileDoi || ?profile = ?profileHdl)
+      bind(concat(str(?d), \" \", str(?npc), \" \", coalesce(?l, \"\")) as ?row)
+    } group by ?fdo
+  }
+  bind(xsd:dateTime(strbefore(?maxrow, \" \")) as ?date)
+  bind(strafter(?maxrow, \" \") as ?rest)
+  bind(iri(strbefore(?rest, \" \")) as ?np)
+  bind(if(strafter(?rest, \" \") = \"\", str(?fdo), strafter(?rest, \" \")) as ?fdo_label)
+}
+order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-03T11:57:37Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-fdos-conforming-to-this-profile;
+    rdfs:label "Get FDOs conforming to this profile";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "F6w7fo1ADvPH3TttdrSiFEnGxhi3wh78EE/iWoUGc9bqBDdoyHRcfmzASFTbN3qnS/gfK/HsTt7E7KgvMk39FtP9HUmmRtu/TTea2IFLQweVK3yPI47EhQtXBawoo3ea86WNEtKrZrVqbsBLgEkFTuyPqZJBbb2rkgUO0yPN5bc=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

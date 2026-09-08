@@ -1,0 +1,70 @@
+@prefix this: <https://w3id.org/np/RAIB2n44nvb56XAZGwTQaPxq_hUiSv1jyiZzL_XqI1vD8> .
+@prefix sub: <https://w3id.org/np/RAIB2n44nvb56XAZGwTQaPxq_hUiSv1jyiZzL_XqI1vD8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-digital-object-type-template-link a grlc:grlc-query;
+    dct:description "Returns a single row whose content column holds a ready-made link to the Nanodash publish form for the 'Introducing a Digital Object Type or Methodology in a vocabulary' template (https://w3id.org/np/RAeEN6u4VQazNLXofl2EsDBZ7H7pf3fFkYN-I-1puite8/template), pre-filled with the given ontology or vocabulary as the template's vocabulary field. It backs a minimal plain-paragraph view that offers the 'add a term' step next to a listing view rather than as a view-level action on it, in the same way as 'Get the link to the I-ADOPT-variable template'. In addition, the query looks up the vocabulary's declared namespace and pre-fills the term identifier with that namespace followed by the literal marker <SET-SUFFIX>, which is the same pre-fill that Nanodash itself produces for view actions that declare a template part field, so that the new term is minted inside the vocabulary's namespace and only the short name has to be filled in. The namespace is picked deterministically with a minimum, so that a vocabulary re-declared in several nanopublications still yields a single link. The link is a root-relative /publish URL with template-version=latest, which Nanodash renders as a button and to which it appends the page context automatically, so the same query works on any Nanodash instance and from any resource page. Note that the template is referenced by its embedded IRI (the nanopub URI with the /template suffix) rather than by the nanopublication URI, because that template uses the embedded-identity shape.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the link to the Digital-Object-Type-or-Methodology template";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?content where {
+  values ?_ontology_multi_iri {}
+  {
+    select (min(?ns0) as ?ns) where {
+      values ?_ontology_multi_iri {}
+      graph ?g { ?_ontology_multi_iri gen:hasNamespace ?ns0 . }
+    }
+  }
+  bind(concat('<p><a href=\"/publish?template=',
+              encode_for_uri('https://w3id.org/np/RAeEN6u4VQazNLXofl2EsDBZ7H7pf3fFkYN-I-1puite8/template'),
+              '&template-version=latest&param_vocabulary=',
+              encode_for_uri(str(?_ontology_multi_iri)),
+              coalesce(concat('&param_thing=', encode_for_uri(concat(str(?ns), '<SET-SUFFIX>'))), ''),
+              '\">➕ introduce a new digital object type or methodology...</a></p>') as ?content)
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-01T08:37:01Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-digital-object-type-template-link;
+    rdfs:label "Get the link to the Digital-Object-Type-or-Methodology template";
+    prov:wasDerivedFrom <https://w3id.org/np/RA7MtBRwcx-W0G-wEdHUAmXE0ehL1oAov3g_aDZNZ3Emw>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "i6bJbFDWBlkqo0SKZ07v8Ph8rig9SqkF7QQZpWHms90dkKk/QpIGUA/L15+cFz/qAwSraoRURl2tFL0ugOLngsy6qZEH01lb65oBFNp0KcA65Hmn0Z+le/UdOZPaQMbZbsI5vzPaabF02fVxyAQa/GySBJ/ao0Kytp6wfRnQp0Y=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

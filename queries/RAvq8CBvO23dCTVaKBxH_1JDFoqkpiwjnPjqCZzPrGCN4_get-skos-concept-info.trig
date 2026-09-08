@@ -1,0 +1,140 @@
+@prefix this: <https://w3id.org/np/RAvq8CBvO23dCTVaKBxH_1JDFoqkpiwjnPjqCZzPrGCN4> .
+@prefix sub: <https://w3id.org/np/RAvq8CBvO23dCTVaKBxH_1JDFoqkpiwjnPjqCZzPrGCN4/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-skos-concept-info a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Given an individual SKOS concept, this query returns its details as property-value rows for an info card on the concept's part page: name, definition, type, curation status (deprecated or withdrawn), broader concepts, related concepts, external equivalents, the scheme it belongs to, and the nanopublication that defines it. It follows the generic Part-info contract: the concept is given by ?_concept_iri (target field 'concept') and the auto-filled ?__pubkey_multi restricts the defining nanopublication to the public keys of the owning resource's space members, of which the latest non-invalidated one wins. Values are rendered as a single merged key/value card: literals appear as text and IRIs as links labelled by the companion label column. Labels of linked concepts and of the scheme are looked up from their own defining nanopublication (skos:prefLabel, rdfs:label or dct:title), falling back to the IRI's local name. Names and definitions carry their language tag in brackets when they have one, so a multilingual concept shows one row per language rather than losing the tagged literals.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get SKOS concept info";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+
+select ?Property_noheader ?Property_label
+       (group_concat(replace(str(?val), '[\\r\\n]+', ' '); separator='\\n') as ?Value_multi_val_noheader)
+       (group_concat(replace(str(?vallabel), '[\\r\\n]+', ' '); separator='\\n') as ?Value_label_multi)
+where {
+  {
+    select ?ord ?Property_noheader ?Property_label ?val (min(?vallabelRaw) as ?vallabel) where {
+      values ?__pubkey_multi {}
+      graph npa:graph {
+        ?dnp npa:hasValidSignatureForPublicKeyHash ?__pubkey_multi ;
+             (npx:introduces|npx:describes|npx:embeds) ?_concept_iri ;
+             dct:created ?ddate ;
+             np:hasAssertion ?da .
+        filter not exists { ?inv npx:invalidates ?dnp ; npa:hasValidSignatureForPublicKeyHash ?__pubkey_multi . }
+        filter not exists {
+          ?dnp2 npa:hasValidSignatureForPublicKeyHash ?pk2 ;
+                (npx:introduces|npx:describes|npx:embeds) ?_concept_iri ;
+                dct:created ?ddate2 .
+          filter not exists { ?inv2 npx:invalidates ?dnp2 ; npa:hasValidSignatureForPublicKeyHash ?pk2 . }
+          filter(?ddate2 > ?ddate)
+        }
+      }
+      {
+        graph ?da { ?_concept_iri skos:prefLabel ?v }
+        bind(1 as ?ord) bind(skos:prefLabel as ?Property_noheader) bind('Name:' as ?Property_label)
+        bind(if(lang(?v) = '', str(?v), concat(str(?v), ' (', lang(?v), ')')) as ?val) bind('' as ?vallabelRaw)
+      } union {
+        graph ?da { ?_concept_iri skos:definition ?v }
+        bind(2 as ?ord) bind(skos:definition as ?Property_noheader) bind('Definition:' as ?Property_label)
+        bind(if(lang(?v) = '', str(?v), concat(str(?v), ' (', lang(?v), ')')) as ?val) bind('' as ?vallabelRaw)
+      } union {
+        graph ?da { ?_concept_iri rdf:type ?iri }
+        filter(?iri not in (owl:DeprecatedClass, gen:WithdrawnTerm))
+        bind(3 as ?ord) bind(rdf:type as ?Property_noheader) bind('Type:' as ?Property_label)
+        bind(str(?iri) as ?val) bind(replace(str(?iri), '^.*[/#]', '') as ?vallabelRaw)
+      } union {
+        graph ?da { ?_concept_iri rdf:type ?iri }
+        filter(?iri in (owl:DeprecatedClass, gen:WithdrawnTerm))
+        bind(4 as ?ord) bind(rdf:type as ?Property_noheader) bind('Status:' as ?Property_label)
+        bind(str(?iri) as ?val)
+        bind(if(?iri = gen:WithdrawnTerm, 'withdrawn', 'deprecated') as ?vallabelRaw)
+      } union {
+        graph ?da { ?_concept_iri skos:broader ?iri }
+        optional {
+          graph npa:graph { ?vnp npx:introduces ?iri ; np:hasAssertion ?vaa . }
+          graph ?vaa { ?iri skos:prefLabel|rdfs:label|dct:title ?vlab }
+        }
+        bind(5 as ?ord) bind(skos:broader as ?Property_noheader) bind('Broader concepts:' as ?Property_label)
+        bind(str(?iri) as ?val) bind(coalesce(str(?vlab), replace(str(?iri), '^.*[/#]', '')) as ?vallabelRaw)
+      } union {
+        graph ?da { ?_concept_iri skos:related ?iri }
+        optional {
+          graph npa:graph { ?vnp npx:introduces ?iri ; np:hasAssertion ?vaa . }
+          graph ?vaa { ?iri skos:prefLabel|rdfs:label|dct:title ?vlab }
+        }
+        bind(6 as ?ord) bind(skos:related as ?Property_noheader) bind('Related concepts:' as ?Property_label)
+        bind(str(?iri) as ?val) bind(coalesce(str(?vlab), replace(str(?iri), '^.*[/#]', '')) as ?vallabelRaw)
+      } union {
+        graph ?da { ?_concept_iri skos:exactMatch ?iri }
+        bind(7 as ?ord) bind(skos:exactMatch as ?Property_noheader) bind('Same as:' as ?Property_label)
+        bind(str(?iri) as ?val) bind(replace(str(?iri), '^.*[/#]', '') as ?vallabelRaw)
+      } union {
+        graph ?da { ?_concept_iri skos:inScheme ?iri }
+        optional {
+          graph npa:graph { ?vnp npx:introduces ?iri ; np:hasAssertion ?vaa . }
+          graph ?vaa { ?iri skos:prefLabel|rdfs:label|dct:title ?vlab }
+        }
+        bind(8 as ?ord) bind(skos:inScheme as ?Property_noheader) bind('In scheme:' as ?Property_label)
+        bind(str(?iri) as ?val) bind(coalesce(str(?vlab), replace(str(?iri), '^.*[/#]', '')) as ?vallabelRaw)
+      } union {
+        graph npa:graph { ?iri (npx:introduces|npx:describes|npx:embeds) ?_concept_iri ; np:hasAssertion ?da . }
+        bind(9 as ?ord) bind(npa:viaNanopub as ?Property_noheader) bind('Defined in:' as ?Property_label)
+        bind(str(?iri) as ?val) bind(substr(replace(str(?iri), '^.*/np/', ''), 1, 10) as ?vallabelRaw)
+      }
+    } group by ?ord ?Property_noheader ?Property_label ?val
+  }
+}
+group by ?ord ?Property_noheader ?Property_label
+order by ?ord""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-04T06:14:12Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-skos-concept-info;
+    rdfs:label "Get SKOS concept info";
+    prov:wasDerivedFrom <https://w3id.org/np/RAOxnm178yESfuNMoQmk-xEeGNWAuhqeOpLFSUiLn3pDk>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "pxW08C3fB+3x3Io0pjVwNHgp6eOngqvCliAvVh3XfuJITW2UWw1vwU38sJ1V582ADQRjKegkWlfmX7DEhHwYdWBdgAiSSFtMBgRFnyrUngEeV30umVrupTamsuJ/YuuYnrNMhc7plWDtwZ08LwZd9ryWccLbSc9WG2Mi08P+kNU=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

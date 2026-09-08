@@ -1,0 +1,151 @@
+@prefix this: <https://w3id.org/np/RAKxW2r9pbDL5tTqtmEnE4IVKrAOOfzeZraZhbel73nvA> .
+@prefix sub: <https://w3id.org/np/RAKxW2r9pbDL5tTqtmEnE4IVKrAOOfzeZraZhbel73nvA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:identifier rdfs:label "has the identifier" .
+  
+  dct:isPartOf rdfs:label "is a part of" .
+  
+  dct:source rdfs:label "is documented in" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "is called" .
+  
+  rdfs:seeAlso rdfs:label "has further information at" .
+  
+  owl:NamedIndividual rdfs:label "individual - a single concrete or abstract thing" .
+  
+  skos:altLabel rdfs:label "is also called" .
+  
+  skos:definition rdfs:label "is defined as follows:" .
+  
+  sub:altlabel a nt:LiteralPlaceholder;
+    rdfs:label "a synonym or alternative name" .
+  
+  sub:class a nt:GuidedChoicePlaceholder;
+    rdfs:label "the class this individual belongs to";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:definition a nt:LongLiteralPlaceholder;
+    rdfs:label "definition or description of the individual" .
+  
+  sub:identifier a nt:LiteralPlaceholder;
+    rdfs:label "an identifier or code for this individual" .
+  
+  sub:individual a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix";
+    nt:hasPrefix "~~NAMESPACE~~";
+    nt:hasPrefixLabel "Individual" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the individual" .
+  
+  sub:seealso a nt:ExternalUriPlaceholder;
+    rdfs:label "a link with further information" .
+  
+  sub:source a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of a source documenting this individual" .
+  
+  sub:st0 rdf:object owl:NamedIndividual;
+    rdf:predicate rdf:type;
+    rdf:subject sub:individual .
+  
+  sub:st1 a nt:RepeatableStatement;
+    rdf:object sub:class;
+    rdf:predicate rdf:type;
+    rdf:subject sub:individual .
+  
+  sub:st2 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:individual .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:definition;
+    rdf:predicate skos:definition;
+    rdf:subject sub:individual .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:vocabulary;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:individual .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:identifier;
+    rdf:predicate dct:identifier;
+    rdf:subject sub:individual .
+  
+  sub:st6 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:altlabel;
+    rdf:predicate skos:altLabel;
+    rdf:subject sub:individual .
+  
+  sub:st7 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:source;
+    rdf:predicate dct:source;
+    rdf:subject sub:individual .
+  
+  sub:st8 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:seealso;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:individual .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Such a nanopublication defines a new individual, i.e. a single concrete or abstract thing such as the planet Mars, Marie Curie, or one value of a controlled list. If the term you want to define refers to a set of things rather than a single one, use the template for classes instead. This variant mints the individual in the namespace of the resource page it is published from.";
+    rdfs:label "Defining a new individual (with placeholder prefix)";
+    nt:hasNanopubLabelPattern "${name}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6, sub:st7,
+      sub:st8;
+    nt:hasTag "Terms" .
+  
+  sub:vocabulary a nt:GuidedChoicePlaceholder;
+    rdfs:label "vocabulary / ontology";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http://www.w3.org/2002/07/owl%23Ontology&searchterm=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234;
+    prov:wasDerivedFrom <https://w3id.org/np/RA_DqxjRb1yRe5ClafP2dEft6WY0h_axYs0vTLjueeUus> .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-04T14:46:03Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    rdfs:label "Defining a new individual (with placeholder prefix)";
+    prov:wasDerivedFrom <https://w3id.org/np/RA_DqxjRb1yRe5ClafP2dEft6WY0h_axYs0vTLjueeUus>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ATyoT7I/u7ddD6n5TZ7gLl+d+5ua16chxcfVh4pyoMjlI8UtXpv8piuzeNqbXC3dWIg2PIP6ZhJYe7kraXOZaTzJRbjrtj21xZ62pjdc2iOxgO0/5MXLO+ePfxcars6NUz9QNmKXrpQr6MIokm4iSVHiiiR/ZyOWT1I5gPe8ruU=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

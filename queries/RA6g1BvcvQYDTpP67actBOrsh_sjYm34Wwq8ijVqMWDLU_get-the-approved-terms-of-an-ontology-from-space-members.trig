@@ -1,0 +1,229 @@
+@prefix this: <https://w3id.org/np/RA6g1BvcvQYDTpP67actBOrsh_sjYm34Wwq8ijVqMWDLU> .
+@prefix sub: <https://w3id.org/np/RA6g1BvcvQYDTpP67actBOrsh_sjYm34Wwq8ijVqMWDLU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-approved-terms-of-an-ontology-from-space-members a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns the approved terms (OWL classes, named individuals, object/datatype/annotation properties, and plain RDF properties) of the given ontology or vocabulary. It is the type-generalised sibling of 'Get the approved classes of an ontology from space members': same membership restriction, same latest-wins selection and the same approval semantics, but covering every OWL term kind instead of classes only, and with a type column instead of the superclasses columns. Because it spans several nanopub types it runs on the full repository (/repo/full) rather than a type-scoped endpoint. A term is included when its definition declares it part of the given resource via dct:isPartOf (or the legacy dct:partOf or schema:isPartOf), and the defining nanopublication was published by an admin, maintainer, or member of the space that maintains the resource; the maintaining space and its validated member public-key hashes are resolved server-side from the spaces repo (/repo/spaces), observers excluded. Each term URI appears once, kept from the latest (by nanopub timestamp, ties broken by nanopub URI) member-published definition; approval is judged on that winning definition only, so publishing a new version starts it out unapproved until it is approved again. A version counts as approved when the newest non-invalidated approval/disapproval nanopublication targeting it is an npx:approvesOf (latest wins across all publishers), its publisher signed with a key belonging to a current member+ of the maintaining space, and that publisher is not the signer of the nanopublication being approved (self-approval never counts). In addition, a contribution counts as approved by default when its signing key belongs to a validated holder of the auto-approved helper role (https://w3id.org/np/RASGFRI3F5TtJ4GA4Yaed3esIpTF3pDyJLbpuvsqHzIXc/autoApprovedHelperRole) in the maintaining space -- typically a curation bot the space has admitted in that role -- unless an outstanding member disapproval overrides it. The approval verdicts are resolved once per request by a self-contained sub-select wrapped in a SERVICE self-reference to /repo/full (so the planner evaluates it independently), federating to /repo/spaces for the approvers' member keys; the helper-role key hashes come from the spaces repo via the validated role instantiations carrying gen:hasRole, wrapped in an extra sub-select so the federated call is evaluated once rather than per result row. The type column gives the term's most specific declared kind: rdf:Property is only reported when no owl:ObjectProperty/owl:DatatypeProperty/owl:AnnotationProperty type is declared alongside it, so a property that carries both shows up as the OWL one; the type_label companion renders the term kind's local name, such as Class, NamedIndividual or ObjectProperty. The description column takes skos:definition, falling back to dct:description (which is what the named-individual definitions use). The status column is a multi-value literal listing the curation states that apply to the winning definition: \"deprecated\" (owl:DeprecatedClass or owl:DeprecatedProperty) and \"example\" (npx:ExampleNanopub), in that order; \"approved\" is not listed since every row of this query is approved, and terms whose winning definition types them gen:WithdrawnTerm are excluded entirely (withdrawal is judged on the winning definition only, so publishing a new version without that type reinstates the term). The disapprove_target and approval_choice columns are action data rather than content: they let a view offer a per-row disapprove action pre-filled with the row's nanopublication and npx:disapprovesOf, and the override_target column carries the row's nanopublication for an in-place re-edit action. The last_modified_by/last_modified columns give the signer and timestamp of the latest definition; the signer name is resolved from the trust repo (/repo/trust) or left blank.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the approved terms of an ontology from space members";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix schema: <https://schema.org/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?term ?term_label ?type ?type_label ?description ?status_multi
+       ?last_modified_by (sample(?lmbl) as ?last_modified_by_label) ?last_modified
+       (?np as ?override_target) ?disapprove_target ?approval_choice ?np ?np_label where {
+  {
+    select ?term (sample(?term_label_) as ?term_label)
+           (max(?typeRank) as ?typeWin)
+           (coalesce(sample(?definition_), sample(?description_)) as ?description)
+           (sample(?status_) as ?status_multi)
+           (sample(?user) as ?last_modified_by) (sample(?date) as ?last_modified)
+           (sample(?np_) as ?np) (\"^\" as ?np_label) where {
+      {
+        select ?term (max(?rank) as ?maxrank) where {
+          {
+            select ?np_ ?term ?a ?date ?pubkey where {
+              values ?itemType { owl:Class owl:ObjectProperty owl:DatatypeProperty owl:AnnotationProperty owl:NamedIndividual rdf:Property }
+              service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+                select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+                  graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+                  values ?_ontology_multi_iri {}
+                  graph ?stateG {
+                    ?_ontology_multi_iri npa:isMaintainedBy? ?space .
+                    ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ;
+                        npa:hasRoleType ?rt .
+                    filter(?rt in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                    ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+                  }
+                }
+              }
+              graph npa:graph {
+                ?np_ npx:hasNanopubType ?itemType .
+                ?np_ npa:hasValidSignatureForPublicKeyHash ?pubkey .
+                filter not exists { ?npx npx:invalidates ?np_ ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+                ?np_ dct:created ?date .
+                ?np_ npx:introduces ?term .
+                ?np_ np:hasAssertion ?a .
+              }
+              filter(contains(?memberPubkeys, ?pubkey))
+            }
+          }
+          values ?_ontology_multi_iri {}
+          graph ?a { ?term dct:isPartOf|dct:partOf|schema:isPartOf ?_ontology_multi_iri . }
+          bind(concat(str(?date), \"|\", str(?np_)) as ?rank)
+        } group by ?term
+      }
+      {
+        select ?np_ ?term ?a ?date ?user ?pubkey ?itemType where {
+          values ?itemType { owl:Class owl:ObjectProperty owl:DatatypeProperty owl:AnnotationProperty owl:NamedIndividual rdf:Property }
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+              graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+              values ?_ontology_multi_iri {}
+              graph ?stateG {
+                ?_ontology_multi_iri npa:isMaintainedBy? ?space .
+                ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ;
+                    npa:hasRoleType ?rt .
+                filter(?rt in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+              }
+            }
+          }
+          graph npa:graph {
+            ?np_ npx:hasNanopubType ?itemType .
+            ?np_ npa:hasValidSignatureForPublicKeyHash ?pubkey .
+            filter not exists { ?npx npx:invalidates ?np_ ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+            ?np_ dct:created ?date .
+            ?np_ npx:introduces ?term .
+            ?np_ np:hasAssertion ?a .
+            optional { ?np_ npx:signedBy ?user . }
+          }
+          filter(contains(?memberPubkeys, ?pubkey))
+        }
+      }
+      values ?_ontology_multi_iri {}
+      graph ?a { ?term a ?itemType ; dct:isPartOf|dct:partOf|schema:isPartOf ?_ontology_multi_iri . }
+      bind(concat(str(?date), \"|\", str(?np_)) as ?rank)
+      filter(?rank = ?maxrank)
+      filter not exists { graph ?a { ?term a gen:WithdrawnTerm } }
+      optional { graph ?a { ?term rdfs:label ?term_label_ . filter(lang(?term_label_) = \"\") } }
+      optional { graph ?a { ?term skos:definition ?definition_ . } }
+      optional { graph ?a { ?term dct:description ?description_ . } }
+      bind(if(?itemType = rdf:Property, concat(\"1|\", str(?itemType)), concat(\"2|\", str(?itemType))) as ?typeRank)
+      bind(replace(concat(
+        if(exists { graph ?a { ?term a owl:DeprecatedClass } } || exists { graph ?a { ?term a owl:DeprecatedProperty } }, \"deprecated\\n\", \"\"),
+        if(exists { graph npa:graph { ?np_ npx:hasNanopubType npx:ExampleNanopub } }, \"example\\n\", \"\")
+      ), \"\\n$\", \"\") as ?status_)
+      {
+        select (group_concat(distinct ?apV; separator=\" \") as ?approvedNps)
+               (group_concat(distinct ?disV; separator=\" \") as ?disapprovedNps) where {
+          {
+            select ?vTarget (max(concat(str(?vDate), \">\", str(?vNp), \">\", ?vMark)) as ?vWin) where {
+              values ?_ontology_multi_iri {}
+              service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+                select (group_concat(?vpk; separator=\" \") as ?vMemberPubkeys) where {
+                  graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?vStateG . }
+                  values ?_ontology_multi_iri {}
+                  graph ?vStateG {
+                    ?_ontology_multi_iri npa:isMaintainedBy? ?vSpace .
+                    ?vRi a gen:RoleInstantiation ; npa:forSpace ?vSpace ; npa:forAgent ?vMember ;
+                         npa:hasRoleType ?vRt .
+                    filter(?vRt in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                    ?vAcct a npa:AccountState ; npa:agent ?vMember ; npa:pubkey ?vpk .
+                  }
+                }
+              }
+              service <https://w3id.org/np/l/nanopub-query-1.1/repo/full> {
+                select distinct ?vTarget ?vNp ?vDate ?vPubkey ?vMark where {
+                  values ?vType { owl:Class owl:ObjectProperty owl:DatatypeProperty owl:AnnotationProperty owl:NamedIndividual rdf:Property }
+                  graph npa:graph {
+                    ?vTarget npx:hasNanopubType ?vType ; npx:signedBy ?targetAgent .
+                    ?vNp npx:signedBy ?vAgent ;
+                         npa:hasValidSignatureForPublicKeyHash ?vPubkey ;
+                         dct:created ?vDate ;
+                         np:hasAssertion ?vA .
+                    filter not exists { ?vInv npx:invalidates ?vNp ; npa:hasValidSignatureForPublicKeyHash ?vPubkey . }
+                  }
+                  graph ?vA { ?vAgent ?vPred ?vTarget . }
+                  values ?vPred { npx:approvesOf npx:disapprovesOf }
+                  filter(?vAgent != ?targetAgent)
+                  bind(if(?vPred = npx:approvesOf, \"a\", \"d\") as ?vMark)
+                }
+              }
+              filter(contains(?vMemberPubkeys, ?vPubkey))
+            } group by ?vTarget
+          }
+          bind(if(strends(?vWin, \"a\"), str(?vTarget), \"\") as ?apV)
+          bind(if(strends(?vWin, \"d\"), str(?vTarget), \"\") as ?disV)
+        }
+      }
+      {
+        select (sample(?helperPubkeys_) as ?helperPubkeys) where {
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            select (group_concat(?hpk; separator=\" \") as ?helperPubkeys_) where {
+              graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?hStateG . }
+              values ?_ontology_multi_iri {}
+              graph ?hStateG {
+                ?_ontology_multi_iri npa:isMaintainedBy? ?hSpace .
+                ?hRi a gen:RoleInstantiation ; npa:forSpace ?hSpace ; npa:forAgent ?hAgent ;
+                     gen:hasRole <https://w3id.org/np/RASGFRI3F5TtJ4GA4Yaed3esIpTF3pDyJLbpuvsqHzIXc/autoApprovedHelperRole> .
+                ?hAcct a npa:AccountState ; npa:agent ?hAgent ; npa:pubkey ?hpk .
+              }
+            }
+          }
+        }
+      }
+      bind(contains(concat(\" \", ?approvedNps, \" \"), concat(\" \", str(?np_), \" \")) as ?explicitApproved)
+      bind(contains(concat(\" \", ?disapprovedNps, \" \"), concat(\" \", str(?np_), \" \")) as ?explicitDisapproved)
+      bind(contains(?helperPubkeys, ?pubkey) as ?isAutoApproved)
+      filter(?explicitApproved || (?isAutoApproved && !?explicitDisapproved))
+    } group by ?term
+  }
+  bind(iri(strafter(?typeWin, \"|\")) as ?type)
+  bind(replace(str(?type), \"^.*[#/]\", \"\") as ?type_label)
+  bind(str(?np) as ?disapprove_target)
+  bind(str(npx:disapprovesOf) as ?approval_choice)
+  optional {
+    service <https://w3id.org/np/l/nanopub-query-1.1/repo/trust> {
+      select ?last_modified_by ?lmbl where {
+        graph npa:graph { npa:thisRepo npa:hasCurrentTrustState ?tg . }
+        graph ?tg { ?last_modified_by foaf:name ?lmbl . }
+      }
+    }
+  }
+}
+group by ?term ?term_label ?type ?type_label ?description ?status_multi ?last_modified_by ?last_modified ?disapprove_target ?approval_choice ?np ?np_label
+order by ?term_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-26T06:33:51Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:get-approved-terms-of-an-ontology-from-space-members;
+    npx:supersedes <https://w3id.org/np/RAmWgepDc9heOwUKIDT6OjGu2i-eslDxctL4x5yxO7OeI>;
+    rdfs:label "Get the approved terms of an ontology from space members";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "r8y/JmRT3sMSV7u55gN4oHZ3k8K79zJESULXH2UUDDNo51Un6giRG0xQCvW79Y+mRCkbTs498Ar6WBofWuHKCMGVWF4m5GlP+34WNiMe0SEEh+jN2FYwvcdqERELErw+hjbsMZMFGOE6TZD0SFltVmZh3owkYpZWEyNQ88ut9h0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

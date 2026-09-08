@@ -1,0 +1,132 @@
+@prefix this: <https://w3id.org/np/RAMiEm0B7QKKStf51XpdiMAQG3b0--OtIX8p1M8XhGV_o> .
+@prefix sub: <https://w3id.org/np/RAMiEm0B7QKKStf51XpdiMAQG3b0--OtIX8p1M8XhGV_o/> .
+@prefix schema: <https://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  dct:isReferencedBy rdfs:label "is covered by" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the name" .
+  
+  owl:sameAs rdfs:label "is the same as" .
+  
+  foaf:isPrimaryTopicOf rdfs:label "is the primary topic of" .
+  
+  schema:about rdfs:label "is about" .
+  
+  sub:article a nt:ExternalUriPlaceholder;
+    rdfs:label "the Wikipedia article about it, if there is one" .
+  
+  sub:newsSource a nt:ExternalUriPlaceholder;
+    rdfs:label "a news article covering it" .
+  
+  sub:space a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the Space";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st1 rdf:object sub:topicType;
+    rdf:predicate rdf:type;
+    rdf:subject sub:topic .
+  
+  sub:st2 rdf:object sub:topicName;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:topic .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:topicDescription;
+    rdf:predicate dct:description;
+    rdf:subject sub:topic .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:article;
+    rdf:predicate foaf:isPrimaryTopicOf;
+    rdf:subject sub:topic .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:newsSource;
+    rdf:predicate dct:isReferencedBy;
+    rdf:subject sub:topic .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:wikidataItem;
+    rdf:predicate owl:sameAs;
+    rdf:subject sub:topic .
+  
+  sub:st7 rdf:object sub:space;
+    rdf:predicate schema:about;
+    rdf:subject nt:ASSERTION .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Proposes a topic that has come up in the news and deserves its own identifier: it gives the topic a name, says what kind of thing it is, and links it to the Wikipedia article it is the primary topic of. The topic gets a stable IRI here and now, so it can be referred to before - or without - a Wikidata item ever being created. If an item is later created, record it by deriving a new version of this nanopublication that fills in the 'is the same as' field; the absence of that field is what marks a proposal as still open, so no claim about a missing item ever goes stale. News coverage normally belongs in its own nanopublications, published with the separate 'Reporting news coverage of a topic' template, so that coverage accumulates as independent contributions by different people rather than being owned by whoever defined the topic. The 'is covered by' field here is a convenience for the sources the proposer already has in hand at the moment of proposing; both routes are counted the same way.";
+    dct:isVersionOf <https://w3id.org/np/RAJdnofiRA3AATbIdgCkV1Cgu9m0XZwa1I1kUnRs4vATg/templateKind>;
+    rdfs:label "Proposing a news topic";
+    gen:governedBy <https://w3id.org/spaces/wikinewsie>;
+    nt:hasNanopubLabelPattern "${topicName}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6, sub:st7;
+    nt:hasTag "Wikinewsie" .
+  
+  sub:topic a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID for the topic, e.g. \"omegacat-bh-2\"" .
+  
+  sub:topicDescription a nt:LiteralPlaceholder;
+    rdfs:label "a short description, as it would read on Wikidata" .
+  
+  sub:topicName a nt:LiteralPlaceholder;
+    rdfs:label "the name of the topic" .
+  
+  sub:topicType a nt:GuidedChoicePlaceholder;
+    rdfs:label "what kind of thing it is";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:wikidataItem a nt:ExternalUriPlaceholder;
+    rdfs:label "the Wikidata item, once one exists" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-26T14:20:40Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:introduces <https://w3id.org/np/RAJdnofiRA3AATbIdgCkV1Cgu9m0XZwa1I1kUnRs4vATg/templateKind>;
+    npx:supersedes <https://w3id.org/np/RAJdnofiRA3AATbIdgCkV1Cgu9m0XZwa1I1kUnRs4vATg>;
+    rdfs:label "Proposing a news topic";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "an4NPe1LyooKnPCU9Gi4e5cfBmoQ03rLSHmEfz40IUbHoy+CjBhjV0oe5NubQUcUcgNvqIB8EQmrcXIL1cVBuEIcZSEle67YWq2Ok4/Onqdi1rLzdutC5NwvSHqm4lSXYu17anjNzIt8KibGVpiPXf3j5YTcp+GLcSYbFXbG2KI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,139 @@
+@prefix this: <https://w3id.org/np/RAm7pKQmaoETdhcaJkbeuxHVGiswyXRLdd5PQGQy2u0Qk> .
+@prefix sub: <https://w3id.org/np/RAm7pKQmaoETdhcaJkbeuxHVGiswyXRLdd5PQGQy2u0Qk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:available rdfs:label "became available in - the month of the year the thing became available" .
+  
+  dct:created rdfs:label "was created at - the moment the thing was created" .
+  
+  dct:date rdfs:label "happened on - the day the thing happened" .
+  
+  dct:dateAccepted rdfs:label "was accepted in - the year the thing was accepted, as exactly four digits" .
+  
+  dct:dateSubmitted rdfs:label "is submitted on - the day of the year, in any year, the thing is submitted on" .
+  
+  dct:issued rdfs:label "was issued in - the year the thing was issued" .
+  
+  dct:modified rdfs:label "is revised on - the day of the month, in any month, the thing is revised on" .
+  
+  dct:valid rdfs:label "is valid in - the month, in any year, the thing is valid in" .
+  
+  sub:acceptedYear a nt:LiteralPlaceholder;
+    rdfs:label "the year it was accepted, which this template narrows to four digits (optional)";
+    nt:hasDatatype xsd:gYear;
+    nt:hasRegex "[0-9]{4}" .
+  
+  sub:availableMonth a nt:LiteralPlaceholder;
+    rdfs:label "the month of the year it became available, e.g. May 2026 (optional)";
+    nt:hasDatatype xsd:gYearMonth .
+  
+  sub:day a nt:LiteralPlaceholder;
+    rdfs:label "the day it happened, picked from a calendar";
+    nt:hasDatatype xsd:date .
+  
+  sub:moment a nt:LiteralPlaceholder;
+    rdfs:label "the moment it was created, to the second and with a time zone";
+    nt:hasDatatype xsd:dateTime .
+  
+  sub:revisionDay a nt:LiteralPlaceholder;
+    rdfs:label "the day of the month it is revised on, in any month, e.g. 17 (optional)";
+    nt:hasDatatype xsd:gDay .
+  
+  sub:st0 rdf:object sub:day;
+    rdf:predicate dct:date;
+    rdf:subject sub:thing .
+  
+  sub:st1 rdf:object sub:moment;
+    rdf:predicate dct:created;
+    rdf:subject sub:thing .
+  
+  sub:st2 rdf:object sub:year;
+    rdf:predicate dct:issued;
+    rdf:subject sub:thing .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:acceptedYear;
+    rdf:predicate dct:dateAccepted;
+    rdf:subject sub:thing .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:availableMonth;
+    rdf:predicate dct:available;
+    rdf:subject sub:thing .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:validMonth;
+    rdf:predicate dct:valid;
+    rdf:subject sub:thing .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:submissionDay;
+    rdf:predicate dct:dateSubmitted;
+    rdf:subject sub:thing .
+  
+  sub:st7 a nt:OptionalStatement;
+    rdf:object sub:revisionDay;
+    rdf:predicate dct:modified;
+    rdf:subject sub:thing .
+  
+  sub:submissionDay a nt:LiteralPlaceholder;
+    rdfs:label "the day of the year it is submitted on, in any year, e.g. 17 May (optional)";
+    nt:hasDatatype xsd:gMonthDay .
+  
+  sub:template a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Exercises every date and time placeholder type Nanodash offers, in one form: a calendar date, a moment with a time zone, and the five Gregorian types that name a point on the calendar coarser than a date. The first three statements are required and the rest optional, so the same form covers a value that has to be given and one that may be left out. The accepted-year field additionally carries a pattern of four digits exactly, which is narrower than the datatype and is the case where a rejected entry has to give way to a correction. Nothing asserted here is meant to be read as a claim about anything: it is a test bed for the form.";
+    rdfs:label "Example: Test date/datetime";
+    nt:hasNanopubLabelPattern "Date/datetime test for ${thing}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6, sub:st7;
+    nt:hasTag "Examples" .
+  
+  sub:thing a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name for the thing being dated, used as URI suffix, e.g. test-run-1" .
+  
+  sub:validMonth a nt:LiteralPlaceholder;
+    rdfs:label "the month it is valid in, in any year, e.g. May (optional)";
+    nt:hasDatatype xsd:gMonth .
+  
+  sub:year a nt:LiteralPlaceholder;
+    rdfs:label "the year it was issued, e.g. 2026";
+    nt:hasDatatype xsd:gYear .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: a npx:ExampleNanopub;
+    dct:created "2026-09-02T14:28:20.360Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    rdfs:label "Example: Test date/datetime" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+i9DV8ynzO944pYkYsDwtlqJHuk+b7FQt6Bb4TIQSDX3jGUURn6WpaNwESHmgMLWSydaH5XlabMzuqpPL4iyB+IAzvwIxdJBLhe39EQMu2j+FZ/5d/xu/gO3nZw2KoEvJ7cJisabuI05OylIRSJ+OG5CmzFxnjojUEJeCFi1njY1InhXrb0yHud9b1ifzweoN6YYOBecKs1gTOaT2bf+t4Wgzg3M0PmRVZ4F0OALsnh4T5+x7kFtiPcDKNpORi585JjKCZ4kczIF6oUKcwgC0kmIY97jtLqSLcXRkxHx5CDI6qz4XlRFs1ZbCUdSlzjdPZAkaBcNem1gIhWzkHkEnQIDAQAB";
+    npx:hasSignature "TVOr+jFgN5oVJWfNgsQhRgFRZwHu32npFCuar2PW32J7xt1VRJVueEMB4ZfXtgnqFPr/xy64SJMeVOPeyTs/c7fL4Qs1ERDdY5SZCRySTq7AL6kNVGLWY7kGM34aAeVJR335We4/GSH5CPPZXVDZ2zaXclXQlaPBVM8qhcJ2Lr5TmW1lpLLsQ4yVlzohh1+BG9rXkdKl+zCN97VEzCVzNxDtYzow9uwkv9uvK0I51ZYzR27f3oEGFT0SPv3DCAeLDnQQdx4S9AVsFI1Wur3On0b7+hiz9JRi5pB7PoMFFeKmp/JUQzFfXilf8V7D1C5qE9RnXtxxZTD6jsgWP6WAnA==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

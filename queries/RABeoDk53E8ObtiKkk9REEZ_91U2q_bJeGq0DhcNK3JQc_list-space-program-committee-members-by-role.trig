@@ -1,0 +1,84 @@
+@prefix this: <https://w3id.org/np/RABeoDk53E8ObtiKkk9REEZ_91U2q_bJeGq0DhcNK3JQc> .
+@prefix sub: <https://w3id.org/np/RABeoDk53E8ObtiKkk9REEZ_91U2q_bJeGq0DhcNK3JQc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:list-space-program-committee-by-role a grlc:grlc-query;
+    dct:description "Lists the program committee members of a given space (one row per agent): agents holding the program committee member role (validated role instantiations in the current space state). The name shown is the agent's canonical name from the space state where there is one, falling back to the foaf:name stated by the grant nanopublication itself - without that fallback, everyone who has not yet published a key renders as a bare URI. The np column points to the role grant nanopub. IRI-keyed by npa:forSpace (param space).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "List space program committee members by role";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+select ?user_iri ?user_iri_label ?np ?np_label where {
+  {
+    select ?user_iri
+           (sample(?name) as ?name)
+           (sample(?grantName) as ?grantName)
+           (max(?grantNpStr) as ?np0)
+    where {
+      values ?_space_multi_iri {}
+      graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?g . }
+      graph ?g {
+        ?ri a gen:RoleInstantiation ; npa:forSpace ?_space_multi_iri ; npa:forAgent ?user_iri ; npa:viaNanopub ?grantNp ;
+            gen:hasRole <https://w3id.org/np/RAgMXdgG-pimYhRop8NC-rV5lxG9CHORSKqv8P3hVTjA8/program-committee-member-role> .
+      }
+      optional { graph ?g { ?user_iri foaf:name ?name } }
+      optional {
+        graph npa:graph { ?grantNp np:hasPublicationInfo ?grantPi . }
+        graph ?grantPi { ?user_iri foaf:name ?grantName . }
+      }
+      bind(str(?grantNp) as ?grantNpStr)
+    }
+    group by ?user_iri
+  }
+  bind(iri(?np0) as ?np)
+  bind(\"^\" as ?np_label)
+  bind(coalesce(str(?name), str(?grantName), \"\") as ?user_iri_label)
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-31T14:45:19Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:list-space-program-committee-by-role;
+    npx:supersedes <https://w3id.org/np/RA51mhVW6t7eXLH9YiR83_brUkGInm4CPrb1hNq6yKQp4>;
+    rdfs:label "List space program committee members by role";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "NRfeOlTCNYlSCXdV24mx/34OvnUvGvkwp9mBSV8ivwLAkTxIff7g+cMVZ8ogtlzYxrV88SUWwGvrrF0kwaxmRb43g54XrVgQo/O7X75Ku035Opi2ewY093Bvf3iJ1T89raqsx98q/F6bZEz0RpOE4785GDcD6kpGDF6d0gCBMac=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

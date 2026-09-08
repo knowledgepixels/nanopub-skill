@@ -1,0 +1,199 @@
+@prefix this: <https://w3id.org/np/RA8RCI49IWxklmSTGNu7i6cNYF8oXSAk20gQCMa2WeoD4> .
+@prefix sub: <https://w3id.org/np/RA8RCI49IWxklmSTGNu7i6cNYF8oXSAk20gQCMa2WeoD4/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-maturity-grid-of-a-dataset a grlc:grlc-query;
+    dct:description "Returns an SVG rendering of the FAIRplus-DSM level-by-dimension grid for one dataset: the three maturity dimensions as rows, the six maturity levels as columns, and in each cell the number of that cell's indicators met out of the total, coloured by the proportion. Level 0 holds absence indicators, so there 'met' means the absence does not hold. A band under the grid marks the levels reached. Only the newest non-invalidated version of the assessment, of each verdict and of each indicator definition is used.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the maturity grid of a dataset";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix dsm: <https://w3id.org/spaces/fairplus/r/dsm/>
+select ?title ?svg ?np ?np_label
+where {
+  {
+    select ?assessment (max(?rank) as ?maxrank) where {
+      values ?_dataset_multi_iri {}
+      graph npa:graph {
+        ?anp0 npx:hasNanopubType dsm:MaturityAssessment ;
+              npa:hasValidSignatureForPublicKeyHash ?apk ;
+              dct:created ?ad1 ; npx:introduces ?assessment ; np:hasAssertion ?aa1 .
+        filter not exists { ?ainv npx:invalidates ?anp0 ; npa:hasValidSignatureForPublicKeyHash ?apk . }
+      }
+      graph ?aa1 { ?assessment dsm:assessedDataset ?_dataset_multi_iri . }
+      bind(concat(str(?ad1), \"|\", str(?anp0)) as ?rank)
+    } group by ?assessment
+  }
+  graph npa:graph {
+    ?np npx:hasNanopubType dsm:MaturityAssessment ;
+        dct:created ?ad2 ; npx:introduces ?assessment ; np:hasAssertion ?ag .
+  }
+  filter(concat(str(?ad2), \"|\", str(?np)) = ?maxrank)
+  optional { graph ?ag { ?assessment dsm:achievedMaturityLevel ?alvl } }
+  bind(coalesce(?alvl, <urn:none>) as ?achieved)
+  optional {
+    { select (?t as ?achieved) (min(?n) as ?anum) where {
+        graph npa:graph { ?lnp npx:introduces ?t ; np:hasAssertion ?la }
+        graph ?la { ?t a dsm:MaturityLevel ; dsm:levelNumber ?n }
+    } group by ?t }
+  }
+  bind(coalesce(?anum, 0) as ?achievedNum)
+  {
+    select ?assessment (group_concat(?cell; separator=\"\") as ?cells) where {
+      {
+        select ?assessment ?dimcode ?lvlnum
+               (count(distinct ?verdict) as ?total) (sum(?okv) as ?nok)
+        where {
+          {
+            select ?verdict (max(?vrank) as ?vmax) where {
+              graph npa:graph {
+                ?vn npx:hasNanopubType dsm:IndicatorVerdict ;
+                    npa:hasValidSignatureForPublicKeyHash ?vpk ;
+                    dct:created ?vd1 ; npx:introduces ?verdict .
+                filter not exists { ?vi npx:invalidates ?vn ; npa:hasValidSignatureForPublicKeyHash ?vpk . }
+              }
+              bind(concat(str(?vd1), \"|\", str(?vn)) as ?vrank)
+            } group by ?verdict
+          }
+          graph npa:graph {
+            ?vnp npx:hasNanopubType dsm:IndicatorVerdict ;
+                 dct:created ?vd2 ; npx:introduces ?verdict ; np:hasAssertion ?va .
+          }
+          filter(concat(str(?vd2), \"|\", str(?vnp)) = ?vmax)
+          graph ?va {
+            ?assessment dsm:hasVerdict ?verdict .
+            ?verdict dsm:forIndicator ?indicator ; dsm:verdictValue ?val .
+          }
+          {
+            select ?indicator (max(?irank) as ?imax) where {
+              graph npa:graph {
+                ?in0 npx:hasNanopubType dsm:MaturityIndicator ;
+                     npa:hasValidSignatureForPublicKeyHash ?ipk ;
+                     dct:created ?id1 ; npx:introduces ?indicator .
+                filter not exists { ?ii npx:invalidates ?in0 ; npa:hasValidSignatureForPublicKeyHash ?ipk . }
+              }
+              bind(concat(str(?id1), \"|\", str(?in0)) as ?irank)
+            } group by ?indicator
+          }
+          graph npa:graph {
+            ?inp npx:hasNanopubType dsm:MaturityIndicator ;
+                 dct:created ?id2 ; npx:introduces ?indicator ; np:hasAssertion ?ia .
+          }
+          filter(concat(str(?id2), \"|\", str(?inp)) = ?imax)
+          graph ?ia { ?indicator dsm:hasMaturityLevel ?level ; dsm:inDimension ?dimension }
+          { select (?t as ?level) (min(?n) as ?lvlnum) where {
+              graph npa:graph { ?lnp2 npx:introduces ?t ; np:hasAssertion ?la2 }
+              graph ?la2 { ?t a dsm:MaturityLevel ; dsm:levelNumber ?n }
+          } group by ?t }
+          { select (?t as ?dimension) (min(?c) as ?dimcode) where {
+              graph npa:graph { ?dnp npx:introduces ?t ; np:hasAssertion ?da }
+              graph ?da { ?t a dsm:MaturityDimension ; dsm:dimensionCode ?c }
+          } group by ?t }
+          bind(if(?lvlnum = 0,
+                  if(?val = dsm:NotSatisfied, 1, 0),
+                  if(?val = dsm:Satisfied, 1, if(?val = dsm:NotApplicable, 1, 0))) as ?okv)
+        } group by ?assessment ?dimcode ?lvlnum
+      }
+      bind(150 + ?lvlnum * 86 as ?x)
+      bind(26 + if(?dimcode = \"R\", 0, if(?dimcode = \"C\", 1, 2)) * 48 as ?y)
+      bind(xsd:double(?nok) / xsd:double(?total) as ?ratio)
+      bind(if(?ratio >= 1.0, \"#2e7d32\",
+           if(?ratio >= 0.75, \"#66bb6a\",
+           if(?ratio >= 0.5, \"#c5e1a5\",
+           if(?ratio > 0.0, \"#ffe082\", \"#ef9a9a\")))) as ?fill)
+      bind(if(?ratio >= 1.0, \"#ffffff\", \"#22292f\") as ?tcol)
+      bind(concat(
+        '<rect x=\"', str(?x + 1), '\" y=\"', str(?y + 1),
+        '\" width=\"84\" height=\"46\" rx=\"3\" fill=\"', ?fill,
+        '\" stroke=\"#ffffff\" stroke-width=\"2\"></rect>',
+        '<text x=\"', str(?x + 43), '\" y=\"', str(?y + 31),
+        '\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"16\" font-weight=\"bold\" fill=\"',
+        ?tcol, '\">', str(?nok), '/', str(?total), '</text>') as ?cell)
+    } group by ?assessment
+  }
+  bind(if(?achievedNum >= 1,
+      concat('<rect x=\"236\" y=\"178\" width=\"', str(?achievedNum * 86),
+             '\" height=\"14\" rx=\"2\" fill=\"#a5d6a7\"></rect>',
+             '<text x=\"', str(236 + ?achievedNum * 43),
+             '\" y=\"189\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"10\" fill=\"#22292f\">reached</text>'),
+      '') as ?band)
+  bind(concat(
+    '<svg viewBox=\"0 0 666 228\" width=\"866\" height=\"296\" preserveAspectRatio=\"xMinYMin meet\">',
+    '<text x=\"193\" y=\"18\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"12\" fill=\"#22292f\">Level 0</text>',
+    '<text x=\"279\" y=\"18\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"12\" fill=\"#22292f\">Level 1</text>',
+    '<text x=\"365\" y=\"18\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"12\" fill=\"#22292f\">Level 2</text>',
+    '<text x=\"451\" y=\"18\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"12\" fill=\"#22292f\">Level 3</text>',
+    '<text x=\"537\" y=\"18\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"12\" fill=\"#22292f\">Level 4</text>',
+    '<text x=\"623\" y=\"18\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"12\" fill=\"#22292f\">Level 5</text>',
+    '<text x=\"142\" y=\"56\" text-anchor=\"end\" font-family=\"sans-serif\" font-size=\"12\" fill=\"#22292f\">Representation &amp; format</text>',
+    '<text x=\"142\" y=\"104\" text-anchor=\"end\" font-family=\"sans-serif\" font-size=\"12\" fill=\"#22292f\">Content &amp; context</text>',
+    '<text x=\"142\" y=\"152\" text-anchor=\"end\" font-family=\"sans-serif\" font-size=\"12\" fill=\"#22292f\">Hosting environment</text>',
+    ?cells, ?band,
+    '<rect x=\"150\" y=\"196\" width=\"12\" height=\"10\" fill=\"#ef9a9a\"></rect>',
+    '<rect x=\"206\" y=\"196\" width=\"12\" height=\"10\" fill=\"#ffe082\"></rect>',
+    '<rect x=\"262\" y=\"196\" width=\"12\" height=\"10\" fill=\"#c5e1a5\"></rect>',
+    '<rect x=\"318\" y=\"196\" width=\"12\" height=\"10\" fill=\"#66bb6a\"></rect>',
+    '<rect x=\"374\" y=\"196\" width=\"12\" height=\"10\" fill=\"#2e7d32\"></rect>',
+    '<text x=\"166\" y=\"205\" font-family=\"sans-serif\" font-size=\"10\" fill=\"#22292f\">none</text>',
+    '<text x=\"222\" y=\"205\" font-family=\"sans-serif\" font-size=\"10\" fill=\"#22292f\">some</text>',
+    '<text x=\"278\" y=\"205\" font-family=\"sans-serif\" font-size=\"10\" fill=\"#22292f\">half</text>',
+    '<text x=\"334\" y=\"205\" font-family=\"sans-serif\" font-size=\"10\" fill=\"#22292f\">most</text>',
+    '<text x=\"390\" y=\"205\" font-family=\"sans-serif\" font-size=\"10\" fill=\"#22292f\">all</text>',
+    '<text x=\"150\" y=\"222\" font-family=\"sans-serif\" font-size=\"10\" fill=\"#5c6670\">',
+    'Each cell: indicators met / total. At level 0, which lists absence indicators, ',
+    '&quot;met&quot; means the absence does not hold.',
+    '</text>',
+    '</svg>') as ?svg)
+  bind(concat(\"Reached Level \", str(?achievedNum), \" of 5\") as ?title)
+  bind(\"^\" as ?np_label)
+}
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-07T07:49:30Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-maturity-grid-of-a-dataset;
+    rdfs:label "Get the maturity grid of a dataset";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "K7++dKDeM8KocEOE0cbreUhtt0E5oYhGUoVDFOaj2qFZ8ytVcUE1qVJF5H80IFo/IQTFS3dBC5P//2cTrrJcmBeeq/MA+KpWY9VY8qAnuhefC17zdk1nZfbucAG3duCLaLiI5S7Etbq7COEzwCnzWZTexMTePqo9WlVeSQQuxtY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

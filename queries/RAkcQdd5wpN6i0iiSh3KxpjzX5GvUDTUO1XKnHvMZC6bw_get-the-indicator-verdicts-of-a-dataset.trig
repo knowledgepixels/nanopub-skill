@@ -1,0 +1,138 @@
+@prefix this: <https://w3id.org/np/RAkcQdd5wpN6i0iiSh3KxpjzX5GvUDTUO1XKnHvMZC6bw> .
+@prefix sub: <https://w3id.org/np/RAkcQdd5wpN6i0iiSh3KxpjzX5GvUDTUO1XKnHvMZC6bw/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-indicator-verdicts-of-a-dataset a grlc:grlc-query;
+    dct:description "Returns every maturity indicator verdict recorded for one dataset, one row per indicator, with the indicator code and requirement, the maturity level it belongs to, the outcome of the evaluation and the evidence or reasoning behind it. Only the newest non-invalidated version of each assessment, verdict and indicator definition is used. Results are ordered by indicator code, which groups them by maturity level and dimension.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the indicator verdicts of a dataset";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix dsm: <https://w3id.org/spaces/fairplus/r/dsm/>
+select ?code ?indicator ?indicator_label ?level ?level_label ?outcome ?outcome_label ?justification
+       ?assessed (str(?np) as ?override_target) ?np ?np_label
+where {
+  {
+    select ?assessment (max(?rank) as ?maxrank) where {
+      values ?_dataset_multi_iri {}
+      graph npa:graph {
+        ?anp0 npx:hasNanopubType dsm:MaturityAssessment ;
+              npa:hasValidSignatureForPublicKeyHash ?apk ;
+              dct:created ?ad1 ; npx:introduces ?assessment ; np:hasAssertion ?aa1 .
+        filter not exists { ?ainv npx:invalidates ?anp0 ; npa:hasValidSignatureForPublicKeyHash ?apk . }
+      }
+      graph ?aa1 { ?assessment dsm:assessedDataset ?_dataset_multi_iri . }
+      bind(concat(str(?ad1), \"|\", str(?anp0)) as ?rank)
+    } group by ?assessment
+  }
+  graph npa:graph {
+    ?anp npx:hasNanopubType dsm:MaturityAssessment ;
+         dct:created ?ad2 ; npx:introduces ?assessment ; np:hasAssertion ?aag .
+  }
+  filter(concat(str(?ad2), \"|\", str(?anp)) = ?maxrank)
+  graph ?aag { ?assessment dsm:assessmentDate ?assessed . }
+  {
+    select ?verdict (max(?vrank) as ?vmax) where {
+      graph npa:graph {
+        ?vn npx:hasNanopubType dsm:IndicatorVerdict ;
+            npa:hasValidSignatureForPublicKeyHash ?vpk ;
+            dct:created ?vd1 ; npx:introduces ?verdict .
+        filter not exists { ?vi npx:invalidates ?vn ; npa:hasValidSignatureForPublicKeyHash ?vpk . }
+      }
+      bind(concat(str(?vd1), \"|\", str(?vn)) as ?vrank)
+    } group by ?verdict
+  }
+  graph npa:graph {
+    ?np npx:hasNanopubType dsm:IndicatorVerdict ;
+        dct:created ?vd2 ; npx:introduces ?verdict ; np:hasAssertion ?va .
+  }
+  filter(concat(str(?vd2), \"|\", str(?np)) = ?vmax)
+  graph ?va {
+    ?assessment dsm:hasVerdict ?verdict .
+    ?verdict dsm:forIndicator ?indicator ; dsm:verdictValue ?outcome .
+  }
+  optional { graph ?va { ?verdict dsm:verdictJustification ?just } }
+  {
+    select ?indicator (max(?irank) as ?imax) where {
+      graph npa:graph {
+        ?in0 npx:hasNanopubType dsm:MaturityIndicator ;
+             npa:hasValidSignatureForPublicKeyHash ?ipk ;
+             dct:created ?id1 ; npx:introduces ?indicator .
+        filter not exists { ?ii npx:invalidates ?in0 ; npa:hasValidSignatureForPublicKeyHash ?ipk . }
+      }
+      bind(concat(str(?id1), \"|\", str(?in0)) as ?irank)
+    } group by ?indicator
+  }
+  graph npa:graph {
+    ?inp npx:hasNanopubType dsm:MaturityIndicator ;
+         dct:created ?id2 ; npx:introduces ?indicator ; np:hasAssertion ?ia .
+  }
+  filter(concat(str(?id2), \"|\", str(?inp)) = ?imax)
+  graph ?ia { ?indicator dsm:indicatorCode ?code ; rdfs:label ?indicator_label ; dsm:hasMaturityLevel ?level }
+  optional {
+    { select (?t as ?level) (min(?tl) as ?llab) where {
+        graph npa:graph { ?lnp npx:introduces ?t ; np:hasAssertion ?la }
+        graph ?la { ?t a dsm:MaturityLevel ; rdfs:label ?tl }
+    } group by ?t }
+  }
+  optional {
+    { select (?v as ?outcome) (min(?vl) as ?olab) where {
+        graph npa:graph { ?onp npx:introduces ?v ; np:hasAssertion ?oa }
+        graph ?oa { ?v a dsm:VerdictValue ; rdfs:label ?vl }
+    } group by ?v }
+  }
+  bind(coalesce(?llab, \"\") as ?level_label)
+  bind(coalesce(?olab, \"\") as ?outcome_label)
+  bind(coalesce(?just, \"\") as ?justification)
+  bind(\"^\" as ?np_label)
+}
+order by ?code
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-07T06:59:32Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-indicator-verdicts-of-a-dataset;
+    rdfs:label "Get the indicator verdicts of a dataset";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "fLiJWAExaT4ntwGjDMroylYA03Ec4L0wyrYSa4FegYqGcPv/vuxJXjkVm06CxwTennYxHtDzLmDRBpdSs9x5CEGoehXjinmGPMUFkZ6j13eSCUPZfSeX4kbO4R9H4aKv/gW7EkIrK5+Id5wbKLO8kBFTAVnarC8CdYhMB4L6nmg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

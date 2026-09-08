@@ -1,0 +1,137 @@
+@prefix this: <https://w3id.org/np/RAQmeNR10dVcLWVe0WyZKbYG-Sonb909aoKFMH8e-Zujk> .
+@prefix sub: <https://w3id.org/np/RAQmeNR10dVcLWVe0WyZKbYG-Sonb909aoKFMH8e-Zujk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix vivo: <http://vivoweb.org/ontology/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "further details - the faculty, department or subject the degree was taken in" .
+  
+  dct:issued rdfs:label "was awarded in - the year the degree was conferred" .
+  
+  dct:type rdfs:label "is of kind - the kind of degree this is, as a Wikidata item" .
+  
+  vivo:AwardedDegree rdfs:label "awarded degree - an academic degree conferred on somebody by an institution" .
+  
+  rdf:type rdfs:label "is a - asserts that the given thing (left) belongs to the given class (right)" .
+  
+  rdfs:label rdfs:label "is called - connects an identifier to a human-readable name for it" .
+  
+  rdfs:seeAlso rdfs:label "is further explained at - connects this degree to the thesis or another document about it" .
+  
+  wd:P512 rdfs:label "was awarded the degree - connects a person to an academic degree they were awarded" .
+  
+  wd:P69 rdfs:label "was awarded by - the institution that conferred the degree" .
+  
+  sub:degree a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name for this degree, used as URI suffix, e.g. doctorate-uzh-2010" .
+  
+  sub:degreeKind a nt:GuidedChoicePlaceholder;
+    rdfs:label "the kind of degree on Wikidata, if one exists, e.g. doctorate; repeat it to also state an equivalent degree, such as a Diplom that is equivalent to an MSc (optional)";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:degreeName a nt:LiteralPlaceholder;
+    rdfs:label "the name of the degree, including the institution, e.g. Doctorate in Informatics from the University of Zurich" .
+  
+  sub:faculty a nt:LiteralPlaceholder;
+    rdfs:label "the faculty, department or subject the degree was taken in (optional)" .
+  
+  sub:holder a nt:AgentPlaceholder;
+    rdfs:label "who was awarded the degree";
+    nt:hasDefaultValue nt:CREATOR .
+  
+  sub:institution a nt:GuidedChoicePlaceholder;
+    rdfs:label "the institution that conferred the degree";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:st0 rdf:object vivo:AwardedDegree;
+    rdf:predicate rdf:type;
+    rdf:subject sub:degree .
+  
+  sub:st1 rdf:object sub:degreeName;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:degree .
+  
+  sub:st2 rdf:object sub:degree;
+    rdf:predicate wd:P512;
+    rdf:subject sub:holder .
+  
+  sub:st3 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:degreeKind;
+    rdf:predicate dct:type;
+    rdf:subject sub:degree .
+  
+  sub:st4 rdf:object sub:institution;
+    rdf:predicate wd:P69;
+    rdf:subject sub:degree .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:faculty;
+    rdf:predicate dct:description;
+    rdf:subject sub:degree .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:thesis;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:degree .
+  
+  sub:st7 rdf:object sub:year;
+    rdf:predicate dct:issued;
+    rdf:subject sub:degree .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Records an academic degree conferred on somebody, such as a doctorate or a master's degree. The degree is modelled as a first-class thing (a VIVO awarded degree), so that the conferring institution, the year, the faculty or subject, and a link to the thesis can all be attached to it. This is about the degree itself, not about the period of study, which is better recorded as a position.";
+    rdfs:label "Declaring an academic degree awarded";
+    nt:hasNanopubLabelPattern "${degreeName}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6, sub:st7;
+    nt:hasTag "CV" .
+  
+  sub:thesis a nt:ExternalUriPlaceholder;
+    rdfs:label "a link to the thesis or dissertation (optional)" .
+  
+  sub:year a nt:LiteralPlaceholder;
+    rdfs:label "the year the degree was conferred, e.g. 2010";
+    nt:hasDatatype xsd:gYear;
+    nt:hasRegex "[0-9]{4}" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-28T17:47:45Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    rdfs:label "Declaring an academic degree awarded";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "btaEEiae77Jl7jJ5Cj07l4R1jrawJItZECrd8ZuqKwcLWRfq4kWzk/6066IcymltPhJdd/rnmSHk39+dSitNecEKtTsdfENiN65uDqRz78SGkhP+olCRZOoBoflrfyfkFlinwv70LAWHIclGS1o6MjCHvzEF2VgYUg22Z0+6ggA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

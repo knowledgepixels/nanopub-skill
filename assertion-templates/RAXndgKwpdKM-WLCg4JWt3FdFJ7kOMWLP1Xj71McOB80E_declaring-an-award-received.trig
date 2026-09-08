@@ -1,0 +1,128 @@
+@prefix this: <https://w3id.org/np/RAXndgKwpdKM-WLCg4JWt3FdFJ7kOMWLP1Xj71McOB80E> .
+@prefix sub: <https://w3id.org/np/RAXndgKwpdKM-WLCg4JWt3FdFJ7kOMWLP1Xj71McOB80E/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix vivo: <http://vivoweb.org/ontology/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:issued rdfs:label "was conferred in - the year in which the award was given" .
+  
+  dct:type rdfs:label "is of kind - the kind of award this is, as a Wikidata item" .
+  
+  vivo:AwardReceipt rdfs:label "award receipt - the fact of a person receiving a particular award on a particular occasion" .
+  
+  rdf:type rdfs:label "is a - asserts that the given thing (left) belongs to the given class (right)" .
+  
+  rdfs:label rdfs:label "is called - connects an identifier to a human-readable name for it" .
+  
+  wd:P1027 rdfs:label "was conferred by - the event or organization that gave the award" .
+  
+  wd:P166 rdfs:label "received the award - connects a person to an award they received" .
+  
+  wd:P1686 rdfs:label "was given for - the paper or other work the award was given for" .
+  
+  sub:awardKind a nt:GuidedChoicePlaceholder;
+    rdfs:label "the kind of award on Wikidata, if one exists, e.g. Best Paper Award (optional)";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:awardName a nt:LiteralPlaceholder;
+    rdfs:label "the name of the award, e.g. Best Paper Award" .
+  
+  sub:conferrer a nt:GuidedChoicePlaceholder;
+    rdfs:label "the event or organization that conferred the award";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:receipt a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name for this award receipt, used as URI suffix, e.g. best-paper-ekaw-2016" .
+  
+  sub:recipient a nt:AgentPlaceholder;
+    rdfs:label "who received the award - add one line per recipient, e.g. all authors of an awarded paper";
+    nt:hasDefaultValue nt:CREATOR .
+  
+  sub:st0 rdf:object vivo:AwardReceipt;
+    rdf:predicate rdf:type;
+    rdf:subject sub:receipt .
+  
+  sub:st1 rdf:object sub:awardName;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:receipt .
+  
+  sub:st2 a nt:RepeatableStatement;
+    rdf:object sub:receipt;
+    rdf:predicate wd:P166;
+    rdf:subject sub:recipient .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:awardKind;
+    rdf:predicate dct:type;
+    rdf:subject sub:receipt .
+  
+  sub:st4 rdf:object sub:conferrer;
+    rdf:predicate wd:P1027;
+    rdf:subject sub:receipt .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:work;
+    rdf:predicate wd:P1686;
+    rdf:subject sub:receipt .
+  
+  sub:st6 rdf:object sub:year;
+    rdf:predicate dct:issued;
+    rdf:subject sub:receipt .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Records that somebody received an award, such as a best paper award at a conference or a prize from an institution. The award receipt is modelled as a first-class thing (a VIVO award receipt), so that the year, the conferring event or organization, and the work the award was given for can all be attached to it. Link the award to a Wikidata item where one exists, so that the same kind of award is recognizable across people and venues; leave that field empty for awards that have no Wikidata entry. An award can have several recipients: a best paper award is received jointly by all authors of the paper, so the recipient statement can be repeated, all pointing at the same award receipt.";
+    rdfs:label "Declaring an award received";
+    nt:hasNanopubLabelPattern "${awardName} received by ${recipient}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6;
+    nt:hasTag "CV" .
+  
+  sub:work a nt:ExternalUriPlaceholder;
+    rdfs:label "the paper or other work the award was given for, as a DOI or other URL (optional)" .
+  
+  sub:year a nt:LiteralPlaceholder;
+    rdfs:label "the year the award was conferred, e.g. 2016";
+    nt:hasDatatype xsd:gYear;
+    nt:hasRegex "[0-9]{4}" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-28T12:10:04Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    rdfs:label "Declaring an award received";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "IsZGMI9yWCOrF3NrCxKodte+KyokGvrhhcHC6KyFoexZrpj83bzb7ugxN1oH0IIxwRjxGlHvFzOcJ3vSXVtke9krcmzhAiUw1KUknCZXVC6pjaPpH/E+cNX1qOGhHk8fffgYpUFv6jyCJCaELpcGJpjphiVIRn8dzry4C1AreSo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

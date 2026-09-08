@@ -1,0 +1,88 @@
+@prefix this: <https://w3id.org/np/RA5GqiovvJhzhYaCayDco_0RLFwgV2dy5WZVcMhJfiNXg> .
+@prefix sub: <https://w3id.org/np/RA5GqiovvJhzhYaCayDco_0RLFwgV2dy5WZVcMhJfiNXg/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-nanosuggestion-comments a grlc:grlc-query;
+    dct:description "Returns the whole comment thread of a nanosuggestion: every Nanoarguments content node that replies to it via as:inReplyTo at any depth, with its text, author and date, oldest first. Replies to replies show what they are replying to.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the comments on a nanosuggestion";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/29e2f808e4864fca4930806dee70c4a32df54a63ee90156244910a47d3443736>;
+    grlc:sparql """
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix schema: <https://schema.org/>
+prefix as: <https://www.w3.org/ns/activitystreams#>
+
+select distinct ?comment ?by ?by_label ?date ?in_reply_to ?reply_target ?np where {
+  # The thread: everything replying to this nanosuggestion, at any depth. Kept in a
+  # sub-select so the optimizer cannot start from the unconstrained \"?c a schema:Statement\"
+  # pattern, which scans every statement on the network (RDF4J: \"Queue full\").
+  # distinct here and in the outer select: the repo holds each nanopub's triples in
+  # several graph contexts, so the path join multiplies rows without it.
+  { select distinct ?c ?parent ?root where {
+      ?c as:inReplyTo+ ?_suggestion_iri .
+      ?c as:inReplyTo ?parent .
+      bind(?_suggestion_iri as ?root)
+  } }
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey ; np:hasAssertion ?a ; dct:created ?date .
+    filter not exists { ?npi npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    optional { ?np dct:creator ?by }
+  }
+  graph ?a { ?c a schema:Statement ; rdf:value ?comment . }
+  bind(?c as ?reply_target)
+  optional { ?by foaf:name ?by_label }
+  optional { ?parent rdf:value ?pv }
+  bind(if(?parent = ?root, '', coalesce(substr(str(?pv), 1, 60), str(?parent))) as ?in_reply_to)
+}
+order by ?date
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-26T13:56:45Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-nanosuggestion-comments;
+    npx:supersedes <https://w3id.org/np/RAsMIUaMLFcpOkN6oJxtKNntUfqDtOZ-ofqqB7SXnrHVc>;
+    rdfs:label "Get the comments on a nanosuggestion";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "lmgLkP3+hQiYZoE2iHx6ruuOXdg8X7z+lLRA2Cfhk1hZ34Y0SGl1rxEGGHTbz8t0eduFGGOjuosJAfoDy6Fip+lBn5kODPSJ8cRMcElVN3yPiNUSoQuBJ8LdgJZ0wGJn++k9rI9AnsCLnxrMOCmRMhINxdDLA3jYTnIgXk09DoM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

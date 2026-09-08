@@ -1,0 +1,535 @@
+@prefix this: <https://w3id.org/np/RA_gQPTtDW8dSBJGKsw-Il9or3aeoUcDI1OHRepZeKiis> .
+@prefix sub: <https://w3id.org/np/RA_gQPTtDW8dSBJGKsw-Il9or3aeoUcDI1OHRepZeKiis/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-class-landscape-svg a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Renders the classes of the given ontology or vocabulary as an inline SVG figure: an Euler ('Venn-style') diagram in which every class is one small dot, positioned by which of four sets it belongs to. The four sets are: whether the class sits in a chemical group (it declares an rdfs:subClassOf other than the vocabulary's top class peh:BioChemEntity), whether it is a metabolite of another entity (peh:isMetaboliteOf), whether it is an isomer of another entity (peh:isIsomerOf), and whether it has a role (obo:RO_0000087). Metabolite and isomer are disjoint in this data and every isomer is also in a chemical group, so the isomer set is drawn nested inside the chemical-group set; the sets are drawn as overlapping rounded rectangles rather than circles, so that each resulting region holds an exactly aligned grid of dots, and a class in none of the four sets sits in the surrounding 'universe' frame. Within the chemical-group set and within the role set the members are further divided into labelled sub-boxes, one per chemical group and one per role, instead of being colour-coded: this is possible because in this data a class has at most one role and (with one exception) at most one chemical group, so groups and roles each partition their set. The sub-boxes are ordered by size, the seven largest chemical groups get their own box and the remainder share an 'other groups' box, and every box carries its own count. A class that is in a chemical group and at the same time is a metabolite or an isomer or has a role belongs both in an overlap region and in its group's box; it is therefore drawn twice, once in each place, in the colour of its overlap region and with a thin line of the same colour connecting the two dots. The same applies to a class that has a role and is also a metabolite or in a chemical group, and a class in both a group and a role is drawn three times. Because of this the count on each sub-box is the full membership of that chemical group or role, not just the part of it that lies outside the other sets. Role identifiers are normalised to a CHEBI:NNNNN key, so that the same role expressed as an obolibrary or an identifiers.org URI counts once, and their display names are supplied by a lookup table inside the query, falling back to the bare CHEBI identifier for a role that is not listed there. Dot colour carries no extra information: it just marks which region the dot is in. Every dot is a link to the class's part page and carries an SVG title element, so hovering shows the class label together with its group, its metabolite or isomer link and its role, and clicking opens it. The class set is exactly the one shown by the 'Get the approved classes of an ontology from space members' query and the corresponding view: the latest non-invalidated definition per class, published by an admin, maintainer or member of the maintaining space, not withdrawn, and approved either explicitly or via the auto-approved helper role. Positions are computed as absolute coordinates from rank sub-selects (the number of same-cell classes sorting before this one, by label then URI), never from the order of a group_concat, which RDF4J does not preserve; the rank is taken within the cell a dot is drawn in, which for a sub-box means within that box rather than within the set. The box order is looked up from single-row string tables rather than joined, because an OPTIONAL around a sub-select does not reliably left-join on a key bound outside it. The figure carries no heading of its own, since the view it is shown in supplies the title, and its width is given as a percentage so that it fills the width of the panel it is shown in. It is intended for a gen:SvgView, which sanitises and embeds the markup; the SVG uses only the static element subset that survives that sanitisation.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the class landscape of an ontology as SVG";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/e8cc5bb29ec5597303f8f101c65c545dc124ee0df68ce733764b03adc3237184>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix peh: <https://w3id.org/peh/terms/>
+prefix obo: <http://purl.obolibrary.org/obo/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+select ?svg where {
+  {
+    select (group_concat(?cellBlock; separator=\"\") as ?body)
+           (group_concat(?cellLines; separator=\"\") as ?lines)
+           (sum(?nc) as ?total)
+           (sum(if(contains(?psets, \"G\"), ?nc, 0)) as ?nGroup)
+           (sum(if(contains(?psets, \"M\"), ?nc, 0)) as ?nMet)
+           (sum(if(contains(?psets, \"R\"), ?nc, 0)) as ?nRole) where {
+      {
+        select ?cell ?cellLabel ?isBox ?bx ?by ?bw ?bh ?x0 ?y0 ?cols
+               (count(*) as ?ccount) (sum(if(?slot = \"P\", 1, 0)) as ?nc)
+               (max(if(?slot = \"P\", ?sets, \"\")) as ?psets)
+               (group_concat(?dot; separator=\"\") as ?dots)
+               (group_concat(?lineMarkup; separator=\"\") as ?cellLines) where {
+          {
+            select ?class ?label ?sets ?groupKey ?roleKey ?parentLabel ?gi ?cellKey ?cellG ?cellR
+                   (sum(if(?ocell = ?cellKey && ?osortkey <= ?sortkey, 1, 0)) - 1 as ?rankP)
+                   (sum(if(?ocell = ?cellG && ?osortkey <= ?sortkey, 1, 0)) - 1 as ?rankG)
+                   (sum(if(?ocell = ?cellR && ?osortkey <= ?sortkey, 1, 0)) - 1 as ?rankR) where {
+              { select ?class ?label (?sets_ as ?sets) (?groupKey_ as ?groupKey) (?roleKey_ as ?roleKey)
+       (?parentLabel_ as ?parentLabel) (min(?sortkey_) as ?sortkey) where {
+  values ?_ontology_multi_iri {}
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+    select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+      graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+      values ?_ontology_multi_iri {}
+      graph ?stateG {
+        ?_ontology_multi_iri npa:isMaintainedBy? ?space .
+        ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?rt .
+        filter(?rt in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+        ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+      }
+    }
+  }
+  graph npa:graph {
+    ?np npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pubkey ;
+        dct:created ?date ; npx:introduces ?class ; np:hasAssertion ?a .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+  }
+  filter(contains(?memberPubkeys, ?pubkey))
+  graph ?a { ?class dct:isPartOf|dct:partOf ?_ontology_multi_iri . }
+  filter not exists { graph ?a { ?class a gen:WithdrawnTerm } }
+  filter not exists {
+    graph npa:graph {
+      ?np2 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 ;
+           dct:created ?date2 ; npx:introduces ?class ; np:hasAssertion ?a2 .
+      filter not exists { ?np2x npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+    }
+    filter(contains(?memberPubkeys, ?pubkey2))
+    graph ?a2 { ?class dct:isPartOf|dct:partOf ?_ontology_multi_iri . }
+    filter(?date2 > ?date || (?date2 = ?date && str(?np2) > str(?np)))
+  }
+  {
+    select (group_concat(distinct ?apV; separator=\" \") as ?approvedNps)
+           (group_concat(distinct ?disV; separator=\" \") as ?disapprovedNps) where {
+      {
+        select ?vTarget (max(concat(str(?vDate), \">\", str(?vNp), \">\", ?vMark)) as ?vWin) where {
+          values ?_ontology_multi_iri {}
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            select (group_concat(?vpk; separator=\" \") as ?vMemberPubkeys) where {
+              graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?vStateG . }
+              values ?_ontology_multi_iri {}
+              graph ?vStateG {
+                ?_ontology_multi_iri npa:isMaintainedBy? ?vSpace .
+                ?vRi a gen:RoleInstantiation ; npa:forSpace ?vSpace ; npa:forAgent ?vMember ;
+                     npa:hasRoleType ?vRt .
+                filter(?vRt in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                ?vAcct a npa:AccountState ; npa:agent ?vMember ; npa:pubkey ?vpk .
+              }
+            }
+          }
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/full> {
+            select distinct ?vTarget ?vNp ?vDate ?vPubkey ?vMark where {
+              graph npa:graph {
+                ?vTarget npx:hasNanopubType owl:Class ; npx:signedBy ?targetAgent .
+                ?vNp npx:signedBy ?vAgent ; npa:hasValidSignatureForPublicKeyHash ?vPubkey ;
+                     dct:created ?vDate ; np:hasAssertion ?vA .
+                filter not exists { ?vInv npx:invalidates ?vNp ; npa:hasValidSignatureForPublicKeyHash ?vPubkey . }
+              }
+              graph ?vA { ?vAgent ?vPred ?vTarget . }
+              values ?vPred { npx:approvesOf npx:disapprovesOf }
+              filter(?vAgent != ?targetAgent)
+              bind(if(?vPred = npx:approvesOf, \"a\", \"d\") as ?vMark)
+            }
+          }
+          filter(contains(?vMemberPubkeys, ?vPubkey))
+        } group by ?vTarget
+      }
+      bind(if(strends(?vWin, \"a\"), str(?vTarget), \"\") as ?apV)
+      bind(if(strends(?vWin, \"d\"), str(?vTarget), \"\") as ?disV)
+    }
+  }
+  {
+    select (sample(?helperPubkeys_) as ?helperPubkeys) where {
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+        select (group_concat(?hpk; separator=\" \") as ?helperPubkeys_) where {
+          graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?hStateG . }
+          values ?_ontology_multi_iri {}
+          graph ?hStateG {
+            ?_ontology_multi_iri npa:isMaintainedBy? ?hSpace .
+            ?hRi a gen:RoleInstantiation ; npa:forSpace ?hSpace ; npa:forAgent ?hAgent ;
+                 gen:hasRole <https://w3id.org/np/RASGFRI3F5TtJ4GA4Yaed3esIpTF3pDyJLbpuvsqHzIXc/autoApprovedHelperRole> .
+            ?hAcct a npa:AccountState ; npa:agent ?hAgent ; npa:pubkey ?hpk .
+          }
+        }
+      }
+    }
+  }
+  bind(contains(concat(\" \", ?approvedNps, \" \"), concat(\" \", str(?np), \" \")) as ?explicitApproved)
+  bind(contains(concat(\" \", ?disapprovedNps, \" \"), concat(\" \", str(?np), \" \")) as ?explicitDisapproved)
+  bind(contains(?helperPubkeys, ?pubkey) as ?isAutoApproved)
+  filter(?explicitApproved || (?isAutoApproved && !?explicitDisapproved))
+  optional { graph ?a { ?class rdfs:label ?label . filter(lang(?label) = \"\") } }
+  optional { select ?class (min(str(?p)) as ?parent) where {
+      values ?_ontology_multi_iri {}
+      graph npa:graph { ?pnp npx:hasNanopubType owl:Class ; npx:introduces ?class ; np:hasAssertion ?pa . }
+      graph ?pa { ?class dct:isPartOf|dct:partOf ?_ontology_multi_iri ; rdfs:subClassOf ?p .
+                  filter(?p != peh:BioChemEntity) }
+    } group by ?class }
+  bind(bound(?parent) as ?g)
+  bind(exists { graph ?a { ?class peh:isMetaboliteOf|peh:isIsomerOf ?y } } as ?l)
+  bind(exists { graph ?a { ?class obo:RO_0000087 ?ro } } as ?r)
+  bind(concat(if(?g,\"1\",\"0\"), if(?l,\"1\",\"0\"), if(?r,\"1\",\"0\")) as ?region)
+  optional { graph ?a { ?class obo:RO_0000087 ?roleIri . }
+             bind(concat(\"CHEBI:\", replace(replace(str(?roleIri), \"^.*[/#]\", \"\"), \"^CHEBI[_:]\", \"\")) as ?roleKey_) }
+  optional {
+    select ?class (min(concat(str(?p), \" ~|~ \", coalesce(?pl, \"\"))) as ?parentCombo) where {
+      values ?_ontology_multi_iri {}
+      graph npa:graph { ?pnp npx:hasNanopubType owl:Class ; npx:introduces ?class ; np:hasAssertion ?pa .
+        filter not exists { ?pgx npx:invalidates ?pnp } }
+      graph ?pa { ?class dct:isPartOf|dct:partOf ?_ontology_multi_iri ; rdfs:subClassOf ?p .
+                  filter(?p != peh:BioChemEntity) }
+      optional {
+        graph npa:graph { ?plnp npx:hasNanopubType owl:Class ; npx:introduces ?p ; np:hasAssertion ?pla . }
+        graph ?pla { ?p rdfs:label ?pl . filter(lang(?pl) = \"\") }
+      }
+    } group by ?class
+  }
+  bind(strbefore(?parentCombo, \" ~|~ \") as ?groupKey_)
+  bind(strafter(?parentCombo, \" ~|~ \") as ?parentLabel_)
+  bind(bound(?parentCombo) as ?fg)
+  bind(exists { graph ?a { ?class peh:isMetaboliteOf ?y } } as ?fm)
+  bind(exists { graph ?a { ?class peh:isIsomerOf ?z } } as ?fi)
+  bind(bound(?roleKey_) as ?fr)
+  bind(if(!?fg && !?fm && !?fi && !?fr, \"\",
+       if(!?fg && ?fm && ?fr, \"MR\",
+       if(!?fg && ?fm, \"M\",
+       if(!?fg && ?fr, \"R\",
+       if(?fg && ?fi, \"GI\",
+       if(?fg && ?fm, \"GM\",
+       if(?fg && ?fr, \"GR\", \"G\"))))))) as ?sets_)
+  bind(concat(lcase(coalesce(?label, \"zzzz\")), \"~\", str(?class)) as ?sortkey_)
+} group by ?class ?label ?sets_ ?groupKey_ ?roleKey_ ?parentLabel_ }
+              { select (group_concat(concat(\"[\", ?k, \">\", str(?idx), \"]\"); separator=\"\") as ?gTab) where { select ?k (count(?k2) - 1 as ?idx) where {
+      { select ?k (count(distinct ?lc) as ?kn) where {
+      values ?_ontology_multi_iri {}
+      graph npa:graph { ?lnp npx:hasNanopubType owl:Class ; npx:introduces ?lc ; np:hasAssertion ?la .
+        filter not exists { ?lx npx:invalidates ?lnp } }
+      graph ?la { ?lc dct:isPartOf|dct:partOf ?_ontology_multi_iri . }
+      graph ?la { ?lc rdfs:subClassOf ?lp . filter(?lp != peh:BioChemEntity) }
+      filter not exists { graph ?la { ?lc peh:isMetaboliteOf ?ly } }
+      filter not exists { graph ?la { ?lc peh:isIsomerOf ?lz } }
+      filter not exists { graph ?la { ?lc obo:RO_0000087 ?lro2 } }
+      bind(str(?lp) as ?k)
+    } group by ?k }
+      { select ?k2 (count(distinct ?lc2) as ?kn2) where {
+      values ?_ontology_multi_iri {}
+      graph npa:graph { ?lnp2 npx:hasNanopubType owl:Class ; npx:introduces ?lc2 ; np:hasAssertion ?la2 .
+        filter not exists { ?lx2 npx:invalidates ?lnp2 } }
+      graph ?la2 { ?lc2 dct:isPartOf|dct:partOf ?_ontology_multi_iri . }
+      graph ?la2 { ?lc2 rdfs:subClassOf ?lp9 . filter(?lp9 != peh:BioChemEntity) }
+      filter not exists { graph ?la2 { ?lc2 peh:isMetaboliteOf ?ly2 } }
+      filter not exists { graph ?la2 { ?lc2 peh:isIsomerOf ?lz2 } }
+      filter not exists { graph ?la2 { ?lc2 obo:RO_0000087 ?lro92 } }
+      bind(str(?lp9) as ?k2)
+    } group by ?k2 }
+      filter(?kn2 > ?kn || (?kn2 = ?kn && ?k2 <= ?k))
+    } group by ?k } }
+              bind(coalesce(xsd:integer(strbefore(strafter(?gTab, concat(\"[\", ?groupKey, \">\")), \"]\")), 99) as ?gi0)
+              bind(if(?gi0 > 6, 7, ?gi0) as ?gi)
+              bind(concat(\"G#\", str(?gi)) as ?cellG)
+              bind(concat(\"R#\", coalesce(?roleKey, \"\")) as ?cellR)
+              bind(if(?sets = \"R\", ?cellR, if(?sets = \"G\", ?cellG, ?sets)) as ?cellKey)
+              {
+                select (?ocellK as ?ocell) (?sortkey as ?osortkey) where {
+                  { select ?class (?sets_ as ?sets) (?groupKey_ as ?groupKey) (?roleKey_ as ?roleKey)
+       (min(?sortkey_) as ?sortkey) where {
+  values ?_ontology_multi_iri {}
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+    select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+      graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+      values ?_ontology_multi_iri {}
+      graph ?stateG {
+        ?_ontology_multi_iri npa:isMaintainedBy? ?space .
+        ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?rt .
+        filter(?rt in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+        ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+      }
+    }
+  }
+  graph npa:graph {
+    ?np npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pubkey ;
+        dct:created ?date ; npx:introduces ?class ; np:hasAssertion ?a .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+  }
+  filter(contains(?memberPubkeys, ?pubkey))
+  graph ?a { ?class dct:isPartOf|dct:partOf ?_ontology_multi_iri . }
+  filter not exists { graph ?a { ?class a gen:WithdrawnTerm } }
+  filter not exists {
+    graph npa:graph {
+      ?np2 npx:hasNanopubType owl:Class ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 ;
+           dct:created ?date2 ; npx:introduces ?class ; np:hasAssertion ?a2 .
+      filter not exists { ?np2x npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+    }
+    filter(contains(?memberPubkeys, ?pubkey2))
+    graph ?a2 { ?class dct:isPartOf|dct:partOf ?_ontology_multi_iri . }
+    filter(?date2 > ?date || (?date2 = ?date && str(?np2) > str(?np)))
+  }
+  {
+    select (group_concat(distinct ?apV; separator=\" \") as ?approvedNps)
+           (group_concat(distinct ?disV; separator=\" \") as ?disapprovedNps) where {
+      {
+        select ?vTarget (max(concat(str(?vDate), \">\", str(?vNp), \">\", ?vMark)) as ?vWin) where {
+          values ?_ontology_multi_iri {}
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            select (group_concat(?vpk; separator=\" \") as ?vMemberPubkeys) where {
+              graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?vStateG . }
+              values ?_ontology_multi_iri {}
+              graph ?vStateG {
+                ?_ontology_multi_iri npa:isMaintainedBy? ?vSpace .
+                ?vRi a gen:RoleInstantiation ; npa:forSpace ?vSpace ; npa:forAgent ?vMember ;
+                     npa:hasRoleType ?vRt .
+                filter(?vRt in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                ?vAcct a npa:AccountState ; npa:agent ?vMember ; npa:pubkey ?vpk .
+              }
+            }
+          }
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/full> {
+            select distinct ?vTarget ?vNp ?vDate ?vPubkey ?vMark where {
+              graph npa:graph {
+                ?vTarget npx:hasNanopubType owl:Class ; npx:signedBy ?targetAgent .
+                ?vNp npx:signedBy ?vAgent ; npa:hasValidSignatureForPublicKeyHash ?vPubkey ;
+                     dct:created ?vDate ; np:hasAssertion ?vA .
+                filter not exists { ?vInv npx:invalidates ?vNp ; npa:hasValidSignatureForPublicKeyHash ?vPubkey . }
+              }
+              graph ?vA { ?vAgent ?vPred ?vTarget . }
+              values ?vPred { npx:approvesOf npx:disapprovesOf }
+              filter(?vAgent != ?targetAgent)
+              bind(if(?vPred = npx:approvesOf, \"a\", \"d\") as ?vMark)
+            }
+          }
+          filter(contains(?vMemberPubkeys, ?vPubkey))
+        } group by ?vTarget
+      }
+      bind(if(strends(?vWin, \"a\"), str(?vTarget), \"\") as ?apV)
+      bind(if(strends(?vWin, \"d\"), str(?vTarget), \"\") as ?disV)
+    }
+  }
+  {
+    select (sample(?helperPubkeys_) as ?helperPubkeys) where {
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+        select (group_concat(?hpk; separator=\" \") as ?helperPubkeys_) where {
+          graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?hStateG . }
+          values ?_ontology_multi_iri {}
+          graph ?hStateG {
+            ?_ontology_multi_iri npa:isMaintainedBy? ?hSpace .
+            ?hRi a gen:RoleInstantiation ; npa:forSpace ?hSpace ; npa:forAgent ?hAgent ;
+                 gen:hasRole <https://w3id.org/np/RASGFRI3F5TtJ4GA4Yaed3esIpTF3pDyJLbpuvsqHzIXc/autoApprovedHelperRole> .
+            ?hAcct a npa:AccountState ; npa:agent ?hAgent ; npa:pubkey ?hpk .
+          }
+        }
+      }
+    }
+  }
+  bind(contains(concat(\" \", ?approvedNps, \" \"), concat(\" \", str(?np), \" \")) as ?explicitApproved)
+  bind(contains(concat(\" \", ?disapprovedNps, \" \"), concat(\" \", str(?np), \" \")) as ?explicitDisapproved)
+  bind(contains(?helperPubkeys, ?pubkey) as ?isAutoApproved)
+  filter(?explicitApproved || (?isAutoApproved && !?explicitDisapproved))
+  optional { graph ?a { ?class rdfs:label ?label . filter(lang(?label) = \"\") } }
+  optional { select ?class (min(str(?p)) as ?parent) where {
+      values ?_ontology_multi_iri {}
+      graph npa:graph { ?pnp npx:hasNanopubType owl:Class ; npx:introduces ?class ; np:hasAssertion ?pa . }
+      graph ?pa { ?class dct:isPartOf|dct:partOf ?_ontology_multi_iri ; rdfs:subClassOf ?p .
+                  filter(?p != peh:BioChemEntity) }
+    } group by ?class }
+  bind(bound(?parent) as ?g)
+  bind(exists { graph ?a { ?class peh:isMetaboliteOf|peh:isIsomerOf ?y } } as ?l)
+  bind(exists { graph ?a { ?class obo:RO_0000087 ?ro } } as ?r)
+  bind(concat(if(?g,\"1\",\"0\"), if(?l,\"1\",\"0\"), if(?r,\"1\",\"0\")) as ?region)
+  optional { graph ?a { ?class obo:RO_0000087 ?roleIri . }
+             bind(concat(\"CHEBI:\", replace(replace(str(?roleIri), \"^.*[/#]\", \"\"), \"^CHEBI[_:]\", \"\")) as ?roleKey_) }
+  optional {
+    select ?class (min(concat(str(?p), \" ~|~ \", coalesce(?pl, \"\"))) as ?parentCombo) where {
+      values ?_ontology_multi_iri {}
+      graph npa:graph { ?pnp npx:hasNanopubType owl:Class ; npx:introduces ?class ; np:hasAssertion ?pa .
+        filter not exists { ?pgx npx:invalidates ?pnp } }
+      graph ?pa { ?class dct:isPartOf|dct:partOf ?_ontology_multi_iri ; rdfs:subClassOf ?p .
+                  filter(?p != peh:BioChemEntity) }
+      optional {
+        graph npa:graph { ?plnp npx:hasNanopubType owl:Class ; npx:introduces ?p ; np:hasAssertion ?pla . }
+        graph ?pla { ?p rdfs:label ?pl . filter(lang(?pl) = \"\") }
+      }
+    } group by ?class
+  }
+  bind(strbefore(?parentCombo, \" ~|~ \") as ?groupKey_)
+  bind(strafter(?parentCombo, \" ~|~ \") as ?parentLabel_)
+  bind(bound(?parentCombo) as ?fg)
+  bind(exists { graph ?a { ?class peh:isMetaboliteOf ?y } } as ?fm)
+  bind(exists { graph ?a { ?class peh:isIsomerOf ?z } } as ?fi)
+  bind(bound(?roleKey_) as ?fr)
+  bind(if(!?fg && !?fm && !?fi && !?fr, \"\",
+       if(!?fg && ?fm && ?fr, \"MR\",
+       if(!?fg && ?fm, \"M\",
+       if(!?fg && ?fr, \"R\",
+       if(?fg && ?fi, \"GI\",
+       if(?fg && ?fm, \"GM\",
+       if(?fg && ?fr, \"GR\", \"G\"))))))) as ?sets_)
+  bind(concat(lcase(coalesce(?label, \"zzzz\")), \"~\", str(?class)) as ?sortkey_)
+} group by ?class ?sets_ ?groupKey_ ?roleKey_ }
+                  { select (group_concat(concat(\"[\", ?k, \">\", str(?idx), \"]\"); separator=\"\") as ?gTab2) where { select ?k (count(?k2) - 1 as ?idx) where {
+      { select ?k (count(distinct ?lc) as ?kn) where {
+      values ?_ontology_multi_iri {}
+      graph npa:graph { ?lnp npx:hasNanopubType owl:Class ; npx:introduces ?lc ; np:hasAssertion ?la .
+        filter not exists { ?lx npx:invalidates ?lnp } }
+      graph ?la { ?lc dct:isPartOf|dct:partOf ?_ontology_multi_iri . }
+      graph ?la { ?lc rdfs:subClassOf ?lp . filter(?lp != peh:BioChemEntity) }
+      filter not exists { graph ?la { ?lc peh:isMetaboliteOf ?ly } }
+      filter not exists { graph ?la { ?lc peh:isIsomerOf ?lz } }
+      filter not exists { graph ?la { ?lc obo:RO_0000087 ?lro2 } }
+      bind(str(?lp) as ?k)
+    } group by ?k }
+      { select ?k2 (count(distinct ?lc2) as ?kn2) where {
+      values ?_ontology_multi_iri {}
+      graph npa:graph { ?lnp2 npx:hasNanopubType owl:Class ; npx:introduces ?lc2 ; np:hasAssertion ?la2 .
+        filter not exists { ?lx2 npx:invalidates ?lnp2 } }
+      graph ?la2 { ?lc2 dct:isPartOf|dct:partOf ?_ontology_multi_iri . }
+      graph ?la2 { ?lc2 rdfs:subClassOf ?lp9 . filter(?lp9 != peh:BioChemEntity) }
+      filter not exists { graph ?la2 { ?lc2 peh:isMetaboliteOf ?ly2 } }
+      filter not exists { graph ?la2 { ?lc2 peh:isIsomerOf ?lz2 } }
+      filter not exists { graph ?la2 { ?lc2 obo:RO_0000087 ?lro92 } }
+      bind(str(?lp9) as ?k2)
+    } group by ?k2 }
+      filter(?kn2 > ?kn || (?kn2 = ?kn && ?k2 <= ?k))
+    } group by ?k } }
+                  bind(coalesce(xsd:integer(strbefore(strafter(?gTab2, concat(\"[\", ?groupKey, \">\")), \"]\")), 99) as ?gi02)
+                  bind(if(?gi02 > 6, 7, ?gi02) as ?gi2)
+                  bind(concat(\"G#\", str(?gi2)) as ?ocellG)
+                  bind(concat(\"R#\", coalesce(?roleKey, \"\")) as ?ocellR)
+                  bind(if(?sets = \"R\", ?ocellR, if(?sets = \"G\", ?ocellG, ?sets)) as ?ocellP)
+                  values ?oslot { \"P\" \"G\" \"R\" }
+                  filter(?oslot = \"P\"
+                      || (?oslot = \"G\" && bound(?groupKey) && ?sets != \"G\")
+                      || (?oslot = \"R\" && bound(?roleKey) && ?sets != \"R\"))
+                  bind(if(?oslot = \"P\", ?ocellP, if(?oslot = \"G\", ?ocellG, ?ocellR)) as ?ocellK)
+                }
+              }
+            } group by ?class ?label ?sets ?groupKey ?roleKey ?parentLabel ?gi ?cellKey ?cellG ?cellR
+          }
+          { select (group_concat(concat(\"[\", ?k, \">\", str(?idx), \"]\"); separator=\"\") as ?roleIdxTable) where { select ?k (count(?k2) - 1 as ?idx) where {
+      { select ?k (count(distinct ?lc) as ?kn) where {
+      values ?_ontology_multi_iri {}
+      graph npa:graph { ?lnp npx:hasNanopubType owl:Class ; npx:introduces ?lc ; np:hasAssertion ?la .
+        filter not exists { ?lx npx:invalidates ?lnp } }
+      graph ?la { ?lc dct:isPartOf|dct:partOf ?_ontology_multi_iri . }
+      graph ?la { ?lc obo:RO_0000087 ?lro . }
+      filter not exists { graph ?la { ?lc rdfs:subClassOf ?lp2 . filter(?lp2 != peh:BioChemEntity) } }
+      filter not exists { graph ?la { ?lc peh:isMetaboliteOf ?ly } }
+      bind(concat(\"CHEBI:\", replace(replace(str(?lro), \"^.*[/#]\", \"\"), \"^CHEBI[_:]\", \"\")) as ?k)
+    } group by ?k }
+      { select ?k2 (count(distinct ?lc2) as ?kn2) where {
+      values ?_ontology_multi_iri {}
+      graph npa:graph { ?lnp2 npx:hasNanopubType owl:Class ; npx:introduces ?lc2 ; np:hasAssertion ?la2 .
+        filter not exists { ?lx2 npx:invalidates ?lnp2 } }
+      graph ?la2 { ?lc2 dct:isPartOf|dct:partOf ?_ontology_multi_iri . }
+      graph ?la2 { ?lc2 obo:RO_0000087 ?lro9 . }
+      filter not exists { graph ?la2 { ?lc2 rdfs:subClassOf ?lp92 . filter(?lp92 != peh:BioChemEntity) } }
+      filter not exists { graph ?la2 { ?lc2 peh:isMetaboliteOf ?ly2 } }
+      bind(concat(\"CHEBI:\", replace(replace(str(?lro9), \"^.*[/#]\", \"\"), \"^CHEBI[_:]\", \"\")) as ?k2)
+    } group by ?k2 }
+      filter(?kn2 > ?kn || (?kn2 = ?kn && ?k2 <= ?k))
+    } group by ?k } }
+          bind(coalesce(xsd:integer(strbefore(strafter(?roleIdxTable, concat(\"[\", ?roleKey, \">\")), \"]\")), 0) as ?ri)
+          bind(\"[CHEBI:25944>pesticide][CHEBI:79314>flame retardant][CHEBI:25442>mycotoxin][CHEBI:73335>ultraviolet filter][CHEBI:24527>herbicide][CHEBI:48318>fragrance][CHEBI:64857>cosmetic][CHEBI:38867>anaesthetic][CHEBI:48357>aprotic solvent]\" as ?roleLabelTable)
+          bind(coalesce(strbefore(strafter(?roleLabelTable, concat(\"[\", ?roleKey, \">\")), \"]\"), \"\") as ?rl0)
+          bind(if(?rl0 = \"\", coalesce(?roleKey, \"\"), ?rl0) as ?roleLabel)
+          bind(if(?sets = \"R\", 316 + (?ri - 3 * floor(?ri / 3)) * 198, 0) as ?rbx)
+          bind(if(?sets = \"R\", 52 + floor(?ri / 3) * 47, 0) as ?rby)
+          bind(316 + (?ri - 3 * floor(?ri / 3)) * 198 as ?ebxR)
+          bind(52 + floor(?ri / 3) * 47 as ?ebyR)
+          bind(106 + (?gi - 4 * floor(?gi / 4)) * 178 as ?ebxG)
+          bind(222 + floor(?gi / 4) * 49 as ?ebyG)
+          values (?vsets ?vx0 ?vy0 ?vcols ?vfill) {
+            (\"\" 20 414 127 \"#C9C9C9\") (\"M\" 48 58 31 \"#3C6DB0\") (\"MR\" 276 40 5 \"#2F8E8E\")
+            (\"GM\" 108 200 23 \"#7B5EA7\") (\"GR\" 316 200 70 \"#8C7A2B\")
+            (\"R\" 0 0 27 \"#3F9E5C\") (\"G\" 0 0 23 \"#C0392B\") (\"GI\" 0 0 24 \"#E07B39\")
+          }
+          filter(?vsets = ?sets)
+          bind(if(?sets = \"R\", ?ebxR + 6, if(?sets = \"G\", ?ebxG + 6, if(?sets = \"GI\", 112, ?vx0))) as ?px0)
+          bind(if(?sets = \"R\", ?ebyR + 22, if(?sets = \"G\", ?ebyG + 22, if(?sets = \"GI\", 345, ?vy0))) as ?py0)
+          bind(?vcols as ?pcols)
+          bind(?px0 + (?rankP - ?pcols * floor(?rankP / ?pcols)) * 7 as ?pxP)
+          bind(?py0 + floor(?rankP / ?pcols) * 7 as ?pyP)
+          bind(?ebxG + 6 + (?rankG - 23 * floor(?rankG / 23)) * 7 as ?pxG)
+          bind(?ebyG + 22 + floor(?rankG / 23) * 7 as ?pyG)
+          bind(?ebxR + 6 + (?rankR - 27 * floor(?rankR / 27)) * 7 as ?pxR)
+          bind(?ebyR + 22 + floor(?rankR / 27) * 7 as ?pyR)
+          values ?slot { \"P\" \"G\" \"R\" }
+          filter(?slot = \"P\"
+              || (?slot = \"G\" && bound(?groupKey) && ?sets != \"G\")
+              || (?slot = \"R\" && bound(?roleKey) && ?sets != \"R\"))
+          bind(if(?slot = \"P\", ?cellKey, if(?slot = \"G\", ?cellG, ?cellR)) as ?cell)
+          bind(if(?slot = \"P\", ?pxP, if(?slot = \"G\", ?pxG, ?pxR)) as ?cx)
+          bind(if(?slot = \"P\", ?pyP, if(?slot = \"G\", ?pyG, ?pyR)) as ?cy)
+          bind(?cell = \"GI\" || strstarts(?cell, \"R#\") || strstarts(?cell, \"G#\") as ?isBox)
+          bind(if(strstarts(?cell, \"R#\"), ?ebxR, if(strstarts(?cell, \"G#\"), ?ebxG, if(?cell = \"GI\", 106, 0))) as ?bx)
+          bind(if(strstarts(?cell, \"R#\"), ?ebyR, if(strstarts(?cell, \"G#\"), ?ebyG, if(?cell = \"GI\", 323, 0))) as ?by)
+          bind(if(strstarts(?cell, \"R#\"), 196, if(strstarts(?cell, \"G#\"), 174, if(?cell = \"GI\", 364, 0))) as ?bw)
+          bind(if(strstarts(?cell, \"R#\"), 42, if(strstarts(?cell, \"G#\"), 44, if(?cell = \"GI\", 40, 0))) as ?bh)
+          bind(if(strstarts(?cell, \"R#\"), ?ebxR + 6, if(strstarts(?cell, \"G#\"), ?ebxG + 6, if(?cell = \"GI\", 112, ?vx0))) as ?x0)
+          bind(if(strstarts(?cell, \"R#\"), ?ebyR + 22, if(strstarts(?cell, \"G#\"), ?ebyG + 22, if(?cell = \"GI\", 345, ?vy0))) as ?y0)
+          bind(if(strstarts(?cell, \"R#\"), 27, if(strstarts(?cell, \"G#\"), 23, ?vcols)) as ?cols)
+          bind(if(strstarts(?cell, \"R#\"), ?roleLabel,
+               if(strstarts(?cell, \"G#\"), if(?gi = 7, \"other groups\", coalesce(?parentLabel, \"unnamed group\")),
+               if(?cell = \"GI\", \"isomer\", \"\"))) as ?cellLabel)
+          bind(if(?slot = \"P\", \"\",
+               concat('<line x1=\"', str(?pxP), '\" y1=\"', str(?pyP), '\" x2=\"', str(?cx), '\" y2=\"', str(?cy),
+                      '\" stroke=\"', ?vfill, '\" stroke-width=\"0.7\" stroke-opacity=\"0.5\"></line>')) as ?lineMarkup)
+          bind(concat(
+                 replace(replace(replace(coalesce(?label, \"(no label)\"), \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"),
+                 if(coalesce(?parentLabel, \"\") = \"\", \"\", concat(\"  |  group: \", replace(replace(replace(?parentLabel, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"))),
+                 if(contains(?sets, \"M\"), \"  |  metabolite\", \"\"),
+                 if(contains(?sets, \"I\"), \"  |  isomer\", \"\"),
+                 if(?roleLabel = \"\", \"\", concat(\"  |  role: \", replace(replace(replace(?roleLabel, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\")))
+               ) as ?tip)
+          bind(concat('<a href=\"/part?id=', encode_for_uri(str(?class)),
+                      '\"><circle cx=\"', str(?cx), '\" cy=\"', str(?cy),
+                      '\" r=\"2.4\" fill=\"', ?vfill, '\" stroke=\"#ffffff\" stroke-width=\"0.6\"><title>',
+                      ?tip, '</title></circle></a>') as ?dot)
+        } group by ?cell ?cellLabel ?isBox ?bx ?by ?bw ?bh ?x0 ?y0 ?cols
+      }
+      bind(concat(
+        if(?isBox,
+          concat('<rect x=\"', str(?bx), '\" y=\"', str(?by), '\" width=\"', str(?bw),
+                 '\" height=\"', str(?bh), '\" rx=\"4\" fill=\"#ffffff\" fill-opacity=\"0.55\" ',
+                 'stroke=\"#9aa4ad\" stroke-width=\"0.8\"></rect>',
+                 '<text x=\"', str(?bx + 6), '\" y=\"', str(?by + 14), '\" font-size=\"9.5\" fill=\"#333333\">',
+                 replace(replace(replace(?cellLabel, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"), '  (', str(?ccount), ')</text>'),
+          concat('<text x=\"', str(if(?ccount <= ?cols, ?x0 + ?ccount * 7 + 4, ?x0)),
+                 '\" y=\"', str(if(?ccount <= ?cols, ?y0 + 3, ?y0 + ceil(?ccount / ?cols) * 7 + 11)),
+                 '\" font-size=\"9\" fill=\"#6b6b6b\">n = ', str(?ccount), '</text>')
+        ), ?dots) as ?cellBlock)
+    }
+  }
+  bind(concat(
+    '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 932 474\" width=\"100%\" height=\"498\" ',
+    'preserveAspectRatio=\"xMidYMin meet\" font-family=\"sans-serif\">',
+    '<desc>Each dot is one class of the vocabulary, placed by which of the four sets it belongs to; ',
+    'the chemical groups and the roles are shown as boxes inside their set.</desc>',
+    '<rect x=\"0\" y=\"0\" width=\"932\" height=\"474\" fill=\"#ffffff\"></rect>',
+    '<rect x=\"12\" y=\"8\" width=\"908\" height=\"456\" rx=\"6\" fill=\"none\" stroke=\"#bbbbbb\" stroke-width=\"1\"></rect>',
+    '<rect x=\"40\" y=\"30\" width=\"270\" height=\"184\" rx=\"8\" fill=\"#3C6DB0\" fill-opacity=\"0.07\" stroke=\"#3C6DB0\" stroke-width=\"1.2\"></rect>',
+    '<rect x=\"270\" y=\"30\" width=\"638\" height=\"184\" rx=\"8\" fill=\"#3F9E5C\" fill-opacity=\"0.07\" stroke=\"#3F9E5C\" stroke-width=\"1.2\"></rect>',
+    '<rect x=\"100\" y=\"194\" width=\"720\" height=\"207\" rx=\"8\" fill=\"#C0392B\" fill-opacity=\"0.07\" stroke=\"#C0392B\" stroke-width=\"1.2\"></rect>',
+    '<text x=\"48\" y=\"46\" font-size=\"11\" fill=\"#2f5488\">metabolite  (', str(?nMet), ')</text>',
+    '<text x=\"316\" y=\"46\" font-size=\"11\" fill=\"#2f7048\">role  (', str(?nRole), ')</text>',
+    '<text x=\"108\" y=\"391\" font-size=\"11\" fill=\"#8f3336\">in a chemical group  (', str(?nGroup), ')</text>',
+    '<text x=\"24\" y=\"458\" font-size=\"11\" fill=\"#6b6b6b\">all classes in this vocabulary  (', str(?total), ')</text>',
+    ?lines,
+    ?body,
+    '</svg>') as ?svg)
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-26T11:42:25Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:get-class-landscape-svg;
+    npx:supersedes <https://w3id.org/np/RA8ZHeRMAJToRTMM6VYdUPm5noZ7ACSqeeUW6SAk66jKQ>;
+    rdfs:label "Get the class landscape of an ontology as SVG";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "avncgmt13X7sVHiJo45qpsHsmuSOKVNeGQRLl9rOLuiELdDNQ16NTM5eDq1UnqAr3hWZJDg8iFf5/pLjWpWzLem4IJ39a9LyS0Zou0G6r106ZIkCvKUFHnNxwlLM9bRrUc1eZF2DkGueoEbdPL7iDKkHnyhn160jWLF1Rp3dN9U=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

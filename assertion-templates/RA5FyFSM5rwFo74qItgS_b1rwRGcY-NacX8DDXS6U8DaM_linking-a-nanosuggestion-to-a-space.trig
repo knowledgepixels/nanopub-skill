@@ -1,0 +1,88 @@
+@prefix this: <https://w3id.org/np/RA5FyFSM5rwFo74qItgS_b1rwRGcY-NacX8DDXS6U8DaM> .
+@prefix sub: <https://w3id.org/np/RA5FyFSM5rwFo74qItgS_b1rwRGcY-NacX8DDXS6U8DaM/> .
+@prefix schema: <https://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nsug: <https://w3id.org/np/RA5BAdUvlxLWMWFQN3UVKoIQEB_MYTiAoLH1klXJ7z-XI/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  schema:Statement rdfs:label "statement" .
+  
+  gen:isRelevantFor rdfs:label "is relevant for" .
+  
+  nsug:Nanosuggestion rdfs:label "nanosuggestion" .
+  
+  sub:space a nt:GuidedChoicePlaceholder;
+    rdfs:label "space this nanosuggestion is relevant for";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st01 rdf:object nsug:Nanosuggestion;
+    rdf:predicate rdf:type;
+    rdf:subject sub:suggestion .
+  
+  sub:st02 rdf:object schema:Statement;
+    rdf:predicate rdf:type;
+    rdf:subject sub:suggestion .
+  
+  sub:st03 a nt:RepeatableStatement;
+    rdf:object sub:space;
+    rdf:predicate gen:isRelevantFor;
+    rdf:subject sub:suggestion .
+  
+  sub:suggestion a nt:GuidedChoicePlaceholder;
+    rdfs:label "the nanosuggestion";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/np/RA5BAdUvlxLWMWFQN3UVKoIQEB_MYTiAoLH1klXJ7z-XI/Nanosuggestion" .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Declare that an existing nanosuggestion is relevant for a further space, so it shows up in that space's list of nanosuggestions too.";
+    dct:isVersionOf <https://w3id.org/np/RARUtkbjajq4DiE75a-By1ZDyRasTGJrGoN1ZcxrMYHyg/templateKind>;
+    rdfs:label "Linking a nanosuggestion to a space";
+    gen:governedBy <https://w3id.org/spaces/nanosuggestions>;
+    nt:hasNanopubLabelPattern "Nanosuggestion ${suggestion} is relevant for ${space}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03;
+    nt:hasTag "Nanosuggestions" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-26T13:25:54Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:supersedes <https://w3id.org/np/RARUtkbjajq4DiE75a-By1ZDyRasTGJrGoN1ZcxrMYHyg>;
+    rdfs:label "Linking a nanosuggestion to a space";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "WdjFF6qao37fJNCeJj1g3rU6zX3eKnvu2m28haLNCBMULDdy6u0pIpU3Y4aiNY7yKmZPGjxKMB4/qTv3PoZj3vJFmDkciYpLh0ne6X2G4XSthqwDhGsyXaLfggaqW5THUleuw7vUZZbh3by0dWZPFW80gZ96i3WvCOfbKAnOpmQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

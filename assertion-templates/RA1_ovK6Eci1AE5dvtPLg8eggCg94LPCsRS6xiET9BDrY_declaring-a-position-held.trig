@@ -1,0 +1,139 @@
+@prefix this: <https://w3id.org/np/RA1_ovK6Eci1AE5dvtPLg8eggCg94LPCsRS6xiET9BDrY> .
+@prefix sub: <https://w3id.org/np/RA1_ovK6Eci1AE5dvtPLg8eggCg94LPCsRS6xiET9BDrY/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix vivo: <http://vivoweb.org/ontology/core#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "further details - the department, group or institute the position sat in" .
+  
+  dct:type rdfs:label "is of kind - the kind of position this is, as a Wikidata item" .
+  
+  vivo:Position rdfs:label "position - a role somebody holds at an organization over a period of time" .
+  
+  rdf:type rdfs:label "is a - asserts that the given thing (left) belongs to the given class (right)" .
+  
+  rdfs:label rdfs:label "is called - connects an identifier to a human-readable name for it" .
+  
+  wd:P108 rdfs:label "was held at - the organization at which the position was held" .
+  
+  wd:P39 rdfs:label "held the position - connects a person to a position they hold or held" .
+  
+  wd:P580 rdfs:label "started in - the year the position started" .
+  
+  wd:P582 rdfs:label "ended in - the year the position ended, left out for a current position" .
+  
+  sub:endYear a nt:LiteralPlaceholder;
+    rdfs:label "the year the position ended, left empty if it is still held (optional)";
+    nt:hasDatatype xsd:gYear;
+    nt:hasRegex "[0-9]{4}" .
+  
+  sub:holder a nt:AgentPlaceholder;
+    rdfs:label "who held the position";
+    nt:hasDefaultValue nt:CREATOR .
+  
+  sub:organization a nt:GuidedChoicePlaceholder;
+    rdfs:label "the organization at which the position was held";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:position a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name for this position, used as URI suffix, e.g. assistant-professor-vu-2015" .
+  
+  sub:roleKind a nt:GuidedChoicePlaceholder;
+    rdfs:label "the kind of position on Wikidata, if one exists, e.g. assistant professor (optional)";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:roleTitle a nt:LiteralPlaceholder;
+    rdfs:label "the title of the position, e.g. Assistant Professor" .
+  
+  sub:st0 rdf:object vivo:Position;
+    rdf:predicate rdf:type;
+    rdf:subject sub:position .
+  
+  sub:st1 rdf:object sub:roleTitle;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:position .
+  
+  sub:st2 rdf:object sub:position;
+    rdf:predicate wd:P39;
+    rdf:subject sub:holder .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:roleKind;
+    rdf:predicate dct:type;
+    rdf:subject sub:position .
+  
+  sub:st4 rdf:object sub:organization;
+    rdf:predicate wd:P108;
+    rdf:subject sub:position .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:unit;
+    rdf:predicate dct:description;
+    rdf:subject sub:position .
+  
+  sub:st6 rdf:object sub:startYear;
+    rdf:predicate wd:P580;
+    rdf:subject sub:position .
+  
+  sub:st7 a nt:OptionalStatement;
+    rdf:object sub:endYear;
+    rdf:predicate wd:P582;
+    rdf:subject sub:position .
+  
+  sub:startYear a nt:LiteralPlaceholder;
+    rdfs:label "the year the position started, e.g. 2015";
+    nt:hasDatatype xsd:gYear;
+    nt:hasRegex "[0-9]{4}" .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Records a position somebody held at an organization, such as a professorship, a postdoc, or a role in a company. The position is modelled as a first-class thing (a VIVO position), so that the organization, the period, and the department or group can all be attached to it. Leave the end year empty for a position that is still held. Link the position to a Wikidata item for its kind where one exists; leave that empty otherwise.";
+    rdfs:label "Declaring a position held";
+    nt:hasNanopubLabelPattern "${roleTitle} at ${organization}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6, sub:st7;
+    nt:hasTag "CV" .
+  
+  sub:unit a nt:LiteralPlaceholder;
+    rdfs:label "the department, group or institute within the organization (optional)" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-28T12:56:10Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    rdfs:label "Declaring a position held";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "cZBSxrBQkQJT8G5v5GfTha1rnFhqT1lqfAeylRf6VGjYXtaTWM1D00t8HXPfKroYahrMQqYqbDX2j3XhyiQgTUsO4ehUiAhEO6vrEZIpEnZzkfE8zbYyjW4LaAiT9woihwQbkUi/LLU0VUbWogPHtwhoKpgDSUw6BeVJIUtRYfE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

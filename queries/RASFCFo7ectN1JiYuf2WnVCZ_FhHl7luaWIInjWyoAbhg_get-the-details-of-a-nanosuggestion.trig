@@ -1,0 +1,111 @@
+@prefix this: <https://w3id.org/np/RASFCFo7ectN1JiYuf2WnVCZ_FhHl7luaWIInjWyoAbhg> .
+@prefix sub: <https://w3id.org/np/RASFCFo7ectN1JiYuf2WnVCZ_FhHl7luaWIInjWyoAbhg/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-nanosuggestion-details a grlc:grlc-query;
+    dct:description "Returns the details of a single nanosuggestion as field/value rows for a compact info card: title, kind, text, current status, assignee, the spaces it is relevant for, what it is about, and further links. Values that are IRIs are returned as IRIs so they render as links, with a companion label column supplying the link text. Empty fields are omitted and only the most recent status assertion is shown. Runs entirely on the schema:Statement type repository: labels are derived locally rather than looked up, so the query does not depend on the full repository.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the details of a nanosuggestion";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/29e2f808e4864fca4930806dee70c4a32df54a63ee90156244910a47d3443736>;
+    grlc:sparql """
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix schema: <https://schema.org/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix nsug: <https://w3id.org/np/RA5BAdUvlxLWMWFQN3UVKoIQEB_MYTiAoLH1klXJ7z-XI/>
+
+select distinct ?Property_noheader ?Value_noheader ?Value_label where {
+  values (?property ?Property_noheader ?ord) {
+    ( rdfs:label          'Title:'         '1' )
+    ( rdf:type            'Kind:'          '2' )
+    ( rdf:value           'Text:'          '3' )
+    ( dct:description     'Text:'          '3' )
+    ( schema:actionStatus 'Status:'        '4' )
+    ( schema:agent        'Assigned to:'   '5' )
+    ( gen:isRelevantFor   'Relevant for:'  '6' )
+    ( schema:about        'About:'         '7' )
+    ( rdfs:seeAlso        'More info:'     '8' )
+  }
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey ; np:hasAssertion ?a ; dct:created ?d .
+    filter not exists { ?npi npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+  }
+  graph ?a { ?_suggestion_iri ?property ?Value_noheader . }
+  # the base types are structural, not the \"kind\"
+  filter(!(?property = rdf:type && (?Value_noheader = nsug:Nanosuggestion || ?Value_noheader = schema:Statement)))
+  # of the status assertions keep only the newest. The date is computed in a sub-select,
+  # which is an optimizer barrier: as a NOT EXISTS this had an unconstrained
+  # \"?np2 npa:hasValidSignatureForPublicKeyHash ?pk2\" that the planner evaluated first,
+  # and it started failing with \"Queue full\" once /repo/full grew past a threshold.
+  optional {
+    { select (max(?sd) as ?maxStatusDate) where {
+        graph npa:graph {
+          ?snp npa:hasValidSignatureForPublicKeyHash ?spk ; np:hasAssertion ?sa ; dct:created ?sdate .
+          filter not exists { ?snpi npx:invalidates ?snp ; npa:hasValidSignatureForPublicKeyHash ?spk . }
+        }
+        graph ?sa { ?_suggestion_iri schema:actionStatus ?anyStatus . }
+        bind(str(?sdate) as ?sd)
+    } }
+  }
+  filter(?property != schema:actionStatus || coalesce(str(?d) = ?maxStatusDate, true))
+  # labels are derived locally, so this query needs only the type repository
+  optional { ?Value_noheader foaf:name ?agentName }
+  bind(if(?Value_noheader = schema:PotentialActionStatus, 'open',
+       if(?Value_noheader = schema:ActiveActionStatus, 'in progress',
+       if(?Value_noheader = schema:CompletedActionStatus, 'done',
+       if(?Value_noheader = schema:FailedActionStatus, 'rejected',
+       if(?property = rdf:type, lcase(replace(str(?Value_noheader), '^.*/', '')),
+       if(?property = gen:isRelevantFor, replace(str(?Value_noheader), '^.*/', ''),
+          coalesce(?agentName, ''))))))) as ?Value_label)
+}
+order by ?ord ?Value_label
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-27T06:32:41Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-nanosuggestion-details;
+    npx:supersedes <https://w3id.org/np/RACYP2tjWHK5oWj9wwhk93l6vQty7NqszptlckCz8qVdM>;
+    rdfs:label "Get the details of a nanosuggestion";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Zxi3r22FeTTGt8irCo2bVA7WWS702/MduG07WftcbsX7BeIv+f+ZCu7hmmnTIDVrvvfQtkeS+X0eb4UcQ17AxnbvVS0qqhnnxxaz5WlYnzpEoMdSdJnrks3GgM+rIHv2e1YxR0GW6w37sZ4bAwty5G7dKCCpRnjSvohNT07yFsk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

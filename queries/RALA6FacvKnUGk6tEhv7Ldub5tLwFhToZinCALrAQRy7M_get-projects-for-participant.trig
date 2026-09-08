@@ -1,0 +1,80 @@
+@prefix this: <https://w3id.org/np/RALA6FacvKnUGk6tEhv7Ldub5tLwFhToZinCALrAQRy7M> .
+@prefix sub: <https://w3id.org/np/RALA6FacvKnUGk6tEhv7Ldub5tLwFhToZinCALrAQRy7M/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-projects-for-participant a grlc:grlc-query;
+    dct:description "Returns the projects a given person took part in, with a description, the project website, and the years the project ran. Unlike the events query, the participation statement and the project definition live in the same nanopublication, so no join across nanopublications is needed. Years are plain years rather than full dates, which is the precision project records usually have; the end year is absent for a project that is still running.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get projects for participant";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix schema: <https://schema.org/>
+prefix wd: <http://www.wikidata.org/entity/>
+
+select ?project ?project_label ?description ?website ?startYear ?endYear ?np (\"^\" as ?np_label) where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    filter not exists { ?nps npx:supersedes ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np np:hasAssertion ?a .
+    ?np npx:introduces ?project .
+  }
+  graph ?a {
+    ?project a schema:ResearchProject .
+    ?_participant_iri wd:P1344 ?project .
+    optional { ?project rdfs:label ?project_label . }
+    optional { ?project dct:description ?description . }
+    optional { ?project rdfs:seeAlso ?website . }
+    optional { ?project schema:startDate ?startYear . }
+    optional { ?project schema:endDate ?endYear . }
+  }
+}
+order by desc(?startYear)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-31T10:31:41Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-projects-for-participant;
+    rdfs:label "Get projects for participant";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ibo9ougSLAu9PCD2+Fg0xrzLhpktMnx+maZddPhlq1VWYGhjyCjiKH0jMAhZuixI8LVQfWD8WPCVvlU25E+e8eXDyZyB3CcUYuxwLlIqHFKPPLu7iljGy0tFMFONcCwXA+e72TPUapXo/P3PuXoqHmKB5JTMwosLaaE7KfEJtz4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

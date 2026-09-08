@@ -1,0 +1,79 @@
+@prefix this: <https://w3id.org/np/RA2-94_7lfJTzgvFj-7KARAP1-NZx5r_LSIcEnnBr6O8Q> .
+@prefix sub: <https://w3id.org/np/RA2-94_7lfJTzgvFj-7KARAP1-NZx5r_LSIcEnnBr6O8Q/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-evidence-for-claim a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "For a given claim, lists the statements that support or contradict it.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get evidence for a claim";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix cito: <http://purl.org/spar/cito/>
+prefix oa: <http://www.w3.org/ns/oa#>
+prefix schema: <https://schema.org/>
+
+select distinct ?evidence_iri ?evidence_iri_label ?stance ?stance_label ?user_iri where {
+  graph npa:graph {
+    ?np np:hasAssertion ?a ; np:hasProvenance ?p ;
+        npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+  }
+  graph ?a {
+    ?evidence_iri a schema:Statement .
+    { ?evidence_iri ?rel ?_claim_iri .
+      filter(?rel in (cito:supports, cito:disputes)) }
+    union
+    { ?evidence_iri ?rel ?spec .
+      filter(?rel in (cito:supports, cito:disputes))
+      ?spec oa:hasSource ?_claim_iri . }
+    optional { ?evidence_iri rdf:value ?text }
+  }
+  optional { graph ?p { ?a prov:wasAttributedTo ?user_iri } }
+  bind(if(?rel = cito:supports, \"✓ supports\", \"✗ contradicts\") as ?stance)
+  bind(if(?rel = cito:supports, \"#1a7f37\", \"#d1242f\") as ?stancecolour)
+  bind(concat(\"<svg width='110' height='16' viewBox='0 0 110 16'><text x='0' y='12' font-size='12' font-weight='500' fill='\", ?stancecolour, \"'>\", ?stance, \"</text></svg>\") as ?stance_label)
+  bind(?text as ?evidence_iri_label)
+}
+order by ?stance ?evidence_iri_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-09-01T13:22:19Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-evidence-for-claim;
+    npx:supersedes <https://w3id.org/np/RAJpvo6X85ysAHrcBd9UDEHClWa5XHOA-o48jMX19-GxM>;
+    rdfs:label "Get evidence for a claim" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+i9DV8ynzO944pYkYsDwtlqJHuk+b7FQt6Bb4TIQSDX3jGUURn6WpaNwESHmgMLWSydaH5XlabMzuqpPL4iyB+IAzvwIxdJBLhe39EQMu2j+FZ/5d/xu/gO3nZw2KoEvJ7cJisabuI05OylIRSJ+OG5CmzFxnjojUEJeCFi1njY1InhXrb0yHud9b1ifzweoN6YYOBecKs1gTOaT2bf+t4Wgzg3M0PmRVZ4F0OALsnh4T5+x7kFtiPcDKNpORi585JjKCZ4kczIF6oUKcwgC0kmIY97jtLqSLcXRkxHx5CDI6qz4XlRFs1ZbCUdSlzjdPZAkaBcNem1gIhWzkHkEnQIDAQAB";
+    npx:hasSignature "YBfeGeURNC9VO87k1eUZxUmjzOIR0FAAp+SJuoUbIfp6cBDxuHJd3ylgCCJn285ZhCOHDn7IsOFLV/JywJdnfhFP8ZHQ6tODw343ypMZHmdytRnXY5gDyo03br6r8YglnUIufRBtqhv4bK5ZtekceQJRlRhiuYGyvGJ5U3z9nvLbYgFQ2FJfutBkDeTkUwQakhp0g94KAQXf2QbfCtqkNMmCyF6s91KvgdWevaqXiQU9kiOPeouTbQDVpG04edb3nNEHKaMcMqB1wk4xfesK6tbk9nuonwUmiE84aiGnijgzLhH2ZzqDqsHWjxFqQTtEQ21ft65bV+hAGAhk2PPuXQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

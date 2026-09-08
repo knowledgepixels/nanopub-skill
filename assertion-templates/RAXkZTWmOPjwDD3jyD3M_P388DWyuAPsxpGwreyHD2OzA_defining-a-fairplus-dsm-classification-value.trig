@@ -1,0 +1,157 @@
+@prefix this: <https://w3id.org/np/RAXkZTWmOPjwDD3jyD3M_P388DWyuAPsxpGwreyHD2OzA> .
+@prefix sub: <https://w3id.org/np/RAXkZTWmOPjwDD3jyD3M_P388DWyuAPsxpGwreyHD2OzA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dsm: <https://w3id.org/spaces/fairplus/r/dsm/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:isPartOf rdfs:label "is a part of" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "is called" .
+  
+  rdfs:seeAlso rdfs:label "has further information at" .
+  
+  owl:NamedIndividual rdfs:label "individual" .
+  
+  skos:definition rdfs:label "is defined as follows:" .
+  
+  <https://w3id.org/Data-Maturity/> rdfs:label "FAIRplus Dataset Maturity (DSM) Model" .
+  
+  sub:code a nt:LiteralPlaceholder;
+    rdfs:label "the single letter used in indicator codes for this dimension (C, R or H)" .
+  
+  sub:definition a nt:LongLiteralPlaceholder;
+    rdfs:label "definition of this value" .
+  
+  sub:dimension a nt:GuidedChoicePlaceholder;
+    rdfs:label "the maturity dimension this category belongs to, if applicable";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/spaces/fairplus/r/dsm/MaturityDimension" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the name of this value" .
+  
+  sub:ontology a nt:GuidedChoicePlaceholder;
+    rdfs:label "the ontology this value is part of";
+    nt:hasDefaultValue <https://w3id.org/Data-Maturity/>;
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http://www.w3.org/2002/07/owl%23Ontology&searchterm=" .
+  
+  sub:seealso a nt:ExternalUriPlaceholder;
+    rdfs:label "a link with further information" .
+  
+  sub:st01 rdf:object owl:NamedIndividual;
+    rdf:predicate rdf:type;
+    rdf:subject sub:value .
+  
+  sub:st02 rdf:object sub:valueType;
+    rdf:predicate rdf:type;
+    rdf:subject sub:value .
+  
+  sub:st03 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:value .
+  
+  sub:st04 a nt:OptionalStatement;
+    rdf:object sub:definition;
+    rdf:predicate skos:definition;
+    rdf:subject sub:value .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:dimension;
+    rdf:predicate dsm:inDimension;
+    rdf:subject sub:value .
+  
+  sub:st06 a nt:OptionalStatement;
+    rdf:object sub:code;
+    rdf:predicate dsm:dimensionCode;
+    rdf:subject sub:value .
+  
+  sub:st07 rdf:object sub:ontology;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:value .
+  
+  sub:st08 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:seealso;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:value .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Such a nanopublication defines one value of a controlled list used by the FAIRplus Dataset Maturity (DSM) Model: a maturity dimension, an indicator category, a granularity level, a hosting capability, or an assessment verdict value.";
+    dct:isVersionOf <https://w3id.org/np/RAH61cynJbmkix-0G1cL3_rLfV35AR7BmZTy1C0f9jq7g/templateKind>;
+    rdfs:label "Defining a FAIRplus-DSM classification value";
+    gen:governedBy <https://w3id.org/spaces/fairplus>;
+    nt:hasNanopubLabelPattern "${label}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08;
+    nt:hasTag "FAIRplus-DSM" .
+  
+  sub:value a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix";
+    nt:hasPrefix "~~NAMESPACE~~";
+    nt:hasPrefixLabel "Value" .
+  
+  sub:valueType a nt:RestrictedChoicePlaceholder;
+    rdfs:label "kind of value";
+    nt:possibleValue dsm:GranularityLevel, dsm:HostingCapability, dsm:IndicatorCategory,
+      dsm:MaturityDimension, dsm:VerdictValue .
+  
+  dsm:GranularityLevel rdfs:label "granularity level - the level of data granularity an indicator applies at" .
+  
+  dsm:HostingCapability rdfs:label "hosting capability - a capability a hosting environment may offer" .
+  
+  dsm:IndicatorCategory rdfs:label "indicator category - a finer grouping of indicators within a dimension" .
+  
+  dsm:MaturityDimension rdfs:label "maturity dimension - one of the three categories of requirement" .
+  
+  dsm:VerdictValue rdfs:label "verdict value - a possible outcome of evaluating an indicator" .
+  
+  dsm:dimensionCode rdfs:label "has the dimension code" .
+  
+  dsm:inDimension rdfs:label "belongs to the dimension" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-07T06:48:55Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:introduces <https://w3id.org/np/RAH61cynJbmkix-0G1cL3_rLfV35AR7BmZTy1C0f9jq7g/templateKind>;
+    npx:supersedes <https://w3id.org/np/RAH61cynJbmkix-0G1cL3_rLfV35AR7BmZTy1C0f9jq7g>;
+    rdfs:label "Defining a FAIRplus-DSM classification value";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "c/UaspstwGEuhape4zf1cJFY9hk87Ukxt2jQs/EXP98/KsAQXMv76uAhCbd0J2agLiSYhaWjn/m/sSNCuWpFqshnSmYCfPnPleay8VqpJKl+RuO4vYxHARb9yKCpAGMhKcWRDmyjDWoA9P/w4ypK0Qx0joexmqZR5mfhwOHA8vA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

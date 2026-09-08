@@ -1,0 +1,186 @@
+@prefix this: <https://w3id.org/np/RASsPAMYxaXaxotZfa0OiNnO5Rcl2cxHlXnIk4wvzeiV8> .
+@prefix sub: <https://w3id.org/np/RASsPAMYxaXaxotZfa0OiNnO5Rcl2cxHlXnIk4wvzeiV8/> .
+@prefix schema: <http://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix conf: <https://w3id.org/scholarlydata/ontology/conference-ontology.owl#> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  schema:endDate rdfs:label "has the end date" .
+  
+  schema:location rdfs:label "takes place in" .
+  
+  schema:startDate rdfs:label "has the start date" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  owl:sameAs rdfs:label "has the alternative ID" .
+  
+  gen:Event rdfs:label "Event" .
+  
+  gen:Space rdfs:label "Space" .
+  
+  gen:hasAdmin rdfs:label "has as admin" .
+  
+  gen:hasRootDefinition rdfs:label "has as root definition" .
+  
+  gen:isSubSpaceOf rdfs:label "is a sub-space of" .
+  
+  sub:admin a nt:AgentPlaceholder;
+    rdfs:label "an admin of the workshop or tutorial" .
+  
+  sub:conference a nt:GuidedChoicePlaceholder;
+    rdfs:label "the conference it is part of";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "the description of the workshop or tutorial" .
+  
+  sub:endDate a nt:LiteralPlaceholder;
+    rdfs:label "end date (and optionally time)";
+    nt:hasDatatype xsd:dateTime .
+  
+  sub:event a nt:ExternalUriPlaceholder, nt:IntroducedResource;
+    rdfs:label "identifier, nested under the conference";
+    nt:hasPrefix "~~SPACE~~/";
+    nt:hasPrefixLabel "Conference" .
+  
+  sub:kind a nt:RestrictedChoicePlaceholder;
+    rdfs:label "workshop or tutorial";
+    nt:possibleValue conf:Tutorial, conf:Workshop .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the name of the workshop or tutorial" .
+  
+  sub:room a nt:LiteralPlaceholder;
+    rdfs:label "the room, as printed in the schedule" .
+  
+  sub:rootDefinition a nt:RootNanopubPlaceholder .
+  
+  sub:st00 a nt:AdvancedStatement;
+    rdf:object gen:Space;
+    rdf:predicate rdf:type;
+    rdf:subject sub:event .
+  
+  sub:st01 a nt:AdvancedStatement;
+    rdf:object gen:Event;
+    rdf:predicate rdf:type;
+    rdf:subject sub:event .
+  
+  sub:st02 rdf:object sub:kind;
+    rdf:predicate rdf:type;
+    rdf:subject sub:event .
+  
+  sub:st03 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:event .
+  
+  sub:st04 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:event .
+  
+  sub:st05 rdf:object sub:conference;
+    rdf:predicate gen:isSubSpaceOf;
+    rdf:subject sub:event .
+  
+  sub:st06 a nt:RepeatableStatement;
+    rdf:object sub:admin;
+    rdf:predicate gen:hasAdmin;
+    rdf:subject sub:event .
+  
+  sub:st10 rdf:object sub:startDate;
+    rdf:predicate schema:startDate;
+    rdf:subject sub:event .
+  
+  sub:st11 a nt:OptionalStatement;
+    rdf:object sub:endDate;
+    rdf:predicate schema:endDate;
+    rdf:subject sub:event .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:room;
+    rdf:predicate schema:location;
+    rdf:subject sub:event .
+  
+  sub:st90 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:website;
+    rdf:predicate owl:sameAs;
+    rdf:subject sub:event .
+  
+  sub:st99 a nt:AdvancedStatement;
+    rdf:object sub:rootDefinition;
+    rdf:predicate gen:hasRootDefinition;
+    rdf:subject sub:event .
+  
+  sub:startDate a nt:LiteralPlaceholder;
+    rdfs:label "start date (and optionally time)";
+    nt:hasDatatype xsd:dateTime .
+  
+  sub:website a nt:ExternalUriPlaceholder;
+    rdfs:label "the website of the workshop or tutorial" .
+  
+  sub:workshop-template a nt:AssertionTemplate;
+    dct:description """<p>Such nanopublications define a <strong>workshop or tutorial that is part of a conference</strong>, as a sub-space of the conference's own Space.</p>
+
+<p>The event is typed as a <code>Space</code> and an <code>Event</code>, like any other time-limited Space, and additionally as a conference-ontology <code>Workshop</code> or <code>Tutorial</code> — so that the two can be told apart on the conference page and in queries.</p>
+
+<p>Give it a short name only: the identifier is minted <strong>under the conference's own namespace</strong> (<code>https://w3id.org/spaces/myconf/2026/my-workshop</code>), which is what makes it a sub-space. Opened from a conference page, the form takes that namespace from the page; otherwise it offers a picker.</p>
+
+<p>Organizers are <em>not</em> declared here: use the separate <em>Declaring an organizer of a space</em> template, one nanopublication per person, so that each grant can be revoked on its own.</p>""";
+    rdfs:label "Defining a workshop or tutorial at a conference";
+    nt:hasNanopubLabelPattern "${label}";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06,
+      sub:st10, sub:st11, sub:st12, sub:st90, sub:st99;
+    nt:hasTag "Spaces";
+    nt:hasTargetNanopubType gen:Event, gen:Space .
+  
+  conf:Tutorial rdfs:label "Tutorial - (teaching a topic to attendees)" .
+  
+  conf:Workshop rdfs:label "Workshop - (its own program of contributed talks)" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-31T09:49:01Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:workshop-template;
+    rdfs:label "Defining a workshop or tutorial at a conference";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "huy704ran2WLWkUxMnYNZ5trRqhc2yrhWFFD2Cdz24qq1W0Da5g/vVgrCTHLikTgI3LU/StJ0TofYlMfYLkVcd2WtvsC7zoUWCvR2Hi2+a3qDX1g0t0aOsx2Sr6QvsdOQ2CWIlAeQL/K8doFpwOIZxDiYiUx4lgl4OWSJzZ0rwE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

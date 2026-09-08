@@ -1,0 +1,129 @@
+@prefix this: <https://w3id.org/np/RAs2zzGL_W_UuVkbclSOCNIeC-AUbCdNuu3_gPT5LSToA> .
+@prefix sub: <https://w3id.org/np/RAs2zzGL_W_UuVkbclSOCNIeC-AUbCdNuu3_gPT5LSToA/> .
+@prefix schema: <https://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "is described as - a short prose description of the project" .
+  
+  rdf:type rdfs:label "is a - asserts that the given thing (left) belongs to the given class (right)" .
+  
+  rdfs:label rdfs:label "is called - connects an identifier to a human-readable name for it" .
+  
+  rdfs:seeAlso rdfs:label "has the website - the project's own web page" .
+  
+  wd:P1344 rdfs:label "took part in - connects a person to a project they were involved in, in any role" .
+  
+  schema:ResearchProject rdfs:label "research project - a collaborative undertaking with a research aim, of any size and any degree of formality" .
+  
+  schema:endDate rdfs:label "ended in - the year the project finished, left out while it is still running" .
+  
+  schema:startDate rdfs:label "started in - the year the project began" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "a short description of what the project was about" .
+  
+  sub:endYear a nt:LiteralPlaceholder;
+    rdfs:label "the year the project ended, e.g. 2013 - leave empty if it is still running";
+    nt:hasDatatype xsd:gYear;
+    nt:hasRegex "[0-9]{4}" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the project, e.g. MOLTO - Multilingual Online Translation" .
+  
+  sub:participant a nt:AgentPlaceholder;
+    rdfs:label "who took part in the project - add one line per person";
+    nt:hasDefaultValue nt:CREATOR .
+  
+  sub:project a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name for this project, used as URI suffix, e.g. molto" .
+  
+  sub:st0 rdf:object schema:ResearchProject;
+    rdf:predicate rdf:type;
+    rdf:subject sub:project .
+  
+  sub:st1 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:project .
+  
+  sub:st2 a nt:RepeatableStatement;
+    rdf:object sub:project;
+    rdf:predicate wd:P1344;
+    rdf:subject sub:participant .
+  
+  sub:st3 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:project .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:website;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:project .
+  
+  sub:st5 rdf:object sub:startYear;
+    rdf:predicate schema:startDate;
+    rdf:subject sub:project .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:endYear;
+    rdf:predicate schema:endDate;
+    rdf:subject sub:project .
+  
+  sub:startYear a nt:LiteralPlaceholder;
+    rdfs:label "the year the project started, e.g. 2010";
+    nt:hasDatatype xsd:gYear;
+    nt:hasRegex "[0-9]{4}" .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Records that somebody took part in a project, and defines the project at the same time. This is the lightweight counterpart to the Space-based project templates: it captures just what a CV entry needs -- a name, a short description, a website, and the years the project ran -- without the governance machinery of Spaces, and without asking for a funder, a grant identifier, or a research programme. Years are recorded as plain years rather than full dates, because that is the precision most project records actually have. Leave the end year empty for a project that is still running. The participation statement can be repeated to name several people involved in the same project.";
+    rdfs:label "Declaring participation in a project";
+    nt:hasNanopubLabelPattern "${participant} took part in ${name}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6;
+    nt:hasTag "CV";
+    nt:hasTargetNanopubType schema:ResearchProject .
+  
+  sub:website a nt:ExternalUriPlaceholder;
+    rdfs:label "the project's website (optional)" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-31T09:55:00Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    rdfs:label "Declaring participation in a project";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "kSwQMtmZwZAikEnN+LYDvNr7HjSSIxcPW2HgBMvkQGyDBp3MQIKfz8/IzK/BdMrHoAKixoR7Y9202DsjCEJs9xWVQVcOyWOi9+6NA2UJO0ygMN+g7ZjQVEx74L5B5Nq/xWSAqHcKnWFq4MVIbmQql/07+1YFViWnDhJjuRgAvq4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

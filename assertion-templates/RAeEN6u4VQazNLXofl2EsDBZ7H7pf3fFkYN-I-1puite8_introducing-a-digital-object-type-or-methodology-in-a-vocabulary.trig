@@ -1,0 +1,146 @@
+@prefix this: <https://w3id.org/np/RAeEN6u4VQazNLXofl2EsDBZ7H7pf3fFkYN-I-1puite8> .
+@prefix sub: <https://w3id.org/np/RAeEN6u4VQazNLXofl2EsDBZ7H7pf3fFkYN-I-1puite8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix fip: <https://w3id.org/fair/fip/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "can be described as follows: - gives a thing (left) a human-readable description (right)" .
+  
+  dct:isPartOf rdfs:label "is part of - states that the thing on the left belongs to the vocabulary on the right" .
+  
+  rdf:type rdfs:label "is a - asserts that the given thing (left) belongs to the given class (right)" .
+  
+  rdfs:label rdfs:label "has the name - connects an identifier to a human-readable name for it" .
+  
+  rdfs:seeAlso rdfs:label "is further explained at - connects an identifier to a link with further information about it" .
+  
+  skos:broadMatch rdfs:label "has parent resource" .
+  
+  skos:closeMatch rdfs:label "can in some situations be considered the same as" .
+  
+  skos:exactMatch rdfs:label "is (almost) exactly the same as" .
+  
+  skos:relatedMatch rdfs:label "is related to - links this identifier to other related existing identifiers" .
+  
+  fip:Digital-Object-Type rdfs:label "Digital Object Type" .
+  
+  fip:Methodology rdfs:label "Methodology" .
+  
+  fip:has-description-source rdfs:label "has the description source" .
+  
+  sub:class a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose whether this is a Digital Object Type or a Methodology";
+    nt:hasDefaultValue fip:Digital-Object-Type;
+    nt:possibleValue fip:Digital-Object-Type, fip:Methodology .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the Digital Object Type or Methodology" .
+  
+  sub:descriptionSource a nt:ExternalUriPlaceholder;
+    rdfs:label "the source of the description above" .
+  
+  sub:mappedResource a nt:ExternalUriPlaceholder;
+    rdfs:label "the identifier of the related resource" .
+  
+  sub:mappingPredicate a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose mapping relation";
+    nt:possibleValue skos:broadMatch, skos:closeMatch, skos:exactMatch, skos:relatedMatch .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the Digital Object Type or Methodology" .
+  
+  sub:seeAlsoLink a nt:ExternalUriPlaceholder;
+    rdfs:label "a URL where more information can be found" .
+  
+  sub:st0 rdf:object sub:class;
+    rdf:predicate rdf:type;
+    rdf:subject sub:thing .
+  
+  sub:st1 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:thing .
+  
+  sub:st2 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:thing .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:descriptionSource;
+    rdf:predicate fip:has-description-source;
+    rdf:subject sub:thing .
+  
+  sub:st4 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:mappedResource;
+    rdf:predicate sub:mappingPredicate;
+    rdf:subject sub:thing .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:seeAlsoLink;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:thing .
+  
+  sub:st6 rdf:object sub:vocabulary;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:thing .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description """<p>Such a nanopublication introduces a new Digital Object Type or Methodology as a term of a given vocabulary, in the sense of the FAIR Implementation Profile (FIP) framework.</p>
+
+<p>A <em>Digital Object Type</em> is a kind of research output or digital artefact, such as 'Dataset', 'Image' or 'Computational Workflow'. A <em>Methodology</em> is a way of producing or analysing such objects, such as 'Mass spectrometry' or 'Systematic review'.</p>
+
+<p>The identifier of the new term should be formed with the namespace of the vocabulary it is part of, followed by a short name. When this form is opened from the vocabulary's page, that namespace is already filled in and only the short name has to be added.</p>""";
+    rdfs:label "Introducing a Digital Object Type or Methodology in a vocabulary";
+    nt:hasNanopubLabelPattern "${class}: ${name}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6;
+    nt:hasTag "FAIR" .
+  
+  sub:thing a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "the identifier of the new Digital Object Type or Methodology, formed with the namespace of the vocabulary" .
+  
+  sub:vocabulary a nt:GuidedChoicePlaceholder;
+    rdfs:label "the vocabulary / ontology this term is part of";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Ontology" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-01T08:37:01Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    rdfs:label "Introducing a Digital Object Type or Methodology in a vocabulary";
+    prov:wasDerivedFrom <http://purl.org/np/RANpj_lBaH-YJoFQR5xLldWoN6ddsBQQ1YGD8oAaKju-g>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Ep+guVIkVWecfg5m6ToyAL2/hAbx9f3597uvrKfU2eUlFGuO0JmZIqgW7w7lJp5TfUoC5YdtM7BmVDG4OQRdE/bcrd4plb/FcnEUU72k6N+Hfixu8x8oghWrE7yGfI4nWD2bbBw2cO/jVy+Ma0A0hp4uzGt/BGhIoO7n6mYhj6I=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

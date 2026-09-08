@@ -1,0 +1,65 @@
+@prefix this: <https://w3id.org/np/RACBAezp4zXMQHIebzgvA46N_4TeuwpV8GzNBPe5Pwhik> .
+@prefix sub: <https://w3id.org/np/RACBAezp4zXMQHIebzgvA46N_4TeuwpV8GzNBPe5Pwhik/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-claim-actions a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "For a given claim, returns the linking actions offered on it as a row of buttons: Comment, Add supporting evidence, Add counterevidence, and Reply with a claim.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get claim actions";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix schema: <https://schema.org/>
+
+select distinct ?content where {
+  graph ?a { ?_claim_iri a schema:Statement . }
+  bind(encode_for_uri(str(?_claim_iri)) as ?claim)
+  bind(\"/publish?template-version=latest&amp;template=\" as ?base)
+  bind(\"https%3A%2F%2Fw3id.org%2Fnp%2FRAsHohypO12gewyyusDEH_aI3z7GE-36tXIkr_ev8eITc\" as ?tContribution)
+  bind(\"https%3A%2F%2Fw3id.org%2Fnp%2FRAvh4S1bTIg_sDSNuice65xk7nblns848NFAw8zfB_KB0\" as ?tEvidence)
+  bind(concat(
+    \"<a href='\", ?base, ?tContribution, \"&amp;param_target=\", ?claim,
+      \"&amp;param_stance=http%3A%2F%2Fpurl.org%2Fspar%2Fcito%2Fdiscusses'>Comment</a> \",
+    \"<a href='\", ?base, ?tEvidence, \"&amp;param_claim=\", ?claim,
+      \"&amp;param_stance=http%3A%2F%2Fpurl.org%2Fspar%2Fcito%2Fsupports'>Add supporting evidence</a> \",
+    \"<a href='\", ?base, ?tEvidence, \"&amp;param_claim=\", ?claim,
+      \"&amp;param_stance=http%3A%2F%2Fpurl.org%2Fspar%2Fcito%2Fdisputes'>Add counterevidence</a> \",
+    \"<a href='\", ?base, ?tContribution, \"&amp;param_target=\", ?claim,
+      \"'>Reply with a claim</a>\"
+  ) as ?content)
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-09-01T14:07:22Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-claim-actions;
+    rdfs:label "Get claim actions" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+i9DV8ynzO944pYkYsDwtlqJHuk+b7FQt6Bb4TIQSDX3jGUURn6WpaNwESHmgMLWSydaH5XlabMzuqpPL4iyB+IAzvwIxdJBLhe39EQMu2j+FZ/5d/xu/gO3nZw2KoEvJ7cJisabuI05OylIRSJ+OG5CmzFxnjojUEJeCFi1njY1InhXrb0yHud9b1ifzweoN6YYOBecKs1gTOaT2bf+t4Wgzg3M0PmRVZ4F0OALsnh4T5+x7kFtiPcDKNpORi585JjKCZ4kczIF6oUKcwgC0kmIY97jtLqSLcXRkxHx5CDI6qz4XlRFs1ZbCUdSlzjdPZAkaBcNem1gIhWzkHkEnQIDAQAB";
+    npx:hasSignature "9Gerl/j0ZyUS6CGkQbT19k85DKVQdP0YFLDgNOUpEWlmmaFScfKC3QM5CWoK+adpgmWhtfbUNvsdxlPs00hWvF7G/aznlgapZIwbG8thUiUyzRhvEam+JAPpWA1J66GtmRBEGqOrLzYtbjGX1bWgI7WYuB04bASgXBWxLwXgFOFLPV7tmqg7V5jk0SDVZkbkNFpepo2JWbMYYxR/6aPiYle1RK9+XT/DW0hp7d2nIEgAScFVNAoggkxPYd2yWYYWVdUl6H2S6zXD898wbndennr3Q6pHVd+xFiagAf/1JbQP9CTO5HiUEHKQuYt63SZshSVnjT7cc+GQ2kmpai2dKA==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

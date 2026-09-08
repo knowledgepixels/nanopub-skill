@@ -1,0 +1,157 @@
+@prefix this: <https://w3id.org/np/RAlNuH3cj4ZNmkZMyoeHft28CfD71ImIyWlulX9rXZTJU> .
+@prefix sub: <https://w3id.org/np/RAlNuH3cj4ZNmkZMyoeHft28CfD71ImIyWlulX9rXZTJU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-nanosuggestions-for-assignee a grlc:grlc-query;
+    dct:description "Returns the nanosuggestions currently assigned to a given agent, for that agent's user page: title, kind, current status, the spaces the nanosuggestion is relevant for, who assigned it, and the date it was originally reported (which is also the sort order, most recent first, with closed and rejected entries last). Only the most recent assignment of each nanosuggestion counts, so a reassignment moves the entry to the new assignee instead of leaving it with both. Also returns the winning assignment nanopublication if there is one, so a reassign action can seed its form from it, and an assign target that is empty in that case so that assign and reassign are offered exclusively. Unlike the space-page listing, this query is not gated on space membership: a user page has no space to resolve membership against, so every assignment naming the agent is shown.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the nanosuggestions assigned to an agent";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/29e2f808e4864fca4930806dee70c4a32df54a63ee90156244910a47d3443736>;
+    grlc:sparql """
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix schema: <https://schema.org/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix nsug: <https://w3id.org/np/RA5BAdUvlxLWMWFQN3UVKoIQEB_MYTiAoLH1klXJ7z-XI/>
+
+select distinct ?item_multi_iri ?item_label_multi ?kind ?status ?spaces_multi_iri ?spaces_label_multi
+       ?assigned_by ?assigned_by_label ?date ?suggestion ?np ?fill_source ?assign_target
+where {
+  # grlc fills this block with the page's agent IRI. A multi-valued (_multi_iri)
+  # parameter REQUIRES the empty values block: used bare the variable simply stays
+  # unbound, and the assignee pattern then matches every agent.
+  values ?_resource_multi_iri {}
+  # the most recent assignment nanopub for each nanosuggestion
+  { select ?suggestion (max(concat(?ad, ' ', str(?anp))) as ?apick) where {
+      graph npa:graph {
+        ?anp npa:hasValidSignatureForPublicKeyHash ?apk ; np:hasAssertion ?aa ; dct:created ?adate .
+        filter not exists { ?anpi npx:invalidates ?anp ; npa:hasValidSignatureForPublicKeyHash ?apk . }
+      }
+      graph ?aa { ?suggestion schema:agent ?ag . }
+      bind(str(?adate) as ?ad)
+    } group by ?suggestion }
+  bind(iri(strafter(?apick, ' ')) as ?assignNp)
+  # ...and it must name this agent, so a later reassignment removes the entry
+  graph npa:graph { ?assignNp np:hasAssertion ?assignA .
+                    optional { ?assignNp dct:creator ?assigned_by } }
+  graph ?assignA { ?suggestion schema:agent ?_resource_multi_iri . }
+  # the declaring nanopub carries the title, the kind and the original report date:
+  # ?date is deliberately taken from here and not from the assignment nanopub, so the
+  # listing is ordered by when each nanosuggestion was reported rather than by the
+  # latest thing that happened to it.
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey ; np:hasAssertion ?a ; dct:created ?date .
+    filter not exists { ?npi npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+  }
+  graph ?a {
+    ?suggestion a nsug:Nanosuggestion ; rdfs:label ?title .
+    optional { ?suggestion a ?k . filter(?k != nsug:Nanosuggestion && ?k != schema:Statement) }
+  }
+  # current status: no space to anchor to on a user page, so the most recent one overall
+  optional {
+    { select ?suggestion (max(concat(?sd, ' ', str(?s))) as ?pick) where {
+        graph npa:graph {
+          ?snp npa:hasValidSignatureForPublicKeyHash ?spk ; np:hasAssertion ?sa ; dct:created ?sdate .
+          filter not exists { ?snpi npx:invalidates ?snp ; npa:hasValidSignatureForPublicKeyHash ?spk . }
+        }
+        graph ?sa { ?suggestion schema:actionStatus ?s . }
+        bind(str(?sdate) as ?sd)
+      } group by ?suggestion }
+  }
+  bind(coalesce(iri(strafter(?pick, ' ')), schema:PotentialActionStatus) as ?st)
+  bind(if(?st = schema:CompletedActionStatus, 'done',
+       if(?st = schema:FailedActionStatus, 'rejected',
+       if(?st = schema:ActiveActionStatus, 'in progress', 'open'))) as ?status)
+  # which spaces the nanosuggestion is relevant for
+  optional {
+    { select ?suggestion (group_concat(distinct str(?sp); separator=' ') as ?spaces_multi_iri)
+             (group_concat(distinct ?splabel; separator='\\n') as ?spaces_label_multi) where {
+        graph npa:graph {
+          ?lnp npa:hasValidSignatureForPublicKeyHash ?lpk ; np:hasAssertion ?la .
+          filter not exists { ?lnpi npx:invalidates ?lnp ; npa:hasValidSignatureForPublicKeyHash ?lpk . }
+        }
+        graph ?la { ?suggestion gen:isRelevantFor ?sp . }
+        optional { ?sp rdfs:label ?spl . filter(lang(?spl) = '') }
+        bind(coalesce(?spl, replace(str(?sp), '^.*/', '')) as ?splabel)
+      } group by ?suggestion }
+  }
+  optional { ?assigned_by foaf:name ?assigned_by_label }
+  # the winning *genuine* assignment nanopub, used only to seed the reassign form
+  optional {
+    { select ?suggestion (max(concat(?fd, ' ', str(?fnp))) as ?fpick) where {
+        graph npa:graph {
+          ?fnp npa:hasValidSignatureForPublicKeyHash ?fpk ; np:hasAssertion ?fa ; dct:created ?fdate .
+          filter not exists { ?fnpi npx:invalidates ?fnp ; npa:hasValidSignatureForPublicKeyHash ?fpk . }
+        }
+        graph ?fa { ?suggestion schema:agent ?fag . }
+        # Only a *reporting* nanopub asserts the issue's title, so this keeps the
+        # candidates to genuine assignment nanopubs. Seeding the assign form from a
+        # report would leave its title/description/status/space unmatched, which is
+        # what produces the \"could not be filled in\" warning.
+        filter not exists { graph ?fa { ?suggestion rdfs:label ?titleHere . } }
+        bind(str(?fdate) as ?fd)
+      } group by ?suggestion }
+    bind(iri(strafter(?fpick, ' ')) as ?fill_source)
+  }
+  # \"assign...\" is offered only while there is no assignment nanopub yet; once there
+  # is one, \"reassign...\" takes over (it seeds the form from it). An empty string is
+  # the off-switch: applyEntryMappings hides a button whose mapped value is blank.
+  # Written with an empty string rather than an unbound value because RDF4J evaluates
+  # both if() branches eagerly, so an erroring branch would blank the column always.
+  bind(if(bound(?fill_source), '', str(?suggestion)) as ?assign_target)
+  bind(?suggestion as ?item_multi_iri)
+  bind(?title as ?item_label_multi)
+  bind(coalesce(lcase(strafter(str(?k), 'RA5BAdUvlxLWMWFQN3UVKoIQEB_MYTiAoLH1klXJ7z-XI/')), '') as ?kind)
+  bind(if(?st in (schema:CompletedActionStatus, schema:FailedActionStatus), '2', '1') as ?openRank)
+}
+order by ?openRank desc(?date)
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-02T13:06:25Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-nanosuggestions-for-assignee;
+    npx:supersedes <https://w3id.org/np/RADJJRWWHOhDog_5Lq_rpEoKWcBofbJJ5DImmyznAEfuI>;
+    rdfs:label "Get the nanosuggestions assigned to an agent";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "UIj5cZ9XdPG033Mi1IIlPbMAzlKDED2hRA7lQis6W7wV/haVRJJ+8r6ubh52x2wZKSL0x22ZuX74r7xEmQscsWmzKAkktQgV+sb5PuOC3TV0f9fKz6YKuvikrCAnlzvqeJRmVLlWp2uPaJ94unnHQ8kX42LHh1s5LkNNrGuwAJY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

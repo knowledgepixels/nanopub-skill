@@ -1,0 +1,162 @@
+@prefix this: <https://w3id.org/np/RAVAdO8EkzVyV2ZGmrYvgfBSoi357QFqbJpvwI0sLk4V8> .
+@prefix sub: <https://w3id.org/np/RAVAdO8EkzVyV2ZGmrYvgfBSoi357QFqbJpvwI0sLk4V8/> .
+@prefix schema: <https://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nsug: <https://w3id.org/np/RA5BAdUvlxLWMWFQN3UVKoIQEB_MYTiAoLH1klXJ7z-XI/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the title" .
+  
+  rdfs:seeAlso rdfs:label "has further information at" .
+  
+  schema:PotentialActionStatus rdfs:label "open" .
+  
+  schema:Statement rdfs:label "statement" .
+  
+  schema:about rdfs:label "is about" .
+  
+  schema:actionStatus rdfs:label "has the status" .
+  
+  schema:agent rdfs:label "is assigned to" .
+  
+  gen:isRelevantFor rdfs:label "is relevant for" .
+  
+  nsug:Bug rdfs:label "bug" .
+  
+  nsug:Feature rdfs:label "feature" .
+  
+  nsug:Nanosuggestion rdfs:label "nanosuggestion" .
+  
+  nsug:Task rdfs:label "task" .
+  
+  sub:assignee a nt:AgentPlaceholder;
+    rdfs:label "person this nanosuggestion is assigned to" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description" .
+  
+  sub:kind a nt:RestrictedChoicePlaceholder;
+    rdfs:label "kind of nanosuggestion";
+    nt:possibleValue nsug:Bug, nsug:Feature, nsug:Task .
+  
+  sub:link a nt:ExternalUriPlaceholder;
+    rdfs:label "a link with further information" .
+  
+  sub:space a nt:GuidedChoicePlaceholder;
+    rdfs:label "space this nanosuggestion is relevant for";
+    nt:hasDefaultValue <https://w3id.org/spaces/nanosuggestions>;
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st01 rdf:object nsug:Nanosuggestion;
+    rdf:predicate rdf:type;
+    rdf:subject sub:suggestion .
+  
+  sub:st02 rdf:object schema:Statement;
+    rdf:predicate rdf:type;
+    rdf:subject sub:suggestion .
+  
+  sub:st03 rdf:object sub:kind;
+    rdf:predicate rdf:type;
+    rdf:subject sub:suggestion .
+  
+  sub:st04 rdf:object sub:title;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:suggestion .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:suggestion .
+  
+  sub:st06 a nt:RepeatableStatement;
+    rdf:object sub:space;
+    rdf:predicate gen:isRelevantFor;
+    rdf:subject sub:suggestion .
+  
+  sub:st07 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:thing;
+    rdf:predicate schema:about;
+    rdf:subject sub:suggestion .
+  
+  sub:st08 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:link;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:suggestion .
+  
+  sub:st09 rdf:object schema:PotentialActionStatus;
+    rdf:predicate schema:actionStatus;
+    rdf:subject sub:suggestion .
+  
+  sub:st10 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:assignee;
+    rdf:predicate schema:agent;
+    rdf:subject sub:suggestion .
+  
+  sub:suggestion a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "This nanosuggestion" .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Report a suggestion, bug, feature request or task, in the style of an issue tracker. The nanosuggestion is linked to one or more spaces it is relevant for and starts out with the status \"open\". It is a content node of the Nanoarguments model (a schema:Statement carrying its text in rdf:value), so it can be commented on, supported or disputed like any other contribution. Other nanopublications can set its status, assign it to somebody, or link it to further spaces.";
+    dct:isVersionOf <https://w3id.org/np/RApgOND1Lamuvy6vIaJ03rM1D1Btn_gVDdbh3g5Y_hhgk/templateKind>;
+    rdfs:label "Reporting a nanosuggestion";
+    gen:governedBy <https://w3id.org/spaces/nanosuggestions>;
+    nt:hasNanopubLabelPattern "Nanosuggestion: ${title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st09, sub:st10;
+    nt:hasTag "Nanosuggestions" .
+  
+  sub:thing a nt:ExternalUriPlaceholder;
+    rdfs:label "something this nanosuggestion is about" .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "short title" .
+  
+  <https://w3id.org/spaces/nanosuggestions> rdfs:label "Nanosuggestions" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-27T06:30:18Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:supersedes <https://w3id.org/np/RAJoQf3urjDaJH2QhZj_pbVxx8FnwEjTltzQis5eXvObE>;
+    rdfs:label "Reporting a nanosuggestion";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "R0W4Z3n5xOq5QuWk5IEHG1y2H60AtPBLfT2pr08qQiDba+yuezlitDZKmsMiNDJRCUGb1Ny9X5sDP0O/2kVjM0Y017448Py9ugt6kZFbVSo3hgHRfPatz9lzQUPu+fRiK78yxHlDdU86dHZu5vxIaVaMdkCFvNFfVPNGL1/UPUE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,97 @@
+@prefix this: <https://w3id.org/np/RAFv-eKTeLzE7W2_7NtOBoYzmBe-iDGjAkqOKH0mgNpV4> .
+@prefix sub: <https://w3id.org/np/RAFv-eKTeLzE7W2_7NtOBoYzmBe-iDGjAkqOKH0mgNpV4/> .
+@prefix schema: <https://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nsug: <https://w3id.org/np/RA5BAdUvlxLWMWFQN3UVKoIQEB_MYTiAoLH1klXJ7z-XI/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "has the comment" .
+  
+  schema:Statement rdfs:label "statement" .
+  
+  schema:agent rdfs:label "is assigned to" .
+  
+  nsug:Nanosuggestion rdfs:label "nanosuggestion" .
+  
+  sub:assignee a nt:AgentPlaceholder;
+    rdfs:label "person the nanosuggestion is assigned to" .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "comment on the assignment (optional)" .
+  
+  sub:st01 rdf:object nsug:Nanosuggestion;
+    rdf:predicate rdf:type;
+    rdf:subject sub:suggestion .
+  
+  sub:st02 rdf:object schema:Statement;
+    rdf:predicate rdf:type;
+    rdf:subject sub:suggestion .
+  
+  sub:st03 a nt:RepeatableStatement;
+    rdf:object sub:assignee;
+    rdf:predicate schema:agent;
+    rdf:subject sub:suggestion .
+  
+  sub:st04 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:suggestion .
+  
+  sub:suggestion a nt:GuidedChoicePlaceholder;
+    rdfs:label "the nanosuggestion";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/np/RA5BAdUvlxLWMWFQN3UVKoIQEB_MYTiAoLH1klXJ7z-XI/Nanosuggestion" .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Assign an existing nanosuggestion to one or more people, meaning that they are expected to take it on. The assignment counts for a space if it was published by a member of that space, so the same nanosuggestion can have different assignees in different spaces.";
+    dct:isVersionOf <https://w3id.org/np/RAuwk865jCQjDa7nO7TSM65P7dmCFzFCLWzwpLDVVg-bo/templateKind>;
+    rdfs:label "Assigning a nanosuggestion";
+    gen:governedBy <https://w3id.org/spaces/nanosuggestions>;
+    nt:hasNanopubLabelPattern "Nanosuggestion ${suggestion} assigned to ${assignee}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04;
+    nt:hasTag "Nanosuggestions" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-26T13:25:54Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:supersedes <https://w3id.org/np/RAuwk865jCQjDa7nO7TSM65P7dmCFzFCLWzwpLDVVg-bo>;
+    rdfs:label "Assigning a nanosuggestion";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "XZ9hUBX6LbGk2aUTQWGsZEH/JEsyfNxFopw4FOGbwq4BH0wa9ya6IKJbblk3R8v8SM958rD6n5lMZaQMHTw/G1dcimePWZ1pRJ8R04Pn6k/BA9TXRnCdMrdSoi4C3rYDkXIvSHEn7mNB9noDe6CLR96/XedjkbfXyLKm40FPX+g=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

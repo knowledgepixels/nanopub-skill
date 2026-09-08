@@ -1,0 +1,91 @@
+@prefix this: <https://w3id.org/np/RAbU26aRWmw-t1io65dHgaxTiru7aBq8eZXEyzd93bmhw> .
+@prefix sub: <https://w3id.org/np/RAbU26aRWmw-t1io65dHgaxTiru7aBq8eZXEyzd93bmhw/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-awards-for-recipient a grlc:grlc-query;
+    dct:description "Returns all awards received by a given person, with the award name, the year it was conferred, the conferring event or organization, the work it was given for, and the full list of recipients. An award can have several recipients: a best paper award is received jointly by all authors of the paper.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get awards for recipient";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/ea5097da16bf887337c4057b23f89093c9b1a4bfe0f30955e75cdf6c4093b4a1>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix wd: <http://www.wikidata.org/entity/>
+prefix vivo: <http://vivoweb.org/ontology/core#>
+
+select ?award ?award_label ?year ?conferrer ?conferrer_label ?work
+  (group_concat(distinct str(?recipient); separator=\" \") as ?recipients_multi_iri)
+  (group_concat(distinct replace(replace(str(?rname), \"\\\\\\\\\", \"\\\\\\\\\\\\\\\\\"), \"[\\r\\n]+\", \"\\\\\\\\n\"); separator=\"\\n\") as ?recipients_label_multi)
+  ?np (\"^\" as ?np_label)
+where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np np:hasAssertion ?a .
+    ?np np:hasPublicationInfo ?pi .
+    ?np npx:introduces ?award .
+  }
+  graph ?a {
+    ?award a vivo:AwardReceipt .
+    ?_recipient_iri wd:P166 ?award .
+    ?recipient wd:P166 ?award .
+    optional { ?award rdfs:label ?award_label . }
+    optional { ?award dct:issued ?year . }
+    optional { ?award wd:P1027 ?conferrer . }
+    optional { ?award wd:P1686 ?work . }
+  }
+  # Labels for the conferrer and the recipients live in the pubinfo graph, not
+  # the assertion. Each OPTIONAL wraps its GRAPH rather than the other way
+  # round: `GRAPH ?x { OPTIONAL {...} }` drops the whole row in RDF4J.
+  optional { graph ?pi { ?conferrer rdfs:label ?conferrer_label . } }
+  optional { graph ?pi { ?recipient foaf:name ?rname . } }
+}
+group by ?award ?award_label ?year ?conferrer ?conferrer_label ?work ?np
+order by desc(?year)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-28T12:45:35Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-awards-for-recipient;
+    rdfs:label "Get awards for recipient";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "hPxg99L+AuNB51RnmDR+rYw3SGeiJKLcWiX1dm57/9dTIIeIsHCNHzZ6HHlbzSAE180KQu3LTWM3coCj5bIiRb+78pfYqfdZE0iwot8rcHj36BZIE9L/mWzIYUsafNAB3QGM0SdpJNfovsyD0upSSRUJTybrhWLqU/iUYGK1N1I=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

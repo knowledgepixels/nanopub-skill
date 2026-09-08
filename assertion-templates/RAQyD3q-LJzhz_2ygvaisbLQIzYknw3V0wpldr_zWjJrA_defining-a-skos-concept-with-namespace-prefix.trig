@@ -1,0 +1,147 @@
+@prefix this: <https://w3id.org/np/RAQyD3q-LJzhz_2ygvaisbLQIzYknw3V0wpldr_zWjJrA> .
+@prefix sub: <https://w3id.org/np/RAQyD3q-LJzhz_2ygvaisbLQIzYknw3V0wpldr_zWjJrA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a - asserts that the thing on the left belongs to the class on the right" .
+  
+  owl:DeprecatedClass rdfs:label "deprecated term - discouraged for new data, but still listed in the vocabulary" .
+  
+  skos:Concept rdfs:label "concept" .
+  
+  skos:broader rdfs:label "has the broader concept" .
+  
+  skos:definition rdfs:label "is defined as follows: - connects an identifier (left) to a human-readable definition (right)" .
+  
+  skos:exactMatch rdfs:label "is the same as" .
+  
+  skos:inScheme rdfs:label "is in scheme" .
+  
+  skos:prefLabel rdfs:label "has the preferred label" .
+  
+  skos:related rdfs:label "is related to - connects two concepts that are somehow related" .
+  
+  gen:WithdrawnTerm rdfs:label "withdrawn term - withdrawn from the vocabulary and hidden from its term listings" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description """<p>Such a nanopublication defines a concept according to the SKOS standard. Concepts are the units of a controlled vocabulary or thesaurus, and are by convention named with singular nouns (or noun phrases) like 'human', 'cardiovascular disease', or 'approach'.</p>
+
+<p>The concept is minted under the namespace of the vocabulary it belongs to: when this form is opened from a vocabulary (or space) page, that namespace is used automatically; otherwise a selector appears to pick it.</p>
+
+<p>Use the term status to mark a concept as deprecated (discouraged, but still listed) or withdrawn (removed from the vocabulary's listings).</p>""";
+    rdfs:label "Defining a SKOS concept (with namespace prefix)";
+    nt:hasNanopubLabelPattern "${label}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st2b, sub:st3, sub:st4, sub:st5, sub:st6;
+    nt:hasTag "Terms" .
+  
+  sub:broaderConcept a nt:GuidedChoicePlaceholder;
+    rdfs:label "the URI of a broader concept";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=http://www.w3.org/2004/02/skos/core%23Concept" .
+  
+  sub:concept a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix";
+    nt:hasPrefix "~~NAMESPACE~~";
+    nt:hasPrefixLabel "Concept" .
+  
+  sub:definition a nt:LongLiteralPlaceholder;
+    rdfs:label "definition of the concept" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the label of the concept" .
+  
+  sub:relatedConcept a nt:GuidedChoicePlaceholder;
+    rdfs:label "URI of a related concept";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=http://www.w3.org/2004/02/skos/core%23Concept" .
+  
+  sub:sameConcept a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of equivalent concept" .
+  
+  sub:scheme a nt:GuidedChoicePlaceholder;
+    rdfs:label "scheme URI";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=http://www.w3.org/2004/02/skos/core%23ConceptScheme" .
+  
+  sub:st0 rdf:object skos:Concept;
+    rdf:predicate rdf:type;
+    rdf:subject sub:concept .
+  
+  sub:st1 rdf:object sub:label;
+    rdf:predicate skos:prefLabel;
+    rdf:subject sub:concept .
+  
+  sub:st2 rdf:object sub:definition;
+    rdf:predicate skos:definition;
+    rdf:subject sub:concept .
+  
+  sub:st2b a nt:OptionalStatement;
+    rdf:object sub:status;
+    rdf:predicate rdf:type;
+    rdf:subject sub:concept .
+  
+  sub:st3 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:broaderConcept;
+    rdf:predicate skos:broader;
+    rdf:subject sub:concept .
+  
+  sub:st4 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:relatedConcept;
+    rdf:predicate skos:related;
+    rdf:subject sub:concept .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:sameConcept;
+    rdf:predicate skos:exactMatch;
+    rdf:subject sub:concept .
+  
+  sub:st6 a nt:OptionalStatement;
+    rdf:object sub:scheme;
+    rdf:predicate skos:inScheme;
+    rdf:subject sub:concept .
+  
+  sub:status a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select term status, if appropriate";
+    nt:possibleValue owl:DeprecatedClass, gen:WithdrawnTerm .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-04T05:21:46Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Defining a SKOS concept (with namespace prefix)";
+    prov:wasDerivedFrom <https://w3id.org/np/RAVkBlSMygOmiOpUzCtYTTR15vHQQ9V7bwLvOAfNL17lE>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "TQ0/lWsRIyuyctQbr6WDwNZeV4SP2bw/S9LC3v85Q7vCKBys8WwmLkpuQM0KvrTNR913vTPaZDdUNcPtKJHhWTEnNXW0OTcDsVySbXEF+VKSv9O9Uq2v2OcWIk2U352HOfvb+hNbtjCGRwM2BsbqhrjPWaa4xVaTysElBUTik3Q=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

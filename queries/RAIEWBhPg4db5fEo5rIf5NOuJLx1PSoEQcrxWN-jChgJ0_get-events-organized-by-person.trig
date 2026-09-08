@@ -1,0 +1,96 @@
+@prefix this: <https://w3id.org/np/RAIEWBhPg4db5fEo5rIf5NOuJLx1PSoEQcrxWN-jChgJ0> .
+@prefix sub: <https://w3id.org/np/RAIEWBhPg4db5fEo5rIf5NOuJLx1PSoEQcrxWN-jChgJ0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-events-organized-by a grlc:grlc-query;
+    dct:description "Returns the academic events a given person organized, with the dates, the location, and the event website. Events are Spaces typed as gen:Event, and the organizer relation is a role instantiation published as a separate nanopublication, so this query joins the two and checks that both carry a valid signature. It runs against the full repository because the event definition and the role grant land in different type-specific repositories.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get events organized by person";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix schema: <http://schema.org/>
+
+select ?event ?event_label ?description ?startDate ?endDate ?location ?location_label (min(?website) as ?website) ?np (\"^\" as ?np_label) where {
+  # the nanopublication that defines the event
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np np:hasAssertion ?a .
+    ?np np:hasPublicationInfo ?pi .
+    ?np npx:introduces ?event .
+  }
+  graph ?a {
+    ?event a gen:Event ;
+      rdfs:label ?event_label .
+    optional { ?event dct:description ?description . }
+    optional { ?event schema:startDate ?startDate . }
+    optional { ?event schema:endDate ?endDate . }
+    optional { ?event schema:location ?location . }
+    optional { ?event owl:sameAs ?website . }
+  }
+  # The organizer role is granted by a separate nanopublication. This is an
+  # EXISTS rather than a join: an event can carry several grant nanopubs (one
+  # here has three), and joining them would return the event once per grant.
+  filter exists {
+    graph npa:graph {
+      ?rnp npa:hasValidSignatureForPublicKeyHash ?rkey .
+      filter not exists { ?rnpx npx:invalidates ?rnp ; npa:hasValidSignatureForPublicKeyHash ?rkey . }
+      ?rnp np:hasAssertion ?ra .
+    }
+    graph ?ra { ?event schema:organizer ?_organizer_iri . }
+  }
+  # the place label sits in the defining nanopublication's pubinfo
+  optional { graph ?pi { ?location rdfs:label ?location_label . } }
+}
+group by ?event ?event_label ?description ?startDate ?endDate ?location ?location_label ?np
+order by desc(?startDate)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-28T19:09:44Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-events-organized-by;
+    rdfs:label "Get events organized by person";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "DmlG5KeIukxtk4eG812T1s3PkCfHaAz2y9ixFmbAEDXy+UjX28xMKhZRoC1Vyguh5hTE/g674YmfcYdMNAdsWWYdchxQSXVA7wyiB7RENjcS5O0xD+uckR0NBt0joNgLrEBA3hwnw2ur8gM1c+5Q9g2Kv+l/Ga0piBgdMaRI9qs=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

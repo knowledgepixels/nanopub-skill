@@ -1,0 +1,138 @@
+@prefix this: <https://w3id.org/np/RADG5bf96K14mvbs0Kv9jEl_q-2DBakSg3aYsGkDH0_1k> .
+@prefix sub: <https://w3id.org/np/RADG5bf96K14mvbs0Kv9jEl_q-2DBakSg3aYsGkDH0_1k/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-maturity-assessments-of-an-ontology a grlc:grlc-query;
+    dct:description "Returns the maturity assessments recorded against a FAIRplus-DSM-style maturity model ontology, one row per assessment, with the dataset assessed (linked to its part page), the assessment date, the highest maturity level found to be reached, the number of indicator verdicts and how many of them fall into each outcome, and who carried the assessment out. Only the newest non-invalidated version of each assessment and of each of its verdicts is counted.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the maturity assessments of an ontology";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix dsm: <https://w3id.org/spaces/fairplus/r/dsm/>
+select ?dataset ?date ?level ?level_label ?verdicts ?satisfied
+       ?not_satisfied ?not_applicable ?not_assessed ?assessor ?assessor_label
+       (str(?assessment) as ?assessment_target) (str(?np) as ?override_target) ?np ?np_label
+where {
+  {
+    select ?assessment (max(?rank) as ?maxrank) where {
+      values ?_ontology_multi_iri {}
+      graph npa:graph {
+        ?np_ npx:hasNanopubType dsm:MaturityAssessment ;
+             npa:hasValidSignatureForPublicKeyHash ?pubkey ;
+             dct:created ?d1 ; npx:introduces ?assessment ; np:hasAssertion ?a1 .
+        filter not exists { ?inv npx:invalidates ?np_ ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+      }
+      graph ?a1 { ?assessment dct:conformsTo ?_ontology_multi_iri . }
+      bind(concat(str(?d1), \"|\", str(?np_)) as ?rank)
+    } group by ?assessment
+  }
+  graph npa:graph {
+    ?np npx:hasNanopubType dsm:MaturityAssessment ;
+        dct:created ?d2 ; npx:introduces ?assessment ;
+        np:hasAssertion ?ag ; np:hasPublicationInfo ?pg .
+  }
+  filter(concat(str(?d2), \"|\", str(?np)) = ?maxrank)
+  graph ?ag {
+    ?assessment dsm:assessedDataset ?ds ; dsm:assessmentDate ?date .
+  }
+  optional { graph ?ag { ?ds rdfs:label ?dslab } }
+  optional { graph ?ag { ?assessment dsm:achievedMaturityLevel ?lvl } }
+  optional { graph ?pg { ?np dct:creator ?agent } }
+  optional { graph ?pg { ?agent0 foaf:name ?aname . filter(?agent0 = ?agent) } }
+  # link the dataset to its part page: the part route is namespace-based, and an
+  # external PID never falls under the resource namespace, so the target is built here
+  bind(replace(replace(replace(str(coalesce(?dslab, ?ds)), \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\") as ?dslabesc)
+  bind(concat('<span><a href=\"/part?id=', encode_for_uri(str(?ds)), '\">', ?dslabesc, '</a></span>') as ?dataset)
+  bind(coalesce(?lvl, <urn:none>) as ?level)
+  bind(coalesce(?agent, <urn:none>) as ?assessor)
+  bind(coalesce(?aname, \"\") as ?assessor_label)
+  optional {
+    { select (?t as ?level) (?tl as ?llab) where {
+        values ?_ontology_multi_iri {}
+        graph npa:graph { ?lnp npx:introduces ?t ; np:hasAssertion ?la }
+        graph ?la { ?t dct:isPartOf ?_ontology_multi_iri ; rdfs:label ?tl }
+    } }
+  }
+  optional {
+    { select ?assessment
+        (count(distinct ?verdict) as ?verdicts)
+        (sum(if(?val = dsm:Satisfied, 1, 0)) as ?satisfied)
+        (sum(if(?val = dsm:NotSatisfied, 1, 0)) as ?not_satisfied)
+        (sum(if(?val = dsm:NotApplicable, 1, 0)) as ?not_applicable)
+        (sum(if(?val = dsm:NotAssessed, 1, 0)) as ?not_assessed)
+      where {
+        {
+          select ?verdict (max(?vrank) as ?vmax) where {
+            graph npa:graph {
+              ?vn npx:hasNanopubType dsm:IndicatorVerdict ;
+                  npa:hasValidSignatureForPublicKeyHash ?vpk ;
+                  dct:created ?vd1 ; npx:introduces ?verdict .
+              filter not exists { ?vi npx:invalidates ?vn ; npa:hasValidSignatureForPublicKeyHash ?vpk . }
+            }
+            bind(concat(str(?vd1), \"|\", str(?vn)) as ?vrank)
+          } group by ?verdict
+        }
+        graph npa:graph {
+          ?vnp npx:hasNanopubType dsm:IndicatorVerdict ;
+               dct:created ?vd2 ; npx:introduces ?verdict ; np:hasAssertion ?va .
+        }
+        filter(concat(str(?vd2), \"|\", str(?vnp)) = ?vmax)
+        graph ?va { ?assessment dsm:hasVerdict ?verdict . ?verdict dsm:verdictValue ?val }
+      } group by ?assessment
+    }
+  }
+  bind(coalesce(?llab, \"\") as ?level_label)
+  bind(\"^\" as ?np_label)
+}
+order by desc(?date) ?dslabesc
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-07T07:50:59Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-maturity-assessments-of-an-ontology;
+    npx:supersedes <https://w3id.org/np/RAkIKX-kBKFNXgEMwpYI4MYY257WtTBfRY8ehQcTLhi6U>;
+    rdfs:label "Get the maturity assessments of an ontology";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "fqm+FNOY56fHBKQvGqCqDTdpnL4wqGXAP2BtsKu/XYKI/IvPucBAHencshwkgKYhmTyt26dfY+bn4BMiJ30zSeh3+udSF1LF3k9TKKonSQQ578uD1leNpQ7kqqMr1bbdczmfNd/TV0Rrlfa9LgGczxe1ApA0IG3qpJh9+OR2ObI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

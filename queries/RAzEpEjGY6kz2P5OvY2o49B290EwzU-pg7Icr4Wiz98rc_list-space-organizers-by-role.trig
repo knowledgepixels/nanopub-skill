@@ -1,0 +1,87 @@
+@prefix this: <https://w3id.org/np/RAzEpEjGY6kz2P5OvY2o49B290EwzU-pg7Icr4Wiz98rc> .
+@prefix sub: <https://w3id.org/np/RAzEpEjGY6kz2P5OvY2o49B290EwzU-pg7Icr4Wiz98rc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:list-space-organizers-by-role a grlc:grlc-query;
+    dct:description "Lists the organizers of a given space (one row per agent): agents holding the organizer role (validated role instantiations in the current space state). The name shown is the agent's canonical name from the space state where there is one, falling back to the foaf:name stated by the grant nanopublication itself - without that fallback, everyone who has not yet published a key renders as a bare URI. The np column points to the organizer-role grant nanopub. IRI-keyed by npa:forSpace (param space).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "List space organizers by role";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+select ?user_iri ?user_iri_label ?np ?np_label where {
+  {
+    select ?user_iri
+           (sample(?name) as ?name)
+           (sample(?grantName) as ?grantName)
+           (max(?grantNpStr) as ?np0)
+    where {
+      values ?_space_multi_iri {}
+      graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?g . }
+      graph ?g {
+        ?ri a gen:RoleInstantiation ; npa:forSpace ?_space_multi_iri ; npa:forAgent ?user_iri ; npa:viaNanopub ?grantNp ;
+            gen:hasRole <https://w3id.org/np/RACYgvw52ZV3zp-gXA1Mdd8dvquFSmtfozJtdmyhpK8YI/organizer-role> .
+      }
+      optional { graph ?g { ?user_iri foaf:name ?name } }
+      optional {
+        graph npa:graph { ?grantNp np:hasPublicationInfo ?grantPi . }
+        graph ?grantPi { ?user_iri foaf:name ?grantName . }
+      }
+      bind(str(?grantNp) as ?grantNpStr)
+    }
+    group by ?user_iri
+  }
+  bind(iri(?np0) as ?np)
+  bind(\"^\" as ?np_label)
+  bind(coalesce(str(?name), str(?grantName), \"\") as ?user_iri_label)
+}
+order by lcase(?user_iri_label)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-07T07:44:53Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:list-space-organizers-by-role;
+    npx:supersedes <https://w3id.org/np/RAvXPmq3omOEcyScqglWmTYVqT4OlHUd1-2K0En7wj8-k>;
+    rdfs:label "List space organizers by role";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "aa2kHVB0EjZYQJMZSwCdqCs1FpXxWb8dg3ER0iTmw2fqwOyO7mAm3be5bCYAft2n9KLqgyybVMF6LbQFftXC/E/IJza5/LxpeNOHVY1zb6kdhv4UMjmAYrVxRvKxnAgh2EfgjxQNf3iYiDvMXfYjwy/7bNT0WJj1iw2y6ikqgfE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

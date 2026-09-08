@@ -1,0 +1,165 @@
+@prefix this: <https://w3id.org/np/RApOvPJIP2oLmESxH_rnKUnE1frQDYwP4swITSBZBdBHU> .
+@prefix sub: <https://w3id.org/np/RApOvPJIP2oLmESxH_rnKUnE1frQDYwP4swITSBZBdBHU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-event-participation-actions a grlc:grlc-query;
+    dct:description "Backs a call-to-action panel on an event Space. Returns one row per way of taking part that is relevant to this particular viewer: either what they have already declared, shown back to them as a short confirmation with the np column pointing at the nanopublication that says it, or an invitation to declare it. The ways in are planned attendance (offered before the event's start date), actual participation (offered from the start date onwards) and observing, the last offered only to somebody who has declared neither of the other two - a person who is coming is not also an observer. A row is returned only when the space actually offers that way in, that is when a role carrying the corresponding property is attached to the space. What the viewer has declared is read from their validated role instantiations via the CURRENTUSER session parameter; a logged-out visitor has none, so they are offered everything the space offers. When the space offers nothing at all, a single row with empty content is returned instead of no rows, so the panel renders blank rather than showing \"(nothing found)\". The content column holds ready-made root-relative /publish links with template-version=latest, which Nanodash renders as buttons; no title column is returned, so the rows carry no headings of their own.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the ways in relevant to the viewer of an event";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix wd: <http://www.wikidata.org/entity/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+select ?content (sample(?npRow) as ?np) where {
+  values ?_space_multi_iri {}
+  values ?__CURRENTUSER_multi_iri {}
+
+  graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?state . }
+
+  # Has the event started? Read the start date off the space's current definition.
+  optional {
+    graph npa:graph {
+      ?defNp npa:hasValidSignatureForPublicKeyHash ?defKey ;
+             np:hasAssertion ?defA ;
+             npx:introduces ?_space_multi_iri .
+      filter not exists { ?defInv npx:invalidates ?defNp ; npa:hasValidSignatureForPublicKeyHash ?defKey . }
+      filter not exists { ?defNewer npx:supersedes ?defNp . }
+    }
+    graph ?defA { ?_space_multi_iri <http://schema.org/startDate> ?startRaw . }
+  }
+  bind(coalesce(?startRaw, '9999-12-31T00:00:00Z'^^xsd:dateTime) as ?start)
+  bind(now() >= ?start as ?started)
+
+  # Which ways in does this space actually offer? A role only takes effect once it
+  # is attached to the space, so an unattached one is not offered.
+  bind(exists {
+    graph npa:graph { ?an1 npa:hasValidSignatureForPublicKeyHash ?ak1 ; np:hasAssertion ?aa1 .
+      filter not exists { ?ai1 npx:invalidates ?an1 ; npa:hasValidSignatureForPublicKeyHash ?ak1 . } }
+    graph ?aa1 { ?_space_multi_iri gen:hasRole ?role1 . }
+    graph ?rd1 { ?role1 gen:hasRegularProperty gen:plansToAttend . }
+  } as ?offersPlanned)
+  bind(exists {
+    graph npa:graph { ?an2 npa:hasValidSignatureForPublicKeyHash ?ak2 ; np:hasAssertion ?aa2 .
+      filter not exists { ?ai2 npx:invalidates ?an2 ; npa:hasValidSignatureForPublicKeyHash ?ak2 . } }
+    graph ?aa2 { ?_space_multi_iri gen:hasRole ?role2 . }
+    graph ?rd2 { ?role2 gen:hasRegularProperty wd:P1344 . }
+  } as ?offersParticipation)
+  bind(exists {
+    graph npa:graph { ?an3 npa:hasValidSignatureForPublicKeyHash ?ak3 ; np:hasAssertion ?aa3 .
+      filter not exists { ?ai3 npx:invalidates ?an3 ; npa:hasValidSignatureForPublicKeyHash ?ak3 . } }
+    graph ?aa3 { ?_space_multi_iri gen:hasRole ?role3 . }
+    graph ?rd3 { ?role3 gen:hasInverseProperty gen:hasObserver . }
+  } as ?offersObserver)
+
+  # What has the viewer already declared, and in which nanopublication? With no
+  # viewer (logged out) the str() comparison errors, the optional binds nothing,
+  # and every flag is false - so a logged-out visitor is offered everything.
+  optional {
+    graph ?state { ?riP a gen:RoleInstantiation ; npa:forSpace ?_space_multi_iri ;
+        npa:forAgent ?uP ; npa:regularProperty gen:plansToAttend ; npa:viaNanopub ?npPlanned . }
+    filter(str(?uP) = str(?__CURRENTUSER_multi_iri))
+  }
+  optional {
+    graph ?state { ?riT a gen:RoleInstantiation ; npa:forSpace ?_space_multi_iri ;
+        npa:forAgent ?uT ; npa:regularProperty wd:P1344 ; npa:viaNanopub ?npTakingPart . }
+    filter(str(?uT) = str(?__CURRENTUSER_multi_iri))
+  }
+  optional {
+    graph ?state { ?riO a gen:RoleInstantiation ; npa:forSpace ?_space_multi_iri ;
+        npa:forAgent ?uO ; npa:inverseProperty gen:hasObserver ; npa:viaNanopub ?npObserving . }
+    filter(str(?uO) = str(?__CURRENTUSER_multi_iri))
+  }
+  bind(bound(?npPlanned) as ?hasPlanned)
+  bind(bound(?npTakingPart) as ?hasTakingPart)
+  bind(bound(?npObserving) as ?hasObserving)
+
+  # One row per way in: what the viewer has declared, shown back to them with a
+  # link to the nanopublication that says it, and what is still open to declare.
+  # Observing is only offered to somebody who is not already coming.
+  bind(?hasPlanned || (?offersPlanned && !?started) as ?showPlanned)
+  bind(?hasTakingPart || (?offersParticipation && ?started) as ?showTakingPart)
+  bind(?hasObserving || (?offersObserver && !?hasPlanned && !?hasTakingPart) as ?showObserving)
+
+  values (?slot ?sort) { ('planned' 1) ('takingpart' 2) ('observing' 3) ('none' 9) }
+  filter(if(?slot = 'planned', ?showPlanned,
+         if(?slot = 'takingpart', ?showTakingPart,
+         if(?slot = 'observing', ?showObserving,
+            !?showPlanned && !?showTakingPart && !?showObserving))))
+
+  bind(concat('/publish?template-version=latest&param_space=',
+              encode_for_uri(str(?_space_multi_iri)), '&template=') as ?tail)
+  bind(if(?slot = 'planned',
+        if(?hasPlanned,
+          '<p>✓ You have declared that you plan to attend this event.</p>',
+          concat('<p>Planning to come? Saying so puts you on the list of expected participants. <a href=\"', ?tail,
+                 encode_for_uri('https://w3id.org/np/RAQ1LrU5fyY0Szd-4i9nN_JXBMvKti_v-GeHZgQG-EpzI'),
+                 '\">declare planned attendance...</a></p>')),
+      if(?slot = 'takingpart',
+        if(?hasTakingPart,
+          '<p>✓ You have declared that you are taking part in this event.</p>',
+          concat('<p>This event is under way. Put it on record that you are taking part. <a href=\"', ?tail,
+                 encode_for_uri('https://w3id.org/np/RAAcUy5wBwXNyadgD71k1rP0iM_KFc07qXFyrxhPcKS5M'),
+                 '\">declare participation...</a></p>')),
+      if(?slot = 'observing',
+        if(?hasObserving,
+          '<p>✓ You have declared that you are observing this event.</p>',
+          concat('<p>Not coming, but want to follow what happens here? <a href=\"', ?tail,
+                 encode_for_uri('https://w3id.org/np/RAs3LMTf4JLXDUGCi1MjT2448aJQE3aatSgkapNwgdgHY'),
+                 '\">observe...</a></p>')),
+        ''))) as ?content)
+  bind(if(?slot = 'planned', ?npPlanned,
+      if(?slot = 'takingpart', ?npTakingPart,
+      if(?slot = 'observing', ?npObserving, ?unbound))) as ?npRow)
+}
+group by ?sort ?content
+order by ?sort""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-07T09:06:05Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-event-participation-actions;
+    npx:supersedes <https://w3id.org/np/RABHQ7LBjgQgrh35OJbCU58Aj1I-rXHZ96nfrnTYXg3dU>;
+    rdfs:label "Get the ways in relevant to the viewer of an event";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "WY7M51l7e4Zwyz0c68S+ZnigxKwDBnmvevJEXenqI8glkwHGGgX96PFObRZY1q5kTyjnHe/g3Y8IShBBj2teVhyv0uGD72Qo65rRzpUTmJaYQfs5/KiMHK4Bz2Y1NpeG3QRa/gxMOeKlQqxKVUpoA0QEO+VE8dF2v0AFL1VI7mo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

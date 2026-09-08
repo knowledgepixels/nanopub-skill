@@ -1,0 +1,174 @@
+@prefix this: <https://w3id.org/np/RAtUxp8X8qJE3HybsXvzxirCt9YvpeurOCjKFIN0q4-rc> .
+@prefix sub: <https://w3id.org/np/RAtUxp8X8qJE3HybsXvzxirCt9YvpeurOCjKFIN0q4-rc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix dsm: <https://w3id.org/spaces/fairplus/r/dsm/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:conformsTo rdfs:label "applies the maturity model" .
+  
+  dct:identifier rdfs:label "has the identifier" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "is called" .
+  
+  <https://w3id.org/Data-Maturity/> rdfs:label "FAIRplus Dataset Maturity (DSM) Model" .
+  
+  sub:assessment a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID suffix for this assessment, e.g. 'assessment'" .
+  
+  sub:dataset a nt:ExternalUriPlaceholder;
+    rdfs:label "the persistent identifier of the dataset being assessed" .
+  
+  sub:datasetId a nt:LiteralPlaceholder;
+    rdfs:label "the dataset's accession or identifier string" .
+  
+  sub:datasetName a nt:LiteralPlaceholder;
+    rdfs:label "the title of the dataset" .
+  
+  sub:date a nt:LiteralPlaceholder;
+    rdfs:label "the date the assessment was carried out";
+    nt:hasDatatype xsd:date;
+    nt:hasRegex "[0-9]{4}-[0-9]{2}-[0-9]{2}" .
+  
+  sub:hostenv a nt:ExternalUriPlaceholder;
+    rdfs:label "the environment that hosts the dataset and its descriptor" .
+  
+  sub:hostenvName a nt:LiteralPlaceholder;
+    rdfs:label "the name of the hosting environment" .
+  
+  sub:level a nt:GuidedChoicePlaceholder;
+    rdfs:label "the highest maturity level found to be reached";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/spaces/fairplus/r/dsm/MaturityLevel" .
+  
+  sub:model a nt:GuidedChoicePlaceholder;
+    rdfs:label "the maturity model being applied";
+    nt:hasDefaultValue <https://w3id.org/Data-Maturity/>;
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http://www.w3.org/2002/07/owl%23Ontology&searchterm=" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "a name for this assessment" .
+  
+  sub:st01 rdf:object dsm:MaturityAssessment;
+    rdf:predicate rdf:type;
+    rdf:subject sub:assessment .
+  
+  sub:st02 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:assessment .
+  
+  sub:st03 rdf:object sub:model;
+    rdf:predicate dct:conformsTo;
+    rdf:subject sub:assessment .
+  
+  sub:st04 rdf:object sub:dataset;
+    rdf:predicate dsm:assessedDataset;
+    rdf:subject sub:assessment .
+  
+  sub:st05 rdf:object dsm:Dataset;
+    rdf:predicate rdf:type;
+    rdf:subject sub:dataset .
+  
+  sub:st06 a nt:OptionalStatement;
+    rdf:object sub:datasetName;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:dataset .
+  
+  sub:st07 a nt:OptionalStatement;
+    rdf:object sub:datasetId;
+    rdf:predicate dct:identifier;
+    rdf:subject sub:dataset .
+  
+  sub:st08 a nt:GroupedStatement, nt:OptionalStatement;
+    nt:hasStatement sub:st08a, sub:st08b .
+  
+  sub:st08a rdf:object sub:hostenv;
+    rdf:predicate dsm:assessedHostingEnvironment;
+    rdf:subject sub:assessment .
+  
+  sub:st08b rdf:object dsm:HostingEnvironment;
+    rdf:predicate rdf:type;
+    rdf:subject sub:hostenv .
+  
+  sub:st09 a nt:OptionalStatement;
+    rdf:object sub:hostenvName;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:hostenv .
+  
+  sub:st10 rdf:object sub:date;
+    rdf:predicate dsm:assessmentDate;
+    rdf:subject sub:assessment .
+  
+  sub:st11 a nt:OptionalStatement;
+    rdf:object sub:level;
+    rdf:predicate dsm:achievedMaturityLevel;
+    rdf:subject sub:assessment .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Such a nanopublication records that a dataset, together with the environment that hosts it, was assessed against the FAIRplus Dataset Maturity (DSM) Model on a given date, and states the highest maturity level found to be reached. The individual indicator verdicts that support this result are published as separate nanopublications, each referring back to this assessment. Identify the dataset by an identifier it already has, such as a DOI, an accession resolvable through identifiers.org, or its landing page; do not mint a new identifier for it.";
+    dct:isVersionOf sub:templateKind;
+    rdfs:label "Recording a FAIRplus-DSM maturity assessment";
+    gen:governedBy <https://w3id.org/spaces/fairplus>;
+    nt:hasNanopubLabelPattern "${name}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st08a, sub:st08b, sub:st09, sub:st10, sub:st11;
+    nt:hasTag "FAIRplus-DSM";
+    nt:hasTargetNanopubType dsm:MaturityAssessment .
+  
+  dsm:Dataset rdfs:label "dataset" .
+  
+  dsm:HostingEnvironment rdfs:label "data hosting environment" .
+  
+  dsm:MaturityAssessment rdfs:label "maturity assessment" .
+  
+  dsm:achievedMaturityLevel rdfs:label "found the achieved maturity level to be" .
+  
+  dsm:assessedDataset rdfs:label "assesses the dataset" .
+  
+  dsm:assessedHostingEnvironment rdfs:label "assesses the hosting environment" .
+  
+  dsm:assessmentDate rdfs:label "was carried out on" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-07T06:34:26Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:introduces sub:templateKind;
+    rdfs:label "Recording a FAIRplus-DSM maturity assessment";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "YN4TcHtbxd9sIQqTMPg4pTEQkg0tM0O4DhIlzHjW1BIj2/ugzxLoRw6s3qnjJ7XDDx6TqRevrlRQugRo43JyI5rACXb3GOehm/K1sNKeyTjElHcOr0PNG/ZHXmrOiGRpm0oihxuDFFLsn4ElHxVKFWop5RbAmhHA8hz0/jmHh+c=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

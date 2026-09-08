@@ -1,0 +1,101 @@
+@prefix this: <https://w3id.org/np/RAWe3d21CR-n1FheI_t6biAg1_3dOApvk3cgjfGy_qEuM> .
+@prefix sub: <https://w3id.org/np/RAWe3d21CR-n1FheI_t6biAg1_3dOApvk3cgjfGy_qEuM/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-news-topic-proposals a grlc:grlc-query;
+    dct:description "Returns the news topics proposed for a given Space, together with their accumulated news coverage. Coverage is counted across independent nanopublications: both the sources the proposer recorded when defining the topic and any 'Reporting news coverage of a topic' nanopublications published later by anyone, without distinction. Results are ordered by coverage first, so the best-attested proposals come top. The optional minSources parameter applies a coverage threshold: pass minSources=3 to see only topics that have appeared in at least three news articles. Topics with no Wikidata item are still open proposals. The contributors column shows who has contributed coverage, since coverage claims are deliberately not restricted to members of the Space.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get news topic proposals for Space";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix schema: <https://schema.org/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+select ?topic ?topic_label ?description ?article ?article_label
+  (group_concat(distinct str(?source); separator=\" \") as ?sources_multi_iri)
+  (count(distinct ?source) as ?source_count)
+  (group_concat(distinct str(?contributor); separator=\" \") as ?contributors_multi_iri)
+  ?wikidata ?wikidata_label ?date ?coverage_target ?override_target ?np ?np_label
+where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np dct:created ?date .
+    ?np np:hasAssertion ?a .
+  }
+  graph ?a {
+    values ?_space_multi_iri {}
+    ?a schema:about ?_space_multi_iri .
+    ?topic a ?type .
+    ?topic rdfs:label ?topic_label .
+  }
+  optional { graph ?a { ?topic dct:description ?description } }
+  optional { graph ?a { ?topic foaf:isPrimaryTopicOf ?article } }
+  optional { graph ?a { ?topic owl:sameAs ?wikidata } }
+  optional {
+    graph npa:graph {
+      ?cnp npa:hasValidSignatureForPublicKeyHash ?cpubkey .
+      filter not exists { ?cinv npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKeyHash ?cpubkey . }
+      ?cnp np:hasAssertion ?ca .
+      ?cnp dct:creator ?contributor .
+    }
+    graph ?ca { ?topic dct:isReferencedBy ?source }
+  }
+  bind(replace(replace(coalesce(str(?article), \"\"), \"^.*/wiki/\", \"\"), \"_\", \" \") as ?article_label)
+  bind(replace(coalesce(str(?wikidata), \"\"), \"^.*/entity/\", \"\") as ?wikidata_label)
+  bind(str(?topic) as ?coverage_target)
+  bind(str(?np) as ?override_target)
+  bind(\"^\" as ?np_label)
+}
+group by ?topic ?topic_label ?description ?article ?article_label ?wikidata ?wikidata_label ?date ?coverage_target ?override_target ?np ?np_label
+having(coalesce(count(distinct ?source) >= xsd:integer(?__minSources), true))
+order by desc(?source_count) desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-26T14:21:22Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-news-topic-proposals;
+    npx:supersedes <https://w3id.org/np/RAIaVeIiwCxast7XuACs65Rbnm5kISL2teJ0idZz_R7wI>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "lZNu1crY3N130VX5MJwPYz1II0SZSQvi/NTvXxdfaFrfvXbuTMKXCqCifsohkMev6M30d3yOyjz295cfQ96iKvP25KVrzRmpzGM5igUL61peotvDeFCW92tDh01kMJ1Uf/L1rkJ1y97djmRDCugIJAOUIJYTGGJgGSsVCGhTQdE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

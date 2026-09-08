@@ -1,0 +1,134 @@
+@prefix this: <https://w3id.org/np/RA0KJear7Y28-EUQKrcTbiSH37ml2IR9sHAP6zZ9VVQj0> .
+@prefix sub: <https://w3id.org/np/RA0KJear7Y28-EUQKrcTbiSH37ml2IR9sHAP6zZ9VVQj0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-presentations-for-event a grlc:grlc-query;
+    dct:description "Returns all presentations of the given event, with label, date, time, location, and the people involved - the presenter first where known, then the authors - plus the nanopub link, in chronological order. Reads both the http:// and https:// schema.org namespaces.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get presentations for event";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/3952cad1a6d2561f045d33e5e79c03e7264b0a492b8becf6c62656c596cf398c>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix wd: <http://www.wikidata.org/entity/>
+prefix schema: <https://schema.org/>
+prefix schemaold: <http://schema.org/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix pav: <http://purl.org/pav/>
+
+select ?presentation ?presentation_label ?date ?time ?location ?people_multi_iri ?people_label_multi ?np (\"^\" as ?np_label) (?np as ?override_target) where {
+  {
+    select ?np ?presentation ?presentation_label ?startDate ?endDate ?location ?olddate
+           (group_concat(distinct ?spk; separator=\" \") as ?spkIris)
+           (group_concat(distinct ?spkLabel; separator=\"\\n\") as ?spkNames)
+           (group_concat(distinct ?auth; separator=\" \") as ?authIris)
+           (group_concat(distinct ?authLabel; separator=\"\\n\") as ?authNames)
+    where {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+        filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        ?np dct:created ?npdate .
+        ?np np:hasAssertion ?a .
+        ?np np:hasPublicationInfo ?pi .
+        ?np npx:introduces ?presentation .
+      }
+      {
+        select ?presentation (max(?npdate2) as ?latestdate) where {
+          graph npa:graph {
+            ?np2 npa:hasValidSignatureForPublicKeyHash ?pubkey2 .
+            filter not exists { ?npx2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+            filter not exists { ?np2 npx:hasNanopubType npx:ExampleNanopub . }
+            ?np2 dct:created ?npdate2 .
+            ?np2 npx:introduces ?presentation .
+          }
+        } group by ?presentation
+      }
+      filter(?npdate = ?latestdate)
+      values ?_event_multi_iri {}
+      graph ?a {
+        ?presentation a wd:Q604733 .
+        ?presentation dct:isPartOf ?_event_multi_iri .
+      }
+      optional { graph ?a { ?presentation rdfs:label ?presentation_label . } }
+      optional { graph ?a { ?presentation schema:startDate ?startDateA . } }
+      optional { graph ?a { ?presentation schemaold:startDate ?startDateB . } }
+      optional { graph ?a { ?presentation schema:endDate ?endDateA . } }
+      optional { graph ?a { ?presentation schemaold:endDate ?endDateB . } }
+      optional { graph ?a { ?presentation schema:location ?locationA . } }
+      optional { graph ?a { ?presentation schemaold:location ?locationB . } }
+      optional { graph ?a { ?presentation dct:date ?olddate . } }
+      optional {
+        graph ?a { ?presentation wd:P823 ?spk . }
+        optional { graph ?pi { ?spk foaf:name ?spkName . } }
+        bind(coalesce(?spkName, str(?spk)) as ?spkLabel)
+      }
+      optional {
+        graph ?a { ?presentation pav:authoredBy ?auth . }
+        filter(!bound(?spk) || str(?auth) != str(?spk))
+        optional { graph ?pi { ?auth foaf:name ?authName . } }
+        bind(coalesce(?authName, str(?auth)) as ?authLabel)
+      }
+      bind(coalesce(?startDateA, ?startDateB) as ?startDate)
+      bind(coalesce(?endDateA, ?endDateB) as ?endDate)
+      bind(coalesce(?locationA, ?locationB) as ?location)
+    }
+    group by ?np ?presentation ?presentation_label ?startDate ?endDate ?location ?olddate
+  }
+  bind(coalesce(strbefore(str(?startDate), \"T\"), str(?olddate)) as ?date)
+  bind(substr(strafter(str(?startDate), \"T\"), 1, 5) as ?starttime)
+  bind(substr(strafter(str(?endDate), \"T\"), 1, 5) as ?endtime)
+  bind(coalesce(concat(?starttime, \"\\u2013\", ?endtime), ?starttime) as ?time)
+  bind(coalesce(str(?startDate), str(?olddate)) as ?sortkey)
+  bind(if(strlen(?spkIris) > 0 && strlen(?authIris) > 0, concat(?spkIris, \" \", ?authIris),
+       concat(?spkIris, ?authIris)) as ?people_multi_iri)
+  bind(if(strlen(?spkNames) > 0 && strlen(?authNames) > 0, concat(?spkNames, \"\\n\", ?authNames),
+       concat(?spkNames, ?authNames)) as ?people_label_multi)
+} order by ?sortkey""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-28T11:28:13Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-presentations-for-event;
+    npx:supersedes <https://w3id.org/np/RAzwVkWqhZhHEGqQyukcR3jyIcLehE5eDSmCDv5yUHs6M>;
+    rdfs:label "Get presentations for event";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "OgS3DzpXudtiVuTDwxqhDyvMTVGpPPk1jLXWElPmJ/PKKVwWsJRts/QLAlWFbpr9XlBvc5M+us6v/7lFrTbKKKd5iW/Ivg6qB8PJPYrVf+X5GKI0VwRNB3cBbdvieMpoa1yDryNgWDJwT7ZYHg4hJhAybV7mD9W0QFK0/82B+L4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

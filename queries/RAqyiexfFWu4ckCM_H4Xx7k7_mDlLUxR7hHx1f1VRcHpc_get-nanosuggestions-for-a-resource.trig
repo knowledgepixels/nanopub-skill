@@ -1,0 +1,223 @@
+@prefix this: <https://w3id.org/np/RAqyiexfFWu4ckCM_H4Xx7k7_mDlLUxR7hHx1f1VRcHpc> .
+@prefix sub: <https://w3id.org/np/RAqyiexfFWu4ckCM_H4Xx7k7_mDlLUxR7hHx1f1VRcHpc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-nanosuggestions a grlc:grlc-query;
+    dct:description "Returns the nanosuggestions (issues, bug reports, feature requests and tasks) linked to a given space or maintained resource via gen:isRelevantFor, with kind, current status, current assignees, comment count, reporter and date. Anybody may link a nanosuggestion to a resource, but status and assignment are resolved per space: the most recent assertion by a current member (admin, maintainer or member, not observer) of that space wins; if no member has ever set a status, the most recent one from outside is shown and marked as such; with no status at all the nanosuggestion counts as open. A single assignment may name several people, and all of them are returned. Also returns the winning assignment nanopublication if there is one, so that a reassign action can seed its form from it, and an assign target that is empty in that case so that assign and reassign are offered exclusively.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get nanosuggestions for a resource";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/29e2f808e4864fca4930806dee70c4a32df54a63ee90156244910a47d3443736>;
+    grlc:sparql """
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix schema: <https://schema.org/>
+prefix as: <https://www.w3.org/ns/activitystreams#>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix nsug: <https://w3id.org/np/RA5BAdUvlxLWMWFQN3UVKoIQEB_MYTiAoLH1klXJ7z-XI/>
+
+select ?item_multi_iri ?item_label_multi ?kind ?status ?assignee_multi_iri ?assignee_label_multi
+       ?comments_multi_iri ?comments_label_multi ?reporter ?reporter_label ?date
+       ?suggestion ?np ?fill_source ?assign_target
+where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npi npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np dct:created ?date .
+    ?np np:hasAssertion ?a .
+    optional { ?np dct:creator ?reporter }
+  }
+  graph ?a {
+    ?suggestion a nsug:Nanosuggestion ; rdfs:label ?title .
+    optional { ?suggestion a ?k . filter(?k != nsug:Nanosuggestion && ?k != schema:Statement) }
+  }
+  filter exists {
+    graph npa:graph {
+      ?lnp npa:hasValidSignatureForPublicKeyHash ?lpk ; np:hasAssertion ?la .
+      filter not exists { ?lnpi npx:invalidates ?lnp ; npa:hasValidSignatureForPublicKeyHash ?lpk . }
+    }
+    graph ?la {
+      values ?_resource_multi_iri {}
+      ?suggestion gen:isRelevantFor ?_resource_multi_iri .
+    }
+  }
+  optional {
+    { select ?suggestion (max(concat(if(?fm,'1','0'), ?sd, ' ', str(?s))) as ?pick) where {
+        service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+          select (group_concat(?mpk; separator=' ') as ?memberPubkeys) where {
+            graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+            values ?_resource_multi_iri {}
+            graph ?stateG {
+              ?_resource_multi_iri npa:isMaintainedBy? ?space .
+              ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?rt .
+              filter(?rt in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+              ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+            }
+          }
+        }
+        graph npa:graph {
+          ?snp npa:hasValidSignatureForPublicKeyHash ?spk ; np:hasAssertion ?sa ; dct:created ?sdate .
+          filter not exists { ?snpi npx:invalidates ?snp ; npa:hasValidSignatureForPublicKeyHash ?spk . }
+        }
+        graph ?sa { ?suggestion schema:actionStatus ?s . }
+        bind(str(?sdate) as ?sd)
+        bind(contains(?memberPubkeys, ?spk) as ?fm)
+      } group by ?suggestion }
+  }
+  bind(coalesce(iri(strafter(?pick, ' ')), schema:PotentialActionStatus) as ?st)
+  bind(coalesce(substr(?pick, 1, 1) = '0', false) as ?outside)
+  bind(if(?st = schema:CompletedActionStatus, 'done',
+       if(?st = schema:FailedActionStatus, 'rejected',
+       if(?st = schema:ActiveActionStatus, 'in progress', 'open'))) as ?st_label)
+  bind(if(?outside, concat(?st_label, ' (set outside this space)'), ?st_label) as ?status)
+  # Current assignee(s). Two-level aggregation: the inner sub-select collects every
+  # agent named by each candidate nanopub, the outer argmax then picks the winning
+  # nanopub and carries its agents along as a payload. Kept in one scope on purpose:
+  # aggregating separately and joining on the winning nanopub across scopes does not
+  # restrict, and multiplies the rows instead. The IRI list and the label list are
+  # group_concats over the same group, so they stay aligned even though group_concat
+  # order is not otherwise guaranteed.
+  optional {
+    { select ?suggestion (max(concat(if(?afm,'1','0'), ?ad, ' ', ?agIris, '|', ?agLabels)) as ?apick) where {
+        { select ?suggestion ?anp ?afm ?ad
+                 (group_concat(distinct str(?ag); separator=' ') as ?agIris)
+                 (group_concat(distinct ?agLbl; separator='\\n') as ?agLabels) where {
+            service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+              select (group_concat(?mpk; separator=' ') as ?memberPubkeys) where {
+                graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+                values ?_resource_multi_iri {}
+                graph ?stateG {
+                  ?_resource_multi_iri npa:isMaintainedBy? ?space .
+                  ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?rt .
+                  filter(?rt in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                  ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+                }
+              }
+            }
+            graph npa:graph {
+              ?anp npa:hasValidSignatureForPublicKeyHash ?apk ; np:hasAssertion ?aa ; dct:created ?adate .
+              filter not exists { ?anpi npx:invalidates ?anp ; npa:hasValidSignatureForPublicKeyHash ?apk . }
+            }
+            graph ?aa { ?suggestion schema:agent ?ag . }
+            optional { ?ag foaf:name ?agName }
+            bind(coalesce(?agName, replace(str(?ag), '^.*/', '')) as ?agLbl)
+            bind(str(?adate) as ?ad)
+            bind(contains(?memberPubkeys, ?apk) as ?afm)
+        } group by ?suggestion ?anp ?afm ?ad }
+      } group by ?suggestion }
+    bind(strafter(?apick, ' ') as ?agPayload)
+    bind(strbefore(?agPayload, '|') as ?assignee_multi_iri)
+    bind(strafter(?agPayload, '|') as ?assignee_label_multi)
+  }
+  # The assignment nanopub that currently wins, so \"assign...\" can seed its form from it.
+  # \"use\" fill mode: the form then arrives pre-filled with ALL current assignees,
+  # whatever their number. Falls back to the declaring nanopub, because a raw-key
+  # (@) mapping with an empty value hides the button entirely.
+  optional {
+    { select ?suggestion (max(concat(if(?nfm,'1','0'), ?nd, ' ', str(?anp2))) as ?npick) where {
+        service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+          select (group_concat(?mpk; separator=' ') as ?memberPubkeys) where {
+            graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+            values ?_resource_multi_iri {}
+            graph ?stateG {
+              ?_resource_multi_iri npa:isMaintainedBy? ?space .
+              ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?rt .
+              filter(?rt in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+              ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+            }
+          }
+        }
+        graph npa:graph {
+          ?anp2 npa:hasValidSignatureForPublicKeyHash ?npk ; np:hasAssertion ?aa2 ; dct:created ?ndate .
+          filter not exists { ?anp2i npx:invalidates ?anp2 ; npa:hasValidSignatureForPublicKeyHash ?npk . }
+        }
+        graph ?aa2 { ?suggestion schema:agent ?ag2 . }
+        # Only a *reporting* nanopub asserts the issue's title, so this keeps the
+        # candidates to genuine assignment nanopubs. Seeding the assign form from a
+        # report would leave its title/description/status/space unmatched, which is
+        # what produces the \"could not be filled in\" warning.
+        filter not exists { graph ?aa2 { ?suggestion rdfs:label ?titleHere . } }
+        bind(str(?ndate) as ?nd)
+        bind(contains(?memberPubkeys, ?npk) as ?nfm)
+      } group by ?suggestion }
+    bind(iri(strafter(?npick, ' ')) as ?assignNp)
+  }
+  # deliberately no fallback: an empty raw-key (@) mapping hides its button, which
+  # is how \"reassign...\" stays hidden until a real assignment nanopub exists
+  bind(?assignNp as ?fill_source)
+  # \"assign...\" is offered only while there is no assignment nanopub yet; once there
+  # is one, \"reassign...\" takes over (it seeds the form from it). An empty string is
+  # the off-switch: applyEntryMappings hides a button whose mapped value is blank.
+  # Written with an empty string rather than an unbound value because RDF4J evaluates
+  # both if() branches eagerly, so an erroring branch would blank the column always.
+  bind(if(bound(?fill_source), '', str(?suggestion)) as ?assign_target)
+
+  optional {
+    { select ?suggestion (count(distinct ?cnp) as ?ccount) where {
+        graph npa:graph {
+          ?cnp npa:hasValidSignatureForPublicKeyHash ?cpk ; np:hasAssertion ?ca .
+          filter not exists { ?cnpi npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKeyHash ?cpk . }
+        }
+        graph ?ca { ?c a schema:Statement ; rdf:value ?ctext . }
+        ?c as:inReplyTo+ ?suggestion .
+      } group by ?suggestion }
+    filter(?ccount > 0)
+    bind(?suggestion as ?comments_multi_iri)
+    bind(concat(str(?ccount), if(?ccount = 1, ' comment', ' comments')) as ?comments_label_multi)
+  }
+  optional { { select ?reporter (min(?rn) as ?reporter_label) where { ?reporter foaf:name ?rn } group by ?reporter } }
+  bind(?suggestion as ?item_multi_iri)
+  bind(?title as ?item_label_multi)
+  bind(coalesce(lcase(strafter(str(?k), 'RA5BAdUvlxLWMWFQN3UVKoIQEB_MYTiAoLH1klXJ7z-XI/')), '') as ?kind)
+  bind(if(?st in (schema:CompletedActionStatus, schema:FailedActionStatus), '2', '1') as ?openRank)
+}
+order by ?openRank desc(?date)
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-27T08:50:06Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-nanosuggestions;
+    npx:supersedes <https://w3id.org/np/RAK9aZ-87P7DSZM6YY7pMHMydo043CVftgV4vVAHs8nb4>;
+    rdfs:label "Get nanosuggestions for a resource";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "mxNFTRYjRGY9eLAYKHurqzwxQyoFcBoGfoiLubwAL9xlaXKRpZQri1+MmCuGeQQIlyKXbb3M8fr8LX+wkDh+CIRpInreL5hKzOGCDSlwE7gr5tKq/LDSzYwVmp6dVY0PuA5FkQZRU6yOkisH+mjAZxn4JFVMbC6wFP4EnpM2dAg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+
