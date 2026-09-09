@@ -1,0 +1,87 @@
+@prefix this: <https://w3id.org/np/RAu3PzffCKMGGOI41sbOhqrpjMpvqrpPZ5M2rH0AXfPXw> .
+@prefix sub: <https://w3id.org/np/RAu3PzffCKMGGOI41sbOhqrpjMpvqrpPZ5M2rH0AXfPXw/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  gen:DocumentationTopic rdfs:label "documentation topic" .
+  
+  gen:isRelevantFor rdfs:label "is relevant for" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the title of this documentation topic" .
+  
+  sub:resource a nt:GuidedChoicePlaceholder;
+    rdfs:label "the documentation collection this topic belongs to";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/MaintainedResource" .
+  
+  sub:st0 rdf:object gen:DocumentationTopic;
+    rdf:predicate rdf:type;
+    rdf:subject sub:topic .
+  
+  sub:st1 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:topic .
+  
+  sub:st2 rdf:object sub:resource;
+    rdf:predicate gen:isRelevantFor;
+    rdf:subject sub:topic .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Declares that a resource is a topic of a documentation collection, so it gets its own documentation page. The resource is normally the very thing being documented, such as a vocabulary term or a class. Fill in the 'described resource' field of the publication info below with the same URI: that is what makes the documentation page resolve, and without it the topic will not get a page of its own.";
+    dct:isVersionOf sub:template-kind;
+    rdfs:label "Declaring a documentation topic";
+    gen:governedBy <https://w3id.org/spaces/nanopub>;
+    nt:hasNanopubLabelPattern "${label}";
+    nt:hasRequiredPubinfoElement <https://w3id.org/np/RAvqXPNKPf56b2226oqhKzARyvIhnpnTrRpLGC1cYweMw>;
+    nt:hasStatement sub:st0, sub:st1, sub:st2;
+    nt:hasTag "Documentation";
+    nt:hasTargetNanopubType gen:DocumentationTopic, gen:isRelevantFor .
+  
+  sub:topic a nt:ExternalUriPlaceholder;
+    rdfs:label "the resource that this documentation topic is about" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-09T13:15:22Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:introduces sub:template-kind;
+    rdfs:label "Declaring a documentation topic";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "GfQ4WeucxypueQyzDCA5bFSI4z0x0tRN5lFPXaM6m3nek8Bitx0TG0MZlWLG+HF3c/ukxAbhnCST44byTnvly3gSEZwfYzNuUCQdEIU+JkzcwmSeZUOMJjU8phUyQjk664vKKSHeCCIJkIdenYl3vnFJB4TT3kfnPWNnGsDoodo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

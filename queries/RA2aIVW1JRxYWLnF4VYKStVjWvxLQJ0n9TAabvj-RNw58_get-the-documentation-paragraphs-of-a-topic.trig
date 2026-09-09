@@ -1,0 +1,118 @@
+@prefix this: <https://w3id.org/np/RA2aIVW1JRxYWLnF4VYKStVjWvxLQJ0n9TAabvj-RNw58> .
+@prefix sub: <https://w3id.org/np/RA2aIVW1JRxYWLnF4VYKStVjWvxLQJ0n9TAabvj-RNw58/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-docs-paragraphs a grlc:grlc-query;
+    dct:description "This query returns the paragraphs of a documentation topic, restricted to those published by a member (admin, maintainer or member tier) of the space maintaining the documentation resource the topic page belongs to, and keeping only the most recent version of each paragraph. This makes wiki-style editing possible: any member can revise any paragraph, and the newest revision is the one shown.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the documentation paragraphs of a topic";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix schema: <http://schema.org/>
+prefix schemas: <https://schema.org/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+# The paragraphs of one documentation topic, gated to the members of the space that
+# maintains the documentation resource, with only the newest version of each paragraph.
+#
+# ?_resource_multi_iri is the topic (the part page's own IRI), filled by the view's
+# gen:hasViewQueryTargetField. ?__context_multi_iri is the maintained resource the part
+# page belongs to; Nanodash fills a placeholder named 'context' automatically with the
+# page's context resource, so the space to gate against never has to be hardcoded.
+select ?title ?content ?date (str(?np) as ?override_target) ?np (\"^\" as ?np_label) where {
+  # One row holding every member pubkey hash of the maintaining space, space-separated.
+  # A sub-select sharing no variables with the outer query, so it is evaluated once
+  # rather than per result row.
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+    select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+      graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+      values ?__context_multi_iri {}
+      graph ?stateG {
+        ?__context_multi_iri npa:isMaintainedBy? ?space .
+        ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ;
+            npa:hasRoleType ?roleType .
+        ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+      }
+      # Observers are excluded: that tier can be self-attested and so is no gate at all.
+      filter(?roleType in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+    }
+  }
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?npPubkey ;
+        dct:created ?date ;
+        np:hasAssertion ?a .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?npPubkey . }
+  }
+  # Must sit outside the graph block: ?memberPubkeys is bound by the service above.
+  filter(contains(?memberPubkeys, ?npPubkey))
+  values ?_resource_multi_iri {}
+  graph ?a {
+    ?paragraph rdf:type gen:Paragraph ;
+      schema:title|schemas:title ?title ;
+      gen:hasContent ?content ;
+      schema:isPartOf|schemas:isPartOf|schema:about|schemas:about ?_resource_multi_iri .
+    optional { ?paragraph gen:hasPositionString ?position }
+  }
+  # Latest-wins per paragraph: an edit republished by another member keeps the paragraph
+  # IRI (override fill mode) and only its newest member-signed version is shown.
+  filter not exists {
+    graph npa:graph {
+      ?np2 npa:hasValidSignatureForPublicKeyHash ?np2Pubkey ;
+           dct:created ?date2 ;
+           np:hasAssertion ?a2 .
+      filter not exists { ?npx2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?np2Pubkey . }
+    }
+    graph ?a2 { ?paragraph rdf:type gen:Paragraph ; gen:hasContent ?content2 . }
+    filter(?date2 > ?date)
+    filter(contains(?memberPubkeys, ?np2Pubkey))
+  }
+}
+order by ?position ?title""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-09T13:10:24Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-docs-paragraphs;
+    prov:wasDerivedFrom <https://w3id.org/np/RAHhVKUA6GgNS0KE2gbOSrDynLHFBWg3ZoM9x0LbsMBjk>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "oE5Y7PxrreJp4SCN2a52PCatt1HJVBiHQ+Trz/5r1OzwWqRWVXBQMOAkNH0J8bG5SqvvSvyJ1kHLIaMpki1BK0PLGaAFud903BWL1mHZhNLHw0zFkkozzKujBuDTq7GLewwK9tRGyN1KLshWDf0P74gkUFB1SaIFOVGd4sShAPM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

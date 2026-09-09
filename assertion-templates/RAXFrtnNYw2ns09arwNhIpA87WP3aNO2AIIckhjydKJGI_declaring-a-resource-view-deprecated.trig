@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RA4QvSuNSVjEtd5oZnZacK0SDTHUTVkogo5Ynw4W8bBHY> .
-@prefix sub: <https://w3id.org/np/RA4QvSuNSVjEtd5oZnZacK0SDTHUTVkogo5Ynw4W8bBHY/> .
+@prefix this: <https://w3id.org/np/RAXFrtnNYw2ns09arwNhIpA87WP3aNO2AIIckhjydKJGI> .
+@prefix sub: <https://w3id.org/np/RAXFrtnNYw2ns09arwNhIpA87WP3aNO2AIIckhjydKJGI/> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -151,9 +151,9 @@ sub:assertion {
   sub:appliesToNamespace a nt:ExternalUriPlaceholder;
     rdfs:label "namespace this view applies to" .
   
-  sub:assertion a nt:AssertionTemplate;
-    dct:description "Declaring a view that to be shown on a resource page (i.e. user/space/maintained resource page).";
-    rdfs:label "Declaring a resource view";
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "DEPRECATED: kept only so that views made from earlier versions of this template can still be updated. For new views use the  generic \"Declaring a resource view\" template (https://w3id.org/np/RAfa1tHtbOrV0YaCY0LyjHkpXoudrauhN8DUYPM63ZQ-k), which also covers space-governed views and all view types.";
+    rdfs:label "Declaring a resource view (deprecated)";
     nt:hasStatement sub:st10, sub:st10b, sub:st11, sub:st20, sub:st21, sub:st30, sub:st31,
       sub:st35, sub:st36, sub:st40, sub:st43, sub:st44, sub:st50;
     nt:hasTag "Spaces" .
@@ -311,12 +311,12 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-08T10:08:26.712Z"^^xsd:dateTime;
+  this: dct:created "2026-09-08T11:36:44.895Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:supersedes <https://w3id.org/np/RAJ2SsntOHN7leMyEXoyBoUp6l2sd-VAPCpPrHVQa2QVM>;
+    npx:supersedes <https://w3id.org/np/RA4QvSuNSVjEtd5oZnZacK0SDTHUTVkogo5Ynw4W8bBHY>;
     npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
-    rdfs:label "Declaring a resource view";
+    rdfs:label "Declaring a resource view (deprecated)";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
@@ -325,7 +325,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
-    npx:hasSignature "OLesTCW2xezePzJztPD7EFOhnQdRibZn/gC+oXh5jboW4KLYBsGWWqXbdT5rTHnT3YczCv6FHjZoUCxG19cjiCZXyDTKebMCPJUypvZkTRBVJsQTbHPWCCUdywS8714ROSk78XlVnpW5X6sbcAO5DGUJFGPm7uTD4ely0Lo0ufE=";
+    npx:hasSignature "qZdyiypRdiBMeDul1pM0HpvqSG2YRFMxE3lDn+Sg7wXJviXFmxx0TBDXFbJ4iZHKSMCjjLdM611UCdof6UCbq5p1CI5uS64HcctcbzZM0b6ZX4trVXZvwyRykweWT55h93fYDNe6rB1EnndRe82RH8w8sNHyzAHn/UDSFhvQVgk=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }
