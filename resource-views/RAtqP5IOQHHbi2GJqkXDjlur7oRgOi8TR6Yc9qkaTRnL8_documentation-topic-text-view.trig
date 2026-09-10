@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RA1hduwex2yJ9TIG51iRLsEW6HnT4DLPIdiYAE57kegHY> .
-@prefix sub: <https://w3id.org/np/RA1hduwex2yJ9TIG51iRLsEW6HnT4DLPIdiYAE57kegHY/> .
+@prefix this: <https://w3id.org/np/RAtqP5IOQHHbi2GJqkXDjlur7oRgOi8TR6Yc9qkaTRnL8> .
+@prefix sub: <https://w3id.org/np/RAtqP5IOQHHbi2GJqkXDjlur7oRgOi8TR6Yc9qkaTRnL8/> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -33,7 +33,7 @@ sub:assertion {
     gen:governedBy <https://w3id.org/spaces/nanopub>;
     gen:hasStructuralPosition "3.2.text";
     gen:hasViewAction sub:add-action, sub:edit-action;
-    gen:hasViewQuery <https://w3id.org/np/RA2aIVW1JRxYWLnF4VYKStVjWvxLQJ0n9TAabvj-RNw58/get-docs-paragraphs>;
+    gen:hasViewQuery <https://w3id.org/np/RAbOBFWFpJ0K7ShUeAW7gfhAJiIC1CHBGdSPkL5T-3mko/get-docs-paragraphs>;
     gen:hasViewQueryTargetField "resource" .
   
   sub:edit-action a gen:ViewEntryAction;
@@ -50,12 +50,12 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-09T13:31:44Z"^^xsd:dateTime;
+  this: dct:created "2026-09-10T08:26:36Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:docs-wiki-view;
     npx:introduces <https://w3id.org/np/RAZOKM2_P8_2OpTNx9VkZ5Lur5r8ArLbxl9LiudXJ_JnA/docs-wiki-view-kind>;
-    npx:supersedes <https://w3id.org/np/RAZOKM2_P8_2OpTNx9VkZ5Lur5r8ArLbxl9LiudXJ_JnA>;
+    npx:supersedes <https://w3id.org/np/RA1hduwex2yJ9TIG51iRLsEW6HnT4DLPIdiYAE57kegHY>;
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
       <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
@@ -63,7 +63,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "PvQWZTFuS54xfR/fbdplaH+b/QMZfVuWcE6sndrYjEGKNsBAjMdwxURs9+TYVPRvorXc+8GrNmnzteSoGeyXIKZLqyiRGznGdTqqc17usxmcjvCL+5IB12+0rgcIN0LpkLHvPiUgCLM/wYb3Lm//YpiTNvHyG7S3P2AOv9O1J9E=";
+    npx:hasSignature "gkFxD9gJci3eFmTgMERKYDPjdOPFnujmVI2Z6pdzEWjkeBikwjHkc6+UijhHlpV/ChrMXxszGzZUO1gPMCQn7lUHJ8FVaeEuNIFrV+FT72xQVRl+fM0JbCovblGhy/YA7EpdPLz39KMhAFrPMLn/gSAf/tvzY1Jh5gIAZLyAAmw=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

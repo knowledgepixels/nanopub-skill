@@ -268,6 +268,15 @@ Rules that differ from regular views: **no** `gen:hasViewQuery`, `gen:hasViewQue
 - **Testing**: the `_nanopub_trig` mechanism fails for large query nanopubs (the base64 URL exceeds nginx's limit); test the raw SPARQL against the target repo endpoint directly (`/repo/type/<hash>`), with single placeholders text-substituted the way grlc does.
 - Requires nanodash with SVG-view support (PR knowledgepixels/nanodash#590); older instances skip such views silently, and the document export shows a "(view type not supported in document export)" note.
 
+**Plain-paragraph views** (`gen:PlainParagraphView`, nanodash issue #328): a view that renders each result row as a heading plus a block of prose, rather than a table row. Its query contract is read by column name:
+
+- **`title`** — the heading. Rendered as escaped text, so no markup in it.
+- **`content`** — the body, rendered as **sanitized HTML** (`cellHtml`): app-internal links get the navigation context appended, and a `/publish` link is styled as a button. Plain text is fine too.
+- **`np`** — the source nanopub, offered as an "↗︎ source" entry in a per-row menu alongside the view's entry actions.
+- **`paragraph`** (optional, nanodash issue #701 / PR #703) — the row's **own** IRI. When present, the heading becomes a link to that resource's `/part` page and the per-row menu gains a "📄 open" entry; the body stays prose, never a link. The link is built from the page's navigation context, so a view rendered without one keeps a plain heading, and a query that does not project the column renders exactly as before.
+
+`paragraph` is what makes a paragraph addressable — its part page is where per-paragraph material belongs (linked examples, a version history), reached with a view carrying `gen:appliesToInstancesOf gen:Paragraph` displayed on the owning resource. Two things make that resolve: the paragraph nanopub must `npx:introduces` its paragraph (the "Create a paragraph item" template does) and be signed by a member of the owning space, so `get-term-definitions` finds it. `ResourcePartPage` titles such a page from `rdfs:label`, falling back to `schema:title` in either scheme — which is what paragraphs carry — so no extra label triple is needed. Requires nanodash with PR #703 (merged 2026-09-10, **after the 5.14.0 release**); until an instance runs a build that includes it, the extra column is simply ignored. Live example: view `RAtqP5IOQHHbi2GJqkXDjlur7oRgOi8TR6Yc9qkaTRnL8/docs-wiki-view` with query `RAbOBFWFpJ0K7ShUeAW7gfhAJiIC1CHBGdSPkL5T-3mko/get-docs-paragraphs` (both in [resource-views/](resource-views/) and [queries/](queries/)), the Nanopublication Docs wiki.
+
 **View actions:** A view can carry action buttons that open a pre-filled Nanodash publish form. Each action is an embedded node referenced via `gen:hasViewAction` (example from the live space-roles view):
 
 ```turtle

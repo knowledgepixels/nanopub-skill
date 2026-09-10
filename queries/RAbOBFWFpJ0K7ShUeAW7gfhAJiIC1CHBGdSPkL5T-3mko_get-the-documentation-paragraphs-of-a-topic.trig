@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RA2aIVW1JRxYWLnF4VYKStVjWvxLQJ0n9TAabvj-RNw58> .
-@prefix sub: <https://w3id.org/np/RA2aIVW1JRxYWLnF4VYKStVjWvxLQJ0n9TAabvj-RNw58/> .
+@prefix this: <https://w3id.org/np/RAbOBFWFpJ0K7ShUeAW7gfhAJiIC1CHBGdSPkL5T-3mko> .
+@prefix sub: <https://w3id.org/np/RAbOBFWFpJ0K7ShUeAW7gfhAJiIC1CHBGdSPkL5T-3mko/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix grlc: <https://w3id.org/kpxl/grlc/> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -20,7 +20,7 @@ sub:Head {
 
 sub:assertion {
   sub:get-docs-paragraphs a grlc:grlc-query;
-    dct:description "This query returns the paragraphs of a documentation topic, restricted to those published by a member (admin, maintainer or member tier) of the space maintaining the documentation resource the topic page belongs to, and keeping only the most recent version of each paragraph. This makes wiki-style editing possible: any member can revise any paragraph, and the newest revision is the one shown.";
+    dct:description "This query returns the paragraphs of a documentation topic, restricted to those published by a member (admin, maintainer or member tier) of the space maintaining the documentation resource the topic page belongs to, and keeping only the most recent version of each paragraph. Each row also carries the paragraph's own IRI, so that the view can link a paragraph to its part page. This makes wiki-style editing possible: any member can revise any paragraph, and the newest revision is the one shown.";
     dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
     rdfs:label "Get the documentation paragraphs of a topic";
     grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
@@ -41,7 +41,10 @@ prefix gen: <https://w3id.org/kpxl/gen/terms/>
 # gen:hasViewQueryTargetField. ?__context_multi_iri is the maintained resource the part
 # page belongs to; Nanodash fills a placeholder named 'context' automatically with the
 # page's context resource, so the space to gate against never has to be hardcoded.
-select ?title ?content ?date (str(?np) as ?override_target) ?np (\"^\" as ?np_label) where {
+#
+# ?paragraph is the paragraph's own IRI: the paragraph view links each heading to its
+# part page under the documentation resource (nanodash issue #701).
+select ?paragraph ?title ?content ?date (str(?np) as ?override_target) ?np (\"^\" as ?np_label) where {
   # One row holding every member pubkey hash of the maintaining space, space-separated.
   # A sub-select sharing no variables with the outer query, so it is evaluated once
   # rather than per result row.
@@ -99,11 +102,11 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-09T13:10:24Z"^^xsd:dateTime;
+  this: dct:created "2026-09-10T08:25:28Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:get-docs-paragraphs;
-    prov:wasDerivedFrom <https://w3id.org/np/RAHhVKUA6GgNS0KE2gbOSrDynLHFBWg3ZoM9x0LbsMBjk>;
+    npx:supersedes <https://w3id.org/np/RA2aIVW1JRxYWLnF4VYKStVjWvxLQJ0n9TAabvj-RNw58>;
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
       <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
@@ -111,7 +114,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "oE5Y7PxrreJp4SCN2a52PCatt1HJVBiHQ+Trz/5r1OzwWqRWVXBQMOAkNH0J8bG5SqvvSvyJ1kHLIaMpki1BK0PLGaAFud903BWL1mHZhNLHw0zFkkozzKujBuDTq7GLewwK9tRGyN1KLshWDf0P74gkUFB1SaIFOVGd4sShAPM=";
+    npx:hasSignature "XqO0hXO0M9fnFXt+Z4t+HhSag6Z+gGhrVY4a7T3G8WQ00PLmK7rttLrDh0uEhIYwJpZ+GcmTPEoK0aYpL0n44kCJMKOyyla2EE5ynQToqPwS9vNb5W42yPx4gE1Si2FBaVxn5H69R7taiEnK3y+oMYmtDMN+s+a16cKOs+tf1os=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }
