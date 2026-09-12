@@ -1,10 +1,17 @@
 # nanopub-skill
 
-A [Claude Code](https://claude.com/claude-code) skill for working with
+An [Agent Skill](https://agentskills.io) for working with
 [nanopublications](https://nanopub.net): creating, signing, publishing,
 querying, superseding and retracting nanopubs, plus the assertion templates,
 query templates, resource views and Spaces that make up the
 [Nanodash](https://nanodash.knowledgepixels.com) ecosystem.
+
+The skill follows the open Agent Skills format, so it is not tied to one
+vendor. It works with any agent that supports the format, including Claude
+Code, OpenAI Codex, Gemini CLI, Cursor, GitHub Copilot and
+[many others](https://agentskills.io/clients). Its instructions are plain
+prose and shell commands that call the `nanopub-java` CLI and public HTTP
+endpoints, so no host-specific tools are required.
 
 The skill itself is the single file [`SKILL.md`](SKILL.md). The rest of the
 repository is reference material the skill points to: a local mirror of every
@@ -13,7 +20,7 @@ helper scripts.
 
 ## What it does
 
-Invoked as `/nanopub`, the skill guides Claude through the full workflow:
+The skill guides the agent through the full workflow:
 
 - **Create** a nanopub from a description or an existing template, as a TriG
   file, with the right provenance and pubinfo (creator ORCID, timestamp,
@@ -34,32 +41,47 @@ test server or the live network.
 
 ## Installation
 
-Clone the repository and link it into the skills directory. Linking the whole
-repository (not just `SKILL.md`) keeps the relative links to the reference
-folders and scripts working.
+A skill is a directory named after the skill that contains `SKILL.md`. Clone
+this repository and link it under your agent's skills directory as `nanopub`.
+Linking the whole repository (not just `SKILL.md`) keeps the relative links to
+the reference folders and scripts working.
 
-User-level, available in every project:
+Most hosts read the shared `.agents/skills/` location, so one link covers
+several agents at once. User-level, available in every project:
 
 ```bash
 git clone https://github.com/knowledgepixels/nanopub-skill.git
-mkdir -p ~/.claude/skills
-ln -s "$PWD/nanopub-skill" ~/.claude/skills/nanopub
+mkdir -p ~/.agents/skills
+ln -s "$PWD/nanopub-skill" ~/.agents/skills/nanopub
 ```
 
 Project-level, for one repository:
 
 ```bash
-mkdir -p .claude/skills
-ln -s /path/to/nanopub-skill .claude/skills/nanopub
+mkdir -p .agents/skills
+ln -s /path/to/nanopub-skill .agents/skills/nanopub
 ```
 
-Working inside this repository needs no setup: `.claude/skills/nanopub/SKILL.md`
+Where an agent uses its own directory instead of or in addition to
+`.agents/skills/`, link there:
+
+| Agent | Project-level | User-level |
+| --- | --- | --- |
+| Claude Code | `.claude/skills/` | `~/.claude/skills/` |
+| OpenAI Codex | `.agents/skills/` | `~/.agents/skills/` |
+| Gemini CLI | `.agents/skills/` or `.gemini/skills/` | `~/.agents/skills/` or `~/.gemini/skills/` |
+| Cursor | `.agents/skills/` or `.cursor/skills/` | `~/.agents/skills/` or `~/.cursor/skills/` |
+| GitHub Copilot | `.agents/skills/`, `.github/skills/` or `.claude/skills/` | `~/.agents/skills/` or `~/.copilot/skills/` |
+
+Check your agent's documentation for the current list. Working inside this
+repository with Claude Code needs no setup: `.claude/skills/nanopub/SKILL.md`
 is already a symlink to the root `SKILL.md`.
 
 ## Usage
 
-Start Claude Code and invoke the skill with a nanopub URI, a description, or
-an action:
+Ask the agent to do something with nanopublications. Every host activates the
+skill when a request matches its description. Claude Code additionally
+exposes it as a slash command:
 
 ```
 /nanopub https://w3id.org/np/RA...
@@ -68,9 +90,15 @@ an action:
 /nanopub make a resource view listing the members of a space
 ```
 
-Claude reads `SKILL.md`, decides which action applies, writes the TriG file
+The agent reads `SKILL.md`, decides which action applies, writes the TriG file
 under `tmp/`, validates and signs it, and reports back before anything is
 published.
+
+Two details in `SKILL.md` are Claude Code conveniences that other hosts
+simply ignore: the `argument-hint` frontmatter key and the `$ARGUMENTS`
+placeholder that receives the slash-command argument. The required
+frontmatter (`name`, `description`) and the body follow the
+[Agent Skills specification](https://agentskills.io/specification).
 
 ## Prerequisites
 
@@ -94,12 +122,12 @@ published.
 
 | Path | Contents |
 | --- | --- |
-| `SKILL.md` | The skill: workflow, conventions, vocabulary, and known pitfalls. |
+| `SKILL.md` | The skill, in Agent Skills format: workflow, conventions, vocabulary, and known pitfalls. |
 | `assertion-templates/` | Mirror of all published assertion template nanopubs, one TriG file each. |
 | `queries/` | Mirror of all published query template nanopubs. |
 | `resource-views/` | Mirror of all published resource view nanopubs. |
 | `scripts/` | Download and conformance-checking helpers (see below). |
-| `.claude/skills/nanopub/` | Symlink making the skill active inside this repository. |
+| `.claude/skills/nanopub/` | Symlink making the skill active for Claude Code inside this repository. |
 | `tmp/` | Scratch space for TriG files in progress. Gitignored. |
 
 Files in the three mirror folders are named `<artifact-code>_<label>.trig`,
