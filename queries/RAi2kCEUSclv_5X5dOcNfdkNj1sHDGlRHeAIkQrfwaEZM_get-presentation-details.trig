@@ -1,0 +1,240 @@
+@prefix this: <https://w3id.org/np/RAi2kCEUSclv_5X5dOcNfdkNj1sHDGlRHeAIkQrfwaEZM> .
+@prefix sub: <https://w3id.org/np/RAi2kCEUSclv_5X5dOcNfdkNj1sHDGlRHeAIkQrfwaEZM/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-presentation-details a grlc:grlc-query;
+    dct:description "Returns the details of a presentation or poster, laid out for reading rather than as a raw property dump: authors (and speakers) are resolved to names and joined into a single row, and the start and end date/time are combined into one 'When' value - a plain date and time range when both fall on the same day, both dates spelled out when they do not. Legacy predicates (dct:date, dct:creator, and the http://schema.org/ forms) are recognised alongside the current ones, and any predicate not recognised is still listed, so nothing in the assertion is hidden. Known properties are shown first. The rdf:type row is omitted for a plain presentation, whose type the panel's own title already gives, and kept for anything else such as a poster. Where a talk records a schema:position - its place in the running order of a session whose talks all share the session's start and end - that is shown as an Order row directly after When, with the highest position in the same slot as the total, so a session whose first talk is not yet published still reads correctly. A final row links to the nanopublication that defines the presentation, labelled with the first ten characters of its trusty URI. Values are returned in a single multi-valued column so that each one renders as whatever it is: authors and speakers as links to the people themselves, with their names as the link text, and the rest as plain text. The property and value columns carry no header, the property naming each row. Which nanopublication is described is now decided by this query rather than by the page that shows it: among the still-valid nanopublications introducing the resource, it takes the newest one signed with an approved key of an admin, maintainer or member of the space given as the context -- members upwards, matching the tier the view offers its override action to. The page's own resolution of the defining nanopublication is therefore no longer used here, and the resourceNp parameter is gone; the context parameter (the space, or a resource maintained by one, that the page is about) is filled in automatically by Nanodash. When no candidate qualifies, no rows are returned rather than an unvetted fallback. Two extra columns carry action data rather than content: override_target_label, the chosen nanopublication, and override_template_label, the template it was made with, which the view's override action maps to the publish form. Their trailing _label is deliberate: every Nanodash version leaves a column named that way out of the rendered table, so this query and the view that reads the columns can be published before the version that understands them is released.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get presentation details";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix wd: <http://www.wikidata.org/entity/>
+prefix schema: <https://schema.org/>
+prefix pav: <http://purl.org/pav/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+
+select ?property_noheader ?property_label ?value_multi_val_noheader ?value_label_multi
+       ?override_target_label ?override_template_label where {
+  # The nanopublications that introduce this presentation and are still valid: the candidates
+  # to describe it. Which of them the panel shows is decided at the bottom of this query.
+  graph npa:graph {
+    ?bnp npx:introduces ?_resource_iri ;
+         npa:hasValidSignatureForPublicKeyHash ?pubkey ;
+         np:hasAssertion ?a ;
+         np:hasPublicationInfo ?npi .
+    filter not exists { ?npx npx:invalidates ?bnp ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+  }
+  {
+    graph ?a { ?_resource_iri rdf:type ?value_multi_val_noheader }
+    filter(?value_multi_val_noheader != wd:Q604733)
+    bind(0 as ?sort) bind(rdf:type as ?property_noheader) bind(\"Type\" as ?property_label)
+    bind(if(?value_multi_val_noheader = gen:PosterPresentation, \"Poster presentation\", \"\") as ?value_label_multi)
+  } union {
+    graph ?a { ?_resource_iri rdfs:label ?value_multi_val_noheader }
+    bind(10 as ?sort) bind(rdfs:label as ?property_noheader) bind(\"Title\" as ?property_label)
+  } union {
+    select ?bnp ?sort ?property_noheader ?property_label
+           (group_concat(distinct ?personIri ; separator=\"\\n\") as ?value_multi_val_noheader)
+           (group_concat(distinct ?who ; separator=\"\\n\") as ?value_label_multi)
+    where {
+      graph npa:graph { ?bnp npx:introduces ?_resource_iri ; np:hasAssertion ?spa ; np:hasPublicationInfo ?sppi . }
+      graph ?spa { ?_resource_iri wd:P823 ?person }
+      optional { graph ?sppi { ?person foaf:name ?pname } }
+      optional { graph ?spa { ?person rdfs:label ?plabel } }
+      bind(coalesce(?pname, ?plabel, str(?person)) as ?who)
+      bind(str(?person) as ?personIri)
+      bind(20 as ?sort) bind(wd:P823 as ?property_noheader) bind(\"Speaker\" as ?property_label)
+    } group by ?bnp ?sort ?property_noheader ?property_label
+  } union {
+    select ?bnp ?sort ?property_noheader ?property_label
+           (group_concat(distinct ?personIri ; separator=\"\\n\") as ?value_multi_val_noheader)
+           (group_concat(distinct ?who ; separator=\"\\n\") as ?value_label_multi)
+    where {
+      graph npa:graph { ?bnp npx:introduces ?_resource_iri ; np:hasAssertion ?aua ; np:hasPublicationInfo ?aupi . }
+      values ?authorPred { pav:authoredBy dct:creator }
+      graph ?aua { ?_resource_iri ?authorPred ?person }
+      optional { graph ?aupi { ?person foaf:name ?pname } }
+      optional { graph ?aua { ?person rdfs:label ?plabel } }
+      bind(coalesce(?pname, ?plabel, str(?person)) as ?who)
+      bind(str(?person) as ?personIri)
+      bind(30 as ?sort) bind(pav:authoredBy as ?property_noheader) bind(\"Authors\" as ?property_label)
+    } group by ?bnp ?sort ?property_noheader ?property_label
+  } union {
+    values ?startPred { schema:startDate <http://schema.org/startDate> dct:date }
+    graph ?a { ?_resource_iri ?startPred ?s }
+    optional {
+      values ?endPred { schema:endDate <http://schema.org/endDate> }
+      graph ?a { ?_resource_iri ?endPred ?e }
+    }
+    bind(40 as ?sort) bind(?startPred as ?property_noheader) bind(\"When\" as ?property_label)
+    bind(\"January  February March    April    May      June     July     August   SeptemberOctober  November December \" as ?mtab)
+    bind(replace(substr(?mtab, (month(?s) - 1) * 9 + 1, 9), \" +$\", \"\") as ?smon)
+    bind(concat(str(day(?s)), \" \", ?smon, \" \", str(year(?s))) as ?sdate)
+    bind(if(contains(str(?s), \"T\"), substr(str(?s), 12, 5), \"\") as ?stime)
+    bind(if(?stime = \"\", ?sdate, concat(?sdate, \", \", ?stime)) as ?sfull)
+    bind(if(bound(?e), replace(substr(?mtab, (month(?e) - 1) * 9 + 1, 9), \" +$\", \"\"), \"\") as ?emon)
+    bind(if(bound(?e), concat(str(day(?e)), \" \", ?emon, \" \", str(year(?e))), \"\") as ?edate)
+    bind(if(bound(?e), if(contains(str(?e), \"T\"), substr(str(?e), 12, 5), \"\"), \"\") as ?etime)
+    bind(if(bound(?e), if(?etime = \"\", ?edate, concat(?edate, \", \", ?etime)), \"\") as ?efull)
+    bind(if(!bound(?e), ?sfull,
+         if(?sfull = ?efull, ?sfull,
+         if(?sdate = ?edate,
+            if(?stime = \"\" || ?etime = \"\", ?sdate, concat(?sdate, \", \", ?stime, \"–\", ?etime)),
+            concat(?sfull, \" – \", ?efull)))) as ?value_multi_val_noheader)
+  } union {
+    graph ?a { ?_resource_iri schema:position ?posv }
+    {
+      select ?bnp (max(?sibpos) as ?nslot) where {
+        graph npa:graph { ?bnp npx:introduces ?_resource_iri ; np:hasAssertion ?sa . }
+        graph ?sa { ?_resource_iri dct:isPartOf ?sev .
+          values ?sStartPred { schema:startDate <http://schema.org/startDate> }
+          values ?sLocPred { schema:location <http://schema.org/location> }
+          ?_resource_iri ?sStartPred ?sst ; ?sLocPred ?sloc . }
+        graph npa:graph { ?snp np:hasAssertion ?sa2 ; npx:introduces ?sib .
+          filter not exists { ?snewer npx:supersedes ?snp . } }
+        graph ?sa2 { ?sib dct:isPartOf ?sev ; ?sStartPred ?sst ; ?sLocPred ?sloc ;
+            schema:position ?sibpos . }
+      } group by ?bnp
+    }
+    bind(45 as ?sort) bind(schema:position as ?property_noheader) bind(\"Order\" as ?property_label)
+    bind(if(?posv = 1, \"1st\", if(?posv = 2, \"2nd\", if(?posv = 3, \"3rd\",
+         concat(str(?posv), \"th\")))) as ?ord)
+    bind(if(?nslot > 1, concat(?ord, \" of \", str(?nslot), \" talks in this session\"),
+            concat(?ord, \" talk of its session\")) as ?value_multi_val_noheader)
+  } union {
+    values ?locPred { schema:location <http://schema.org/location> }
+    graph ?a { ?_resource_iri ?locPred ?value_multi_val_noheader }
+    bind(50 as ?sort) bind(?locPred as ?property_noheader) bind(\"Room\" as ?property_label)
+    optional { graph ?a { ?value_multi_val_noheader rdfs:label ?value_label_multi } }
+  } union {
+    graph ?a { ?_resource_iri dct:isPartOf ?value_multi_val_noheader }
+    bind(60 as ?sort) bind(dct:isPartOf as ?property_noheader) bind(\"Part of\" as ?property_label)
+    optional { graph ?a { ?value_multi_val_noheader rdfs:label ?value_label_multi } }
+  } union {
+    graph ?a { ?_resource_iri dct:description ?descRaw }
+    bind(replace(str(?descRaw), \"[\\n\\r]+\", \" \") as ?value_multi_val_noheader)
+    bind(70 as ?sort) bind(dct:description as ?property_noheader) bind(\"Description\" as ?property_label)
+  } union {
+    values ?aboutPred { schema:about <http://schema.org/about> }
+    graph ?a { ?_resource_iri ?aboutPred ?value_multi_val_noheader }
+    bind(80 as ?sort) bind(?aboutPred as ?property_noheader) bind(\"Topic\" as ?property_label)
+    optional { graph ?a { ?value_multi_val_noheader rdfs:label ?value_label_multi } }
+  } union {
+    graph ?a { ?_resource_iri rdfs:seeAlso ?value_multi_val_noheader }
+    bind(90 as ?sort) bind(rdfs:seeAlso as ?property_noheader) bind(\"Link\" as ?property_label)
+  } union {
+    graph npa:graph { ?bnp npx:introduces ?_resource_iri . }
+    bind(1000 as ?sort) bind(<http://purl.org/nanopub/x/introduces> as ?property_noheader)
+    bind(\"Defined in\" as ?property_label)
+    bind(?bnp as ?value_multi_val_noheader)
+    bind(substr(replace(str(?bnp), \"^.*/np/\", \"\"), 1, 10) as ?value_label_multi)
+  } union {
+    graph ?a { ?_resource_iri ?pred ?value_multi_val_noheader }
+    filter(?pred not in (rdf:type, rdfs:label, rdfs:seeAlso, wd:P823, pav:authoredBy, dct:creator,
+      dct:date, dct:isPartOf, dct:description,
+      schema:startDate, schema:endDate, schema:location, schema:about, schema:position,
+      <http://schema.org/startDate>, <http://schema.org/endDate>,
+      <http://schema.org/location>, <http://schema.org/about>))
+    bind(990 as ?sort) bind(?pred as ?property_noheader) bind(str(?pred) as ?property_label)
+    optional { graph ?a { ?value_multi_val_noheader rdfs:label ?value_label_multi } }
+  }
+  # Which candidate the panel shows is decided here, in the view's own query, rather than by
+  # the page that shows it: the newest one signed with an approved key of an admin,
+  # maintainer or member of the space the page is in -- members upwards, the same tier the
+  # view offers its override action to, so that the people who can change what this panel
+  # shows are exactly the people it shows the button to. Projecting ?bnp joins the choice
+  # back onto the rows above, keeping only the chosen nanopublication's.
+  {
+    select (iri(strafter(max(concat(str(?cdate), \" \", str(?cnp))), \" \")) as ?bnp) where {
+      # The candidates are materialized in their own sub-select: an aggregation or join at
+      # the same level as a SERVICE makes the service silently return nothing (RDF4J).
+      {
+        select ?cnp ?cdate ?cpk where {
+          graph npa:graph {
+            ?cnp npx:introduces ?_resource_iri ;
+                 npa:hasValidSignatureForPublicKeyHash ?cpk ;
+                 dct:created ?cdate .
+            filter not exists { ?ci npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKeyHash ?cpk . }
+          }
+        }
+      }
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+        graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+        graph ?stateG {
+          # The page's context is either the space itself or a resource maintained by one.
+          { ?ri npa:forSpace ?_context_iri . }
+          union
+          { ?_context_iri npa:isMaintainedBy ?ctxSpace . ?ri npa:forSpace ?ctxSpace . }
+          ?ri a gen:RoleInstantiation ; npa:hasRoleType ?tier ; npa:forAgent ?agent .
+          filter(?tier = gen:AdminRole || ?tier = gen:MaintainerRole || ?tier = gen:MemberRole)
+          # npa:AccountState is the trust-approved account; a pending one carries no authority.
+          ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?cpk .
+        }
+      }
+      # Grouped, so that no eligible candidate means no row at all: an aggregate with no
+      # grouping would return one row with ?bnp unbound, and joining an unbound variable
+      # filters nothing -- the panel would fall back to showing whatever it found.
+      bind(?_resource_iri as ?resourceKey)
+    } group by ?resourceKey
+  }
+  # Read back by the view's override action, which reopens exactly the nanopublication shown
+  # here, in the template it was made with (nanodash docs/magic-query-params.md). These are
+  # action data rather than content, and their \"_label\" suffix is what keeps them out of the
+  # rendered table: every Nanodash version skips a column whose name ends that way, so the
+  # view can be published before the version that reads them is released.
+  bind(str(?bnp) as ?override_target_label)
+  optional { graph ?npi { ?bnp nt:wasCreatedFromTemplate ?override_template_label . } }
+}
+order by ?sort ?property_noheader ?value_multi_val_noheader""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-09T14:00:58Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-presentation-details;
+    npx:supersedes <https://w3id.org/np/RA-TnHdB501Qs-Wmj0QtrW8t6rjFuqgcnMtH1aXYiLtf8>;
+    rdfs:label "Get presentation details";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "LkNnLBsF4tLZO0NZFwv01IbfylFFvMMNWtAcE1Gwu8HETdbYFxoRBPbGrqHO0caalzZIV7y2Gyv/Z7umNwN8n8dQ/v43RVvw2Yy+70/v/bnZnb9WB+SCE05rLzYP215WEmzc0EwReiX/BJgbFT5GYELzQ73iVMn6/8wE8fPrBbk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,57 @@
+@prefix this: <https://w3id.org/np/RAUUeX_VN6-H3u3ajy74LalOZ-_LsjBLQddLcgqiG_fp4> .
+@prefix sub: <https://w3id.org/np/RAUUeX_VN6-H3u3ajy74LalOZ-_LsjBLQddLcgqiG_fp4/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix hycl: <http://purl.org/petapico/o/hycl#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:more-specific-statements-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAsFh8Rl8xHk0ttpvwxNhI5BjGIOWcRVlnA-zc4FLe70c/more-specific-statements-view-kind>;
+    dct:title "🔽 More specific statements";
+    rdfs:label "More specific statements that a statement generalises";
+    gen:appliesToInstancesOf hycl:AIDA-Sentence;
+    gen:hasStructuralPosition "4.2.moreSpecificStatements";
+    gen:hasViewQuery <https://w3id.org/np/RAr3OGUV1DBWTZl9oS4cuD4OYBw30ZwnzqVrDfoFXbrrA/get-more-specific-statements>;
+    gen:hasViewQueryTargetField "statement" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-11T13:15:16Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:more-specific-statements-view;
+    npx:introduces <https://w3id.org/np/RAsFh8Rl8xHk0ttpvwxNhI5BjGIOWcRVlnA-zc4FLe70c/more-specific-statements-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAsFh8Rl8xHk0ttpvwxNhI5BjGIOWcRVlnA-zc4FLe70c>;
+    rdfs:label "More specific statements that a statement generalises";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAfa1tHtbOrV0YaCY0LyjHkpXoudrauhN8DUYPM63ZQ-k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "XJWglhE0WGXDi+43akoW9TEPBk/fjAZ/gpW4BI74wjfPifJQYQkuuOQhR6b05BgAal2qvZZRN1ubZWF+meFj0Z4v6q25bqqrp5RYfTECLPX8yt748fyq6Kvkay8ELnH2m6wYJSCqzaAArIaNOZLRPxaUoUwwtEeerVTe/e8nAU0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}

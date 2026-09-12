@@ -1,0 +1,212 @@
+@prefix this: <https://w3id.org/np/RAr3OGUV1DBWTZl9oS4cuD4OYBw30ZwnzqVrDfoFXbrrA> .
+@prefix sub: <https://w3id.org/np/RAr3OGUV1DBWTZl9oS4cuD4OYBw30ZwnzqVrDfoFXbrrA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-more-specific-statements a grlc:grlc-query;
+    dct:description "Given a general statement (an AIDA sentence), this query returns the more specific statements it generalises via hycl:hasMoreGeneralMeaningThan, one row per statement, with the projects it declares itself relevant for, the number of evidence items and arguments behind it, the kinds of that evidence as links, and its own nanopublication. Evidence behind a statement means the items typed obo:ECO_0000000 or wd:Q11538 that the statement obtains support from (cito:obtainsSupportFrom) directly, or that a statement it in turn generalises obtains support from, so a project's general statement shows the evidence of its findings; the kind is the more specific ECO class, labelled from the pubinfo of the evidence nanopublication. The evidence is aggregated in its own sub-select so that it does not multiply the project rows. It is meant as a part-level view on a statement page: the statement is the page's part and the page's context resource (a space, or a resource maintained by one) is filled into the context parameter automatically. Only nanopublications signed by a current admin, maintainer or member of the context space or of one of its sub-spaces are considered, with invalidated, superseded and example nanopublications skipped; the member check on the union branches is applied after the union, as a filter inside a branch cannot see the collected pubkeys. Without a context the gate is empty and nothing is returned. This version drops the kind column of the first version and adds the evidence columns.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the more specific statements that a statement generalises";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix hycl: <http://purl.org/petapico/o/hycl#>
+prefix cito: <http://purl.org/spar/cito/>
+prefix obo: <http://purl.obolibrary.org/obo/>
+prefix wd: <http://www.wikidata.org/entity/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?statement ?statement_label ?project_multi_iri ?project_label_multi
+       ?evidence_items ?evidence_kind_multi_iri ?evidence_kind_label_multi ?np ?np_label
+where {
+  {
+    select ?statement
+           (group_concat(distinct str(?project); separator=\"\\n\") as ?project_multi_iri)
+           (group_concat(distinct ?projectLabel; separator=\"\\n\") as ?project_label_multi)
+           (sample(?dnp) as ?np)
+    where {
+      {
+        select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            select ?mpk where {
+              values ?__context_multi_iri {}
+              graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+              graph ?stateG {
+                ?ri a gen:RoleInstantiation ; npa:forSpace ?sp ; npa:forAgent ?agent ; npa:hasRoleType ?roleType .
+                filter(?roleType in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+              }
+              # The context is the space itself or a resource it maintains; the space and its
+              # sub-spaces (IRI extended with a slash) are matched in a filter rather than with
+              # a zero-length property path, because when the optional context is absent an
+              # unbound path subject scans the whole state graph and times out, while the
+              # bound() guard short-circuits to an empty gate.
+              filter(bound(?__context_multi_iri) && (
+                ?sp = ?__context_multi_iri || strstarts(str(?sp), concat(str(?__context_multi_iri), \"/\"))
+                || exists { graph ?stateG { ?__context_multi_iri npa:isMaintainedBy ?mb .
+                            filter(?sp = ?mb || strstarts(str(?sp), concat(str(?mb), \"/\"))) } }))
+            }
+          }
+        }
+      }
+      graph npa:graph {
+        ?gnp np:hasAssertion ?ga ; npa:hasValidSignatureForPublicKeyHash ?gpk .
+        filter not exists { ?gInv npx:invalidates ?gnp ; npa:hasValidSignatureForPublicKeyHash ?gpk }
+        filter not exists { ?gSup npx:supersedes ?gnp }
+        filter not exists { ?gnp npx:hasNanopubType npx:ExampleNanopub }
+      }
+      filter(contains(?memberPubkeys, ?gpk))
+      graph ?ga { ?_statement_iri hycl:hasMoreGeneralMeaningThan ?statement . }
+      optional {
+        graph npa:graph {
+          ?dnp np:hasAssertion ?da ; npa:hasValidSignatureForPublicKeyHash ?dpk .
+          filter not exists { ?dInv npx:invalidates ?dnp ; npa:hasValidSignatureForPublicKeyHash ?dpk }
+          filter not exists { ?dSup npx:supersedes ?dnp }
+          filter not exists { ?dnp npx:hasNanopubType npx:ExampleNanopub }
+        }
+        filter(contains(?memberPubkeys, ?dpk))
+        graph ?da { ?statement a hycl:AIDA-Sentence . }
+      }
+      optional {
+        graph npa:graph {
+          ?rnp np:hasAssertion ?ra ; npa:hasValidSignatureForPublicKeyHash ?rpk .
+          filter not exists { ?rInv npx:invalidates ?rnp ; npa:hasValidSignatureForPublicKeyHash ?rpk }
+          filter not exists { ?rSup npx:supersedes ?rnp }
+        }
+        filter(contains(?memberPubkeys, ?rpk))
+        graph ?ra { ?statement gen:isRelevantFor ?project . }
+        bind(replace(str(?project), \"^.*/\", \"\") as ?projectLabel)
+      }
+    }
+    group by ?statement
+  }
+  # Evidence and arguments behind each more specific statement: items it obtains support
+  # from directly, or that a statement it generalises in turn obtains support from (one
+  # further level, so a project's general statement shows the evidence of its findings).
+  # Kept as its own sub-select so the counts do not multiply the project rows above.
+  optional {
+    {
+      select ?statement (count(distinct ?evidence) as ?evidence_items)
+             (group_concat(distinct str(?kind); separator=\"\\n\") as ?evidence_kind_multi_iri)
+             (group_concat(distinct ?kindLabel; separator=\"\\n\") as ?evidence_kind_label_multi)
+      where {
+        {
+          select ?statement ?evidence ?kind (min(?kl) as ?kindLabel) where {
+            {
+              select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+                service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+                  select ?mpk where {
+                    values ?__context_multi_iri {}
+                    graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+                    graph ?stateG {
+                      ?ri a gen:RoleInstantiation ; npa:forSpace ?sp ; npa:forAgent ?agent ; npa:hasRoleType ?roleType .
+                      filter(?roleType in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                      ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+                    }
+                    filter(bound(?__context_multi_iri) && (
+                      ?sp = ?__context_multi_iri || strstarts(str(?sp), concat(str(?__context_multi_iri), \"/\"))
+                      || exists { graph ?stateG { ?__context_multi_iri npa:isMaintainedBy ?mb .
+                                  filter(?sp = ?mb || strstarts(str(?sp), concat(str(?mb), \"/\"))) } }))
+                  }
+                }
+              }
+            }
+            graph npa:graph {
+              ?gnp2 np:hasAssertion ?ga2 ; npa:hasValidSignatureForPublicKeyHash ?gpk2 .
+              filter not exists { ?gInv2 npx:invalidates ?gnp2 ; npa:hasValidSignatureForPublicKeyHash ?gpk2 }
+              filter not exists { ?gSup2 npx:supersedes ?gnp2 }
+              filter not exists { ?gnp2 npx:hasNanopubType npx:ExampleNanopub }
+            }
+            graph ?ga2 { ?_statement_iri hycl:hasMoreGeneralMeaningThan ?statement . }
+            {
+              graph npa:graph {
+                ?snp np:hasAssertion ?sa ; npa:hasValidSignatureForPublicKeyHash ?spk .
+                filter not exists { ?sInv npx:invalidates ?snp ; npa:hasValidSignatureForPublicKeyHash ?spk }
+                filter not exists { ?sSup npx:supersedes ?snp }
+              }
+              graph ?sa { ?statement cito:obtainsSupportFrom ?evidence . }
+            } union {
+              graph npa:graph {
+                ?hnp np:hasAssertion ?ha ; npa:hasValidSignatureForPublicKeyHash ?hpk .
+                filter not exists { ?hInv npx:invalidates ?hnp ; npa:hasValidSignatureForPublicKeyHash ?hpk }
+                filter not exists { ?hSup npx:supersedes ?hnp }
+              }
+              graph ?ha { ?statement hycl:hasMoreGeneralMeaningThan ?supported . }
+              graph npa:graph {
+                ?snp2 np:hasAssertion ?sa2 ; npa:hasValidSignatureForPublicKeyHash ?spk2 .
+                filter not exists { ?sInv2 npx:invalidates ?snp2 ; npa:hasValidSignatureForPublicKeyHash ?spk2 }
+                filter not exists { ?sSup2 npx:supersedes ?snp2 }
+              }
+              graph ?sa2 { ?supported cito:obtainsSupportFrom ?evidence . }
+            }
+            # member checks after the union: a filter inside a branch cannot see ?memberPubkeys
+            filter(contains(?memberPubkeys, ?gpk2))
+            filter(coalesce(contains(?memberPubkeys, ?spk), true))
+            filter(coalesce(contains(?memberPubkeys, ?hpk), true))
+            filter(coalesce(contains(?memberPubkeys, ?spk2), true))
+            graph npa:graph {
+              ?enp np:hasAssertion ?ea ; np:hasPublicationInfo ?epi ; npa:hasValidSignatureForPublicKeyHash ?epk .
+              filter not exists { ?eInv npx:invalidates ?enp ; npa:hasValidSignatureForPublicKeyHash ?epk }
+              filter not exists { ?eSup npx:supersedes ?enp }
+            }
+            filter(contains(?memberPubkeys, ?epk))
+            graph ?ea { ?evidence a ?evType , ?kind . }
+            filter(?evType in (obo:ECO_0000000, wd:Q11538))
+            filter(?kind != obo:ECO_0000000)
+            optional { graph ?epi { ?kind rdfs:label ?klRaw } }
+            bind(coalesce(?klRaw, replace(str(?kind), \"^.*/\", \"\")) as ?kl)
+          }
+          group by ?statement ?evidence ?kind
+        }
+      }
+      group by ?statement
+    }
+  }
+  bind(replace(replace(replace(replace(replace(replace(replace(strafter(str(?statement), \"http://purl.org/aida/\"), \"[+]\", \" \"), \"%2C\", \",\"), \"%3A\", \":\"), \"%28\", \"(\"), \"%29\", \")\"), \"%2F\", \"/\"), \"%25\", \"%\") as ?statement_label)
+  bind(\"^\" as ?np_label)
+}
+order by ?statement_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-11T13:15:14Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-more-specific-statements;
+    npx:supersedes <https://w3id.org/np/RA9XMsgA86KtCXZq3KXA03Ewr9mgPTNfivYurHKRq_nGw>;
+    rdfs:label "Get the more specific statements that a statement generalises";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "jaU+F4XJA9YylvYN05Tvfly0X9c/iAAJJalttmPjxKxurSdglFSXwKGomAtPeh8xchytPDWqp8+AuyX67o7JAv46S9ZSQNK/XelchSBR6SFa96kzE5/oitHmJ6HdocfCuHF+6Hx1W8zOKzW+4egt2J/2ZXTrpq0FSfMd4tySGho=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}

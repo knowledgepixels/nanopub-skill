@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAVsaIwAWFk9NekiVx-pGN6c1p-CK9ozishyvXcjUtTLc> .
-@prefix sub: <https://w3id.org/np/RAVsaIwAWFk9NekiVx-pGN6c1p-CK9ozishyvXcjUtTLc/> .
+@prefix this: <https://w3id.org/np/RAoX3HtuHttjxGWkdPc9tzF11hNrTiD2fm3OcQgR7Wbxw> .
+@prefix sub: <https://w3id.org/np/RAoX3HtuHttjxGWkdPc9tzF11hNrTiD2fm3OcQgR7Wbxw/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix grlc: <https://w3id.org/kpxl/grlc/> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -20,7 +20,7 @@ sub:Head {
 
 sub:assertion {
   sub:list-space-non-approved a grlc:grlc-query;
-    dct:description "Lists the non-approved role claims of a given space ref (space IRI + root definition): agents who hold a higher-tier role instantiation (admin/maintainer/member) that is NOT in the trust-validated current state, i.e. a self-assigned or otherwise ungranted claim awaiting approval by an equal-or-higher-tier member. Pass the ref's root nanopub (root_np). Observer-tier roles are excluded: they are self-assignable, so a self-declared observer needs no approval and is shown by list-space-observers instead. The higher-tier test is generic — the built-in admin property (gen:hasAdmin) OR a RoleDeclaration whose npa:hasRoleType is gen:AdminRole/gen:MaintainerRole/gen:MemberRole. Per (member, role) only the latest role-instantiation nanopub is considered (by dct:created). Returns one row per member with the claimed tier, the grant nanopub(s) with the claimed role's label (role_assignments_multi_iri + role_assignments_label_multi), and a consistent (approve_np, grant_template) pair for the approve action: the granting nanopublication to derive from and the template to open it with. v2: adds the role_assignments columns. v3: resolves owl:sameAs space aliases (via the ref's validated npa:sameAsSpace edges in the current-state graph), so a higher-tier claim made against an alias IRI of the space is detected. v4: the invalidation filter honours an npx:invalidates edge only when the invalidating nanopub shares a signing pubkey (npa:hasValidSignatureForPublicKeyHash) with the grant it targets, so a foreign-key retraction can no longer suppress another agent's claim (issue #487 / same gate as the materializer's #112). v5: BUGFIX — the v3/v4 space-alias resolution used a BIND-in-UNION pattern that RDF4J leaves unbound, so the query returned ZERO rows for every space; replaced with a non-union filter/exists that restores detection while keeping alias resolution. v6: adds an approve_np column holding the granting nanopublication for each pending row. v7 (nanodash issue #603): replaces the admin-only roleAssignmentTemplate and agent_iri columns with a per-row (approve_np, grant_template) pair so the approve action works for EVERY tier, not only for admin grants: grant_template is the grant's own nt:wasCreatedFromTemplate (falling back to the free-form template), letting the approve action open the pending grant in derive mode (approve_np:@derive-a grant_template:@template) so the approver re-publishes the same assertion under their own key — which is exactly what tier validation requires. The tier column is DETERMINISTIC: the highest tier among the member's pending claims (rank-keyed min, not a sample), and the approve pair is computed from the SAME grant via a rank-prefixed concatenated min — preferring the grant of that highest tier — so the displayed tier, the derive target, and the template can never mismatch when a member has pending claims under several role properties. A grant whose assertion defines a Space itself (a root definition, detected via '?s a gen:Space' since gen:hasRootDefinition is absent on older definitions) is not offered for derivation, as deriving it would publish a competing root definition; for admin-tier claims such rows instead pair with the built-in admin-assignment template, so the approve button keeps working as a space-ref-conflict remedy (the hasAdmin triple unifies with that template, the definition's other statements show as unfillable). Rows whose grant is not loaded in this repo, or whose grant is a space definition claiming a non-admin tier, get no pair and hence no approve button.";
+    dct:description "Lists the non-approved role claims of a given space ref (space IRI + root definition): agents who hold a higher-tier role instantiation (admin/maintainer/member) that is NOT in the trust-validated current state, i.e. a self-assigned or otherwise ungranted claim awaiting approval by an equal-or-higher-tier member. Pass the ref's root nanopub (root_np). Observer-tier roles are excluded: they are self-assignable, so a self-declared observer needs no approval and is shown by list-space-observers instead. The higher-tier test is generic — the built-in admin property (gen:hasAdmin) OR a RoleDeclaration whose npa:hasRoleType is gen:AdminRole/gen:MaintainerRole/gen:MemberRole. Per (member, role) only the latest role-instantiation nanopub is considered (by dct:created). Returns one row per member with the claimed tier, the grant nanopub(s) with the claimed role's label (role_assignments_multi_iri + role_assignments_label_multi), and a consistent (approve_np, grant_template) pair for the approve action: the granting nanopublication to derive from and the template to open it with. v2: adds the role_assignments columns. v3: resolves owl:sameAs space aliases (via the ref's validated npa:sameAsSpace edges in the current-state graph), so a higher-tier claim made against an alias IRI of the space is detected. v4: the invalidation filter honours an npx:invalidates edge only when the invalidating nanopub shares a signing pubkey (npa:hasValidSignatureForPublicKeyHash) with the grant it targets, so a foreign-key retraction can no longer suppress another agent's claim (issue #487 / same gate as the materializer's #112). v5: BUGFIX — the v3/v4 space-alias resolution used a BIND-in-UNION pattern that RDF4J leaves unbound, so the query returned ZERO rows for every space; replaced with a non-union filter/exists that restores detection while keeping alias resolution. v6: adds an approve_np column holding the granting nanopublication for each pending row. v7 (nanodash issue #603): replaces the admin-only roleAssignmentTemplate and agent_iri columns with a per-row (approve_np, grant_template) pair so the approve action works for EVERY tier, not only for admin grants: grant_template is the grant's own nt:wasCreatedFromTemplate (falling back to the free-form template), letting the approve action open the pending grant in derive mode (approve_np:@derive-a grant_template:@template) so the approver re-publishes the same assertion under their own key — which is exactly what tier validation requires. The tier column is DETERMINISTIC: the highest tier among the member's pending claims (rank-keyed min, not a sample), and the approve pair is computed from the SAME grant via a rank-prefixed concatenated min — preferring the grant of that highest tier — so the displayed tier, the derive target, and the template can never mismatch when a member has pending claims under several role properties. A grant whose assertion defines a Space itself (a root definition, detected via '?s a gen:Space' since gen:hasRootDefinition is absent on older definitions) is not offered for derivation, as deriving it would publish a competing root definition; for admin-tier claims such rows instead pair with the built-in admin-assignment template, so the approve button keeps working as a space-ref-conflict remedy (the hasAdmin triple unifies with that template, the definition's other statements show as unfillable). Rows whose grant is not loaded in this repo, or whose grant is a space definition claiming a non-admin tier, get no pair and hence no approve button. v8: Adds a member_label column so each agent is shown by name instead of by bare IRI: the canonical foaf:name mirrored into the current space state (which comes from the agent's own key introduction) when present, otherwise the foaf:name asserted for that agent in the pubinfo of the grant nanopublication. Most role holders of a space have no key introduction of their own, so without the fallback they render as a bare ORCID. Rows are ordered by that display name.";
     dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
     rdfs:label "List space non-approved role claims (ref-scoped)";
     grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces>;
@@ -32,8 +32,10 @@ prefix npx: <http://purl.org/nanopub/x/>
 prefix nt: <https://w3id.org/np/o/ntemplate/>
 prefix gen: <https://w3id.org/kpxl/gen/terms/>
 prefix schema: <http://schema.org/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
 
 select ?member
+       (sample(?memberName) as ?member_label)
        (strafter(min(?tierKey), \" \") as ?tier)
        (group_concat(distinct ?latestNp; separator=\" \") as ?role_assignments_multi_iri)
        (group_concat(distinct ?roleLabel; separator=\"\\n\") as ?role_assignments_label_multi)
@@ -46,6 +48,7 @@ where {
            (strafter(max(concat(coalesce(str(?dateNp),\"\"), \" \", str(?grantNp))), \" \") as ?latestNp)
            (sample(?tier0) as ?tierX)
            (sample(?rl) as ?rlRaw)
+           (sample(?memberName0) as ?memberName)
     where {
       values ?_root_np_multi_iri {}
       graph npa:spacesGraph { ?ref npa:rootNanopub ?_root_np_multi_iri ; npa:spaceIri ?spaceIri . }
@@ -63,6 +66,12 @@ where {
       filter not exists { graph npa:graph { ?invNp npx:invalidates ?grantNp ; npa:hasValidSignatureForPublicKeyHash ?invpk . ?grantNp npa:hasValidSignatureForPublicKeyHash ?invpk . } }
       bind(if(exists { graph ?g { ?vri npa:forSpaceRef ?ref ; npa:forAgent ?member ; (npa:regularProperty|npa:inverseProperty) ?roleProp } }, 1, 0) as ?val0)
       optional { graph npa:graph { ?grantNp dct:created ?dateNp } }
+      optional { graph ?g { ?member foaf:name ?selfName } }
+      optional {
+        graph npa:graph { ?grantNp np:hasPublicationInfo ?grantPi . }
+        graph ?grantPi { ?member foaf:name ?grantName . }
+      }
+      bind(coalesce(?selfName, ?grantName) as ?memberName0)
       bind(if(?isAdminProp || ?isAdminDecl, \"Admin\", if(?isMaint, \"Maintainer\", \"Member\")) as ?tier0)
       optional {
         graph ?g { ?raRole a gen:RoleAssignment ; npa:forSpaceRef ?ref ; gen:hasRole ?role . }
@@ -94,7 +103,7 @@ where {
              ?undefPair)) as ?pair)
 }
 group by ?member
-order by ?member""" .
+order by lcase(coalesce(?member_label, str(?member)))""" .
 }
 
 sub:provenance {
@@ -104,11 +113,11 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-08-19T06:58:30Z"^^xsd:dateTime;
+  this: dct:created "2026-09-08T11:22:06Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:list-space-non-approved;
-    npx:supersedes <https://w3id.org/np/RAhSqdJ6w_dpbVwlCLQyp5rqOWGSnG47EL_hULHkspehQ>;
+    npx:supersedes <https://w3id.org/np/RAVsaIwAWFk9NekiVx-pGN6c1p-CK9ozishyvXcjUtTLc>;
     rdfs:label "List space non-approved role claims (ref-scoped)";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
@@ -117,7 +126,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "NbgwNLh4suYoiXdn+cTYxbhofdNyXz0tea2N3U+j2BY74UQrUAbXYzmV6T55rxyQqPFXxkU5o2fkxaUc+z0X21pNQIhRz0Lln126TKTdFKEad7o0SRUybQ0jgyxgXYABg9gUutjYPd808aAa2NmYu46984GbQZxhg/1at9UqrCo=";
+    npx:hasSignature "bST1mstn+5rT9hNzrYqmm9OH3bS5G2tehUa4rQB8rYghOGqz0ezLVfAZj3/1FyEzWXkD4cZo3458iC2mkSa1WodoArcplxsS5QLPCfBArsWWmjpPgWcFit9scmuQYf47pVu2dK3u8G+7gIB/QOQLhSNPuY34XfshwTFFKv2gMdo=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

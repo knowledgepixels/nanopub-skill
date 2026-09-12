@@ -1,0 +1,113 @@
+@prefix this: <https://w3id.org/np/RAnb2hI_DPJntpD9qF71M7h12B5Laf2v7ONYRct6zAjGo> .
+@prefix sub: <https://w3id.org/np/RAnb2hI_DPJntpD9qF71M7h12B5Laf2v7ONYRct6zAjGo/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:list-space-participants a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Lists the participants of a given space (one row per agent). Two kinds of rows are merged: (1) validated role instantiations in the current space state for the general participant role or the planned-attendance role, and (2) self-declarations (wikidata P1344, 3pff participatedAsParticipantIn, gen:plansToAttend) by an agent whose signing key has no registered account, so no role instantiation exists for it. The latter are marked with a warning icon (hover text 'unverified identity') in the status column, are dropped when self-retracted, and are only taken from keys bound to no other agent. The status column holds '(planned)' when the agent only plans to attend (no participant role), plus the warning icon as described, otherwise empty. The np column points to the participant grant/declaration if present, otherwise to the planned-attendance one. IRI-keyed by npa:forSpace (param space).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "List space participants";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+select ?user_iri ?user_iri_label ?status ?np ?np_label where {
+  {
+    select ?user_iri
+           (sample(?name) as ?name)
+           (max(?partNpV0) as ?partNpV)
+           (max(?partNpU0) as ?partNpU)
+           (max(?planNpV0) as ?planNpV)
+           (max(?planNpU0) as ?planNpU)
+    where {
+      values ?_space_multi_iri {}
+      graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?g . }
+      {
+        values ?role {
+          <https://w3id.org/np/RAAZF7iqaWUcyWJMZ-1-hJxoGUxM5ykR70SQT9vKT5m3I/participantRole>
+          <https://w3id.org/np/RA9SPqtEgUK_ZcNzTRQjoOvKuV6vNgA81la4XA4HKDltQ/plannedAttendanceRole>
+        }
+        graph ?g {
+          ?ri a gen:RoleInstantiation ; npa:forSpace ?_space_multi_iri ; npa:forAgent ?user_iri ; npa:viaNanopub ?grantNp ; gen:hasRole ?role .
+        }
+        optional { graph ?g { ?user_iri foaf:name ?name } }
+        bind(\"v\" as ?tier)
+      }
+      union
+      {
+        values ( ?prop ?role ) {
+          ( <http://www.wikidata.org/entity/P1344> <https://w3id.org/np/RAAZF7iqaWUcyWJMZ-1-hJxoGUxM5ykR70SQT9vKT5m3I/participantRole> )
+          ( <https://w3id.org/fair/3pff/participatedAsParticipantIn> <https://w3id.org/np/RAAZF7iqaWUcyWJMZ-1-hJxoGUxM5ykR70SQT9vKT5m3I/participantRole> )
+          ( gen:plansToAttend <https://w3id.org/np/RA9SPqtEgUK_ZcNzTRQjoOvKuV6vNgA81la4XA4HKDltQ/plannedAttendanceRole> )
+        }
+        graph npa:graph {
+          ?grantNp npx:signedBy ?user_iri ; np:hasAssertion ?a ; npa:hasValidSignatureForPublicKeyHash ?pubkey .
+        }
+        graph ?a { ?user_iri ?prop ?_space_multi_iri . }
+        filter not exists { graph npa:graph { ?inv npx:invalidates ?grantNp ; npa:hasValidSignatureForPublicKeyHash ?pubkey . } }
+        filter not exists { graph ?g { ?acc a npa:AccountState ; npa:pubkey ?pubkey } }
+        optional { graph npa:graph { ?grantNp np:hasPublicationInfo ?pi . } graph ?pi { ?user_iri foaf:name ?name . } }
+        bind(\"u\" as ?tier)
+      }
+      bind(if(?role = <https://w3id.org/np/RAAZF7iqaWUcyWJMZ-1-hJxoGUxM5ykR70SQT9vKT5m3I/participantRole> && ?tier = \"v\", str(?grantNp), \"\") as ?partNpV0)
+      bind(if(?role = <https://w3id.org/np/RAAZF7iqaWUcyWJMZ-1-hJxoGUxM5ykR70SQT9vKT5m3I/participantRole> && ?tier = \"u\", str(?grantNp), \"\") as ?partNpU0)
+      bind(if(?role = <https://w3id.org/np/RA9SPqtEgUK_ZcNzTRQjoOvKuV6vNgA81la4XA4HKDltQ/plannedAttendanceRole> && ?tier = \"v\", str(?grantNp), \"\") as ?planNpV0)
+      bind(if(?role = <https://w3id.org/np/RA9SPqtEgUK_ZcNzTRQjoOvKuV6vNgA81la4XA4HKDltQ/plannedAttendanceRole> && ?tier = \"u\", str(?grantNp), \"\") as ?planNpU0)
+    }
+    group by ?user_iri
+  }
+  bind(if(?partNpV != \"\", ?partNpV, if(?partNpU != \"\", ?partNpU, if(?planNpV != \"\", ?planNpV, ?planNpU))) as ?npStr)
+  bind(?partNpV = \"\" && ?partNpU = \"\" as ?planned)
+  bind(?partNpV = \"\" && ?planNpV = \"\" as ?unverified)
+  bind(iri(?npStr) as ?np)
+  bind(\"^\" as ?np_label)
+  bind(if(bound(?name), str(?name), \"\") as ?user_iri_label)
+  bind('<svg width=\"18\" height=\"18\" viewBox=\"0 0 18 18\"><title>unverified identity</title><text x=\"9\" y=\"14.5\" font-size=\"16\" text-anchor=\"middle\">⚠</text></svg>' as ?warnIcon)
+  bind(if(?unverified, if(?planned, concat('<span>(planned) ', ?warnIcon, '</span>'), ?warnIcon), if(?planned, '(planned)', '')) as ?status)
+}
+order by lcase(?user_iri_label)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-09T15:06:18Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:list-space-participants;
+    npx:supersedes <https://w3id.org/np/RAjW2VVunw5b0lXh_-XO38HofxzjWBnCc4ze0LC-zAuhw>;
+    rdfs:label "List space participants";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "fuqR5ZVBkgYwGTMWaSf+frNT3xys1frc7eqrlc3YPMS+tMnuO0zJ0TFn42QoSR6PjvtHed6R9dEwQ+Z+p75hAGYguagZMDTMHHGMsldpGkt7cfxapmUO/wze27VLCRb4fnfzUkmnUzG54n711xzjSFDMlAtqh0SpdCoCpncibHI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

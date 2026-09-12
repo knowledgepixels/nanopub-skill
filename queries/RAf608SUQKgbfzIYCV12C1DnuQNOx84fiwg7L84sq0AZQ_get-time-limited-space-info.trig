@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAiBVEbfU6fUcmjiTsQfZfZ-ezTISdI2_B1EKs-XfchjI> .
-@prefix sub: <https://w3id.org/np/RAiBVEbfU6fUcmjiTsQfZfZ-ezTISdI2_B1EKs-XfchjI/> .
+@prefix this: <https://w3id.org/np/RAf608SUQKgbfzIYCV12C1DnuQNOx84fiwg7L84sq0AZQ> .
+@prefix sub: <https://w3id.org/np/RAf608SUQKgbfzIYCV12C1DnuQNOx84fiwg7L84sq0AZQ/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix grlc: <https://w3id.org/kpxl/grlc/> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -20,7 +20,7 @@ sub:Head {
 
 sub:assertion {
   sub:get-time-limited-space-info a grlc:grlc-query;
-    dct:description "Returns key-value facts for display on the page of a time-limited space (project, initiative, campaign, or event): its type(s), date, location, description(s), and admins. Type, date, location, and description are read from a single winning definition nanopub: among all validly signed, non-invalidated nanopubs that introduce the resource and type it as gen:Space or gen:MaintainedResource, the one with the latest dct:created wins (ties broken by nanopub URI). This matters because successive definitions are chained by root definition rather than by npx:supersedes, and a resource IRI can be claimed by more than one space-ref, so the earlier plain not-invalidated filter merged the values of every past definition into one row. Admins are the validated admins (npa:hasRoleType gen:AdminRole) of the governing space, resolved via the spaces repository. The date row shows the start and end dates; when both fall on the same day, it shows the day with the start and end times (and the timezone offset); when the end date is absent, only the start date is shown. The location row shows the location URI as a link. Date and location rows are omitted when the corresponding values are not given, as is any row whose value is empty. Each property occupies one row; the Value column is a multi-value cell so properties with several values (multiple types or admins) list them all in a single row. Type labels are derived from the concatenated type IRIs by a single regex so the value and label lists always stay aligned. Both columns use the '_noheader' convention so the redundant header row is dropped.";
+    dct:description "Returns key-value facts for display on the page of a time-limited space (project, initiative, campaign, or event): its type(s), date, location, description(s), and admins. Type, date, location, and description are read from a single winning definition nanopub: among all validly signed, non-invalidated nanopubs that introduce the resource and type it as gen:Space or gen:MaintainedResource, the one with the latest dct:created wins (ties broken by nanopub URI). This matters because successive definitions are chained by root definition rather than by npx:supersedes, and a resource IRI can be claimed by more than one space-ref, so the earlier plain not-invalidated filter merged the values of every past definition into one row. Admins are the validated admins (npa:hasRoleType gen:AdminRole) of the governing space, resolved via the spaces repository. An admin's display name is taken from the foaf:name in the spaces repository, which is only present for agents who have published an introduction; when that is absent it falls back to the foaf:name recorded in the pubinfo of the grant nanopub that materialised the role (npa:viaNanopub), and only then to the bare agent URI. Admins are grouped by agent so that each contributes exactly one value and one label, keeping the two lists aligned even when an agent holds the role through several grants naming them differently. The date row shows the start and end dates; when both fall on the same day, it shows the day with the start and end times (and the timezone offset); when the end date is absent, only the start date is shown. The location row shows the location URI as a link. Date and location rows are omitted when the corresponding values are not given, as is any row whose value is empty. Each property occupies one row; the Value column is a multi-value cell so properties with several values (multiple types or admins) list them all in a single row. Type labels are derived from the concatenated type IRIs by a single regex so the value and label lists always stay aligned. Both columns use the '_noheader' convention so the redundant header row is dropped.";
     dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
     rdfs:label "Get time-limited space info";
     grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
@@ -92,18 +92,23 @@ select distinct ?Property_noheader ?Property_label ?Value_multi_val_noheader ?Va
 
   optional {
     select (group_concat(?admin2; separator=\"\\n\") as ?adminVal) (group_concat(?adminName; separator=\"\\n\") as ?adminLabel) where {
-      select distinct ?admin2 ?adminName where {
+      select ?admin2 (min(?adminNameC) as ?adminName) where {
         values ?_resource_multi_iri {}
         service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
           graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?g . }
           optional { graph ?g { ?_resource_multi_iri npa:isMaintainedBy ?maint . } }
           bind(coalesce(?maint, ?_resource_multi_iri) as ?adminSpace)
           graph ?g { ?ri a gen:RoleInstantiation ; npa:forSpace ?adminSpace ; npa:hasRoleType gen:AdminRole ; npa:forAgent ?admin . }
+          optional { graph ?g { ?ri npa:viaNanopub ?viaNp . } }
           optional { graph ?g { ?admin foaf:name ?adminName0 . } }
         }
-        bind(coalesce(?adminName0, str(?admin)) as ?adminName)
+        optional {
+          graph npa:graph { ?viaNp np:hasPublicationInfo ?viaPi . }
+          graph ?viaPi { ?admin foaf:name ?grantName . }
+        }
+        bind(coalesce(?adminName0, ?grantName, str(?admin)) as ?adminNameC)
         bind(str(?admin) as ?admin2)
-      }
+      } group by ?admin2
     } having (count(?admin2) > 0)
   }
 
@@ -144,20 +149,20 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-08-24T11:12:09Z"^^xsd:dateTime;
+  this: dct:created "2026-09-09T09:06:54Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:get-time-limited-space-info;
-    npx:supersedes <https://w3id.org/np/RA1AX_8gIdU4w3swKLJoSg9e6zatRxiaiCa1AZCgJTzdc>;
+    npx:supersedes <https://w3id.org/np/RAiBVEbfU6fUcmjiTsQfZfZ-ezTISdI2_B1EKs-XfchjI>;
     rdfs:label "Get time-limited space info";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
-    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
-      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
     nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "aLTeGcj2UmaWrs4an1rn+8X/9Gmt6Zj07+0nh/wYjSIroKJtnK5t4wKJn+lhnrpD3HrSjkIjYizwvfHRBXonPlI90pp1k/s9m3rIlUm/ziRBnfEJ0sCuZyzU0ii94gGkLY712koaG66APHPP3ifVD/Sx06XU1geiRkQxzPVajW4=";
+    npx:hasSignature "aNXofb7BB0ZpHi5TtAH5kVoUO0pbVMB3lk9+UAGiP8wOcpe3qEWYZfukfQEod8lRk8beN5iHhOuOKZqPHtmzOE8pysS/gJqR8Lafs3m90JInpyj9R8XtQViN+1GDL/VGsM/FsD0ejdb9MfsUXOKe8NgyKns6iKHkM1IULpqVRvo=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }
