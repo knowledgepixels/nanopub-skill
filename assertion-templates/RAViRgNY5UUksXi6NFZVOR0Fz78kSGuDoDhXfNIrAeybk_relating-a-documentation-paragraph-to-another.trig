@@ -1,0 +1,67 @@
+@prefix this: <https://w3id.org/np/RAViRgNY5UUksXi6NFZVOR0Fz78kSGuDoDhXfNIrAeybk> .
+@prefix sub: <https://w3id.org/np/RAViRgNY5UUksXi6NFZVOR0Fz78kSGuDoDhXfNIrAeybk/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdfs:seeAlso rdfs:label "see also" .
+  
+  sub:paragraph a nt:ExternalUriPlaceholder;
+    rdfs:label "the documentation paragraph" .
+  
+  sub:related a nt:GuidedChoicePlaceholder;
+    rdfs:label "the related paragraph";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Paragraph" .
+  
+  sub:st0 rdf:object sub:related;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:paragraph .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Links a documentation paragraph to another paragraph that a reader of the first should also see, possibly in another chapter. The link is shown on both paragraphs' pages, so one direction is enough.";
+    dct:isVersionOf sub:template-kind;
+    rdfs:label "Relating a documentation paragraph to another";
+    gen:governedBy <https://w3id.org/spaces/nanopub>;
+    nt:hasNanopubLabelPattern "See also: ${paragraph} → ${related}";
+    nt:hasStatement sub:st0;
+    nt:hasTag "Documentation";
+    nt:hasTargetNanopubType rdfs:seeAlso .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-09-15T07:20:29Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:introduces sub:template-kind;
+    rdfs:label "Relating a documentation paragraph to another";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl8cMusqtNyKA6UIsi3f7BAcZmHQXWxU0qk0PLsboMWQxYrGBfGgHTgRHJrBRxL+Zn9kJHKVmz2smDcjCBptXi/OwWy80gjsx+Pbe6IWz3zFPWF1UoFIKfPnC0slV67CQgdM853zW7Bmk9/uflCtK4EtZKmPdRGtUHVC7DTVvDBMDzLRGdE2KCBVN29EbM5GGVNvijYbaZQ9OFQPBkQshayqSIyGRr6rreJdkrRVLIzu3uuAjKYydaeXZWSN2JLnVBwrClKUxaEdCwhb5nXpMtKOMD+R+LgaXLeJUWM8BdRSYnta9ZqI5pHY4y3v+eW7J+HHeTvRbHvlik+Z4hFUXmQIDAQAB";
+    npx:hasSignature "ftU9YXlKvX26CKzv+5h02SVINY7dsq5WsNMdfRA3qTq4d+YMrwpg/QralzJ4NvFc/OIlErkJTK545OsGggwsYodjj7QXVIiRRtPNXMjLDOVpkdKo0KTxsVQzW03Xiz/JBcKSGhcshAhSQ+6+woeoVa37zIOpl2CKVyR/VlHnS5rJ/P3RtM/Ij/JrZjGGYlJQiCKEVrIIN+43Pnex12mjARY1i9mSy4WOdDSyP66052oexOFlEyjdH15kdeXzoSUZT+qow1Qp38tzgCfFYdjHv9zThaVVOukNyyjigE/cxkd080xLENJiapFg/2nt+jRGC9kYGjhoP+ZTEE4MfcLSxw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
+}
+

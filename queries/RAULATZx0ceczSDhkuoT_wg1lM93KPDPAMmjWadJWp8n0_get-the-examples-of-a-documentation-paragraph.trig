@@ -1,0 +1,90 @@
+@prefix this: <https://w3id.org/np/RAULATZx0ceczSDhkuoT_wg1lM93KPDPAMmjWadJWp8n0> .
+@prefix sub: <https://w3id.org/np/RAULATZx0ceczSDhkuoT_wg1lM93KPDPAMmjWadJWp8n0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-docs-paragraph-examples a grlc:grlc-query;
+    dct:description "Examples linked to one documentation paragraph (gen:isExampleFor) by a member of the maintaining space. An example is any URI: a nanopublication, a page, a service URL, a file. Returns the example with a label (the nanopublication's label where it is one), the note saying what to look at, and the linking nanopublication as source and edit target.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the examples of a documentation paragraph";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+# Examples linked to ONE documentation paragraph (<example> gen:isExampleFor <paragraph>) by a
+# member of the maintaining space. An example is any URI: a nanopublication, a page, a service
+# URL. ?example_label is the nanopublication's label where the example is one, else the URI
+# itself. ?np is the linking nanopublication (source link and edit target).
+select ?example ?example_label ?note ?date (str(?np) as ?override_target) ?np (\"^\" as ?np_label) where {
+  {
+    select ?example ?np ?date (min(?n) as ?note) (min(?l) as ?label) where {
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+        select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+          graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+          values ?__context_multi_iri {}
+          graph ?stateG {
+            ?__context_multi_iri npa:isMaintainedBy? ?space .
+            ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?roleType .
+            ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+          }
+          filter(?roleType in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+        }
+      }
+      values ?_resource_multi_iri {}
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?npPubkey ; dct:created ?date ; np:hasAssertion ?a .
+        filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?npPubkey . }
+      }
+      filter(contains(?memberPubkeys, ?npPubkey))
+      graph ?a {
+        ?example gen:isExampleFor ?_resource_multi_iri .
+        optional { ?example rdfs:comment ?n . }
+      }
+      optional { graph npa:graph { ?example rdfs:label ?l . } }
+    } group by ?example ?np ?date
+  }
+  bind(coalesce(?label, str(?example)) as ?example_label)
+}
+order by ?date""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-09-15T07:34:02Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-docs-paragraph-examples;
+    npx:supersedes <https://w3id.org/np/RA-YGf2uHpZKq7aLp4iWCzL2qaRlZ5B2APni1vIq08s4U>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl8cMusqtNyKA6UIsi3f7BAcZmHQXWxU0qk0PLsboMWQxYrGBfGgHTgRHJrBRxL+Zn9kJHKVmz2smDcjCBptXi/OwWy80gjsx+Pbe6IWz3zFPWF1UoFIKfPnC0slV67CQgdM853zW7Bmk9/uflCtK4EtZKmPdRGtUHVC7DTVvDBMDzLRGdE2KCBVN29EbM5GGVNvijYbaZQ9OFQPBkQshayqSIyGRr6rreJdkrRVLIzu3uuAjKYydaeXZWSN2JLnVBwrClKUxaEdCwhb5nXpMtKOMD+R+LgaXLeJUWM8BdRSYnta9ZqI5pHY4y3v+eW7J+HHeTvRbHvlik+Z4hFUXmQIDAQAB";
+    npx:hasSignature "kYnQQ3B8i68LmYcpIzCbnWTaF/lV4pC+QdPa8Y+MDd95rH7x5XkkR38BItB0rONGxLZiw2VGFGRL1hOy5/3/Dl9UuaxRXPgEP4KDMt+cAsCB/eiiBJnnmGFiAJ8zGa8S/7Rb1PyW9iIiIxZS/3/xg6gl2DonC07g+3d1S4pRRKJJ0Yfi/lXrExtrslZfBuCw73cafrfJz5NLHSHyl308w2ylD6Oz5oSYnM0ulVu3/xxJqhymAY8l0PunNFj3LBMAnPm9vlQjqFUp+u3hZ7YuGZwuA98yWbMQUl5ZojX1guJx6Ahhtk/03a6pNWjU4kqSB4wyjXdeuzRZPByYaxgojg==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
+}
+

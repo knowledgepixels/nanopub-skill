@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RA3TWUUZHOZX1sKm7t89jsUt7y0bLujGQ5EpXjHkOv5ks> .
-@prefix sub: <https://w3id.org/np/RA3TWUUZHOZX1sKm7t89jsUt7y0bLujGQ5EpXjHkOv5ks/> .
+@prefix this: <https://w3id.org/np/RAGYx71tl8hxhgZ7H-Ht6thVX3R9F-CInV_UcxV6sLZGM> .
+@prefix sub: <https://w3id.org/np/RAGYx71tl8hxhgZ7H-Ht6thVX3R9F-CInV_UcxV6sLZGM/> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -19,11 +19,11 @@ sub:Head {
 sub:assertion {
   sub:add-action a gen:ViewResultAction;
     rdfs:label "➕ add example...";
-    gen:hasActionTemplate <https://w3id.org/np/RAaDYFI5bRze6O449wjM1psaV0HFfNcbgXjF9eS5Sl86g/template>;
+    gen:hasActionTemplate <https://w3id.org/np/RAQaFrvT2qZrDZ1A366gqINdlsVDU9Kziq8CfdFAATSHQ/template>;
     gen:hasActionTemplateTargetField "paragraph";
     gen:isVisibleTo gen:MemberRole .
   
-  sub:docs-paragraph-examples-view a gen:NanopubSetView, gen:ResourceView;
+  sub:docs-paragraph-examples-view a gen:ResourceView, gen:TabularView;
     dct:isVersionOf <https://w3id.org/np/RA-s4kT4Y1IAyzmSHMpa6TFg5ZbGELBMgoMAUijCb-HtE/docs-paragraph-examples-view-kind>;
     dct:title "🧪 Examples";
     rdfs:label "Documentation paragraph examples view";
@@ -31,12 +31,12 @@ sub:assertion {
     gen:governedBy <https://w3id.org/spaces/nanopub>;
     gen:hasStructuralPosition "4.2.examples";
     gen:hasViewAction sub:add-action, sub:edit-action;
-    gen:hasViewQuery <https://w3id.org/np/RA-YGf2uHpZKq7aLp4iWCzL2qaRlZ5B2APni1vIq08s4U/get-docs-paragraph-examples>;
+    gen:hasViewQuery <https://w3id.org/np/RAULATZx0ceczSDhkuoT_wg1lM93KPDPAMmjWadJWp8n0/get-docs-paragraph-examples>;
     gen:hasViewQueryTargetField "resource" .
   
   sub:edit-action a gen:ViewEntryAction;
     rdfs:label "✏ edit link...";
-    gen:hasActionTemplate <https://w3id.org/np/RAaDYFI5bRze6O449wjM1psaV0HFfNcbgXjF9eS5Sl86g/template>;
+    gen:hasActionTemplate <https://w3id.org/np/RAQaFrvT2qZrDZ1A366gqINdlsVDU9Kziq8CfdFAATSHQ/template>;
     gen:hasActionTemplateQueryMapping "override_target:@override";
     gen:isVisibleTo gen:MemberRole .
 }
@@ -46,12 +46,12 @@ sub:provenance {
 }
 
 sub:pubinfo {
-  this: dct:created "2026-09-15T05:32:16Z"^^xsd:dateTime;
+  this: dct:created "2026-09-15T07:34:23Z"^^xsd:dateTime;
     dct:creator <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot>;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:docs-paragraph-examples-view;
     npx:introduces <https://w3id.org/np/RA-s4kT4Y1IAyzmSHMpa6TFg5ZbGELBMgoMAUijCb-HtE/docs-paragraph-examples-view-kind>;
-    npx:supersedes <https://w3id.org/np/RA-s4kT4Y1IAyzmSHMpa6TFg5ZbGELBMgoMAUijCb-HtE>;
+    npx:supersedes <https://w3id.org/np/RA3TWUUZHOZX1sKm7t89jsUt7y0bLujGQ5EpXjHkOv5ks>;
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
       <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
@@ -59,7 +59,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl8cMusqtNyKA6UIsi3f7BAcZmHQXWxU0qk0PLsboMWQxYrGBfGgHTgRHJrBRxL+Zn9kJHKVmz2smDcjCBptXi/OwWy80gjsx+Pbe6IWz3zFPWF1UoFIKfPnC0slV67CQgdM853zW7Bmk9/uflCtK4EtZKmPdRGtUHVC7DTVvDBMDzLRGdE2KCBVN29EbM5GGVNvijYbaZQ9OFQPBkQshayqSIyGRr6rreJdkrRVLIzu3uuAjKYydaeXZWSN2JLnVBwrClKUxaEdCwhb5nXpMtKOMD+R+LgaXLeJUWM8BdRSYnta9ZqI5pHY4y3v+eW7J+HHeTvRbHvlik+Z4hFUXmQIDAQAB";
-    npx:hasSignature "UlYLCQmWexbUDhdGKzoPyLDO8ecsLyo2H+HvmIFAy8B6+Bzw8FYP0duZrtIyVCGrQ0uZZOEUUbDuiinUq1Iap0zBfKAM6WZZoBrycTYh4ML3xQRGbzgEf9LSIOgUqDX8XR0iQHKPc9Yyuwn067k4D3R5YHaQv+54r083TvD5oaRWj99reRmfLF8TnwpeOY3A5AeGPP1EV4+iy/EI9YFNuJCwoBPYGcp+RuFwMlI9oSptaSeKXFPY8DG06JDvDAy0IgLdwSU6CJWJtopwZ/BUEtxGoZ20uHRFtMCYlkHWDbjF3eHY/4VrdfUXfQS80Pupr8prXclb36dvRrVJoex1zw==";
+    npx:hasSignature "KqoYqQddNQ7D9hD7c9rzaORGaDbl0dsJDvJuWqkPRqt04qaM+ZCK6wbnJnPbwMqMyyy4127chisysTS/otwDx/fiWLUVsPFhsF5TA+Xa733oF1txzN3g9iea5VbxdH36tnyi1KdaoBhkUp82JnQQlE1WiNJCz/n6rKoHrpK4IHAVV1js8jYr/LqqOivNVAv/8xWO8hHgQsMM4QUE49s0tHWLhuXlmQ53RiQnu/0lFOCS1pz62LLCdLbrGJPD1KTxvqD/j412PWjrljjBRVU1PExCzMGj3+EO4XBvZ8isXalZI2YXsRsIfy7Gh1w0Jkh7rq78q4K6906qXUch3uT6DQ==";
     npx:hasSignatureTarget this:;
     npx:signedBy <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
 }

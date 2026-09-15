@@ -13,7 +13,7 @@ OUTPUT_DIR="${1:-$SCRIPT_DIR/../resource-views}"
 mkdir -p "$OUTPUT_DIR"
 
 echo "Fetching resource view list from Nanopub Query..."
-QUERY_LIST=$(curl -s "https://query.knowledgepixels.com/api/RAcyg9La3L2Xuig-jEXicmdmEgUGYfHda6Au1Pfq64hR0/get-all-resource-views")
+QUERY_LIST=$(curl -s "https://query.knowledgepixels.com/api/RAlUUQZdB79bh2lHZdoC21crPDV1SdR9k6ilkGrlRKm94/get-all-resource-views")
 
 # Skip the CSV header line
 TOTAL=$(echo "$QUERY_LIST" | tail -n +2 | wc -l)
