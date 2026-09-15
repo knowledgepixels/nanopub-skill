@@ -1,0 +1,59 @@
+@prefix this: <https://w3id.org/np/RA1ACzDLILDEMnnj-wRvG-bSSNTIo_wKjqYE6PohEiyLE> .
+@prefix sub: <https://w3id.org/np/RA1ACzDLILDEMnnj-wRvG-bSSNTIo_wKjqYE6PohEiyLE/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:docs-paragraph-history-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:docs-paragraph-history-view-kind;
+    dct:title "🕓 Version history";
+    rdfs:label "Documentation paragraph version history view";
+    gen:appliesToInstancesOf gen:Paragraph;
+    gen:governedBy <https://w3id.org/spaces/nanopub>;
+    gen:hasStructuralPosition "5.5.history";
+    gen:hasViewAction sub:restore-action;
+    gen:hasViewQuery <https://w3id.org/np/RAe0--dN9JzreAJpQW3xKzfTXvFPHQ1wT6zAFvKyiY9Ts/get-docs-paragraph-versions>;
+    gen:hasViewQueryTargetField "resource" .
+  
+  sub:restore-action a gen:ViewEntryAction;
+    rdfs:label "↩ restore this version...";
+    gen:hasActionTemplate <https://w3id.org/np/RAdxrv0Rie-65L6gdURjpy8nTt7YagghQfX20Zw4pR7t0>;
+    gen:hasActionTemplateQueryMapping "restore_target:@override";
+    gen:isVisibleTo gen:MemberRole .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-09-15T05:24:25Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:docs-paragraph-history-view;
+    npx:introduces sub:docs-paragraph-history-view-kind;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RApNBmFsH3uf4RIPM6TR-iFJ2geOP3uTmSFhlPZ0eikg4/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl8cMusqtNyKA6UIsi3f7BAcZmHQXWxU0qk0PLsboMWQxYrGBfGgHTgRHJrBRxL+Zn9kJHKVmz2smDcjCBptXi/OwWy80gjsx+Pbe6IWz3zFPWF1UoFIKfPnC0slV67CQgdM853zW7Bmk9/uflCtK4EtZKmPdRGtUHVC7DTVvDBMDzLRGdE2KCBVN29EbM5GGVNvijYbaZQ9OFQPBkQshayqSIyGRr6rreJdkrRVLIzu3uuAjKYydaeXZWSN2JLnVBwrClKUxaEdCwhb5nXpMtKOMD+R+LgaXLeJUWM8BdRSYnta9ZqI5pHY4y3v+eW7J+HHeTvRbHvlik+Z4hFUXmQIDAQAB";
+    npx:hasSignature "FgIXp4QKOsP7Iw+JRMhDKJh7Rtt13vDvekKcU+P9nAyLeOzUJ0C1RYOgrsc2N4tl/uYYUDk9/ONSMP4dc7u+jECTBEwp3tXzv7Vj0D1tINPBq8zepjilbmxpxkivs8UYSgxB9kGbIulATxPPs5oUdfQoxJ1PxFILJ/H5Pr9/u8SkFeGL4WkB/6J5r1XRb2cS5Yd/vUcdDkmzKPNESkSDzmfymusRjjmPuHbANsegaUZAU579PhBDeWoK3Jq3DRhShwetMNL5zItihW60zDanrTwepa9W+FuHGbY1wMrTCiS/R1e137xsM7DqtvVgH+bDBnTSN2P8bSfjqP+W5BwM5g==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
+}
+

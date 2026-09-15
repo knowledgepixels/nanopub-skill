@@ -1,0 +1,114 @@
+@prefix this: <https://w3id.org/np/RAe0--dN9JzreAJpQW3xKzfTXvFPHQ1wT6zAFvKyiY9Ts> .
+@prefix sub: <https://w3id.org/np/RAe0--dN9JzreAJpQW3xKzfTXvFPHQ1wT6zAFvKyiY9Ts/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-docs-paragraph-versions a grlc:grlc-query;
+    dct:description "Every version of one documentation paragraph published by a member of the maintaining space, newest first, with the current one marked. Older rows carry the nanopublication as restore target: opening it in override mode republishes that content as the newest version.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the versions of a documentation paragraph";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix schema: <http://schema.org/>
+prefix schemas: <https://schema.org/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+# Every member-signed version of ONE documentation paragraph, newest first, with the current
+# version marked. A row's nanopublication introduces the paragraph, so opening an older row in
+# override mode republishes its content as the newest version: that is the \"restore\" action.
+# ?restore_target is blank on the current row, which hides the button there.
+select ?date ?creator ?creator_label ?title ?current (if(?isCurrent, \"\", str(?np)) as ?restore_target) ?np (\"^\" as ?np_label) where {
+  {
+    select ?np ?date ?creator ?title (max(?cname) as ?creator_label) where {
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+        select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+          graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+          values ?__context_multi_iri {}
+          graph ?stateG {
+            ?__context_multi_iri npa:isMaintainedBy? ?space .
+            ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?roleType .
+            ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+          }
+          filter(?roleType in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+        }
+      }
+      values ?_resource_multi_iri {}
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?npPubkey ; dct:created ?date ; np:hasAssertion ?a ; np:hasPublicationInfo ?pi .
+        filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?npPubkey . }
+      }
+      filter(contains(?memberPubkeys, ?npPubkey))
+      graph ?a { ?_resource_multi_iri rdf:type gen:Paragraph ; schema:title|schemas:title ?title . }
+      graph ?pi { ?np dct:creator ?creator . }
+      optional { graph ?anyg { ?creator foaf:name ?cname . } }
+    } group by ?np ?date ?creator ?title
+  }
+  {
+    select (max(?d) as ?maxDate) where {
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+        select (group_concat(?mpk2; separator=\" \") as ?memberPubkeys2) where {
+          graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG2 . }
+          values ?__context_multi_iri {}
+          graph ?stateG2 {
+            ?__context_multi_iri npa:isMaintainedBy? ?space2 .
+            ?ri2 a gen:RoleInstantiation ; npa:forSpace ?space2 ; npa:forAgent ?agent2 ; npa:hasRoleType ?roleType2 .
+            ?acct2 a npa:AccountState ; npa:agent ?agent2 ; npa:pubkey ?mpk2 .
+          }
+          filter(?roleType2 in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+        }
+      }
+      values ?_resource_multi_iri {}
+      graph npa:graph {
+        ?n npa:hasValidSignatureForPublicKeyHash ?k ; dct:created ?d ; np:hasAssertion ?aa .
+        filter not exists { ?x npx:invalidates ?n ; npa:hasValidSignatureForPublicKeyHash ?k . }
+      }
+      filter(contains(?memberPubkeys2, ?k))
+      graph ?aa { ?_resource_multi_iri rdf:type gen:Paragraph . }
+    }
+  }
+  bind(?date = ?maxDate as ?isCurrent)
+  bind(if(?isCurrent, \"✓ current\", \"\") as ?current)
+}
+order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-09-15T05:22:52Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-docs-paragraph-versions;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl8cMusqtNyKA6UIsi3f7BAcZmHQXWxU0qk0PLsboMWQxYrGBfGgHTgRHJrBRxL+Zn9kJHKVmz2smDcjCBptXi/OwWy80gjsx+Pbe6IWz3zFPWF1UoFIKfPnC0slV67CQgdM853zW7Bmk9/uflCtK4EtZKmPdRGtUHVC7DTVvDBMDzLRGdE2KCBVN29EbM5GGVNvijYbaZQ9OFQPBkQshayqSIyGRr6rreJdkrRVLIzu3uuAjKYydaeXZWSN2JLnVBwrClKUxaEdCwhb5nXpMtKOMD+R+LgaXLeJUWM8BdRSYnta9ZqI5pHY4y3v+eW7J+HHeTvRbHvlik+Z4hFUXmQIDAQAB";
+    npx:hasSignature "YkFssyGG0m0bT7pJsqp5G8zU/eyPuQCMl7Xot1G1bhHvP2hymKnZmFz+Q5o8YsT9eWUyvk7uorAC0T81joiJGOYehlWFEiqabRjnG59ZnIIL0fdWLAkPRTLOdmsxjiIP+hiDZMc+mo37vf1E7IWlFK3hTiTYLGp6qruoQwak8w7tI/SAvhd/CJQzUoHnZEPC7Hg+hNfeTmCC0W/sFSDGuPRKHNYiZqowqu28LE0EpPZ1dcNWmBX9XAAH5cSvYCKTPEHuDBQTbZ5uluH9gpzpDTJEX9ytUnYTHQYpwyaD0JYobt4rB754jzRvwTawjF+Z23EC9zJgHzFu2FvmfSJ60Q==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
+}
+

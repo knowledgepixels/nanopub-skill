@@ -1,0 +1,77 @@
+@prefix this: <https://w3id.org/np/RAaDYFI5bRze6O449wjM1psaV0HFfNcbgXjF9eS5Sl86g> .
+@prefix sub: <https://w3id.org/np/RAaDYFI5bRze6O449wjM1psaV0HFfNcbgXjF9eS5Sl86g/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdfs:comment rdfs:label "with the note" .
+  
+  gen:isExampleFor rdfs:label "is an example for" .
+  
+  sub:example a nt:TrustyUriPlaceholder;
+    rdfs:label "the example nanopublication" .
+  
+  sub:note a nt:LongLiteralPlaceholder;
+    rdfs:label "what this example shows (optional)" .
+  
+  sub:paragraph a nt:ExternalUriPlaceholder;
+    rdfs:label "the documentation paragraph it illustrates" .
+  
+  sub:st0 rdf:object sub:paragraph;
+    rdf:predicate gen:isExampleFor;
+    rdf:subject sub:example .
+  
+  sub:st1 a nt:OptionalStatement;
+    rdf:object sub:note;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:example .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Links an existing nanopublication to a paragraph of the documentation as an example of what the paragraph describes. The example is shown, in full, on the paragraph's own page. Add a short note saying what to look at in it.";
+    dct:isVersionOf <https://w3id.org/np/RAhfBdgcmxtE2VpqgNHlZbqf7KzED7mm9JAL-3popBDKI/template-kind>;
+    rdfs:label "Linking an example to a documentation paragraph";
+    gen:governedBy <https://w3id.org/spaces/nanopub>;
+    nt:hasNanopubLabelPattern "Example for: ${paragraph}";
+    nt:hasStatement sub:st0, sub:st1;
+    nt:hasTag "Documentation";
+    nt:hasTargetNanopubType gen:isExampleFor .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-09-15T05:31:55Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:introduces <https://w3id.org/np/RAhfBdgcmxtE2VpqgNHlZbqf7KzED7mm9JAL-3popBDKI/template-kind>;
+    npx:supersedes <https://w3id.org/np/RAhfBdgcmxtE2VpqgNHlZbqf7KzED7mm9JAL-3popBDKI>;
+    rdfs:label "Linking an example to a documentation paragraph";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl8cMusqtNyKA6UIsi3f7BAcZmHQXWxU0qk0PLsboMWQxYrGBfGgHTgRHJrBRxL+Zn9kJHKVmz2smDcjCBptXi/OwWy80gjsx+Pbe6IWz3zFPWF1UoFIKfPnC0slV67CQgdM853zW7Bmk9/uflCtK4EtZKmPdRGtUHVC7DTVvDBMDzLRGdE2KCBVN29EbM5GGVNvijYbaZQ9OFQPBkQshayqSIyGRr6rreJdkrRVLIzu3uuAjKYydaeXZWSN2JLnVBwrClKUxaEdCwhb5nXpMtKOMD+R+LgaXLeJUWM8BdRSYnta9ZqI5pHY4y3v+eW7J+HHeTvRbHvlik+Z4hFUXmQIDAQAB";
+    npx:hasSignature "c918uEhWD9IbYSBIcRunbazw18c1MuZykY5u8gBanVTaOlGgdAXLawHYvRc4UDua/65dOtbV5UIv8v1ouMj2Zdmv+v4Q6YBYnPTL8cj31FJcSWzCv0sRxm7qrCwpFM+F6HJoyE+ykZMN3exOeaJoyV55TSNxcmeC1UVe8kIAdEGe7Qod8LEPDmmSF6JiffyYGwqEQb/YkqQzuCkFJhI4ymGk8e4xmMzpCK/xNqzwq39TrF4+Aa2hraykg4DDJJjC5uwJjIoqXEjyp4Jik9rorC5tGfTOAPrdhvcZbUYNnqR6rfnYvTCvSVl6x1/dPzYVmRgRkx0dhZdhHs9m5ZRagw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
+}
+

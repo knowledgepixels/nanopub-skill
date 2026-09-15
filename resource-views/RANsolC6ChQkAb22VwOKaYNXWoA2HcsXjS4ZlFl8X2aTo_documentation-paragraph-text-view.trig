@@ -1,0 +1,59 @@
+@prefix this: <https://w3id.org/np/RANsolC6ChQkAb22VwOKaYNXWoA2HcsXjS4ZlFl8X2aTo> .
+@prefix sub: <https://w3id.org/np/RANsolC6ChQkAb22VwOKaYNXWoA2HcsXjS4ZlFl8X2aTo/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:docs-paragraph-text-view a gen:PlainParagraphView, gen:ResourceView;
+    dct:isVersionOf sub:docs-paragraph-text-view-kind;
+    dct:title "📜 Text";
+    rdfs:label "Documentation paragraph text view";
+    gen:appliesToInstancesOf gen:Paragraph;
+    gen:governedBy <https://w3id.org/spaces/nanopub>;
+    gen:hasStructuralPosition "3.2.text";
+    gen:hasViewAction sub:edit-action;
+    gen:hasViewQuery <https://w3id.org/np/RAIPWrEI4v_zQbSexEGAoh91DtHS-TC15FsWvCjb1VOGs/get-docs-paragraph-text>;
+    gen:hasViewQueryTargetField "resource" .
+  
+  sub:edit-action a gen:ViewEntryAction;
+    rdfs:label "✏ edit...";
+    gen:hasActionTemplate <https://w3id.org/np/RAdxrv0Rie-65L6gdURjpy8nTt7YagghQfX20Zw4pR7t0>;
+    gen:hasActionTemplateQueryMapping "override_target:@override";
+    gen:isVisibleTo gen:MemberRole .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-09-15T05:24:25Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:docs-paragraph-text-view;
+    npx:introduces sub:docs-paragraph-text-view-kind;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RApNBmFsH3uf4RIPM6TR-iFJ2geOP3uTmSFhlPZ0eikg4/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl8cMusqtNyKA6UIsi3f7BAcZmHQXWxU0qk0PLsboMWQxYrGBfGgHTgRHJrBRxL+Zn9kJHKVmz2smDcjCBptXi/OwWy80gjsx+Pbe6IWz3zFPWF1UoFIKfPnC0slV67CQgdM853zW7Bmk9/uflCtK4EtZKmPdRGtUHVC7DTVvDBMDzLRGdE2KCBVN29EbM5GGVNvijYbaZQ9OFQPBkQshayqSIyGRr6rreJdkrRVLIzu3uuAjKYydaeXZWSN2JLnVBwrClKUxaEdCwhb5nXpMtKOMD+R+LgaXLeJUWM8BdRSYnta9ZqI5pHY4y3v+eW7J+HHeTvRbHvlik+Z4hFUXmQIDAQAB";
+    npx:hasSignature "kTqsAkLGNPwRfP5WuOuM4dXqX/ZimIktiF2K5fYqurp8iYH0k9QRIpwBj5BYbmOx7MS7qaXEoGxKpYvkkjHwTlwJLAtlPU3p0PJmxE83+7Hlw9vqatBn61/FK8vh4FOMR8gAUCs4rZzvnLt+x/1g6jF/ErFqHTjDn3MoxJMkXWYzim1LAUcgpk7njBJ11lHcexkFO76JmJ934PCZGDBie8HlRfxiyahS5gpd/FDjVMC32lsk8WpRlgHEY4FkdYzBukcHTRZFdwhmyfJJQ7z+y5Dv3uCgNDJdDk80vJ0BT9miaNdSiffb0ji9233kUdPgNRNgTrcJbZVqC6DU3fioag==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
+}
+
