@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAfdFsvfwxMw1VbJR0xoJyTTSNWMAEY2hdgSG2pJaGJiQ> .
-@prefix sub: <https://w3id.org/np/RAfdFsvfwxMw1VbJR0xoJyTTSNWMAEY2hdgSG2pJaGJiQ/> .
+@prefix this: <https://w3id.org/np/RAQNZj-Ii6K29q1jnu5rqWbnwlCfgPqHsugU93tyikUtY> .
+@prefix sub: <https://w3id.org/np/RAQNZj-Ii6K29q1jnu5rqWbnwlCfgPqHsugU93tyikUtY/> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -24,14 +24,14 @@ sub:assertion {
     gen:isVisibleTo gen:MemberRole .
   
   sub:docs-paragraph-related-view a gen:PlainParagraphView, gen:ResourceView;
-    dct:isVersionOf sub:docs-paragraph-related-view-kind;
+    dct:isVersionOf <https://w3id.org/np/RAfdFsvfwxMw1VbJR0xoJyTTSNWMAEY2hdgSG2pJaGJiQ/docs-paragraph-related-view-kind>;
     dct:title "🔗 Related";
     rdfs:label "Documentation paragraph related-paragraphs view";
     gen:appliesToInstancesOf gen:Paragraph;
     gen:governedBy <https://w3id.org/spaces/nanopub>;
     gen:hasStructuralPosition "4.6.related";
     gen:hasViewAction sub:add-action, sub:edit-action;
-    gen:hasViewQuery <https://w3id.org/np/RAGbWrOWNAn3DBiyVWswIMrq2G5ZN2U-fRYcVHI8k7GwY/get-docs-paragraph-related>;
+    gen:hasViewQuery <https://w3id.org/np/RAxhCZ7pmNTI7m2NvPu2lYYjJqNwFCH5YCZTztyIZlzFM/get-docs-paragraph-related>;
     gen:hasViewQueryTargetField "resource" .
   
   sub:edit-action a gen:ViewEntryAction;
@@ -46,19 +46,20 @@ sub:provenance {
 }
 
 sub:pubinfo {
-  this: dct:created "2026-09-15T07:23:31Z"^^xsd:dateTime;
+  this: dct:created "2026-09-15T07:56:57Z"^^xsd:dateTime;
     dct:creator <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot>;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:docs-paragraph-related-view;
-    npx:introduces sub:docs-paragraph-related-view-kind;
+    npx:introduces <https://w3id.org/np/RAfdFsvfwxMw1VbJR0xoJyTTSNWMAEY2hdgSG2pJaGJiQ/docs-paragraph-related-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAfdFsvfwxMw1VbJR0xoJyTTSNWMAEY2hdgSG2pJaGJiQ>;
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
-      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
     nt:wasCreatedFromTemplate <https://w3id.org/np/RApNBmFsH3uf4RIPM6TR-iFJ2geOP3uTmSFhlPZ0eikg4/template> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl8cMusqtNyKA6UIsi3f7BAcZmHQXWxU0qk0PLsboMWQxYrGBfGgHTgRHJrBRxL+Zn9kJHKVmz2smDcjCBptXi/OwWy80gjsx+Pbe6IWz3zFPWF1UoFIKfPnC0slV67CQgdM853zW7Bmk9/uflCtK4EtZKmPdRGtUHVC7DTVvDBMDzLRGdE2KCBVN29EbM5GGVNvijYbaZQ9OFQPBkQshayqSIyGRr6rreJdkrRVLIzu3uuAjKYydaeXZWSN2JLnVBwrClKUxaEdCwhb5nXpMtKOMD+R+LgaXLeJUWM8BdRSYnta9ZqI5pHY4y3v+eW7J+HHeTvRbHvlik+Z4hFUXmQIDAQAB";
-    npx:hasSignature "ekeujdYAbks8kEpxAcgwXA3cMQ/RqKKLiMvEV9Aio9euOc6tRXPJhS4VaEY6VZ6/9Z/rTwKxwb3OD+wsZdhH4MoM4deOprHR9YZxafRt2Zq15eDi2S2Aw2HBoL6YRk2WIhrSSsgel3QzBjbA3V8HlVgdhybssm+wuBBi44b8vuxQ/SRk+uo+rXWpFBu+JitugiOKkrtrsxYpKixpTvJixHT8j0fsj8mTbttzx2C2MmGi1HFJ2scD7LyOfOisOyexJ54a5XvAUSF4iKmixP8X+Z3YkZBKll2IhVOT5/uDMxSQjUZVB+KeU2uMo0jws3Ku9SZPWFZcDNybI59cao3h8Q==";
+    npx:hasSignature "L425Mbr5nvHvFqK0nwSuGKEvbzH24Fnfv3JQEJElRMXwDxYIn93pTWiiugqlrCxS95iZ+VM1YQ0ClD/NrjhIFVKDq6c7K2+tVAEPjULwM2ofrTGEiub3vrL+RDK6iabIl+NrrZ7HVu4rDpDlCo7ZkuJhXvkuKCUO9/iSyXQY0/1z9m9bQNB5GizybK8wq3RY2Dbpij1EBXPCWLUKLnW6TN8KKeiYG1dhQwUDkH8VhKeQAX/e4fSkZRWJQekbuHxBE/lq8Qx/+0IPKvrq1ch4YDxinNSQWJpCh8bdtfS5pGUjUeEcm+n5DY61FpgpXQa3IZ2yFcAyQ/5MwpV8yir/Sg==";
     npx:hasSignatureTarget this:;
     npx:signedBy <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
 }
