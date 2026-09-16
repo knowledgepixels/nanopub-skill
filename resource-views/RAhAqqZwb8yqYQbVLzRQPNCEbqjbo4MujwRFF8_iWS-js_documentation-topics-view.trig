@@ -1,0 +1,65 @@
+@prefix this: <https://w3id.org/np/RAhAqqZwb8yqYQbVLzRQPNCEbqjbo4MujwRFF8_iWS-js> .
+@prefix sub: <https://w3id.org/np/RAhAqqZwb8yqYQbVLzRQPNCEbqjbo4MujwRFF8_iWS-js/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:add-action a gen:ViewResultAction;
+    rdfs:label "➕ add topic...";
+    gen:hasActionTemplate <https://w3id.org/np/RACXLNtb1K0RrZ8noSkPf_AqV5nG1sxr1h1qtPzfaog38/template>;
+    gen:hasActionTemplateTargetField "resource";
+    gen:isVisibleTo gen:MemberRole .
+  
+  sub:docs-topics-view a gen:PlainParagraphView, gen:ResourceView;
+    dct:isVersionOf sub:docs-topics-view-kind;
+    dct:title "📚 Topics";
+    rdfs:label "Documentation topics view";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:governedBy <https://w3id.org/spaces/nanopub>;
+    gen:hasStructuralPosition "3.8.topics";
+    gen:hasViewAction sub:add-action, sub:edit-action;
+    gen:hasViewQuery <https://w3id.org/np/RA0m-5A9NjJagaJ4aPz8xnhUPEMxZCOlle0t_4kQ3kmuQ/get-docs-topics>;
+    gen:hasViewQueryTargetField "resource" .
+  
+  sub:edit-action a gen:ViewEntryAction;
+    rdfs:label "✏ edit...";
+    gen:hasActionTemplate <https://w3id.org/np/RACXLNtb1K0RrZ8noSkPf_AqV5nG1sxr1h1qtPzfaog38/template>;
+    gen:hasActionTemplateQueryMapping "override_target:@override";
+    gen:isVisibleTo gen:MemberRole .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-09-16T12:40:46Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:docs-topics-view;
+    npx:introduces sub:docs-topics-view-kind;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RApNBmFsH3uf4RIPM6TR-iFJ2geOP3uTmSFhlPZ0eikg4/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl8cMusqtNyKA6UIsi3f7BAcZmHQXWxU0qk0PLsboMWQxYrGBfGgHTgRHJrBRxL+Zn9kJHKVmz2smDcjCBptXi/OwWy80gjsx+Pbe6IWz3zFPWF1UoFIKfPnC0slV67CQgdM853zW7Bmk9/uflCtK4EtZKmPdRGtUHVC7DTVvDBMDzLRGdE2KCBVN29EbM5GGVNvijYbaZQ9OFQPBkQshayqSIyGRr6rreJdkrRVLIzu3uuAjKYydaeXZWSN2JLnVBwrClKUxaEdCwhb5nXpMtKOMD+R+LgaXLeJUWM8BdRSYnta9ZqI5pHY4y3v+eW7J+HHeTvRbHvlik+Z4hFUXmQIDAQAB";
+    npx:hasSignature "KSEiAfccVezIyQdu+mCNqUksR71GJNKjrKPmDKiEC3BV5Ktzw1+fpBO08Zk/ZriIaefjLWs2pKABr/diPxbN+oAZx9VKKfl89CEFMnhOY/GU8/aXrt3O23Td28w6VJxhVKqFFxYYMZ5kraHf42zO7CRYFkR51oouqh5besOT6ZZtqW5nVtTK5HZMrpsIm+u7AI0ZUBQ7oDWHNEcERyfoZwZ7LZdzbq8iWYKQobl+fO26A/guPlH+u+BasC4P6+8Li+wcen43Iqi1JJ54NGQFsGMUbTJgjE31K7COO/nhr/ti3IfM8bdp4hi249fXLobw2+NHFU0Muu3zy5EBbJcCJQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
+}
+
