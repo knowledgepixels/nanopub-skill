@@ -1,0 +1,69 @@
+@prefix this: <https://w3id.org/np/RAM4sqo0m22iRJY0VoMExERQRT0SmH3N6nYiVFBO008w8> .
+@prefix sub: <https://w3id.org/np/RAM4sqo0m22iRJY0VoMExERQRT0SmH3N6nYiVFBO008w8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    rdfs:label "add...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RAvcJKm2DZPEKOBevGdPGcKL6sEw04JXwgzx2lH5DE5LU>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "systematicReview" .
+  
+  sub:search-strategy-view a <https://w3id.org/kpxl/gen/terms/ListView>, <https://w3id.org/kpxl/gen/terms/ResourceView>;
+    dct:isVersionOf <https://w3id.org/np/RAU0FNjcuyn42t5uEJPVBTat8yxooth5WQcgOQpXuzHPY/search-strategy-view-kind>;
+    dct:title "Search strategy";
+    rdfs:label "View of search strategy of systematic review";
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.2.researchQuestions.2.searchStrategies";
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:addAction;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAx1gUtDVeKoVfot1sJMfIIXO-LOc5Vw_i5rIlYqkPZeQ/get-search-strategy-for-systematic-review>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "systematicReview" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-01-13T08:51:42.778Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:search-strategy-view;
+    npx:introduces <https://w3id.org/np/RAU0FNjcuyn42t5uEJPVBTat8yxooth5WQcgOQpXuzHPY/search-strategy-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAU0FNjcuyn42t5uEJPVBTat8yxooth5WQcgOQpXuzHPY>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAMwJK-KwLZao9NyIJ3QPE6AK_MasTNoHlp-PoUEavR2c> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "e4ga/Q52mO+Tsq15q+9tsLAB/ZzjA0A8n8bcAOAGM/H7tgB/ey9HP3P0RG6/tB8Du56S+TNMrqvaZbmaTT8wADqoA8Y3vqCYk22R50LnwbYJl46Lj4w5R5HtVsbqyrtMB91hg8cnpHD1wIgKBBNWMUukdVYUOZjEMY1UqdSkdLM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAvcJKm2DZPEKOBevGdPGcKL6sEw04JXwgzx2lH5DE5LU> nt:hasLabelFromApi
+      "Defining a systematic review search strategy - This template allows researchers to document their systematic review search s..." .
+  
+  <https://w3id.org/np/RAx1gUtDVeKoVfot1sJMfIIXO-LOc5Vw_i5rIlYqkPZeQ/get-search-strategy-for-systematic-review>
+    nt:hasLabelFromApi "Get search strategy for systematic review - This query returns the search strategy (or strategies) for the given systemat..." .
+}
+

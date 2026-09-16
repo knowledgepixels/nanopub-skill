@@ -1,0 +1,76 @@
+@prefix this: <https://w3id.org/np/RA64eoORu9pZfSDbINDbGtDe_z6PD3R-50KSHhbWQQsJY> .
+@prefix sub: <https://w3id.org/np/RA64eoORu9pZfSDbINDbGtDe_z6PD3R-50KSHhbWQQsJY/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:action a gen:ViewResultAction;
+    rdfs:label "add...";
+    gen:hasActionTemplate <https://w3id.org/np/RAFr0RyK-ATWGUnJzKXeRTL0_OrW-mEzoKCaJz0TE8Ao0>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "resource";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:simple-message-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAwkZL45-jGqVt9hz0vB01rcp-x6bHzpmxJLKePwwGpdI/simple-message-view-kind>;
+    dct:title "💬 Messages";
+    rdfs:label "Simple message view";
+    gen:appliesToInstancesOf gen:IndividualAgent, gen:MaintainedResource, gen:Space;
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels>;
+    gen:hasStructuralPosition "6.4.messages.1";
+    gen:hasViewAction sub:action;
+    gen:hasViewQuery <https://w3id.org/np/RApqpCItSUMFf82LaeQs8qFPo-GA8d8g4o-Apfypgyjx8/get-messages-about-this-resource-only>;
+    gen:hasViewQueryTargetField "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  this: dct:created "2026-09-14T19:39:42.073Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:simple-message-view;
+    npx:introduces <https://w3id.org/np/RAwkZL45-jGqVt9hz0vB01rcp-x6bHzpmxJLKePwwGpdI/simple-message-view-kind>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAz_p_Eg5Xxc0T-MBmhmqFrB0IPb6BKUvnuCoDaQB1jWI>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RApNBmFsH3uf4RIPM6TR-iFJ2geOP3uTmSFhlPZ0eikg4/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCM0tu3I/KK6A/qPha/6pfngQZ4LBQpLnKAcIUuZLnSEb0epJ2IoY3zh/4N42us/6LpCHgZZZtSOTm5/KVo+OTDIqo294PpEZAO70u5DcMcGMC5OufzxGKs3Dwdo6XqPiDHxXuiaKCTO7/ABWAi7CtFoMrqJAHfeyqe82dAiH2IiwIDAQAB";
+    npx:hasSignature "ca0051v1l9xwnG0fHzfKYZiSa8+e4PMvnypwJXyAqfeL2QXC+RLkXLSRVgDhAp5sdgAsbcCU1X0GbtkYEBV+D8R6+JKw2mKq9Kg88rRT+EhVIq8rZ2GHc2x7xBN6/50Uc2N9J1NYT+g1EjZOkofElwzDeBvvQvd+WB18geCjpSo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+  
+  <https://w3id.org/np/RAFr0RyK-ATWGUnJzKXeRTL0_OrW-mEzoKCaJz0TE8Ao0> nt:hasLabelFromApi
+      "Publish a plain-text message for a resource" .
+  
+  <https://w3id.org/np/RApqpCItSUMFf82LaeQs8qFPo-GA8d8g4o-Apfypgyjx8/get-messages-about-this-resource-only>
+    nt:hasLabelFromApi "Get messages about this resource only - This query returns plain-text messages and discourse statements (schema:Statement) about the given resource itself (not about its sub-spaces or maintained resources)." .
+  
+  <https://w3id.org/spaces/knowledgepixels> nt:hasLabelFromApi "Knowledge Pixels" .
+}
+

@@ -1,0 +1,94 @@
+@prefix this: <https://w3id.org/np/RAnCJCUuJrJHjUQTjSZGfJ7h4EL-2BP5Xtb5uReb182Pc> .
+@prefix sub: <https://w3id.org/np/RAnCJCUuJrJHjUQTjSZGfJ7h4EL-2BP5Xtb5uReb182Pc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-individuals-of-ontology-ns a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns all individuals that specify to be part of a given ontology or use its namespace. Adds two action-data columns for a per-row in-place re-edit action: override_target carries the row's own nanopublication, and override_template the template that nanopublication was created from, so each individual reopens in the template it was actually made with. Individuals whose nanopublication records no template -- for example the hand-authored FIP-Ontology ones -- fall back to the generic \"Publishing hand-coded statements\" template, whose single repeatable subject/predicate/object statement matches any triple, so the re-edit form is offered on every row and no existing content is reported as unfillable. Both columns are action-mapping sources and are therefore not rendered as table columns.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the individuals of an ontology including via namespace, with override columns";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/f2a0ff8319823c7eb4c1e93c8c6b25c6ebc8a46454801e856e8cc1f98e4641f4>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+
+select distinct ?individual ?individual_label ?class (coalesce(?desc, ?def) as ?description)
+       (str(?np) as ?override_target) (str(coalesce(?srcTemplate, <http://purl.org/np/RAFu2BNmgHrjOTJ8SKRnKaRp-VP8AOOb7xX88ob0DZRsU>)) as ?override_template)
+       ?np (\"^\" as ?np_label) where {
+  values ?_ontology_multi_iri {}
+  graph npa:graph {
+    ?np npx:hasNanopubType owl:NamedIndividual .
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np dct:created ?date .
+    ?np npx:introduces ?individual .
+    ?np np:hasAssertion ?a .
+  }
+  optional {
+    graph npa:graph { ?np np:hasPublicationInfo ?srcPubinfo . }
+    graph ?srcPubinfo { ?np nt:wasCreatedFromTemplate ?srcTemplate . }
+  }
+  graph ?a {
+    {{
+      ?individual a owl:NamedIndividual .
+      filter(strstarts(str(?individual), ?__ontologyNamespace))
+    } union {
+      ?individual a owl:NamedIndividual .
+      ?individual dct:partOf ?_ontology_multi_iri .
+    }}
+    optional {
+      ?individual a ?class .
+      filter(?class != owl:NamedIndividual)
+    }
+    optional { ?individual rdfs:label ?individual_label . }
+    optional { ?individual skos:definition ?def . }
+    optional { ?individual dct:description ?desc . }
+  }
+}
+order by ?class ?individual_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-16T13:06:08Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-individuals-of-ontology-ns;
+    npx:supersedes <https://w3id.org/np/RAosv51-_RxC3U1nSEkOusJ2Nh_0RKtJp8SaxrklVa2ss>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "P/8dDmJVuTycvgYmkUfcjEAR9yEvShMecNCTKnrZOamJ1RbN2O+7ve3JBe92OrIGhjASfZeslTTr89Fhp4vDsb7URNm+GMlmZrGwotTU1ejo6vuJTFBILuIIv8m9uNK8ACr1+OQnsxVaP/Ho6+VbR1rfrLUlOWteyJNEcFvj7cg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

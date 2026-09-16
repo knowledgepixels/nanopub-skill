@@ -1,0 +1,74 @@
+@prefix this: <https://w3id.org/np/RAJppzlbjlKW5neRls0Bfe1GfvOw41Hho7Nw54OYSTLNs> .
+@prefix sub: <https://w3id.org/np/RAJppzlbjlKW5neRls0Bfe1GfvOw41Hho7Nw54OYSTLNs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:add-role-action a <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    rdfs:label "Add role";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RARBzGkEqiQzeiHk0EXFcv9Ol1d-17iOh9MoFJzgfVQDc>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "space";
+    <https://w3id.org/kpxl/gen/terms/isVisibleTo> <https://w3id.org/kpxl/gen/terms/AdminRole> .
+  
+  sub:assign-user-action a <https://w3id.org/kpxl/gen/terms/ViewEntryAction>;
+    rdfs:label "Assign user";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RAR1oWGaiVkWtDL6SdXYnlRBR7t5NoVNa46ShNLJ697g0>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "roleAssignmentTemplate:@template";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "space";
+    <https://w3id.org/kpxl/gen/terms/isVisibleTo> <https://w3id.org/kpxl/gen/terms/AdminRole> .
+  
+  sub:space-roles-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RADFLDTJUN8Qa9028Ltvlx19_J6Pm2_Mfa3g8KhxxbNiI/space-roles-view-kind>;
+    dct:title "🎭 Assigned roles";
+    rdfs:label "Space roles view";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/Space>;
+    <https://w3id.org/kpxl/gen/terms/hasDisplayWidth> <https://w3id.org/kpxl/gen/terms/ColumnWidth06of12>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "5.5.spaceRoles";
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:add-role-action, sub:assign-user-action;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAt5h_cTf5Ci6ZpYqYin4FshL_rRBYhbLElPXLPi248dI/list-space-roles>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "space" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-11T10:09:25.838+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:space-roles-view;
+    npx:introduces <https://w3id.org/np/RADFLDTJUN8Qa9028Ltvlx19_J6Pm2_Mfa3g8KhxxbNiI/space-roles-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAcRnO6i7L22wozu6szNq_sMok4W3Lc6aowHfnVAfCrOo>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "XBLRuPLR7VBtmhWaa9VLI76sbCpe855DtThtOBQD6jNdfFVn0O+HnIxEKOspr18cDuw1ZYPDkNoFn8vAmWkIICXiW28U1v5vwkzwV9dZVNYbmlsW3I72W98X6spX/dnCeCh18xAyv8W1L3PogpVf8AJFdBMOdHy1ukWgxHinRiY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

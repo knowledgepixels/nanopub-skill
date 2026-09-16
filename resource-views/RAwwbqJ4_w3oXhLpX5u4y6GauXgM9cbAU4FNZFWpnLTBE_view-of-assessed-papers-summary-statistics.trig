@@ -1,0 +1,61 @@
+@prefix this: <https://w3id.org/np/RAwwbqJ4_w3oXhLpX5u4y6GauXgM9cbAU4FNZFWpnLTBE> .
+@prefix sub: <https://w3id.org/np/RAwwbqJ4_w3oXhLpX5u4y6GauXgM9cbAU4FNZFWpnLTBE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:llm-kg-summary-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf sub:llm-kg-summary-kind;
+    dct:title "Methods and code summary stats";
+    rdfs:label "View of assessed papers summary statistics";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/Space>;
+    <https://w3id.org/kpxl/gen/terms/hasDisplayWidth> <https://w3id.org/kpxl/gen/terms/ColumnWidth06of12>;
+    <https://w3id.org/kpxl/gen/terms/hasPageSize> "10";
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "1.2.summary-stats";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RA7ZVUBsunF1SvM67wE-PzjiwuAc2IO53ympEWIZtmowE/get-llm-kg-papers-summary>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-3080-0303 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-3080-0303 foaf:name "Anastasiya Danilenka" .
+  
+  <https://w3id.org/np/RA7ZVUBsunF1SvM67wE-PzjiwuAc2IO53ympEWIZtmowE/get-llm-kg-papers-summary>
+    nt:hasLabelFromApi "Get summary statistics for assessed LLM-KG papers - This query summarises statistics for the assessed LLM-KG integration papers, ..." .
+  
+  this: dct:created "2026-04-15T15:08:14.907Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-3080-0303;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:llm-kg-summary-view;
+    npx:introduces sub:llm-kg-summary-kind;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAIMCeC10xyu9Ou2ZWHkcE-TeIknD2HoJCCDc0gP_ozPw>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAIMCeC10xyu9Ou2ZWHkcE-TeIknD2HoJCCDc0gP_ozPw> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnosJSn16QpO5H1VxOxrwMH/H/b4lqyVo+/w5ri059ZaXR4GFN2l7rDusHTzgbyZ3Ifq2eEntFfnS3XrygI+AoIxoEob8jM1lEJstaCpSi3Kv+v9uD+s61HWL/4J7DyaVgycDcDFG7mOyemtUIU94hV9x5z2kXdFPfoffAlF8BRxKymOBMaCx/uOouxS/CCR4brlG6gXfU2d+13y/4PbiM3SxXdSKVAYaeSEA83ohAgJFhH3oZtZeuPhyENllRGxT5PVzqx59YVr10UV1VudiGIkqKjkcvGbfOoifZB38+uNN5DVBnLN4NcnoqqCAweoODWYUFOsjHTpobqA0+Ss0VwIDAQAB";
+    npx:hasSignature "I+Smf+TFdp/NEAWxS7jY+ikDby7wD6/j3qnHswSmoaR5QVHnVigLnkSEUbMf4oFotzHGQFI2dKCb2ArNYLZUSIm/eZXZry+HryK9KJXR7OzEmVc8DoelKJ2dRWZpcsDgXt8M4uSIKCBnarKp1P5jDMxSI6hbenJak8GlMc6MlrtruD96mOcPY5o9nK+pLmyWkE3zd7OekEfwyxdyYcfLEe5mYYWdWfMGWGsX9sxjfwb2JdJGmEsz2cL0lspz3HapGW6FRrwQ7jL0FKmhRNGbu1Ww7nmxWfZZgbCIDU8L2IkgeyBiQXEnd4MnAnK8GgxqpApTnDiRc5dTg0Ah5BeNxQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-3080-0303 .
+}
+

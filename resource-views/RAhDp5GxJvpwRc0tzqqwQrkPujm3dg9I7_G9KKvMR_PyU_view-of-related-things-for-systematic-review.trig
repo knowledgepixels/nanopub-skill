@@ -1,0 +1,58 @@
+@prefix this: <https://w3id.org/np/RAhDp5GxJvpwRc0tzqqwQrkPujm3dg9I7_G9KKvMR_PyU> .
+@prefix sub: <https://w3id.org/np/RAhDp5GxJvpwRc0tzqqwQrkPujm3dg9I7_G9KKvMR_PyU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:systematic-review-related-things-view a <https://w3id.org/kpxl/gen/terms/ResourceView>,
+      <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf sub:systematic-review-related-things-view-kind;
+    dct:title "Related things";
+    rdfs:label "View of related things for systematic review";
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.9.relatedThings";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAFv2US1c71x1PirtNj5WxQ2gyERraFXM-lT04o5Hoy-E/get-related-things-for-review>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "systematicReview" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RAFv2US1c71x1PirtNj5WxQ2gyERraFXM-lT04o5Hoy-E/get-related-things-for-review>
+    nt:hasLabelFromApi "Get related things for systematic review - This query returns related things, like datasets, software, and claims, that ..." .
+  
+  this: dct:created "2026-01-21T08:30:32.882Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:systematic-review-related-things-view;
+    npx:introduces sub:systematic-review-related-things-view-kind;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAMwJK-KwLZao9NyIJ3QPE6AK_MasTNoHlp-PoUEavR2c> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "zajWb3GGxJKtnkmIOhDrk2K6fxlDEihwWj6YqOzlg33X6LVbyU++Y1cZe6SHtugcNOfUE1nJ87OaM91lR19kFIj8oKDCOvK5ghekV598mrlEq+Gfgq9c0G7hAyDwQt+YJSgkJJ5sTLrVFG7uECEc2CBE8xvInCuXDIzIG5ApuJg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

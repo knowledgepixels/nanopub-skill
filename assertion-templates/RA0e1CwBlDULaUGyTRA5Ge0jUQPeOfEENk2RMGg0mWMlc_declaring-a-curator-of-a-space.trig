@@ -1,0 +1,68 @@
+@prefix this: <https://w3id.org/np/RA0e1CwBlDULaUGyTRA5Ge0jUQPeOfEENk2RMGg0mWMlc> .
+@prefix sub: <https://w3id.org/np/RA0e1CwBlDULaUGyTRA5Ge0jUQPeOfEENk2RMGg0mWMlc/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  gen:hasCurator a gen:InverseRoleProperty;
+    rdfs:label "has as curator" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication declares that a person is a curator of the given space, i.e. someone who curates and qualifies the metadata of the resources (e.g. FAIR Supporting Resources) that the space is about.";
+    rdfs:label "Declaring a curator of a space";
+    nt:hasNanopubLabelPattern "${space} has curator ${curator}";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Spaces";
+    nt:hasTargetNanopubType gen:RoleInstantiation .
+  
+  sub:curator a nt:AgentPlaceholder;
+    rdfs:label "choose the curator" .
+  
+  sub:space a nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the space";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st1 rdf:object sub:curator;
+    rdf:predicate gen:hasCurator;
+    rdf:subject sub:space .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-11T08:22:03Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Declaring a curator of a space";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzZAkv4Mu1YSUxQMriBnhYunqosX5wpuQ3FjUyzW8wTC51wjCmhsChyhS+mCx7Od+2MTDpdhxDWA+pH1r9AX508X2rIY/sbpMS+pd56e0qKPQ0t4folln1TgamPN9iOlY/yLc2x27AdipWIGXUdtL2iAcb+P/Y5dQS2AkHMS3lP2e5JBL5/bD/10qvTLKvdsqIKts8qjuLpxr9CFbsS2gLjMkXL5D2IsJ0cL5sgmIfS1inLVxIfXrS/OgqYNFqeNznUYCVWfo0g7DKjnjiICz3omeQeJFLYwlJ6PhUhYDQS6O318DGwUCwhnuXbBbwL9evZa2I/0Pwu5xpZdNLYJ5UwIDAQAB";
+    npx:hasSignature "wJHmFI+hsMLEzXUk1iACeLBoWvontQ7ONh1DGPZ+O2qEX8a1nrHdyQ/J3OsnHFDNBrz+NvhBDnmpNZhdkw0Zx1bNQiCy9KGHx4pZjHqsT/ELlDFq3mGsahiwoS8tXaBMqVaOMShhpYvIqMjxiSaKqw/8Oiq3SwswuZNDn8YET5AEO85lmuU2HtgiokQfvTHk0uNOh51brlKL5b7AyxZxhUZwtx4WTb0y+XDeK7TqoWzcj+5gLT/+L8uhFXS8COUm5q9PKojFVc9Nlj8jv2SOBCymawT1oNJBBBD9666z9bmE/MvL5uqOLxyKHV6+l/EV5aRdZ8mAxP/ydomVO/MF3A==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot> .
+}
+

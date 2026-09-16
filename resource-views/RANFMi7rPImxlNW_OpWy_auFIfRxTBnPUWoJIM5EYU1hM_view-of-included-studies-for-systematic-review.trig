@@ -1,0 +1,66 @@
+@prefix this: <https://w3id.org/np/RANFMi7rPImxlNW_OpWy_auFIfRxTBnPUWoJIM5EYU1hM> .
+@prefix sub: <https://w3id.org/np/RANFMi7rPImxlNW_OpWy_auFIfRxTBnPUWoJIM5EYU1hM/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction rdfs:label "add...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RAivw_N13pxVoXRMP6Y3ErfA--Z011qMqwKccfiKVxF0w>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "systematicReview" .
+  
+  sub:included-studies-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:title "Included studies";
+    rdfs:label "View of included studies for systematic review";
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.6.includedStudies.1";
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:addAction;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAdaH_5ufaVty9oWWpCVQNwA4T3JQnIsGSuC4kPoBvRBE/get-studies-of-systematic-review>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "systematicReview";
+    <https://w3id.org/kpxl/gen/terms/hasViewTargetClass> <http://purl.org/spar/fabio/SystematicReview> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2025-11-24T08:19:58.453Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:included-studies-view;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9sfQNEzUycSrZM-P1w-mL1v6OTBUl0vUP0PdHL7rQHk> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "qaVYWJnZfpBLb/hNZXHj0X1P+nMuirSGyR6HwCH4f4Gpifk8/iLIU1giGglBNU4U5RpD4Q6FDgHbN7C7A1Eka2t/G6YZfMuGNfUx1+4Zm9xZEJV9pR3APr3bgys/1wC29RY5j55o6qRoK5r9b1Sxdh0j7/JHcDtvCp2gNJVlO8Y=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAdaH_5ufaVty9oWWpCVQNwA4T3JQnIsGSuC4kPoBvRBE/get-studies-of-systematic-review>
+    nt:hasLabelFromApi "Get studies of systematic review - This query returns the studies included in the given systematic review." .
+  
+  <https://w3id.org/np/RAivw_N13pxVoXRMP6Y3ErfA--Z011qMqwKccfiKVxF0w> nt:hasLabelFromApi
+      "Declaring a study to be included in a systematic review" .
+}
+

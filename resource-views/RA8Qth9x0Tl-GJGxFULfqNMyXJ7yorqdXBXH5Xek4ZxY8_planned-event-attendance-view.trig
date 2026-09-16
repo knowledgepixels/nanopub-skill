@@ -1,0 +1,71 @@
+@prefix this: <https://w3id.org/np/RA8Qth9x0Tl-GJGxFULfqNMyXJ7yorqdXBXH5Xek4ZxY8> .
+@prefix sub: <https://w3id.org/np/RA8Qth9x0Tl-GJGxFULfqNMyXJ7yorqdXBXH5Xek4ZxY8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    rdfs:label "add...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RAZxpqtS3Coiz_fTwsA7n8DnevgIm_7zAv2hWQG_l6rXE>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "void" .
+  
+  sub:planned-event-attendance-view a <https://w3id.org/kpxl/gen/terms/ResourceView>,
+      <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RAYzF4anuBjmhJmqpfVvKObUO_4yoZ9__-AvnAjfkTYX0/planned-event-attendance-view-kind>;
+    dct:title "🔜 Planning to attend these events coming up";
+    rdfs:label "Planned event attendance view";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/IndividualAgent>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.2.plannedevents";
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:addAction;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAdwV588EdTzQ6UhsYX_hmg5GvOJbKvFjMOcEIpVNxyLg/get-future-planned-event-attendances>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "user" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-03-23T21:26:52.144Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:planned-event-attendance-view;
+    npx:introduces <https://w3id.org/np/RAYzF4anuBjmhJmqpfVvKObUO_4yoZ9__-AvnAjfkTYX0/planned-event-attendance-view-kind>;
+    npx:supersedes <https://w3id.org/np/RA8jRuDpYAceDcfF-Oy5MCBkun-8FDUtXeISvbRN2f3j4>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAIMCeC10xyu9Ou2ZWHkcE-TeIknD2HoJCCDc0gP_ozPw> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "m1v30mug50c15h3awAUopzmKnbGzrydmaZgDgFqyH7QPRUesDiZLQZ5W8mZixWd4oNZXPi9cmGMoclac6kZfEytAppxEWk9BZSRCtN7L675J1N4vNGQGS40tRECCSQ5ikqgbgYbANY85lmyGl+XyLHJXZAi8zuP+pRdK7Lm380E=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAZxpqtS3Coiz_fTwsA7n8DnevgIm_7zAv2hWQG_l6rXE> nt:hasLabelFromApi
+      "Declaring to plan to attend an event (with extra info) - Such a nanopublication declares that the creator plans to attend an event, in..." .
+  
+  <https://w3id.org/np/RAdwV588EdTzQ6UhsYX_hmg5GvOJbKvFjMOcEIpVNxyLg/get-future-planned-event-attendances>
+    nt:hasLabelFromApi "Get future planned event attendances - This query returns the future events the given user plans to attend." .
+}
+

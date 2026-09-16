@@ -1,0 +1,60 @@
+@prefix this: <https://w3id.org/np/RAw9PvdcyGjX1O4tz9hIUc1i8bYOlHmle7lz1N_JT03wE> .
+@prefix sub: <https://w3id.org/np/RAw9PvdcyGjX1O4tz9hIUc1i8bYOlHmle7lz1N_JT03wE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:fer-definition-relations a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf sub:fer-definition-relations-kind;
+    dct:title "FER definition relations";
+    rdfs:label "Basic view of FER definition relations";
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "3.2.definitionRelations.2";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAqxwE3KbcXxjYm6tNpRrBY4UP7cSN5O-QRZWBwvmK6tY/get-intro-relations>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "resource";
+    <https://w3id.org/kpxl/gen/terms/hasViewTargetClass> <https://w3id.org/fair/fip/terms/FAIR-Enabling-Resource>,
+      <https://w3id.org/fair/fip/terms/FAIR-Supporting-Resource> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RAqxwE3KbcXxjYm6tNpRrBY4UP7cSN5O-QRZWBwvmK6tY/get-intro-relations>
+    nt:hasLabelFromApi "Get intro relations - This query returns the relations (predicate-object) of the assertion part of ..." .
+  
+  this: dct:created "2025-11-27T13:07:58.486Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:fer-definition-relations;
+    npx:introduces sub:fer-definition-relations-kind;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RARa-HQ6__xWRshwEuACgGoX3Rh8X5B_E2qSqppfK3fBI>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAZeaO_RX0cw1bDMDJehQBI-BH52v3yGx2GglSt4d_gvc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "Wjejm0i4i3nQyo6nH6BuS3Qn5gGEBGXEKfurERozJkKSKILtEJ1dnAIqqt9mofmsL8qyhQ8aAUsPK4iK43snaFPhfr98IlwHhkXUEBh75ipY0KgFGE8sKtXF4dXxf1mPwlfEntdWkm779unOwflG4mnVjiqSdAEdIlkGP1Kc9Z0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,155 @@
+@prefix this: <https://w3id.org/np/RAunUifYz7BVtmxBmneNaDh9SEO5fB7Uqsj6vsQXC66S4> .
+@prefix sub: <https://w3id.org/np/RAunUifYz7BVtmxBmneNaDh9SEO5fB7Uqsj6vsQXC66S4/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-space-onehealth-coverage-svg a grlc:grlc-query;
+    dct:description "Returns a single row holding an SVG diagram of how the projects of a space cover the three One Health domains: three overlapping circles for Human, Animal and Environment, each region showing the number of projects tagged with exactly that combination of domains via the ZonMw One Health vocabulary (zonmw/r/onehealth/domain), and each domain heading showing how many of the space's projects and how many datasets are tagged with it. Projects are the gen:Project spaces whose IRI extends the given space, tagged or not, which gives the 'of N' denominator; entities are anything under the space's IRI that carries a domain tag, classified as project (gen:Project), dataset (ff:Dataset) or other. The per-entity domain flags are computed once and every count is a conditional sum over that one set of rows, so the figures never multiply each other. Only tags asserted in nanopublications signed by a current admin, maintainer or member of the space or one of its sub-spaces count, with invalidated, superseded and example nanopublications skipped; the membership lookup is a federated sub-select sharing no variables with the rest of the query. The SVG uses explicit end tags and camelCase attributes and contains no data-derived text other than numbers, so it needs no escaping.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get a One Health coverage diagram for a space and its sub-spaces";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix ff: <https://w3id.org/fair/ff/terms/>
+prefix oh: <https://w3id.org/spaces/zonmw/r/onehealth/>
+
+select ?svg
+where {
+  # One row: how many projects and datasets sit in each region of the Human / Animal /
+  # Environment diagram, computed from one set of per-entity domain flags so that the
+  # sums never multiply each other.
+  {
+    select
+      (sum(if(?kind = \"project\" && ?h = 1 && ?a = 0 && ?e = 0, 1, 0)) as ?pH)
+      (sum(if(?kind = \"project\" && ?h = 0 && ?a = 1 && ?e = 0, 1, 0)) as ?pA)
+      (sum(if(?kind = \"project\" && ?h = 0 && ?a = 0 && ?e = 1, 1, 0)) as ?pE)
+      (sum(if(?kind = \"project\" && ?h = 1 && ?a = 1 && ?e = 0, 1, 0)) as ?pHA)
+      (sum(if(?kind = \"project\" && ?h = 1 && ?a = 0 && ?e = 1, 1, 0)) as ?pHE)
+      (sum(if(?kind = \"project\" && ?h = 0 && ?a = 1 && ?e = 1, 1, 0)) as ?pAE)
+      (sum(if(?kind = \"project\" && ?h = 1 && ?a = 1 && ?e = 1, 1, 0)) as ?pHAE)
+      (sum(if(?kind = \"project\" && ?h = 1, 1, 0)) as ?pHt)
+      (sum(if(?kind = \"project\" && ?a = 1, 1, 0)) as ?pAt)
+      (sum(if(?kind = \"project\" && ?e = 1, 1, 0)) as ?pEt)
+      (sum(if(?kind = \"project\", 1, 0)) as ?pTagged)
+      (sum(if(?kind = \"dataset\" && ?h = 1, 1, 0)) as ?dHt)
+      (sum(if(?kind = \"dataset\" && ?a = 1, 1, 0)) as ?dAt)
+      (sum(if(?kind = \"dataset\" && ?e = 1, 1, 0)) as ?dEt)
+      (sum(if(?kind = \"dataset\", 1, 0)) as ?dTagged)
+      (sum(if(?kind = \"other\" && ?h = 1, 1, 0)) as ?oHt)
+      (sum(if(?kind = \"other\" && ?a = 1, 1, 0)) as ?oAt)
+      (sum(if(?kind = \"other\" && ?e = 1, 1, 0)) as ?oEt)
+    where {
+      {
+        select ?entity ?kind
+          (max(if(?domain = oh:Human, 1, 0)) as ?h)
+          (max(if(?domain = oh:Animal, 1, 0)) as ?a)
+          (max(if(?domain = oh:Environment, 1, 0)) as ?e)
+        where {
+          values ?_space_multi_iri {}
+          {
+            select (group_concat(distinct ?mpk; separator=\" \") as ?memberPubkeys) where {
+              service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+                select ?mpk where {
+                  values ?_space_multi_iri {}
+                  graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+                  graph ?stateG {
+                    ?ri a gen:RoleInstantiation ; npa:forSpace ?sp ; npa:forAgent ?agent ; npa:hasRoleType ?rt .
+                    filter(?rt in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                    ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+                  }
+                  filter(?sp = ?_space_multi_iri || strstarts(str(?sp), concat(str(?_space_multi_iri), \"/\")))
+                }
+              }
+            }
+          }
+          graph npa:graph {
+            ?np npa:hasValidSignatureForPublicKeyHash ?npPubkey .
+            filter not exists { ?invNp npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?npPubkey . }
+            filter not exists { ?supNp npx:supersedes ?np . }
+            filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+            ?np np:hasAssertion ?a0 .
+          }
+          filter(contains(?memberPubkeys, ?npPubkey))
+          graph ?a0 { ?entity oh:domain ?domain . }
+          filter(strstarts(str(?entity), concat(str(?_space_multi_iri), \"/\")))
+          bind(if(exists { graph ?ta { ?entity a gen:Project } }, \"project\",
+               if(exists { graph ?tb { ?entity a ff:Dataset } }, \"dataset\", \"other\")) as ?kind)
+        }
+        group by ?entity ?kind
+      }
+    }
+  }
+  # Denominator: every project space in the subtree, tagged or not.
+  {
+    select (count(distinct ?project) as ?pAll) where {
+      values ?_space_multi_iri {}
+      graph npa:graph { ?pnp np:hasAssertion ?pa . filter not exists { ?psup npx:supersedes ?pnp . } }
+      graph ?pa { ?project a gen:Project . }
+      filter(strstarts(str(?project), concat(str(?_space_multi_iri), \"/\")))
+    }
+  }
+  bind(if(?pAll > 0, ?pAll, ?pTagged) as ?pTotal)
+  bind(concat(
+    '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 470 370\" width=\"705\" height=\"555\" font-family=\"sans-serif\">',
+    '<circle cx=\"160\" cy=\"145\" r=\"95\" fill=\"#4e79a7\" fill-opacity=\"0.22\" stroke=\"#4e79a7\" stroke-width=\"2\"></circle>',
+    '<circle cx=\"300\" cy=\"145\" r=\"95\" fill=\"#e15759\" fill-opacity=\"0.22\" stroke=\"#e15759\" stroke-width=\"2\"></circle>',
+    '<circle cx=\"230\" cy=\"240\" r=\"95\" fill=\"#59a14f\" fill-opacity=\"0.22\" stroke=\"#59a14f\" stroke-width=\"2\"></circle>',
+    '<text x=\"98\" y=\"22\" text-anchor=\"middle\" font-size=\"15\" font-weight=\"bold\" fill=\"#4e79a7\">Human</text>',
+    '<text x=\"98\" y=\"38\" text-anchor=\"middle\" font-size=\"10\" fill=\"#444\">', str(?pHt), ' of ', str(?pTotal), ' projects, ', str(?dHt), ' datasets</text>',
+    '<text x=\"362\" y=\"22\" text-anchor=\"middle\" font-size=\"15\" font-weight=\"bold\" fill=\"#e15759\">Animal</text>',
+    '<text x=\"362\" y=\"38\" text-anchor=\"middle\" font-size=\"10\" fill=\"#444\">', str(?pAt), ' of ', str(?pTotal), ' projects, ', str(?dAt), ' datasets</text>',
+    '<text x=\"395\" y=\"307\" text-anchor=\"middle\" font-size=\"15\" font-weight=\"bold\" fill=\"#59a14f\">Environment</text>',
+    '<text x=\"395\" y=\"323\" text-anchor=\"middle\" font-size=\"10\" fill=\"#444\">', str(?pEt), ' of ', str(?pTotal), ' projects, ', str(?dEt), ' datasets</text>',
+    '<text x=\"118\" y=\"133\" text-anchor=\"middle\" font-size=\"22\" font-weight=\"bold\" fill=\"', if(?pH > 0, '#222', '#aaa'), '\">', str(?pH), '</text>',
+    '<text x=\"342\" y=\"133\" text-anchor=\"middle\" font-size=\"22\" font-weight=\"bold\" fill=\"', if(?pA > 0, '#222', '#aaa'), '\">', str(?pA), '</text>',
+    '<text x=\"230\" y=\"293\" text-anchor=\"middle\" font-size=\"22\" font-weight=\"bold\" fill=\"', if(?pE > 0, '#222', '#aaa'), '\">', str(?pE), '</text>',
+    '<text x=\"230\" y=\"115\" text-anchor=\"middle\" font-size=\"22\" font-weight=\"bold\" fill=\"', if(?pHA > 0, '#222', '#aaa'), '\">', str(?pHA), '</text>',
+    '<text x=\"168\" y=\"221\" text-anchor=\"middle\" font-size=\"22\" font-weight=\"bold\" fill=\"', if(?pHE > 0, '#222', '#aaa'), '\">', str(?pHE), '</text>',
+    '<text x=\"292\" y=\"221\" text-anchor=\"middle\" font-size=\"22\" font-weight=\"bold\" fill=\"', if(?pAE > 0, '#222', '#aaa'), '\">', str(?pAE), '</text>',
+    '<text x=\"230\" y=\"185\" text-anchor=\"middle\" font-size=\"22\" font-weight=\"bold\" fill=\"', if(?pHAE > 0, '#222', '#aaa'), '\">', str(?pHAE), '</text>',
+    '<text x=\"12\" y=\"362\" font-size=\"10\" fill=\"#666\">Numbers: projects per region (', str(?pTagged), ' of ', str(?pTotal), ' projects tagged, ', str(?dTagged), ' datasets)</text>',
+    '</svg>') as ?svg)
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-13T05:32:24Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-space-onehealth-coverage-svg;
+    rdfs:label "Get a One Health coverage diagram for a space and its sub-spaces";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "AYD3btJN+kkQKJvpMXgJW/WUcAdli1ctXlF7m/qLdpMAUczBZCbV7gXGERgd/w07RwUCMfWA5btJdEF8Us5dcIn7TovnxLKnUI4NgQLKAOrJhmOGNGFEtP5nUa06emfWuTgr82MipwphD1585Y3YOVpRaOGw5t7Nll+7Riuo1xY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}

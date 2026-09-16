@@ -1,0 +1,123 @@
+@prefix this: <https://w3id.org/np/RAjE6b097a2UblKfN1jQgrDEirHEe1-nN6fajarEdO0VQ> .
+@prefix sub: <https://w3id.org/np/RAjE6b097a2UblKfN1jQgrDEirHEe1-nN6fajarEdO0VQ/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-feedback a grlc:grlc-query;
+    dct:description "Lists the feedback (schema:Review instances, published with the \"Giving feedback to organizers\" template) whose schema:itemReviewed is a given space or maintained resource, with its kind given by dct:type (went well = Wikidata praise Q1208425, could be improved = constructive criticism Q11743037, suggestion for next time = suggestion Q89325745), most up-voted first, then oldest first. An up-vote is a schema:VoteAction (published with the \"Up-voting an idea or feedback\" template) whose schema:object is the feedback; the count is the number of distinct signing keys with a valid, non-retracted up-vote, so each person counts once and a retracted up-vote no longer counts. Example nanopublications and superseded or invalidated feedback are ignored. The hidden action columns are computed against the viewer's local key (?__LOCALPUBKEY_multi): upvote_target holds the feedback unless the viewer has already up-voted it, withdraw_target holds the viewer's own up-vote nanopublication (to retract it), and edit_target holds the feedback nanopublication if the viewer's key signed it (to supersede it).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the feedback given to the organizers of a resource with up-votes";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix schema: <https://schema.org/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix wd: <http://www.wikidata.org/entity/>
+
+select ?kind ?feedback ?feedback_label ?details ?upvotes ?author ?author_label ?date ?np ?np_label ?upvote_target ?withdraw_target ?edit_target
+where {
+  {
+    select ?feedback ?np ?a ?pk ?created
+           (min(str(?lbl)) as ?feedback_label) (sample(?desc) as ?details) (min(str(?k)) as ?kindS)
+           (min(str(?auth)) as ?authS) (min(str(?aname)) as ?author_label)
+    where {
+      {
+        select ?feedback ?np ?a ?pk ?created where {
+          values ?_target_multi_iri {}
+          graph ?a { ?feedback a schema:Review ; schema:itemReviewed ?_target_multi_iri . }
+          graph npa:graph {
+            ?np np:hasAssertion ?a ; npa:hasValidSignatureForPublicKey ?pk ; npx:introduces ?feedback ; dct:created ?created .
+            filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pk . }
+            filter not exists { ?newer npx:supersedes ?np . }
+            filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+          }
+        }
+      }
+      graph ?a { ?feedback rdfs:label ?lbl . }
+      optional { graph ?a { ?feedback dct:type ?k . } }
+      optional { graph ?a { ?feedback dct:description ?desc . } }
+      graph npa:graph { ?np np:hasPublicationInfo ?pi . }
+      optional { graph ?pi { ?np dct:creator ?auth . } }
+      optional { graph ?pi { ?auth foaf:name ?aname . } }
+    } group by ?feedback ?np ?a ?pk ?created
+  }
+  optional {
+    select ?feedback (count(distinct ?vpk) as ?nvotes) where {
+      graph ?va { ?vote a schema:VoteAction ; schema:object ?feedback . }
+      graph npa:graph {
+        ?vnp np:hasAssertion ?va ; npa:hasValidSignatureForPublicKey ?vpk .
+        filter not exists { ?vinv npx:invalidates ?vnp ; npa:hasValidSignatureForPublicKey ?vpk . }
+        filter not exists { ?vnp npx:hasNanopubType npx:ExampleNanopub . }
+      }
+    } group by ?feedback
+  }
+  optional {
+    select ?feedback (max(str(?mvnp)) as ?myvote) where {
+      values ?__LOCALPUBKEY_multi {}
+      graph ?mva { ?mvote a schema:VoteAction ; schema:object ?feedback . }
+      graph npa:graph {
+        ?mvnp np:hasAssertion ?mva ; npa:hasValidSignatureForPublicKey ?mvpk .
+        filter not exists { ?minv npx:invalidates ?mvnp ; npa:hasValidSignatureForPublicKey ?mvpk . }
+      }
+      filter(coalesce(str(?mvpk) = str(?__LOCALPUBKEY_multi), false))
+    } group by ?feedback
+  }
+  values ?__LOCALPUBKEY_multi {}
+  bind(if(?kindS = str(wd:Q1208425), \"👍 went well\",
+       if(?kindS = str(wd:Q11743037), \"🔧 could be improved\",
+       if(?kindS = str(wd:Q89325745), \"💡 suggestion for next time\", \"\"))) as ?kind)
+  bind(coalesce(?nvotes, 0) as ?upvotes)
+  bind(if(bound(?authS), iri(?authS), ?authS) as ?author)
+  bind(str(?created) as ?date)
+  bind(\"^\" as ?np_label)
+  bind(if(bound(?myvote), \"\", str(?feedback)) as ?upvote_target)
+  bind(coalesce(?myvote, \"\") as ?withdraw_target)
+  bind(if(coalesce(str(?pk) = str(?__LOCALPUBKEY_multi), false), str(?np), \"\") as ?edit_target)
+}
+order by desc(?upvotes) ?created""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-15T09:31:10Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-feedback;
+    npx:supersedes <https://w3id.org/np/RAkDr3osILRT0ENsj4idXjW-pejxGE46EObHDwX19JDLs>;
+    rdfs:label "Get the feedback given to the organizers of a resource with up-votes";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "I933TNWFmhT1Tqu3Aor3u/nrV8iMibnFoV9B1KR61hy9x2NtaTYRkKppAl3MNqxA2rgdLMPzdyu6bJfjpOGno9FJjjP/dSM9l1vNA7pRHhQuQ2+tewN2KsgB4sYtPKT5QK9s6B7wwv6OAKf/rvjqJSRCwf5o6D4y9DWbj8Po43o=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

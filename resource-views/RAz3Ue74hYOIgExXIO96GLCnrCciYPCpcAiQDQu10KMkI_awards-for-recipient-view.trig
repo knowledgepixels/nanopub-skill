@@ -1,0 +1,63 @@
+@prefix this: <https://w3id.org/np/RAz3Ue74hYOIgExXIO96GLCnrCciYPCpcAiQDQu10KMkI> .
+@prefix sub: <https://w3id.org/np/RAz3Ue74hYOIgExXIO96GLCnrCciYPCpcAiQDQu10KMkI/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a gen:ViewResultAction;
+    rdfs:label "➕ add award...";
+    gen:hasActionTemplate <https://w3id.org/np/RAXndgKwpdKM-WLCg4JWt3FdFJ7kOMWLP1Xj71McOB80E/template>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "recipient" .
+  
+  sub:awards-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:awards-view-kind;
+    dct:title "🏆 Awards";
+    rdfs:label "Awards for recipient view";
+    gen:appliesToInstancesOf gen:IndividualAgent;
+    gen:hasStructuralPosition "4.5.awards";
+    gen:hasViewAction sub:addAction;
+    gen:hasViewQuery <https://w3id.org/np/RAbU26aRWmw-t1io65dHgaxTiru7aBq8eZXEyzd93bmhw/get-awards-for-recipient>;
+    gen:hasViewQueryTargetField "recipient" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-28T12:54:04Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:awards-view;
+    npx:introduces sub:awards-view-kind;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RAcm8OurwUk15WOgBM9wySo-T3a5h6as4K8YR5MBrrxUc>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Lvdu+WDt9RCMEITM3O63S1oQmLAO5j9etvuMAmdu4eLMZyw+jA2sov2B+xZy8ObRrnxpzhzBLBdYEbtJ4MyGQcl5ThsCCMMoFUB6+XYVz2jHjvXh+i8yCCjgLZZwPke9efpwhNY+gyH+yO8i8Z05utAZw5J0ncXCd32igRPMna0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

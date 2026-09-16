@@ -1,0 +1,92 @@
+@prefix this: <https://w3id.org/np/RAyED4XFAbCu0CNtsTzC0mX_F4KZtFKxKjzkdNHgXHx0E> .
+@prefix sub: <https://w3id.org/np/RAyED4XFAbCu0CNtsTzC0mX_F4KZtFKxKjzkdNHgXHx0E/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-facilitators a grlc:grlc-query;
+    dct:description "Returns the people holding a 3PFF facilitator qualification issued by the GO FAIR Foundation (ROR 056j50v04): nanopublications of type 3PFF Qualification that qualify the person as 3PFF Facilitator or FIP Facilitator. Shows the person (name from their introduction nanopublication), the qualification type(s), the date the qualification was completed (dcat:endDate), and the qualification nanopublication. Invalidated qualifications are excluded.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get facilitators";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix schema: <https://schema.org/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+prefix tpff: <https://w3id.org/fair/3pff/>
+prefix search: <http://www.openrdf.org/contrib/lucenesail#>
+
+select ?person (min(?name) as ?person_label)
+  (group_concat(distinct ?qtype_label; separator=\", \") as ?qualification)
+  (max(?enddate) as ?date)
+  (min(?np) as ?np) (\"^\" as ?np_label)
+where {
+  graph npa:graph {
+    ?np npx:hasNanopubType tpff:3PFF-Qualification ; np:hasAssertion ?a ; npa:hasValidSignatureForPublicKey ?pk .
+    filter not exists { ?x npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pk . }
+  }
+  graph ?a {
+    ?np npx:qualifies ?qtype ; tpff:issued-to ?person .
+    values ?qtype { tpff:3PFF-Facilitator tpff:FIP-Facilitator }
+    optional { ?np <https://schema.org/issuedBy>|<http://schema.org/issuedBy> ?issuer . }
+    optional { ?np <https://www.w3.org/ns/dcat#endDate>|<http://www.w3.org/ns/dcat#endDate> ?enddate . }
+  }
+  filter(coalesce(str(?issuer) = \"https://ror.org/056j50v04\", true))
+  bind(if(?qtype = tpff:3PFF-Facilitator, \"3PFF Facilitator\", \"FIP Facilitator\") as ?qtype_label)
+  optional {
+    graph npa:graph { ?inp np:hasAssertion ?ia ; npa:hasValidSignatureForPublicKey ?ipk . filter not exists { ?ix npx:invalidates ?inp ; npa:hasValidSignatureForPublicKey ?ipk . } }
+    graph ?ia { ?decl npx:declaredBy ?person . ?person foaf:name ?name . }
+  }
+} group by ?person order by ?person_label
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-11T09:24:15Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-facilitators;
+    rdfs:label "Get facilitators";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzZAkv4Mu1YSUxQMriBnhYunqosX5wpuQ3FjUyzW8wTC51wjCmhsChyhS+mCx7Od+2MTDpdhxDWA+pH1r9AX508X2rIY/sbpMS+pd56e0qKPQ0t4folln1TgamPN9iOlY/yLc2x27AdipWIGXUdtL2iAcb+P/Y5dQS2AkHMS3lP2e5JBL5/bD/10qvTLKvdsqIKts8qjuLpxr9CFbsS2gLjMkXL5D2IsJ0cL5sgmIfS1inLVxIfXrS/OgqYNFqeNznUYCVWfo0g7DKjnjiICz3omeQeJFLYwlJ6PhUhYDQS6O318DGwUCwhnuXbBbwL9evZa2I/0Pwu5xpZdNLYJ5UwIDAQAB";
+    npx:hasSignature "bZ9ixZxaAA+vriPXGY3Y3YtsWanoEzUDnp15ByiMVoAckxzEbHb3vru5Xln1b65Wb0bpFEyCs3S8cF3n51YafmuonwmQnojmKkFnHHV9wo3Y3b2nXge2BKQ+d9gozXn4xLCm+EudV/Fcnb5gBv5m/C5wE12yZNazLvH+3+51dNmj+qELPK8Hq/hZ5UtQ0r0ExnJ8TuN5JewtT5koXRdrer0J7ZHY+ESXcY7McSyTGBxD4Ph8W+Ua1mLhrg9KbvxxPOplcudNOZl8YCMsC8/6QNf82hMHHHqUeNprDPO+oqlXOJ29WviRcfd9PVYHbYDj9mT62nQr9zQbhbl9owEkvg==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot> .
+}
+

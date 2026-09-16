@@ -1,0 +1,115 @@
+@prefix this: <https://w3id.org/np/RAmf-AY6fa6MNzmThrqf2FJoInVZ2j64hEohzSQRzty0M> .
+@prefix sub: <https://w3id.org/np/RAmf-AY6fa6MNzmThrqf2FJoInVZ2j64hEohzSQRzty0M/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-community-recommended-fsrs a grlc:grlc-query;
+    dct:description "For a FAIR Implementation Community, lists the FAIR Supporting Resources (FSRs) it recommends (fip:recommended-by), with the FSR types and a checkmark when the latest metadata nanopublication of the FSR is qualified by the GO FAIR Foundation.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the FSRs recommended by a community";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix schema: <https://schema.org/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+prefix tpff: <https://w3id.org/fair/3pff/>
+prefix search: <http://www.openrdf.org/contrib/lucenesail#>
+
+select ?fsr (coalesce(min(?fsr_label_x), replace(str(?fsr), \"^.*[/#]\", \"\")) as ?fsr_label)
+  (group_concat(distinct str(?type); separator=\" \") as ?types_multi_iri) (group_concat(distinct ?type_label; separator=\"\\n\") as ?types_label_multi)
+  (max(?qualified_x) as ?qualified) (min(?rnp) as ?np) (\"^\" as ?np_label)
+where {
+  { select ?curators_a where {
+  graph npa:graph {
+    <https://w3id.org/np/RA27Uhopq4MHZziL2lKXX-wTb1jz4KVLbHaupxyAcCt9Y> npa:hasValidSignatureForPublicKey ?curators_pk .
+    ?curators_np npa:hasValidSignatureForPublicKey ?curators_pk ; np:hasAssertion ?curators_a .
+    filter not exists { ?curators_x npx:invalidates ?curators_np ; npa:hasValidSignatureForPublicKey ?curators_pk . }
+  }
+  graph npa:networkGraph {
+    ?curators_np (npx:supersedes)* <https://w3id.org/np/RA27Uhopq4MHZziL2lKXX-wTb1jz4KVLbHaupxyAcCt9Y> .
+    filter not exists { ?curators_y npx:supersedes ?curators_np }
+  }
+  } }
+
+  graph npa:graph { ?rnp npx:hasNanopubType fip:recommended-by ; np:hasAssertion ?ra ; npa:hasValidSignatureForPublicKey ?rpk . filter not exists { ?rx npx:invalidates ?rnp ; npa:hasValidSignatureForPublicKey ?rpk . } }
+  graph ?ra { ?fsr fip:recommended-by ?_community_iri . }
+  optional {
+    graph npa:graph {
+      ?fsrnp npx:introduces|npx:describes ?fsr ; rdfs:label ?fsr_label_x ; npa:hasValidSignatureForPublicKey ?spk ; dct:created ?sdate .
+      ?fsrnp npx:hasNanopubType ?sft . values ?sft { fip:FAIR-Enabling-Resource fip:FAIR-Supporting-Resource }
+      filter not exists { ?fsrnp npx:hasNanopubType npx:ExampleNanopub . }
+      filter not exists { ?sx npx:invalidates ?fsrnp ; npa:hasValidSignatureForPublicKey ?spk . }
+    }
+  }
+
+  optional {
+    graph npa:graph { ?fsrnp npx:hasNanopubType ?type . }
+    filter(strstarts(str(?type), \"https://w3id.org/fair/fip/terms/\"))
+    filter(?type not in (fip:FAIR-Enabling-Resource, fip:FAIR-Supporting-Resource, fip:Available-FAIR-Enabling-Resource, fip:Available-FAIR-Supporting-Resource, fip:FAIR-Enabling-Resource-to-be-Developed, fip:FAIR-Supporting-Resource-to-be-Developed))
+    bind(replace(replace(str(?type), \"^.*/\", \"\"), \"-\", \" \") as ?type_label)
+  }
+  optional {
+    graph ?qa { ?qualifier npx:qualifies ?fsrnp . }
+    values ?qualifier { <https://ror.org/056j50v04> <https://www.gofairfoundation.org> <https://www.gofairfoundation.org/> <https://gofairfoundation.org> }
+    graph npa:graph {
+      ?qnp np:hasAssertion ?qa ; npa:hasValidSignatureForPublicKey ?qpk .
+      filter not exists { ?qx npx:invalidates ?qnp ; npa:hasValidSignatureForPublicKey ?qpk . }
+    }
+    graph ?curators_a { ?qk npx:hasPublicKey ?qpk . }
+  }
+
+  bind(if(bound(?qnp), \"✓\", \"\") as ?qualified_x)
+} group by ?fsr order by ?fsr_label
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-11T09:37:28Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-community-recommended-fsrs;
+    rdfs:label "Get the FSRs recommended by a community";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzZAkv4Mu1YSUxQMriBnhYunqosX5wpuQ3FjUyzW8wTC51wjCmhsChyhS+mCx7Od+2MTDpdhxDWA+pH1r9AX508X2rIY/sbpMS+pd56e0qKPQ0t4folln1TgamPN9iOlY/yLc2x27AdipWIGXUdtL2iAcb+P/Y5dQS2AkHMS3lP2e5JBL5/bD/10qvTLKvdsqIKts8qjuLpxr9CFbsS2gLjMkXL5D2IsJ0cL5sgmIfS1inLVxIfXrS/OgqYNFqeNznUYCVWfo0g7DKjnjiICz3omeQeJFLYwlJ6PhUhYDQS6O318DGwUCwhnuXbBbwL9evZa2I/0Pwu5xpZdNLYJ5UwIDAQAB";
+    npx:hasSignature "MDPlNs5Jh0eJ5RD3y8r14VaZ7HbirUjTOiCivnwqg3vhqU6GGRsSmZSu7J9hCfLo3LZDpl8NPW8VMiAVHs19/YgvPj4Vxti9POXESN7uUu++PI/CY39os1Rg4hjPzrt2u351BYxBYUgyOhX5+VVUWbA3WNTRM4d+MTIAKn5ZGY90Fu7JiZtW0AkzuFbK1QvQ4cb3dNGCT0eKecOjo6nUChhqz0jPU1wOqKmLckVo3crQKRnxvZbmoQxbA65nR9Jn4T+QEqd27pNhjQRbLYfdWCcqAspXjs9TjYlH1urXdFw/iZQ50+Q/NVdR0RWi9e8FV0wFc9hQA3K/kmrgceopPQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot> .
+}
+

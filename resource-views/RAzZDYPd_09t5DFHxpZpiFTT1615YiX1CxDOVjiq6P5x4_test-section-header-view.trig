@@ -1,0 +1,65 @@
+@prefix this: <https://w3id.org/np/RAzZDYPd_09t5DFHxpZpiFTT1615YiX1CxDOVjiq6P5x4> .
+@prefix sub: <https://w3id.org/np/RAzZDYPd_09t5DFHxpZpiFTT1615YiX1CxDOVjiq6P5x4/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:add-admin-action a gen:ViewResultAction;
+    rdfs:label "➕ add admin...";
+    gen:hasActionTemplate <https://w3id.org/np/RAsOQ7k3GNnuUqZuLm57PWwWopQJR_4onnCpNR457CZg8>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateTargetField "space";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:test-header-view a gen:HeaderView, gen:ResourceView;
+    dct:description "This section header is rendered by a header view (nanodash issue #572): a title with an optional description text and optional result-level actions, but no query. For testing...";
+    dct:isVersionOf <https://w3id.org/np/RAUqJMjX0m3cwMl7gOdu9Ucese3JoEUeKjLRqT7k9mmsY/test-header-view-kind>;
+    dct:title "🧪 Test section";
+    rdfs:label "Test section header view";
+    gen:appliesToInstancesOf gen:Space;
+    gen:hasStructuralPosition "5.1.testheader";
+    gen:hasViewAction sub:add-admin-action .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-28T09:37:45.817+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:test-header-view;
+    npx:introduces <https://w3id.org/np/RAUqJMjX0m3cwMl7gOdu9Ucese3JoEUeKjLRqT7k9mmsY/test-header-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAUqJMjX0m3cwMl7gOdu9Ucese3JoEUeKjLRqT7k9mmsY>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAZYU_kQZ0B3ruoNSeZOaKR6M93PJ-z1jlArXl7_H4EEU/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Jx3cErj28ZpTGkbvc/oC9e3P6zYFwd0QEJOFMm3mYNhK4cyPfDilgcK5Z+xjVOEYZEIvwa3+2ls44xx8A7Pp3KUhra8x5SSOUTdlZh3CHkxLeECo3Ze6BiDUoHaS7ogTGeDMLwCtMOkYtN1viFYpwZ3GORV/j/R1f8DB3pkS8Vs=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

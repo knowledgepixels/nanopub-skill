@@ -1,0 +1,59 @@
+@prefix this: <https://w3id.org/np/RAFSAWMvbQqxsx5KKvLtdvpUJkjWOb4xHrkOphUpzeBww> .
+@prefix sub: <https://w3id.org/np/RAFSAWMvbQqxsx5KKvLtdvpUJkjWOb4xHrkOphUpzeBww/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:fair-compendium-review-comments-view a <https://w3id.org/kpxl/gen/terms/ResourceView>,
+      <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RA8JBceIjK9NXJJSMA2danvH0i9Q71gCI3Ce1696Mi4Zs/fair-compendium-review-comments-view-kind>;
+    dct:title "🧐 Review comments";
+    rdfs:label "FAIR Compendium review comments view";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/FAIRCompendiumOfContributedKnowledge>;
+    <https://w3id.org/kpxl/gen/terms/hasDisplayWidth> <https://w3id.org/kpxl/gen/terms/ColumnWidth06of12>;
+    <https://w3id.org/kpxl/gen/terms/hasPageSize> "3";
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.7.reviews";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAd_TLY_k69f5UaPXvkec-q8Y94sVRpg8-jmyPou1POL8/get-fair-compendium-review-comments>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "partid" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-27T17:17:34.777+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:fair-compendium-review-comments-view;
+    npx:introduces <https://w3id.org/np/RA8JBceIjK9NXJJSMA2danvH0i9Q71gCI3Ce1696Mi4Zs/fair-compendium-review-comments-view-kind>;
+    npx:supersedes <https://w3id.org/np/RA7WlFOv4AeZfZWM747MBek-dzy69eSiQp7OVaKNqGntA>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAr1Krh98VGXbIc7JVSJpH24bWi2JEVRYfvJ_KJq0wJtc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "cNJIMtdP8XO/YYDos0Jb6LfxWjJ3nw6immaVHrOwFImQR0ILP982dDVIt5kB7N3YiTgE6GtQ3jUlfVAD/rIwalv8YUr85iueCZAjrUoFJc6vYmg+gI35z0z48q4D6ZvtETCFmpa9vxEYfkAyUuJ++UXjUYuoaPZ/UPNhPCbIBiE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

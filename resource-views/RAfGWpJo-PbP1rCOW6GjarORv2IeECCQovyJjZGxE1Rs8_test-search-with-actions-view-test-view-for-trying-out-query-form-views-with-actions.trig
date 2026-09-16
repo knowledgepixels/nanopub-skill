@@ -1,0 +1,71 @@
+@prefix this: <https://w3id.org/np/RAfGWpJo-PbP1rCOW6GjarORv2IeECCQovyJjZGxE1Rs8> .
+@prefix sub: <https://w3id.org/np/RAfGWpJo-PbP1rCOW6GjarORv2IeECCQovyJjZGxE1Rs8/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:comment-action a gen:ViewResultAction;
+    rdfs:label "💬 comment on this resource";
+    gen:hasActionTemplate <http://purl.org/np/RA3gQDMnYbKCTiQeiUYJYBaH6HUhz8f3HIg71itlsZDgA>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "thing" .
+  
+  sub:comment-entry-action a gen:ViewEntryAction;
+    rdfs:label "💬 comment";
+    gen:hasActionTemplate <http://purl.org/np/RA3gQDMnYbKCTiQeiUYJYBaH6HUhz8f3HIg71itlsZDgA>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "np:thing";
+    gen:hasActionTemplateTargetField "void" .
+  
+  sub:test-search-actions-view a gen:NanopubSetView, gen:QueryFormView, gen:ResourceView;
+    dct:description "This is a test view for trying out query-form views (gen:QueryFormView) combined with view actions: a top-level comment action and a per-row comment action on the full-text search results, shown as a nanopub set.";
+    dct:isVersionOf <https://w3id.org/np/RAcU0NlvqiLk-jSoRj7a1PzDGiyr8G_Vp-7FJCv2N0vLA/test-search-actions-view-kind>;
+    dct:title "🧪 Test Search With Actions";
+    rdfs:label "Test Search With Actions View (test view for trying out query-form views with actions)";
+    gen:appliesToInstancesOf gen:IndividualAgent, gen:MaintainedResource, gen:Space;
+    gen:hasStructuralPosition "5.5.testsearchactions";
+    gen:hasViewAction sub:comment-action, sub:comment-entry-action;
+    gen:hasViewQuery <https://w3id.org/np/RAxdh5xkc6K6SMLY23yKu__zTWJPXeRFc0qgNNxkbOkpY/fulltext-search> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-07T16:35:00Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:test-search-actions-view;
+    npx:introduces <https://w3id.org/np/RAcU0NlvqiLk-jSoRj7a1PzDGiyr8G_Vp-7FJCv2N0vLA/test-search-actions-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAcU0NlvqiLk-jSoRj7a1PzDGiyr8G_Vp-7FJCv2N0vLA>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ZAv6/kk7WUgFM0OPAsmV1U7ZdMtdq43ZlcEX3zE0lQUUNAyRb09/edSUR59NLzro2htAp4TpNYTEebO6hHP02Gakuz0F4fFIY8EiGZwZNRu7S1fcIg2V0t7FszyCer9AaznYjV4sgIh4r0KD8FVrOA6mhAnVoNDlt/G6mAC/KyA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

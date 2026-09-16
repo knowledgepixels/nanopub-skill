@@ -1,0 +1,137 @@
+@prefix this: <https://w3id.org/np/RA702yt-kfrD9yRKDkBC1Z7qWmknFpLzO0_Loc4WLKgXQ> .
+@prefix sub: <https://w3id.org/np/RA702yt-kfrD9yRKDkBC1Z7qWmknFpLzO0_Loc4WLKgXQ/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-fip-declared-fsrs a grlc:grlc-query;
+    dct:description "For a FAIR Implementation Profile (FIP) or reference FIP (rFIP), lists every FAIR Supporting Resource (FSR) it declares: the FSR (labelled from its metadata nanopublication, or by its identifier), its FSR types, the FIP question(s) it was declared under with the FAIR principle they refer to, the kind of use (current use, planned use, planned replacement), and the declaration nanopublication. A FIP is resolved through its declaration index; a FIP without an index (such as an rFIP) through the declarations of the same community. For such a FIP the declaration version is chosen by ranking the community's declaration versions: a version equal to the FIP's own schema:version wins, otherwise the most recently published one is used. Versions are compared after stripping a leading \"v\" or \"v.\", because the FIP wizard writes the profile version and the declaration versions in different formats (e.g. \"0.0.2\" vs \"v0.1.1\") and does not keep their numbering in step; without this fallback such an rFIP lists no FSRs at all. Rows are grouped by FSR. The five declaration predicates are matched in a single scan through a two-column VALUES block binding the predicate and its use label together, rather than as a five-way UNION over the declaration assertion graphs; this is result-identical and roughly four times faster on FIPs with many declarations.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the FSRs declared in a FIP";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix schema: <https://schema.org/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+prefix tpff: <https://w3id.org/fair/3pff/>
+prefix search: <http://www.openrdf.org/contrib/lucenesail#>
+
+select ?fsr (coalesce(min(?fsr_label_x), replace(str(?fsr), \"^.*[/#]\", \"\")) as ?fsr_label)
+  (group_concat(distinct str(?type); separator=\" \") as ?types_multi_iri) (group_concat(distinct ?type_label; separator=\"\\n\") as ?types_label_multi)
+  (group_concat(distinct ?qcode; separator=\", \") as ?questions)
+  (group_concat(distinct str(?principle); separator=\" \") as ?principles_multi_iri) (group_concat(distinct ?principle_label; separator=\"\\n\") as ?principles_label_multi)
+  (group_concat(distinct ?use; separator=\", \") as ?use)
+  (min(?dnp) as ?np) (\"^\" as ?np_label)
+where {
+  graph npa:graph {
+    ?fipnp npx:introduces ?_fip_iri ; np:hasAssertion ?fa ; npa:hasValidSignatureForPublicKey ?fpk .
+    filter not exists { ?fx npx:invalidates ?fipnp ; npa:hasValidSignatureForPublicKey ?fpk . }
+  }
+  graph ?fa { ?_fip_iri fip:declared-by ?community . optional { ?_fip_iri schema:version|<http://schema.org/version> ?version . } }
+  {
+    graph ?fa { ?_fip_iri fip:has-declaration-index ?index . }
+    graph npa:networkGraph { ?index npx:includesElement ?dnp . }
+  } union {
+    graph ?fa { filter not exists { ?_fip_iri fip:has-declaration-index ?ix . } }
+    {
+      select ?community (?dvC as ?chosenRawVersion) where {
+        graph npa:graph { ?fnpB npx:introduces ?_fip_iri ; np:hasAssertion ?faB . }
+        graph ?faB {
+          ?_fip_iri fip:declared-by ?community .
+          optional { ?_fip_iri schema:version|<http://schema.org/version> ?vB . }
+        }
+        bind(replace(str(coalesce(?vB, \"\")), \"^[vV][.]?\", \"\") as ?nverB)
+        graph ?daC { ?declC fip:declared-by ?community ; schema:version|<http://schema.org/version> ?dvC . }
+        graph npa:graph { ?dnpC np:hasAssertion ?daC ; npx:hasNanopubType fip:FIP-Declaration ; dct:created ?dtC . }
+        bind(if(replace(str(?dvC), \"^[vV][.]?\", \"\") = ?nverB, 0, 1) as ?pref)
+      } order by ?pref desc(?dtC) limit 1
+    }
+    graph ?da0 { ?decl0 fip:declared-by ?community ; schema:version|<http://schema.org/version> ?chosenRawVersion . }
+    graph npa:graph { ?dnp np:hasAssertion ?da0 . }
+  }
+  graph npa:graph { ?dnp np:hasAssertion ?da . }
+  values (?useProp ?use) {
+    (fip:declares-current-use-of \"current use\")
+    (fip:declares-planned-use-of \"planned use\")
+    (fip:declares-planned-replacement-of \"planned replacement\")
+    (fip:declares-replacement-from \"replacement from\")
+    (fip:declares-replacement-to \"replacement to\")
+  }
+  graph ?da {
+    ?decl a fip:FIP-Declaration ; fip:refers-to-question ?question ; ?useProp ?fsr .
+  }
+  graph npa:graph {
+    ?dnp npx:hasNanopubType fip:FIP-Declaration ; npa:hasValidSignatureForPublicKey ?dpk .
+    filter not exists { ?dx npx:invalidates ?dnp ; npa:hasValidSignatureForPublicKey ?dpk . }
+  }
+  bind(replace(str(?question), \"^.*FIP-Question-\", \"\") as ?qcode)
+  optional { graph npa:graph { ?qnp2 npx:introduces ?question ; np:hasAssertion ?qa2 . } graph ?qa2 { ?question fip:refers-to-principle ?principle . } }
+  bind(replace(str(?principle), \"^.*/\", \"\") as ?principle_label)
+  optional {
+    values ?p { npx:introduces npx:describes }
+    graph npa:graph {
+      ?fsrnp ?p ?fsr ; rdfs:label ?fsr_label_x ; npx:hasNanopubType ?sft ; npa:hasValidSignatureForPublicKey ?spk .
+      values ?sft { fip:FAIR-Enabling-Resource fip:FAIR-Supporting-Resource }
+      filter not exists { ?sx npx:invalidates ?fsrnp ; npa:hasValidSignatureForPublicKey ?spk . }
+    }
+    optional {
+      graph npa:graph { ?fsrnp npx:hasNanopubType ?type . }
+      filter(strstarts(str(?type), \"https://w3id.org/fair/fip/terms/\"))
+      filter(?type not in (fip:FAIR-Enabling-Resource, fip:FAIR-Supporting-Resource, fip:Available-FAIR-Enabling-Resource, fip:Available-FAIR-Supporting-Resource, fip:FAIR-Enabling-Resource-to-be-Developed, fip:FAIR-Supporting-Resource-to-be-Developed))
+      bind(replace(replace(str(?type), \"^.*/\", \"\"), \"-\", \" \") as ?type_label)
+    }
+  }
+} group by ?fsr order by ?fsr_label
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-16T10:40:54Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-fip-declared-fsrs;
+    npx:supersedes <https://w3id.org/np/RAo_olh20wOiS7izMJNfkhqqd7pGMioAdYluQB3FCbpbw>;
+    rdfs:label "Get the FSRs declared in a FIP";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzZAkv4Mu1YSUxQMriBnhYunqosX5wpuQ3FjUyzW8wTC51wjCmhsChyhS+mCx7Od+2MTDpdhxDWA+pH1r9AX508X2rIY/sbpMS+pd56e0qKPQ0t4folln1TgamPN9iOlY/yLc2x27AdipWIGXUdtL2iAcb+P/Y5dQS2AkHMS3lP2e5JBL5/bD/10qvTLKvdsqIKts8qjuLpxr9CFbsS2gLjMkXL5D2IsJ0cL5sgmIfS1inLVxIfXrS/OgqYNFqeNznUYCVWfo0g7DKjnjiICz3omeQeJFLYwlJ6PhUhYDQS6O318DGwUCwhnuXbBbwL9evZa2I/0Pwu5xpZdNLYJ5UwIDAQAB";
+    npx:hasSignature "hFiQMXIwQPRu6wP9J3VbQKVKpy8672BKuz7DH7zt7JfOcD0BFNcu1LXTv7yVx6MijUHCIM79/ImypJR+XayxXaJy+HZtmc2ZCDKMy/cjrI/KBLWQkyDgJ/2KSBqRi24YsB75AQUm/6Z83caRr67zwvQAuh12bj/JHh0DgLbXKcyF/9uabPCj+sJpv6Zy8onE03Q3Vu4HL85nHgEq1diVKhHahGlKVYhwzFIUsRhfvwxYHmbhEUpOwPtXtEBmG2WZeXag143D1ggspUQ+YyRcSlytrn4jv5EQSUxhQ/MV6GBec7r6SpzvDGYsWk3LDd4ScDbxA4tu8M62dAjootsgjA==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot> .
+}
+

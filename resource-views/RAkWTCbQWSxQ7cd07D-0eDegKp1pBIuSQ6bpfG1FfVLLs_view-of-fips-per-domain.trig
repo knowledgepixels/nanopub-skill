@@ -1,0 +1,61 @@
+@prefix this: <https://w3id.org/np/RAkWTCbQWSxQ7cd07D-0eDegKp1pBIuSQ6bpfG1FfVLLs> .
+@prefix sub: <https://w3id.org/np/RAkWTCbQWSxQ7cd07D-0eDegKp1pBIuSQ6bpfG1FfVLLs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:fip-by-domain a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf sub:fip-by-domain-kind;
+    dct:title "FIPs";
+    rdfs:label "View of FIPs per domain";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <http://www.wikidata.org/entity/Q1047113>;
+    <https://w3id.org/kpxl/gen/terms/appliesToNamespace> <http://aims.fao.org/aos/agrovoc/>,
+      <http://edamontology.org/>, <http://purl.obolibrary.org/obo/>, <http://www.fairsharing.org/ontology/subject/>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.2.fipByDomain.1";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAZJDpBRntHn849-15fSvHom2o3872I2Ry1zmfxGenQjk/fips-by-domain>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "domain" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RAZJDpBRntHn849-15fSvHom2o3872I2Ry1zmfxGenQjk/fips-by-domain>
+    nt:hasLabelFromApi "FIP by domain - This query returns the FAIR Implementation Profiles (FIPs) per scientific dom..." .
+  
+  this: dct:created "2025-12-08T20:53:29.703Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:fip-by-domain;
+    npx:introduces sub:fip-by-domain-kind;
+    npx:supersedes <https://w3id.org/np/RAYBSmCJJ_KO8kb3MAzfQSC0KyoYgPu-D-Dp3ycEM4n4E>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAMwJK-KwLZao9NyIJ3QPE6AK_MasTNoHlp-PoUEavR2c> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "sNxJwIb78po7wozWAYVpkZ98PzfWx8Vtu8ApAfU4JtlTDGL1vW502jMP7Tiu1ajNJyy4CL+HU/2T1ShTw5OqpCa5b/wF1JL3/eF42qbah3RoXnXv9IqmfymWpGnPdyNd7adljxr/s/XfyzNZ3Q34v34LibVF18qpU//BUuBvMkE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,84 @@
+@prefix this: <https://w3id.org/np/RA7eYpQFqY_FrVJzLQZbrQMCgL2hR1806W1GNmS-bz0sY> .
+@prefix sub: <https://w3id.org/np/RA7eYpQFqY_FrVJzLQZbrQMCgL2hR1806W1GNmS-bz0sY/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:add-part-view-display-action a gen:ViewResultAction;
+    rdfs:label "➕ add part-level view display";
+    gen:hasActionTemplate <https://w3id.org/np/RAIrUZ9TQfAYeun74aM_BicxYF4uU6GkL6BthX4WdI9dA>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "resource";
+    gen:isVisibleTo gen:MaintainerRole .
+  
+  sub:override-action a gen:ViewEntryAction;
+    rdfs:label "♻️ override...";
+    gen:hasActionTemplate <https://w3id.org/np/RAIrUZ9TQfAYeun74aM_BicxYF4uU6GkL6BthX4WdI9dA>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "override_target:@override override_template:@template";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:MaintainerRole .
+  
+  sub:override-preset-view-action a gen:ViewEntryAction;
+    rdfs:label "♻️ override...";
+    gen:hasActionTemplate <https://w3id.org/np/RAIrUZ9TQfAYeun74aM_BicxYF4uU6GkL6BthX4WdI9dA>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "override_view:view";
+    gen:hasActionTemplateTargetField "resource";
+    gen:isVisibleTo gen:MaintainerRole .
+  
+  sub:part-view-displays-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAznY5UHHhAd05TOHwNTgmBdkU8CDneVoEp_WgkdkzyGg/part-view-displays-view-kind>;
+    dct:title "⬜ View displays";
+    rdfs:label "Part view displays view";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:hasStructuralPosition "5.5.viewDisplays";
+    gen:hasViewAction sub:add-part-view-display-action, sub:override-action, sub:override-preset-view-action;
+    gen:hasViewQuery <https://w3id.org/np/RAsdgRZ1Mj7fkgUH8WJbf5tlLakWkl8BMQtR0ISFS9LtE/list-part-view-displays>;
+    gen:hasViewQueryTargetField "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-31T08:04:22Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:part-view-displays-view;
+    npx:introduces <https://w3id.org/np/RAznY5UHHhAd05TOHwNTgmBdkU8CDneVoEp_WgkdkzyGg/part-view-displays-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAkVfABJ--_FstM8Bjvv431S9HI6uMIy5N5fvkhAkc_Vo>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "G1x9UR7SUGOdi8V/u6lA8VJ0iHw8ybRHqv/RfJYfVfyOm/UQ1p9V00Nqq8W3ZmduTunhAFzqs0QoJQv9Ch+eSek9YJ7Ubu4L8NBWroJQA7j3UzuXqrUOKhcMjX26v4i8T+rosad3VZ96bQHUCDe1J2twSvHuYYg6SrHaPW5OySo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAIrUZ9TQfAYeun74aM_BicxYF4uU6GkL6BthX4WdI9dA> nt:hasLabelFromApi
+      "Displaying a view for the parts of a resource" .
+}
+

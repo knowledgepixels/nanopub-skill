@@ -1,0 +1,53 @@
+@prefix this: <https://w3id.org/np/RAVDKcUeSYBUm4AKIZYLcyFOycziB3qplz2cf9PlnAE60> .
+@prefix sub: <https://w3id.org/np/RAVDKcUeSYBUm4AKIZYLcyFOycziB3qplz2cf9PlnAE60/> .
+@prefix schema: <https://schema.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:claim-actions-view a gen:PlainParagraphView, gen:ResourceView;
+    dct:isVersionOf sub:claim-actions-view-kind;
+    dct:title "Claim actions";
+    rdfs:label "Linking actions for a claim";
+    gen:appliesToInstancesOf schema:Statement;
+    gen:hasPageSize "1";
+    gen:hasStructuralPosition "4.3.actions";
+    gen:hasViewQuery <https://w3id.org/np/RACBAezp4zXMQHIebzgvA46N_4TeuwpV8GzNBPe5Pwhik/get-claim-actions>;
+    gen:hasViewQueryTargetField "claim" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-09-01T14:07:41Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:claim-actions-view;
+    npx:introduces sub:claim-actions-view-kind;
+    rdfs:label "Claim actions view" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+i9DV8ynzO944pYkYsDwtlqJHuk+b7FQt6Bb4TIQSDX3jGUURn6WpaNwESHmgMLWSydaH5XlabMzuqpPL4iyB+IAzvwIxdJBLhe39EQMu2j+FZ/5d/xu/gO3nZw2KoEvJ7cJisabuI05OylIRSJ+OG5CmzFxnjojUEJeCFi1njY1InhXrb0yHud9b1ifzweoN6YYOBecKs1gTOaT2bf+t4Wgzg3M0PmRVZ4F0OALsnh4T5+x7kFtiPcDKNpORi585JjKCZ4kczIF6oUKcwgC0kmIY97jtLqSLcXRkxHx5CDI6qz4XlRFs1ZbCUdSlzjdPZAkaBcNem1gIhWzkHkEnQIDAQAB";
+    npx:hasSignature "rzrQM13LsSJKZDO2s6pFS7LIyEQAFJGwdJ3rqXRXphxd/9MDBdm7ohkpZEUfHX4RpFZmFmLLXhszmSpsKIpFpstPM1Lyh8nh7ClxGWwlCSRj5Z3Ee07xeWo9O2iaYeLbTnV2W8a2VjnvG6FzH3Ak2MWVIoV/Y3UtJ9BtlKQLXS14t1S8lvohKbn+xcSc/ZKFIMrEH9vljgNgMxm1SSt4TtaHcyiS72aVe7JAJLLcuAeOnU1w2tT8QTj0uFx0BiVavHOZkwIbtWL7lC1zPhrlsTmhvooISF0CwR/RFSimVjljOcEWzFZvijU26UZPSBZJvYFgBz5MJpHq3F058x8vyw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

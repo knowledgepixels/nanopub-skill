@@ -1,0 +1,99 @@
+@prefix this: <https://w3id.org/np/RAbaF_1-Fpdy5FHPHhstbk3IbXWJ8VKWBOlDSIj8eEgv4> .
+@prefix sub: <https://w3id.org/np/RAbaF_1-Fpdy5FHPHhstbk3IbXWJ8VKWBOlDSIj8eEgv4/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assignAction a gen:ViewEntryAction;
+    rdfs:label "assign...";
+    gen:hasActionTemplate <https://w3id.org/np/RAFv-eKTeLzE7W2_7NtOBoYzmBe-iDGjAkqOKH0mgNpV4/template>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "assign_target:suggestion";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:assigned-nanosuggestions-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAOtMwtqhadW8gAAsnELR48YVdp30rLxkkosBKl_awLa4/assigned-nanosuggestions-view-kind>;
+    dct:title "📌 Assigned nanosuggestions";
+    rdfs:label "Assigned nanosuggestions view";
+    gen:appliesToInstancesOf gen:IndividualAgent;
+    gen:governedBy <https://w3id.org/spaces/nanosuggestions>;
+    gen:hasStructuralPosition "4.2.assignedNanosuggestions";
+    gen:hasViewAction sub:assignAction, sub:commentAction, sub:reassignAction, sub:reportAction,
+      sub:statusAction;
+    gen:hasViewQuery <https://w3id.org/np/RAlNuH3cj4ZNmkZMyoeHft28CfD71ImIyWlulX9rXZTJU/get-nanosuggestions-for-assignee>;
+    gen:hasViewQueryTargetField "resource" .
+  
+  sub:commentAction a gen:ViewEntryAction;
+    rdfs:label "comment...";
+    gen:hasActionTemplate <https://w3id.org/np/RAUEWFWLBntdwIbOq9kvsGY8r183GoE5u5aUB8WAWOQNw/template>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "suggestion:target";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:reassignAction a gen:ViewEntryAction;
+    rdfs:label "reassign...";
+    gen:hasActionTemplate <https://w3id.org/np/RAFv-eKTeLzE7W2_7NtOBoYzmBe-iDGjAkqOKH0mgNpV4/template>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "fill_source:@use-a";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:reportAction a gen:ViewResultAction;
+    rdfs:label "report...";
+    gen:hasActionTemplate <https://w3id.org/np/RAVAdO8EkzVyV2ZGmrYvgfBSoi357QFqbJpvwI0sLk4V8/template>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:statusAction a gen:ViewEntryAction;
+    rdfs:label "change status...";
+    gen:hasActionTemplate <https://w3id.org/np/RAcigohADerlCWLymsIKgDx2yui7IR-F_oHNBzPs-57dI/template>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "suggestion:suggestion";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:EveryoneRole .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-02T13:07:26Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:assigned-nanosuggestions-view;
+    npx:supersedes <https://w3id.org/np/RA4cqkzXE0J6PTOPJiIVZk-h_D8Pn6eHKDWIGm68X-pJE>;
+    rdfs:label "Assigned nanosuggestions view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAr1Krh98VGXbIc7JVSJpH24bWi2JEVRYfvJ_KJq0wJtc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "pEp72RZwSQWjhGJy3RbdVqTkwPVz/Ghei3T3BzUAdUdrZLr2XC1yjY45hXx2DY6065uxQu/sTq5f8+lDo+I93fN9UbYc1lFUkYBV9XaBb+64OvlD3YQ/UgBsVH2XYWR0daOg3+gEW0gU67dx9qQpLOEK0DeEm8bl9U+lbuRW4dE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

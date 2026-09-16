@@ -1,0 +1,84 @@
+@prefix this: <https://w3id.org/np/RAOnWLLWap_Kn78gmGw1WdZoLmkjygxSe3ifqdXZ5DpGA> .
+@prefix sub: <https://w3id.org/np/RAOnWLLWap_Kn78gmGw1WdZoLmkjygxSe3ifqdXZ5DpGA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-smiley-svg a grlc:grlc-query;
+    dct:description "Returns the smiley face from the OntoSVG repository as RDF, for an SVG view to render (see docs/svg-views.md in the nanodash repo). A CONSTRUCT query whose result graph describes the image in the OntoSVG vocabulary -- elements as resources typed with an OntoSVG class, attributes as the svg: properties holding literals, children as the numbered rdf:_1, rdf:_2, ... properties, and character data as a node carrying its string in xml:fragment -- which Nanodash serializes to SVG markup, sanitizes and embeds, instead of the query assembling that markup as a string itself. The figure is constant, so the query takes no parameters and its WHERE clause is empty: it is the smallest thing that exercises the RDF form of an SVG view end to end, and a worked reference for writing one. Note that the <title> is svg:Title holding an svg:Text child, and that a text label is svg:TextElement (not svg:Text, which is the character data inside it).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get smiley SVG";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix svg: <http://www.w3.org/SVG/model/def/>
+prefix xml: <http://www.w3.org/XML/model/def/>
+prefix smiley: <https://w3id.org/kpxl/gen/svg/smiley#>
+
+construct {
+  smiley:image a svg:Svg ;
+    xml:xmlns \"http://www.w3.org/2000/svg\" ;
+    svg:viewBox \"0 0 200 200\" ;
+    svg:width \"200\" ;
+    svg:height \"200\" ;
+    rdf:_1 smiley:caption ;
+    rdf:_2 smiley:face ;
+    rdf:_3 smiley:left-eye ;
+    rdf:_4 smiley:right-eye ;
+    rdf:_5 smiley:mouth .
+
+  smiley:caption a svg:Title ;
+    rdf:_1 smiley:caption-text .
+  smiley:caption-text a svg:Text ;
+    xml:fragment \"A smiley face\" .
+
+  smiley:face a svg:Circle ;
+    svg:cx \"100\" ; svg:cy \"100\" ; svg:r \"90\" ;
+    svg:fill \"yellow\" ; svg:stroke \"black\" ; svg:stroke-width \"2\" .
+
+  smiley:left-eye a svg:Circle ;
+    svg:cx \"70\" ; svg:cy \"70\" ; svg:r \"10\" ; svg:fill \"black\" .
+
+  smiley:right-eye a svg:Circle ;
+    svg:cx \"130\" ; svg:cy \"70\" ; svg:r \"10\" ; svg:fill \"black\" .
+
+  smiley:mouth a svg:Path ;
+    svg:d \"M 60 120 Q 100 150 140 120\" ;
+    svg:fill \"none\" ; svg:stroke \"black\" ; svg:stroke-width \"3\" .
+}
+where {}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-09-14T10:19:34Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-smiley-svg;
+    rdfs:label "Get smiley SVG" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+i9DV8ynzO944pYkYsDwtlqJHuk+b7FQt6Bb4TIQSDX3jGUURn6WpaNwESHmgMLWSydaH5XlabMzuqpPL4iyB+IAzvwIxdJBLhe39EQMu2j+FZ/5d/xu/gO3nZw2KoEvJ7cJisabuI05OylIRSJ+OG5CmzFxnjojUEJeCFi1njY1InhXrb0yHud9b1ifzweoN6YYOBecKs1gTOaT2bf+t4Wgzg3M0PmRVZ4F0OALsnh4T5+x7kFtiPcDKNpORi585JjKCZ4kczIF6oUKcwgC0kmIY97jtLqSLcXRkxHx5CDI6qz4XlRFs1ZbCUdSlzjdPZAkaBcNem1gIhWzkHkEnQIDAQAB";
+    npx:hasSignature "2ltofV4pUWVE3gSB65hSvn02Oq+Xc345xA3Nv8PFlPApDfL2vWqfWWrgR0e7uMWnqU8zhZH12XyEqBs2k6jn9ezoofwFDJMM7bwsseuH0AtS13MJ78JN4Svl6XaG4HJFSiPFyDEZdP5qOonGPVYJcNxZqTZfKhDKs8pICW1oruhhjuZ/x5ct9FveLcPnr5Pl+lTOWUUFhsHWjbqgQ2uXHbjs/MW3p83+hywDS16T0kOPxtzfEyprSajVvGm/LX/sWIOSp4MqpjjW6mM946G4b8HSRLF9OV4mhmbfLLEHR7yAFsaYa6CIx4IgtnHJ1Q44HEKwuZAF67SlsL/1lrNyXA==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

@@ -1,0 +1,58 @@
+@prefix this: <https://w3id.org/np/RAqS-_eVung50nrGaVFGChmQNG6RKvjBCugw2zWibA_UE> .
+@prefix sub: <https://w3id.org/np/RAqS-_eVung50nrGaVFGChmQNG6RKvjBCugw2zWibA_UE/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:concept-info-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:skos-concept-info-view-kind;
+    dct:title "ℹ️ Info";
+    rdfs:label "SKOS concept info view";
+    gen:appliesToInstancesOf skos:Concept;
+    gen:hasDisplayWidth gen:ColumnWidth06of12;
+    gen:hasStructuralPosition "3.1.info";
+    gen:hasViewQuery <https://w3id.org/np/RAvq8CBvO23dCTVaKBxH_1JDFoqkpiwjnPjqCZzPrGCN4/get-skos-concept-info>;
+    gen:hasViewQueryTargetField "concept" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-04T06:15:20Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:concept-info-view;
+    npx:introduces sub:skos-concept-info-view-kind;
+    prov:wasDerivedFrom <https://w3id.org/np/RAdKAPyufPTH7VWCZEZas-anYqL4MaS7R2FfzORkW2wLk>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA7j_m2mlg_mJaCD0mvB2POXSa9rGjW3fiJa0AKmmQJGc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "gJzrIPpqxTJ7814RYyFtrsXN+IjeTA6s9Yr2sh882BXsBDF9eRQ1agpFZI8d4cDWyCmbAXn1BvoznvQlf2boYJ5/tU6BINSDRRwQJ27M2jigaW7Pl6MIjytDu+i7YrLLf8ImmnJOVGzEaGszF9oCyvLyhwo2xdOzThxVdmWP4G0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

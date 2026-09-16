@@ -1,0 +1,108 @@
+@prefix this: <https://w3id.org/np/RAPnE_EOE3CxTu11pxeLUijyBsqF-B1vgksdFauzPCXbg> .
+@prefix sub: <https://w3id.org/np/RAPnE_EOE3CxTu11pxeLUijyBsqF-B1vgksdFauzPCXbg/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-general-statements-of-space a grlc:grlc-query;
+    dct:description "Returns the general statements that the projects of a space support, one row per statement, with the number of supporting projects, the projects themselves as links labelled with the last segment of their IRI (the grant number for the ZonMw programme spaces), and the number of more specific statements through which the support arrives. A statement counts as supported by a project when it generalises, via hycl:hasMoreGeneralMeaningThan, a statement that declares itself relevant for that project; the target may be a specific finding or another general statement, which is how a two-level hierarchy still resolves to the projects underneath it. Programme-wide statements supported by several projects therefore sort to the top, followed by each project's own general statements. Projects are the given space itself and every space whose IRI extends it with a slash, the same sub-space convention the sibling 'all projects' views use, and only nanopublications signed by a current admin, maintainer or member of one of those spaces are counted, with invalidated, superseded and example nanopublications skipped. The generalisation is matched one step at a time rather than with a property path, because a path inside a named graph would have to stay within a single nanopublication while these links are each asserted in their own. This is the unthresholded sibling of get-shared-statements-of-space, which keeps only the statements more than one project reaches.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the general statements that the projects of a space have added support to";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix hycl: <http://purl.org/petapico/o/hycl#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?statement ?statement_label ?projects ?project_multi_iri ?project_label_multi ?supporting_statements
+where {
+  {
+    select ?statement ?statement_label
+           (count(distinct ?project) as ?projects)
+           (count(distinct ?supported) as ?supporting_statements)
+           (group_concat(distinct str(?project); separator=\"\\n\") as ?project_multi_iri)
+           (group_concat(distinct ?projectLabel; separator=\"\\n\") as ?project_label_multi)
+    where {
+      values ?_space_multi_iri {}
+      {
+        select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            select ?mpk where {
+              values ?_space_multi_iri {}
+              graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+              graph ?stateG {
+                ?ri a gen:RoleInstantiation ; npa:forSpace ?sp ; npa:forAgent ?agent ; npa:hasRoleType ?roleType .
+                filter(?roleType in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+              }
+              filter(strstarts(str(?sp), str(?_space_multi_iri)))
+            }
+          }
+        }
+      }
+      graph npa:graph {
+        ?gnp np:hasAssertion ?ga ; np:hasPublicationInfo ?gpi ; npa:hasValidSignatureForPublicKeyHash ?gpk .
+        filter not exists { ?gInv npx:invalidates ?gnp ; npa:hasValidSignatureForPublicKeyHash ?gpk }
+        filter not exists { ?gSup npx:supersedes ?gnp }
+        filter not exists { ?gnp npx:hasNanopubType npx:ExampleNanopub }
+      }
+      filter(contains(?memberPubkeys, ?gpk))
+      graph ?ga { ?statement hycl:hasMoreGeneralMeaningThan ?supported . }
+      graph npa:graph {
+        ?snp np:hasAssertion ?sa ; npa:hasValidSignatureForPublicKeyHash ?spk .
+        filter not exists { ?sInv npx:invalidates ?snp ; npa:hasValidSignatureForPublicKeyHash ?spk }
+        filter not exists { ?sSup npx:supersedes ?snp }
+      }
+      filter(contains(?memberPubkeys, ?spk))
+      graph ?sa { ?supported gen:isRelevantFor ?project . }
+      filter(?project = ?_space_multi_iri || strstarts(str(?project), concat(str(?_space_multi_iri), \"/\")))
+      optional { graph ?gpi { ?statement rdfs:label ?lbl } }
+      bind(coalesce(?lbl, replace(replace(replace(replace(replace(replace(replace(replace(str(?statement), \"^.*/aida/\", \"\"), \"[+]\", \" \"), \"%2C\", \",\"), \"%3A\", \":\"), \"%28\", \"(\"), \"%29\", \")\"), \"%2F\", \"/\"), \"%25\", \"%\")) as ?statement_label)
+      bind(replace(str(?project), \"^.*/\", \"\") as ?projectLabel)
+    }
+    group by ?statement ?statement_label
+  }
+}
+order by desc(?projects) desc(?supporting_statements) ?statement_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-13T06:06:15Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-general-statements-of-space;
+    rdfs:label "Get the general statements that the projects of a space have added support to";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ocV8Q0ScqhbdoGiFbwIk/P9k+n4ytaDfOOYJzuEgo+8iIqQeFVgsAyPRPamgfczojIXqUkLdkBtCuKDoFlrjFvZ6z3FqRHdU8RzwN45jOS2+rvkDsjqV2UCAcjrxJkjEb+1iwMr/+LX/cmYJ4ChGzMatemhEPagEwtd5SgvH/A8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}

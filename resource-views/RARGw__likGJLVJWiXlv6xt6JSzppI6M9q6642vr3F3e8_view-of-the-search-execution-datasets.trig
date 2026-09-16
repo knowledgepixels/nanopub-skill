@@ -1,0 +1,69 @@
+@prefix this: <https://w3id.org/np/RARGw__likGJLVJWiXlv6xt6JSzppI6M9q6642vr3F3e8> .
+@prefix sub: <https://w3id.org/np/RARGw__likGJLVJWiXlv6xt6JSzppI6M9q6642vr3F3e8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    rdfs:label "add...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RAV_H3udaSzxYOhhR0t-q7PKS6URwauD_Z5sMLbHmM2x0>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "systematicReview" .
+  
+  sub:search-exec-dataset-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf sub:search-exec-dataset-view-kind;
+    dct:title "Search execution datasets";
+    rdfs:label "View of the search execution datasets";
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.5.searchExecutions.1";
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:addAction;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RApcnZRlw-6D-3l91yGgSBQZ0xJqCt6smQQ5TIqn90FFY/get-search-exec-dataset>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "systematicReview" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-01-13T07:07:05.260Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:search-exec-dataset-view;
+    npx:introduces sub:search-exec-dataset-view-kind;
+    npx:supersedes <https://w3id.org/np/RAH_fj6C1Arfr_5LaMwfY8lwd38QcWpdrlsUCcgK7PWPM>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAMwJK-KwLZao9NyIJ3QPE6AK_MasTNoHlp-PoUEavR2c> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "yLgDhjztMye4TUjJuvkfjDa2X6DFsxXnWpriuAFEoXfk3Ex+FxWb1z7pecDuF0Nzm+wxBygFsMy/5n6WWWxlL14b2PZWEW5K0EEKx0dLo6qPR+G8pWxcPjDFyoXjlBseW21yZG9EjT/5HSMS8mism4fbhsH2Pp8zusddl0VTezg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAV_H3udaSzxYOhhR0t-q7PKS6URwauD_Z5sMLbHmM2x0> nt:hasLabelFromApi
+      "Declaring a PRISMA search execution dataset - This template documents search execution and initial study selection for syst..." .
+  
+  <https://w3id.org/np/RApcnZRlw-6D-3l91yGgSBQZ0xJqCt6smQQ5TIqn90FFY/get-search-exec-dataset>
+    nt:hasLabelFromApi "Get search execution dataset - This query returns the search execution dataset for the given systematic review." .
+}
+

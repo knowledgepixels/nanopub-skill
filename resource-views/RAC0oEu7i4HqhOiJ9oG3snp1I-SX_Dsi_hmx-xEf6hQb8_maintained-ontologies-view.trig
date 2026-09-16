@@ -1,0 +1,64 @@
+@prefix this: <https://w3id.org/np/RAC0oEu7i4HqhOiJ9oG3snp1I-SX_Dsi_hmx-xEf6hQb8> .
+@prefix sub: <https://w3id.org/np/RAC0oEu7i4HqhOiJ9oG3snp1I-SX_Dsi_hmx-xEf6hQb8/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:maintained-ontologies-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAmtSm3jiq1dsACLG3R30PKqtLpgwnoRPa_LeOSHlcGAk/maintained-ontologies-view-kind>;
+    dct:title "📚 Maintained ontologies";
+    rdfs:label "Maintained ontologies view";
+    gen:appliesToInstancesOf gen:Space;
+    gen:governedBy <https://w3id.org/spaces/FAIR-Implementation-Space>;
+    gen:hasDisplayWidth gen:ColumnWidth06of12;
+    gen:hasStructuralPosition "6.3.maintainedOntologies";
+    gen:hasViewQuery <https://w3id.org/np/RAUJxZFT0f9b-s9DBnfJXm0BJE2XdkvU-bR89Z-Ofuayc/get-maintained-ontologies>;
+    gen:hasViewQueryTargetField "space" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  this: dct:created "2026-09-14T19:25:10.136Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:maintained-ontologies-view;
+    npx:introduces <https://w3id.org/np/RAmtSm3jiq1dsACLG3R30PKqtLpgwnoRPa_LeOSHlcGAk/maintained-ontologies-view-kind>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAmtSm3jiq1dsACLG3R30PKqtLpgwnoRPa_LeOSHlcGAk>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RApNBmFsH3uf4RIPM6TR-iFJ2geOP3uTmSFhlPZ0eikg4/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCM0tu3I/KK6A/qPha/6pfngQZ4LBQpLnKAcIUuZLnSEb0epJ2IoY3zh/4N42us/6LpCHgZZZtSOTm5/KVo+OTDIqo294PpEZAO70u5DcMcGMC5OufzxGKs3Dwdo6XqPiDHxXuiaKCTO7/ABWAi7CtFoMrqJAHfeyqe82dAiH2IiwIDAQAB";
+    npx:hasSignature "Y8GGbmGVW9YT09wcpi4U8DckGOIe3fenox8SYEh17EqGS7albKF2nzP+jsJo58+kvbjn5xoKuM0qguziGRgn83kbzacwUpZKPAcrtEbEa2v8GHC32eJdJUjGxuAAb1gTsGUGPU58gVfbDVkFZbMH5UtrT0RRpT+lqhL8z28Ft6A=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+  
+  <https://w3id.org/spaces/FAIR-Implementation-Space> nt:hasLabelFromApi "FAIR Implementation Space" .
+}
+

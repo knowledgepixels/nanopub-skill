@@ -1,0 +1,59 @@
+@prefix this: <https://w3id.org/np/RAa0eVRVxVK0CLnxC_0EnagfesS9iBfeWjfwHUaFrYtcI> .
+@prefix sub: <https://w3id.org/np/RAa0eVRVxVK0CLnxC_0EnagfesS9iBfeWjfwHUaFrYtcI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:add-view-display-action a <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    rdfs:label "➕ add view display";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RAJnYnoOgXRJx31ad_Zm3__6jyvV6vuWCAKGFQCm4Xilo>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "resource";
+    <https://w3id.org/kpxl/gen/terms/isVisibleTo> <https://w3id.org/kpxl/gen/terms/MaintainerRole> .
+  
+  sub:part-view-displays-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RAHPaxWXTO6Utt54oRFQqTjyGuk4w7y8IDZEsmNqeptwE/part-view-displays-view-kind>;
+    dct:title "⬜ View displays";
+    rdfs:label "Part view displays view";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/MaintainedResource>;
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:add-view-display-action;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAQ3RmzSRkt2yzxl90vXYTkg0X7j8IYcrCX7BjmeZX2XI/list-part-view-displays>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-15T15:08:04Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:part-view-displays-view;
+    npx:introduces <https://w3id.org/np/RAHPaxWXTO6Utt54oRFQqTjyGuk4w7y8IDZEsmNqeptwE/part-view-displays-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAkPmlQp7n3FGfRGyOPl1-ep9DZa00BMSt8-ECQhzaZ2w>;
+    rdfs:label "Part view displays view" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "qbLwN6o+jdliYif+tAxQ0MC3/0kGEsxoUTYQUfpIDYhV4LemihdQBVr59VmaCCzz8We4UkFAYghGz3ZaTdtjjsG5TWXNWcBdpYRqejeGEdnPwxeeWTcbzsriO1mpte5hYRbEF/ZkuRvq11CzCe61E4YY85J7uNv5pK6R8BcWWmQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

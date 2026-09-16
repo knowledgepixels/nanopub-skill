@@ -1,0 +1,64 @@
+@prefix this: <https://w3id.org/np/RACj1hp4qnr5A16nJqC9-OhJPQfzi0a2TUc1MRn9mrylU> .
+@prefix sub: <https://w3id.org/np/RACj1hp4qnr5A16nJqC9-OhJPQfzi0a2TUc1MRn9mrylU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:action rdfs:label "add...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RA9_MDt_BeNkAvLf1ZqUky5aaNWAGZPB1DcupXwOS3UQE>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "resource" .
+  
+  sub:news-list-view a <https://w3id.org/kpxl/gen/terms/ListView>, <https://w3id.org/kpxl/gen/terms/ResourceView>;
+    dct:title "News List";
+    rdfs:label "News List View";
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:action;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAo8COdQwJdwNu7FmNgA4cuHNa7Nk2Bc0IYI7eLtyPQlw/get-news-content>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  <https://w3id.org/np/RA9_MDt_BeNkAvLf1ZqUky5aaNWAGZPB1DcupXwOS3UQE> nt:hasLabelFromApi
+      "Publish a news article to a Space" .
+  
+  this: dct:created "2025-11-19T17:14:28.646Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:news-list-view;
+    npx:supersedes <https://w3id.org/np/RAeW0vvpD8w8XrWPOcnbOikVjG1AH2knw95Ot9x9Tu4oU>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAtgc4BBMRZYFbDJ_fSXfGfs2r-kS2DdPvNY_9FWsJjf4> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCaQXE2B2hJ6QdWxaWerU4F/XOtCQdj2OkdrIYd1kpMY9hIUh8boxaO3uOBeqvvqKLf5HjpRF4DT1eghOSsa2Dhd5HRTM/XIamvwWkHpN4oB3Ml19pAAzjTqczYmFLfgG67mGL5+vSA8VEdHtKQCrvP4SpTibMBP1qaxt3k1tqD6wIDAQAB";
+    npx:hasSignature "Gj4H/3AOZpIu3i88fjrUYs2uH4NaA74pbHIRfFdnClUmameKAnaXtH1a5q4wPrGzRVLM4C7LKwLn8c26eKMFUsOBfeC23pBnKOmhUjhjmg7ASSIl9Jh0Dkh7Jv9XBkEnTvXsMwGjeb0O8+vAxSrJbcQ97EXRWEzSc/FGB7+gxzU=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+  
+  <https://w3id.org/np/RAo8COdQwJdwNu7FmNgA4cuHNa7Nk2Bc0IYI7eLtyPQlw/get-news-content>
+    nt:hasLabelFromApi "Get news content - This query returns the content (body) of the news entries." .
+}
+

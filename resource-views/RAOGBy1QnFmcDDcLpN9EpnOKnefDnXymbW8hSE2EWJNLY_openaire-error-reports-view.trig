@@ -1,0 +1,97 @@
+@prefix this: <https://w3id.org/np/RAOGBy1QnFmcDDcLpN9EpnOKnefDnXymbW8hSE2EWJNLY> .
+@prefix sub: <https://w3id.org/np/RAOGBy1QnFmcDDcLpN9EpnOKnefDnXymbW8hSE2EWJNLY/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:approveAction a <https://w3id.org/kpxl/gen/terms/ViewEntryAction>;
+    rdfs:label "⚖️ approve/disapprove...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RAx2PsXNbCcxYh3sOSScV9H0-tqyETuKjyHsgD6FPC3_E>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "action_target:nanopub";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "void";
+    <https://w3id.org/kpxl/gen/terms/isVisibleTo> <https://w3id.org/kpxl/gen/terms/MemberRole> .
+  
+  sub:error-reports-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RA6HOGJrJpojm9JiwGW3LcWX_Fx9I-PEU-MeItra5TsTc/error-reports-view-kind>;
+    dct:title "🐞 Error reports";
+    rdfs:label "OpenAIRE error reports view";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/Space>;
+    <https://w3id.org/kpxl/gen/terms/hasDisplayWidth> <https://w3id.org/kpxl/gen/terms/ColumnWidth12of12>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "5.2.openaire-errorReports.2.errorReports";
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:approveAction, sub:reportRelationAction,
+      sub:reportValueAction;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RATAR6Fr3sWuMZJy7rou75BJj76BfKy9CbXk6tdTwRC2c/get-openaire-error-reports>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "space" .
+  
+  sub:reportRelationAction a <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    rdfs:label "➕ report incorrect relation...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RA68EN1TC8MRY-MhufFPm8diRNBdeo07wJg7eAN0stgBA/template>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "void";
+    <https://w3id.org/kpxl/gen/terms/isVisibleTo> <https://w3id.org/kpxl/gen/terms/EveryoneRole> .
+  
+  sub:reportValueAction a <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    rdfs:label "➕ report incorrect value...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RA5GbS1FtyYc-wTxgM2yR3ss35KxUL0QPrYJdm91p8lPs/template>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "void";
+    <https://w3id.org/kpxl/gen/terms/isVisibleTo> <https://w3id.org/kpxl/gen/terms/EveryoneRole> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/kpxl/gen/terms/EveryoneRole> nt:hasLabelFromApi "everyone" .
+  
+  <https://w3id.org/np/RA5GbS1FtyYc-wTxgM2yR3ss35KxUL0QPrYJdm91p8lPs/template> nt:hasLabelFromApi
+      "OpenAIRE: Reporting an incorrect metadata value" .
+  
+  <https://w3id.org/np/RA68EN1TC8MRY-MhufFPm8diRNBdeo07wJg7eAN0stgBA/template> nt:hasLabelFromApi
+      "OpenAIRE: Reporting an incorrect relation" .
+  
+  this: dct:created "2026-07-30T06:51:08.168+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:error-reports-view;
+    npx:introduces <https://w3id.org/np/RA6HOGJrJpojm9JiwGW3LcWX_Fx9I-PEU-MeItra5TsTc/error-reports-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAZzhA4aeHm3QoWdKE-_4uJte71VvdvrvuRko6gVKlbrA>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "O/AALchDvkSHLCOvp41abG0EbwjxqNN35sgf14cpOul3Rg2j92s/zxal1tojUTPhqv/2dyQNbn3trbXhoLKrK2FoGVsViwzBCWAqgl9E3o+k9LhVGiE9BmvRe7Lbaelmn+5zwIp7Kl4lsIlHxlWhrX+UlW8VvreEiI3pIcrYSR4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RATAR6Fr3sWuMZJy7rou75BJj76BfKy9CbXk6tdTwRC2c/get-openaire-error-reports>
+    nt:hasLabelFromApi "Get OpenAIRE error reports" .
+  
+  <https://w3id.org/np/RAx2PsXNbCcxYh3sOSScV9H0-tqyETuKjyHsgD6FPC3_E> nt:hasLabelFromApi
+      "Approving or disapproving of a nanopublication" .
+}
+

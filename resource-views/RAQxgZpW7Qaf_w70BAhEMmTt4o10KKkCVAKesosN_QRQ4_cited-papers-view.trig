@@ -1,0 +1,72 @@
+@prefix this: <https://w3id.org/np/RAQxgZpW7Qaf_w70BAhEMmTt4o10KKkCVAKesosN_QRQ4> .
+@prefix sub: <https://w3id.org/np/RAQxgZpW7Qaf_w70BAhEMmTt4o10KKkCVAKesosN_QRQ4/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addArticleMetadataAction a gen:ViewResultAction;
+    rdfs:label "add article metadata...";
+    gen:hasActionTemplate <https://w3id.org/np/RAYRjIrbLSDIX5Mp1cb6MK4vRV0Vd5o0TZ8NTIEHwCPOI>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "void" .
+  
+  sub:addCitationAction a gen:ViewResultAction;
+    rdfs:label "add citation...";
+    gen:hasActionTemplate <https://w3id.org/np/RAX_4tWTyjFpO6nz63s14ucuejd64t2mK3IBlkwZ7jjLo>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "article" .
+  
+  sub:cited-papers-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAxvpXVd0mj-pe7kZxGr1qRA4tcoMzuNtPpw_fiYFFtsc/cited-papers-view-kind>;
+    dct:title "📚 Cited papers";
+    rdfs:label "Cited papers view";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:hasStructuralPosition "5.3.cited-papers";
+    gen:hasViewAction sub:addArticleMetadataAction, sub:addCitationAction;
+    gen:hasViewQuery <https://w3id.org/np/RAOCiFNyjzD-kRYGK49dpFiEwg9i4HqQwN9JrNu_KiOpg/get-cited-papers-for-resource>;
+    gen:hasViewQueryTargetField "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-02T08:32:12Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:cited-papers-view;
+    npx:introduces <https://w3id.org/np/RAxvpXVd0mj-pe7kZxGr1qRA4tcoMzuNtPpw_fiYFFtsc/cited-papers-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAnI3t6NsGrw6tO-O6ZLkJPR26pcLZtmUCivbnrCOkJI4>;
+    rdfs:label "Cited papers view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAIMCeC10xyu9Ou2ZWHkcE-TeIknD2HoJCCDc0gP_ozPw> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "bS9lttQp0QXHqvToD6HGSPDqUqHWRwYO2ducv7JP+14h4QnSL1M9OtlfNm8KVUppg1Bd7j+By2NndYktc3ajdPvOx/2tlRzLObuEFxXwyJ54DtIWzmxTMw/A63EDUX1x6hDb2IV3ZB/mOIQZTHsJhXW4LUZnyrSNWp6zYCJjGO4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

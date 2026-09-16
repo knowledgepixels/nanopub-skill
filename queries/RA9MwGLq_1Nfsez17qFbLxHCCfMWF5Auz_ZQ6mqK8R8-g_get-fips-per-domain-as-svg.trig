@@ -1,0 +1,189 @@
+@prefix this: <https://w3id.org/np/RA9MwGLq_1Nfsez17qFbLxHCCfMWF5Auz_ZQ6mqK8R8-g> .
+@prefix sub: <https://w3id.org/np/RA9MwGLq_1Nfsez17qFbLxHCCfMWF5Auz_ZQ6mqK8R8-g/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-fips-per-domain-svg a grlc:grlc-query;
+    dct:description "Returns one row with an SVG column: two horizontal bar charts of the number of FAIR Implementation Profiles (FIPs) per research domain, computed from the current FIP nanopublications, their declaring communities and the communities' research domains, resolved against the Research domains (SRAO) resource of the FAIR Implementation Space (a FIP counts for a domain when a research domain of its community is that domain or one of its sub-domains). The first chart shows the top-level SRAO domains, the second the second-level domains, each only where at least one FIP exists. Bars are sorted by count; each label links root-relatively to the domain part page (/part?id=...), where the FIPs and most used FSRs of the domain are shown. Positions are computed with rank subqueries, so the output is deterministic. This is the query behind the \"FIPs per domain\" SVG view.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get FIPs per domain as SVG";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix schema: <https://schema.org/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+prefix tpff: <https://w3id.org/fair/3pff/>
+prefix search: <http://www.openrdf.org/contrib/lucenesail#>
+
+select ?svg where {
+  { select (group_concat(?bar1; separator=\"\") as ?bars1) where {
+    { select ?d ?level ?dlabel ?n ?max (count(*) as ?rank) where {
+  { select ?d ?level (min(?dl) as ?dlabel) (count(distinct ?fip) as ?n) where {
+    { select distinct ?fip ?d where {
+    { select distinct ?fip ?cd where {
+        graph npa:graph {
+          ?np npx:hasNanopubType fip:FAIR-Implementation-Profile ; npx:introduces ?fip ; np:hasAssertion ?a ; npa:hasValidSignatureForPublicKey ?pk .
+          filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+          filter not exists { ?x npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pk . }
+        }
+        graph ?a { ?fip fip:declared-by ?community . }
+        graph npa:graph { ?cnp npx:hasNanopubType fip:FAIR-Implementation-Community ; npx:introduces|npx:describes ?community ; np:hasAssertion ?ca ; npa:hasValidSignatureForPublicKey ?cpk . filter not exists { ?cx npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKey ?cpk . } }
+        graph ?ca { ?community fip:has-research-domain ?cd . }
+      } }
+      ?cd rdfs:subClassOf* ?d .
+    } }
+  graph npa:graph {
+      ?srao_np npx:describes <https://w3id.org/spaces/FAIR-Implementation-Space/r/research-domains> ;
+        npa:hasValidSignatureForPublicKeyHash \"9069576dbf1967483c9a3095fb8a7c38b4770974a1733c681d5969e14e455e2b\" ;
+        np:hasAssertion ?srao_a .
+      filter not exists { ?srao_x npx:invalidates ?srao_np ; npa:hasValidSignatureForPublicKeyHash \"9069576dbf1967483c9a3095fb8a7c38b4770974a1733c681d5969e14e455e2b\" . }
+    }
+    { graph ?srao_a { ?d rdfs:label ?dl . filter not exists { ?d rdfs:subClassOf ?p . } } bind(1 as ?level) }
+    union { graph ?srao_a { ?d rdfs:label ?dl ; rdfs:subClassOf ?root . filter not exists { ?root rdfs:subClassOf ?p . } } bind(2 as ?level) }
+  } group by ?d ?level }
+      { select ?level2 (max(?nn) as ?max) where {
+  { select ?dd ?level2 (min(?dl) as ?ddl) (count(distinct ?fip) as ?nn) where {
+        { select distinct ?fip ?dd where {
+        { select distinct ?fip ?cd where {
+            graph npa:graph {
+              ?np npx:hasNanopubType fip:FAIR-Implementation-Profile ; npx:introduces ?fip ; np:hasAssertion ?a ; npa:hasValidSignatureForPublicKey ?pk .
+              filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+              filter not exists { ?x npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pk . }
+            }
+            graph ?a { ?fip fip:declared-by ?community . }
+            graph npa:graph { ?cnp npx:hasNanopubType fip:FAIR-Implementation-Community ; npx:introduces|npx:describes ?community ; np:hasAssertion ?ca ; npa:hasValidSignatureForPublicKey ?cpk . filter not exists { ?cx npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKey ?cpk . } }
+            graph ?ca { ?community fip:has-research-domain ?cd . }
+          } }
+          ?cd rdfs:subClassOf* ?dd .
+        } }
+      graph npa:graph {
+          ?srao_np npx:describes <https://w3id.org/spaces/FAIR-Implementation-Space/r/research-domains> ;
+            npa:hasValidSignatureForPublicKeyHash \"9069576dbf1967483c9a3095fb8a7c38b4770974a1733c681d5969e14e455e2b\" ;
+            np:hasAssertion ?srao_a .
+          filter not exists { ?srao_x npx:invalidates ?srao_np ; npa:hasValidSignatureForPublicKeyHash \"9069576dbf1967483c9a3095fb8a7c38b4770974a1733c681d5969e14e455e2b\" . }
+        }
+        { graph ?srao_a { ?dd rdfs:label ?dl . filter not exists { ?dd rdfs:subClassOf ?p . } } bind(1 as ?level2) }
+        union { graph ?srao_a { ?dd rdfs:label ?dl ; rdfs:subClassOf ?root . filter not exists { ?root rdfs:subClassOf ?p . } } bind(2 as ?level2) }
+      } group by ?dd ?level2 }
+      } group by ?level2 }
+  { select ?d2 ?lv2 (min(?dl) as ?dl2) (count(distinct ?fip) as ?n2) where {
+      { select distinct ?fip ?d2 where {
+      { select distinct ?fip ?cd where {
+          graph npa:graph {
+            ?np npx:hasNanopubType fip:FAIR-Implementation-Profile ; npx:introduces ?fip ; np:hasAssertion ?a ; npa:hasValidSignatureForPublicKey ?pk .
+            filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+            filter not exists { ?x npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pk . }
+          }
+          graph ?a { ?fip fip:declared-by ?community . }
+          graph npa:graph { ?cnp npx:hasNanopubType fip:FAIR-Implementation-Community ; npx:introduces|npx:describes ?community ; np:hasAssertion ?ca ; npa:hasValidSignatureForPublicKey ?cpk . filter not exists { ?cx npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKey ?cpk . } }
+          graph ?ca { ?community fip:has-research-domain ?cd . }
+        } }
+        ?cd rdfs:subClassOf* ?d2 .
+      } }
+    graph npa:graph {
+        ?srao_np npx:describes <https://w3id.org/spaces/FAIR-Implementation-Space/r/research-domains> ;
+          npa:hasValidSignatureForPublicKeyHash \"9069576dbf1967483c9a3095fb8a7c38b4770974a1733c681d5969e14e455e2b\" ;
+          np:hasAssertion ?srao_a .
+        filter not exists { ?srao_x npx:invalidates ?srao_np ; npa:hasValidSignatureForPublicKeyHash \"9069576dbf1967483c9a3095fb8a7c38b4770974a1733c681d5969e14e455e2b\" . }
+      }
+      { graph ?srao_a { ?d2 rdfs:label ?dl . filter not exists { ?d2 rdfs:subClassOf ?p . } } bind(1 as ?lv2) }
+      union { graph ?srao_a { ?d2 rdfs:label ?dl ; rdfs:subClassOf ?root . filter not exists { ?root rdfs:subClassOf ?p . } } bind(2 as ?lv2) }
+    } group by ?d2 ?lv2 }
+      filter(?level2 = ?level && ?lv2 = ?level && (?n2 > ?n || (?n2 = ?n && str(?d2) <= str(?d))))
+    } group by ?d ?level ?dlabel ?n ?max }
+    bind(if(?level = 1, 30, 170) + (?rank - 1) * 22 as ?y)
+    bind(round(320 * ?n / ?max) as ?w)
+    bind(replace(replace(replace(?dlabel, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\") as ?lbl)
+    bind(concat(
+      '<a href=\"/part?id=', encode_for_uri(str(?d)), '\"><text x=\"228\" y=\"', str(?y + 15), '\" text-anchor=\"end\" font-size=\"12\" fill=\"#333\">', ?lbl, '</text></a>',
+      '<rect x=\"236\" y=\"', str(?y + 3), '\" width=\"', str(?w), '\" height=\"16\" fill=\"#4a7fb5\"></rect>',
+      '<text x=\"', str(240 + ?w), '\" y=\"', str(?y + 15), '\" font-size=\"11\" fill=\"#333\">', str(?n), '</text>'
+    ) as ?bar1)
+  } }
+  { select (count(*) as ?k2) where {
+  { select ?d3 ?lv3 (min(?dl) as ?dl3) (count(distinct ?fip) as ?n3) where {
+      { select distinct ?fip ?d3 where {
+      { select distinct ?fip ?cd where {
+          graph npa:graph {
+            ?np npx:hasNanopubType fip:FAIR-Implementation-Profile ; npx:introduces ?fip ; np:hasAssertion ?a ; npa:hasValidSignatureForPublicKey ?pk .
+            filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+            filter not exists { ?x npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pk . }
+          }
+          graph ?a { ?fip fip:declared-by ?community . }
+          graph npa:graph { ?cnp npx:hasNanopubType fip:FAIR-Implementation-Community ; npx:introduces|npx:describes ?community ; np:hasAssertion ?ca ; npa:hasValidSignatureForPublicKey ?cpk . filter not exists { ?cx npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKey ?cpk . } }
+          graph ?ca { ?community fip:has-research-domain ?cd . }
+        } }
+        ?cd rdfs:subClassOf* ?d3 .
+      } }
+    graph npa:graph {
+        ?srao_np npx:describes <https://w3id.org/spaces/FAIR-Implementation-Space/r/research-domains> ;
+          npa:hasValidSignatureForPublicKeyHash \"9069576dbf1967483c9a3095fb8a7c38b4770974a1733c681d5969e14e455e2b\" ;
+          np:hasAssertion ?srao_a .
+        filter not exists { ?srao_x npx:invalidates ?srao_np ; npa:hasValidSignatureForPublicKeyHash \"9069576dbf1967483c9a3095fb8a7c38b4770974a1733c681d5969e14e455e2b\" . }
+      }
+      { graph ?srao_a { ?d3 rdfs:label ?dl . filter not exists { ?d3 rdfs:subClassOf ?p . } } bind(1 as ?lv3) }
+      union { graph ?srao_a { ?d3 rdfs:label ?dl ; rdfs:subClassOf ?root . filter not exists { ?root rdfs:subClassOf ?p . } } bind(2 as ?lv3) }
+    } group by ?d3 ?lv3 }
+    filter(?lv3 = 2)
+  } }
+  bind(170 + ?k2 * 22 + 12 as ?height)
+  bind(concat(
+    '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 640 ', str(?height), '\" width=\"640\" height=\"', str(?height), '\" font-family=\"sans-serif\">',
+    '<text x=\"0\" y=\"16\" font-size=\"14\" font-weight=\"bold\" fill=\"#222\">FIPs per top-level research domain</text>',
+    '<text x=\"0\" y=\"156\" font-size=\"14\" font-weight=\"bold\" fill=\"#222\">FIPs per research domain (second level)</text>',
+    ?bars1,
+    '</svg>') as ?svg)
+}
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-11T09:50:26Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-fips-per-domain-svg;
+    rdfs:label "Get FIPs per domain as SVG";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzZAkv4Mu1YSUxQMriBnhYunqosX5wpuQ3FjUyzW8wTC51wjCmhsChyhS+mCx7Od+2MTDpdhxDWA+pH1r9AX508X2rIY/sbpMS+pd56e0qKPQ0t4folln1TgamPN9iOlY/yLc2x27AdipWIGXUdtL2iAcb+P/Y5dQS2AkHMS3lP2e5JBL5/bD/10qvTLKvdsqIKts8qjuLpxr9CFbsS2gLjMkXL5D2IsJ0cL5sgmIfS1inLVxIfXrS/OgqYNFqeNznUYCVWfo0g7DKjnjiICz3omeQeJFLYwlJ6PhUhYDQS6O318DGwUCwhnuXbBbwL9evZa2I/0Pwu5xpZdNLYJ5UwIDAQAB";
+    npx:hasSignature "JMQCzhgTvwbUB4Bgt/cdqIpa+/QDeVcBdFrsDxddAkcMFJZolgLyylwE/saIog6mijxJ/1/99lZkbclVvTo6PwGMmq7epUZzp5WIwx21C47SSogY1/75Yk+G/Qvaz0okwnb3MDpsJwwnnUjyFxIAuNKy96WCWCPu21obI0Ffzjx9r+msXBGRaRKnFtiqHG69HnMc46xHuTWQukh1qdBURBKuuhP/zRT6ITIdytF9U/ec1WeoDOYdweirq47YUdJSaudKl+mSoyQObf7B/KCivPUlcJPop13tfwvgZ2lisQR2eLARSd2sROnFmrmm8Uoa6vNqulfBOgnldNTE1qFAhg==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot> .
+}
+

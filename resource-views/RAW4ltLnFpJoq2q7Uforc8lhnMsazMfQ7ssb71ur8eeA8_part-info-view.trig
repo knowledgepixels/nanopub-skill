@@ -1,0 +1,53 @@
+@prefix this: <https://w3id.org/np/RAW4ltLnFpJoq2q7Uforc8lhnMsazMfQ7ssb71ur8eeA8> .
+@prefix sub: <https://w3id.org/np/RAW4ltLnFpJoq2q7Uforc8lhnMsazMfQ7ssb71ur8eeA8/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:part-info-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAKMu5L23lMUfZe-DSGopJTRFHBh-drfvazSDC6ZocxhU/part-info-view-kind>;
+    dct:title "ℹ️ Info";
+    rdfs:label "Part info view";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:hasDisplayWidth gen:ColumnWidth06of12;
+    gen:hasStructuralPosition "3.1.info";
+    gen:hasViewQuery <https://w3id.org/np/RAuYAbkk7dlFiPwpYr6axu0QSWKXOmqdkQYKG3S6fDUKQ/get-part-info>;
+    gen:hasViewQueryTargetField "partid" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-16T07:58:51Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:part-info-view;
+    npx:introduces <https://w3id.org/np/RAKMu5L23lMUfZe-DSGopJTRFHBh-drfvazSDC6ZocxhU/part-info-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAHsGIH4pRxYO0xmk0zpIB5NN3DOre7AzOxHczbsZ4YIM>;
+    rdfs:label "Part info view" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "m/GtSYX6MlrYo8ORKDv8DlVf2GgSRhm6TnXIYDSsWc/UhQLj6BzYB6AcoaqxU653Sz/flzZGeofaLTnT+e1220eJHGbeLWq30kIMytsp19Ji4pVzxusc31CabCqpK6qPDqqs4pUhLOdl4O7fBuVAy1dyxiV/4vYE92j6VUNslRI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

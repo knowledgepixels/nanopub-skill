@@ -1,0 +1,78 @@
+@prefix this: <https://w3id.org/np/RA4-s82OQc1Bh-cBszukITWKqO-EYfbECjELccb36zgK8> .
+@prefix sub: <https://w3id.org/np/RA4-s82OQc1Bh-cBszukITWKqO-EYfbECjELccb36zgK8/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:add-role-action a gen:ViewResultAction;
+    rdfs:label "➕ add role...";
+    gen:hasActionTemplate <https://w3id.org/np/RARBzGkEqiQzeiHk0EXFcv9Ol1d-17iOh9MoFJzgfVQDc>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "space";
+    gen:isVisibleTo gen:AdminRole .
+  
+  sub:assign-user-action a gen:ViewEntryAction;
+    rdfs:label "👤 add user...";
+    gen:hasActionTemplate <https://w3id.org/np/RAR1oWGaiVkWtDL6SdXYnlRBR7t5NoVNa46ShNLJ697g0>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "roleAssignmentTemplate:@template";
+    gen:hasActionTemplateTargetField "space";
+    gen:isVisibleTo gen:AdminRole .
+  
+  sub:detach-role-action a gen:ViewEntryAction;
+    rdfs:label "🚫 detach role...";
+    gen:hasActionTemplate <https://w3id.org/np/RAVnwxKEiHRthdz-ZUNDGoDz9CDiTjnx4gEzs4lCXg6gk>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "detachRole:role";
+    gen:hasActionTemplateTargetField "space";
+    gen:isVisibleTo gen:AdminRole .
+  
+  sub:space-roles-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RADFLDTJUN8Qa9028Ltvlx19_J6Pm2_Mfa3g8KhxxbNiI/space-roles-view-kind>;
+    dct:title "🎭 Assigned roles";
+    rdfs:label "Space roles view";
+    gen:appliesToInstancesOf gen:Space;
+    gen:hasDisplayWidth gen:ColumnWidth12of12;
+    gen:hasStructuralPosition "5.6.spaceRoles";
+    gen:hasViewAction sub:add-role-action, sub:assign-user-action, sub:detach-role-action;
+    gen:hasViewQuery <https://w3id.org/np/RAVA7rSNA6fgl4fphFqJYc-QPhdqYAGrvkocg9JWf-U3Y/list-space-roles>;
+    gen:hasViewQueryTargetField "space" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-08-31T10:03:46Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:space-roles-view;
+    npx:supersedes <https://w3id.org/np/RAXEnJ6WDtgge2lNemOZRmk0E09zJ16HDpGPoO5bp9ozU>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Bl15rQlzoIJzSbDpZgLjqGCuGX4m0HFXfowd5mBWw4UVXWIFlf1xHsILVheVWliwZfUUXA1ylcO2mxI5vqaxKjVnYEarigjv8qLb+vhL8jpVQRpcT7fksZXfCHYbpNo54eXI+2z/qlNCbXEbhMlkH8HeuFG1sXEh8hHubgB2wKE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

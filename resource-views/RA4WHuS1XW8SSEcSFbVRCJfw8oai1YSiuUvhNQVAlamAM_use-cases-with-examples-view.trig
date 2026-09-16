@@ -1,0 +1,92 @@
+@prefix this: <https://w3id.org/np/RA4WHuS1XW8SSEcSFbVRCJfw8oai1YSiuUvhNQVAlamAM> .
+@prefix sub: <https://w3id.org/np/RA4WHuS1XW8SSEcSFbVRCJfw8oai1YSiuUvhNQVAlamAM/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addExampleAction a gen:ViewEntryAction;
+    rdfs:label "add example...";
+    gen:hasActionTemplate <https://w3id.org/np/RA6VOR7RkSpQK_rwz5u-XGTHOIQjRAM8Z4dSkMe2vGpTA/template>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "usecase_ref:useCaseClass";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:addUseCaseAction a gen:ViewResultAction;
+    rdfs:label "add use case...";
+    gen:hasActionTemplate <https://w3id.org/np/RAzkwQbhBx6lnFhzwCkkORxhlwzkQaF0KUX5V42q0Iblo/template>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "entity";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:overrideAction a gen:ViewEntryAction;
+    rdfs:label "♻️ override...";
+    gen:hasActionTemplate <https://w3id.org/np/RAzkwQbhBx6lnFhzwCkkORxhlwzkQaF0KUX5V42q0Iblo/template>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "override_target:@override";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:MemberRole .
+  
+  sub:use-cases-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAXlyL5SpPLHHk-wNhg2QMru1mBSKDanw8UZD9zCSWDYs/use-cases-view-kind>;
+    dct:title "💡 Use cases";
+    rdfs:label "Use cases with examples view";
+    gen:appliesToInstancesOf gen:MaintainedResource, gen:Space;
+    gen:hasPageSize "20";
+    gen:hasStructuralPosition "4.3.useCases";
+    gen:hasViewAction sub:addExampleAction, sub:addUseCaseAction, sub:overrideAction;
+    gen:hasViewQuery <https://w3id.org/np/RA6dQOftH1SslzJpOFMz9Ow4OP3w5pmRXcBiLyG0Tx87E/get-use-cases-with-examples>;
+    gen:hasViewQueryTargetField "entity" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-14T12:21:50Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:use-cases-view;
+    npx:introduces <https://w3id.org/np/RAXlyL5SpPLHHk-wNhg2QMru1mBSKDanw8UZD9zCSWDYs/use-cases-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAY6mBpN6oHhqYbaNfh71UccUoZ2d8l_0GapV3lM-bF4Q>;
+    rdfs:label "Use cases with examples view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "LOZl8+2TzpkjXAqnDu7vyh2+d7iyjo4T8NlVvg06u6GfCgj4k3GfIidouBiuZhaUnySNpiNc9JXOhF3yj+nV/13ee5RP8D8tYteJSD8Q5z4irCM34T9+sa9y4KU7bwH6xAk3qEnd/Uv5K/AvjQ1Btvc+9T9yjc+vFiM6MMAR/V0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RA6VOR7RkSpQK_rwz5u-XGTHOIQjRAM8Z4dSkMe2vGpTA/template> nt:hasLabelFromApi
+      "Providing an example for a use case" .
+  
+  <https://w3id.org/np/RA6dQOftH1SslzJpOFMz9Ow4OP3w5pmRXcBiLyG0Tx87E/get-use-cases-with-examples>
+    nt:hasLabelFromApi "Get use cases with examples for a resource" .
+  
+  <https://w3id.org/np/RAzkwQbhBx6lnFhzwCkkORxhlwzkQaF0KUX5V42q0Iblo/template> nt:hasLabelFromApi
+      "Defining a use case for a resource" .
+}
+

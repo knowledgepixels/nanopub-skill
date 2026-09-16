@@ -1,0 +1,77 @@
+@prefix this: <https://w3id.org/np/RA_f5euz_CioWfTr23WiUbjjxclCVhUwFSE_mFkIkxtuk> .
+@prefix sub: <https://w3id.org/np/RA_f5euz_CioWfTr23WiUbjjxclCVhUwFSE_mFkIkxtuk/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a gen:ViewResultAction;
+    rdfs:label "add...";
+    gen:hasActionTemplate <https://w3id.org/np/RAAK7zq9m5XHQaPZSfWxIS8coE-FJn9PWn43Qa8_sv6Tk>;
+    gen:hasActionTemplatePartField "class";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "vocabulary" .
+  
+  sub:classes-from-space-members-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAg3-5LVOXPhSKP7Wzql131pUfab51MkpPqN7fk5BOpag/classes-from-space-members-view-kind>;
+    dct:title "🏷 Classes";
+    rdfs:label "View of classes of OWL ontology published by members of the maintaining space, including classes in its namespace";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels>;
+    gen:hasStructuralPosition "4.3.classes.2";
+    gen:hasViewAction sub:addAction, sub:overrideAction;
+    gen:hasViewQuery <https://w3id.org/np/RAENlitA6jHNR8Mk3PI2nA9f4mSaP3d5zH60aETdcW-uE/get-classes-of-ontology-from-space-members>;
+    gen:hasViewQueryTargetField "ontology" .
+  
+  sub:overrideAction a gen:ViewEntryAction;
+    rdfs:label "override...";
+    gen:hasActionTemplate <https://w3id.org/np/RAAK7zq9m5XHQaPZSfWxIS8coE-FJn9PWn43Qa8_sv6Tk>;
+    gen:hasActionTemplateQueryMapping "override_target:@override override_template:@template";
+    gen:isVisibleTo gen:MemberRole .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RAAK7zq9m5XHQaPZSfWxIS8coE-FJn9PWn43Qa8_sv6Tk> nt:hasLabelFromApi
+      "Defining a new class - <p>Such a nanopublication defines a new class. Classes represent sets of conc..." .
+  
+  <https://w3id.org/np/RAENlitA6jHNR8Mk3PI2nA9f4mSaP3d5zH60aETdcW-uE/get-classes-of-ontology-from-space-members>
+    nt:hasLabelFromApi "Get the classes of an ontology from space members including namespace - Like 'Get the classes of an ontology', but only returns classes published by an admin, maintainer, or member of the space that maintains the given resource. Classes are included if their definition declares them part of the given ontology (dct:isPartOf, or the legacy dct:partOf) or if their IRI starts with the ontology's namespace (optional 'ontologyNamespace' parameter). Each class URI appears once, kept from the latest member-published definition." .
+  
+  this: dct:created "2026-09-16T12:17:49Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:classes-from-space-members-view;
+    npx:introduces <https://w3id.org/np/RAg3-5LVOXPhSKP7Wzql131pUfab51MkpPqN7fk5BOpag/classes-from-space-members-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAJSYEzJN4vbiX5cv4LUiR6DXmSLdXoVp0omte-QuLAb0>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAfa1tHtbOrV0YaCY0LyjHkpXoudrauhN8DUYPM63ZQ-k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Vl7v0SLLay5nXfmZ/sQGiwSllbmEZpgDUJHPHCPBA9Zy361TI18Kjbx6UA9pV0WD+U2qCIR33Lziy6UBjZAd4YW2M6bG3N9seBigHRAZ1d9Sme+YzPHyxFImmzGW1ZlT7VI2k0wvodx/wNHjVZKZHVwMsVNgNENWMIzNrWlTNeY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

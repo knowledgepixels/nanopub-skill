@@ -1,0 +1,126 @@
+@prefix this: <https://w3id.org/np/RA2gQ84CXoTbfdLxWE6GHNdrf7FnSlrn_V62CzYa3i7-g> .
+@prefix sub: <https://w3id.org/np/RA2gQ84CXoTbfdLxWE6GHNdrf7FnSlrn_V62CzYa3i7-g/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-all-fsr-html a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query is intended to be used on external websites.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get all FSRs (html)";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix tpff: <https://w3id.org/fair/3pff/>
+prefix schema: <http://schema.org/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+
+
+select
+	(concat(\"<span><a href=\\\"\", str(?thing), \"\\\" target=\\\"_blank\\\">\", str(?label), \"</a></span>\") as ?thing_ID)
+	(strbefore(str(?date), \"T\") as ?formatted_date)
+	(concat(\"<span>\", group_concat(distinct concat(
+        \"<a href=\\\"\", str(?type), \"\\\">\",
+        replace(str(?type), \"^.*[/#]\", \"\"),
+        \"</a>\"
+      ); separator=\", \"), \"</span>\") as ?types)
+	?description
+	?np
+where {
+    graph npa:graph {
+    <https://w3id.org/np/RA27Uhopq4MHZziL2lKXX-wTb1jz4KVLbHaupxyAcCt9Y> npa:hasValidSignatureForPublicKey ?curators_np_pk .
+    ?latest_curators_np npa:hasValidSignatureForPublicKey ?curators_np_pk .
+    filter not exists { ?latest_curators_npx npx:invalidates ?latest_curators_np ; npa:hasValidSignatureForPublicKey ?curators_np_pk . }
+    ?latest_curators_np np:hasAssertion ?latest_curators_assertion .
+  }
+  graph npa:networkGraph {
+    ?latest_curators_np (npx:supersedes)* <https://w3id.org/np/RA27Uhopq4MHZziL2lKXX-wTb1jz4KVLbHaupxyAcCt9Y> .
+    filter not exists { ?latest_curators_npxx npx:supersedes ?latest_curators_np }
+  }
+  graph npa:graph {
+    ?np rdfs:label ?label .
+    ?np dct:description ?description .
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    ?np dct:created ?date .
+    ?np np:hasAssertion ?assertion .
+    ?np npx:introduces|npx:describes ?thing .
+    filter(str(?date) > \"2022\")
+    filter exists { ?np npx:hasNanopubType ?fsr_type . values ?fsr_type { fip:FAIR-Enabling-Resource fip:FAIR-Supporting-Resource fip:Available-FAIR-Enabling-Resource } }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np npx:hasNanopubType ?type .
+    filter(?type != fip:FAIR-Enabling-Resource)
+    filter(?type != fip:Available-FAIR-Enabling-Resource)
+    filter(?type != fip:FAIR-Enabling-Resource-to-be-Developed)
+    filter(?type != fip:FAIR-Supporting-Resource)
+    filter(?type != fip:Available-FAIR-Supporting-Resource)
+    filter(?type != fip:FAIR-Supporting-Resource-to-be-Developed)
+    filter(?type != fip:Domain-Specific-FAIR-Supporting-Resource)
+    filter(?type != fip:Domain-Agnostic-FAIR-Supporting-Resource)
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pubkey . }
+  }
+  filter not exists {
+      graph npa:graph {
+        ?disapproval_np npx:hasNanopubType <http://purl.org/nanopub/x/disapprovesOf> .
+        ?disapproval_np np:hasAssertion ?da ;
+          npa:hasValidSignatureForPublicKey ?dpubkey .
+        filter not exists { ?disapproval_npx npx:invalidates ?disapproval_np ; npa:hasValidSignatureForPublicKey ?dpubkey . }
+      }
+      graph ?latest_curators_assertion {
+        ?qpubkeys npx:hasPublicKey ?dpubkey .
+      }
+      graph ?da {
+        ?disapprover npx:disapprovesOf ?np .
+      }
+    }
+}
+group by ?thing ?description ?label ?date ?np""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0007-7713-900X .
+}
+
+sub:pubinfo {
+  orcid:0009-0007-7713-900X foaf:name "Marvin Friedl" .
+  
+  this: dct:created "2026-09-15T15:00:59.803Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0007-7713-900X;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-all-fsr-html;
+    npx:supersedes <https://w3id.org/np/RAhbLKksdH7H5Tk9KO25_Gzt1mSGPjAkAfO9jObdL9zC4>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    skos:changeNote "exclude domain agnostic and specific from types";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6nKKLJLqRlne3x0edmCYSr5xQdqM6C1FWZNdRdKZIsZFOmLmkh8dSeoHfQ9j2qws06koRRmIL6eij55oCL67M9/21JmSygbDBmVkBhKCdIMOCJIXSqb+CZIeS05qhZTDjznex8PBAd9pAFIIOW3hhvhA1cNVPlbBL/jWeT6UZ3bU9MKGD9abCZZYQ63/vxX+153bECpVJISzc4YmabntbbYa5xS2vXsJeS2Sn21uKO3A85Rj+PAqLi9DrsmtEjcGtcMxdzmp+DscfR2Zigbwqs9LV3UCITymRqx01QFEgBWRryjzatsArZ+3nUI1jpywt7IRKYhUTy5gCeHY76vlSwIDAQAB";
+    npx:hasSignature "y2RXK6QmexmQnFGz7pncfS6YVglvycNk61WOUnkoHHB0r70FhN3kD4fX5IeRp3Km8o/PIP8TmOPpZUCDw/Fx1LezGXdvgp/Q8diaeYo+omTqJ9GlfoOpwV4rA0L2ATwTZ3O5f/TKd8Z0hIaBrlHIPMnVOFLDSSt/ttVrCpMCMjByEUzL436IO2sYl1Bpysl3h3kXZBo9PE1hO6gGnfBLPmqipWvMavRK5ZHBq4/relQcu7LbLh1u1yc4KRRjsX4TAv8M7DtLwdV5+AgsAZtCAnUpOl3je8RKSQzaatIN9fVg+sF5HlGJL8FKZXhbEFqOXvvMLKSyK52KEAX3AXQ2UQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0007-7713-900X .
+}
+

@@ -1,0 +1,60 @@
+@prefix this: <https://w3id.org/np/RAcYq4eiY7QjptsKcoUIXK73fIkh4Hgq-WTDZAJ8B4sTM> .
+@prefix sub: <https://w3id.org/np/RAcYq4eiY7QjptsKcoUIXK73fIkh4Hgq-WTDZAJ8B4sTM/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:space-list-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RAZBDngUMAHKWewUdc1fgD2lSeBtOx1aNTp0gm1rQYQ7I/space-list-view-kind>;
+    dct:title "🌎 Spaces";
+    rdfs:label "List of all Spaces for given agent";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/IndividualAgent>;
+    <https://w3id.org/kpxl/gen/terms/hasDisplayWidth> <https://w3id.org/kpxl/gen/terms/ColumnWidth12of12>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "3.1.spaces.1";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAyEYam0RC4L4ijNLCR5t4e-GJwxo_OM63pUx8SSDxU5w/get-spaces-and-roles-for-user>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "agent" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-03-25T07:44:54.057+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:space-list-view;
+    npx:introduces <https://w3id.org/np/RAZBDngUMAHKWewUdc1fgD2lSeBtOx1aNTp0gm1rQYQ7I/space-list-view-kind>;
+    npx:supersedes <https://w3id.org/np/RApGYm4n6M97yZZdwGF6lW1uwSwnrPNUtHc1QL-_c91Bc>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAIMCeC10xyu9Ou2ZWHkcE-TeIknD2HoJCCDc0gP_ozPw> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "knAwy5cR8gTkM5R/dd7AOIXp7ETxMFfr+NgH/Lpaw7f3vTofgEttbPuhNw9WmORVv4r7SjkrjS0EX+bJRIFIvCOUN2Su+++Fnw0W4Mlr2WkfYmsOY8W9pmqj5uE2vMdXDE0AKmcimqUL7a0C7Xu1UrMw2GcJPpfBexwFjqVmTnQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAyEYam0RC4L4ijNLCR5t4e-GJwxo_OM63pUx8SSDxU5w/get-spaces-and-roles-for-user>
+    nt:hasLabelFromApi "Get Spaces and roles for user - Returns all the spaces a given user belongs to, together with the role names ..." .
+}
+

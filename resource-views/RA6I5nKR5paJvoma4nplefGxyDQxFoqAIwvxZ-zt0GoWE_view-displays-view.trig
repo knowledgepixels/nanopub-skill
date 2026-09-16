@@ -1,0 +1,72 @@
+@prefix this: <https://w3id.org/np/RA6I5nKR5paJvoma4nplefGxyDQxFoqAIwvxZ-zt0GoWE> .
+@prefix sub: <https://w3id.org/np/RA6I5nKR5paJvoma4nplefGxyDQxFoqAIwvxZ-zt0GoWE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:add-view-display-action a <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    rdfs:label "➕ add view display";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RAJnYnoOgXRJx31ad_Zm3__6jyvV6vuWCAKGFQCm4Xilo>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "resource";
+    <https://w3id.org/kpxl/gen/terms/isVisibleTo> <https://w3id.org/kpxl/gen/terms/MaintainerRole> .
+  
+  sub:deactivate-action a <https://w3id.org/kpxl/gen/terms/ViewEntryAction>;
+    rdfs:label "❌ deactivate";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RAZ47_4JquvEXk30HYnVeSgFRcQqHtpdibcfBOeqHI2j4>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "deactivateView:view";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "resource";
+    <https://w3id.org/kpxl/gen/terms/isVisibleTo> <https://w3id.org/kpxl/gen/terms/MaintainerRole> .
+  
+  sub:view-displays-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RAQO0kK2FFtdfdGShuLkpFTbrq90btzt38z4w1hGVQfJE/view-displays-view-kind>;
+    dct:title "⬜ View displays";
+    rdfs:label "View displays view";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/Space>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "5.5.viewDisplays";
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:add-view-display-action, sub:deactivate-action;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAdWeDNFHaMMxJ5RVKtSPdj_0wQHfdicHd0YDnX1X7nSM/list-view-displays>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-06-15T15:08:04Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:view-displays-view;
+    npx:introduces <https://w3id.org/np/RAQO0kK2FFtdfdGShuLkpFTbrq90btzt38z4w1hGVQfJE/view-displays-view-kind>;
+    npx:supersedes <https://w3id.org/np/RApAUl9_dbHppfHuhSeIWz15Xe-K6RUgYFnnuY58i_Dls>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "UTkb5yQflvKv/RrKhNtFplBGt5c6+fvZMMFbsmlHDNCwEAQuDCrOFdvReiI2LNgsxmCpr2xPBzHsbRw6stZqeIdBDqyjxOHE3PXFtcljrusz9IS4p0ULR4g3kXKMiq/7RzIW2355DQeYNOWHd4Mq2PIaksJyQV+9KHY3CDSVReY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,68 @@
+@prefix this: <https://w3id.org/np/RAK7E0Y_hjMGdevTbuwhQWLC1C5jng-BjtBGfb0GX3CxY> .
+@prefix sub: <https://w3id.org/np/RAK7E0Y_hjMGdevTbuwhQWLC1C5jng-BjtBGfb0GX3CxY/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    rdfs:label "add ...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RA0_alLZqmVu7acAKE2yXgJbXWjm3Qw50-UHCgNLGjBb8>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "void" .
+  
+  sub:list-case-study-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf sub:list-case-study-kind;
+    dct:title "List of Case Studies";
+    rdfs:label "View of case study";
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "1.1.caseStudies";
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:addAction;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RANfitoiMzDj7n6Prq9ka4A6UyhYaxzT5ySs_8tBl2k7o/get-all-cs>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0003-2195-3997 .
+}
+
+sub:pubinfo {
+  orcid:0000-0003-2195-3997 foaf:name "Barbara Magagna" .
+  
+  <https://w3id.org/np/RA0_alLZqmVu7acAKE2yXgJbXWjm3Qw50-UHCgNLGjBb8> nt:hasLabelFromApi
+      "Defining a Case study - Template for defining a Case Study" .
+  
+  this: dct:created "2025-12-29T18:44:58.052Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0003-2195-3997;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:list-case-study-view;
+    npx:introduces sub:list-case-study-kind;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAMwJK-KwLZao9NyIJ3QPE6AK_MasTNoHlp-PoUEavR2c> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCM0tu3I/KK6A/qPha/6pfngQZ4LBQpLnKAcIUuZLnSEb0epJ2IoY3zh/4N42us/6LpCHgZZZtSOTm5/KVo+OTDIqo294PpEZAO70u5DcMcGMC5OufzxGKs3Dwdo6XqPiDHxXuiaKCTO7/ABWAi7CtFoMrqJAHfeyqe82dAiH2IiwIDAQAB";
+    npx:hasSignature "G/NWFXiG2UM10zrvexyHzClOIeitXKs3cmSZ9qjZOC8LWU0hjkHPxfjbJFo2rI+xVy6PDlGQACu2v/nsAy5kfQ6TApb+AAQxPO7DK5CRGsKIkOr+m7Y398R4KPJd4XT5Aa83WJ9fT3PGGrJq/T8hl4JYRy/8+Fx0FYJUbmGtlUM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0003-2195-3997 .
+  
+  <https://w3id.org/np/RANfitoiMzDj7n6Prq9ka4A6UyhYaxzT5ySs_8tBl2k7o/get-all-cs> nt:hasLabelFromApi
+      "Get case studies - This query returns all case studies" .
+}
+

@@ -1,0 +1,76 @@
+@prefix this: <https://w3id.org/np/RAiOdvZbovn_f4MW_gseA_ECfR4g6MhIHEJvWF9TGZKdw> .
+@prefix sub: <https://w3id.org/np/RAiOdvZbovn_f4MW_gseA_ECfR4g6MhIHEJvWF9TGZKdw/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:askAction a gen:ViewResultAction;
+    rdfs:label "❓ ask a question...";
+    gen:hasActionTemplate <https://w3id.org/np/RAsqh6SzmNU8NJnxOZ-viynv0tCWi8n2GFMlZ59dWZpVY>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "target";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:replyAction a gen:ViewEntryAction;
+    rdfs:label "💬 reply...";
+    gen:hasActionTemplate <https://w3id.org/np/RAFpID-NunXGUAZebXPfhD9efjvfpZqB5gDBrgP2Lp5N8>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "reply_target:target";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:session-qa-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:session-qa-view-kind;
+    dct:title "💬 Questions & answers";
+    rdfs:label "Questions and answers view, including sessions";
+    gen:appliesToInstancesOf wd:Q604733, gen:MaintainedResource, gen:Space;
+    gen:hasPageSize "10"^^xsd:integer;
+    gen:hasStructuralPosition "4.2.questions";
+    gen:hasViewAction sub:askAction, sub:replyAction;
+    gen:hasViewQuery <https://w3id.org/np/RAAWlWQVkHhj2XoqrMFcalU-Q_LQ9mzbwnrDMytZ3uXng>;
+    gen:hasViewQueryTargetField "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234;
+    prov:wasDerivedFrom <https://w3id.org/np/RAwvDsHVtaa08tdfp1m2yrtHDf7GxKwjXZh5yAr--HIGw/qa-view> .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-07T12:01:06Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:session-qa-view;
+    npx:introduces sub:session-qa-view-kind;
+    rdfs:label "Questions and answers view, including sessions";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RAefFjYMSnydcZtTqdT8TG8rJeJa76ryG7h10VHQiWKgY>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA7FuFF5RWV_iVg2IQNcFITP-ReH8Py1QQQcvD3mtku5g> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Mvj7RoFXCeDEfaV0Tjg2Y1ZNA8JpsScG9slbXqnmvMIG/QUYKKg3LDXfAY6SF39UoWPTvJwbPMu6b3ZXpcu1USytq9bpLN5SNbhfZBcpqpGH4K6x3ZnLRm7GBZdRXVJ3cgZfrMSs3sWgEE6o6utlboC0gV5/QuvVPJNozKE1jXg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,51 @@
+@prefix this: <https://w3id.org/np/RATFJfFNLsuMCuF00VudNG1EXUyn02gthaFQvjIGtxoq8> .
+@prefix sub: <https://w3id.org/np/RATFJfFNLsuMCuF00VudNG1EXUyn02gthaFQvjIGtxoq8/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <https://w3id.org/np/RAhfBdgcmxtE2VpqgNHlZbqf7KzED7mm9JAL-3popBDKI/template-kind>
+    a gen:MaintainedResource, nt:AssertionTemplate;
+    dct:description "The stable kind of the template that links example nanopublications to documentation paragraphs. Registered as a maintained resource of the Nanopublication space so that any member can publish its next version.";
+    rdfs:label "Template kind: Linking an example to a documentation paragraph";
+    gen:isMaintainedBy <https://w3id.org/spaces/nanopub> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-15T05:24:41Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Template kind: Linking an example to a documentation paragraph";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAuoIiBPtkpMCALeI5AWNlQHoXdBfqZwqj_sVHiBGbfQo> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "J6QalVSVa9B8CYzYhRXJJ1UhOgwF22QeUBaHnWJ+TO7jEY9qdTxM0Os+GyXe3RZOp8o0upyuVVHycgs4om5a4mpncpulDO32k+odERezZqoCzMZKXSdCgf/l8MQ7ttJpxPlvthwGA19xoFGuwA4LquxAMqk1AmifdWQ6y/4Bz64=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

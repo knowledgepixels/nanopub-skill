@@ -1,0 +1,78 @@
+@prefix this: <https://w3id.org/np/RATwIkY6lwQl2Y34yuMBhTUgb2pMwS7kto-mYS39L8P_k> .
+@prefix sub: <https://w3id.org/np/RATwIkY6lwQl2Y34yuMBhTUgb2pMwS7kto-mYS39L8P_k/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a gen:ViewResultAction;
+    rdfs:label "add...";
+    gen:hasActionTemplate ns1:RAUXTKJMABL75eHuEH5WEw4NweGUKL8gs0v3qot5Tptdo;
+    gen:hasActionTemplatePartField "individual";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "vocabulary";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:ontology-named-individuals-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAmNltFu6fyI_YMmJxrh-gr7XADXU8h16YlQr1QJIT4qU/ontology-named-individuals-view-kind>;
+    dct:title "🫧 Named individuals";
+    rdfs:label "View of named individuals of OWL ontology including namespace";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels>;
+    gen:hasStructuralPosition "4.5.individuals.1";
+    gen:hasViewAction sub:addAction;
+    gen:hasViewQuery <https://w3id.org/np/RA6Cc0zgnWS-G5oVTOEMLgcWXQA24sLSh5FfZ30jazAzU/get-individuals-of-ontology-ns>;
+    gen:hasViewQueryTargetField "ontology" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  ns1:RAUXTKJMABL75eHuEH5WEw4NweGUKL8gs0v3qot5Tptdo nt:hasLabelFromApi "Defining a new individual - <p>Such nanopublications define a new named individual. Such a named individu..." .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RA6Cc0zgnWS-G5oVTOEMLgcWXQA24sLSh5FfZ30jazAzU/get-individuals-of-ontology-ns>
+    nt:hasLabelFromApi "Get the individuals of an ontology including via namespace - This query returns all individuals that specify to be part of a given ontolog..." .
+  
+  this: dct:created "2026-09-16T12:38:20.649Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:ontology-named-individuals-view;
+    npx:introduces <https://w3id.org/np/RAmNltFu6fyI_YMmJxrh-gr7XADXU8h16YlQr1QJIT4qU/ontology-named-individuals-view-kind>;
+    npx:supersedes <https://w3id.org/np/RA8TDndSKDDSQ15J8FmHdPtwbWSYgWSplrKKDbMQNWG5Q>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    skos:changeNote "Making it goverend by Knowledge Pixels.";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RApNBmFsH3uf4RIPM6TR-iFJ2geOP3uTmSFhlPZ0eikg4/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "v+UFnXi+pwmG/FJNM8Ddi0OB3lfFcbxIQCYJqWiFD3DqNysq9M5v5/2tL9wIlUwDO712EBwMl5vm0xhwD4YNnwlGnQ10EA4nuTYQw+xGZNFYVKCTiUcut5U7RKQ8UvcEZxQ9y1fWAICoqvIKOe+E/KD3OIjgi5ZS0PeuhmHF6dg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/spaces/knowledgepixels> nt:hasLabelFromApi "Knowledge Pixels - Knowledge Pixels is a tech start-up with the mission to revolutionize global ..." .
+}
+

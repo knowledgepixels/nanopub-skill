@@ -1,0 +1,74 @@
+@prefix this: <https://w3id.org/np/RA8Nyuq_7kxYGjHUM15xZgNcFlD6QWKDDangd9bv0v0Y0> .
+@prefix sub: <https://w3id.org/np/RA8Nyuq_7kxYGjHUM15xZgNcFlD6QWKDDangd9bv0v0Y0/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a gen:ViewResultAction;
+    rdfs:label "add narrower concept...";
+    gen:hasActionTemplate <https://w3id.org/np/RAQyD3q-LJzhz_2ygvaisbLQIzYknw3V0wpldr_zWjJrA>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "broaderConcept";
+    gen:isVisibleTo gen:MemberRole .
+  
+  sub:narrower-concepts-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:skos-narrower-concepts-view-kind;
+    dct:title "🌳 Narrower concepts";
+    rdfs:label "View of the narrower concepts of a SKOS concept from space members";
+    gen:appliesToInstancesOf skos:Concept;
+    gen:hasStructuralPosition "4.4.narrower.1";
+    gen:hasViewAction sub:addAction, sub:overrideAction;
+    gen:hasViewQuery <https://w3id.org/np/RAsjZhi-UjWr5dkB2t7B3sJPCx_225ykI4Negvi-tM-z4/get-narrower-concepts-from-space-members>;
+    gen:hasViewQueryTargetField "concept" .
+  
+  sub:overrideAction a gen:ViewEntryAction;
+    rdfs:label "override...";
+    gen:hasActionTemplate <https://w3id.org/np/RAQyD3q-LJzhz_2ygvaisbLQIzYknw3V0wpldr_zWjJrA>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "override_target:@override";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:MemberRole .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-04T07:52:58Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:narrower-concepts-view;
+    npx:introduces sub:skos-narrower-concepts-view-kind;
+    prov:wasDerivedFrom <https://w3id.org/np/RAwzUGGC8W6jmQ7w-3aDnSNpdA-w5nbEkBQfD4ay5XbuI>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA7j_m2mlg_mJaCD0mvB2POXSa9rGjW3fiJa0AKmmQJGc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "kAyT7OhUSbrN0+UbJxqdpFZXNUIi66CTg12cT21onGAAmgNaDzYZ/N5E2iSP8GM6IWu5EwsjDfNCaIbpkXJaNsP/QWxBgVQ9ffCLp5wdbJhPXgjfq6A+qB097YX58gbY7x3EFm69zdxFI68+MR7p6/bB8D/8mfs/ZdRni42sZvs=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

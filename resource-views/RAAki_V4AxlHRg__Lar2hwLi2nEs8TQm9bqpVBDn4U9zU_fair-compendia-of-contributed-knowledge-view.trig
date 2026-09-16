@@ -1,0 +1,58 @@
+@prefix this: <https://w3id.org/np/RAAki_V4AxlHRg__Lar2hwLi2nEs8TQm9bqpVBDn4U9zU> .
+@prefix sub: <https://w3id.org/np/RAAki_V4AxlHRg__Lar2hwLi2nEs8TQm9bqpVBDn4U9zU/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:fair-compendia-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:fair-compendia-view-kind;
+    dct:title "🗂️ FAIR Compendia of Contributed Knowledge";
+    rdfs:label "FAIR Compendia of Contributed Knowledge view";
+    gen:appliesToInstancesOf gen:IndividualAgent;
+    gen:hasStructuralPosition "5.6.fairCompendia";
+    gen:hasViewQuery <https://w3id.org/np/RAo9-0EZWqg1H9UMho9jiDM2Cm1oiwhxX4rAtEoTvVWT0/get-fair-compendia-for-user>;
+    gen:hasViewQueryTargetField "user" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-27T11:34:25Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:fair-compendia-view;
+    npx:introduces sub:fair-compendia-view-kind;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "CVSnS2EnwdLFKLRVDyIUaxZD0DeVkv7vlHKvPm/RzfkZ+dZRuBA0UghfpBiQm1zDV9pyoLrUpFhVL1XfhjvDiUXW6lRbY0/2QkRr4o322u5L4OpMrTpbeER9jmqTshv+3IT1iV1kwhaHw1NN4o0Oq3ysW+OSCrQ1PDhHe7mQTG0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAo9-0EZWqg1H9UMho9jiDM2Cm1oiwhxX4rAtEoTvVWT0/get-fair-compendia-for-user>
+    nt:hasLabelFromApi "Get FAIR Compendia of Contributed Knowledge for user - Returns the FAIR Compendia of Contributed Knowledge that cover the given user." .
+}
+

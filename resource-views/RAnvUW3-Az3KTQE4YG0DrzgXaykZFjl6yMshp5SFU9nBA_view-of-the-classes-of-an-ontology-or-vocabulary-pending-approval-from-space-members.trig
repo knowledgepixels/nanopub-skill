@@ -1,0 +1,82 @@
+@prefix this: <https://w3id.org/np/RAnvUW3-Az3KTQE4YG0DrzgXaykZFjl6yMshp5SFU9nBA> .
+@prefix sub: <https://w3id.org/np/RAnvUW3-Az3KTQE4YG0DrzgXaykZFjl6yMshp5SFU9nBA/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:approveAction a gen:ViewEntryAction;
+    rdfs:label "approve...";
+    gen:hasActionTemplate <https://w3id.org/np/RAkhTlKa-i0miq_DN3V4HSv-btlDgwzg8qPUesrsJ0k9Q>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "approve_target:nanopub approval_choice:approveOrDisapprove";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:MemberRole .
+  
+  sub:classes-pending-approval-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RA4ayDBDOLpRgvKIDjwi1-zXLQInxbzFcOtKW_dca3kXI/classes-pending-approval-view-kind>;
+    dct:title "⏳ Classes pending approval";
+    rdfs:label "View of the classes of an ontology or vocabulary pending approval from space members";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels>;
+    gen:hasStructuralPosition "4.3.classes.4";
+    gen:hasViewAction sub:approveAction, sub:disapproveAction, sub:overrideAction;
+    gen:hasViewQuery <https://w3id.org/np/RAw9xCgqcKbV_O86FyGVta4qe68gjXqTLZkAaIXvcGL60/get-classes-pending-approval-of-an-ontology-from-space-members>;
+    gen:hasViewQueryTargetField "ontology" .
+  
+  sub:disapproveAction a gen:ViewEntryAction;
+    rdfs:label "disapprove...";
+    gen:hasActionTemplate <https://w3id.org/np/RAkhTlKa-i0miq_DN3V4HSv-btlDgwzg8qPUesrsJ0k9Q>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "disapprove_target:nanopub disapproval_choice:approveOrDisapprove";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:MemberRole .
+  
+  sub:overrideAction a gen:ViewEntryAction;
+    rdfs:label "override...";
+    gen:hasActionTemplate <https://w3id.org/np/RAD4mKOVqsJc7nAVVR0dXXcVFU2IOjrFywv2GspkpalfQ>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "override_target:@override";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:MemberRole .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-16T12:17:49Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:classes-pending-approval-view;
+    npx:introduces <https://w3id.org/np/RA4ayDBDOLpRgvKIDjwi1-zXLQInxbzFcOtKW_dca3kXI/classes-pending-approval-view-kind>;
+    npx:supersedes <https://w3id.org/np/RA3dnPLlkR7pU_O-lCTxJiUzPm1zAHgE0QmWP7G9sqP0A>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAfa1tHtbOrV0YaCY0LyjHkpXoudrauhN8DUYPM63ZQ-k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Wu5HACNHrFkLmGmD0xkJAujnYjWL3ZFXb0trtLR+JvsWif5Rt9FIOH44tmeUWzAwXDVQWWgLAqXenxIfySxqEgEVhE1ApOhQea1UHGTMuYePr7W+BasR4Ipvfnc3oDgiKJYVzrAaDumoj6eEjiEjzLf+xD1L8zvjBvT2yJnSu5Y=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

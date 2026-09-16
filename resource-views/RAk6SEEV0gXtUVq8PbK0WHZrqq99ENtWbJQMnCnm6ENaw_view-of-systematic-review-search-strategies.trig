@@ -1,0 +1,78 @@
+@prefix this: <https://w3id.org/np/RAk6SEEV0gXtUVq8PbK0WHZrqq99ENtWbJQMnCnm6ENaw> .
+@prefix sub: <https://w3id.org/np/RAk6SEEV0gXtUVq8PbK0WHZrqq99ENtWbJQMnCnm6ENaw/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:01addAction a <https://w3id.org/kpxl/gen/terms/ViewAction>;
+    rdfs:label "add...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RAvcJKm2DZPEKOBevGdPGcKL6sEw04JXwgzx2lH5DE5LU>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "systematicReview" .
+  
+  sub:02declareSearchAction a <https://w3id.org/kpxl/gen/terms/ViewEntryAction>;
+    rdfs:label "add database search...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RA8MyCoRqMdgGqqOwN4MIQfe6Htwt5FPgiHXlXK4RKiic>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "searchStrategy:searchStrategy";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "systematicReview" .
+  
+  sub:systematic-review-search-strategy-view a <https://w3id.org/kpxl/gen/terms/ResourceView>,
+      <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:title "Search strategies";
+    rdfs:label "View of systematic review search strategies";
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.2.researchQuestions.2.searchStrategies";
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:01addAction, sub:02declareSearchAction;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RATiMLn7xjMjCqrd1hTrZETP7aOldgoBJ-KrEFM_z-0aY/get-search-strategies>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RA8MyCoRqMdgGqqOwN4MIQfe6Htwt5FPgiHXlXK4RKiic> nt:hasLabelFromApi
+      "Declaring a systematic database search" .
+  
+  <https://w3id.org/np/RATiMLn7xjMjCqrd1hTrZETP7aOldgoBJ-KrEFM_z-0aY/get-search-strategies>
+    nt:hasLabelFromApi "Get systematic review search strategies - This query returns all search strategies for systematic reviews." .
+  
+  this: dct:created "2025-11-24T14:56:51.917Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:systematic-review-search-strategy-view;
+    npx:supersedes <https://w3id.org/np/RAQP2r1UGxWdjzwxs9Ggr_De4ltg9PIv9XecLZOKKizaI>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAAZtlj3fQC3Mbbed3OkpzeqdskpcneKJWsW9W-vKAxK0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "h8ix9hwNS03Lx/GFJhKx/kjIf5XsVhO5YDUGVHHch6IZ6W7zGFVf0ptxi3D2/9bvMga3V3LBm/QxJCiFWmCROq34P9mHU3ICGGzpTkNimZk5+/cFHMn3nEZxMuSaHYWqpKte+C0RLuFi+UK/D//Lvwp6BhmBISUzBt/0EfzWDy0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAvcJKm2DZPEKOBevGdPGcKL6sEw04JXwgzx2lH5DE5LU> nt:hasLabelFromApi
+      "Defining a systematic review search strategy - This template allows researchers to document their systematic review search s..." .
+}
+

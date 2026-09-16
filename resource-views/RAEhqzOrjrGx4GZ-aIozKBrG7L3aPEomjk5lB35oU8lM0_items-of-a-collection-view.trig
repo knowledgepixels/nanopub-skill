@@ -1,0 +1,80 @@
+@prefix this: <https://w3id.org/np/RAEhqzOrjrGx4GZ-aIozKBrG7L3aPEomjk5lB35oU8lM0> .
+@prefix sub: <https://w3id.org/np/RAEhqzOrjrGx4GZ-aIozKBrG7L3aPEomjk5lB35oU8lM0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:01addAction a <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    rdfs:label "add...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RAP7H9az1ayL4948E3WbfsaZgj_xuxy6WwQ48Yk5JRLc8>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "thing";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "collection" .
+  
+  sub:02makeIndexAction a <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    rdfs:label "make index...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RAxnhKtopKXeNotK-uejPSrZ4EC7sSRw0n3JCAsbzJ-3M>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "np:element";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "resource" .
+  
+  sub:collection-items-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RAW-_ut4pYlazIz2bY2FgZ-ILKp8rSceh9d2WwQ0YnMs8/collection-items-view-kind>;
+    dct:title "Items";
+    rdfs:label "Items of a collection view";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <http://purl.org/dc/dcmitype/Collection>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.4.collectionItems.1";
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:01addAction, sub:02makeIndexAction;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RA9ZR8Lu0hlbk8J8uyoiNFqszFQeCy4bL4-0_WzLvZ4DQ/get-items-of-collection>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "collection" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RA9ZR8Lu0hlbk8J8uyoiNFqszFQeCy4bL4-0_WzLvZ4DQ/get-items-of-collection>
+    nt:hasLabelFromApi "Get items of collection - This query returns the items of a collection" .
+  
+  this: dct:created "2026-02-03T09:00:55.132+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:collection-items-view;
+    npx:introduces <https://w3id.org/np/RAW-_ut4pYlazIz2bY2FgZ-ILKp8rSceh9d2WwQ0YnMs8/collection-items-view-kind>;
+    npx:supersedes <https://w3id.org/np/RALxOve_HkqQ1z5YBXtDJD53FqmFE4rrk9qBkICA6qUxA>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAMwJK-KwLZao9NyIJ3QPE6AK_MasTNoHlp-PoUEavR2c> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "EWaHN1MA4jg2WaCqfh2DzkLv/W4CoLC9xFItgT6W6PebsNl8yhooS2bs+JGGsoY+b+A6tvYnxJmdKBUW5qjoE7xklyCj406i7PrritNbTuMFaE+RUlfJB6BZBRC6SnjK3GOfU6ACYw9qDhVKfAkdSD9Mi7H1XmqqbkpuNSxw0nQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAP7H9az1ayL4948E3WbfsaZgj_xuxy6WwQ48Yk5JRLc8> nt:hasLabelFromApi
+      "Declaring something as a part of a collection" .
+  
+  <https://w3id.org/np/RAxnhKtopKXeNotK-uejPSrZ4EC7sSRw0n3JCAsbzJ-3M> nt:hasLabelFromApi
+      "Defining a nanopublication index as part of a resource" .
+}
+

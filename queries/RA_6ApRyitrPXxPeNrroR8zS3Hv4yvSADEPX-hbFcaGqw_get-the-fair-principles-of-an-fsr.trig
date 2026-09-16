@@ -1,0 +1,87 @@
+@prefix this: <https://w3id.org/np/RA_6ApRyitrPXxPeNrroR8zS3Hv4yvSADEPX-hbFcaGqw> .
+@prefix sub: <https://w3id.org/np/RA_6ApRyitrPXxPeNrroR8zS3Hv4yvSADEPX-hbFcaGqw/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-fsr-principles a grlc:grlc-query;
+    dct:description "For a FAIR Supporting Resource (FSR), lists the FAIR (sub-)principles it relates to: those referred to by the FIP questions under which communities declare using it (with the number of declaring communities), and those its FSR types enable or support according to the FIP Ontology class definitions (fip:enables / fip:supports). One row per principle.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the FAIR principles of an FSR";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix schema: <https://schema.org/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+prefix tpff: <https://w3id.org/fair/3pff/>
+prefix search: <http://www.openrdf.org/contrib/lucenesail#>
+
+select ?principle (replace(str(?principle), \"^.*/\", \"\") as ?principle_label)
+  (group_concat(distinct ?via; separator=\", \") as ?via) (count(distinct ?community) as ?communities)
+where {
+  {
+    graph npa:graph { ?dnp npx:hasNanopubType fip:FIP-Declaration ; np:hasAssertion ?da ; npa:hasValidSignatureForPublicKey ?dpk . filter not exists { ?dx npx:invalidates ?dnp ; npa:hasValidSignatureForPublicKey ?dpk . } }
+    graph ?da { ?decl (fip:declares-current-use-of|fip:declares-planned-use-of|fip:declares-planned-replacement-of) ?_fsr_iri ; fip:refers-to-question ?question ; fip:declared-by ?community . }
+    graph npa:graph { ?qnp npx:introduces ?question ; np:hasAssertion ?qa . }
+    graph ?qa { ?question fip:refers-to-principle ?principle . }
+    bind(concat(\"question \", replace(str(?question), \"^.*FIP-Question-\", \"\")) as ?via)
+  } union {
+    graph npa:graph { ?fsrnp npx:introduces|npx:describes ?_fsr_iri ; npx:hasNanopubType ?type ; npa:hasValidSignatureForPublicKey ?spk . filter not exists { ?sx npx:invalidates ?fsrnp ; npa:hasValidSignatureForPublicKey ?spk . } }
+    filter(strstarts(str(?type), \"https://w3id.org/fair/fip/terms/\"))
+    graph npa:graph { ?tnp npx:introduces ?type ; np:hasAssertion ?ta ; npa:hasValidSignatureForPublicKey ?tpk . filter not exists { ?tx npx:invalidates ?tnp ; npa:hasValidSignatureForPublicKey ?tpk . } }
+    graph ?ta { ?type fip:enables|fip:supports ?principle . }
+    bind(concat(\"type \", replace(replace(str(?type), \"^.*/\", \"\"), \"-\", \" \")) as ?via)
+  }
+} group by ?principle order by ?principle_label
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-11T09:37:25Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-fsr-principles;
+    rdfs:label "Get the FAIR principles of an FSR";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzZAkv4Mu1YSUxQMriBnhYunqosX5wpuQ3FjUyzW8wTC51wjCmhsChyhS+mCx7Od+2MTDpdhxDWA+pH1r9AX508X2rIY/sbpMS+pd56e0qKPQ0t4folln1TgamPN9iOlY/yLc2x27AdipWIGXUdtL2iAcb+P/Y5dQS2AkHMS3lP2e5JBL5/bD/10qvTLKvdsqIKts8qjuLpxr9CFbsS2gLjMkXL5D2IsJ0cL5sgmIfS1inLVxIfXrS/OgqYNFqeNznUYCVWfo0g7DKjnjiICz3omeQeJFLYwlJ6PhUhYDQS6O318DGwUCwhnuXbBbwL9evZa2I/0Pwu5xpZdNLYJ5UwIDAQAB";
+    npx:hasSignature "n7CiFGl/0DDujeYeHylQ6cGEVpM5NySKCOYt6FuMpQB8fYqQt4Cf1XXHN/rHUfMu31y6CMjspZXUyrKXpLyzzIL3lmpB+JflH3P6eNKKIhOz3JiBalKrXSU4GKjdtOz7xEwBffgAQCcvHvXJDBfj0SrPeyQxLjpy4rAwzfRJj68AzUnKxMjZR+CgAswep/HKPEpsm/Be5ONOVLQ/4zuGf8onwUddIzyiAwGrS3IeK/G9ek1pAHE+xiwWy2TGGgt1PesbnT7FWLLzr+hn4JIEOG4ocL56AIL9nHfejyE4n8Neaa+JzrG1rxF/bHAQ3veWlfO4fRHfarhasYuxqalH5w==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot> .
+}
+

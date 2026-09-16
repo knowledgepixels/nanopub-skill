@@ -1,0 +1,86 @@
+@prefix this: <https://w3id.org/np/RAqsUY64nIVQzMxsifZB_w6oqZex7ZIcROx_F8wKLgZ5I> .
+@prefix sub: <https://w3id.org/np/RAqsUY64nIVQzMxsifZB_w6oqZex7ZIcROx_F8wKLgZ5I/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a gen:ViewResultAction;
+    rdfs:label "➕ add...";
+    gen:hasActionTemplate <https://w3id.org/np/RAOANAcjR5hGkYns4nWTy6ngjRtXdDm588cgddCOIZed8/template>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:approveAction a gen:ViewEntryAction;
+    rdfs:label "⚖️ approve/disapprove...";
+    gen:hasActionTemplate <https://w3id.org/np/RAx2PsXNbCcxYh3sOSScV9H0-tqyETuKjyHsgD6FPC3_E>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "action_target:nanopub";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:MemberRole .
+  
+  sub:same-work-links-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAczGQAaUAJTtrpdTxITnVKDpNBjBZiFvJrz6wIJzq5ss/same-work-links-view-kind>;
+    dct:title "🔁 Same-work links";
+    rdfs:label "OpenAIRE same-work links view";
+    gen:appliesToInstancesOf gen:Space;
+    gen:hasDisplayWidth gen:ColumnWidth12of12;
+    gen:hasStructuralPosition "5.1.openaire-linking.3.sameWork";
+    gen:hasViewAction sub:addAction, sub:approveAction;
+    gen:hasViewQuery <https://w3id.org/np/RAVkkEfcpTKMer3ulhWXy7FK_SrxupG3yFLHrptRnCxbE/get-openaire-same-work-links>;
+    gen:hasViewQueryTargetField "space" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  gen:EveryoneRole nt:hasLabelFromApi "everyone" .
+  
+  <https://w3id.org/np/RAOANAcjR5hGkYns4nWTy6ngjRtXdDm588cgddCOIZed8/template> nt:hasLabelFromApi
+      "OpenAIRE: Two records denote the same work" .
+  
+  <https://w3id.org/np/RAVkkEfcpTKMer3ulhWXy7FK_SrxupG3yFLHrptRnCxbE/get-openaire-same-work-links>
+    nt:hasLabelFromApi "Get OpenAIRE same-work links" .
+  
+  this: dct:created "2026-07-29T18:24:17Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:same-work-links-view;
+    npx:introduces <https://w3id.org/np/RAczGQAaUAJTtrpdTxITnVKDpNBjBZiFvJrz6wIJzq5ss/same-work-links-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAr8l0M9YwiKfu6FbJYmgsNnr7mtwdd4tNrgAURL8Q3fA>;
+    rdfs:label "OpenAIRE same-work links view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ncSEVxWLbBiBqg0Sz9QR1aWfHURLsxYRLlxLWuzSPCN2I/6DsO/iY6l4O2rKdtKD7fknlf7BnTG+oCqGTqlKP5LL4R5Mk60+UY6YEZJCbTzTF/wDXV6sWcxspSMTcyeDlM4kaUtmNwLwI/S8sWUB3AfFDWggPO6cybfxCaG+j4E=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAx2PsXNbCcxYh3sOSScV9H0-tqyETuKjyHsgD6FPC3_E> nt:hasLabelFromApi
+      "Approving or disapproving of a nanopublication" .
+}
+

@@ -1,0 +1,58 @@
+@prefix this: <https://w3id.org/np/RAwlsJmKSl0VOzzfqalwRyZJnbZvg1D8YCl2HbMk7pOpc> .
+@prefix sub: <https://w3id.org/np/RAwlsJmKSl0VOzzfqalwRyZJnbZvg1D8YCl2HbMk7pOpc/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:publication-details-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:publication-details-view-kind;
+    dct:title "📄 Publication details";
+    rdfs:label "Publication details view";
+    gen:appliesToNamespace <https://doi.org/>;
+    gen:hasStructuralPosition "2.5.details";
+    gen:hasViewQuery <https://w3id.org/np/RAQpKLGcVZSdY4BDXx9pUaDupJv4ed4CjT1f1pZxjQ_ko/get-publication-details>;
+    gen:hasViewQueryTargetField "publication" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RAQpKLGcVZSdY4BDXx9pUaDupJv4ed4CjT1f1pZxjQ_ko/get-publication-details>
+    nt:hasLabelFromApi "Get publication details - Given a publication, this query returns its bibliographic details, citing resources, and derived statements as property-value rows." .
+  
+  this: dct:created "2026-07-06T14:41:17Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:publication-details-view;
+    npx:introduces sub:publication-details-view-kind;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "lo2QGBIJcCrlmWxMAAkp9e82FSSR1beROHGQ9DJ95o3JuI7WDN2ueFYJAfO/AfUFt3SkYQUnQMF2Yv4zYPcgG7izE5LXB+BG7FAT9eF0QmpQay76W6TjQ9y/4i0fRXRMlqB85yKsf+Kg25bbAd7l5+JESEDJT0jK0bJoXVEPJK0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

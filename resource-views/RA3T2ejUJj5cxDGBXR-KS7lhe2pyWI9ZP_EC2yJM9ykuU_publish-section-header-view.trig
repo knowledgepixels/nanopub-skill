@@ -1,0 +1,55 @@
+@prefix this: <https://w3id.org/np/RA3T2ejUJj5cxDGBXR-KS7lhe2pyWI9ZP_EC2yJM9ykuU> .
+@prefix sub: <https://w3id.org/np/RA3T2ejUJj5cxDGBXR-KS7lhe2pyWI9ZP_EC2yJM9ykuU/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:publish-header-view a gen:HeaderView, gen:ResourceView;
+    dct:description "Publish a new nanopublication by choosing one of the templates below.";
+    dct:isVersionOf sub:publish-header-view-kind;
+    dct:title "✏ Publish";
+    rdfs:label "Publish section header view";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:hasStructuralPosition "7.5.publish" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-08-13T06:05:41Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:publish-header-view;
+    npx:introduces sub:publish-header-view-kind;
+    rdfs:label "Publish section header view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAZYU_kQZ0B3ruoNSeZOaKR6M93PJ-z1jlArXl7_H4EEU> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "OLPlpkX06A4E6N2X3MGUB7L/fLtRfCkAWzzThbpJX/uQwPkiNQnk9R+pWiKfK8w8NTBZ2pkeGsn1sIPd0DjrLW8xbmRkyw6sjUsWcZbsyoG4cqotXGNJdakaKA9SZFvHg2/+77LhPxifL7oKUu3C5L6qtZla8wjGnUBtfFv86LQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

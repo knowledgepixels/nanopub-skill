@@ -1,0 +1,101 @@
+@prefix this: <https://w3id.org/np/RAl7MOJ_aQGOQNGcLClAqhSGx6mFDdrSXvVzrYzGk301I> .
+@prefix sub: <https://w3id.org/np/RAl7MOJ_aQGOQNGcLClAqhSGx6mFDdrSXvVzrYzGk301I/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-all-fips a grlc:grlc-query;
+    dct:description "Returns all FAIR Implementation Profiles (FIPs) from their latest non-invalidated nanopublications: the FIP, its declaring community (name only), version, publication date, the number of FIP declarations in its declaration index, and the top-level research domains of its community (the SRAO roots that the community's domains fall under, resolved through the Research domains (SRAO) resource of the FAIR Implementation Space). Reference FIPs (rFIPs) are listed by the separate rFIP view and excluded here. Example nanopublications are excluded.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get all FIPs";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix schema: <https://schema.org/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+prefix tpff: <https://w3id.org/fair/3pff/>
+prefix search: <http://www.openrdf.org/contrib/lucenesail#>
+
+select ?fip (min(?fip_label) as ?fip_label) (min(?community) as ?community) (min(?community_label) as ?community_label) (min(?version) as ?version)
+  (count(distinct ?decl_np) as ?declarations)
+  (group_concat(distinct ?top_label; separator=\", \") as ?domains)
+  (min(?date) as ?date) (min(?np) as ?np) (\"^\" as ?np_label)
+where {
+  graph npa:graph {
+    ?np npx:hasNanopubType fip:FAIR-Implementation-Profile ; npx:introduces ?fip ; npa:hasValidSignatureForPublicKey ?pk ; dct:created ?date ; np:hasAssertion ?a .
+    filter not exists { ?np npx:hasNanopubType fip:Reference-FAIR-Implementation-Profile . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    filter not exists { ?x npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pk . }
+  }
+  graph ?a {
+    ?fip a fip:FAIR-Implementation-Profile ; rdfs:label ?fip_label ; fip:declared-by ?community .
+    optional { ?fip schema:version|<http://schema.org/version> ?version . }
+    optional { ?fip fip:has-declaration-index ?index . }
+  }
+  optional { graph npa:networkGraph { ?index npx:includesElement ?decl_np . } }
+  optional {
+    graph npa:graph { ?cnp npx:hasNanopubType fip:FAIR-Implementation-Community ; npx:introduces|npx:describes ?community ; np:hasAssertion ?ca ; npa:hasValidSignatureForPublicKey ?cpk . filter not exists { ?cx npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKey ?cpk . } }
+    graph ?ca { ?community rdfs:label ?community_label . optional { ?community fip:has-research-domain ?domain . } }
+    graph npa:graph {
+    ?srao_np npx:describes <https://w3id.org/spaces/FAIR-Implementation-Space/r/research-domains> ;
+      npa:hasValidSignatureForPublicKeyHash \"9069576dbf1967483c9a3095fb8a7c38b4770974a1733c681d5969e14e455e2b\" ;
+      np:hasAssertion ?srao_a .
+    filter not exists { ?srao_x npx:invalidates ?srao_np ; npa:hasValidSignatureForPublicKeyHash \"9069576dbf1967483c9a3095fb8a7c38b4770974a1733c681d5969e14e455e2b\" . }
+    }
+    optional { graph ?srao_a { ?domain rdfs:subClassOf* ?top . filter not exists { ?top rdfs:subClassOf ?tp . } ?top rdfs:label ?top_label . } }
+
+  }
+} group by ?fip order by ?fip_label
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-11T10:21:20Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-all-fips;
+    npx:supersedes <https://w3id.org/np/RAb1YZEI6dbjluVU2LmUs4oMMYhiGhasqsLOL3UM2oyJY>;
+    rdfs:label "Get all FIPs";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzZAkv4Mu1YSUxQMriBnhYunqosX5wpuQ3FjUyzW8wTC51wjCmhsChyhS+mCx7Od+2MTDpdhxDWA+pH1r9AX508X2rIY/sbpMS+pd56e0qKPQ0t4folln1TgamPN9iOlY/yLc2x27AdipWIGXUdtL2iAcb+P/Y5dQS2AkHMS3lP2e5JBL5/bD/10qvTLKvdsqIKts8qjuLpxr9CFbsS2gLjMkXL5D2IsJ0cL5sgmIfS1inLVxIfXrS/OgqYNFqeNznUYCVWfo0g7DKjnjiICz3omeQeJFLYwlJ6PhUhYDQS6O318DGwUCwhnuXbBbwL9evZa2I/0Pwu5xpZdNLYJ5UwIDAQAB";
+    npx:hasSignature "vBFAG49QFGATyLlrlMkeahDub+FHlezmvEFyEUIveeaQRBLGBHzPCBtaw8Xs+CWBrZIljtOo0Px4ubvIVs4zKrvfiw5mWJYqm/36nvH/D9wemjdsAH503n9OijGhA5+CJuiiq5A34h4g+qUGNBerY1KQabVv4v5xrSxoXPLesSG+cywtJDyxR1EWUrtREDMjkPM1+0knf+ywvlMoLazCu3kQaf4HZNg2rK5VZSnQpj8NA78gAksodvVPeYzqcb+LKLsEfyUL1kkB8ny+umltGuViwiX9kQIJ1wZq75hkp8Zzkm7+SOv3TZE3CKRMI/A/jbVnuKj3fOHVwGlqcmRYmw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot> .
+}
+

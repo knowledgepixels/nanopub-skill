@@ -1,0 +1,83 @@
+@prefix this: <https://w3id.org/np/RAtiuwYYr4ZfpaICYSVcbP5o63cLF52qbdDrNYtxZX3PU> .
+@prefix sub: <https://w3id.org/np/RAtiuwYYr4ZfpaICYSVcbP5o63cLF52qbdDrNYtxZX3PU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-idea-upvotes a grlc:grlc-query;
+    dct:description "Lists the up-votes of one idea for its part page, oldest first: one row per valid (not retracted or otherwise invalidated) schema:VoteAction nanopublication whose schema:object is the idea, with the voter (schema:agent, labelled with the foaf:name from the nanopublication's publication info), the date, and the nanopublication. The hidden withdraw_target column holds the nanopublication when it was signed by the viewer's local key (?__LOCALPUBKEY_multi), so that the viewer can retract their own up-vote.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the up-votes of an idea";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix schema: <https://schema.org/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix idea: <https://w3id.org/np/RA7b4hUMrroGWIlG_JJm9XV_XJlHGqRiTFP0amY0BcOd8/>
+
+select ?voter ?voter_label ?date ?np ?np_label ?withdraw_target
+where {
+  {
+    select ?np ?voter ?created ?pk (min(str(?vn)) as ?vname) where {
+      graph ?va { ?vote a schema:VoteAction ; schema:object ?_idea_iri . }
+      graph npa:graph {
+        ?np np:hasAssertion ?va ; np:hasPublicationInfo ?pi ; npa:hasValidSignatureForPublicKey ?pk ; dct:created ?created .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKey ?pk . }
+      }
+      optional { graph ?va { ?vote schema:agent ?voter . } }
+      optional { graph ?pi { ?voter foaf:name ?vn . } }
+    } group by ?np ?voter ?created ?pk
+  }
+  values ?__LOCALPUBKEY_multi {}
+  bind(coalesce(?vname, replace(str(?voter), '^.*/', '')) as ?voter_label)
+  bind(str(?created) as ?date)
+  bind('^' as ?np_label)
+  bind(if(coalesce(str(?pk) = str(?__LOCALPUBKEY_multi), false), str(?np), '') as ?withdraw_target)
+}
+order by ?created""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-15T09:34:08Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-idea-upvotes;
+    npx:supersedes <https://w3id.org/np/RAb_wKxDiP2vo04XJ-Uiy5mCBYLTKkonKGk74LobmDMJc>;
+    rdfs:label "Get the up-votes of an idea";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "VDqYEZxedu0cnoX1O3iK6gtvIQrAyASdvG9SbSPWf1c7xRP9OPX8XzHvB7JTP0HFKk1C1WZ2fu2HYRVIEVO+o3025kFh6JISg5X6MEsCu+cqQyV86Fn87iH0+ReHdOBRNQrcBcE4XpPlZthIovRSHw382i4t2IjzM++6H29Rg/U=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

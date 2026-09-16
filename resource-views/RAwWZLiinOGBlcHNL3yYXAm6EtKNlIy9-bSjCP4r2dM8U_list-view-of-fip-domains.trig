@@ -1,0 +1,58 @@
+@prefix this: <https://w3id.org/np/RAwWZLiinOGBlcHNL3yYXAm6EtKNlIy9-bSjCP4r2dM8U> .
+@prefix sub: <https://w3id.org/np/RAwWZLiinOGBlcHNL3yYXAm6EtKNlIy9-bSjCP4r2dM8U/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:fip-domains-list-view a <https://w3id.org/kpxl/gen/terms/ListView>, <https://w3id.org/kpxl/gen/terms/ResourceView>;
+    dct:isVersionOf <https://w3id.org/np/RAjMe-jsrbT0zAOBXon7VGjO8gwMrhy1vf1-Jea3Nevx0/fip-domains-list-view-kind>;
+    dct:title "FIP domains";
+    rdfs:label "List view of FIP domains";
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.5.fip-domains.1";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RA8gemDprPvQeIDYnYFyJH7wDLNtlg709pOwsYKQPeYTw/fip-domains>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RA8gemDprPvQeIDYnYFyJH7wDLNtlg709pOwsYKQPeYTw/fip-domains> nt:hasLabelFromApi
+      "Get FIP domains - This query returns the domains of all FAIR Implementation Profiles (FIPs)." .
+  
+  this: dct:created "2025-12-09T12:47:01.055+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:fip-domains-list-view;
+    npx:introduces <https://w3id.org/np/RAjMe-jsrbT0zAOBXon7VGjO8gwMrhy1vf1-Jea3Nevx0/fip-domains-list-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAjMe-jsrbT0zAOBXon7VGjO8gwMrhy1vf1-Jea3Nevx0>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAMwJK-KwLZao9NyIJ3QPE6AK_MasTNoHlp-PoUEavR2c> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "knveIorv4s6newdbNFfwT0u5StoBXYKOOVEC5TdyJhajW4UQhtVYZ6FbKrGLg2k+Z+C0Jw5gbAcipkPUy/hq5JZ2945zTpMC9zjDpe0L6sB+QH5/3DEpDfeijx6waHZHxXoGrWr4kNpO/iOco6k7X52tpREmBjDalj+3zztN4SI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

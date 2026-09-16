@@ -1,0 +1,105 @@
+@prefix this: <https://w3id.org/np/RAlZD5yYrf1Q5i-LB5jAcIzQ_1wLrXSa4E2dq7kS9yylI> .
+@prefix sub: <https://w3id.org/np/RAlZD5yYrf1Q5i-LB5jAcIzQ_1wLrXSa4E2dq7kS9yylI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-observed-events-of-user a grlc:grlc-query;
+    dct:description "Returns the events a user observes, limited to current and future events only: past events are never listed. An observed event is a space typed as an event (gen:Event) in which the user holds the observer role, i.e. a validated role instantiation whose property is gen:hasObserver in the current space state. The user does not need any other role in the event, and holding one (such as admin) does not exclude it. Other roles of the observer tier, such as planned attendance or participation, are not matched. An event counts as current or future while its end date (or its start date, when it has no end date) is today or later, so an event under way is still listed until its last day has passed; events without a start date are left out, since they cannot be placed in time. Each event is described from the newest still-valid nanopublication that introduces it, giving its label and its dates (a single day, or a start - end range), ordered by start date, soonest first.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get events a user is interested in";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/8ad572d99071cc1ba0c16e54087b43594bdd9e8b2cfb62d2a0b16945fc49e53c>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix schema: <http://schema.org/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+select ?event ?event_label ?dates ?np (\"^\" as ?np_label) where {
+  {
+    select distinct ?event where {
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+        graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+        graph ?stateG {
+          ?ri a gen:RoleInstantiation ;
+            npa:forAgent ?_user_iri ;
+            npa:forSpace ?event ;
+            npa:inverseProperty gen:hasObserver .
+        }
+      }
+    }
+  }
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np npx:introduces ?event .
+    ?np np:hasAssertion ?a .
+    ?np dct:created ?npDate .
+    filter not exists {
+      ?np2 npx:introduces ?event .
+      ?np2 npa:hasValidSignatureForPublicKeyHash ?pubkey2 .
+      filter not exists { ?npx2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+      ?np2 dct:created ?npDate2 .
+      filter(?npDate2 > ?npDate)
+    }
+  }
+  graph ?a {
+    ?event a gen:Space .
+    ?event a gen:Event .
+    ?event rdfs:label ?event_label .
+  }
+  graph ?a { ?event schema:startDate ?datetime . }
+  optional { graph ?a { ?event schema:endDate ?endDatetime . } }
+  bind(xsd:date(substr(str(?datetime), 1, 10)) as ?date)
+  bind(xsd:date(substr(str(now()), 1, 10)) as ?today)
+  optional { bind(xsd:date(substr(str(?endDatetime), 1, 10)) as ?endDate) }
+  bind(if(bound(?endDate), ?endDate, ?date) as ?effectiveEnd)
+  filter(?effectiveEnd >= ?today)
+  bind(substr(str(?datetime), 1, 10) as ?startDay)
+  bind(if(bound(?endDatetime), substr(str(?endDatetime), 1, 10), ?startDay) as ?endDay)
+  bind(if(?startDay = ?endDay, ?startDay, concat(?startDay, \" – \", ?endDay)) as ?dates)
+} order by ?date ?event_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo <https://orcid.org/0000-0001-8492-0354> .
+}
+
+sub:pubinfo {
+  <https://orcid.org/0000-0001-8492-0354> foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-09-16T15:24:51Z"^^xsd:dateTime;
+    dct:creator <https://orcid.org/0000-0001-8492-0354>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-observed-events-of-user;
+    rdfs:label "Get events a user is interested in";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+i9DV8ynzO944pYkYsDwtlqJHuk+b7FQt6Bb4TIQSDX3jGUURn6WpaNwESHmgMLWSydaH5XlabMzuqpPL4iyB+IAzvwIxdJBLhe39EQMu2j+FZ/5d/xu/gO3nZw2KoEvJ7cJisabuI05OylIRSJ+OG5CmzFxnjojUEJeCFi1njY1InhXrb0yHud9b1ifzweoN6YYOBecKs1gTOaT2bf+t4Wgzg3M0PmRVZ4F0OALsnh4T5+x7kFtiPcDKNpORi585JjKCZ4kczIF6oUKcwgC0kmIY97jtLqSLcXRkxHx5CDI6qz4XlRFs1ZbCUdSlzjdPZAkaBcNem1gIhWzkHkEnQIDAQAB";
+    npx:hasSignature "UdtKOHLJf8ObppjlBjyMhYcOrZURzrZw0MbRdtVyRMqmAtDLO9++1B2PvusThw7mDM+Q644uEg7T67k5V/maEt6K1ACfWoCfR1M63QNmETyjsDzmhYAGeUnULOKPaj9seljroudD51YNBhZhLwApJfAlVS0eUzooAIIjpCM4Mk7X4KKH8YKCNjUKJxn5iuwzoB14HIcL8NkQtFVL2BpG+ocFxR8aaSLLEGQ8WkFd5E8ZZUXUCG/Jx9qMJbA4kocZrpytvdg3mLXxizzmd0iv1G2UYkzu8iYtBel3SGkX9XZubmMydOQX3GGmp6IF1QqvLSFw5yhQqyVBoJ1m8B3kdg==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://orcid.org/0000-0001-8492-0354> .
+}
+

@@ -1,0 +1,53 @@
+@prefix this: <https://w3id.org/np/RAP3ESFFcc0k5FAca2pG8l1iv7VlNQWuc-tBbE_hLqMMQ> .
+@prefix sub: <https://w3id.org/np/RAP3ESFFcc0k5FAca2pG8l1iv7VlNQWuc-tBbE_hLqMMQ/> .
+@prefix schema: <https://schema.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:evidence-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RARmMC74bl5MJVDaERG0FsYirdE_nefQFEhqWVooQ2aVo/evidence-view-kind>;
+    dct:title "⚖️ Evidence";
+    rdfs:label "Evidence for and against a claim";
+    gen:appliesToInstancesOf schema:Statement;
+    gen:hasPageSize "10";
+    gen:hasStructuralPosition "4.4.evidence";
+    gen:hasViewQuery <https://w3id.org/np/RA2-94_7lfJTzgvFj-7KARAP1-NZx5r_LSIcEnnBr6O8Q/get-evidence-for-claim>;
+    gen:hasViewQueryTargetField "claim" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-09-01T13:24:01Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:evidence-view;
+    npx:supersedes <https://w3id.org/np/RARmMC74bl5MJVDaERG0FsYirdE_nefQFEhqWVooQ2aVo>;
+    rdfs:label "Evidence view" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+i9DV8ynzO944pYkYsDwtlqJHuk+b7FQt6Bb4TIQSDX3jGUURn6WpaNwESHmgMLWSydaH5XlabMzuqpPL4iyB+IAzvwIxdJBLhe39EQMu2j+FZ/5d/xu/gO3nZw2KoEvJ7cJisabuI05OylIRSJ+OG5CmzFxnjojUEJeCFi1njY1InhXrb0yHud9b1ifzweoN6YYOBecKs1gTOaT2bf+t4Wgzg3M0PmRVZ4F0OALsnh4T5+x7kFtiPcDKNpORi585JjKCZ4kczIF6oUKcwgC0kmIY97jtLqSLcXRkxHx5CDI6qz4XlRFs1ZbCUdSlzjdPZAkaBcNem1gIhWzkHkEnQIDAQAB";
+    npx:hasSignature "uxX7eTYP6cYPcT8VUb1rdptRBbMkEPGJRIqwob99h+lyKeeSJfHTfuf7U665JOouiaK+eaCnFufnwtm79VLUl8K7Rst0KfcHPynscqz7D4GINUUEeLZj8lIn9MMpqu5CKV42Jl8MeWJsQLxhkM+oSL9VZMXIFkA6CKUzcez2We/wfoigIgJ5+4Bh3IVcgdtTSx0JtN93VbITX6y3vYySQhYNToY6AsWd7Aq2RdYvwZ0Ea7dOwKedR6MOAFEF1qrzjEWg6N4oZTLlUuLqBnP24XPkktw5lL3eSQidDKxh3CxTxZsKQLVfKHRB7S2YN0B5u+L3Zd7bhxffL6ExQRy6tA==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

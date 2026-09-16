@@ -1,0 +1,67 @@
+@prefix this: <https://w3id.org/np/RAy3kdlFC6PAPaIsF4oBIi2GgesbBl671hye8ZqltkzPU> .
+@prefix sub: <https://w3id.org/np/RAy3kdlFC6PAPaIsF4oBIi2GgesbBl671hye8ZqltkzPU/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix wd: <http://www.wikidata.org/entity/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a gen:ViewResultAction;
+    rdfs:label "add...";
+    gen:hasActionTemplate <https://w3id.org/np/RAEipKyMzto49YbqjYTSPOvNOlVP2cWEcgITDyd-s0vY8>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "resource";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:session-messages-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:session-messages-view-kind;
+    dct:title "💬 Messages";
+    rdfs:label "Messages about a session";
+    gen:appliesToInstancesOf wd:Q604733;
+    gen:hasStructuralPosition "6.2.messages.1";
+    gen:hasViewAction sub:addAction;
+    gen:hasViewQuery <https://w3id.org/np/RApqpCItSUMFf82LaeQs8qFPo-GA8d8g4o-Apfypgyjx8/get-messages-about-this-resource-only>;
+    gen:hasViewQueryTargetField "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234;
+    prov:wasDerivedFrom <https://w3id.org/np/RAz_p_Eg5Xxc0T-MBmhmqFrB0IPb6BKUvnuCoDaQB1jWI/simple-message-view> .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-07T12:01:06Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:session-messages-view;
+    npx:introduces sub:session-messages-view-kind;
+    rdfs:label "Messages about a session";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RAefFjYMSnydcZtTqdT8TG8rJeJa76ryG7h10VHQiWKgY>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA7FuFF5RWV_iVg2IQNcFITP-ReH8Py1QQQcvD3mtku5g> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "V9yiD1Xc2mEGEoosN72HVawYbk4cqLOq/uGch8pq83KsCWJlcrifk5FWVilLVAF5kKkCS8hYQyZ/AjlPjUaxWWJljeVkATJFNneoafc6LHdJjYVu2dG4JzDLVM3PYsqpIZ0ITdCmo00xxeHFBHE22TrmCoKtqhbFM2WQ7KLAuXA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

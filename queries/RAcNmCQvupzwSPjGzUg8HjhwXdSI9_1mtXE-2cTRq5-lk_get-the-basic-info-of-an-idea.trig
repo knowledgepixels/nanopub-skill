@@ -1,0 +1,112 @@
+@prefix this: <https://w3id.org/np/RAcNmCQvupzwSPjGzUg8HjhwXdSI9_1mtXE-2cTRq5-lk> .
+@prefix sub: <https://w3id.org/np/RAcNmCQvupzwSPjGzUg8HjhwXdSI9_1mtXE-2cTRq5-lk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-idea-info a grlc:grlc-query;
+    dct:description "Key/value rows describing one idea (an instance of the Idea class published with the \"Suggesting an idea\" template) for its part page: title, description, what it is suggested for, further links, who suggested it and when, and the number of up-votes. The descriptive rows come from the newest valid (not invalidated, not superseded) nanopublication introducing the idea. Up-votes are schema:VoteAction nanopublications with the idea as schema:object, counted as distinct valid signing keys, so each person counts once.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the basic info of an idea";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix schema: <https://schema.org/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix idea: <https://w3id.org/np/RA7b4hUMrroGWIlG_JJm9XV_XJlHGqRiTFP0amY0BcOd8/>
+
+select ?Property_noheader ?Value_noheader (min(?vl) as ?Value_label)
+where {
+  {
+    select ?np ?a ?pi ?created where {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ; np:hasAssertion ?a ; np:hasPublicationInfo ?pi ;
+            npx:introduces ?_idea_iri ; dct:created ?created .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?newer npx:supersedes ?np . }
+      }
+      graph ?a { ?_idea_iri a idea:Idea . }
+    } order by desc(?created) limit 1
+  }
+  {
+    values (?property ?Property_noheader ?ord) {
+      ( rdfs:label        'Title:'          '1' )
+      ( dct:description   'Description:'    '2' )
+      ( gen:isRelevantFor 'Suggested for:'  '3' )
+      ( rdfs:seeAlso      'More info:'      '4' )
+    }
+    graph ?a { ?_idea_iri ?property ?Value_noheader . }
+    optional { graph ?lg { ?Value_noheader rdfs:label ?tl . } filter(isIRI(?Value_noheader)) }
+    bind(if(isIRI(?Value_noheader), coalesce(str(?tl), replace(str(?Value_noheader), '^.*/', '')), '') as ?vl)
+  } union {
+    graph npa:graph { ?np npx:introduces ?_idea_iri . }
+    graph ?pi { ?np dct:creator ?Value_noheader . }
+    optional { graph ?pi { ?Value_noheader foaf:name ?cn . } }
+    bind(coalesce(str(?cn), replace(str(?Value_noheader), '^.*/', '')) as ?vl)
+    bind('Suggested by:' as ?Property_noheader) bind('5' as ?ord)
+  } union {
+    graph npa:graph { ?np npx:introduces ?_idea_iri ; dct:created ?c2 . }
+    bind(str(?c2) as ?Value_noheader)
+    bind('' as ?vl) bind('Suggested on:' as ?Property_noheader) bind('6' as ?ord)
+  } union {
+    {
+      select (count(distinct ?vpk) as ?nv) where {
+        graph ?va { ?vote a schema:VoteAction ; schema:object ?_idea_iri . }
+        graph npa:graph {
+          ?vnp np:hasAssertion ?va ; npa:hasValidSignatureForPublicKeyHash ?vpk .
+          filter not exists { ?vinv npx:invalidates ?vnp ; npa:hasValidSignatureForPublicKeyHash ?vpk . }
+        }
+      }
+    }
+    bind(str(?nv) as ?Value_noheader)
+    bind('' as ?vl) bind('Up-votes:' as ?Property_noheader) bind('7' as ?ord)
+  }
+}
+group by ?ord ?Property_noheader ?Value_noheader
+order by ?ord ?Value_noheader""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-15T09:34:19Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-idea-info;
+    npx:supersedes <https://w3id.org/np/RAK840_o0ofx3YDSsR5-afZSrJHcG7Y-zn7WXypakxpZk>;
+    rdfs:label "Get the basic info of an idea";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "bUAr7bF74dOrIas68dvpRLQD6p9clBKryztEupOeQ/kE8jhXn0OT6AfRvmxRBTXwAXlkLITU+ECIlsxZ9qE0s072jMtJC1uCbdjg15ozHx8YNY9sm2wAlJNjK66ATp/lparnn3WML62NcbpH9oFPRSJf2B0d/jUqoY70I+6RNgQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,58 @@
+@prefix this: <https://w3id.org/np/RAIR2M8kcnTv05GAk--upOuu9pNzoH9UALmLnAfZ2EUD4> .
+@prefix sub: <https://w3id.org/np/RAIR2M8kcnTv05GAk--upOuu9pNzoH9UALmLnAfZ2EUD4/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:reviewed-articles-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf sub:reviewed-articles-view-kind;
+    dct:title "🔍 Reviewed articles";
+    rdfs:label "View of the reviewed articles by a user";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/IndividualAgent>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "5.4.reviewedArticles.1";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAwsg9J4wGkznq6vUH6MeWsRgYlQUo1DIX-MSsT3uPVJc/get-reviews-by-reviewer>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "reviewer" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-08-05T13:04:17.950Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:reviewed-articles-view;
+    npx:introduces sub:reviewed-articles-view-kind;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCaQXE2B2hJ6QdWxaWerU4F/XOtCQdj2OkdrIYd1kpMY9hIUh8boxaO3uOBeqvvqKLf5HjpRF4DT1eghOSsa2Dhd5HRTM/XIamvwWkHpN4oB3Ml19pAAzjTqczYmFLfgG67mGL5+vSA8VEdHtKQCrvP4SpTibMBP1qaxt3k1tqD6wIDAQAB";
+    npx:hasSignature "ZtNxVVU+iD0ntWYA8A7wSapUD5Wp61VsmHdVTpevpF9vUKsCZtQhO42/ypJYIP9spbQCmXB1euqwdPiv+QfCS57flO2N8puC1FkRCAoDuWeKYDCQd7aoLg/wCFDsUoSMlwOAMSvmRPrkZEpHcn9nXjaurR8Lb+d5Q6AP4TlTAUg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+  
+  <https://w3id.org/np/RAwsg9J4wGkznq6vUH6MeWsRgYlQUo1DIX-MSsT3uPVJc/get-reviews-by-reviewer>
+    nt:hasLabelFromApi "Get reviews by reviewer - This query returns the items a given user has reviewed." .
+}
+

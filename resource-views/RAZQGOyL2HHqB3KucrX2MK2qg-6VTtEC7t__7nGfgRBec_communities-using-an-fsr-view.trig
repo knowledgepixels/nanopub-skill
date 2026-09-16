@@ -1,0 +1,77 @@
+@prefix this: <https://w3id.org/np/RAZQGOyL2HHqB3KucrX2MK2qg-6VTtEC7t__7nGfgRBec> .
+@prefix sub: <https://w3id.org/np/RAZQGOyL2HHqB3KucrX2MK2qg-6VTtEC7t__7nGfgRBec/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:fsr-communities-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:fsr-communities-view-kind;
+    dct:title "👥 Communities";
+    rdfs:label "Communities using an FSR view";
+    gen:appliesToInstancesOf <https://w3id.org/fair/fip/terms/Access-Service>, <https://w3id.org/fair/fip/terms/Authentication-and-authorization-service>,
+      <https://w3id.org/fair/fip/terms/Available-FAIR-Enabling-Resource>, <https://w3id.org/fair/fip/terms/Available-FAIR-Supporting-Resource>,
+      <https://w3id.org/fair/fip/terms/Communication-protocol>, <https://w3id.org/fair/fip/terms/Crosswalk>,
+      <https://w3id.org/fair/fip/terms/Data-usage-license>, <https://w3id.org/fair/fip/terms/Domain-Specific-Registry>,
+      <https://w3id.org/fair/fip/terms/Editor>, <https://w3id.org/fair/fip/terms/Emerging-Community>,
+      <https://w3id.org/fair/fip/terms/FAIR-Data-Stewardship-Event>, <https://w3id.org/fair/fip/terms/FAIR-Enabling-Resource>,
+      <https://w3id.org/fair/fip/terms/FAIR-Enabling-Resource-to-be-Developed>, <https://w3id.org/fair/fip/terms/FAIR-Enrichment-Service>,
+      <https://w3id.org/fair/fip/terms/FAIR-Implementation-Community>, <https://w3id.org/fair/fip/terms/FAIR-Practice>,
+      <https://w3id.org/fair/fip/terms/FAIR-Representation-Service>, <https://w3id.org/fair/fip/terms/FAIR-Specification>,
+      <https://w3id.org/fair/fip/terms/FAIR-Supporting-Resource>, <https://w3id.org/fair/fip/terms/FAIR-Supporting-Resource-to-be-Developed>,
+      <https://w3id.org/fair/fip/terms/FAIR-Supporting-Service>, <https://w3id.org/fair/fip/terms/FAIR-Supporting-Software>,
+      <https://w3id.org/fair/fip/terms/Generalist-Registry>, <https://w3id.org/fair/fip/terms/Identifier-service>,
+      <https://w3id.org/fair/fip/terms/Knowledge-representation-language>, <https://w3id.org/fair/fip/terms/Mature-Community>,
+      <https://w3id.org/fair/fip/terms/Metadata-data-linking-schema>, <https://w3id.org/fair/fip/terms/Metadata-preservation-policy>,
+      <https://w3id.org/fair/fip/terms/Metadata-schema>, <https://w3id.org/fair/fip/terms/Persistency-Policy>,
+      <https://w3id.org/fair/fip/terms/Provenance-model>, <https://w3id.org/fair/fip/terms/Reference-FAIR-Implementation-Profile>,
+      <https://w3id.org/fair/fip/terms/Registry>, <https://w3id.org/fair/fip/terms/Semantic-model>,
+      <https://w3id.org/fair/fip/terms/Structured-vocabulary>, <https://w3id.org/fair/fip/terms/Validation-Service>,
+      <https://w3id.org/fair/fip/terms/Web-API>;
+    gen:governedBy <https://w3id.org/spaces/FAIR-Implementation-Space>;
+    gen:hasDisplayWidth gen:ColumnWidth06of12;
+    gen:hasPageSize "20";
+    gen:hasStructuralPosition "4.3.communities";
+    gen:hasViewQuery <https://w3id.org/np/RAOmKbkyg4Y_92243f-wPHJZasDmh8QnLUnRUM8E6DPGQ/get-fsr-communities>;
+    gen:hasViewQueryTargetField "fsr" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-11T09:43:25Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:fsr-communities-view;
+    npx:introduces sub:fsr-communities-view-kind;
+    rdfs:label "Communities using an FSR view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAfa1tHtbOrV0YaCY0LyjHkpXoudrauhN8DUYPM63ZQ-k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzZAkv4Mu1YSUxQMriBnhYunqosX5wpuQ3FjUyzW8wTC51wjCmhsChyhS+mCx7Od+2MTDpdhxDWA+pH1r9AX508X2rIY/sbpMS+pd56e0qKPQ0t4folln1TgamPN9iOlY/yLc2x27AdipWIGXUdtL2iAcb+P/Y5dQS2AkHMS3lP2e5JBL5/bD/10qvTLKvdsqIKts8qjuLpxr9CFbsS2gLjMkXL5D2IsJ0cL5sgmIfS1inLVxIfXrS/OgqYNFqeNznUYCVWfo0g7DKjnjiICz3omeQeJFLYwlJ6PhUhYDQS6O318DGwUCwhnuXbBbwL9evZa2I/0Pwu5xpZdNLYJ5UwIDAQAB";
+    npx:hasSignature "jqAmmc62HAmSzdiZzMOJX5IeRBoJ5s5QmbQWyoEaHKvEK/IF8Oh5v58Q3JSp6Gdzo3ZsuXEXRqOvmGkqi0IZthlMipJyXdIQZAL2rIXG+YjLkIJWQ+8gXfKvzxFb2cHZhKEzMrY2+s5rnioR106Ow+/nzQ1uD9LMyKJEanbbaOUIXtGySnRdVmL0FrAgDUZBLDHWQamLfZ0VMCMObCcwxPW8MHjAAENIwYry2mnIUiWm6N+LkL/dxKeBC98qgZPc07raxFZLG1wNVjYj8+sIMYxtUfkjkVCKjez1aVK7dXbDFo9VSfTd3ud2A9dlYjYqLp5620gT1mv1IvTn30hdrA==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot> .
+}
+

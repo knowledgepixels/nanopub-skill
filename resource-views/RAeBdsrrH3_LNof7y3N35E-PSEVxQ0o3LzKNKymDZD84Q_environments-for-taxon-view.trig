@@ -1,0 +1,70 @@
+@prefix this: <https://w3id.org/np/RAeBdsrrH3_LNof7y3N35E-PSEVxQ0o3LzKNKymDZD84Q> .
+@prefix sub: <https://w3id.org/np/RAeBdsrrH3_LNof7y3N35E-PSEVxQ0o3LzKNKymDZD84Q/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    rdfs:label "add...";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> ns1:RAZhLP7PiTBTSNhJlRRQT5xPkp___jXP_zC3_yQgkhKhk;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "taxonname" .
+  
+  sub:environments-for-taxon-view a <https://w3id.org/kpxl/gen/terms/ResourceView>,
+      <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RAMetPCsNimoMV4sVIWVFVMOCPAKIu58VZLjMe8N03r20/environments-for-taxon-view-kind>;
+    dct:title "Associated environments";
+    rdfs:label "Environments for taxon view";
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.8.environments";
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:addAction;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RALPCoi8MPPBbQsWh17-4ofVZGl9IZMGVUMK3wAPXW3G8/get-environments-for-taxon>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "taxonname" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  ns1:RAZhLP7PiTBTSNhJlRRQT5xPkp___jXP_zC3_yQgkhKhk nt:hasLabelFromApi "Expressing an association between an organism and an environment - <p>Such a nanopublication expresses an association between an organism instan..." .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RALPCoi8MPPBbQsWh17-4ofVZGl9IZMGVUMK3wAPXW3G8/get-environments-for-taxon>
+    nt:hasLabelFromApi "Get environments for taxon - This query returns the environments associated to the given taxon." .
+  
+  this: dct:created "2026-02-12T07:08:54.609Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:environments-for-taxon-view;
+    npx:introduces <https://w3id.org/np/RAMetPCsNimoMV4sVIWVFVMOCPAKIu58VZLjMe8N03r20/environments-for-taxon-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAMetPCsNimoMV4sVIWVFVMOCPAKIu58VZLjMe8N03r20>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAMwJK-KwLZao9NyIJ3QPE6AK_MasTNoHlp-PoUEavR2c> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "6R+SKylaVLH8diBW8LeXNjz4t8YGP/vK0krVeJLB9QA7UeiayH4ZpCAWtDS4zubcew6iTs3eeFtzc5Cop6ZXC1iqB6WZKTjKQUbDtCMZWnYAQHAb/jMsYS7tVqwQtlIgEriTbi8Cdv5euc6F2gvqE9x14xvFY/Lpk305hvSmwH0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

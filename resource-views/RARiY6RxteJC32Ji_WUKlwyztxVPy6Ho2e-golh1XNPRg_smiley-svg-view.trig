@@ -1,0 +1,50 @@
+@prefix this: <https://w3id.org/np/RARiY6RxteJC32Ji_WUKlwyztxVPy6Ho2e-golh1XNPRg> .
+@prefix sub: <https://w3id.org/np/RARiY6RxteJC32Ji_WUKlwyztxVPy6Ho2e-golh1XNPRg/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:smiley-svg-view a gen:ResourceView, gen:SvgView;
+    dct:description "Renders the smiley face from the OntoSVG repository, from a CONSTRUCT query that describes the image in RDF rather than returning SVG markup as a string. A worked example of the RDF form of an SVG view, documented in docs/svg-views.md in the nanodash repo. The figure is constant and the query takes no parameters, so the view shows the same image wherever it is placed and gen:hasViewQueryTargetField is left off.";
+    dct:isVersionOf sub:smiley-svg-view-kind;
+    dct:title "🙂 Smiley";
+    rdfs:label "Smiley SVG view";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:hasViewQuery <https://w3id.org/np/RAOnWLLWap_Kn78gmGw1WdZoLmkjygxSe3ifqdXZ5DpGA/get-smiley-svg> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-09-14T10:22:42Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:smiley-svg-view;
+    npx:introduces sub:smiley-svg-view-kind;
+    rdfs:label "Smiley SVG view" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+i9DV8ynzO944pYkYsDwtlqJHuk+b7FQt6Bb4TIQSDX3jGUURn6WpaNwESHmgMLWSydaH5XlabMzuqpPL4iyB+IAzvwIxdJBLhe39EQMu2j+FZ/5d/xu/gO3nZw2KoEvJ7cJisabuI05OylIRSJ+OG5CmzFxnjojUEJeCFi1njY1InhXrb0yHud9b1ifzweoN6YYOBecKs1gTOaT2bf+t4Wgzg3M0PmRVZ4F0OALsnh4T5+x7kFtiPcDKNpORi585JjKCZ4kczIF6oUKcwgC0kmIY97jtLqSLcXRkxHx5CDI6qz4XlRFs1ZbCUdSlzjdPZAkaBcNem1gIhWzkHkEnQIDAQAB";
+    npx:hasSignature "ahSP/FrRZyy5gRIaHFA2H4D5UZjTFqEaVaXP/jPZnaqRtDDuHtxOWcIlccKQOBUI8rKf+mKFUsrTYgRfH9oARYTrZn4YGPgBLScD1viCfVnCXs9mkf0ksznYL/uKJfmgnhGo1IRUz+BgeEd2+UjDYU/U2BonHVrpbc4eXLSaCUMjVhZJ0pUoFV6eP917ljS9FEyr4ANRzmIqgv8+6kP48pnUxW0vAXHz8KotnsUb6G+kBXPWOxXpyuODzKUdRmTfOUoiuG1/xRjsQxmIQOD8k+RZiYJu27yDFYimE9PXFxBr59mB8H8DxPYUDBJe6rcS2Tmi8NKaj3PITlX8zM7ECw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

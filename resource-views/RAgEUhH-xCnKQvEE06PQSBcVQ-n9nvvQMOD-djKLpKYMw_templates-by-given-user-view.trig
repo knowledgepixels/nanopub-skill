@@ -1,0 +1,59 @@
+@prefix this: <https://w3id.org/np/RAgEUhH-xCnKQvEE06PQSBcVQ-n9nvvQMOD-djKLpKYMw> .
+@prefix sub: <https://w3id.org/np/RAgEUhH-xCnKQvEE06PQSBcVQ-n9nvvQMOD-djKLpKYMw/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:templates-by-user-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAOw_wkO7C8lKpG7ZXsAXtVk6VFH9kV8CaCqyz-WBhM5U/templates-by-user-view-kind>;
+    dct:title "📋 My templates";
+    rdfs:label "Templates by given user view";
+    gen:appliesToInstancesOf gen:IndividualAgent;
+    gen:hasStructuralPosition "5.6.userTemplates";
+    gen:hasViewQuery <https://w3id.org/np/RANtwPAT8bDZLzpoegkPyNcCcGbK9XN2ga4BcpsRTI0PA/get-templates-by-user>;
+    gen:hasViewQueryTargetField "user" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RANtwPAT8bDZLzpoegkPyNcCcGbK9XN2ga4BcpsRTI0PA/get-templates-by-user>
+    nt:hasLabelFromApi "Get templates by given user - Returns the assertion templates created by the given user. Supports both template identity shapes (embedded and legacy)." .
+  
+  this: dct:created "2026-07-09T17:54:40Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:templates-by-user-view;
+    npx:introduces <https://w3id.org/np/RAOw_wkO7C8lKpG7ZXsAXtVk6VFH9kV8CaCqyz-WBhM5U/templates-by-user-view-kind>;
+    npx:supersedes <https://w3id.org/np/RA4miM9_xeoX_Plyyt8eCm-ku1PCfP86uhOt7m67UNH8o>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Ys70Gskfznore4Wqgx9JNeqQtOcA6vwIhXUVFEzvFX1uGsoSOGaUTTiuFZPYCuMCPHjBlXm6Y7d7GpAQAddG3/a5rFw/OrOZxnP5tkqsXxXLDZU6deXrGOU4hDTetLNN9wYnEn469JnOmCiY3MNZ+MDhbFdLpn5hE2/zutHWmOo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

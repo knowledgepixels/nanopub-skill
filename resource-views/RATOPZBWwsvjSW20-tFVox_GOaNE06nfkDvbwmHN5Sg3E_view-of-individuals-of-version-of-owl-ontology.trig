@@ -1,0 +1,60 @@
+@prefix this: <https://w3id.org/np/RATOPZBWwsvjSW20-tFVox_GOaNE06nfkDvbwmHN5Sg3E> .
+@prefix sub: <https://w3id.org/np/RATOPZBWwsvjSW20-tFVox_GOaNE06nfkDvbwmHN5Sg3E/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:ontology-version-individuals-view a <https://w3id.org/kpxl/gen/terms/ResourceView>,
+      <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf sub:ontology-version-individuals-view-kind;
+    dct:title "Named individuals";
+    rdfs:label "View of individuals of version of OWL ontology";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/OntologyVersion>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.5.individuals.1";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAnbHVsf4DjzMIjcfMcuDm0EdbCXZ8pzJhNvBkJjk21Cc/get-individuals-of-ontology-version>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "ontologyVersion" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-02-27T14:26:02.583Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:ontology-version-individuals-view;
+    npx:introduces sub:ontology-version-individuals-view-kind;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RA85N4RT7dxHusZr0sAEHIEgjZcfgJpIY7TnawIAskTGI>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAMwJK-KwLZao9NyIJ3QPE6AK_MasTNoHlp-PoUEavR2c> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "SqIuOGrZuJJdKnTabHjWUu55Y2/JDzRvlcGRJ5af83nJvn7I8sTbkpIAClo1+cGkYXRvITMMr/rmGDw8A5+LYk9MaSjBD07E4wvpUSA74lMsR2nRq7+MD3Grlamk/94CMzeu8qVLUaY/lks/MSaqS4dJUAsYdHStt1YUpG5p4OQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAnbHVsf4DjzMIjcfMcuDm0EdbCXZ8pzJhNvBkJjk21Cc/get-individuals-of-ontology-version>
+    nt:hasLabelFromApi "Get the individuals of an ontology version - This query returns all named individuals that are part of a given version of ..." .
+}
+

@@ -1,0 +1,80 @@
+@prefix this: <https://w3id.org/np/RARV4aDWEy8vx8b9GmR9n4nz60fmP7RxJcF1LutcvuQd4> .
+@prefix sub: <https://w3id.org/np/RARV4aDWEy8vx8b9GmR9n4nz60fmP7RxJcF1LutcvuQd4/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:answerAction a gen:ViewEntryAction;
+    rdfs:label "💬 reply...";
+    gen:hasActionTemplate <https://w3id.org/np/RAFpID-NunXGUAZebXPfhD9efjvfpZqB5gDBrgP2Lp5N8>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "reply_target:target";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:postAction a gen:ViewResultAction;
+    rdfs:label "➕ add reply...";
+    gen:hasActionTemplate <https://w3id.org/np/RAFpID-NunXGUAZebXPfhD9efjvfpZqB5gDBrgP2Lp5N8>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "target";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:thread-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:thread-view-kind;
+    dct:title "🧵 Thread";
+    rdfs:label "Thread view";
+    gen:appliesToInstancesOf <https://schema.org/Question>, <https://schema.org/Statement>;
+    gen:hasPageSize "20"^^xsd:integer;
+    gen:hasStructuralPosition "4.2.thread";
+    gen:hasViewAction sub:answerAction, sub:postAction;
+    gen:hasViewQuery <https://w3id.org/np/RAhdldevdeHe4nb9fM3CKA_cUnufQPq_xj4fuRyjTkq1o/get-thread>;
+    gen:hasViewQueryTargetField "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RAFpID-NunXGUAZebXPfhD9efjvfpZqB5gDBrgP2Lp5N8> nt:hasLabelFromApi
+      "Discourse contribution" .
+  
+  this: dct:created "2026-09-01T12:31:41Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:thread-view;
+    npx:introduces sub:thread-view-kind;
+    rdfs:label "Thread view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA7j_m2mlg_mJaCD0mvB2POXSa9rGjW3fiJa0AKmmQJGc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "PUTfp7CJ/ZM3Gytztu39YTgw6Vei0fHfGUpxdzEJ3GTZZsiNKleWfoSme9Hc0KG9BOuTu3UTlwNrnd7yoe5e6ium3KWo+o21i06559agjri0K4FSXYSEUjUfiNMspHIoXiHn6dARzQDkMgXpY53oregSWu1JETFvjOpQOZ2pWLY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAhdldevdeHe4nb9fM3CKA_cUnufQPq_xj4fuRyjTkq1o/get-thread> nt:hasLabelFromApi
+      "Get the thread under a contribution" .
+}
+

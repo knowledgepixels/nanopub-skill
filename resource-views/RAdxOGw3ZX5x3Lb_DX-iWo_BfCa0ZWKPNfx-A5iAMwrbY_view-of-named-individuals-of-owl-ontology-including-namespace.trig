@@ -1,0 +1,83 @@
+@prefix this: <https://w3id.org/np/RAdxOGw3ZX5x3Lb_DX-iWo_BfCa0ZWKPNfx-A5iAMwrbY> .
+@prefix sub: <https://w3id.org/np/RAdxOGw3ZX5x3Lb_DX-iWo_BfCa0ZWKPNfx-A5iAMwrbY/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a gen:ViewResultAction;
+    rdfs:label "add...";
+    gen:hasActionTemplate ns1:RAUXTKJMABL75eHuEH5WEw4NweGUKL8gs0v3qot5Tptdo;
+    gen:hasActionTemplatePartField "individual";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "vocabulary";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:ontology-named-individuals-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAmNltFu6fyI_YMmJxrh-gr7XADXU8h16YlQr1QJIT4qU/ontology-named-individuals-view-kind>;
+    dct:title "🫧 Named individuals";
+    rdfs:label "View of named individuals of OWL ontology including namespace";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels>;
+    gen:hasStructuralPosition "4.5.individuals.1";
+    gen:hasViewAction sub:addAction, sub:overrideAction;
+    gen:hasViewQuery <https://w3id.org/np/RAnCJCUuJrJHjUQTjSZGfJ7h4EL-2BP5Xtb5uReb182Pc/get-individuals-of-ontology-ns>;
+    gen:hasViewQueryTargetField "ontology" .
+  
+  sub:overrideAction a gen:ViewEntryAction;
+    rdfs:label "override...";
+    gen:hasActionTemplate ns1:RAUXTKJMABL75eHuEH5WEw4NweGUKL8gs0v3qot5Tptdo;
+    gen:hasActionTemplateQueryMapping "override_target:@override override_template:@template";
+    gen:isVisibleTo gen:MemberRole .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  ns1:RAUXTKJMABL75eHuEH5WEw4NweGUKL8gs0v3qot5Tptdo nt:hasLabelFromApi "Defining a new individual - <p>Such nanopublications define a new named individual. Such a named individu..." .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-16T13:06:48Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:ontology-named-individuals-view;
+    npx:introduces <https://w3id.org/np/RAmNltFu6fyI_YMmJxrh-gr7XADXU8h16YlQr1QJIT4qU/ontology-named-individuals-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAOZiCSbO-XThZ2lqDFVIaOc2BEc5cRIYxqvmCPsdW9QI>;
+    skos:changeNote "Point at the query version whose override_template falls back to the generic hand-coded-statements template, so the re-edit form fits nanopublications that record no template of their own.";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RApNBmFsH3uf4RIPM6TR-iFJ2geOP3uTmSFhlPZ0eikg4/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "igrChqIk4+jKm2p0WUGzAsUa8He55+6vHluKdlIbZNwtXsJGVwkdJvanLtj1NmMN3rntYwrIIF0n5sy/DoZDAkZkEHP2Dzf3enB2IxlDx0xmU9ZrE7+l+Mi2XvKd9hfj3nKQZldsOgtVUlm506wmSp5tYEHpvTABeUsPfnyKuhk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAnCJCUuJrJHjUQTjSZGfJ7h4EL-2BP5Xtb5uReb182Pc/get-individuals-of-ontology-ns>
+    nt:hasLabelFromApi "Get the individuals of an ontology including via namespace - This query returns all individuals that specify to be part of a given ontolog..." .
+  
+  <https://w3id.org/spaces/knowledgepixels> nt:hasLabelFromApi "Knowledge Pixels - Knowledge Pixels is a tech start-up with the mission to revolutionize global ..." .
+}
+

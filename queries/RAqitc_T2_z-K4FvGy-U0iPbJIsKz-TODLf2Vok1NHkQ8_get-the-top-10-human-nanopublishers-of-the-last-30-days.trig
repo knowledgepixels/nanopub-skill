@@ -1,0 +1,107 @@
+@prefix this: <https://w3id.org/np/RAqitc_T2_z-K4FvGy-U0iPbJIsKz-TODLf2Vok1NHkQ8> .
+@prefix sub: <https://w3id.org/np/RAqitc_T2_z-K4FvGy-U0iPbJIsKz-TODLf2Vok1NHkQ8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-top-creators-last30d a grlc:grlc-query;
+    dct:description "This query returns the 10 human users who published most nanopublications during the last 30 days. Publishers are resolved via the trust network: only agents with an approved account are counted, and only the nanopublications signed with their own approved public keys. Agents that are introduced as bots or other software agents are excluded.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the top-10 human nanopublishers of the last 30 days";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/last30d>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?user_iri where {
+  # count the nanopublications of the last 30 days per signing key:
+  {
+    select ?pubkey (count(distinct ?np) as ?np_count) where {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKey ?pubkey .
+      }
+    }
+    group by ?pubkey
+  }
+  bind(sha256(?pubkey) as ?pubkey_hash)
+  # resolve the keys to their agents via the trust network (approved accounts only):
+  {
+    select ?user_iri ?pubkey_hash where {
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/trust> {
+        graph npa:graph {
+          <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentTrustState ?trust_state .
+        }
+        graph ?trust_state {
+          ?account a npa:AccountState ;
+            npa:agent ?user_iri ;
+            npa:pubkey ?pubkey_hash ;
+            npa:trustStatus ?trust_status .
+        }
+        filter(?trust_status in (npa:loaded, npa:toLoad))
+      }
+    }
+  }
+  # exclude agents that are introduced as bots or other software agents:
+  {
+    select (group_concat(?software_agent_string; separator=' ') as ?software_agents) where {
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/full> {
+        select distinct ?software_agent_string where {
+          values ?agent_type { npx:Bot npx:SoftwareAgent prov:SoftwareAgent }
+          graph ?agent_graph {
+            ?software_agent a ?agent_type .
+          }
+          bind(concat('<', str(?software_agent), '>') as ?software_agent_string)
+        }
+      }
+    }
+  }
+  filter(!contains(?software_agents, concat('<', str(?user_iri), '>')))
+}
+group by ?user_iri
+order by desc(sum(?np_count))
+limit 10""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-16T05:50:28Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-top-creators-last30d;
+    npx:supersedes <https://w3id.org/np/RADYMdJR0EUPNxDgT1RbYz75a1quOW8yyycYZ_KIKQr3M>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "q8MiMlWcJ5WLToA8kYyv+0NVrCsNr+VhZlCq32I1axmxwyboJIvr+S7yu1PX0b29hKO1WlLq9O7Xzwtu89QSg0pFFe2y92ch+Wpjz9n1V7JQPi0NieRoC2aCnpFp0BVlI5g8qiwP7yD7YbVzlmilE7heJiMY6vjD/UP5DuTxrWE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}

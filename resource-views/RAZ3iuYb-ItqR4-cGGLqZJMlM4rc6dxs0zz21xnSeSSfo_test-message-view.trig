@@ -1,0 +1,65 @@
+@prefix this: <https://w3id.org/np/RAZ3iuYb-ItqR4-cGGLqZJMlM4rc6dxs0zz21xnSeSSfo> .
+@prefix sub: <https://w3id.org/np/RAZ3iuYb-ItqR4-cGGLqZJMlM4rc6dxs0zz21xnSeSSfo/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:test-message-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RAX0bno4p7yvdc0QTGn8uS5AjHrBFFOrtgH-BrqjhPn0o/test-message-view-kind>;
+    dct:title "🛠️ Test message view";
+    rdfs:label "Test message view";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/IndividualAgent>,
+      <https://w3id.org/kpxl/gen/terms/MaintainedResource>, <https://w3id.org/kpxl/gen/terms/Space>;
+    <https://w3id.org/kpxl/gen/terms/governedBy> <https://w3id.org/spaces/knowledgepixels>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "6.2.messages.1";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RA96ICXi7xTQAfj_r99IhGhUnhS54gI4ekg1MxRRrm4Qk/get-messages-about-resource>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RA96ICXi7xTQAfj_r99IhGhUnhS54gI4ekg1MxRRrm4Qk/get-messages-about-resource>
+    nt:hasLabelFromApi "Get messages about resource - This query returns plain-text messages about the given resource." .
+  
+  this: dct:created "2026-07-03T13:46:07.793+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:test-message-view;
+    npx:introduces <https://w3id.org/np/RAX0bno4p7yvdc0QTGn8uS5AjHrBFFOrtgH-BrqjhPn0o/test-message-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAX0bno4p7yvdc0QTGn8uS5AjHrBFFOrtgH-BrqjhPn0o>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RApd4qFzHok9nd4x-GWVTIRgUYGaWHjclUVgSvUXe1jBk>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAr1Krh98VGXbIc7JVSJpH24bWi2JEVRYfvJ_KJq0wJtc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "mZBW1sBlnMQ/CXtLYD06NwnVTYZJI02zO894eO7ImegJeIPwg9EPCbGijslQ4+jMTCE0ZDHJhyp8TY5uZWg6EUAAprANp5TKdLDfkdPCO9clwS5hTcd5ACIzbP6CnoQyKmpAYGTGUZRuwfKBkbtEhS2lcJoZXJAH5By5v93EWSg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/spaces/knowledgepixels> nt:hasLabelFromApi "Knowledge Pixels - Knowledge Pixels is a tech start-up with the mission to revolutionize global ..." .
+}
+

@@ -1,0 +1,60 @@
+@prefix this: <https://w3id.org/np/RAmjlPmUu8Uk7HKcOI1rm5xUdtbvmZsycAMDPphifjJV8> .
+@prefix sub: <https://w3id.org/np/RAmjlPmUu8Uk7HKcOI1rm5xUdtbvmZsycAMDPphifjJV8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:llm-kg-category-count-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RAv7IsOekNRKuiTn1Twub-SSzSa9-bheOFpQtd-h1aO8g/llm-kg-category-count-kind>;
+    dct:title "Papers count per assigned LLM-KG category";
+    rdfs:label "View of assessed papers count per assigned category";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/Space>;
+    <https://w3id.org/kpxl/gen/terms/hasDisplayWidth> <https://w3id.org/kpxl/gen/terms/ColumnWidth12of12>;
+    <https://w3id.org/kpxl/gen/terms/hasPageSize> "10";
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "1.1.categories-count";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAoTk2RB6fztwEdg3xYaJzAFP8RwaKmVtzYXGL0kZEDW4>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-3080-0303 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-3080-0303 foaf:name "Anastasiya Danilenka" .
+  
+  this: dct:created "2026-04-15T14:09:19.799Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-3080-0303;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:llm-kg-category-count-view;
+    npx:introduces <https://w3id.org/np/RAv7IsOekNRKuiTn1Twub-SSzSa9-bheOFpQtd-h1aO8g/llm-kg-category-count-kind>;
+    npx:supersedes <https://w3id.org/np/RAXQEPmyrQtMugbINk1PpqfbWeYjqaYhG9SePJ9zTXYwQ>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAIMCeC10xyu9Ou2ZWHkcE-TeIknD2HoJCCDc0gP_ozPw>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAIMCeC10xyu9Ou2ZWHkcE-TeIknD2HoJCCDc0gP_ozPw> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnosJSn16QpO5H1VxOxrwMH/H/b4lqyVo+/w5ri059ZaXR4GFN2l7rDusHTzgbyZ3Ifq2eEntFfnS3XrygI+AoIxoEob8jM1lEJstaCpSi3Kv+v9uD+s61HWL/4J7DyaVgycDcDFG7mOyemtUIU94hV9x5z2kXdFPfoffAlF8BRxKymOBMaCx/uOouxS/CCR4brlG6gXfU2d+13y/4PbiM3SxXdSKVAYaeSEA83ohAgJFhH3oZtZeuPhyENllRGxT5PVzqx59YVr10UV1VudiGIkqKjkcvGbfOoifZB38+uNN5DVBnLN4NcnoqqCAweoODWYUFOsjHTpobqA0+Ss0VwIDAQAB";
+    npx:hasSignature "Ay/FB79KR6tuVBq8Fz8p/Pw9/OVVmBRvqomWyoQXkzCTJ1NqZB60AwkxRt2aghHA01rgRXAm3fXswaxAjsaVOgz20Yuty45p9uGFFPxN0H90N3UETRDpgfVfpxjbko8OkwcbYTy6sy8Aq2eCOZyYHTkcm8rHCpEHMy3kR+55l49QetbkVaHcyD2MfbkZUGkAsUVqc9shsfeBDNCVw7nXT407Z9hXnl1Xf7MHSe/Kd9faZG8100if66busL++ckmMugVSqt9dGT1rNUcfDu2Gl/jX9WgKO3EpdHGYHVdxu+mstpFxd+JoYRrTum0TRcAq+qYcpfIaxisOzjthgR3nlw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-3080-0303 .
+}
+

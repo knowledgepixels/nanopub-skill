@@ -1,0 +1,105 @@
+@prefix this: <https://w3id.org/np/RA3eOlVIpCTrzzjK1yzwKMZq-x0vXHMAWhCvhXNKEvTgk> .
+@prefix sub: <https://w3id.org/np/RA3eOlVIpCTrzzjK1yzwKMZq-x0vXHMAWhCvhXNKEvTgk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-activity-overview-of-space a grlc:grlc-query;
+    dct:description "Returns one row per kind of activity (study) reported across the projects of a space: the kind with its label, how many activities of that kind there are, and how many projects report at least one. Activities are the resources typed obo:OBI_0000066 (study) that declare themselves part of the space itself or of a space whose IRI extends it with a slash, the same sub-space convention the sibling 'all projects' views use; the kind is any more specific type the study carries in addition to obo:OBI_0000066, such as the OBI investigation classes or the schema.org study classes offered by the 'Defining a study' template, labelled from the pubinfo of the study nanopublication, with studies carrying no more specific type reported as 'study (kind unspecified)'. A study with several specific types counts once under each of them, mirroring the sibling evidence overview query, whose shape this query follows. Only study nanopublications signed by a current admin, maintainer or member of a space in the subtree count, with invalidated, superseded and example nanopublications skipped; the membership lookup is a federated sub-select sharing no variables with the rest of the query, so it runs once.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the activity kinds reported across the projects of a space";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix obo: <http://purl.obolibrary.org/obo/>
+
+select ?activity_type
+       (min(?typeLabel) as ?activity_type_label)
+       (sum(?n) as ?activities)
+       (count(distinct ?project) as ?projects)
+where {
+  {
+    select ?activity_type ?project (min(?typeLabel0) as ?typeLabel) (count(distinct ?study) as ?n) where {
+      values ?_space_multi_iri {}
+      {
+        select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            select ?mpk where {
+              values ?_space_multi_iri {}
+              graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+              graph ?stateG {
+                ?ri a gen:RoleInstantiation ; npa:forSpace ?sp ; npa:forAgent ?agent ; npa:hasRoleType ?roleType .
+                filter(?roleType in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+              }
+              filter(?sp = ?_space_multi_iri || strstarts(str(?sp), concat(str(?_space_multi_iri), \"/\")))
+            }
+          }
+        }
+      }
+      graph npa:graph {
+        ?studyNp np:hasAssertion ?studyA ; np:hasPublicationInfo ?studyPi ; npa:hasValidSignatureForPublicKeyHash ?studyPk .
+        filter not exists { ?studyInv npx:invalidates ?studyNp ; npa:hasValidSignatureForPublicKeyHash ?studyPk }
+        filter not exists { ?studySup npx:supersedes ?studyNp }
+        filter not exists { ?studyNp npx:hasNanopubType npx:ExampleNanopub }
+      }
+      filter(contains(?memberPubkeys, ?studyPk))
+      graph ?studyA { ?study a obo:OBI_0000066 ; dct:isPartOf ?project . }
+      filter(?project = ?_space_multi_iri || strstarts(str(?project), concat(str(?_space_multi_iri), \"/\")))
+      # The more specific kind is any further type the study carries; its label is
+      # recorded in the pubinfo of the study nanopublication.
+      optional {
+        graph ?studyA { ?study a ?sub . filter(?sub != obo:OBI_0000066) }
+        optional { graph ?studyPi { ?sub rdfs:label ?subLabel } }
+      }
+      bind(coalesce(?sub, obo:OBI_0000066) as ?activity_type)
+      bind(coalesce(?subLabel, if(bound(?sub), replace(str(?sub), \"^.*[/#]\", \"\"), \"study (kind unspecified)\")) as ?typeLabel0)
+    } group by ?activity_type ?project
+  }
+}
+group by ?activity_type
+order by desc(?activities) ?activity_type_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-13T05:36:15Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-activity-overview-of-space;
+    rdfs:label "Get the activity kinds reported across the projects of a space";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "RjAmWzk4EeclRpiOBP2Tj0TbcIPEjMJ/WqLex5m58R1OuTy2yWx2tI6ZG0hWZYhBlhKvhp/RI6LP2X23Wo7IFXbAcfSiy1LklSL6FCkPrI3TrWjklLY+GQRXqQgxqcP3LJFC6ODZtW9c4N7eHReGSlLH7IRXIvQQtF3c/xR0JqI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}

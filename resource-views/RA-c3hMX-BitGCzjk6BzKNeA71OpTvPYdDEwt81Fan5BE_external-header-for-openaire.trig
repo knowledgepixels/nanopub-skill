@@ -1,0 +1,58 @@
+@prefix this: <https://w3id.org/np/RA-c3hMX-BitGCzjk6BzKNeA71OpTvPYdDEwt81Fan5BE> .
+@prefix sub: <https://w3id.org/np/RA-c3hMX-BitGCzjk6BzKNeA71OpTvPYdDEwt81Fan5BE/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:openaireExternalHeader a gen:HeaderView, gen:ResourceView;
+    dct:description "The sections here are about linking external resources to the OpenAIRE graph.";
+    dct:isVersionOf <https://w3id.org/np/RAnhd_Fal7nKzPqmtVEAFE3cS2FI1E8lj2zjC09bMLgdA/openaireExternalHeaderKind>;
+    dct:title "🌐 External links";
+    rdfs:label "External header for OpenAIRE";
+    gen:appliesToInstancesOf gen:Space;
+    gen:hasStructuralPosition "5.3.openaire-external.0.header" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-30T06:58:21.904+02:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:openaireExternalHeader;
+    npx:introduces <https://w3id.org/np/RAnhd_Fal7nKzPqmtVEAFE3cS2FI1E8lj2zjC09bMLgdA/openaireExternalHeaderKind>;
+    npx:supersedes <https://w3id.org/np/RAnhd_Fal7nKzPqmtVEAFE3cS2FI1E8lj2zjC09bMLgdA>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAt9VSHN339aLRxu6BSpsuTTvluhNl5JKEj5T_QZOw_nM>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAZYU_kQZ0B3ruoNSeZOaKR6M93PJ-z1jlArXl7_H4EEU/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "MLgz5o2kQKFPpaqT/l/JNaohv7KM5IH0TsMpp5c40z47Nb1j1piK13O3cQgH4kljppICBwoaSea2fKCLAhy9KmNS6CKoAcli61W6gsNwQ7JwxGe1OAy+AEJvoyzOPm0MWGNKmL9vru1mKWchEmWr0Quzh6SLKOpMxPrBnmqhtCs=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

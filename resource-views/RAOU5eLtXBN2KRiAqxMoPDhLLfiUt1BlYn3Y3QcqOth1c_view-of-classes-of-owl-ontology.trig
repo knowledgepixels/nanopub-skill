@@ -1,0 +1,59 @@
+@prefix this: <https://w3id.org/np/RAOU5eLtXBN2KRiAqxMoPDhLLfiUt1BlYn3Y3QcqOth1c> .
+@prefix sub: <https://w3id.org/np/RAOU5eLtXBN2KRiAqxMoPDhLLfiUt1BlYn3Y3QcqOth1c/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:ontology-classes-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RAHQg2rHyzBQ4iyD44JK2_SoqMxb9oUyy5bO5NFTjrePI/ontology-classes-view-kind>;
+    dct:title "🏷 Classes";
+    rdfs:label "View of classes of OWL ontology";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/MaintainedResource>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.3.classes.1";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAf_hcNeHFmt3PcDfreGUmgjKsvLaP-SBH8j2MfZklxJo/get-classes-of-ontology>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "ontology" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-27T09:49:30.532Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:ontology-classes-view;
+    npx:introduces <https://w3id.org/np/RAHQg2rHyzBQ4iyD44JK2_SoqMxb9oUyy5bO5NFTjrePI/ontology-classes-view-kind>;
+    npx:supersedes <https://w3id.org/np/RANvmRWljYwkJB6ZodPNhu_htftdOEdQpyETzzNeaAKOQ>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "MaUU4uxOAUQ3Ccj3saepmr1jHM38Q44VM3SXEsm/27twX0n35Lr6iLpxXQzvajCrLHWwl36ovJs8SLGfqMD9rISiUE+8PLMhBZxg4SQOYH+vSP4/xJWZDZG6SBGd+13r8rKtsdqBG7BH/yGe9+nITZkB8msHjxJgHXf8MoFeMD4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAf_hcNeHFmt3PcDfreGUmgjKsvLaP-SBH8j2MfZklxJo/get-classes-of-ontology>
+    nt:hasLabelFromApi "Get the classes of an ontology - This query returns all classes that specify to be part of a given ontology." .
+}
+

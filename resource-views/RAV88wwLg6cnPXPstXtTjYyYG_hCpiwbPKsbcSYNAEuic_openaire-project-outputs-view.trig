@@ -1,0 +1,86 @@
+@prefix this: <https://w3id.org/np/RAV88wwLg6cnPXPstXtTjYyYG_hCpiwbPKsbcSYNAEuic> .
+@prefix sub: <https://w3id.org/np/RAV88wwLg6cnPXPstXtTjYyYG_hCpiwbPKsbcSYNAEuic/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a gen:ViewResultAction;
+    rdfs:label "➕ add...";
+    gen:hasActionTemplate <https://w3id.org/np/RAlxu8m1nn5PZZiQOx-FX4G5Ibm70HQa92AvRp8TwDMPo/template>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:approveAction a gen:ViewEntryAction;
+    rdfs:label "⚖️ approve/disapprove...";
+    gen:hasActionTemplate <https://w3id.org/np/RAx2PsXNbCcxYh3sOSScV9H0-tqyETuKjyHsgD6FPC3_E>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "action_target:nanopub";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:MemberRole .
+  
+  sub:project-outputs-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RA0QVUqePwmZgHs2slCkoCsaSBNQNOlPgzG3_v5NRUQAw/project-outputs-view-kind>;
+    dct:title "💰 Project outputs";
+    rdfs:label "OpenAIRE project outputs view";
+    gen:appliesToInstancesOf gen:Space;
+    gen:hasDisplayWidth gen:ColumnWidth12of12;
+    gen:hasStructuralPosition "5.1.openaire-linking.2.projectOutputs";
+    gen:hasViewAction sub:addAction, sub:approveAction;
+    gen:hasViewQuery <https://w3id.org/np/RA55g61pXEhYE3w1HGnAbLoPv781_ShXcXkiKneFnJQdU/get-openaire-project-outputs>;
+    gen:hasViewQueryTargetField "space" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  gen:EveryoneRole nt:hasLabelFromApi "everyone" .
+  
+  <https://w3id.org/np/RA55g61pXEhYE3w1HGnAbLoPv781_ShXcXkiKneFnJQdU/get-openaire-project-outputs>
+    nt:hasLabelFromApi "Get OpenAIRE project outputs" .
+  
+  this: dct:created "2026-07-29T18:24:17Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:project-outputs-view;
+    npx:introduces <https://w3id.org/np/RA0QVUqePwmZgHs2slCkoCsaSBNQNOlPgzG3_v5NRUQAw/project-outputs-view-kind>;
+    npx:supersedes <https://w3id.org/np/RADljJv3jbjSPBe2wK09jcxE---2BTP6PZPUB6VIuTKaA>;
+    rdfs:label "OpenAIRE project outputs view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "mBY/aJnxN/X8jgOvEIxLYPf7FoJsQG9A8yw77ldPEPBUknBiSXe37g8WbmPzbUAoDvbc/YFDVm19atiB8dj8D2qwpQnF5d6CQtGEGr9cc3QICtqDP79qZiJ2zuFK9b2P9yqEwHHGRoiusY3vaJNAQzfjB0pRmV0x5E4idzXd1BA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAlxu8m1nn5PZZiQOx-FX4G5Ibm70HQa92AvRp8TwDMPo/template> nt:hasLabelFromApi
+      "OpenAIRE: Research product is output of project" .
+  
+  <https://w3id.org/np/RAx2PsXNbCcxYh3sOSScV9H0-tqyETuKjyHsgD6FPC3_E> nt:hasLabelFromApi
+      "Approving or disapproving of a nanopublication" .
+}
+

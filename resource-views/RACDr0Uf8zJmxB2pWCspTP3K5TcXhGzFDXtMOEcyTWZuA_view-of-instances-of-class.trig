@@ -1,0 +1,59 @@
+@prefix this: <https://w3id.org/np/RACDr0Uf8zJmxB2pWCspTP3K5TcXhGzFDXtMOEcyTWZuA> .
+@prefix sub: <https://w3id.org/np/RACDr0Uf8zJmxB2pWCspTP3K5TcXhGzFDXtMOEcyTWZuA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:class-instances-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RAn92Vrgdnu3iFqZAui3JbsovEPMPLNrVDQSf1c6X6xTE/class-instances-view-kind>;
+    dct:title "🫧 Instances";
+    rdfs:label "View of instances of class";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <http://www.w3.org/2002/07/owl#Class>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.4.instances.1";
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RA4s708TGiO6GXcj7kT2uSgiR72ZKOFqSflgxdHo4F3ZU/get-instances-simple>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "class" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RA4s708TGiO6GXcj7kT2uSgiR72ZKOFqSflgxdHo4F3ZU/get-instances-simple>
+    nt:hasLabelFromApi "Get instances for class (simple result) - This query returns the instances assigned to the given class." .
+  
+  this: dct:created "2026-06-03T14:35:48.590Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:class-instances-view;
+    npx:introduces <https://w3id.org/np/RAn92Vrgdnu3iFqZAui3JbsovEPMPLNrVDQSf1c6X6xTE/class-instances-view-kind>;
+    npx:supersedes <https://w3id.org/np/RACm3lzI-kZh9Cw2mRu141Dh16eAcAdWOpvB5-h6qA10g>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAIMCeC10xyu9Ou2ZWHkcE-TeIknD2HoJCCDc0gP_ozPw> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "wqbUAn4ey3mo0YEx5xKExfadRI2yH7OgFqgxiqG1KL9uNBLs9rgQ/Y6jPGCpe/G3cOtlGK/OIvSD3H0tKNCTo92Q16xhjjr2uykJNCifrz+cdMQnq30n5dubHR0on/iqm7dYOeadkAcuHcEiLOKekw1ljQ2kMzJBlprLq3WbSfs=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,75 @@
+@prefix this: <https://w3id.org/np/RASm9QCCowimW9StbBEdJ3t5dMsFgoBPe5ofZ-n0T-e88> .
+@prefix sub: <https://w3id.org/np/RASm9QCCowimW9StbBEdJ3t5dMsFgoBPe5ofZ-n0T-e88/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:action a <https://w3id.org/kpxl/gen/terms/ViewResultAction>;
+    rdfs:label "add";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplate> <https://w3id.org/np/RA6Oz3cAiH2ZJZmlNVi3P_RgT_ks67JDOWuNXKMNZ2QwQ>;
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplatePartField> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateQueryMapping> "void";
+    <https://w3id.org/kpxl/gen/terms/hasActionTemplateTargetField> "resource";
+    <https://w3id.org/kpxl/gen/terms/isVisibleTo> <https://w3id.org/kpxl/gen/terms/EveryoneRole> .
+  
+  sub:ontology-classes-view a <https://w3id.org/kpxl/gen/terms/ResourceView>, <https://w3id.org/kpxl/gen/terms/TabularView>;
+    dct:isVersionOf <https://w3id.org/np/RALq0to6-TasWuGx0xlbZ7e8v4hGcBuNY6H81EkSiRnt4/ontology-classes-view-kind>;
+    dct:title "🏷 Classes";
+    rdfs:label "View of classes of OWL ontology including namespace";
+    <https://w3id.org/kpxl/gen/terms/appliesToInstancesOf> <https://w3id.org/kpxl/gen/terms/MaintainedResource>;
+    <https://w3id.org/kpxl/gen/terms/hasStructuralPosition> "4.3.classes.1";
+    <https://w3id.org/kpxl/gen/terms/hasViewAction> sub:action;
+    <https://w3id.org/kpxl/gen/terms/hasViewQuery> <https://w3id.org/np/RAip8Lyns21DKT89ypqGwofiR2d1h4MAL9WqK8HYvzHYQ/get-classes-of-ontology-ns>;
+    <https://w3id.org/kpxl/gen/terms/hasViewQueryTargetField> "ontology" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  <https://w3id.org/np/RA6Oz3cAiH2ZJZmlNVi3P_RgT_ks67JDOWuNXKMNZ2QwQ> nt:hasLabelFromApi
+      "Defining a new class (with placeholder prefix) - <p>Such a nanopublication defines a new class. Classes represent sets of conc..." .
+  
+  this: dct:created "2026-07-31T10:54:44.229Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354, orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:ontology-classes-view;
+    npx:introduces <https://w3id.org/np/RALq0to6-TasWuGx0xlbZ7e8v4hGcBuNY6H81EkSiRnt4/ontology-classes-view-kind>;
+    npx:supersedes <https://w3id.org/np/RA3uRagkgbiY7WGkzgzuvmqG2DaVDYU4jqhVZKo13wGGA>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAhRx_luCvGGV60Eww9Qpo4_EqVPrw6FvTUmhAic8v_Tk>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCaQXE2B2hJ6QdWxaWerU4F/XOtCQdj2OkdrIYd1kpMY9hIUh8boxaO3uOBeqvvqKLf5HjpRF4DT1eghOSsa2Dhd5HRTM/XIamvwWkHpN4oB3Ml19pAAzjTqczYmFLfgG67mGL5+vSA8VEdHtKQCrvP4SpTibMBP1qaxt3k1tqD6wIDAQAB";
+    npx:hasSignature "QNLzXJJ+SOKzfz8xhqR22dGACUhodxKv5gLuz5N7XaQju4dwP/GSf8XNwLbyBgxP7T6FkW5xeBCIVZMoJCQWxm3XNJIWkeoYGWIOTDkGrOQMF1FTZZIcFPNAPqQQkCuYEtqBi3E3JLulW3AP0x244eDslEQdjnZRjAn9iEcAu60=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+  
+  <https://w3id.org/np/RAip8Lyns21DKT89ypqGwofiR2d1h4MAL9WqK8HYvzHYQ/get-classes-of-ontology-ns>
+    nt:hasLabelFromApi "Get the classes of an ontology including via namespace - This query returns all classes that specify to be part of a given ontology or..." .
+}
+

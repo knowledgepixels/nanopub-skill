@@ -1,0 +1,59 @@
+@prefix this: <https://w3id.org/np/RA_vNdhl5goDmvVWxxiB2kQUYqz8Z0KonPaA8BnF7VRuU> .
+@prefix sub: <https://w3id.org/np/RA_vNdhl5goDmvVWxxiB2kQUYqz8Z0KonPaA8BnF7VRuU/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:fair-compendium-info-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:fair-compendium-info-view-kind;
+    dct:title "ℹ️ Info";
+    rdfs:label "FAIR Compendium info view";
+    gen:appliesToInstancesOf gen:FAIRCompendiumOfContributedKnowledge;
+    gen:hasDisplayWidth gen:ColumnWidth06of12;
+    gen:hasStructuralPosition "3.1.info";
+    gen:hasViewQuery <https://w3id.org/np/RAv5hfTMcVppWyvpabrYciO7ilQ5hZkliz8IVWb8gzkLw/get-fair-compendium-info>;
+    gen:hasViewQueryTargetField "partid" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-07-27T11:41:23Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:fair-compendium-info-view;
+    npx:introduces sub:fair-compendium-info-view-kind;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "FHgUHZcG/ISTxRc3F4D5F1XPYzAA0wbwJqic2C4Ld5HOa9XNtgzgBAJN5VDxbocbE7fIlpglnQM4JwTgtfI5cXL3gfwS33ul6x3+wU62nILdrFhvvvW6PsBHIl5IbK2ItXu81/eS5LOQlK5O4DbtHwjbiMUjQ7FOoh3/gVu1tMc=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAv5hfTMcVppWyvpabrYciO7ilQ5hZkliz8IVWb8gzkLw/get-fair-compendium-info>
+    nt:hasLabelFromApi "Get FAIR Compendium info - Key-value Info table for a FAIR Compendium of Contributed Knowledge." .
+}
+

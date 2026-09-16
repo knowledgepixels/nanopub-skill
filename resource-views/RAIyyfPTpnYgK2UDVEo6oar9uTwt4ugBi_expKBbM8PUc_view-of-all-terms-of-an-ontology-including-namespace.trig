@@ -1,0 +1,67 @@
+@prefix this: <https://w3id.org/np/RAIyyfPTpnYgK2UDVEo6oar9uTwt4ugBi_expKBbM8PUc> .
+@prefix sub: <https://w3id.org/np/RAIyyfPTpnYgK2UDVEo6oar9uTwt4ugBi_expKBbM8PUc/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:ontology-terms-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RASTzkJBhTnQ1YyD9il6Q3JywJ-RQ1IBKRB2PQOshbOPY/ontology-terms-view-kind>;
+    dct:title "📖 Terms";
+    rdfs:label "View of all terms of an ontology including namespace";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels>;
+    gen:hasStructuralPosition "4.5.terms.1";
+    gen:hasViewAction sub:overrideAction;
+    gen:hasViewQuery <https://w3id.org/np/RA5pNPWKHJ2_sGQmkMJB90SF-2UV6aCSIdOiWc415EjMU/get-terms-of-ontology-ns>;
+    gen:hasViewQueryTargetField "ontology" .
+  
+  sub:overrideAction a gen:ViewEntryAction;
+    rdfs:label "override...";
+    gen:hasActionTemplate <http://purl.org/np/RAFu2BNmgHrjOTJ8SKRnKaRp-VP8AOOb7xX88ob0DZRsU>;
+    gen:hasActionTemplateQueryMapping "override_target:@override override_template:@template";
+    gen:isVisibleTo gen:MemberRole .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-16T13:08:48Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:ontology-terms-view;
+    npx:introduces <https://w3id.org/np/RASTzkJBhTnQ1YyD9il6Q3JywJ-RQ1IBKRB2PQOshbOPY/ontology-terms-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAaS8tEZYllnT3NWvMNVqWxkFb0GIHOorZdm0qvWY6RMQ>;
+    skos:changeNote "Put the view under the governance of the Knowledge Pixels space, and add a member-visible per-row override action that reopens each term in the template it was made with (falling back to hand-coded statements where none is recorded).";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAVXmu2rj-pkWoDjHH4n1oAHbseAf3RcUYpYiwI1WXDmY>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RApNBmFsH3uf4RIPM6TR-iFJ2geOP3uTmSFhlPZ0eikg4/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "pESEsDC9OChW3cAFc7hXQ6bl6xK2o+szBxyeyXjbCNLO7noDSODml78Ta0BGROy00FggZ++qOEW9qAmp7Jm8XzgjP5Z5Lmiy+1s2yeqCto20FyWwkMJ7XzfsrfjNPepRJPfC0XYTvkMHIras3D1Y6sgbAn5uvbKX/wDBvyADKtA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

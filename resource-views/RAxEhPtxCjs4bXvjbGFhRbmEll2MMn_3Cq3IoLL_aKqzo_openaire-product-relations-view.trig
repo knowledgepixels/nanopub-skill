@@ -1,0 +1,86 @@
+@prefix this: <https://w3id.org/np/RAxEhPtxCjs4bXvjbGFhRbmEll2MMn_3Cq3IoLL_aKqzo> .
+@prefix sub: <https://w3id.org/np/RAxEhPtxCjs4bXvjbGFhRbmEll2MMn_3Cq3IoLL_aKqzo/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a gen:ViewResultAction;
+    rdfs:label "➕ add...";
+    gen:hasActionTemplate <https://w3id.org/np/RA8lPVuNJ1OI05hN59r-typtOu-nG2s_YZZ5UXJK6ay-8/template>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:approveAction a gen:ViewEntryAction;
+    rdfs:label "⚖️ approve/disapprove...";
+    gen:hasActionTemplate <https://w3id.org/np/RAx2PsXNbCcxYh3sOSScV9H0-tqyETuKjyHsgD6FPC3_E>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "action_target:nanopub";
+    gen:hasActionTemplateTargetField "void";
+    gen:isVisibleTo gen:MemberRole .
+  
+  sub:product-relations-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAegFsxcArw6qfDXrf0jQrauZ85NXaRNbT80Bx9iGFICM/product-relations-view-kind>;
+    dct:title "🔗 Product relations";
+    rdfs:label "OpenAIRE product relations view";
+    gen:appliesToInstancesOf gen:Space;
+    gen:hasDisplayWidth gen:ColumnWidth12of12;
+    gen:hasStructuralPosition "5.1.openaire-linking.4.productRelations";
+    gen:hasViewAction sub:addAction, sub:approveAction;
+    gen:hasViewQuery <https://w3id.org/np/RAtF1e-F2emBde_PrGsOuQm1mGTApPY4SEExHn1G2GO34/get-openaire-product-relations>;
+    gen:hasViewQueryTargetField "space" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  gen:EveryoneRole nt:hasLabelFromApi "everyone" .
+  
+  <https://w3id.org/np/RA8lPVuNJ1OI05hN59r-typtOu-nG2s_YZZ5UXJK6ay-8/template> nt:hasLabelFromApi
+      "OpenAIRE: Relation between two research products" .
+  
+  <https://w3id.org/np/RAtF1e-F2emBde_PrGsOuQm1mGTApPY4SEExHn1G2GO34/get-openaire-product-relations>
+    nt:hasLabelFromApi "Get OpenAIRE research product relations" .
+  
+  <https://w3id.org/np/RAx2PsXNbCcxYh3sOSScV9H0-tqyETuKjyHsgD6FPC3_E> nt:hasLabelFromApi
+      "Approving or disapproving of a nanopublication" .
+  
+  this: dct:created "2026-07-29T18:24:17Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:product-relations-view;
+    npx:introduces <https://w3id.org/np/RAegFsxcArw6qfDXrf0jQrauZ85NXaRNbT80Bx9iGFICM/product-relations-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAASJ23NqxqgD2pHbFXgaQc4wYXXer7oyzPd5XRpJIybQ>;
+    rdfs:label "OpenAIRE product relations view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA8_hijwsfGCryMYtjtEpec21ZSNY68-qmL0bHRWR0sWM> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "c/BfocTxo41Q716dq7BKd0UfvwNlg5moVSAP7Y42n1Nol/N+jkhRzFMSB+Jv/Dz6PgFYaGnu5QurCf1TD2jzZkv0l/860rFwpZ/c2JmwrvU2tp2gLayfeVWMNv5bK73zmtiV2XJoJkA3TC5xLBam/SKWfqTsWxVYG2ZVpENG9ek=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+
