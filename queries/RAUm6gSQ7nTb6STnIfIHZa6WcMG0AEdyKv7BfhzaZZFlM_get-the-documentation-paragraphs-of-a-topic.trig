@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAbOBFWFpJ0K7ShUeAW7gfhAJiIC1CHBGdSPkL5T-3mko> .
-@prefix sub: <https://w3id.org/np/RAbOBFWFpJ0K7ShUeAW7gfhAJiIC1CHBGdSPkL5T-3mko/> .
+@prefix this: <https://w3id.org/np/RAUm6gSQ7nTb6STnIfIHZa6WcMG0AEdyKv7BfhzaZZFlM> .
+@prefix sub: <https://w3id.org/np/RAUm6gSQ7nTb6STnIfIHZa6WcMG0AEdyKv7BfhzaZZFlM/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix grlc: <https://w3id.org/kpxl/grlc/> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -7,9 +7,7 @@
 @prefix npx: <http://purl.org/nanopub/x/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix orcid: <https://orcid.org/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
 sub:Head {
   this: a np:Nanopublication;
@@ -20,7 +18,7 @@ sub:Head {
 
 sub:assertion {
   sub:get-docs-paragraphs a grlc:grlc-query;
-    dct:description "This query returns the paragraphs of a documentation topic, restricted to those published by a member (admin, maintainer or member tier) of the space maintaining the documentation resource the topic page belongs to, and keeping only the most recent version of each paragraph. Each row also carries the paragraph's own IRI, so that the view can link a paragraph to its part page. This makes wiki-style editing possible: any member can revise any paragraph, and the newest revision is the one shown.";
+    dct:description "The paragraphs about one documentation topic, published by members of the space maintaining the documentation resource (the page's context), newest version of each paragraph only. A paragraph whose newest version marks it as removed (gen:DeactivatedParagraph) is not shown. Shaped for a plain paragraph view with per-paragraph edit and remove actions.";
     dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
     rdfs:label "Get the documentation paragraphs of a topic";
     grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
@@ -79,7 +77,9 @@ select ?paragraph ?title ?content ?date (str(?np) as ?override_target) ?np (\"^\
     optional { ?paragraph gen:hasPositionString ?position }
   }
   # Latest-wins per paragraph: an edit republished by another member keeps the paragraph
-  # IRI (override fill mode) and only its newest member-signed version is shown.
+  # IRI (override fill mode) and only its newest member-signed version is shown. A removal
+  # is a newer version typed gen:DeactivatedParagraph (no title or content), so a removed
+  # paragraph has no winning row and disappears; restoring it is just another newer version.
   filter not exists {
     graph npa:graph {
       ?np2 npa:hasValidSignatureForPublicKeyHash ?np2Pubkey ;
@@ -87,7 +87,8 @@ select ?paragraph ?title ?content ?date (str(?np) as ?override_target) ?np (\"^\
            np:hasAssertion ?a2 .
       filter not exists { ?npx2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?np2Pubkey . }
     }
-    graph ?a2 { ?paragraph rdf:type gen:Paragraph ; gen:hasContent ?content2 . }
+    graph ?a2 { ?paragraph rdf:type ?type2 . }
+    values ?type2 { gen:Paragraph gen:DeactivatedParagraph }
     filter(?date2 > ?date)
     filter(contains(?memberPubkeys, ?np2Pubkey))
   }
@@ -96,26 +97,24 @@ order by ?position ?title""" .
 }
 
 sub:provenance {
-  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+  sub:assertion prov:wasAttributedTo <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
 }
 
 sub:pubinfo {
-  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
-  
-  this: dct:created "2026-09-10T08:25:28Z"^^xsd:dateTime;
-    dct:creator orcid:0000-0002-1267-0234;
+  this: dct:created "2026-09-16T15:13:47Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot>;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:get-docs-paragraphs;
-    npx:supersedes <https://w3id.org/np/RA2aIVW1JRxYWLnF4VYKStVjWvxLQJ0n9TAabvj-RNw58>;
+    npx:supersedes <https://w3id.org/np/RAbOBFWFpJ0K7ShUeAW7gfhAJiIC1CHBGdSPkL5T-3mko>;
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
       <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
     nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
   
   sub:sig npx:hasAlgorithm "RSA";
-    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "XqO0hXO0M9fnFXt+Z4t+HhSag6Z+gGhrVY4a7T3G8WQ00PLmK7rttLrDh0uEhIYwJpZ+GcmTPEoK0aYpL0n44kCJMKOyyla2EE5ynQToqPwS9vNb5W42yPx4gE1Si2FBaVxn5H69R7taiEnK3y+oMYmtDMN+s+a16cKOs+tf1os=";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl8cMusqtNyKA6UIsi3f7BAcZmHQXWxU0qk0PLsboMWQxYrGBfGgHTgRHJrBRxL+Zn9kJHKVmz2smDcjCBptXi/OwWy80gjsx+Pbe6IWz3zFPWF1UoFIKfPnC0slV67CQgdM853zW7Bmk9/uflCtK4EtZKmPdRGtUHVC7DTVvDBMDzLRGdE2KCBVN29EbM5GGVNvijYbaZQ9OFQPBkQshayqSIyGRr6rreJdkrRVLIzu3uuAjKYydaeXZWSN2JLnVBwrClKUxaEdCwhb5nXpMtKOMD+R+LgaXLeJUWM8BdRSYnta9ZqI5pHY4y3v+eW7J+HHeTvRbHvlik+Z4hFUXmQIDAQAB";
+    npx:hasSignature "YjQblEMQ1nREFqYcZ2rzwB+Ttz9hvWWkfHlcpS1mZlPuwuAVZumsMlGdcTr7eVyLXTcU/Hwn/yl+9ed6b2bH6xsc40IoDTjoGLn8XHfKLMhDFZ7dNyu0M6Q6NEoFf69NKu0awqQzoF53fI90f9S6zcA6a8S2kxgdTiU9IiN51E8zeOFR17NHoiRGOcpqN+nKrgT/+eh9ewZt+gbJaOSAjGOevppkrI4IKNS/9Oi+/EdNKciusBIcQqUWZ3t7MyBdN+j+h6i/r2giZdd/QpFzJq84Iio+ynCq8WEvzlZdr8DKQi/ZIqzPh8EaDC+NOTiVgLqtMVrPIYyBSboXJ3m5CA==";
     npx:hasSignatureTarget this:;
-    npx:signedBy orcid:0000-0002-1267-0234 .
+    npx:signedBy <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
 }
 

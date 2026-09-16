@@ -1,0 +1,75 @@
+@prefix this: <https://w3id.org/np/RA7IFropt6dywZVeroeyM6t94AMrjvHYtRpdHubgMff7U> .
+@prefix sub: <https://w3id.org/np/RA7IFropt6dywZVeroeyM6t94AMrjvHYtRpdHubgMff7U/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is now a" .
+  
+  rdfs:comment rdfs:label "with the reason" .
+  
+  gen:DeactivatedParagraph rdfs:label "removed paragraph" .
+  
+  sub:paragraph a nt:ExternalUriPlaceholder;
+    rdfs:label "the paragraph to remove" .
+  
+  sub:reason a nt:LongLiteralPlaceholder;
+    rdfs:label "why it is removed (optional)" .
+  
+  sub:st0 rdf:object gen:DeactivatedParagraph;
+    rdf:predicate rdf:type;
+    rdf:subject sub:paragraph .
+  
+  sub:st1 a nt:OptionalStatement;
+    rdf:object sub:reason;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:paragraph .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Removes a paragraph from the documentation. This publishes a newer version of the paragraph that marks it as removed, so it disappears from its topic pages and is no longer counted. Nothing is deleted: the paragraph's own page keeps its version history, and any earlier text can be restored from there. Add a short reason unless the removal is obvious.";
+    dct:isVersionOf sub:template-kind;
+    rdfs:label "Removing a documentation paragraph";
+    gen:governedBy <https://w3id.org/spaces/nanopub>;
+    nt:hasNanopubLabelPattern "Removed paragraph: ${paragraph}";
+    nt:hasStatement sub:st0, sub:st1;
+    nt:hasTag "Documentation";
+    nt:hasTargetNanopubType gen:DeactivatedParagraph .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-09-16T15:13:47Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:introduces sub:template-kind;
+    rdfs:label "Removing a documentation paragraph";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl8cMusqtNyKA6UIsi3f7BAcZmHQXWxU0qk0PLsboMWQxYrGBfGgHTgRHJrBRxL+Zn9kJHKVmz2smDcjCBptXi/OwWy80gjsx+Pbe6IWz3zFPWF1UoFIKfPnC0slV67CQgdM853zW7Bmk9/uflCtK4EtZKmPdRGtUHVC7DTVvDBMDzLRGdE2KCBVN29EbM5GGVNvijYbaZQ9OFQPBkQshayqSIyGRr6rreJdkrRVLIzu3uuAjKYydaeXZWSN2JLnVBwrClKUxaEdCwhb5nXpMtKOMD+R+LgaXLeJUWM8BdRSYnta9ZqI5pHY4y3v+eW7J+HHeTvRbHvlik+Z4hFUXmQIDAQAB";
+    npx:hasSignature "WVesLNEC2o5zLU60fQs6o796+qAvxC4iOZHTP17kGAImDsb+nLFgcU8G9VJuXfm6sXkN1IdhLqPDycePuZXI9Fj0jwTddW5XALzHwADeu+aZLeD/UH+OG6ISNoPuwVAOl8JEoObziLgejkggXCSVxnezG1WVTLxDLP6BDzxUHzu77TaF9Xmy8lDpKGeBgOytFFJJhEVq96j5vzRkzWT1WV0oVsuHjtbvNJjV5Re7ex5HxX23FdB1yUH+4UNw9noYXp+TX3OyzfqiktUnsOzzIMkyTp8VsCFMZp2tdWLxc5Z+zvJBOAHiABs0XdqsW9KgxgesCyJ9hHMUp3fSTFXfhw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
+}
+

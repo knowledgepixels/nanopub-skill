@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RANVCTgItt8SIo-zU50f1Cp56UnrM-oLk_irj1ioGxQjI> .
-@prefix sub: <https://w3id.org/np/RANVCTgItt8SIo-zU50f1Cp56UnrM-oLk_irj1ioGxQjI/> .
+@prefix this: <https://w3id.org/np/RALravjedg3V7zxIj9H6x86L0LHMF-3qKDhBbmRWKLCwo> .
+@prefix sub: <https://w3id.org/np/RALravjedg3V7zxIj9H6x86L0LHMF-3qKDhBbmRWKLCwo/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix grlc: <https://w3id.org/kpxl/grlc/> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -18,7 +18,7 @@ sub:Head {
 
 sub:assertion {
   sub:get-docs-paragraph-related a grlc:grlc-query;
-    dct:description "Paragraphs linked to one documentation paragraph with rdfs:seeAlso, in either direction, by a member of the maintaining space. Returns each related paragraph with its current title as label, the chapter it belongs to with the title declared for this documentation, and the linking nanopublication as source and edit target.";
+    dct:description "Paragraphs linked to one documentation paragraph with rdfs:seeAlso in either direction by a member of the maintaining space, with each related paragraph's current title and the topic it belongs to. Related paragraphs whose newest version marks them as removed are left out.";
     dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
     rdfs:label "Get the paragraphs related to a documentation paragraph";
     grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
@@ -61,7 +61,8 @@ select ?related ?related_label ?chapter ?chapter_label ?date (str(?np) as ?overr
         { ?_resource_multi_iri rdfs:seeAlso ?paragraph . } union { ?paragraph rdfs:seeAlso ?_resource_multi_iri . }
       }
       filter(?paragraph != ?_resource_multi_iri)
-      # the related paragraph's current (newest member-signed) title and chapter
+      # the related paragraph's current (newest member-signed) title and chapter; a paragraph whose
+      # newest version is a removal (gen:DeactivatedParagraph) has no current title and is left out
       graph npa:graph {
         ?pnp npa:hasValidSignatureForPublicKeyHash ?pk ; dct:created ?pdate ; np:hasAssertion ?pa .
         filter not exists { ?y npx:invalidates ?pnp ; npa:hasValidSignatureForPublicKeyHash ?pk . }
@@ -71,7 +72,8 @@ select ?related ?related_label ?chapter ?chapter_label ?date (str(?np) as ?overr
       filter not exists {
         graph npa:graph { ?pnp2 npa:hasValidSignatureForPublicKeyHash ?pk2 ; dct:created ?pdate2 ; np:hasAssertion ?pa2 .
           filter not exists { ?z npx:invalidates ?pnp2 ; npa:hasValidSignatureForPublicKeyHash ?pk2 . } }
-        graph ?pa2 { ?paragraph rdf:type gen:Paragraph . }
+        graph ?pa2 { ?paragraph rdf:type ?ptype2 . }
+        values ?ptype2 { gen:Paragraph gen:DeactivatedParagraph }
         filter(?pdate2 > ?pdate) filter(contains(?memberPubkeys, ?pk2))
       }
       # the chapter's title as declared for THIS documentation, not any label the anchor IRI has elsewhere
@@ -92,19 +94,19 @@ sub:provenance {
 }
 
 sub:pubinfo {
-  this: dct:created "2026-09-15T09:48:09Z"^^xsd:dateTime;
+  this: dct:created "2026-09-16T15:13:48Z"^^xsd:dateTime;
     dct:creator <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot>;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:get-docs-paragraph-related;
-    npx:supersedes <https://w3id.org/np/RAxhCZ7pmNTI7m2NvPu2lYYjJqNwFCH5YCZTztyIZlzFM>;
+    npx:supersedes <https://w3id.org/np/RANVCTgItt8SIo-zU50f1Cp56UnrM-oLk_irj1ioGxQjI>;
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
-      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
     nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl8cMusqtNyKA6UIsi3f7BAcZmHQXWxU0qk0PLsboMWQxYrGBfGgHTgRHJrBRxL+Zn9kJHKVmz2smDcjCBptXi/OwWy80gjsx+Pbe6IWz3zFPWF1UoFIKfPnC0slV67CQgdM853zW7Bmk9/uflCtK4EtZKmPdRGtUHVC7DTVvDBMDzLRGdE2KCBVN29EbM5GGVNvijYbaZQ9OFQPBkQshayqSIyGRr6rreJdkrRVLIzu3uuAjKYydaeXZWSN2JLnVBwrClKUxaEdCwhb5nXpMtKOMD+R+LgaXLeJUWM8BdRSYnta9ZqI5pHY4y3v+eW7J+HHeTvRbHvlik+Z4hFUXmQIDAQAB";
-    npx:hasSignature "c4HVXdQiejqrsb4SCvfTChO3A/TpMI6M+PDvjYqdlNQesf6g+1uwfC3DfNWW5xnhRPiYDm4G9pGhhbrcH4t4qx/NQSxyh90H9IgYWNvSxLr2H5Jk4oWZDw1+n6V80+vWpa5WX4N+jIuK1VKlK2xCX4OqK8ivs5auFmaJN2v6fBNvJDmyjeRcDr0H7Tjf/3HZNwrfQHUf6wzBMfFvvjcsHBv7nLgC1Dh2CcL+dN/2NIITRJ0MpY/+OrHZ6Nlo5y58RS8ALIidEsjqLAXVXG8X1ysIg2Wev1OgAvrLfoOLv46Pu6i2QTg063I9Ul0gWZupxhuNiUZXKC094WrLTFtZbw==";
+    npx:hasSignature "lpGvLeNT8qXH3A7BG8aPkTjAj7ID7QTjNgKYPWyfXXc6oStlgYtabt7h/p1u0MqXk147UYiX2Ije9ztGN7QC21FTc7WMhaD7AV6weSiJOgUDLZguMe7kme7I99s7DzDGyAkzO5pXfEc+6w2dZg8VwjO/vVHOolbXeVhO0azGCrOI6Gr6tK/d6fQ4dRGNr3hgEZ1YxesQEPMcTZAgBheWTRaB9gAHh4TcU3h3LWQjpaPkfcFC2zyBI8NPPC7KACEMZtWj7z5DLV4ahOPCzPwqoUGSuWN2JMM1VGgU6mwJf/lDqMvL4trGODeRkyhO9g+uDxc3e+re1tPVe630hnCASg==";
     npx:hasSignatureTarget this:;
     npx:signedBy <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
 }

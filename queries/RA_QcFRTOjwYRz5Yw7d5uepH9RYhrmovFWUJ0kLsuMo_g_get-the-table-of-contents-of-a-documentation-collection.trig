@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RA0m-5A9NjJagaJ4aPz8xnhUPEMxZCOlle0t_4kQ3kmuQ> .
-@prefix sub: <https://w3id.org/np/RA0m-5A9NjJagaJ4aPz8xnhUPEMxZCOlle0t_4kQ3kmuQ/> .
+@prefix this: <https://w3id.org/np/RA_QcFRTOjwYRz5Yw7d5uepH9RYhrmovFWUJ0kLsuMo_g> .
+@prefix sub: <https://w3id.org/np/RA_QcFRTOjwYRz5Yw7d5uepH9RYhrmovFWUJ0kLsuMo_g/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix grlc: <https://w3id.org/kpxl/grlc/> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -18,7 +18,7 @@ sub:Head {
 
 sub:assertion {
   sub:get-docs-topics a grlc:grlc-query;
-    dct:description "The topics of a documentation collection in reading order: each topic's newest declaration by a member of the maintaining space, ordered by position and then label, with its description and its number of paragraphs. Shaped for a paragraph view, so each topic's heading links to its page; the declaring nanopublication is the source and edit target.";
+    dct:description "The topics of a documentation collection in reading order, each with its description and the number of its paragraphs. A topic's newest member-signed declaration counts; a newer removal (gen:DeactivatedDocumentationTopic) hides it. Paragraph counts include only current, member-signed paragraphs, so moved and removed ones are not counted.";
     dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
     rdfs:label "Get the table of contents of a documentation collection";
     grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
@@ -66,17 +66,41 @@ select ?paragraph ?title ?content (str(?np) as ?override_target) ?np (\"^\" as ?
       filter not exists {
         graph npa:graph { ?np2 npa:hasValidSignatureForPublicKeyHash ?k2 ; dct:created ?date2 ; np:hasAssertion ?a2 .
           filter not exists { ?y npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?k2 . } }
-        graph ?a2 { ?topic gen:isRelevantFor ?_resource_multi_iri . }
+        # a newer declaration, or a newer removal (gen:DeactivatedDocumentationTopic), replaces this one
+        graph ?a2 { { ?topic gen:isRelevantFor ?_resource_multi_iri . } union { ?topic rdf:type gen:DeactivatedDocumentationTopic . } }
         filter(?date2 > ?date) filter(contains(?memberPubkeys, ?k2))
       }
     } group by ?topic ?np ?date
   }
-  # number of paragraphs about the topic (retracted ones excluded; each paragraph counted once)
+  # number of paragraphs about the topic: member-signed, newest version of each paragraph only,
+  # so moved and removed paragraphs are not counted
   {
     select ?topic (count(distinct ?p) as ?n) where {
-      graph npa:graph { ?pnp npa:hasValidSignatureForPublicKeyHash ?pk ; np:hasAssertion ?pa .
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+        select (group_concat(?mpk2; separator=\" \") as ?memberPubkeys2) where {
+          graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG2 . }
+          values ?_resource_multi_iri {}
+          graph ?stateG2 {
+            ?_resource_multi_iri npa:isMaintainedBy? ?space2 .
+            ?ri2 a gen:RoleInstantiation ; npa:forSpace ?space2 ; npa:forAgent ?agent2 ; npa:hasRoleType ?roleType2 .
+            ?acct2 a npa:AccountState ; npa:agent ?agent2 ; npa:pubkey ?mpk2 .
+          }
+          filter(?roleType2 in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+        }
+      }
+      values ?_resource_multi_iri {}
+      graph ?tg { ?topic gen:isRelevantFor ?_resource_multi_iri . }
+      graph npa:graph { ?pnp npa:hasValidSignatureForPublicKeyHash ?pk ; dct:created ?pdate ; np:hasAssertion ?pa .
         filter not exists { ?z npx:invalidates ?pnp ; npa:hasValidSignatureForPublicKeyHash ?pk . } }
+      filter(contains(?memberPubkeys2, ?pk))
       graph ?pa { ?p rdf:type gen:Paragraph ; schema:about|schemas:about ?topic . }
+      filter not exists {
+        graph npa:graph { ?pnp2 npa:hasValidSignatureForPublicKeyHash ?pk2 ; dct:created ?pdate2 ; np:hasAssertion ?pa2 .
+          filter not exists { ?w npx:invalidates ?pnp2 ; npa:hasValidSignatureForPublicKeyHash ?pk2 . } }
+        graph ?pa2 { ?p rdf:type ?ptype2 . }
+        values ?ptype2 { gen:Paragraph gen:DeactivatedParagraph }
+        filter(?pdate2 > ?pdate) filter(contains(?memberPubkeys2, ?pk2))
+      }
     } group by ?topic
   }
   bind(?topic as ?paragraph)
@@ -90,10 +114,11 @@ sub:provenance {
 }
 
 sub:pubinfo {
-  this: dct:created "2026-09-16T12:40:45Z"^^xsd:dateTime;
+  this: dct:created "2026-09-16T15:13:48Z"^^xsd:dateTime;
     dct:creator <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot>;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:get-docs-topics;
+    npx:supersedes <https://w3id.org/np/RA0m-5A9NjJagaJ4aPz8xnhUPEMxZCOlle0t_4kQ3kmuQ>;
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
       <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
@@ -101,7 +126,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl8cMusqtNyKA6UIsi3f7BAcZmHQXWxU0qk0PLsboMWQxYrGBfGgHTgRHJrBRxL+Zn9kJHKVmz2smDcjCBptXi/OwWy80gjsx+Pbe6IWz3zFPWF1UoFIKfPnC0slV67CQgdM853zW7Bmk9/uflCtK4EtZKmPdRGtUHVC7DTVvDBMDzLRGdE2KCBVN29EbM5GGVNvijYbaZQ9OFQPBkQshayqSIyGRr6rreJdkrRVLIzu3uuAjKYydaeXZWSN2JLnVBwrClKUxaEdCwhb5nXpMtKOMD+R+LgaXLeJUWM8BdRSYnta9ZqI5pHY4y3v+eW7J+HHeTvRbHvlik+Z4hFUXmQIDAQAB";
-    npx:hasSignature "Fjb7rP3ZCsiyDnRZk+9SsGHYdToy0YfP32ar4tC1+m6URygt+YTT+7fTYhwzOSkcFDmk2pqMeRNUMRGeWmvyZ4bgnWmTockxU1tVBUmnTCzCGyukcqPIhIb9GrhvNRARb27r0+sYlw7apZoHbO4flddtTK+QnnoebI5F/z3UgAvzg/U2KNFhBJ3Jp6RYS8nbrTAZGFB7gyDWc211RW+j7jZhfYyikzmU92jmMh4GPo5sQPpR/bo0EaLPneh4JrLNNTFjUKSBTL27XGlnDH6J8H47T8DvxmAWa9D84BqWVFr6f4PKw3UIZlftLPZ421VeIQ2v2uV1zO/cXLvobe5Fzg==";
+    npx:hasSignature "IgKwrbHi1oSzEwbCkjvCNkPhGG5XLD7MAYQyPe7QJogiVQDbtgpp/AdWVNOzIzA9IX2aDjIjI2COC8Ofb4F8YRmG9RInUVGZ4JvAPLD3wkGuIhrcmpb+5oU6trVyf8nGtt8qMN9btBIYA8D0MfXfU3znsuvOHDQq/rehc5PuusF8sXLRdNv6cFvgmcpNTfl9g+1dpZ2sC7Wo74fOF2mgH+zsQxOgeTnhx6Moc8KBexFdLgghqUnxefFiaNomlTt6a3muSxXtS/GO1R4M4xbSuemAhEAJRgjpzeLJNTu61ibdsVZ1DTmLEZ7JmivsJtaT1HFUqAiYWLgTaHsbcOg0ow==";
     npx:hasSignatureTarget this:;
     npx:signedBy <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
 }

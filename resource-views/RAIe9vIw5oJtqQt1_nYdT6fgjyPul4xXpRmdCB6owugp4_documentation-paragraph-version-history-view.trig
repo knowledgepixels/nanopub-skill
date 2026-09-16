@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAP4YdM3pU00NwWvEwBeY48gD3lRBne-NU-js-0xZWj_8> .
-@prefix sub: <https://w3id.org/np/RAP4YdM3pU00NwWvEwBeY48gD3lRBne-NU-js-0xZWj_8/> .
+@prefix this: <https://w3id.org/np/RAIe9vIw5oJtqQt1_nYdT6fgjyPul4xXpRmdCB6owugp4> .
+@prefix sub: <https://w3id.org/np/RAIe9vIw5oJtqQt1_nYdT6fgjyPul4xXpRmdCB6owugp4/> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -17,27 +17,21 @@ sub:Head {
 }
 
 sub:assertion {
-  sub:add-action a gen:ViewResultAction;
-    rdfs:label "🔗 add related paragraph...";
-    gen:hasActionTemplate <https://w3id.org/np/RAViRgNY5UUksXi6NFZVOR0Fz78kSGuDoDhXfNIrAeybk/template>;
-    gen:hasActionTemplateTargetField "paragraph";
-    gen:isVisibleTo gen:MemberRole .
-  
-  sub:docs-paragraph-related-view a gen:ResourceView, gen:TabularView;
-    dct:isVersionOf <https://w3id.org/np/RAfdFsvfwxMw1VbJR0xoJyTTSNWMAEY2hdgSG2pJaGJiQ/docs-paragraph-related-view-kind>;
-    dct:title "🔗 Related";
-    rdfs:label "Documentation paragraph related-paragraphs view";
+  sub:docs-paragraph-history-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RA1ACzDLILDEMnnj-wRvG-bSSNTIo_wKjqYE6PohEiyLE/docs-paragraph-history-view-kind>;
+    dct:title "🕓 Version history";
+    rdfs:label "Documentation paragraph version history view";
     gen:appliesToInstancesOf gen:Paragraph;
     gen:governedBy <https://w3id.org/spaces/nanopub>;
-    gen:hasStructuralPosition "4.6.related";
-    gen:hasViewAction sub:add-action, sub:edit-action;
-    gen:hasViewQuery <https://w3id.org/np/RANVCTgItt8SIo-zU50f1Cp56UnrM-oLk_irj1ioGxQjI/get-docs-paragraph-related>;
+    gen:hasStructuralPosition "5.5.history";
+    gen:hasViewAction sub:restore-action;
+    gen:hasViewQuery <https://w3id.org/np/RAofhQTZQsoeVtAH_V8qTjeLYhT-IdbMN7inXKz0jLA1o/get-docs-paragraph-versions>;
     gen:hasViewQueryTargetField "resource" .
   
-  sub:edit-action a gen:ViewEntryAction;
-    rdfs:label "✏ edit link...";
-    gen:hasActionTemplate <https://w3id.org/np/RAViRgNY5UUksXi6NFZVOR0Fz78kSGuDoDhXfNIrAeybk/template>;
-    gen:hasActionTemplateQueryMapping "override_target:@override";
+  sub:restore-action a gen:ViewEntryAction;
+    rdfs:label "↩ restore this version...";
+    gen:hasActionTemplate <https://w3id.org/np/RAdxrv0Rie-65L6gdURjpy8nTt7YagghQfX20Zw4pR7t0>;
+    gen:hasActionTemplateQueryMapping "restore_target:@override";
     gen:isVisibleTo gen:MemberRole .
 }
 
@@ -46,12 +40,12 @@ sub:provenance {
 }
 
 sub:pubinfo {
-  this: dct:created "2026-09-15T09:48:10Z"^^xsd:dateTime;
+  this: dct:created "2026-09-16T15:15:35Z"^^xsd:dateTime;
     dct:creator <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot>;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:embeds sub:docs-paragraph-related-view;
-    npx:introduces <https://w3id.org/np/RAfdFsvfwxMw1VbJR0xoJyTTSNWMAEY2hdgSG2pJaGJiQ/docs-paragraph-related-view-kind>;
-    npx:supersedes <https://w3id.org/np/RAQNZj-Ii6K29q1jnu5rqWbnwlCfgPqHsugU93tyikUtY>;
+    npx:embeds sub:docs-paragraph-history-view;
+    npx:introduces <https://w3id.org/np/RA1ACzDLILDEMnnj-wRvG-bSSNTIo_wKjqYE6PohEiyLE/docs-paragraph-history-view-kind>;
+    npx:supersedes <https://w3id.org/np/RA1ACzDLILDEMnnj-wRvG-bSSNTIo_wKjqYE6PohEiyLE>;
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
       <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
@@ -59,7 +53,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl8cMusqtNyKA6UIsi3f7BAcZmHQXWxU0qk0PLsboMWQxYrGBfGgHTgRHJrBRxL+Zn9kJHKVmz2smDcjCBptXi/OwWy80gjsx+Pbe6IWz3zFPWF1UoFIKfPnC0slV67CQgdM853zW7Bmk9/uflCtK4EtZKmPdRGtUHVC7DTVvDBMDzLRGdE2KCBVN29EbM5GGVNvijYbaZQ9OFQPBkQshayqSIyGRr6rreJdkrRVLIzu3uuAjKYydaeXZWSN2JLnVBwrClKUxaEdCwhb5nXpMtKOMD+R+LgaXLeJUWM8BdRSYnta9ZqI5pHY4y3v+eW7J+HHeTvRbHvlik+Z4hFUXmQIDAQAB";
-    npx:hasSignature "i6QC+rd/9rjshIu6g7r+y+SYfznWeAJCokdyeFoxcqkq/l6qc6HQ2aCP3UNosUeJ9NJ1sCLlu32IayafmFrrprHHY7AN+/ilxPgaRAKxXKupcfZW313pNclP8h404N8Bv6K1hsMXIeO4oRLOs7FxiwwAblLdo6G1JNokiMNDJQhzoi5qlGdmJ58r+XmQSTmNGJ//l/wUSt5ZA9AcTu/oLqmW6y5U9nWLxOFxfBy7xS0nvLr64SF3908PmCkn5QioY5bRee6vxjr62DvrQ8przKUr/xLTKU1Rdh1VPP72X2cUoGyimPhKCjhLE676kbRvtQxHS4bPZg5jccLQRe+nVw==";
+    npx:hasSignature "eIfGZv2bUOIz8QRxgpF2AEwuH2iCiCin0jmSY4st6PAj4kKIrFTQ1m8ezswEjT0KRNnyzDEBpUnQ9vfP78qeQ3mNWKGI0Pc0iZjrfke0MokG8u0a7k+RQXgMI7rK7oMVqC8Xwb671GvUn813vEOUgV2qWx+aWi8yFJBBBtV/TQDNF64dVG1wqHQT7pwWLy/EPP+quWbh1Ky+5WWnW63bRaEjBxpbUD+blhsJvQGZ2b45ErtVP0cLUupoCADGeqDhNCJgkxZVXxOANfqOKc6PTKiCG57tPtO7gIDvyOMSrt+HK8myQAKEFMdQRroPxecyPfhd8TdwqQAer/2d/f+z0Q==";
     npx:hasSignatureTarget this:;
     npx:signedBy <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
 }

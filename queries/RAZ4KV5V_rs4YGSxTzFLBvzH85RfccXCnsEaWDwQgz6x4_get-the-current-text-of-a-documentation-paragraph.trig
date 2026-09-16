@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAIPWrEI4v_zQbSexEGAoh91DtHS-TC15FsWvCjb1VOGs> .
-@prefix sub: <https://w3id.org/np/RAIPWrEI4v_zQbSexEGAoh91DtHS-TC15FsWvCjb1VOGs/> .
+@prefix this: <https://w3id.org/np/RAZ4KV5V_rs4YGSxTzFLBvzH85RfccXCnsEaWDwQgz6x4> .
+@prefix sub: <https://w3id.org/np/RAZ4KV5V_rs4YGSxTzFLBvzH85RfccXCnsEaWDwQgz6x4/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix grlc: <https://w3id.org/kpxl/grlc/> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -18,11 +18,12 @@ sub:Head {
 
 sub:assertion {
   sub:get-docs-paragraph-text a grlc:grlc-query;
-    dct:description "For the part page of one documentation paragraph: its current title and text, i.e. the newest version published by a member of the space maintaining the documentation resource (the page context).";
+    dct:description "The newest member-signed version of one documentation paragraph, for its own page. If that version marks the paragraph as removed, the row is a removal notice with the reason, and the edit and remove actions are hidden.";
     dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
     rdfs:label "Get the current text of a documentation paragraph";
     grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
     grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix dct: <http://purl.org/dc/terms/>
 prefix np: <http://www.nanopub.org/nschema#>
 prefix npa: <http://purl.org/nanopub/admin/>
@@ -34,8 +35,11 @@ prefix gen: <https://w3id.org/kpxl/gen/terms/>
 # The current text of ONE documentation paragraph, for the paragraph's own part page.
 # ?_resource_multi_iri is the paragraph IRI; ?__context_multi_iri the documentation resource
 # (auto-filled by Nanodash), whose maintaining space gates the authors. Same rules as the
-# topic-page query: member-signed only, newest version wins.
-select ?title ?content ?date (str(?np) as ?override_target) ?np (\"^\" as ?np_label) where {
+# topic-page query: member-signed only, newest version wins. When the newest version is a
+# removal (typed gen:DeactivatedParagraph, optionally with a reason in rdfs:comment), the row
+# is a removal notice instead, and the edit and remove actions are hidden (blank ?override_target
+# and ?remove_target; ?remove_target otherwise carries the paragraph IRI for the remove action).
+select ?title ?content ?date (if(?type = gen:DeactivatedParagraph, \"\", str(?np)) as ?override_target) (if(?type = gen:DeactivatedParagraph, \"\", str(?_resource_multi_iri)) as ?remove_target) ?np (\"^\" as ?np_label) where {
   service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
     select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
       graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
@@ -55,17 +59,25 @@ select ?title ?content ?date (str(?np) as ?override_target) ?np (\"^\" as ?np_la
   }
   filter(contains(?memberPubkeys, ?npPubkey))
   graph ?a {
-    ?_resource_multi_iri rdf:type gen:Paragraph ; schema:title|schemas:title ?title ; gen:hasContent ?content .
+    ?_resource_multi_iri rdf:type ?type .
+    optional { ?_resource_multi_iri schema:title|schemas:title ?title0 . }
+    optional { ?_resource_multi_iri gen:hasContent ?content0 . }
+    optional { ?_resource_multi_iri rdfs:comment ?reason . }
   }
+  values ?type { gen:Paragraph gen:DeactivatedParagraph }
   filter not exists {
     graph npa:graph {
       ?np2 npa:hasValidSignatureForPublicKeyHash ?np2Pubkey ; dct:created ?date2 ; np:hasAssertion ?a2 .
       filter not exists { ?npx2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?np2Pubkey . }
     }
-    graph ?a2 { ?_resource_multi_iri rdf:type gen:Paragraph ; gen:hasContent ?content2 . }
+    graph ?a2 { ?_resource_multi_iri rdf:type ?type2 . }
+    values ?type2 { gen:Paragraph gen:DeactivatedParagraph }
     filter(?date2 > ?date)
     filter(contains(?memberPubkeys, ?np2Pubkey))
   }
+  # coalesce rather than if(): RDF4J evaluates both branches of if(), and an unbound variable there is an error
+  bind(coalesce(?title0, \"Removed paragraph\") as ?title)
+  bind(coalesce(?content0, concat(\"<p><em>This paragraph has been removed\", coalesce(concat(\": \", ?reason), \"\"), \".</em> Earlier versions are listed in the version history below and can be restored from there.</p>\")) as ?content)
 }""" .
 }
 
@@ -74,10 +86,11 @@ sub:provenance {
 }
 
 sub:pubinfo {
-  this: dct:created "2026-09-15T05:22:52Z"^^xsd:dateTime;
+  this: dct:created "2026-09-16T15:13:47Z"^^xsd:dateTime;
     dct:creator <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot>;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:get-docs-paragraph-text;
+    npx:supersedes <https://w3id.org/np/RAIPWrEI4v_zQbSexEGAoh91DtHS-TC15FsWvCjb1VOGs>;
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
       <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
@@ -85,7 +98,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAl8cMusqtNyKA6UIsi3f7BAcZmHQXWxU0qk0PLsboMWQxYrGBfGgHTgRHJrBRxL+Zn9kJHKVmz2smDcjCBptXi/OwWy80gjsx+Pbe6IWz3zFPWF1UoFIKfPnC0slV67CQgdM853zW7Bmk9/uflCtK4EtZKmPdRGtUHVC7DTVvDBMDzLRGdE2KCBVN29EbM5GGVNvijYbaZQ9OFQPBkQshayqSIyGRr6rreJdkrRVLIzu3uuAjKYydaeXZWSN2JLnVBwrClKUxaEdCwhb5nXpMtKOMD+R+LgaXLeJUWM8BdRSYnta9ZqI5pHY4y3v+eW7J+HHeTvRbHvlik+Z4hFUXmQIDAQAB";
-    npx:hasSignature "eRBXCAwFDpu5bqNK876pKNnl9Ktz3Sba45+kNz/+Fg9Kp31ylR79/8C2HSBfcXnrzMFDRhK86UNkxHq1eeaJQFs9fF20ZU7cC7ev/pIQXmwqLMxVB980DWQVyvlbAxLiFTSmBIcMgm79d8nQCpiZMQUvz3bbLlAlT+vQELlraYOX1VJMiLVzW76iezkJ94KfqIsW8860eDgaes2gNQXaK4r50MI7YkX0wQdF6k1EtOlQNq2mpNggqWLH2hppARMOrCi8wvcJGrQ0s3OxRo5hKB66QKU+h9N9HJKf/qNhxgST+PfBBloL9kgi9sTD64tzi4WL6oRS9yl6u5K9mBt+1w==";
+    npx:hasSignature "kvBmDEj6exKvsmZX0FlYlhEzTA+qnfntZmSpN/+tvglp0kaBPtTGKbQXC7/5r8KGJ2RuZ1porWFuXZG8QbsgLm06vHoLiZkOzdldPzdmFLDR7a9GZKh1O9DfUcVogeuqzu6Gr6pHzQAcDWsHTwLVcjWfPBaVWyZA7zt2RnDjuGzI8QTcZMX8RjX2OP9WgzklT5/S/npFTAEWuuQCF7EFjwZOTzJnWr8HcPr0+eTPM1tEao4LpOARIKcKEM7fodzeVNYpq6e/TDEbjJL46bX6Sth/fNzSd0JxePTs+tdn00AJ5mMRpAXr6bvAqp3t6rBXtuM5+xjWQzpelp461L6X0A==";
     npx:hasSignatureTarget this:;
     npx:signedBy <https://w3id.org/np/RAFJKwxgChOLOQ2UduMAT1bYf1VNaWIZYIPmTT3YvJ8y0/docs-bot> .
 }
