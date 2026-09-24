@@ -1,5 +1,6 @@
 import sys
 from rdflib import Dataset, URIRef, Literal, RDF, RDFS
+from governance_check import report as report_governance
 
 NT="https://w3id.org/np/o/ntemplate/"; DCT="http://purl.org/dc/terms/"
 GEN="https://w3id.org/kpxl/gen/terms/"
@@ -97,3 +98,6 @@ for st in simple:
     for r,n in ((RDF.subject,'subject'),(RDF.predicate,'predicate'),(RDF.object,'object')):
         if (st,r,None) not in g: print(f"   ! stB000 on {st}: missing rdf:{n}")
     if st not in top_stmts: print(f"   ! {st} not linked from the template node (stB001)")
+
+# a governed template: is its kind registered with the space it names? (a note, never a failure)
+report_governance(sys.argv[1])

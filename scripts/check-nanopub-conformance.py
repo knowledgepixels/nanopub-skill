@@ -10,12 +10,16 @@ Reports, per nanopub:
   - RestrictedChoicePlaceholder values outside the allowed set
 Exit code 1 if any nanopub has problems.
 
+Also notes, without failing, a space-governed definition whose kind is not registered
+with its space (see governance_check.py).
+
 NOT for template nanopubs: the template meta-template uses grouped, role-restricted
 statement patterns that this flat matcher does not model, so it reports false
 positives on them. Use scripts/check-template-conformance.py for those instead.
 """
 import re, sys, os, urllib.request
 from rdflib import Dataset, Graph, URIRef, Literal, BNode, RDF, RDFS
+from governance_check import report as report_governance
 
 NT = "https://w3id.org/np/o/ntemplate/"
 nt = lambda n: URIRef(NT + n)
@@ -192,6 +196,7 @@ def check(path):
             for st in missing: print("   ! required statement not instantiated:", short(st))
         else:
             print(f"{name}  vs {npuri.rsplit('/',1)[-1]}:  OK ({len(list(ag))} assertion triples all matched)")
+    report_governance(path)
     return ok
 
 if __name__ == '__main__':
