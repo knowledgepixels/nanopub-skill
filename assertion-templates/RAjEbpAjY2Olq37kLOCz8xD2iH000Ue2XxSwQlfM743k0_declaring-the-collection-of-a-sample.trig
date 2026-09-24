@@ -1,0 +1,237 @@
+@prefix this: <https://w3id.org/np/RAjEbpAjY2Olq37kLOCz8xD2iH000Ue2XxSwQlfM743k0> .
+@prefix sub: <https://w3id.org/np/RAjEbpAjY2Olq37kLOCz8xD2iH000Ue2XxSwQlfM743k0/> .
+@prefix schema: <https://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://rdfs.org/sioc/ns#link> rdfs:label "has observation in" .
+  
+  <http://softeng.polito.it/rsctx#hasTemperature> rdfs:label "has temperature in °C" .
+  
+  rdf:type rdfs:label "is an instance of" .
+  
+  schema:about rdfs:label "relates to" .
+  
+  <https://w3id.org/biolink/vocab/timepoint> rdfs:label "has timepoint in XSD DateTime format" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasLocationCoordinates> rdfs:label "has location in decimal degrees w. optional altitude" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonName> rdfs:label "belongs to taxon" .
+  
+  sub:conductivityMeasurement a nt:LiteralPlaceholder;
+    rdfs:label "enter conductivity of sample (e.g. '0.5 [mS]')";
+    nt:hasDatatype <https://w3id.org/cdt/ucum>;
+    nt:hasRegex "[0-9]+(\\.[0-9]+)? \\[mS\\]" .
+  
+  sub:coordinates a nt:LiteralPlaceholder;
+    rdfs:label "enter location coordinates (e.g. '+47.37+8.54+400.5')";
+    nt:hasRegex "[+-][0-9]+(\\.[0-9]+)?[+-][0-9]+(\\.[0-9]+)?([+-][0-9]+(\\.[0-9]+)?)?" .
+  
+  sub:ecosystem a nt:GuidedChoicePlaceholder;
+    rdfs:label "enter ecosystem of sampling location (ENVO ontology)";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=envo&q=" .
+  
+  sub:group1 a nt:GroupedStatement;
+    nt:hasStatement sub:st10, sub:st11, sub:st12, sub:st13, sub:st14, sub:st15 .
+  
+  sub:group2 a nt:GroupedStatement;
+    nt:hasStatement sub:st19, sub:st20, sub:st21, sub:st24, sub:st27, sub:st28 .
+  
+  sub:group4 a nt:GroupedStatement;
+    nt:hasStatement sub:st41, sub:st42, sub:st43, sub:st44 .
+  
+  sub:iNaturalistLink a nt:ExternalUriPlaceholder;
+    rdfs:label "specify link to observation description (e.g. iNaturalist)" .
+  
+  sub:intentionToSample a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "enter nanopublication expressing Intention to Sample";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https://w3id.org/spaces/biodiversity/r/ontology/samplingIntention" .
+  
+  sub:materialOntology a nt:GuidedChoicePlaceholder;
+    rdfs:label "enter environmental (ENVO ontology) or tissue material (BTO ontology)";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=bto&q=", "https://www.ebi.ac.uk/ols/api/select?ontology=envo&q=" .
+  
+  sub:permit a nt:ValuePlaceholder;
+    rdfs:label "enter permit ID or URL" .
+  
+  sub:phMeasurement a nt:LiteralPlaceholder;
+    rdfs:label "enter pH of sample (e.g. '7.4 [pH]')";
+    nt:hasDatatype <https://w3id.org/cdt/ucum>;
+    nt:hasRegex "[0-9]+(\\.[0-9]+)? \\[pH\\]" .
+  
+  sub:protocol a nt:ExternalUriPlaceholder;
+    rdfs:label "enter isolation protocol URL" .
+  
+  sub:purpose a nt:GuidedChoicePlaceholder;
+    rdfs:label "enter sampling purpose (MESH ontology)";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=mesh&q=" .
+  
+  sub:sample a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this sample" .
+  
+  sub:sampleLocation a nt:LocalResource;
+    rdfs:label "a sample location" .
+  
+  sub:sampleMaterial a nt:LocalResource;
+    rdfs:label "a sample material" .
+  
+  sub:st10 rdf:object <https://w3id.org/spaces/biodiversity/r/ontology/Sample>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:sample .
+  
+  sub:st11 rdf:object sub:timepoint;
+    rdf:predicate <https://w3id.org/biolink/vocab/timepoint>;
+    rdf:subject sub:sample .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:permit;
+    rdf:predicate <https://w3id.org/spaces/biodiversity/r/ontology/hasSamplingPermit>;
+    rdf:subject sub:sample .
+  
+  sub:st13 rdf:object sub:purpose;
+    rdf:predicate <https://w3id.org/spaces/biodiversity/r/ontology/hasSamplingPurpose>;
+    rdf:subject sub:sample .
+  
+  sub:st14 rdf:object sub:protocol;
+    rdf:predicate schema:about;
+    rdf:subject sub:sample .
+  
+  sub:st15 a nt:OptionalStatement;
+    rdf:object sub:intentionToSample;
+    rdf:predicate schema:about;
+    rdf:subject sub:sample .
+  
+  sub:st19 rdf:object sub:sampleMaterial;
+    rdf:predicate <https://w3id.org/spaces/biodiversity/r/ontology/hasSampleMaterial>;
+    rdf:subject sub:sample .
+  
+  sub:st20 rdf:object sub:materialOntology;
+    rdf:predicate rdf:type;
+    rdf:subject sub:sampleMaterial .
+  
+  sub:st21 a nt:OptionalStatement;
+    rdf:object sub:phMeasurement;
+    rdf:predicate <https://w3id.org/spaces/biodiversity/r/ontology/hasPh>;
+    rdf:subject sub:sampleMaterial .
+  
+  sub:st24 a nt:OptionalStatement;
+    rdf:object sub:conductivityMeasurement;
+    rdf:predicate <https://w3id.org/spaces/biodiversity/r/ontology/hasConductivity>;
+    rdf:subject sub:sampleMaterial .
+  
+  sub:st27 a nt:OptionalStatement;
+    rdf:object sub:taxonname;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonName>;
+    rdf:subject sub:sampleMaterial .
+  
+  sub:st28 a nt:OptionalStatement;
+    rdf:object sub:iNaturalistLink;
+    rdf:predicate <http://rdfs.org/sioc/ns#link>;
+    rdf:subject sub:sampleMaterial .
+  
+  sub:st41 rdf:object sub:sampleLocation;
+    rdf:predicate <https://w3id.org/spaces/biodiversity/r/ontology/hasSamplingLocation>;
+    rdf:subject sub:sample .
+  
+  sub:st42 rdf:object sub:coordinates;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasLocationCoordinates>;
+    rdf:subject sub:sampleLocation .
+  
+  sub:st43 rdf:object sub:ecosystem;
+    rdf:predicate rdf:type;
+    rdf:subject sub:sampleLocation .
+  
+  sub:st44 a nt:OptionalStatement;
+    rdf:object sub:temperature;
+    rdf:predicate <http://softeng.polito.it/rsctx#hasTemperature>;
+    rdf:subject sub:sampleLocation .
+  
+  sub:taxonname a nt:GuidedChoicePlaceholder;
+    rdfs:label "enter taxon from checklistbank.org (if not found, specify URI from MycoBank, Index Fungorum, or Zoobank)";
+    nt:possibleValuesFromApi "https://vodex.petapico.org/nidx/query?rows=100&q=label:" .
+  
+  sub:temperature a nt:LiteralPlaceholder;
+    rdfs:label "enter temperature of location (e.g. '+23.5 [°C]')";
+    nt:hasDatatype <https://w3id.org/cdt/ucum>;
+    nt:hasRegex "[+-][0-9]+(\\.[0-9]+)? \\[°C\\]" .
+  
+  sub:template a nt:AssertionTemplate;
+    dcterms:description "Declares the collection of small quantities of biological or environmental material for a specific purpose.";
+    dcterms:isVersionOf <https://w3id.org/np/RAgCh57tYtg-fTQeVwGwRGETodFYIjaY9KuXGRcSM1NPw/templateKind>;
+    rdfs:label "Declaring the collection of a sample";
+    gen:governedBy <https://w3id.org/spaces/zdouclab>;
+    nt:hasNanopubLabelPattern "Sampling ${materialOntology} from ${ecosystem}";
+    nt:hasStatement sub:group1, sub:group2, sub:group4, sub:st10, sub:st11, sub:st12,
+      sub:st13, sub:st14, sub:st15, sub:st19, sub:st20, sub:st21, sub:st24, sub:st27, sub:st28,
+      sub:st41, sub:st42, sub:st43, sub:st44;
+    nt:hasTag "naturalProducts" .
+  
+  sub:timepoint a nt:LiteralPlaceholder;
+    rdfs:label "enter timepoint (e.g. '2026-03-30T22:17:11Z')";
+    nt:hasRegex "-?([1-9]\\d\\d\\d+|0\\d\\d\\d)-(0[1-9]|1[0-2])-(0[1-9]|[12]\\d|3[01])T(([01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(\\.\\d+)?|24:00:00(\\.0+)?)(Z|[+-](0\\d|1[0-4]):[0-5]\\d)?" .
+  
+  <https://w3id.org/spaces/biodiversity/r/ontology/Sample> rdfs:label "Sample" .
+  
+  <https://w3id.org/spaces/biodiversity/r/ontology/hasConductivity> rdfs:label "has conductivity in millisiemens" .
+  
+  <https://w3id.org/spaces/biodiversity/r/ontology/hasPh> rdfs:label "has pH measurement in pH units" .
+  
+  <https://w3id.org/spaces/biodiversity/r/ontology/hasSampleMaterial> rdfs:label "has sample material" .
+  
+  <https://w3id.org/spaces/biodiversity/r/ontology/hasSamplingLocation> rdfs:label "has sampling location" .
+  
+  <https://w3id.org/spaces/biodiversity/r/ontology/hasSamplingPermit> rdfs:label "has sampling permit" .
+  
+  <https://w3id.org/spaces/biodiversity/r/ontology/hasSamplingPurpose> rdfs:label "has sampling purpose" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-6534-6609 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-6534-6609 foaf:name "Mitja M. Zdouc" .
+  
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dcterms:created "2026-09-24T09:38:44+00:00"^^xsd:dateTime;
+    dcterms:creator orcid:0000-0002-1267-0234;
+    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:template;
+    npx:introduces <https://w3id.org/np/RAgCh57tYtg-fTQeVwGwRGETodFYIjaY9KuXGRcSM1NPw/templateKind>;
+    rdfs:label "Declaring the collection of a sample";
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: intentionToSample.";
+    prov:wasDerivedFrom <https://w3id.org/np/RA36coMj32AtDmy6rbaFM7n4gxg53quH17KsjUCithr3I>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ktZzwxuqGyA+v0bKaSKGGV6VJ4gepTExQZIu4RAxv2OK+/eo+6mA7DNcsBM0n6xXR9OiFokUgKOFYWj486poyttSCBsJEtfFnEsHn+KHvtWRCSf5hvNnKJEMgmioDjJkznl0966UMitlIP+4xynLDiOEWTm/4yTUPKBHJRKSLwM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/spaces/zdouclab> nt:hasLabelFromApi "ZdoucLab - Describes the activities of the ZdoucLab group at the University of Vienna." .
+}
+

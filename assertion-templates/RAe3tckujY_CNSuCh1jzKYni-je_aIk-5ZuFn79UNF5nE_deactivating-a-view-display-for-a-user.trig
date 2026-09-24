@@ -1,0 +1,92 @@
+@prefix this: <https://w3id.org/np/RAe3tckujY_CNSuCh1jzKYni-je_aIk-5ZuFn79UNF5nE> .
+@prefix sub: <https://w3id.org/np/RAe3tckujY_CNSuCh1jzKYni-je_aIk-5ZuFn79UNF5nE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  gen:DeactivatedViewDisplay rdfs:label "deactivated view display" .
+  
+  gen:ViewDisplay rdfs:label "view display" .
+  
+  gen:isDisplayFor rdfs:label "is a display for" .
+  
+  gen:isDisplayOfView rdfs:label "is a display of the view" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Deactivating a view display for a user";
+    nt:hasNanopubLabelPattern "${resource} deactivates view: ${view}";
+    nt:hasStatement sub:st10, sub:st12, sub:st20, sub:st30;
+    nt:hasTag "Spaces" .
+  
+  sub:display a nt:EmbeddedResource, nt:LocalResource;
+    rdfs:label "this" .
+  
+  sub:resource a nt:AgentPlaceholder;
+    rdfs:label "choose the user" .
+  
+  sub:st10 rdf:object gen:ViewDisplay;
+    rdf:predicate rdf:type;
+    rdf:subject sub:display .
+  
+  sub:st12 rdf:object gen:DeactivatedViewDisplay;
+    rdf:predicate rdf:type;
+    rdf:subject sub:display .
+  
+  sub:st20 rdf:object sub:view;
+    rdf:predicate gen:isDisplayOfView;
+    rdf:subject sub:display .
+  
+  sub:st30 rdf:object sub:resource;
+    rdf:predicate gen:isDisplayFor;
+    rdf:subject sub:display .
+  
+  sub:view a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the view";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAs7Q2IMbb7C2WzFa98bVwlDMhN3kJ0rrF9cSEybtvLaA/find-embedded-things?type=https://w3id.org/kpxl/gen/terms/ResourceView" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-24T09:38:44+00:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAZ47_4JquvEXk30HYnVeSgFRcQqHtpdibcfBOeqHI2j4>;
+    rdfs:label "Deactivating a view display for a user";
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: view.";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "oO0J/W7m5r6Gh035gWZw8ESD43xRbS0MHOF1tEIe2LezsgZvcexbPjKhFJaKCxu0ZrmsY41kGn8d6KX9u0fJj78ScOgf8EVfoYSbLZpE4io6HX1JtyP5wPWhLmuy27dfwT2XD308OQBNDEte3UCww6IeBWCHyxd8aG9AKgZXJAQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

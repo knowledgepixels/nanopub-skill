@@ -1,0 +1,141 @@
+@prefix this: <https://w3id.org/np/RAuUAdXWlPCa0EXwpUTwmGr81mE1O-mDYgUR0hW629UgM> .
+@prefix sub: <https://w3id.org/np/RAuUAdXWlPCa0EXwpUTwmGr81mE1O-mDYgUR0hW629UgM/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:title rdfs:label "has the title" .
+  
+  <http://schema.org/name> rdfs:label "has the name" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  gen:MaintainerRole rdfs:label "Maintainer-tier role" .
+  
+  gen:MemberRole rdfs:label "Member-tier role" .
+  
+  gen:ObserverRole rdfs:label "Observer-tier role" .
+  
+  gen:SpaceMemberRole rdfs:label "space member role" .
+  
+  gen:hasInverseProperty rdfs:label "has the inverse property" .
+  
+  gen:hasRegularProperty rdfs:label "has the regular property" .
+  
+  gen:hasRoleAssignmentTemplate rdfs:label "has the role assignment template" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Declaring a space member role";
+    nt:hasStatement sub:st01, sub:st01b, sub:st02a, sub:st02b, sub:st02c, sub:st03, sub:st10a,
+      sub:st10b;
+    nt:hasTag "Spaces";
+    nt:hasTargetNanopubType gen:SpaceMemberRole .
+  
+  sub:inverseProperty a nt:ExternalUriPlaceholder;
+    rdfs:label "inverse property URI (space-to-agent)" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the label for the role" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "short name, e.g. \"member\"" .
+  
+  sub:regularProperty a nt:ExternalUriPlaceholder;
+    rdfs:label "regular property URI (agent-to-space)" .
+  
+  sub:role a nt:EmbeddedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID suffix" .
+  
+  sub:roleAssignmentTemplate a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "choose template";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAvSIHegG4Mb-Q64cWQoghLffvN_2NdDdqxNnOhJSZQfs/search-templates" .
+  
+  sub:st01 rdf:object gen:SpaceMemberRole;
+    rdf:predicate rdf:type;
+    rdf:subject sub:role .
+  
+  sub:st01b rdf:object sub:tier;
+    rdf:predicate rdf:type;
+    rdf:subject sub:role .
+  
+  sub:st02a rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:role .
+  
+  sub:st02b rdf:object sub:name;
+    rdf:predicate <http://schema.org/name>;
+    rdf:subject sub:role .
+  
+  sub:st02c rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:role .
+  
+  sub:st03 a nt:OptionalStatement;
+    rdf:object sub:roleAssignmentTemplate;
+    rdf:predicate gen:hasRoleAssignmentTemplate;
+    rdf:subject sub:role .
+  
+  sub:st10a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:regularProperty;
+    rdf:predicate gen:hasRegularProperty;
+    rdf:subject sub:role .
+  
+  sub:st10b a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:inverseProperty;
+    rdf:predicate gen:hasInverseProperty;
+    rdf:subject sub:role .
+  
+  sub:tier a nt:RestrictedChoicePlaceholder;
+    rdfs:label "tier";
+    nt:hasDefaultValue gen:ObserverRole;
+    nt:possibleValue gen:MaintainerRole, gen:MemberRole, gen:ObserverRole .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "short header title, e.g. \"Members\"" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-24T09:38:44+00:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RADUb7sP1dfTh-L9fg3d9bvrDVnX-SBRtIJDB_eSfUDew>;
+    rdfs:label "Declaring a space member role";
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: roleAssignmentTemplate.";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "DyDmtHsectGFzJlOxFdMWnYJAWjMtfH4FWk/jUI8R0Z3v5n/OXj+JG19yD6QB4jEVOpjQzyCKkhExMmSdvBSc9KxDZ6pcRMPBcLpeEXiXqcLaiMpuDyYLZcCTFjA30gdCgH/tU4FF+gHgpq71XSmhGKoyh22ENekYEsa3JcNkBA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

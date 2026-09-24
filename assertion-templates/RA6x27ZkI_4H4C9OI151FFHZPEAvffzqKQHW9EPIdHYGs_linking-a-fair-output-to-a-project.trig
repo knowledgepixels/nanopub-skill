@@ -1,0 +1,97 @@
+@prefix this: <https://w3id.org/np/RA6x27ZkI_4H4C9OI151FFHZPEAvffzqKQHW9EPIdHYGs> .
+@prefix sub: <https://w3id.org/np/RA6x27ZkI_4H4C9OI151FFHZPEAvffzqKQHW9EPIdHYGs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <https://w3id.org/fair/ff/terms/has-article> rdfs:label "has article" .
+  
+  <https://w3id.org/fair/ff/terms/has-dataset> rdfs:label "has dataset" .
+  
+  <https://w3id.org/fair/ff/terms/has-dmp> rdfs:label "has DMP" .
+  
+  <https://w3id.org/fair/ff/terms/has-method> rdfs:label "has method" .
+  
+  <https://w3id.org/fair/ff/terms/has-preregistration> rdfs:label "has pre-registration" .
+  
+  <https://w3id.org/fair/ff/terms/has-presentation> rdfs:label "has presentation" .
+  
+  <https://w3id.org/fair/ff/terms/has-software> rdfs:label "has software" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Declares that a given project produced or reused a specific FAIR output, using the FAIR-findings (ff) vocabulary. Pick the kind of output (article, dataset, software, method, data management plan, or pre-registration), then give its DOI/URL and, optionally, a title.";
+    rdfs:label "Linking a FAIR output to a project";
+    nt:hasNanopubLabelPattern "${project} ${relation} ${output}";
+    nt:hasStatement sub:st1, sub:st2;
+    nt:hasTag "FAIR Findings", "Spaces";
+    nt:hasTargetNanopubType <https://w3id.org/fair/ff/terms/has-output> .
+  
+  sub:output a nt:ExternalUriPlaceholder;
+    rdfs:label "the output (paste a DOI, URL, or other identifier)" .
+  
+  sub:outputLabel a nt:LiteralPlaceholder;
+    rdfs:label "title of the output (optional)" .
+  
+  sub:project a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the project";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Project" .
+  
+  sub:relation a nt:RestrictedChoicePlaceholder;
+    rdfs:label "kind of output";
+    nt:possibleValue <https://w3id.org/fair/ff/terms/has-article>, <https://w3id.org/fair/ff/terms/has-dataset>,
+      <https://w3id.org/fair/ff/terms/has-dmp>, <https://w3id.org/fair/ff/terms/has-method>,
+      <https://w3id.org/fair/ff/terms/has-preregistration>, <https://w3id.org/fair/ff/terms/has-presentation>,
+      <https://w3id.org/fair/ff/terms/has-software> .
+  
+  sub:st1 rdf:object sub:output;
+    rdf:predicate sub:relation;
+    rdf:subject sub:project .
+  
+  sub:st2 a nt:OptionalStatement;
+    rdf:object sub:outputLabel;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:output .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-24T09:38:44+00:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA6qPIEIiWAz66evvlbEEoU1XvCj9VlxWjICdlSX8elqs>;
+    rdfs:label "Linking a FAIR output to a project";
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: project.";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "jLNPls4hDX6G9J/3ioYpJtTOkA6CAhzyhvAMSmLjY8wbmw9i7AE1gdPhf9WngTFlr7L8Scwek3we2c7i7MHD51fjhlQbT+owjahr2stBWXoxBU4fmEQk30D8eIBz+lWDcsZwrdU5pchZjuwigv9DklTri6v5DsUhg2i30elICb8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

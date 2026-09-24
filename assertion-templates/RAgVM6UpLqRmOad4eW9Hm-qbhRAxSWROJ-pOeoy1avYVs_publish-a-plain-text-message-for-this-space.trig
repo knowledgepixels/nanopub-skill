@@ -1,0 +1,85 @@
+@prefix this: <https://w3id.org/np/RAgVM6UpLqRmOad4eW9Hm-qbhRAxSWROJ-pOeoy1avYVs> .
+@prefix sub: <https://w3id.org/np/RAgVM6UpLqRmOad4eW9Hm-qbhRAxSWROJ-pOeoy1avYVs/> .
+@prefix schema: <https://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdfs:label rdfs:label "has the text" .
+  
+  rdfs:seeAlso rdfs:label "has the link / further info at" .
+  
+  schema:about rdfs:label "is about" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Publish a plain-text message for this Space";
+    nt:hasNanopubLabelPattern "${message}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3;
+    nt:hasTag "Spaces" .
+  
+  sub:link a nt:ExternalUriPlaceholder;
+    rdfs:label "link your message is about or with additional info" .
+  
+  sub:message a nt:LongLiteralPlaceholder;
+    rdfs:label "your plain-text message" .
+  
+  sub:space a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the Space";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st1 rdf:object sub:message;
+    rdf:predicate rdfs:label;
+    rdf:subject nt:ASSERTION .
+  
+  sub:st2 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:link;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject nt:ASSERTION .
+  
+  sub:st3 rdf:object sub:space;
+    rdf:predicate schema:about;
+    rdf:subject nt:ASSERTION .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-24T09:38:44+00:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA-b4Z62nHyJw6ZzPjIueRzSkLFXu-W76LAp7um8jDWKw>;
+    rdfs:label "Publish a plain-text message for this Space";
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: space.";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "KKE+ik1lP0+39Z0hlV67SUoA3S1nvS1RKuvfLy3kVMF5vLf90Dk8GxTPiSUu1LZja0CGTwu33AGmyrJCDPeB72LBoXihF3oDq/bRkRhJJcHvKNEQfrwGQXTHBfHfqoBpvFS72NZBD3Fz8M3VoYtVAKX9PRTDciEGWZcLJrtEw5s=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

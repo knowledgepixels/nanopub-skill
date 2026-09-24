@@ -1,0 +1,115 @@
+@prefix this: <https://w3id.org/np/RA_QgU4MbTUKs4tELnl61gg3niYHTAqLjDI75Yn08QRb8> .
+@prefix sub: <https://w3id.org/np/RA_QgU4MbTUKs4tELnl61gg3niYHTAqLjDI75Yn08QRb8/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:isPartOf rdfs:label "is part of" .
+  
+  <http://schema.org/Question> rdfs:label "FAQ entry" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the question" .
+  
+  gen:UnansweredQuestion rdfs:label "unanswered question" .
+  
+  gen:hasContent rdfs:label "has the answer" .
+  
+  gen:hasPositionString rdfs:label "has the position string" .
+  
+  sub:answer a nt:LongLiteralPlaceholder;
+    rdfs:label "the answer" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    rdfs:label "Create an FAQ entry";
+    nt:hasNanopubLabelPattern "FAQ: ${question}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5 .
+  
+  sub:entity a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "entity this FAQ entry is part of";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/MaintainedResource" .
+  
+  sub:faq-entry a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this FAQ entry" .
+  
+  sub:position a nt:LiteralPlaceholder;
+    rdfs:label "string determining the order of the FAQ entries" .
+  
+  sub:question a nt:LiteralPlaceholder;
+    rdfs:label "the question" .
+  
+  sub:st0 rdf:object <http://schema.org/Question>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:faq-entry .
+  
+  sub:st1 rdf:object sub:question;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:faq-entry .
+  
+  sub:st2 rdf:object sub:answer;
+    rdf:predicate gen:hasContent;
+    rdf:subject sub:faq-entry .
+  
+  sub:st3 rdf:object sub:entity;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:faq-entry .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:position;
+    rdf:predicate gen:hasPositionString;
+    rdf:subject sub:faq-entry .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:unansweredType;
+    rdf:predicate rdf:type;
+    rdf:subject sub:faq-entry .
+  
+  sub:unansweredType a nt:RestrictedChoicePlaceholder;
+    rdfs:label "mark as still unanswered (leave empty once answered)";
+    nt:possibleValue gen:UnansweredQuestion .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-24T09:38:44+00:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAUneCxaT_JQhs4XK8yFhSm5JGmAMgn8k6zBkWB2pp3BI>;
+    rdfs:label "Create an FAQ entry";
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: entity.";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "DanNxl7XD5e4g67v2S5Iu95uXYzCS0FIXO36RV3oh5cgb0n1x8qJEudTuxyo3Iksq5Q4vP7tbfmqDqJvr/SvLG/ddiPctLA/v1mwfvGw0yBDxiyEeI//FS1VkIEz2NncqjBzAWoNfOxyBlaqI2yTXD3mwKSdNCdteUBoaJksxf4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

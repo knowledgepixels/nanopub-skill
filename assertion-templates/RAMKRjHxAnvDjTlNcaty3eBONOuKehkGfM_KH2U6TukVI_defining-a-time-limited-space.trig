@@ -1,0 +1,208 @@
+@prefix this: <https://w3id.org/np/RAMKRjHxAnvDjTlNcaty3eBONOuKehkGfM_KH2U6TukVI> .
+@prefix sub: <https://w3id.org/np/RAMKRjHxAnvDjTlNcaty3eBONOuKehkGfM_KH2U6TukVI/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  dct:subject rdfs:label "has the topic" .
+  
+  <http://schema.org/endDate> rdfs:label "has the end date" .
+  
+  <http://schema.org/location> rdfs:label "has the location" .
+  
+  <http://schema.org/startDate> rdfs:label "has the start date" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <http://www.w3.org/2002/07/owl#sameAs> rdfs:label "has the alternative ID" .
+  
+  gen:AdminRole rdfs:label "admins" .
+  
+  gen:Campaign rdfs:label "Campaign - (with focus on outreach)" .
+  
+  gen:Consortium rdfs:label "Consortium - (with focus on bringing units together)" .
+  
+  gen:Event rdfs:label "Event - (with focus on exchange)" .
+  
+  gen:Initiative rdfs:label "Initiative - (with focus on coordination)" .
+  
+  gen:MaintainerRole rdfs:label "maintainers" .
+  
+  gen:MemberRole rdfs:label "members" .
+  
+  gen:ObserverRole rdfs:label "observers" .
+  
+  gen:Project rdfs:label "Project - (with focus on getting work done)" .
+  
+  gen:Space rdfs:label "Space" .
+  
+  gen:Taskforce rdfs:label "Taskforce - (with focus on formal vessel)" .
+  
+  gen:Taskunit rdfs:label "Taskunit - (with focus on structuring into sub-units)" .
+  
+  gen:hasAdmin rdfs:label "has as admin" .
+  
+  gen:hasPartDefinitionTier rdfs:label "has parts defined by" .
+  
+  gen:hasRootDefinition rdfs:label "has as root definition" .
+  
+  gen:isSubSpaceOf rdfs:label "is a sub-space of" .
+  
+  sub:admin a nt:AgentPlaceholder;
+    rdfs:label "an admin of the Space" .
+  
+  sub:altId a nt:ExternalUriPlaceholder;
+    rdfs:label "alternative URI" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such nanopublications defines a time-limited Space, i.e. a project, initiative, campaign, or event.";
+    rdfs:label "Defining a time-limited Space";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06,
+      sub:st11, sub:st12, sub:st13, sub:st14, sub:st90, sub:st99;
+    nt:hasTag "Spaces" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "the description of the Space" .
+  
+  sub:endDate a nt:LiteralPlaceholder;
+    rdfs:label "end date (and optionally time)";
+    nt:hasDatatype xsd:dateTime .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the name of the Space" .
+  
+  sub:location a nt:ExternalUriPlaceholder;
+    rdfs:label "the location as a URI (e.g. a web page or map link)" .
+  
+  sub:parentSpace a nt:GuidedChoicePlaceholder;
+    rdfs:label "the parent Space";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:partDefinitionTier a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the lowest role tier whose members define this Space's parts (leave out for anyone with a role)";
+    nt:possibleValue gen:AdminRole, gen:MaintainerRole, gen:MemberRole, gen:ObserverRole .
+  
+  sub:rootDefinition a nt:RootNanopubPlaceholder .
+  
+  sub:space a nt:ExternalUriPlaceholder, nt:IntroducedResource;
+    rdfs:label "Space identifier";
+    nt:hasPrefix "https://w3id.org/spaces/";
+    nt:hasPrefixLabel "https://w3id.org/spaces/" .
+  
+  sub:st00 rdf:object gen:Space;
+    rdf:predicate rdf:type;
+    rdf:subject sub:space .
+  
+  sub:st01 rdf:object sub:type;
+    rdf:predicate rdf:type;
+    rdf:subject sub:space .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:space .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:space .
+  
+  sub:st04 a nt:RepeatableStatement;
+    rdf:object sub:admin;
+    rdf:predicate gen:hasAdmin;
+    rdf:subject sub:space .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:parentSpace;
+    rdf:predicate gen:isSubSpaceOf;
+    rdf:subject sub:space .
+  
+  sub:st06 a nt:OptionalStatement;
+    rdf:object sub:partDefinitionTier;
+    rdf:predicate gen:hasPartDefinitionTier;
+    rdf:subject sub:space .
+  
+  sub:st11 rdf:object sub:startDate;
+    rdf:predicate <http://schema.org/startDate>;
+    rdf:subject sub:space .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:endDate;
+    rdf:predicate <http://schema.org/endDate>;
+    rdf:subject sub:space .
+  
+  sub:st13 a nt:OptionalStatement;
+    rdf:object sub:location;
+    rdf:predicate <http://schema.org/location>;
+    rdf:subject sub:space .
+  
+  sub:st14 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:topic;
+    rdf:predicate dct:subject;
+    rdf:subject sub:space .
+  
+  sub:st90 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:altId;
+    rdf:predicate <http://www.w3.org/2002/07/owl#sameAs>;
+    rdf:subject sub:space .
+  
+  sub:st99 rdf:object sub:rootDefinition;
+    rdf:predicate gen:hasRootDefinition;
+    rdf:subject sub:space .
+  
+  sub:startDate a nt:LiteralPlaceholder;
+    rdfs:label "start date (and optionally time)";
+    nt:hasDatatype xsd:dateTime .
+  
+  sub:topic a nt:GuidedChoicePlaceholder;
+    rdfs:label "a topic of the Space, as a URI (a Wikidata item, for instance)";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=http%3A%2F%2Fwww.w3.org%2F2004%2F02%2Fskos%2Fcore%23Concept" .
+  
+  sub:type a nt:RestrictedChoicePlaceholder;
+    rdfs:label "type of the Space";
+    nt:possibleValue gen:Campaign, gen:Consortium, gen:Event, gen:Initiative, gen:Project,
+      gen:Taskforce, gen:Taskunit .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-09-23T15:26:49Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Defining a time-limited Space";
+    skos:changeNote "Adds an optional, repeatable topic: a Space can now state what it is about, with dct:subject and a URI, so that events can be listed and filtered by topic.";
+    prov:wasDerivedFrom <https://w3id.org/np/RAHgTuFC9TXMrIvt8we_kBYYJQ4vglfVoUbTxw2amWMZs>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+i9DV8ynzO944pYkYsDwtlqJHuk+b7FQt6Bb4TIQSDX3jGUURn6WpaNwESHmgMLWSydaH5XlabMzuqpPL4iyB+IAzvwIxdJBLhe39EQMu2j+FZ/5d/xu/gO3nZw2KoEvJ7cJisabuI05OylIRSJ+OG5CmzFxnjojUEJeCFi1njY1InhXrb0yHud9b1ifzweoN6YYOBecKs1gTOaT2bf+t4Wgzg3M0PmRVZ4F0OALsnh4T5+x7kFtiPcDKNpORi585JjKCZ4kczIF6oUKcwgC0kmIY97jtLqSLcXRkxHx5CDI6qz4XlRFs1ZbCUdSlzjdPZAkaBcNem1gIhWzkHkEnQIDAQAB";
+    npx:hasSignature "M94nY13fTPaV112WLmUtQ7oCLVqzOH2YvCVeHYIsxaK0z7I9zronTWEYQ6qnYZFhctJPZmlr5gnphGT62VhCcrKVZjVsvRyv1WYMLdYv5ZeCaz89AEeZRo50yBCc9E1hta2J3RzANogVneryDv5UwxEETi2JUm/Vjp3MkVOFWsljcXxYxagbA3bKCfSJfteCbBTw7m7WFZMospvGEkdHA6TAOB+IgpXTSuWAPmE5jJ331X2+5bzqwJiT4tM07UR/6jaIIpPRiYlPz/LZ82J2rRebYqA3Z3JMXfGDywhhFfNQUrdgLD/PBvgKtuz7/D6HPPLhGA23mSamAbGMCxS1Cw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

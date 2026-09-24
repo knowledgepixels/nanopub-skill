@@ -1,0 +1,103 @@
+@prefix this: <https://w3id.org/np/RA1Hcx7u788w-MLSYTyxG6QnTT-Y7LAUkUDtwJCiHG0N0> .
+@prefix sub: <https://w3id.org/np/RA1Hcx7u788w-MLSYTyxG6QnTT-Y7LAUkUDtwJCiHG0N0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  gen:ActivatedPresetAssignment rdfs:label "activated preset assignment" .
+  
+  gen:DeactivatedPresetAssignment rdfs:label "deactivated preset assignment" .
+  
+  gen:PresetAssignment rdfs:label "preset assignment" .
+  
+  gen:isAssignmentFor rdfs:label "is an assignment for" .
+  
+  gen:isAssignmentOfPreset rdfs:label "is an assignment of the preset" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description """<p>Assign a <strong>preset</strong> (a named bundle of default views and roles) to a <strong>user</strong>, so that the user's page picks up the preset's views and roles.</p>
+
+<p>Only presets designed for users (<code>gen:appliesToInstancesOf gen:IndividualAgent</code>) are offered. Like view displays, a preset assignment is identified by the <em>(preset, resource)</em> pair rather than by this nanopublication's URI, so it can later be deactivated.</p>""";
+    rdfs:label "Assigning a preset to a user";
+    nt:hasNanopubLabelPattern "${resource} uses preset: ${preset}";
+    nt:hasStatement sub:st10, sub:st12, sub:st20, sub:st30;
+    nt:hasTag "Spaces" .
+  
+  sub:assignment a nt:EmbeddedResource, nt:LocalResource;
+    rdfs:label "this" .
+  
+  sub:assignmentMode a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select whether this assignment is activated or deactivated";
+    nt:hasDefaultValue gen:ActivatedPresetAssignment;
+    nt:possibleValue gen:ActivatedPresetAssignment, gen:DeactivatedPresetAssignment .
+  
+  sub:preset a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the preset";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RASzbAAibVFh25rujZN2MwgyUB7zHogsxo7-UgI05Dotg/find-presets?appliedPresetClass=https://w3id.org/kpxl/gen/terms/IndividualAgent" .
+  
+  sub:resource a nt:AgentPlaceholder;
+    rdfs:label "choose the user" .
+  
+  sub:st10 rdf:object gen:PresetAssignment;
+    rdf:predicate rdf:type;
+    rdf:subject sub:assignment .
+  
+  sub:st12 a nt:AdvancedStatement;
+    rdf:object sub:assignmentMode;
+    rdf:predicate rdf:type;
+    rdf:subject sub:assignment .
+  
+  sub:st20 rdf:object sub:preset;
+    rdf:predicate gen:isAssignmentOfPreset;
+    rdf:subject sub:assignment .
+  
+  sub:st30 rdf:object sub:resource;
+    rdf:predicate gen:isAssignmentFor;
+    rdf:subject sub:assignment .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-24T09:38:44+00:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAOXRN5ldzg1TtmAnst4eaQmHkmomTVmS5e1AtXWnNuHY>;
+    rdfs:label "Assigning a preset to a user";
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: preset.";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RANjqEfLnGSzLuq0heRSXN0psYWW0oX4v3W8w7osb3xfs> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "fSzBYyof/rjCjIb6T7U40KdH11s8Pf4tqy9imAvxQWDxl6E9+ovzCavjnkaUauPJqkpQ9ClZx2knM9WLUBuHuGdAffRQu+Br/O5qUkh3JmxjaNs0003WrCgd4wVwTglQO9HP2756nr9l/a1v0M5w5K8QVOgde3qGVKzEoynAXnM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,121 @@
+@prefix this: <https://w3id.org/np/RA3lNiRhlopY8lv5XCH_9LBW0EWTj1fqQjanrCZq33IFk> .
+@prefix sub: <https://w3id.org/np/RA3lNiRhlopY8lv5XCH_9LBW0EWTj1fqQjanrCZq33IFk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "can be described as follows: - gives a thing (left) a human-readable description (right)" .
+  
+  dct:isPartOf rdfs:label "is part of" .
+  
+  rdf:type rdfs:label "is a - asserts that the given thing (left) belongs to the given class (right)" .
+  
+  rdfs:label rdfs:label "is called - connects an identifier to a human-readable name for it" .
+  
+  rdfs:seeAlso rdfs:label "is further explained at - connects an identifier to a link with further information about it" .
+  
+  owl:NamedIndividual rdfs:label "named individual - a concrete or abstract thing that is given an identifier and a name" .
+  
+  owl:Thing rdfs:label "thing - the class representing everything" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description """<p>Such nanopublications define a new named individual. Such a named individual represets a single concrete or abstract thing that is in some way relevant. Examples are the planet Mars, Marie Curie, or the Universal Declaration of Human Rights.</p>
+
+<p>Such individuals do <strong>not</strong> represent sets of things, like humans, diseases, or ideas. Such concepts representing sets should be defined with the template for classes.</p>""";
+    rdfs:label "Defining a new individual";
+    nt:hasNanopubLabelPattern "${name}";
+    nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5;
+    nt:hasTag "Terms" .
+  
+  sub:class a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "the URI of the class this individual belongs to";
+    nt:possibleValue owl:Thing;
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http%3A%2F%2Fwww.w3.org%2F2002%2F07%2Fowl%23Class&searchterm=",
+      "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "description of the individual" .
+  
+  sub:individual a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short name, used as URI suffix - the formal identifier of the individual" .
+  
+  sub:name a nt:LiteralPlaceholder;
+    rdfs:label "the name of the individual" .
+  
+  sub:seeAlsoLink a nt:UriPlaceholder;
+    rdfs:label "a URL where more information about this individual can be found" .
+  
+  sub:st0 rdf:object owl:NamedIndividual;
+    rdf:predicate rdf:type;
+    rdf:subject sub:individual .
+  
+  sub:st1 rdf:object sub:class;
+    rdf:predicate rdf:type;
+    rdf:subject sub:individual .
+  
+  sub:st2 rdf:object sub:name;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:individual .
+  
+  sub:st3 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:individual .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:seeAlsoLink;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:individual .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:vocabulary;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:individual .
+  
+  sub:vocabulary a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "vocabulary / ontology";
+    nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=http://www.w3.org/2002/07/owl%23Ontology&searchterm=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-24T09:38:44+00:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <http://purl.org/np/RArM4sTMqqoQ7EsNRhaqtmH_at54xkWRuhv6se1u8Kaig>;
+    rdfs:label "Defining a new individual";
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: vocabulary, class.";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "R6kOODFeA32pcusyfdGJbIPA1F/c5J0bEO6/hyVdBHXzOJaku0lE5vJ6ZfK0MnUHTi8oXZmqGE+SVB+xjVT+2TfFePyiRky9yND/rFIzwLvAx90xGYy6u1kthWGEEY+E9sK32z+GNohjXZY2VlibdqYy9z37R2zAI8U/yOyISlk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,72 @@
+@prefix this: <https://w3id.org/np/RAolI_F8np0pl1LlaYLkmhKLuWKkLf064jTEo7e1dQlzU> .
+@prefix sub: <https://w3id.org/np/RAolI_F8np0pl1LlaYLkmhKLuWKkLf064jTEo7e1dQlzU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  gen:hasAutoApprovedHelper a gen:InverseRoleProperty;
+    rdfs:label "has as auto-approved helper" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication declares that an agent (human or artificial) is an auto-approved helper of the given space.";
+    rdfs:label "Declaring an auto-approved helper of a space";
+    nt:hasNanopubLabelPattern "${space} has auto-approved helper ${helper}";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Spaces";
+    nt:hasTargetNanopubType gen:RoleInstantiation .
+  
+  sub:helper a nt:AgentPlaceholder;
+    rdfs:label "choose the helper" .
+  
+  sub:space a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the space";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st1 rdf:object sub:helper;
+    rdf:predicate gen:hasAutoApprovedHelper;
+    rdf:subject sub:space .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-24T09:38:44+00:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA5YdOZq1t_JvwsuhWET-lNn45X8kPHfgcCzE5TF17htI>;
+    rdfs:label "Declaring an auto-approved helper of a space";
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: space.";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAlA89umMNpYpI_MRD8ODmkpTkUiHds5-EXbWChS1RC4g> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "VoS7MdFzoIINh67QBwLVfdpoLVbM9Ne3iIZ09yJ+pf5ve0g+lCDsbdnoAPGTG1oc0zEJk2N81qe8BresORsLPao4mlrQmSWFjvT8Libfyc69p+AoMehpV3effKpe1E16OeHql63d7hqFmx+021tyw/B2mt/NkVewkAVOL1eZglw=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

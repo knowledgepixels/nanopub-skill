@@ -1,0 +1,58 @@
+@prefix this: <https://w3id.org/np/RA8P_AKAmS1r40B5RT_8hM2H-EZBDqzGP1uNTbtGPoMwA> .
+@prefix sub: <https://w3id.org/np/RA8P_AKAmS1r40B5RT_8hM2H-EZBDqzGP1uNTbtGPoMwA/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:presentations-grid-svg-view a gen:ResourceView, gen:SvgView;
+    dct:isVersionOf <https://w3id.org/np/RAVLVVAERT-oTEQMwj4lhZPGMrFTI3cVA1vTXdBlUwht8/presentations-grid-svg-view-kind>;
+    dct:title "🕘 Schedule";
+    rdfs:label "Schedule grid view";
+    gen:appliesToInstancesOf gen:MaintainedResource, gen:Space;
+    gen:hasStructuralPosition "4.3.scheduleGrid";
+    gen:hasViewQuery <https://w3id.org/np/RAs5Ka5C8Ncx63siVnl_tYhXsov5kB5GPI63AdXJXAsG4/get-presentations-grid-svg>;
+    gen:hasViewQueryTargetField "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-17T07:36:32Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:presentations-grid-svg-view;
+    npx:introduces <https://w3id.org/np/RAVLVVAERT-oTEQMwj4lhZPGMrFTI3cVA1vTXdBlUwht8/presentations-grid-svg-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAA5m_DX4MRrWl-jRk-jSIkPuX7m8JW1F9PZD4tdrWjbY>;
+    rdfs:label "Schedule grid view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAfa1tHtbOrV0YaCY0LyjHkpXoudrauhN8DUYPM63ZQ-k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "QmGAUrIIQIjsa1PNCDQ8K0qwWsdnt1B/2AayCg3g3m8crrulVsxQRP0x0afUHUWTfeoJuaZvWM2iV055K27g7QuuytrsdMZTtFDFwB9pm1u6whZeqeogi/NgRuYpsWatTSaPnjvuO3G1LVF74TsVbH9wMmpCq5zsNu6o14u7ruQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+
