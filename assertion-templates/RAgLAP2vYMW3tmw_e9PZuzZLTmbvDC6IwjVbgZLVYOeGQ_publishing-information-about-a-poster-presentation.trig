@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAB4SDs17xTxptaLS_LKFPLY8ZKfVz2_EvL0BhLvhWUQU> .
-@prefix sub: <https://w3id.org/np/RAB4SDs17xTxptaLS_LKFPLY8ZKfVz2_EvL0BhLvhWUQU/> .
+@prefix this: <https://w3id.org/np/RAgLAP2vYMW3tmw_e9PZuzZLTmbvDC6IwjVbgZLVYOeGQ> .
+@prefix sub: <https://w3id.org/np/RAgLAP2vYMW3tmw_e9PZuzZLTmbvDC6IwjVbgZLVYOeGQ/> .
 @prefix schema: <https://schema.org/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
@@ -108,7 +108,7 @@ sub:assertion {
   sub:title a nt:LiteralPlaceholder;
     rdfs:label "title of the poster" .
   
-  sub:topic a nt:GuidedChoicePlaceholder;
+  sub:topic a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
     rdfs:label "topic or subject of the poster";
     nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
 }
@@ -118,18 +118,18 @@ sub:provenance {
 }
 
 sub:pubinfo {
-  this: dct:created "2026-09-24T09:38:44+00:00"^^xsd:dateTime;
+  this: dct:created "2026-09-24T12:04:38+00:00"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:supersedes <https://w3id.org/np/RAySQ-S4Q7JJZ5jJ2bprDo6YwVL8T8SYWGLLHuAvFtqVc>;
+    npx:supersedes <https://w3id.org/np/RAB4SDs17xTxptaLS_LKFPLY8ZKfVz2_EvL0BhLvhWUQU>;
     rdfs:label "Publishing information about a poster presentation";
-    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: event.";
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: topic.";
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>,
       <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "lC/l1mf2tAy2k2dmC4qi5b7S0Ez1Rjdp/bmGyNtWhT0latglnj3vEX+3i1d+MrsM5bFGRpczd4h9wa28U/71O6J5XXxwADrd1nfbmYRg0QDy9Y5+UOE+RsjA23O13l4f2z/1MhIfWi/Ehse36iKYQpesxavkpSBRgLBvrgF8N6c=";
+    npx:hasSignature "GKpya2m5XSrn9W15OP6jrJT20RvAsL2mJrJvcMy6fqKeKG7WEoewaiw8v1XMt98viQVSPeyQ06uc0Lni/9o6FSvF5xQP0EMIakKVc8OKDzWW5rL7gm6ITmIPIvnyx71t6jYYLdJ+1lDSR15kulh6Eplrbtw+Ou4tYPe65MxoEUs=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

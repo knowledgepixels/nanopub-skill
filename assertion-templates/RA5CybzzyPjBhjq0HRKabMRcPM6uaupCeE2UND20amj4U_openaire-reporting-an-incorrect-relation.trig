@@ -1,15 +1,12 @@
-@prefix this: <https://w3id.org/np/RA68EN1TC8MRY-MhufFPm8diRNBdeo07wJg7eAN0stgBA> .
-@prefix sub: <https://w3id.org/np/RA68EN1TC8MRY-MhufFPm8diRNBdeo07wJg7eAN0stgBA/> .
+@prefix this: <https://w3id.org/np/RA5CybzzyPjBhjq0HRKabMRcPM6uaupCeE2UND20amj4U> .
+@prefix sub: <https://w3id.org/np/RA5CybzzyPjBhjq0HRKabMRcPM6uaupCeE2UND20amj4U/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
-@prefix frapo: <http://purl.org/cerif/frapo/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix orcid: <https://orcid.org/> .
-@prefix frbr: <http://purl.org/vocab/frbr/core#> .
-@prefix cito: <http://purl.org/spar/cito/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix npx: <http://purl.org/nanopub/x/> .
@@ -24,17 +21,17 @@ sub:Head {
 }
 
 sub:assertion {
-  frapo:isOutputOf rdfs:label "is output of" .
+  <http://purl.org/cerif/frapo/isOutputOf> rdfs:label "is output of" .
   
-  cito:cites rdfs:label "cites" .
+  <http://purl.org/spar/cito/cites> rdfs:label "cites" .
   
-  cito:isDocumentedBy rdfs:label "is documented by" .
+  <http://purl.org/spar/cito/isDocumentedBy> rdfs:label "is documented by" .
   
-  frbr:partOf rdfs:label "is part of" .
+  <http://purl.org/vocab/frbr/core#partOf> rdfs:label "is part of" .
   
-  frbr:revisionOf rdfs:label "is a revision of" .
+  <http://purl.org/vocab/frbr/core#revisionOf> rdfs:label "is a revision of" .
   
-  frbr:supplement rdfs:label "is supplemented by" .
+  <http://purl.org/vocab/frbr/core#supplement> rdfs:label "is supplemented by" .
   
   rdf:type rdfs:label "is a" .
   
@@ -52,21 +49,23 @@ sub:assertion {
   
   prov:wasDerivedFrom rdfs:label "was derived from" .
   
-  sub:correctTarget a nt:GuidedChoicePlaceholder;
+  sub:correctTarget a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
     rdfs:label "correct target of the relation";
     nt:possibleValuesFromApi "https://api.openaire.eu/graph/v3/projects?search=", "https://api.openaire.eu/graph/v3/research-products?search=" .
   
   sub:explanation a nt:LongLiteralPlaceholder;
     rdfs:label "explanation of the error" .
   
-  sub:record a nt:GuidedChoicePlaceholder;
+  sub:record a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
     rdfs:label "record that is the subject of the incorrect relation";
     nt:possibleValuesFromApi "https://api.openaire.eu/graph/v3/research-products?search=" .
   
   sub:relation a nt:RestrictedChoicePlaceholder;
     rdfs:label "relation";
-    nt:possibleValue frapo:isOutputOf, cito:cites, cito:isDocumentedBy, frbr:partOf, frbr:revisionOf,
-      frbr:supplement, skos:exactMatch, prov:wasDerivedFrom .
+    nt:possibleValue <http://purl.org/cerif/frapo/isOutputOf>, <http://purl.org/spar/cito/cites>,
+      <http://purl.org/spar/cito/isDocumentedBy>, <http://purl.org/vocab/frbr/core#partOf>,
+      <http://purl.org/vocab/frbr/core#revisionOf>, <http://purl.org/vocab/frbr/core#supplement>,
+      skos:exactMatch, prov:wasDerivedFrom .
   
   sub:report a nt:IntroducedResource, nt:LocalResource;
     rdfs:label "this report" .
@@ -106,7 +105,7 @@ sub:assertion {
     nt:hasTag "OpenAIRE";
     nt:hasTargetNanopubType owl:NegativePropertyAssertion .
   
-  sub:wrongTarget a nt:GuidedChoicePlaceholder;
+  sub:wrongTarget a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
     rdfs:label "incorrectly related record or project";
     nt:possibleValuesFromApi "https://api.openaire.eu/graph/v3/projects?search=", "https://api.openaire.eu/graph/v3/research-products?search=" .
 }
@@ -118,19 +117,22 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-07-29T08:31:13Z"^^xsd:dateTime;
+  this: dct:created "2026-09-24T12:04:38+00:00"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:template;
+    npx:supersedes <https://w3id.org/np/RA68EN1TC8MRY-MhufFPm8diRNBdeo07wJg7eAN0stgBA>;
     rdfs:label "OpenAIRE: Reporting an incorrect relation";
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: correctTarget, record, wrongTarget.";
     nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
       <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
     nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "WFgPrCxZ7wRIsiR8n5AEVjmBv6SJiBtsJsLCkBjQTcm1/AIt6KzR1/ly1JVjRPADkicERsAmxnqQqQoC9LwhtljMDSWcsg3MwSkLE47EkOQ2Z+4qjjf7LhBxbexLzNPQaBqqZ8sj6mmw5i8sVOy/kYWeJtiDeK/hoXdx5EuUQ+o=";
+    npx:hasSignature "p4fLdGhz3e2Cx91MBabh4IsAk+qupakppyF/6VWTa2hanHQQGkQG/wYUWc+0i5g+LS5Z1YATaMx3roLk8aL2gnrT3WyeoU8F9n/wAJMgL/ECx0LDhmNl9+oJ09nuXiMhfK8y78NyeIlblHrziMOT8p0oTBkIu1J4jFpjR1EcZus=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

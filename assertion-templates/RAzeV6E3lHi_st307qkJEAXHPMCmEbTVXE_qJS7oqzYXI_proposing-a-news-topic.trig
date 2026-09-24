@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAjvzUDnmZkPYSTlaNzls2JW_Qy7iA4gWOpyOE10rsSa4> .
-@prefix sub: <https://w3id.org/np/RAjvzUDnmZkPYSTlaNzls2JW_Qy7iA4gWOpyOE10rsSa4/> .
+@prefix this: <https://w3id.org/np/RAzeV6E3lHi_st307qkJEAXHPMCmEbTVXE_qJS7oqzYXI> .
+@prefix sub: <https://w3id.org/np/RAzeV6E3lHi_st307qkJEAXHPMCmEbTVXE_qJS7oqzYXI/> .
 @prefix schema: <https://schema.org/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
@@ -97,7 +97,7 @@ sub:assertion {
   sub:topicName a nt:LiteralPlaceholder;
     rdfs:label "the name of the topic" .
   
-  sub:topicType a nt:GuidedChoicePlaceholder;
+  sub:topicType a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
     rdfs:label "what kind of thing it is";
     nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
   
@@ -112,14 +112,14 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-24T09:38:44+00:00"^^xsd:dateTime;
+  this: dct:created "2026-09-24T12:04:38+00:00"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:template;
     npx:introduces <https://w3id.org/np/RAJdnofiRA3AATbIdgCkV1Cgu9m0XZwa1I1kUnRs4vATg/templateKind>;
-    npx:supersedes <https://w3id.org/np/RAMiEm0B7QKKStf51XpdiMAQG3b0--OtIX8p1M8XhGV_o>;
+    npx:supersedes <https://w3id.org/np/RAjvzUDnmZkPYSTlaNzls2JW_Qy7iA4gWOpyOE10rsSa4>;
     rdfs:label "Proposing a news topic";
-    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: space.";
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: topicType.";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>,
@@ -128,7 +128,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "r/YtmyEmWKvjxcRFVqKiS1j4BSCeDntfb+5HG9hs8lBH1gaFmaZqlHrAu2WKOv3TZb6OS5+/h4XBhe8pjpscMLMlgmw71KeMcuK1GEqMxQqQEXKsFItZ+aH2ZJBx1TYdg6obFmKdUL0ILTVTC7L68FaAlww6xK7YKCs3EhNVPCQ=";
+    npx:hasSignature "pEbqdQZmGxmXDSjuqdJTaiDkfYIk5PpKrAZKJ7KHbswmIxODFse/AWSj87PiF5YYFFCffokQZfQXygbYyShV8/PdmN53l7OmVi6GILkR9BEYQhouZb2sHImg3ymOwlRNdaTdS36hqtJlH4W4mbOCfZinUz1J/Hb5OiMmsaJFLnQ=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

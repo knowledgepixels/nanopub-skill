@@ -1,16 +1,15 @@
-@prefix this: <https://w3id.org/np/RAfqnkEbBGD9vnRWDOPVb4Z3MtDG2oMvjv_hGjcSnu80M> .
-@prefix sub: <https://w3id.org/np/RAfqnkEbBGD9vnRWDOPVb4Z3MtDG2oMvjv_hGjcSnu80M/> .
+@prefix this: <https://w3id.org/np/RACOxrgAPmFZ-Xwzhw91G8mCrqyw_L4G_cdevSw55uLUg> .
+@prefix sub: <https://w3id.org/np/RACOxrgAPmFZ-Xwzhw91G8mCrqyw_L4G_cdevSw55uLUg/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
-@prefix nt: <https://w3id.org/np/o/ntemplate/> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix orcid: <https://orcid.org/> .
-@prefix cito: <http://purl.org/spar/cito/> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
-@prefix obo: <http://purl.obolibrary.org/obo/> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
 sub:Head {
@@ -21,29 +20,29 @@ sub:Head {
 }
 
 sub:assertion {
-  obo:ECO_0000000 rdfs:label "evidence" .
+  <http://purl.obolibrary.org/obo/ECO_0000000> rdfs:label "evidence" .
   
-  obo:ECO_0000006 rdfs:label "experimental evidence" .
+  <http://purl.obolibrary.org/obo/ECO_0000006> rdfs:label "experimental evidence" .
   
-  obo:ECO_0000041 rdfs:label "similarity evidence" .
+  <http://purl.obolibrary.org/obo/ECO_0000041> rdfs:label "similarity evidence" .
   
-  obo:ECO_0000212 rdfs:label "combinatorial evidence" .
+  <http://purl.obolibrary.org/obo/ECO_0000212> rdfs:label "combinatorial evidence" .
   
-  obo:ECO_0000352 rdfs:label "evidence used in manual assertion" .
+  <http://purl.obolibrary.org/obo/ECO_0000352> rdfs:label "evidence used in manual assertion" .
   
-  obo:ECO_0000361 rdfs:label "inferential evidence" .
+  <http://purl.obolibrary.org/obo/ECO_0000361> rdfs:label "inferential evidence" .
   
-  obo:ECO_0000501 rdfs:label "evidence used in automatic assertion" .
+  <http://purl.obolibrary.org/obo/ECO_0000501> rdfs:label "evidence used in automatic assertion" .
   
-  obo:ECO_0006055 rdfs:label "high throughput evidence" .
+  <http://purl.obolibrary.org/obo/ECO_0006055> rdfs:label "high throughput evidence" .
   
-  obo:ECO_0006151 rdfs:label "documented statement evidence" .
+  <http://purl.obolibrary.org/obo/ECO_0006151> rdfs:label "documented statement evidence" .
   
-  obo:ECO_0007672 rdfs:label "computational evidence" .
+  <http://purl.obolibrary.org/obo/ECO_0007672> rdfs:label "computational evidence" .
   
   dct:description rdfs:label "has as description" .
   
-  cito:isDocumentedBy rdfs:label "is documented by" .
+  <http://purl.org/spar/cito/isDocumentedBy> rdfs:label "is documented by" .
   
   rdf:type rdfs:label "is a" .
   
@@ -57,7 +56,7 @@ sub:assertion {
     nt:hasNanopubLabelPattern "Evidence: ${title}";
     nt:hasStatement sub:st0, sub:st1, sub:st2, sub:st3, sub:st4, sub:st5;
     nt:hasTag "Science";
-    nt:hasTargetNanopubType obo:ECO_0000000 .
+    nt:hasTargetNanopubType <http://purl.obolibrary.org/obo/ECO_0000000> .
   
   sub:description a nt:LongLiteralPlaceholder;
     rdfs:label "what was observed, measured or computed (optional)" .
@@ -65,16 +64,19 @@ sub:assertion {
   sub:evidence a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
     rdfs:label "short name for the evidence, used as URI suffix" .
   
-  sub:kind a nt:GuidedChoicePlaceholder;
+  sub:kind a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
     rdfs:label "more specific kind of evidence (optional)";
-    nt:possibleValue obo:ECO_0000006, obo:ECO_0000041, obo:ECO_0000212, obo:ECO_0000352,
-      obo:ECO_0000361, obo:ECO_0000501, obo:ECO_0006055, obo:ECO_0006151, obo:ECO_0007672;
+    nt:possibleValue <http://purl.obolibrary.org/obo/ECO_0000006>, <http://purl.obolibrary.org/obo/ECO_0000041>,
+      <http://purl.obolibrary.org/obo/ECO_0000212>, <http://purl.obolibrary.org/obo/ECO_0000352>,
+      <http://purl.obolibrary.org/obo/ECO_0000361>, <http://purl.obolibrary.org/obo/ECO_0000501>,
+      <http://purl.obolibrary.org/obo/ECO_0006055>, <http://purl.obolibrary.org/obo/ECO_0006151>,
+      <http://purl.obolibrary.org/obo/ECO_0007672>;
     nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=eco&allChildrenOf=http://purl.obolibrary.org/obo/ECO_0000000&q=" .
   
   sub:source a nt:UriPlaceholder;
     rdfs:label "publication or dataset documenting it (optional)" .
   
-  sub:st0 rdf:object obo:ECO_0000000;
+  sub:st0 rdf:object <http://purl.obolibrary.org/obo/ECO_0000000>;
     rdf:predicate rdf:type;
     rdf:subject sub:evidence .
   
@@ -99,7 +101,7 @@ sub:assertion {
   
   sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
     rdf:object sub:source;
-    rdf:predicate cito:isDocumentedBy;
+    rdf:predicate <http://purl.org/spar/cito/isDocumentedBy>;
     rdf:subject sub:evidence .
   
   sub:study a nt:UriPlaceholder;
@@ -116,19 +118,21 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-08-17T06:40:00Z"^^xsd:dateTime;
+  this: dct:created "2026-09-24T12:04:38+00:00"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:supersedes <https://w3id.org/np/RAdK5KmqUZAbLUX2IF29UwZHVyZsBj0i8iSy4bzTZxCtI>;
+    npx:supersedes <https://w3id.org/np/RAfqnkEbBGD9vnRWDOPVb4Z3MtDG2oMvjv_hGjcSnu80M>;
     rdfs:label "Describing a piece of evidence";
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: kind.";
     nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
-      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
     nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "eUYqF8A6fya8rScD0rZ7W4a8ErH8J++rw+Vis77t9PVvKI+dpQbRP/LO/lAfrv7kmJA5p6+RFnDZJU/HS0svGXk2SFyPtJTUMtODlGvZ8gLexWtdFxDSp5EtyBb6wp1AgAhDlUDeR/J9f0+ZJtua/nSaW0NIaCf5KOINbIRBEyQ=";
+    npx:hasSignature "KThxwAZS+GraxDL2E0inM7J9+KrJub/iwvESsaZ0i43iHlPecKaemd7jSwhqOVQlasaCwnvQgjzLraiJYLoh/sASM7rvtBGUFr4zrTacGqGbyr5bI/dt3ayGcXBA1bSzTcloWgHEidp9guVujplb9aw4WzejIN6ZHX2ht/F898M=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

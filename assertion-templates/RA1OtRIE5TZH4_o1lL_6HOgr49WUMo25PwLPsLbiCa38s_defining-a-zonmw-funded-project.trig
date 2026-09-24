@@ -1,18 +1,18 @@
-@prefix this: <https://w3id.org/np/RATXFYzTRbbfUm05kfZ61pJD0LsTj4qYAtnPhb7B_GoR0> .
-@prefix sub: <https://w3id.org/np/RATXFYzTRbbfUm05kfZ61pJD0LsTj4qYAtnPhb7B_GoR0/> .
-@prefix ff: <https://w3id.org/fair/ff/terms/> .
-@prefix schema: <http://schema.org/> .
+@prefix this: <https://w3id.org/np/RA1OtRIE5TZH4_o1lL_6HOgr49WUMo25PwLPsLbiCa38s> .
+@prefix sub: <https://w3id.org/np/RA1OtRIE5TZH4_o1lL_6HOgr49WUMo25PwLPsLbiCa38s/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix npx: <http://purl.org/nanopub/x/> .
 
 sub:Head {
   this: a np:Nanopublication;
@@ -24,25 +24,25 @@ sub:Head {
 sub:assertion {
   dct:description rdfs:label "has the description" .
   
-  schema:endDate rdfs:label "has the end date" .
+  <http://schema.org/endDate> rdfs:label "has the end date" .
   
-  schema:startDate rdfs:label "has the start date" .
+  <http://schema.org/startDate> rdfs:label "has the start date" .
   
   rdf:type rdfs:label "is a" .
   
   rdfs:label rdfs:label "has the label" .
   
-  <http://www.w3.org/2002/07/owl#sameAs> rdfs:label "has the alternative ID" .
+  owl:sameAs rdfs:label "has the alternative ID" .
   
   <https://ror.org/01yaj9a77> rdfs:label "ZonMw - Netherlands Organisation for Health Research and Development" .
   
-  ff:has-funder rdfs:label "has as funder" .
+  <https://w3id.org/fair/ff/terms/has-funder> rdfs:label "has as funder" .
   
-  ff:has-grant-id rdfs:label "has the ZonMw project number" .
+  <https://w3id.org/fair/ff/terms/has-grant-id> rdfs:label "has the ZonMw project number" .
   
-  ff:has-lead-institution rdfs:label "has as lead institution" .
+  <https://w3id.org/fair/ff/terms/has-lead-institution> rdfs:label "has as lead institution" .
   
-  ff:has-partner-institution rdfs:label "has as partner institution" .
+  <https://w3id.org/fair/ff/terms/has-partner-institution> rdfs:label "has as partner institution" .
   
   gen:Project rdfs:label "Project" .
   
@@ -78,11 +78,11 @@ sub:assertion {
   sub:label a nt:LiteralPlaceholder;
     rdfs:label "the title of the project" .
   
-  sub:leadInstitution a nt:GuidedChoicePlaceholder;
+  sub:leadInstitution a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
     rdfs:label "the lead institution (search by name to find its ROR identifier)";
     nt:possibleValuesFromApi "https://api.ror.org/organizations?query=" .
   
-  sub:partnerInstitution a nt:GuidedChoicePlaceholder;
+  sub:partnerInstitution a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
     rdfs:label "a partner institution (search by name to find its ROR identifier)";
     nt:possibleValuesFromApi "https://api.ror.org/organizations?query=" .
   
@@ -115,35 +115,35 @@ sub:assertion {
     rdf:subject sub:space .
   
   sub:st11 rdf:object sub:startDate;
-    rdf:predicate schema:startDate;
+    rdf:predicate <http://schema.org/startDate>;
     rdf:subject sub:space .
   
   sub:st12 a nt:OptionalStatement;
     rdf:object sub:endDate;
-    rdf:predicate schema:endDate;
+    rdf:predicate <http://schema.org/endDate>;
     rdf:subject sub:space .
   
   sub:st14 a nt:OptionalStatement;
     rdf:object sub:leadInstitution;
-    rdf:predicate ff:has-lead-institution;
+    rdf:predicate <https://w3id.org/fair/ff/terms/has-lead-institution>;
     rdf:subject sub:space .
   
   sub:st15 a nt:OptionalStatement, nt:RepeatableStatement;
     rdf:object sub:partnerInstitution;
-    rdf:predicate ff:has-partner-institution;
+    rdf:predicate <https://w3id.org/fair/ff/terms/has-partner-institution>;
     rdf:subject sub:space .
   
   sub:st16 rdf:object <https://ror.org/01yaj9a77>;
-    rdf:predicate ff:has-funder;
+    rdf:predicate <https://w3id.org/fair/ff/terms/has-funder>;
     rdf:subject sub:space .
   
   sub:st17 rdf:object sub:grantId;
-    rdf:predicate ff:has-grant-id;
+    rdf:predicate <https://w3id.org/fair/ff/terms/has-grant-id>;
     rdf:subject sub:space .
   
   sub:st90 a nt:OptionalStatement, nt:RepeatableStatement;
     rdf:object sub:altId;
-    rdf:predicate <http://www.w3.org/2002/07/owl#sameAs>;
+    rdf:predicate owl:sameAs;
     rdf:subject sub:space .
   
   sub:st99 rdf:object sub:rootDefinition;
@@ -162,19 +162,21 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-08-11T07:34:20Z"^^xsd:dateTime;
+  this: dct:created "2026-09-24T12:04:38+00:00"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RATXFYzTRbbfUm05kfZ61pJD0LsTj4qYAtnPhb7B_GoR0>;
     rdfs:label "Defining a ZonMw-funded project";
-    prov:wasDerivedFrom <https://w3id.org/np/RAKZJOvcZ5GSBXYBIq3yeP_LOVTvGiqKN7_2voTmLAxII>;
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: leadInstitution, partnerInstitution.";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
-      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
     nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "MeMFgCDOe+CanoaOI/lqSAAP86tVKi10JnvzpeLjaoy8IutJomWgtx38hRyAC8ao/wtnCJLz99L+bTiUjEVtZbwMHp5HSrFYJYyuRL23tLmNcf9AI0ZJV9vAoXkSfv446bg5HXd+ojWr1pFcpkPGdbvRsc0nhBCF/o8QcAschVY=";
+    npx:hasSignature "LRCU5KcPpg4NCW+4Gfy4cShgg7jCb32hGhqPJ1eyRN2BW2wP9eb/H9MKCpZmIrKV7kcRevuPfGKffMAR6s1VX56q00JD5mnb/FMJjgdv16b3rmVFw7gGMNqK4V3nWPBp1widwh3NBP1t8++e+Ysq5MP4D/r/qng9yATAfDO6uE4=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

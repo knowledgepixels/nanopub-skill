@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RA-3qktGHa8LikyN6Xfp1WBskCp7TKYlx3Vc6afOT4hJg> .
-@prefix sub: <https://w3id.org/np/RA-3qktGHa8LikyN6Xfp1WBskCp7TKYlx3Vc6afOT4hJg/> .
+@prefix this: <https://w3id.org/np/RA191ipgpFeRmvtTIRkRpN7om6Lgz5GInE1AXMHKnKXY0> .
+@prefix sub: <https://w3id.org/np/RA191ipgpFeRmvtTIRkRpN7om6Lgz5GInE1AXMHKnKXY0/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
@@ -71,7 +71,7 @@ sub:assertion {
   sub:comment a nt:LongLiteralPlaceholder;
     rdfs:label "a comment" .
   
-  sub:context a nt:GuidedChoicePlaceholder;
+  sub:context a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
     rdfs:label "context: organization (ROR id)";
     nt:possibleValuesFromApi "https://api.ror.org/organizations?query=" .
   
@@ -235,13 +235,13 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-24T09:38:44+00:00"^^xsd:dateTime;
+  this: dct:created "2026-09-24T12:04:38+00:00"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:assertion;
-    npx:supersedes <https://w3id.org/np/RAmq7WIPhUTCEyiYIXyEX59n58STMug9vlWAf29S3l8oY>;
+    npx:supersedes <https://w3id.org/np/RA-3qktGHa8LikyN6Xfp1WBskCp7TKYlx3Vc6afOT4hJg>;
     rdfs:label "Defining a biochementity";
-    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: isomer, parent, vocabulary, metaboliteparent.";
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: context.";
     nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RAcm8OurwUk15WOgBM9wySo-T3a5h6as4K8YR5MBrrxUc>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
@@ -250,7 +250,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "qJkHG7/WFlitmgjXnF25xNsvuTE6ng15FXx41zWghmhjFX4Dpe7LZJEPWTnnphxdqQaMtoW0ibCH+JcEwMD8tXSJ9CcqWxH1hQ1xQ79oDaKlwlRN0sWiEntAnAuU79rIp55h8XME8nt3Hfwt4VUmHeir+5rx7LBwIw9dPYvmQLk=";
+    npx:hasSignature "MJ1bBOQwMxtDS98eOYdQ8jITwiwl2QIf9dPBtywX1gsqmravtaWnPyrz5bo8b1QvzjEOtXOr/RbcLAEgRb0kIU4V+gm2JdJlqN/Nfpukqv3Z6YsHpUj1uZdFR7Cie6Ty44d/ii+q4iy84jFkuqvc7jd97OAnh/n8uF9KMdJESaA=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAjEbpAjY2Olq37kLOCz8xD2iH000Ue2XxSwQlfM743k0> .
-@prefix sub: <https://w3id.org/np/RAjEbpAjY2Olq37kLOCz8xD2iH000Ue2XxSwQlfM743k0/> .
+@prefix this: <https://w3id.org/np/RAC76AXzBflvVky8uLdSxzP_cyu1Xjiv9UN9c4VKmawNw> .
+@prefix sub: <https://w3id.org/np/RAC76AXzBflvVky8uLdSxzP_cyu1Xjiv9UN9c4VKmawNw/> .
 @prefix schema: <https://schema.org/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
@@ -8,9 +8,9 @@
 @prefix orcid: <https://orcid.org/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix npx: <http://purl.org/nanopub/x/> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
@@ -45,7 +45,7 @@ sub:assertion {
     rdfs:label "enter location coordinates (e.g. '+47.37+8.54+400.5')";
     nt:hasRegex "[+-][0-9]+(\\.[0-9]+)?[+-][0-9]+(\\.[0-9]+)?([+-][0-9]+(\\.[0-9]+)?)?" .
   
-  sub:ecosystem a nt:GuidedChoicePlaceholder;
+  sub:ecosystem a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
     rdfs:label "enter ecosystem of sampling location (ENVO ontology)";
     nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=envo&q=" .
   
@@ -65,7 +65,7 @@ sub:assertion {
     rdfs:label "enter nanopublication expressing Intention to Sample";
     nt:possibleValuesFromApi "http://purl.org/nanopub/api/find_signed_things?type=https://w3id.org/spaces/biodiversity/r/ontology/samplingIntention" .
   
-  sub:materialOntology a nt:GuidedChoicePlaceholder;
+  sub:materialOntology a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
     rdfs:label "enter environmental (ENVO ontology) or tissue material (BTO ontology)";
     nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=bto&q=", "https://www.ebi.ac.uk/ols/api/select?ontology=envo&q=" .
   
@@ -80,7 +80,7 @@ sub:assertion {
   sub:protocol a nt:ExternalUriPlaceholder;
     rdfs:label "enter isolation protocol URL" .
   
-  sub:purpose a nt:GuidedChoicePlaceholder;
+  sub:purpose a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
     rdfs:label "enter sampling purpose (MESH ontology)";
     nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=mesh&q=" .
   
@@ -164,7 +164,7 @@ sub:assertion {
     rdf:predicate <http://softeng.polito.it/rsctx#hasTemperature>;
     rdf:subject sub:sampleLocation .
   
-  sub:taxonname a nt:GuidedChoicePlaceholder;
+  sub:taxonname a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
     rdfs:label "enter taxon from checklistbank.org (if not found, specify URI from MycoBank, Index Fungorum, or Zoobank)";
     nt:possibleValuesFromApi "https://vodex.petapico.org/nidx/query?rows=100&q=label:" .
   
@@ -174,8 +174,8 @@ sub:assertion {
     nt:hasRegex "[+-][0-9]+(\\.[0-9]+)? \\[°C\\]" .
   
   sub:template a nt:AssertionTemplate;
-    dcterms:description "Declares the collection of small quantities of biological or environmental material for a specific purpose.";
-    dcterms:isVersionOf <https://w3id.org/np/RAgCh57tYtg-fTQeVwGwRGETodFYIjaY9KuXGRcSM1NPw/templateKind>;
+    dct:description "Declares the collection of small quantities of biological or environmental material for a specific purpose.";
+    dct:isVersionOf <https://w3id.org/np/RAgCh57tYtg-fTQeVwGwRGETodFYIjaY9KuXGRcSM1NPw/templateKind>;
     rdfs:label "Declaring the collection of a sample";
     gen:governedBy <https://w3id.org/spaces/zdouclab>;
     nt:hasNanopubLabelPattern "Sampling ${materialOntology} from ${ecosystem}";
@@ -212,23 +212,23 @@ sub:pubinfo {
   
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dcterms:created "2026-09-24T09:38:44+00:00"^^xsd:dateTime;
-    dcterms:creator orcid:0000-0002-1267-0234;
-    dcterms:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+  this: dct:created "2026-09-24T12:04:38+00:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
     npx:embeds sub:template;
     npx:introduces <https://w3id.org/np/RAgCh57tYtg-fTQeVwGwRGETodFYIjaY9KuXGRcSM1NPw/templateKind>;
+    npx:supersedes <https://w3id.org/np/RAjEbpAjY2Olq37kLOCz8xD2iH000Ue2XxSwQlfM743k0>;
     rdfs:label "Declaring the collection of a sample";
-    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: intentionToSample.";
-    prov:wasDerivedFrom <https://w3id.org/np/RA36coMj32AtDmy6rbaFM7n4gxg53quH17KsjUCithr3I>;
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: ecosystem, materialOntology, purpose, taxonname.";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
-      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
       <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
     nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E/template> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "ktZzwxuqGyA+v0bKaSKGGV6VJ4gepTExQZIu4RAxv2OK+/eo+6mA7DNcsBM0n6xXR9OiFokUgKOFYWj486poyttSCBsJEtfFnEsHn+KHvtWRCSf5hvNnKJEMgmioDjJkznl0966UMitlIP+4xynLDiOEWTm/4yTUPKBHJRKSLwM=";
+    npx:hasSignature "V20tGteCCoSXyMmtdk3DXpLuNLi23r91ufCvlNIJW22m6eZ/51D0V6H1XXiB24YhXQgFbYb108ZRjWTiv0nT0135B1f0H5Uh+mREyEshPZKNzj9BV/qKC1ZruNN/iZl5KNwqzJJH0/7GNyddWzK64KWz8rjayANgYw0Dg/vYhCA=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
   

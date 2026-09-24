@@ -1,15 +1,14 @@
-@prefix this: <https://w3id.org/np/RAxWtM9AOnaD_QT5znInSV7JVrvPlMnKp6j_ja7i1654s> .
-@prefix sub: <https://w3id.org/np/RAxWtM9AOnaD_QT5znInSV7JVrvPlMnKp6j_ja7i1654s/> .
+@prefix this: <https://w3id.org/np/RAPFLo7q8zXV4-RC5aJhiz_Z90BhojJ4c38nV4m7r9ov4> .
+@prefix sub: <https://w3id.org/np/RAPFLo7q8zXV4-RC5aJhiz_Z90BhojJ4c38nV4m7r9ov4/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
-@prefix nt: <https://w3id.org/np/o/ntemplate/> .
-@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-@prefix orcid: <https://orcid.org/> .
-@prefix wd: <http://www.wikidata.org/entity/> .
-@prefix cito: <http://purl.org/spar/cito/> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
@@ -21,17 +20,17 @@ sub:Head {
 }
 
 sub:assertion {
-  cito:agreesWith rdfs:label "agrees with" .
+  <http://purl.org/spar/cito/agreesWith> rdfs:label "agrees with" .
   
-  cito:critiques rdfs:label "critiques" .
+  <http://purl.org/spar/cito/critiques> rdfs:label "critiques" .
   
-  cito:disagreesWith rdfs:label "disagrees with" .
+  <http://purl.org/spar/cito/disagreesWith> rdfs:label "disagrees with" .
   
-  cito:discusses rdfs:label "discusses" .
+  <http://purl.org/spar/cito/discusses> rdfs:label "discusses" .
   
-  cito:reviews rdfs:label "reviews" .
+  <http://purl.org/spar/cito/reviews> rdfs:label "reviews" .
   
-  wd:P1065 rdfs:label "has the archive URL" .
+  <http://www.wikidata.org/entity/P1065> rdfs:label "has the archive URL" .
   
   sub:archiveUrl a nt:ExternalUriPlaceholder;
     rdfs:label "archive URL of the post" .
@@ -41,9 +40,10 @@ sub:assertion {
   
   sub:relation a nt:RestrictedChoicePlaceholder;
     rdfs:label "relation";
-    nt:hasDefaultValue cito:discusses;
-    nt:possibleValue cito:agreesWith, cito:critiques, cito:disagreesWith, cito:discusses,
-      cito:reviews .
+    nt:hasDefaultValue <http://purl.org/spar/cito/discusses>;
+    nt:possibleValue <http://purl.org/spar/cito/agreesWith>, <http://purl.org/spar/cito/critiques>,
+      <http://purl.org/spar/cito/disagreesWith>, <http://purl.org/spar/cito/discusses>,
+      <http://purl.org/spar/cito/reviews> .
   
   sub:st1 rdf:object sub:work;
     rdf:predicate sub:relation;
@@ -51,7 +51,7 @@ sub:assertion {
   
   sub:st2 a nt:OptionalStatement;
     rdf:object sub:archiveUrl;
-    rdf:predicate wd:P1065;
+    rdf:predicate <http://www.wikidata.org/entity/P1065>;
     rdf:subject sub:post .
   
   sub:template a nt:AssertionTemplate;
@@ -60,9 +60,9 @@ sub:assertion {
     nt:hasNanopubLabelPattern "${post} ${relation} ${work}";
     nt:hasStatement sub:st1, sub:st2;
     nt:hasTag "OpenAIRE";
-    nt:hasTargetNanopubType cito:discusses .
+    nt:hasTargetNanopubType <http://purl.org/spar/cito/discusses> .
   
-  sub:work a nt:GuidedChoicePlaceholder;
+  sub:work a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
     rdfs:label "scholarly work";
     nt:possibleValuesFromApi "https://api.openaire.eu/graph/v3/research-products?search=" .
 }
@@ -74,19 +74,22 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-07-30T04:39:42Z"^^xsd:dateTime;
+  this: dct:created "2026-09-24T12:04:38+00:00"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:template;
+    npx:supersedes <https://w3id.org/np/RAxWtM9AOnaD_QT5znInSV7JVrvPlMnKp6j_ja7i1654s>;
     rdfs:label "OpenAIRE: Work discussed in a web or social media post";
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: work.";
     nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
       <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
     nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "nSkZ4qwdUxDrDzmNSX+MJXYC1velhtelMRXr0BAq644EpITy6qbN1iCc3PCzYrOSOK2pE/88uEpgn573zpaRWT6s0pjHn4Opv8IWvAoMNvE0jt2ZyQV94Gf7qEaycGw2Ru2IxbZoW7L46RzL9j5eOHR0OEmJpT3IQCKyMe6bXEM=";
+    npx:hasSignature "O4slApwN5sR0F+1O1xU3CYK23uOe7prAUqUoKDy11yOHQK29yrzkzUmYK2argPyM0BNDD79LiPJDEmyIyzqY5gNNcLee4+A+NRtoZMcUQ8lvag1Cli9lYzGABiSe1ixcyNIHRJbjq9nH8U5TvWSnUMM1JISS41iECT/iu1jdqWE=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAPiC5f_KJ4LtrUb0SwOaLfBtMjwKgCm5U0PlqBzTPWPs> .
-@prefix sub: <https://w3id.org/np/RAPiC5f_KJ4LtrUb0SwOaLfBtMjwKgCm5U0PlqBzTPWPs/> .
+@prefix this: <https://w3id.org/np/RADqhb7t0-FA_nE5fvFr_6IqCRlu7fjDEv5SfCiYZK564> .
+@prefix sub: <https://w3id.org/np/RADqhb7t0-FA_nE5fvFr_6IqCRlu7fjDEv5SfCiYZK564/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -21,19 +21,22 @@ sub:Head {
 }
 
 sub:assertion {
-  <http://schema.org/about> rdfs:label "has the topic" .
+  dct:subject rdfs:label "has the topic" .
   
   rdfs:comment rdfs:label "has the description" .
   
-  rdfs:label rdfs:label "has the name" .
-  
-  rdfs:subClassOf rdfs:label "is a subclass of - states that all instances of the class to the left are also instances of the class to the right" .
-  
-  gen:UseCase rdfs:label "use case" .
+  rdfs:label rdfs:label "has the title" .
   
   gen:isUseCaseFor rdfs:label "is a use case for" .
   
-  sub:description a nt:LongLiteralPlaceholder;
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Declare an existing resource (identified by its URI — e.g. a Space, project, dataset, or any URI) as a use case for a given Space or Maintained Resource, with an optional title, description, and general topic.";
+    rdfs:label "Describing a use case for a resource";
+    nt:hasNanopubLabelPattern "${useCase} is a use case for ${entity}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04;
+    nt:hasTargetNanopubType gen:isUseCaseFor .
+  
+  sub:body a nt:LongLiteralPlaceholder;
     rdfs:label "description of the use case" .
   
   sub:entity a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
@@ -41,46 +44,34 @@ sub:assertion {
     nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/MaintainedResource",
       "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
   
-  sub:name a nt:LiteralPlaceholder;
-    rdfs:label "name of the use case" .
-  
-  sub:st01 rdf:object gen:UseCase;
-    rdf:predicate rdfs:subClassOf;
-    rdf:subject sub:useCase .
-  
-  sub:st02 rdf:object sub:entity;
+  sub:st01 rdf:object sub:entity;
     rdf:predicate gen:isUseCaseFor;
     rdf:subject sub:useCase .
   
-  sub:st03 rdf:object sub:name;
+  sub:st02 a nt:OptionalStatement;
+    rdf:object sub:title;
     rdf:predicate rdfs:label;
     rdf:subject sub:useCase .
   
-  sub:st04 a nt:OptionalStatement;
-    rdf:object sub:description;
+  sub:st03 a nt:OptionalStatement;
+    rdf:object sub:body;
     rdf:predicate rdfs:comment;
     rdf:subject sub:useCase .
   
-  sub:st05 a nt:OptionalStatement, nt:RepeatableStatement;
-    rdf:object sub:topic;
-    rdf:predicate <http://schema.org/about>;
+  sub:st04 a nt:OptionalStatement;
+    rdf:object sub:subject;
+    rdf:predicate dct:subject;
     rdf:subject sub:useCase .
   
-  sub:template a nt:AssertionTemplate;
-    dct:description """<p>Declare a use case for a given Space or Maintained Resource, as a category (class) to which concrete examples can be attached later on. The use case gets a name, an optional description, and optional links to matching Wikidata concepts.</p>
-
-<p>Concrete examples can afterwards be attached to the use case with the 'Providing an example for a use case' template.</p>""";
-    rdfs:label "Defining a use case for a resource";
-    nt:hasNanopubLabelPattern "Use case: ${name}";
-    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05;
-    nt:hasTargetNanopubType gen:UseCase .
-  
-  sub:topic a nt:GuidedChoicePlaceholder;
-    rdfs:label "matching topic/concept on Wikidata (optional, repeatable)";
+  sub:subject a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "general topic/category (optional)";
     nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
   
-  sub:useCase a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
-    rdfs:label "short name for the use case, used as URI suffix" .
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title/label for the use case (optional)" .
+  
+  sub:useCase a nt:ExternalUriPlaceholder;
+    rdfs:label "the use case (an existing URI, e.g. a Space, project, or dataset)" .
 }
 
 sub:provenance {
@@ -90,22 +81,22 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-24T09:38:44+00:00"^^xsd:dateTime;
+  this: dct:created "2026-09-24T12:04:38+00:00"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:embeds sub:template;
-    npx:supersedes <https://w3id.org/np/RAzkwQbhBx6lnFhzwCkkORxhlwzkQaF0KUX5V42q0Iblo>;
-    rdfs:label "Defining a use case for a resource";
-    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: entity.";
+    npx:hasNanopubType gen:isUseCaseFor;
+    npx:supersedes <https://w3id.org/np/RAELDhYgrRqpMryIHzjoIubo0_zEXUWN-YN_PgbPMbF0U>;
+    rdfs:label "Describing a use case for a resource";
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: subject.";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
-    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
       <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
-    nt:wasCreatedFromTemplate <https://w3id.org/np/RA9cOdAwjxTF6qNNFkXTl_EgOan0LDPmu0fWnIgmZu-7E> .
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASDwdz5WzsWdeDRREs0i5n5xTtKTrKS8pCIFUXhlkpt0> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "Fga8d9fAvVxI1LeRkiriLOkN997KnY7a+vikaDic3spfx+KbmxcieCOFi8vwxnENVADWIv4PGxDan813Tcg8CVxOCZw345BjBARk/TxrbgN5JfmTge4aFnCPvF15WnyIyaLHImAEjPArzSMUFDce+qnglikmk7QHBdPZns520xY=";
+    npx:hasSignature "CC6iW8whWUMf0NYsPWitydgOzuswg2e0weviTwcVJMXvNCL62YdvyT2h5H3mo/3Ox7mrDF7e9gwbgZ8qyqG3lA1lezQABbryowgfAroovfmJnkt/tvn2fcEIkbFof4FADA4q7sRtXLqJB6CFMuZQT4TENCI2paerqHqAjtamOd0=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

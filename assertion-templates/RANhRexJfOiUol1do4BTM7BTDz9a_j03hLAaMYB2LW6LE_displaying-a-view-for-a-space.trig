@@ -1,11 +1,11 @@
-@prefix this: <https://w3id.org/np/RAcSaO64OsncSlG4a_3cHFIVwSFNqGVjaB2q6EiqrNAFQ> .
-@prefix sub: <https://w3id.org/np/RAcSaO64OsncSlG4a_3cHFIVwSFNqGVjaB2q6EiqrNAFQ/> .
+@prefix this: <https://w3id.org/np/RANhRexJfOiUol1do4BTM7BTDz9a_j03hLAaMYB2LW6LE> .
+@prefix sub: <https://w3id.org/np/RANhRexJfOiUol1do4BTM7BTDz9a_j03hLAaMYB2LW6LE/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix skos: <http://www.w3.org/2004/02/skos/core#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -77,8 +77,8 @@ sub:assertion {
   sub:appliesToNamespace a nt:ExternalUriPlaceholder;
     rdfs:label "namespace (URI prefix)" .
   
-  sub:appliesToResource a nt:GuidedChoicePlaceholder;
-    rdfs:label "choose resource" .
+  sub:appliesToResource a nt:ExternalUriPlaceholder;
+    rdfs:label "resource URI" .
   
   sub:assertion a nt:AssertionTemplate;
     rdfs:label "Displaying a view for a Space";
@@ -185,12 +185,12 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-10T06:47:15Z"^^xsd:dateTime;
+  this: dct:created "2026-09-24T11:30:35+00:00"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:supersedes <https://w3id.org/np/RA6NdKaYuWA3HznV33rIA88f_ESETtjs1WLloEpPVoXhA>;
+    npx:supersedes <https://w3id.org/np/RAcSaO64OsncSlG4a_3cHFIVwSFNqGVjaB2q6EiqrNAFQ>;
     rdfs:label "Displaying a view for a Space";
-    skos:changeNote "Added optional statements to override the structural position, page size, display width and title of the view for this display.";
+    skos:changeNote "The appliesTo resource is now a plain external URI placeholder instead of a guided choice without any source, so the form no longer offers to mint a typed plain name locally; a display restricted to such a name would never match a page.";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
@@ -199,7 +199,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "pbPDsSgdv7lMdj2/ZgzboQilv4gqxWU8o8fZKFbMHe5HZ9MDoETJJG2RteqW8NX305ovU93t7+U1Z5RKSG9qYy7Uin2l/7FTxwNsScWzPjHVntpav+oY0gfvPG9daXmJdQpZd5/Iz9n4jBe9LdALnXZaQyADiltei9P/vx2C3Nk=";
+    npx:hasSignature "HGxutYFuucsiyTrMrldHKXaZhf+82DfD0eCjAKaWvnVXMJ6YMwkDy+ytyeuLHQostMyZ+ZQNfVa6EPpwVq89XK4ZjqwbTsoNRIegZR+Yy0TA+K+BDwWiUmu1caR+AIzwpeQy5YeEwdm62gl9RDQMZizfZz/DbLcS5cFdKzFoz74=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

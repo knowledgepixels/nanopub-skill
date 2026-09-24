@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAidZZirzvh4Vomku3KCjfSngNr5eqzhw1KcmpL0CMiGI> .
-@prefix sub: <https://w3id.org/np/RAidZZirzvh4Vomku3KCjfSngNr5eqzhw1KcmpL0CMiGI/> .
+@prefix this: <https://w3id.org/np/RAuI4QefXkCLHOtThd3dOxZS8Zme7B0UleQigxDPQq8Rw> .
+@prefix sub: <https://w3id.org/np/RAuI4QefXkCLHOtThd3dOxZS8Zme7B0UleQigxDPQq8Rw/> .
 @prefix schema: <https://schema.org/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix void: <http://rdfs.org/ns/void#> .
@@ -186,7 +186,7 @@ sub:assertion {
   sub:title a nt:LiteralPlaceholder;
     rdfs:label "title of the knowledge graph" .
   
-  sub:topic a nt:GuidedChoicePlaceholder;
+  sub:topic a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
     rdfs:label "the topic";
     nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
   
@@ -204,12 +204,12 @@ sub:provenance {
 }
 
 sub:pubinfo {
-  this: dct:created "2026-09-24T09:38:44+00:00"^^xsd:dateTime;
+  this: dct:created "2026-09-24T12:04:38+00:00"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:supersedes <http://purl.org/np/RAQ44k8NrrYoGj8S2gvWLGnXsv5CMLSh1aEvegmt43QVg>;
+    npx:supersedes <https://w3id.org/np/RAidZZirzvh4Vomku3KCjfSngNr5eqzhw1KcmpL0CMiGI>;
     rdfs:label "Template: Describing a knowledge graph";
-    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: accessrights, license.";
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: topic.";
     nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
     nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
       <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>,
@@ -218,7 +218,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "rpCUhT2LhqIaD4NyQy+6aOvsHDcdlsp+BnlGCWSkQRRgA5YK+bcIB7LYOO/trzVsdERd8oVDyyCNhJ2qqL/D+GILJST8Ofp89d8Varv36tPRPYJ5X+E3bE4qRezB+P3FVAqR9JAVkc3AVK18YB9JaaRagJsKxz1v7VR7utYaKmY=";
+    npx:hasSignature "UFjHQdtoepw/TYpsXyC2Yda34dCnqZOLc8J6QsQtdVzN2k1iP7/bdiYpH59T8Deqn4rUm+P8UaXTqByFq1RvIe36nPaWw8m+RndAmzLwDEQnmnaV+SizklDbTB0yd2NkT1EAPhQvWAJpk6eB6cigkY8OF50xVEK/SVRtWQnJsqg=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

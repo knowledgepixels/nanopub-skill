@@ -1,14 +1,14 @@
-@prefix this: <https://w3id.org/np/RAJ5AWeAHdhAr5inJhLlyW5fnENhWvuacSe5qfEuRlaA8> .
-@prefix sub: <https://w3id.org/np/RAJ5AWeAHdhAr5inJhLlyW5fnENhWvuacSe5qfEuRlaA8#> .
+@prefix this: <https://w3id.org/np/RArUYBhxnH4vpvEZOPkR0v5QNMSuJyqScRtcPDTCVqBTQ> .
+@prefix sub: <https://w3id.org/np/RArUYBhxnH4vpvEZOPkR0v5QNMSuJyqScRtcPDTCVqBTQ/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix npx: <http://purl.org/nanopub/x/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
-@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix orcid: <https://orcid.org/> .
-@prefix ns1: <http://purl.org/np/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
@@ -24,7 +24,7 @@ sub:assertion {
     rdfs:label "testing SPARQL auto-complete";
     nt:hasStatement sub:st1 .
   
-  sub:obj a nt:GuidedChoicePlaceholder;
+  sub:obj a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
     nt:possibleValuesFromApi "https://vocab.nerc.ac.uk/sparql/sparql?query=prefix%20skos%3A%20%3Chttp%3A%2F%2Fwww.w3.org%2F2004%2F02%2Fskos%2Fcore%23%3E%0A%0Aselect%20%3Fthing%20%3Flabel%20where%20%7B%0A%20%20%3Fthing%20a%20skos%3AConcept%20.%0A%20%20%3Fthing%20skos%3AprefLabel%20%3Flabel%20.%0A%20%20filter%28contains%28str%28%3Flabel%29%2C%20%22 %22%29%29%0A%7D%20limit%2010" .
   
   sub:st1 rdf:object sub:obj;
@@ -39,21 +39,22 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  sub:sig npx:hasAlgorithm "RSA";
-    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "eM0aK0THfD/+S3Wx01oIS3p+OE3Qy+6vY1Et5g7N5Fw80Plw6rf+96VFC5ZAoPTT25/cOrSZPwolIUhdQakaVHpIPsksyG93GcVaoC3CINjkS/5eITRLbMbfMojvWW1A4DUnS2hCGVNFVLEkp7unPMdf4Dc5eHnvmxNWamYNf24=";
-    npx:hasSignatureTarget this:;
-    npx:signedBy orcid:0000-0002-1267-0234 .
-  
-  this: dct:created "2024-05-31T08:35:31.177Z"^^xsd:dateTime;
+  this: dct:created "2026-09-24T12:04:38+00:00"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:wasCreatedAt <http://localhost:37373/>;
+    npx:supersedes <https://w3id.org/np/RAJ5AWeAHdhAr5inJhLlyW5fnENhWvuacSe5qfEuRlaA8>;
     rdfs:label "Template: testing SPARQL auto-complete";
-    prov:wasDerivedFrom <https://w3id.org/np/RASwkaMWjrBb7GNyN-5_bekeMgo0KG2LGETl47cBKTkOE>;
-    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
-    nt:wasCreatedFromPubinfoTemplate ns1:RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM,
-      ns1:RABngHbKpoJ3U9Nebc8mX_KUdv_vXw28EejqAyQya5zVA, ns1:RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90;
-    nt:wasCreatedFromTemplate ns1:RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so .
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: obj.";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
+      <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <http://purl.org/np/RAJwu5sVubRqXY4t2gkSoGxWkMyZqnpkGTCPiTlmvi4so> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "eY1QmrmTNnrYgm+vNIjfA++u3kxtC1BjlgNIOoIPq+2aM9niDB6j4H3JZaLQTblyHJ5oartJCGM0bHcS5R7JJKfWPnrJQB2J0CF01cjDaV77myTj0GxWP+2Kulmod5oQrU4O8MAd8a6ZCIW/7Ew0gBnP5yGeZR9NUrFAlcXUXUM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
 }
 

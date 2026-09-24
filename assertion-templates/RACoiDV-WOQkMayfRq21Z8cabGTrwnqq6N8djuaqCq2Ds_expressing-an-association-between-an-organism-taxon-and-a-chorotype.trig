@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAXyhPmmsOK226gWnhljAcLmernotk-6gPAJYie7Ewp6A> .
-@prefix sub: <https://w3id.org/np/RAXyhPmmsOK226gWnhljAcLmernotk-6gPAJYie7Ewp6A/> .
+@prefix this: <https://w3id.org/np/RACoiDV-WOQkMayfRq21Z8cabGTrwnqq6N8djuaqCq2Ds> .
+@prefix sub: <https://w3id.org/np/RACoiDV-WOQkMayfRq21Z8cabGTrwnqq6N8djuaqCq2Ds/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
@@ -102,7 +102,7 @@ sub:assertion {
     rdfs:label "publication DOI (https://doi.org/...) or taxon treatment ID (https://treatment.plazi.org/id/...)";
     nt:hasRegex "(https://doi.org/|https://treatment.plazi.org/id/).+" .
   
-  sub:taxonname a nt:GuidedChoicePlaceholder;
+  sub:taxonname a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
     rdfs:label "search and select from list (if not found, paste identifying URI from IPNI, MycoBank, Index Fungorum, or Zoobank)";
     nt:possibleValuesFromApi "https://vodex.petapico.org/nidx/query?rows=100&q=label:" .
   
@@ -120,12 +120,12 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-24T09:38:44+00:00"^^xsd:dateTime;
+  this: dct:created "2026-09-24T12:04:38+00:00"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:introduces sub:assertion;
-    npx:supersedes <https://w3id.org/np/RAt9ok5IMj_GMUAeMi0RsNAdTHzZnp1rxDtMh5QnG4T0M>;
-    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: chorotype.";
+    npx:supersedes <https://w3id.org/np/RAXyhPmmsOK226gWnhljAcLmernotk-6gPAJYie7Ewp6A>;
+    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: taxonname.";
     nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
     nt:wasCreatedFromPubinfoTemplate <http://purl.org/np/RAA2MfqdBCzmz9yVWjKLXNbyfBNcwsMmOqcNUxkk1maIM>,
       <http://purl.org/np/RAh1gm83JiG5M6kDxXhaYT1l49nCzyrckMvTzcPn-iv90>, <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>,
@@ -134,7 +134,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "D+l5JJNi5AzGJjjock+cpaEEFWwtc5M3aBiCsDQ6IJdciP7tWv6VVcQygVsAcDdcGMwhZNEuusWPRDFuRzJVpvINCJSfTsg+T3SZaHbZdqDWmk5+SsEQqfrmfCkh7I1i/5LBiyGO1LV17DVX0vgEaG34ZRcMTttAVOVS7v9/oOA=";
+    npx:hasSignature "Du610pcsPYN75PKnNYo92wRAV5CN6UaFiBXwkWZEiEcElOj3vMNJUi9MaekiIgJcZCYzLRa3/GgSkALIH2eU4iWC65GWfMaVFjXl30ZmOFUOZ85Hi3yxlxR7l9kPJZy/7ceZl2OZD1kx1bYzai/10IhpKQ47wkLUmqS6toGCVhw=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }
