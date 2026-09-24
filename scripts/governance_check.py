@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Report whether the space-governed definitions in a nanopub have their kind registered.
+"""Report whether the named space maintains the kind of each space-governed definition in a nanopub.
 
 A definition version declaring dct:isVersionOf <kind> and gen:governedBy <space> on a node
 the nanopub npx:embeds is resolved space-based (any current member of the space can publish
-its next version) only once an admin of the space has registered the kind:
+its next version) only once an admin of the space has made it maintain the kind:
 <kind> a gen:MaintainedResource ; gen:isMaintainedBy <space>. Until then gen:governedBy has
 no effect and the version updates only through its own npx:supersedes chain; up to Nanodash
 5.15.0 a reference to such a version even stays on exactly that version (nanodash#732).
@@ -22,7 +22,9 @@ GOVERNED_BY = URIRef("https://w3id.org/kpxl/gen/terms/governedBy")
 EMBEDS = URIRef("http://purl.org/nanopub/x/embeds")
 SUPERSEDES = URIRef("http://purl.org/nanopub/x/supersedes")
 ADMIN_NS = "http://purl.org/nanopub/admin/"
-REGISTRATION_TEMPLATE = "RAuoIiBPtkpMCALeI5AWNlQHoXdBfqZwqj_sVHiBGbfQo"
+# The prefix-free "Defining a maintained resource" version: the governed one mints its resource
+# under ~~SPACE~~/r/, so it cannot take an existing kind IRI.
+MAINTAINED_RESOURCE_TEMPLATE = "https://w3id.org/np/RAuoIiBPtkpMCALeI5AWNlQHoXdBfqZwqj_sVHiBGbfQo"
 # The spaces repo of each public Nanopub Query instance, tried in turn: any one of them can be
 # slow or down at a given moment, and the generic w3id route forwards to a single one.
 SPACES_REPOS = os.environ.get("SPACES_REPOS",
@@ -101,25 +103,26 @@ def report(path):
                     print(f"   NOTE governed: {kind} is not the kind of the version this nanopub supersedes "
                           f"({old} is a version of {', '.join(sorted(ks))}). A new version has to keep the kind IRI "
                           f"(and npx:introduces it), otherwise it starts a separate line that governed resolution of "
-                          f"the earlier versions does not see; republish with the earlier kind rather than registering this one")
+                          f"the earlier versions does not see; republish with the earlier kind rather than having the space maintain this one")
                     continue
                 if minted_here and not published:
-                    print(f"   NOTE governed: this nanopub mints the kind {kind}, so it can only be registered with "
+                    print(f"   NOTE governed: this nanopub mints the kind {kind}, so it can only become maintained by "
                           f"{space} once published; until then gen:governedBy has no effect "
-                          f"(an admin of the space registers it with the maintained-resource template {REGISTRATION_TEMPLATE})")
+                          f"(an admin of the space declares it with the maintained-resource template {MAINTAINED_RESOURCE_TEMPLATE})")
                     continue
                 spaces = maintaining_spaces(kind)
                 if spaces is None:
-                    print(f"   NOTE governed: could not check whether {kind} is registered with {space} (no query instance answered)")
+                    print(f"   NOTE governed: could not check whether {space} maintains {kind} (no query instance answered)")
                 elif str(space) in spaces:
-                    print(f"   governed: {kind} is registered with {space}: its members can publish the next versions")
+                    print(f"   governed: {kind} is maintained by {space}: its members can publish the next versions")
                 else:
-                    elsewhere = f" (it is registered with {', '.join(sorted(spaces))})" if spaces else ""
+                    elsewhere = f" (it is maintained by {', '.join(sorted(spaces))})" if spaces else ""
                     when = " (after this nanopub is published, since it mints the kind)" if minted_here else ""
-                    print(f"   NOTE governed: {kind} is not registered as a maintained resource of {space}{elsewhere}, "
+                    print(f"   NOTE governed: {space} does not maintain {kind}{elsewhere}, "
                           f"so gen:governedBy has no effect yet: versions update only through their own npx:supersedes "
                           f"chain, and up to Nanodash 5.15.0 a reference stays on exactly this version. An admin of the "
-                          f"space registers it{when} with the maintained-resource template {REGISTRATION_TEMPLATE}")
+                          f"space can list it as a maintained resource{when} on the space's About tab or with the "
+                          f"maintained-resource template {MAINTAINED_RESOURCE_TEMPLATE}")
 
 
 if __name__ == '__main__':
