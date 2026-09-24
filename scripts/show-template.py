@@ -11,12 +11,14 @@ def load(code):
         open(fn,'wb').write(urllib.request.urlopen(req,timeout=60).read())
     d=Dataset(); d.parse(fn,format='trig'); return d
 def ag(d):
-    for g in d.graphs():
-        if str(g.identifier).endswith('/assertion'): return g
+    # found via the head graph, so old purl.org templates (graph IRIs ending in #assertion) work too
+    has_assertion=URIRef('http://www.nanopub.org/nschema#hasAssertion')
+    head=next(g for g in d.graphs() if (None,has_assertion,None) in g)
+    return d.graph(next(head.objects(None,has_assertion)))
 code=sys.argv[1]; g=ag(load(code))
-tmpl=next(g.subjects(RDF.type, nt('AssertionTemplate')))
+tmpl=next(s for k in ('AssertionTemplate','ProvenanceTemplate','PubinfoTemplate') for s in g.subjects(RDF.type, nt(k)))
 print("TEMPLATE:", next(g.objects(tmpl, RDFS.label), '?'))
-print("identity :", "legacy (reference by NANOPUB uri)" if str(tmpl).endswith('/assertion') else f"embedded -> reference {tmpl}")
+print("identity :", "legacy (reference by NANOPUB uri)" if tmpl==g.identifier else f"embedded -> reference {tmpl}")
 sh=lambda v: (str(v).rsplit('/',1)[-1].rsplit('#',1)[-1] if isinstance(v,URIRef) else '"'+str(v)[:40]+'"')
 stmts=set(g.objects(tmpl, nt('hasStatement')))
 for s in list(stmts): stmts |= set(g.objects(s, nt('hasStatement')))

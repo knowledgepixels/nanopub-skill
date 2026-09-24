@@ -6,8 +6,11 @@ GEN="https://w3id.org/kpxl/gen/terms/"
 nt=lambda n: URIRef(NT+n)
 
 def assertion(path):
+    # found via the head graph, so old purl.org templates (graph IRIs ending in #assertion) work too
     d=Dataset(); d.parse(path, format='trig')
-    return [g for g in d.graphs() if str(g.identifier).endswith('/assertion')][0]
+    has_assertion=URIRef('http://www.nanopub.org/nschema#hasAssertion')
+    head=[g for g in d.graphs() if (None,has_assertion,None) in g][0]
+    return d.graph(next(head.objects(None,has_assertion)))
 
 g=assertion(sys.argv[1])
 tmpl=[s for s,_,_ in g.triples((None,RDF.type,nt('AssertionTemplate')))][0]

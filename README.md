@@ -31,7 +31,7 @@ The skill guides the agent through the full workflow:
   grlc-style query API.
 - **Supersede or retract** earlier versions with the right key and links.
 - **Author ecosystem artifacts**: assertion templates, query templates,
-  resource views (tabular, plain-paragraph, header, SVG views), view
+  resource views (tabular, plain-paragraph, header, SVG, query-form views), view
   displays, Spaces, roles, memberships and nanopub indexes.
 - **Set up a bot identity** with its own key pair and introduction nanopub.
 
