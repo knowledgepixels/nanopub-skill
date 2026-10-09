@@ -1,0 +1,81 @@
+@prefix this: <https://w3id.org/np/RA52WCejTHCzaUuRJsf8QXVEWHL2YjiPKGLFIJ2ofTHoU> .
+@prefix sub: <https://w3id.org/np/RA52WCejTHCzaUuRJsf8QXVEWHL2YjiPKGLFIJ2ofTHoU/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:01-list-action a gen:ViewEntryAction;
+    rdfs:label "✔ list as maintained resource...";
+    gen:hasActionTemplate <https://w3id.org/np/RAuoIiBPtkpMCALeI5AWNlQHoXdBfqZwqj_sVHiBGbfQo>;
+    gen:hasActionTemplateQueryMapping "list_resource:!resource list_label:label list_description:description list_type:type";
+    gen:hasActionTemplateTargetField "space";
+    gen:isVisibleTo gen:AdminRole .
+  
+  sub:02-dismiss-action a gen:ViewEntryAction;
+    rdfs:label "✖ dismiss...";
+    gen:hasActionTemplate <https://w3id.org/np/RAkhTlKa-i0miq_DN3V4HSv-btlDgwzg8qPUesrsJ0k9Q/template>;
+    gen:hasActionTemplateQueryMapping "dismiss_target:nanopub dismiss_choice:approveOrDisapprove";
+    gen:isVisibleTo gen:AdminRole .
+  
+  sub:add-maintained-resource a gen:ViewResultAction;
+    rdfs:label "add maintained resource";
+    gen:hasActionTemplate <https://w3id.org/np/RAw91C9LMpYXs1IJd3iAFOv-_x8XlkEOhWUbYtv8nNFmk>;
+    gen:hasActionTemplatePartField "void";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "space";
+    gen:isVisibleTo gen:AdminRole .
+  
+  sub:maintained-resources-view a gen:ListView, gen:ResourceView;
+    dct:isVersionOf <https://w3id.org/np/RA9lZA-e3b3oMS9XHhbGOeV_Fvs2q9yFBQ7c4xcG2JNkE/maintained-resources-view-kind>;
+    dct:title "📦 Maintained resources";
+    rdfs:label "Maintained resources view";
+    gen:appliesToInstancesOf gen:Space;
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels/nanodash>;
+    gen:hasDisplayWidth gen:ColumnWidth06of12;
+    gen:hasStructuralPosition "3.4.maintainedResources";
+    gen:hasViewAction sub:01-list-action, sub:02-dismiss-action, sub:add-maintained-resource;
+    gen:hasViewQuery <https://w3id.org/np/RAWZab2iKc3cB6TwqHdUEn1ZgMh817nfiwFKAVMrypVlI/list-maintained-and-not-yet-listed-resources>;
+    gen:hasViewQueryTargetField "space" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-24T15:32:43+00:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:maintained-resources-view;
+    npx:supersedes <https://w3id.org/np/RAgRefXho-HtD_Vr4LsB3VSPxLnDKIRMeHdvEE2Yojbb8>;
+    skos:changeNote "Removed the description: it was written as documentation, and Nanodash now shows a view's description on the page below its title (issue #735).";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAJfQoTn4f7e8qHl0MYmn15qiHydwhr4F8Ow7agpMkWsE/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "QtQxPGKk2Byz1GmDsTf7vzf2fbzA9AxwayLx3plR5Xb1xVEv1teW6kwScVr6PRUnB6SnsLFJWv/pHAlnW2omhCW3/2SKgxZDDuZ6LggLhKeUULFeoBK1mM/mCTHTw5sipl1kbavT+qzvfack7H0Vv/5jzzyoEDI8PNlSBM83sn0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

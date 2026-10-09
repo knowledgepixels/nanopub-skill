@@ -1,11 +1,12 @@
-@prefix this: <https://w3id.org/np/RAFSqsBr19K2SgM1X0F8ZQ1SwOkE_Y_3w1jlB8--Ffrm4> .
-@prefix sub: <https://w3id.org/np/RAFSqsBr19K2SgM1X0F8ZQ1SwOkE_Y_3w1jlB8--Ffrm4/> .
+@prefix this: <https://w3id.org/np/RAZ3QDoAlPHXs0-jlbqUH1fGwcOSGnmzx_IoCVyfV18wg> .
+@prefix sub: <https://w3id.org/np/RAZ3QDoAlPHXs0-jlbqUH1fGwcOSGnmzx_IoCVyfV18wg/> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix npx: <http://purl.org/nanopub/x/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix orcid: <https://orcid.org/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
@@ -20,7 +21,6 @@ sub:Head {
 
 sub:assertion {
   sub:knowledge-product-counts-view a gen:ResourceView, gen:TabularView;
-    dct:description "How many knowledge products (per category) have been delivered by each project of this program, with a total count per project.";
     dct:isVersionOf <https://w3id.org/np/RA-Vt2JA9KAg_9jw1CvQLYoIQnGAW__zx7PidqsFvnHTM/knowledge-product-counts-view-kind>;
     dct:title "🧮 Knowledge product counts";
     rdfs:label "Knowledge product counts per project view";
@@ -37,13 +37,14 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-13T05:02:28Z"^^xsd:dateTime;
+  this: dct:created "2026-09-24T15:32:43+00:00"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:knowledge-product-counts-view;
     npx:introduces <https://w3id.org/np/RA-Vt2JA9KAg_9jw1CvQLYoIQnGAW__zx7PidqsFvnHTM/knowledge-product-counts-view-kind>;
-    npx:supersedes <https://w3id.org/np/RA-Vt2JA9KAg_9jw1CvQLYoIQnGAW__zx7PidqsFvnHTM>;
+    npx:supersedes <https://w3id.org/np/RAFSqsBr19K2SgM1X0F8ZQ1SwOkE_Y_3w1jlB8--Ffrm4>;
     rdfs:label "Knowledge product counts per project view";
+    skos:changeNote "Removed the description: it was written as documentation, and Nanodash now shows a view's description on the page below its title (issue #735).";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
@@ -51,7 +52,8 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "GcishS3VpiuOtCNtuhSdRT0oEBAl8ibl5rQZBb7IS5q8JqON7nJZopaOn7/LjgrmnpQj7+HxXHZGyqfAYI6HRNc3vW1PXhKwxUQRZH3Aprwul74pAziO2lAF309qc17vZ/CV1GlBSrbL2MyT8FUOMParYsMk4EoPkTsbG0t3Ze8=";
+    npx:hasSignature "jBOB05RLpE7OgC02LKQ6eELbHCfF9pdqvajLEKKwgvlBKJRx5lv5TW43tsiirkUYLp0aiTOxGi8qJ8TX5FDgbqTr5s+ta6uKHRJ3tWWVoyAmbBr7GmovYgULAR+nBqw+nH101KcFYS63Ndb18gvi3t5E842bIDM6HdBcVynNOCc=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }
+

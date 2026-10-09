@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAwQqHPsbZOOXfISONUWfSnZ0YOhrULx7M94BuT-vMyJs> .
-@prefix sub: <https://w3id.org/np/RAwQqHPsbZOOXfISONUWfSnZ0YOhrULx7M94BuT-vMyJs/> .
+@prefix this: <https://w3id.org/np/RAJxl_iWXpnZBs3oKdkWkRmdiA9ONkKz3h4919JwQkbec> .
+@prefix sub: <https://w3id.org/np/RAJxl_iWXpnZBs3oKdkWkRmdiA9ONkKz3h4919JwQkbec/> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -9,7 +9,6 @@
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix orcid: <https://orcid.org/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
-@prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
 sub:Head {
   this: a np:Nanopublication;
@@ -22,15 +21,16 @@ sub:assertion {
   sub:declareParticipationAction a gen:ViewResultAction;
     rdfs:label "➕ declare participation...";
     gen:hasActionTemplate <https://w3id.org/np/RA7vwC0g_WOMKyCy_e0gV97PUgZ9ehZ5kaIZh-dCE9x14>;
-    gen:hasActionTemplatePartField "void";
-    gen:hasActionTemplateQueryMapping "void";
     gen:hasActionTemplateTargetField "space" .
   
   sub:declarePlannedAttendanceAction a gen:ViewResultAction;
     rdfs:label "➕ declare planned attendance...";
     gen:hasActionTemplate <https://w3id.org/np/RANuBhW-pXbmSr24Nzl4JTaDjgifqmc_DjOe-GcU-4ElI>;
-    gen:hasActionTemplatePartField "void";
-    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "space" .
+  
+  sub:declareRegretsAction a gen:ViewResultAction;
+    rdfs:label "✖ declare regrets...";
+    gen:hasActionTemplate <https://w3id.org/np/RAnQmm32XwkSVvPPJGoq2FeQZZ8vV63I0varAsv5IGjSs>;
     gen:hasActionTemplateTargetField "space" .
   
   sub:view a gen:ListView, gen:ResourceView;
@@ -40,8 +40,9 @@ sub:assertion {
     gen:appliesToInstancesOf gen:Space;
     gen:hasDisplayWidth gen:ColumnWidth06of12;
     gen:hasStructuralPosition "3.2.spaceParticipants";
-    gen:hasViewAction sub:declareParticipationAction, sub:declarePlannedAttendanceAction;
-    gen:hasViewQuery <https://w3id.org/np/RAnb2hI_DPJntpD9qF71M7h12B5Laf2v7ONYRct6zAjGo/list-space-participants>;
+    gen:hasViewAction sub:declareParticipationAction, sub:declarePlannedAttendanceAction,
+      sub:declareRegretsAction;
+    gen:hasViewQuery <https://w3id.org/np/RAS04z39zJ4h3PXGX5E17z3LjiBMLDvnAPyaOHfO0YzQU/list-space-participants>;
     gen:hasViewQueryTargetField "space" .
 }
 
@@ -50,22 +51,20 @@ sub:provenance {
 }
 
 sub:pubinfo {
-  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
-  
-  this: dct:created "2026-09-09T15:06:42Z"^^xsd:dateTime;
+  this: dct:created "2026-10-08T05:40:34Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:view;
     npx:introduces <https://w3id.org/np/RAWu0vPMpvBSCUw26MODQfVQ7dyINZMmZA993ICki9cNs/participants-view-kind>;
-    npx:supersedes <https://w3id.org/np/RA6GWZt-Wm0LjeGqw5fn31pXSaCdBIcjm0p75OBRC27y0>;
+    npx:supersedes <https://w3id.org/np/RAwQqHPsbZOOXfISONUWfSnZ0YOhrULx7M94BuT-vMyJs>;
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
-    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAJfQoTn4f7e8qHl0MYmn15qiHydwhr4F8Ow7agpMkWsE/template> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "T9IxKx1UzF2R3CPoBS+E4bK9cANcy0K/a4IZZgVIo4xT00SE4GgfoUgs6fZGVXQdL2QZg1HcNEQcyaaBuqFaZpqmXXbUJ9iBg7fg4drQ1jvrJGhMvjOnEzXXA416CKtjb//yO3Cykf9D5salqnfpVN6+nL/lIaOPNAP2/pZZ4OU=";
+    npx:hasSignature "SOIyRPmUwCsLbVsEGHI84GNnsR7Wy7Wxp/T8iNXgW80Kiku9d/hEr7OTeQIHkpqV01Uqg6LwNy/Dv3z/p5ophQWtILjYTt4BpND5Dn0IjhlhxxbMpepuvm5pCzXmiQUf4ai7zjJKmlMpEqRRT/U87ZBS3IK8WJfq5OMKYYu/jps=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

@@ -1,11 +1,12 @@
-@prefix this: <https://w3id.org/np/RAmYiMRQyd6kkwBMNMZV7_EnJEv0lK18Q5tgwkDS05HlY> .
-@prefix sub: <https://w3id.org/np/RAmYiMRQyd6kkwBMNMZV7_EnJEv0lK18Q5tgwkDS05HlY/> .
+@prefix this: <https://w3id.org/np/RAaBBRHQXJGvSlJJ-Njdj8EB_VmVZImJMlU0nxVYsgxqU> .
+@prefix sub: <https://w3id.org/np/RAaBBRHQXJGvSlJJ-Njdj8EB_VmVZImJMlU0nxVYsgxqU/> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix npx: <http://purl.org/nanopub/x/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix orcid: <https://orcid.org/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
@@ -19,13 +20,18 @@ sub:Head {
 }
 
 sub:assertion {
-  sub:add-template-action a gen:ViewResultAction;
-    rdfs:label "➕ add template...";
-    gen:hasActionTemplate <https://w3id.org/np/RAKmcrbEVkxF0ivA0_yGg8bnl6iKkwVDp_2SSHvPBrkPw/template>;
-    gen:hasActionTemplatePartField "void";
-    gen:hasActionTemplateQueryMapping "void";
-    gen:hasActionTemplateTargetField "governingSpace";
-    gen:isVisibleTo gen:MemberRole .
+  sub:list-kind-action a gen:ViewEntryAction;
+    rdfs:label "📦 list as maintained resource...";
+    gen:hasActionTemplate <https://w3id.org/np/RAuoIiBPtkpMCALeI5AWNlQHoXdBfqZwqj_sVHiBGbfQo>;
+    gen:hasActionTemplateQueryMapping "register_kind:!resource register_label:label register_description:description register_type:type";
+    gen:hasActionTemplateTargetField "space";
+    gen:isVisibleTo gen:AdminRole .
+  
+  sub:list-template-action a gen:ViewResultAction;
+    rdfs:label "📦 list a template...";
+    gen:hasActionTemplate <https://w3id.org/np/RAuoIiBPtkpMCALeI5AWNlQHoXdBfqZwqj_sVHiBGbfQo>;
+    gen:hasActionTemplateTargetField "space";
+    gen:isVisibleTo gen:AdminRole .
   
   sub:maintained-templates-view a gen:ListView, gen:ResourceView;
     dct:isVersionOf <https://w3id.org/np/RAHokSK-M65XoTWcufOQWbwJR4mOShe5SB-JttP3Xjg4I/maintained-templates-view-kind>;
@@ -36,8 +42,8 @@ sub:assertion {
     gen:hasDisplayWidth gen:ColumnWidth06of12;
     gen:hasPageSize "5";
     gen:hasStructuralPosition "5.4.maintainedUI.templates";
-    gen:hasViewAction sub:add-template-action;
-    gen:hasViewQuery <https://w3id.org/np/RA3BSycqfPoG-qBCT7mE104-ucAXrENGhGHKKKEWfFuU4/list-maintained-templates>;
+    gen:hasViewAction sub:list-kind-action, sub:list-template-action;
+    gen:hasViewQuery <https://w3id.org/np/RAMg3Wx8MmLL3POsRi2DnjgWcZ1jxb0YoWEYz1vV1CAwg/list-maintained-templates>;
     gen:hasViewQueryTargetField "space" .
 }
 
@@ -48,26 +54,24 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-24T08:23:11.935+02:00"^^xsd:dateTime;
+  this: dct:created "2026-09-24T15:29:00+00:00"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:maintained-templates-view;
     npx:hasNanopubType gen:ResourceView;
     npx:introduces <https://w3id.org/np/RAHokSK-M65XoTWcufOQWbwJR4mOShe5SB-JttP3Xjg4I/maintained-templates-view-kind>;
-    npx:supersedes <https://w3id.org/np/RA3NqmdNEYyIjTC_OEtUBhq1ccrQMvCLGDyR8QbCOtXqc>;
-    npx:wasCreatedAt <http://localhost:37373/>;
+    npx:supersedes <https://w3id.org/np/RAK49hHZk52yB0vBD0UEKO-pt8Yc7KTZR-0UBsDDzm32E>;
+    skos:changeNote "Removed the description: it was written as documentation, and Nanodash now shows a view's description on the page below its title (issue #735).";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
-      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>,
-      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
-    nt:wasCreatedFromTemplate <https://w3id.org/np/RApNBmFsH3uf4RIPM6TR-iFJ2geOP3uTmSFhlPZ0eikg4/template> .
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAJfQoTn4f7e8qHl0MYmn15qiHydwhr4F8Ow7agpMkWsE/template> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "XLUOPTxAFKRvdhSdDzrJZL5jGx0TE55H7r7/6T5RPaI5N/ogXnV0vp5F6ruBjE1i8OcvlBGCs+k8M+nGE3Em07qpgp/tikp6nMaqE5J/XfiS9Ng/L/kf2Zkgp5dVQxcYWPXEy40I3E2kODlvp1A+lBcr/1/WTprNp+M9yFLjY5k=";
+    npx:hasSignature "NHmaC4cxdYFa/6HttqDI1PfSunMV7WuyM5WEDQH2MEHyU54C+k8t5BFu6POjBJ47QN8zspcnensJEYwKgGRiDL6agStc46O+LNrKyd06OzZScpJm8lIrubX6HnkrxiTzdoGEoG7lyZdl98hXnTKY5XVCsiMpk9yzk1HGjBSdzm8=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
-  
-  <https://w3id.org/spaces/knowledgepixels> nt:hasLabelFromApi "Knowledge Pixels - Knowledge Pixels is a tech start-up with the mission to revolutionize global ..." .
 }
 

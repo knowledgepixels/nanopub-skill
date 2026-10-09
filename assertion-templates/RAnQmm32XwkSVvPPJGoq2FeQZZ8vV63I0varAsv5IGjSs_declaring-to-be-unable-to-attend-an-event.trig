@@ -1,0 +1,66 @@
+@prefix this: <https://w3id.org/np/RAnQmm32XwkSVvPPJGoq2FeQZZ8vV63I0varAsv5IGjSs> .
+@prefix sub: <https://w3id.org/np/RAnQmm32XwkSVvPPJGoq2FeQZZ8vV63I0varAsv5IGjSs/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  gen:unableToAttend a gen:RegularRoleProperty;
+    rdfs:label "is unable to attend" .
+  
+  sub:agent a nt:AgentPlaceholder, nt:ExternalUriPlaceholder;
+    rdfs:label "choose the agent who is unable to attend";
+    nt:hasDefaultValue nt:CREATOR .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication declares that the given agent is unable to attend an event, which meeting minutes commonly call \"regrets\". This is the counterpart of \"Declaring to plan to attend an event\" and uses its own predicate, gen:unableToAttend, so that regrets are never mixed up with actual participation. For the declaration to show up on the event page, the event needs to have the \"Regrets\" role attached, which the general regular meeting preset provides.";
+    rdfs:label "Declaring to be unable to attend an event";
+    nt:hasNanopubLabelPattern "${agent} is unable to attend ${space}";
+    nt:hasStatement sub:st1;
+    nt:hasTag "Spaces";
+    nt:hasTargetNanopubType gen:RoleInstantiation .
+  
+  sub:space a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "choose the event";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st1 rdf:object sub:space;
+    rdf:predicate gen:unableToAttend;
+    rdf:subject sub:agent .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-10-08T05:35:50Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Declaring to be unable to attend an event";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "lQuYovtZvgMxcCIdN1BchPzNZrQGu2GAIahHaJ2ZJsOmoaOZUaVQohXWokiPNj3MPb4I0eLVLziz+1ndfvuQYlbSF7smGGFTR77dWEIjtjq2hSDgSMaKk4yc3d6xGYct8lMH11tH6ks2j3J9erxnR6ocQMYqSpGkD4LTzPEZfAI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+
