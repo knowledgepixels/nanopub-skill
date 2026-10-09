@@ -1,0 +1,143 @@
+@prefix this: <https://w3id.org/np/RAhuoOErCYvU0QE7QuyU_WELHNa2-PtcwMFMTdgAXxYMo> .
+@prefix sub: <https://w3id.org/np/RAhuoOErCYvU0QE7QuyU_WELHNa2-PtcwMFMTdgAXxYMo/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-presentations-for-event-and-sub-events a grlc:grlc-query;
+    dct:description "Returns all presentations of the given event and of its sub-events, at any depth, with label, date and time, location, and the people involved - the presenter first where known, then the authors - plus the nanopub link, latest first. A presentation that starts at midnight and has no end time is taken to have a date only, which is shown without a time. Sub-events are the Spaces that the spaces repository's current state records as sub-spaces of the event, so only sub-space links accepted by the admins of both spaces count. Otherwise the same as Get presentations for event.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get presentations for event and its sub-events";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/3952cad1a6d2561f045d33e5e79c03e7264b0a492b8becf6c62656c596cf398c>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix wd: <http://www.wikidata.org/entity/>
+prefix schema: <https://schema.org/>
+prefix schemaold: <http://schema.org/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix pav: <http://purl.org/pav/>
+
+select ?presentation ?presentation_label ?date ?location ?people_multi_iri ?people_label_multi ?np (\"^\" as ?np_label) where {
+  {
+    select ?np ?presentation ?presentation_label ?startDate ?endDate ?location ?olddate
+           (group_concat(distinct ?spk; separator=\" \") as ?spkIris)
+           (group_concat(distinct ?spkLabel; separator=\"\\n\") as ?spkNames)
+           (group_concat(distinct ?auth; separator=\" \") as ?authIris)
+           (group_concat(distinct ?authLabel; separator=\"\\n\") as ?authNames)
+    where {
+      {
+        select distinct ?event where {
+          {
+            values ?_event_multi_iri {}
+            bind(?_event_multi_iri as ?event)
+          } union {
+            values ?_event_multi_iri {}
+            service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+              graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+              graph ?stateG { ?event npa:isSubSpaceOf+ ?_event_multi_iri . }
+            }
+          }
+        }
+      }
+      graph ?a {
+        ?presentation a wd:Q604733 .
+        ?presentation dct:isPartOf ?event .
+      }
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+        filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        ?np dct:created ?npdate .
+        ?np np:hasAssertion ?a .
+        ?np np:hasPublicationInfo ?pi .
+        ?np npx:introduces ?presentation .
+      }
+      {
+        select ?presentation (max(?npdate2) as ?latestdate) where {
+          graph npa:graph {
+            ?np2 npa:hasValidSignatureForPublicKeyHash ?pubkey2 .
+            filter not exists { ?npx2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+            filter not exists { ?np2 npx:hasNanopubType npx:ExampleNanopub . }
+            ?np2 dct:created ?npdate2 .
+            ?np2 npx:introduces ?presentation .
+          }
+        } group by ?presentation
+      }
+      filter(?npdate = ?latestdate)
+      optional { graph ?a { ?presentation rdfs:label ?presentation_label . } }
+      optional { graph ?a { ?presentation schema:startDate ?startDateA . } }
+      optional { graph ?a { ?presentation schemaold:startDate ?startDateB . } }
+      optional { graph ?a { ?presentation schema:endDate ?endDateA . } }
+      optional { graph ?a { ?presentation schemaold:endDate ?endDateB . } }
+      optional { graph ?a { ?presentation schema:location ?locationA . } }
+      optional { graph ?a { ?presentation schemaold:location ?locationB . } }
+      optional { graph ?a { ?presentation dct:date ?olddate . } }
+      optional { graph ?a { ?presentation wd:P823 ?spk . } }
+      optional { graph ?pi { ?spkNamed foaf:name ?spkName . } filter(?spkNamed = ?spk) }
+      bind(coalesce(?spkName, str(?spk)) as ?spkLabel)
+      optional {
+        graph ?a { ?presentation pav:authoredBy ?auth . }
+        filter not exists { graph ?a { ?presentation wd:P823 ?auth . } }
+      }
+      optional { graph ?pi { ?authNamed foaf:name ?authName . } filter(?authNamed = ?auth) }
+      bind(coalesce(?authName, str(?auth)) as ?authLabel)
+      bind(coalesce(?startDateA, ?startDateB) as ?startDate)
+      bind(coalesce(?endDateA, ?endDateB) as ?endDate)
+      bind(coalesce(?locationA, ?locationB) as ?location)
+    }
+    group by ?np ?presentation ?presentation_label ?startDate ?endDate ?location ?olddate
+  }
+  bind(coalesce(strbefore(str(?startDate), \"T\"), str(?olddate)) as ?day)
+  bind(if(!bound(?endDate) && substr(strafter(str(?startDate), \"T\"), 1, 8) = \"00:00:00\", \"\", substr(strafter(str(?startDate), \"T\"), 1, 5)) as ?starttime)
+  bind(substr(strafter(str(?endDate), \"T\"), 1, 5) as ?endtime)
+  bind(coalesce(concat(?starttime, \"\\u2013\", ?endtime), ?starttime) as ?time)
+  bind(if(bound(?time) && strlen(?time) > 0, concat(?day, \" \", ?time), ?day) as ?date)
+  bind(coalesce(str(?startDate), str(?olddate)) as ?sortkey)
+  bind(if(strlen(?spkIris) > 0 && strlen(?authIris) > 0, concat(?spkIris, \" \", ?authIris),
+       concat(?spkIris, ?authIris)) as ?people_multi_iri)
+  bind(if(strlen(?spkNames) > 0 && strlen(?authNames) > 0, concat(?spkNames, \"\\n\", ?authNames),
+       concat(?spkNames, ?authNames)) as ?people_label_multi)
+} order by desc(?sortkey)
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo <https://orcid.org/0000-0001-8492-0354> .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-10-02T13:04:05Z"^^xsd:dateTime;
+    dct:creator <https://orcid.org/0000-0001-8492-0354>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-presentations-for-event-and-sub-events;
+    npx:supersedes <https://w3id.org/np/RAD_V-Sa_BeeebmrpX0Y_XibcBOrMSyTWNYyFiwFEwz6s>;
+    rdfs:label "Get presentations for event and its sub-events";
+    prov:wasDerivedFrom <https://w3id.org/np/RAza14obosgDGsnTP6JvhfrXWcQNX_AaHTHlKFMQlULpk>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+i9DV8ynzO944pYkYsDwtlqJHuk+b7FQt6Bb4TIQSDX3jGUURn6WpaNwESHmgMLWSydaH5XlabMzuqpPL4iyB+IAzvwIxdJBLhe39EQMu2j+FZ/5d/xu/gO3nZw2KoEvJ7cJisabuI05OylIRSJ+OG5CmzFxnjojUEJeCFi1njY1InhXrb0yHud9b1ifzweoN6YYOBecKs1gTOaT2bf+t4Wgzg3M0PmRVZ4F0OALsnh4T5+x7kFtiPcDKNpORi585JjKCZ4kczIF6oUKcwgC0kmIY97jtLqSLcXRkxHx5CDI6qz4XlRFs1ZbCUdSlzjdPZAkaBcNem1gIhWzkHkEnQIDAQAB";
+    npx:hasSignature "SUVty8dr6WlzDOFzAHwns3nX3umB8YQ+hUW6pxsAHM4TA1wUbYfYNlJ0cD5rRGzV4QKxqyGFgCHOv1FngQQlygM61yJWGj/eu/ZDOuaTZAQfKdyAZznHCsXHyX28toAjm6Yyll3xAVp7stc8QLFrmiaFcsNtp9A5D83zn9bjODXqjwg3tEmn1eEhQMqxbfzLpbClolGAVOZPiMV03Lb1rZoE8OHVt6KAVhBWQMEWhviqzNRuBTJAycXBjabJqZpKARMBWQHoH3cJgNiSzPTWFT+7IVsoOwnwGEIMjFjubGsvvihRB9AB4gmt0OePHgQWWMkYN+WpguiA5lIFjhSTcw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://orcid.org/0000-0001-8492-0354> .
+}
+

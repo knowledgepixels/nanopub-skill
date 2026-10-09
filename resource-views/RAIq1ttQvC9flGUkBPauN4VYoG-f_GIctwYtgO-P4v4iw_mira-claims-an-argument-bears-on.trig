@@ -1,0 +1,59 @@
+@prefix this: <https://w3id.org/np/RAIq1ttQvC9flGUkBPauN4VYoG-f_GIctwYtgO-P4v4iw> .
+@prefix sub: <https://w3id.org/np/RAIq1ttQvC9flGUkBPauN4VYoG-f_GIctwYtgO-P4v4iw/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix mira: <http://purl.org/mira-science/mira#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:mira-bears-on-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:viewKind;
+    dct:title "⚖ Bears on";
+    rdfs:label "MIRA claims an argument bears on";
+    gen:appliesToInstancesOf mira:Claim, mira:Evidence;
+    gen:governedBy <https://w3id.org/spaces/mira>;
+    gen:hasPageSize "20";
+    gen:hasStructuralPosition "6.1.miraBearsOn";
+    gen:hasViewQuery <https://w3id.org/np/RAa7Tj5jNcuGC1506XaebZaHA034Ubx6oYuLla8XW7Ctk/get-mira-bears-on>;
+    gen:hasViewQueryTargetField "partid" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-01T12:06:21Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:mira-bears-on-view;
+    npx:introduces sub:viewKind;
+    rdfs:label "MIRA claims an argument bears on";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAJfQoTn4f7e8qHl0MYmn15qiHydwhr4F8Ow7agpMkWsE/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "RP1AxXssoRWf5tocIO+LdRj+HuiwBsHZkzUAgsH1Kad3Ido3sh4i/vXRcE2p0Ifog9rKnNyir6cvvYRYVa4p1OXYHL5cO7LV5wyDLZ8JnQZB8cJiQ4/jYLJSM4Is6YLKxsBvRpfovaeHv4Z9Qg3VMDfQ/+T3/ETVPWU9m+cpil0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

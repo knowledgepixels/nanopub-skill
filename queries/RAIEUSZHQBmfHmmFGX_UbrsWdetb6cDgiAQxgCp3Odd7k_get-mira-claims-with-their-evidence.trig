@@ -1,0 +1,118 @@
+@prefix this: <https://w3id.org/np/RAIEUSZHQBmfHmmFGX_UbrsWdetb6cDgiAQxgCp3Odd7k> .
+@prefix sub: <https://w3id.org/np/RAIEUSZHQBmfHmmFGX_UbrsWdetb6cDgiAQxgCp3Odd7k/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-mira-claims-with-evidence a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Lists every MIRA claim with a count of the evidence items observing it, a tally of the arguments supporting and opposing it, and a derived status: contested when both stances exist, otherwise supported, disputed, \"no stance yet\" when evidence exists but no judgement has been made, or \"no evidence yet\". The evidence count and the stance counts are separate on purpose: in MIRA an observation of a claim is neutral. A flags column carries record-level markers such as Example, and the creator and date come from the nanopublication stating the claim. Runs against the type repository of the shared MIRA record type, so the endpoint is coupled to that type IRI (https://w3id.org/spaces/mira/r/MiraRecord). Flags are read from npx:hasNanopubType via a values table, so a further marker is one row.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get MIRA claims with their evidence";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/5ee93356ac9163d743a44466ee5cae3e537a0bb429b81354f72799d7f700c947>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix mira: <http://purl.org/mira-science/mira#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?claim ?claim_label ?flags ?status ?evidence ?supporting ?opposing
+       ?creator ?creator_label ?date ?np (\"^\" as ?np_label) where {
+  {
+    select ?claim (sample(?t) as ?claim_label) where {
+      graph ?ca { ?claim a mira:Claim ; dct:title ?t . }
+    } group by ?claim
+  }
+  # Evidence items observing this claim. Deliberately separate from the stance counts
+  # below: in MIRA an observation of a claim is neutral, and supports/opposes is a
+  # further judgement that may never be made.
+  optional {
+    select ?claim (count(distinct ?e) as ?evd) where {
+      graph ?eg { ?e mira:observationStatement ?claim . }
+    } group by ?claim
+  }
+  optional {
+    select ?claim (count(distinct ?s) as ?sup) where {
+      graph ?sg { ?s mira:supports ?claim . }
+    } group by ?claim
+  }
+  optional {
+    select ?claim (count(distinct ?o) as ?opp) where {
+      graph ?og { ?o mira:opposes ?claim . }
+    } group by ?claim
+  }
+  bind(coalesce(?evd, 0) as ?evidence)
+  bind(coalesce(?sup, 0) as ?supporting)
+  bind(coalesce(?opp, 0) as ?opposing)
+  # A claim with evidence but no stance is not \"no evidence yet\": that reads as false
+  # on imported records, where the source expresses observation without judgement.
+  bind(if(?supporting > 0 && ?opposing > 0, \"contested\",
+       if(?supporting > 0, \"supported\",
+       if(?opposing > 0, \"disputed\",
+       if(?evidence > 0, \"no stance yet\", \"no evidence yet\")))) as ?status)
+  # pubinfo triples are mirrored into npa:graph, so pin the graph: a variable graph
+  # here would match both the nanopub's own pubinfo and npa:graph, doubling rows.
+  # The type repository holds only the current version, so ?np is unambiguous.
+  graph npa:graph { ?np npx:introduces ?claim ; dct:creator ?creator ; dct:created ?date . }
+  # The creator's name lives in that nanopublication's own pubinfo graph; pin it there
+  # too, since foaf:name for the same agent occurs in many nanopubs' pubinfo.
+  optional {
+    select ?np (sample(?n) as ?creatorName) where {
+      graph npa:graph { ?np np:hasPublicationInfo ?pi ; dct:creator ?c . }
+      graph ?pi { ?c foaf:name ?n . }
+    } group by ?np
+  }
+  bind(coalesce(?creatorName, \"\") as ?creator_label)
+  # Record-level flags. To add a flag, add one row to the values table below; the
+  # marker is read from the nanopublication's npx:hasNanopubType.
+  optional {
+    select ?np (group_concat(distinct ?flag; separator=\", \") as ?flagList) where {
+      graph npa:graph { ?np npx:hasNanopubType ?flagType . }
+      values (?flagType ?flag) {
+        (npx:ExampleNanopub \"Example\")
+      }
+    } group by ?np
+  }
+  bind(coalesce(?flagList, \"\") as ?flags)
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-02T08:52:07Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-mira-claims-with-evidence;
+    npx:supersedes <https://w3id.org/np/RAEJmOPmWNETRWrc2aE4jMjtGaLXkkEDJ0S0DHWJKsZOQ>;
+    rdfs:label "Get MIRA claims with their evidence";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "B6tKzmlzNMzhG52JuOQyhQoqk62lkhlC8jEO5ZC75V79kFdeLyrXNASpADZbmGhYmpRUMR2wdbf3HqOnHcnu1xOy5m5g2S0ERiRz0AzjpYuBrO3VTXke8Xl2WWMD7lnjjvz79USha+RXBWLf1ScYf2WB80CIKcgas/DUC8UnBPk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

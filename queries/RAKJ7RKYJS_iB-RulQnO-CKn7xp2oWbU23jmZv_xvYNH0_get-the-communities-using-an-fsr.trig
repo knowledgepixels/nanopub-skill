@@ -1,0 +1,94 @@
+@prefix this: <https://w3id.org/np/RAKJ7RKYJS_iB-RulQnO-CKn7xp2oWbU23jmZv_xvYNH0> .
+@prefix sub: <https://w3id.org/np/RAKJ7RKYJS_iB-RulQnO-CKn7xp2oWbU23jmZv_xvYNH0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-fsr-communities a grlc:grlc-query;
+    dct:description "For a FAIR Supporting Resource (FSR), lists the FAIR Implementation Communities whose FIP declarations refer to it -- one row per community, showing the community name as a link and nothing else. The earlier version put the declaration details (type, questions, FAIR principles, kind of use, declaration count) in the same table, which made it hard to read off simply who uses the resource. Community names are taken from the current community nanopublication, falling back to a label from any earlier version and finally to the identifier fragment, so that a community whose description nanopublication has been superseded still shows a name rather than a bare URI; four of the seventy-four communities of the DOI resource were affected. Ordered by name, case-insensitively. The community column is projected as community_noheader so that the table renders the names without a column header, the panel title alone saying what the list is.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the communities using an FSR";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+
+select (?community as ?community_noheader)
+  (coalesce(min(?preferred_label), min(?any_label), min(?fallback_label)) as ?community_label)
+  (min(?cnp) as ?np) (\"^\" as ?np_label)
+where {
+  graph npa:graph {
+    ?dnp npx:hasNanopubType fip:FIP-Declaration ; np:hasAssertion ?da ; npa:hasValidSignatureForPublicKey ?dpk .
+    filter not exists { ?dx npx:invalidates ?dnp ; npa:hasValidSignatureForPublicKey ?dpk . }
+  }
+  graph ?da {
+    ?decl a fip:FIP-Declaration ; fip:declared-by ?community .
+    { ?decl fip:declares-current-use-of ?_fsr_iri }
+    union { ?decl fip:declares-planned-use-of ?_fsr_iri }
+    union { ?decl fip:declares-planned-replacement-of ?_fsr_iri }
+    union { ?decl fip:declares-replacement-from ?_fsr_iri }
+    union { ?decl fip:declares-replacement-to ?_fsr_iri }
+  }
+  bind(replace(replace(str(?community), \"^.*[/#]\", \"\"), \"-\", \" \") as ?fallback_label)
+  # Preferred: the label from a current (non-invalidated) community nanopublication.
+  optional {
+    graph npa:graph {
+      ?cnp npx:hasNanopubType fip:FAIR-Implementation-Community ; npx:introduces|npx:describes ?community ;
+           np:hasAssertion ?ca ; npa:hasValidSignatureForPublicKey ?cpk .
+      filter not exists { ?cx npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKey ?cpk . }
+    }
+    graph ?ca { ?community rdfs:label ?preferred_label }
+  }
+  # Fallback: a label from any community nanopublication, so that communities whose
+  # description nanopublication has been superseded still show a name, not a bare URI.
+  optional {
+    graph npa:graph { ?anp npx:introduces|npx:describes ?community ; np:hasAssertion ?aa . }
+    graph ?aa { ?community rdfs:label ?any_label }
+  }
+} group by ?community
+order by lcase(str(coalesce(min(?preferred_label), min(?any_label), min(?fallback_label))))
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-18T06:23:43Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-fsr-communities;
+    npx:supersedes <https://w3id.org/np/RA2WoJYiVOOTTwjMWIdDoXT1nO0zEJA5EF6z9aArVPdsk>;
+    rdfs:label "Get the communities using an FSR";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzZAkv4Mu1YSUxQMriBnhYunqosX5wpuQ3FjUyzW8wTC51wjCmhsChyhS+mCx7Od+2MTDpdhxDWA+pH1r9AX508X2rIY/sbpMS+pd56e0qKPQ0t4folln1TgamPN9iOlY/yLc2x27AdipWIGXUdtL2iAcb+P/Y5dQS2AkHMS3lP2e5JBL5/bD/10qvTLKvdsqIKts8qjuLpxr9CFbsS2gLjMkXL5D2IsJ0cL5sgmIfS1inLVxIfXrS/OgqYNFqeNznUYCVWfo0g7DKjnjiICz3omeQeJFLYwlJ6PhUhYDQS6O318DGwUCwhnuXbBbwL9evZa2I/0Pwu5xpZdNLYJ5UwIDAQAB";
+    npx:hasSignature "R5/TupmWyNxvTEpbUm1MucxRrQJS0H2Ogg3DDzjgidRViVFnqHinPJ62OCOpTlYQxk8NalZnKuDu15p13LMKTZnbCnJXn6cV3XfXvSC0pZDKEiqHH/r4zqzNZLdyxtkry5Uby2AXEhKJmO4EkHtSga0RpZNV/vqY9fKjAiIq47LaHHRdryoCIxlU8V6Zmm1SqcXo0Su65cmQ2sNhqPdhZYoUOLwb0hhfCP20Vw4sjSpz78gCatHQatFICYwL3oEMXV6aYtSSrENjBd0Cri9WXTMJWPiSmbR9v8HUL8ilj5OtYCcjtgtALoMhcPfJjOD3wya9M94HXrOuglfdrLvXKQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot> .
+}
+

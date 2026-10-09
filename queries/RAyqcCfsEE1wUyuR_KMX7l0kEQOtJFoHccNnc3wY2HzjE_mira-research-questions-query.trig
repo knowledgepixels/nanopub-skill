@@ -1,0 +1,98 @@
+@prefix this: <https://w3id.org/np/RAyqcCfsEE1wUyuR_KMX7l0kEQOtJFoHccNnc3wY2HzjE> .
+@prefix sub: <https://w3id.org/np/RAyqcCfsEE1wUyuR_KMX7l0kEQOtJFoHccNnc3wY2HzjE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-mira-questions a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Lists every MIRA research question with how many claims answer it, how much evidence bears on those claims, and a derived state: unanswered when no claim addresses it, answered but without evidence yet, or under investigation. Surfaces the questions a field has left open. Runs against the shared MIRA record type repository.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "MIRA research questions (query)";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/5ee93356ac9163d743a44466ee5cae3e537a0bb429b81354f72799d7f700c947>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix mira: <http://purl.org/mira-science/mira#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?question ?question_label ?flags ?state ?claims ?evidence
+       ?creator ?creator_label ?date ?np (\"^\" as ?np_label) where {
+  {
+    select ?question (sample(?t) as ?question_label) where {
+      graph ?qa { ?question a mira:Question ; dct:title ?t . }
+    } group by ?question
+  }
+  optional {
+    select ?question (count(distinct ?c) as ?nclaims) where {
+      graph ?ca { ?c mira:addresses ?question . }
+    } group by ?question
+  }
+  # evidence bearing on any claim that addresses this question
+  optional {
+    select ?question (count(distinct ?e) as ?nev) where {
+      graph ?ca2 { ?c2 mira:addresses ?question . }
+      graph ?eg { ?e ?stance ?c2 . }
+      values ?stance { mira:supports mira:opposes }
+    } group by ?question
+  }
+  bind(coalesce(?nclaims, 0) as ?claims)
+  bind(coalesce(?nev, 0) as ?evidence)
+  bind(if(?claims = 0, \"unanswered\",
+       if(?evidence = 0, \"answered, no evidence yet\", \"under investigation\")) as ?state)
+  graph npa:graph { ?np npx:introduces ?question ; dct:creator ?creator ; dct:created ?date . }
+  optional {
+    select ?np (sample(?n) as ?creatorName) where {
+      graph npa:graph { ?np np:hasPublicationInfo ?pi ; dct:creator ?c3 . }
+      graph ?pi { ?c3 foaf:name ?n . }
+    } group by ?np
+  }
+  bind(coalesce(?creatorName, '') as ?creator_label)
+  optional {
+    select ?np (group_concat(distinct ?flag; separator=\", \") as ?flagList) where {
+      graph npa:graph { ?np npx:hasNanopubType ?flagType . }
+      values (?flagType ?flag) { (npx:ExampleNanopub \"Example\") }
+    } group by ?np
+  }
+  bind(coalesce(?flagList, '') as ?flags)
+} order by ?state""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-01T12:06:21Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-mira-questions;
+    rdfs:label "MIRA research questions (query)";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Gqmi91ChVUx4VX0DKCb09M3IthuHd4yUEW58Xsthkf9bZ/ZUUJsC7ho04oY+qj/BrVAOAy/7veZSIJTdi0fVhkhMCFq5nO0OCk6CjXv5Mux0/pR/196OpbKLoplTseWUpTGAcwFscjL/uSBV7zIUyxanlB/jwvTP4VWOp9Sq0WM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

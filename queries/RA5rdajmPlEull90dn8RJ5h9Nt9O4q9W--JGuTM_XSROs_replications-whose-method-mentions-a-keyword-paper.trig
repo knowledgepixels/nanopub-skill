@@ -1,0 +1,78 @@
+@prefix this: <https://w3id.org/np/RA5rdajmPlEull90dn8RJ5h9Nt9O4q9W--JGuTM_XSROs> .
+@prefix sub: <https://w3id.org/np/RA5rdajmPlEull90dn8RJ5h9Nt9O4q9W--JGuTM_XSROs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:replications-by-method-keyword a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description """Finds FORRT replication studies whose methodology text contains a keyword (e.g. \"sea surface temperature\", \"survey\"), and returns for each the original paper 
+(DOI), the replication outcome, its verdict (Validated / Partially supported / Contradicted) and the limitations the replicators recorded. Walks the FORRT nanopublication ch
+ain claim -> study -> outcome, skipping superseded outcomes. Used in the talk \"Thirty agent-assisted replications, published as nanopublications: the honest debrief\" (FORRT 
+AI in Metascience, 29 Sep 2026).""";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Replications whose method mentions a keyword: paper, verdict and admitted limitations";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """PREFIX slt:  <https://w3id.org/sciencelive/o/terms/>
+PREFIX np:   <http://www.nanopub.org/nschema#>
+PREFIX npx:  <http://purl.org/nanopub/x/>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dct:  <http://purl.org/dc/terms/>
+
+# Replications whose study method mentions a keyword:
+# the paper they test, the verdict, and the limitations they admit.
+# Walks the FORRT chain: claim -> study (method text) -> outcome.
+SELECT DISTINCT ?paper ?verdict ?outcome ?outcome_label ?limitations WHERE {
+  GRAPH ?gs { ?study slt:targetsClaim ?claimRef ;
+                     slt:hasMethodologyDescription ?method }
+  FILTER (CONTAINS(LCASE(STR(?method)), LCASE(STR(?_keyword))))
+  GRAPH ?gc { ?claim dct:source ?paper }
+  FILTER (STRSTARTS(STR(?claim), STR(?claimRef)) || STRSTARTS(STR(?claimRef), STR(?claim)))
+  ?onp np:hasAssertion ?go .
+  GRAPH ?go { ?outcome slt:isOutcomeOf ?studyRef ;
+                       slt:hasValidationStatus ?verdict ;
+                       slt:hasLimitationsDescription ?limitations ;
+                       rdfs:label ?outcome_label }
+  FILTER (STRSTARTS(STR(?study), STR(?studyRef)) || STRSTARTS(STR(?studyRef), STR(?study)))
+  FILTER NOT EXISTS { GRAPH ?x { ?newer npx:supersedes ?onp } }
+}
+ORDER BY ?paper""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1784-2920 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1784-2920 foaf:name "Anne Fouilloux" .
+  
+  this: dct:created "2026-09-25T18:30:47.451Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1784-2920;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:replications-by-method-keyword;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDWv2pJnmDsBOq8OlT1aSvYXSuWT34WOp4FYqEzdnn2F0kqzcFevBqWGZDxJWC0lqCrDEuNfp2QFyPe/+nES9dlHGYIhqPi68fwK6ZiNUotRFxXou+rjFznVvUxtCL8Ede79EBHwWN61QtwSIcU12bLoZsNPFlqQASQ93BJuKlihwIDAQAB";
+    npx:hasSignature "paVfKqMXH2ILrg2hQdQQtDy8jjqNDnYBDdTi8NwECX75y/18VLSDSlK+w0PboAZJW+JcQGzcm8WMUwqkE//w2x2s5A7rdAWdJISSj5FitYQ77I2JnGzd3Bu8HaM9JmOqlZ7c/Q8Ey13I+q8ZBuG8QLfkzB5ZAfODymEgAwQc9DM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1784-2920 .
+}
+

@@ -1,0 +1,93 @@
+@prefix this: <https://w3id.org/np/RA177VGaNZhfVHwJkdZuwWwQ0LP9wGImQbRAlJIPZqfRQ> .
+@prefix sub: <https://w3id.org/np/RA177VGaNZhfVHwJkdZuwWwQ0LP9wGImQbRAlJIPZqfRQ/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-ongoing-and-upcoming-events a grlc:grlc-query;
+    dct:description "Returns all ongoing and upcoming events that are defined as Spaces, with ongoing ones marked as ongoing instead of a date. Events starting on the same day are listed with overarching spaces before their sub-spaces.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get ongoing and upcoming events";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/8ad572d99071cc1ba0c16e54087b43594bdd9e8b2cfb62d2a0b16945fc49e53c>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix schema: <http://schema.org/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+select ?event ?event_label ?when ?np (\"^\" as ?np_label) where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np npx:introduces ?event .
+    ?np np:hasAssertion ?a .
+    ?np dct:created ?npDate .
+    filter not exists {
+      ?np2 npx:introduces ?event .
+      ?np2 npa:hasValidSignatureForPublicKeyHash ?pubkey2 .
+      filter not exists { ?npx2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+      ?np2 dct:created ?npDate2 .
+      filter(?npDate2 > ?npDate)
+    }
+  }
+  graph ?a {
+    ?event a gen:Space .
+    ?event a gen:Event .
+    ?event rdfs:label ?event_label .
+    ?event schema:startDate ?datetime .
+    optional { ?event schema:endDate ?endDatetime . }
+  }
+  bind(if(exists { graph ?a { ?event gen:isSubSpaceOf ?parentSpace . } }, 1, 0) as ?subSpaceOrder)
+  bind(xsd:date(substr(str(?datetime), 1, 10)) as ?date)
+  bind(xsd:date(substr(str(now()), 1, 10)) as ?today)
+  optional { bind(xsd:date(substr(str(?endDatetime), 1, 10)) as ?endDate) }
+  bind(if(bound(?endDate), ?endDate, ?date) as ?effectiveEnd)
+  filter(?effectiveEnd >= ?today)
+  bind(if(?date > ?today, 2, 1) as ?statusOrder)
+  bind(if(?date > ?today, str(?date), \"ongoing\") as ?when)
+} order by ?statusOrder ?date ?subSpaceOrder ?event_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-09T12:04:40Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-ongoing-and-upcoming-events;
+    npx:supersedes <https://w3id.org/np/RAnRxXMlHaXfb5RrNU47u7sZiVFwtBt0_cbCvqkxLvMRE>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "C+/SQXAvo2+F4wRfSzxTt3KL81L0526DUmHlKwOJZpkqd1CWIKrPsAEvsf1Wl0UJN/gxqy5Cb+1CfCmX7Ee6idHhM9JYcylTGyL7BuMj96BCKPUMcIeIrSiIgJvlsROEohW8+TbpSZEWZWEDPTShmbf+z7YL8EpvzZ/AbxoXE4s=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,82 @@
+@prefix this: <https://w3id.org/np/RAyGgvvl9RZJ3SZbtZUFEaVr1HVn4b8hvQjM5PCf8yorM> .
+@prefix sub: <https://w3id.org/np/RAyGgvvl9RZJ3SZbtZUFEaVr1HVn4b8hvQjM5PCf8yorM/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-mira-opposing-arguments a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Lists every MIRA claim or evidence item that opposes the claim on this page, with the kind of argument it is, who asserted the link and when. The link nanopublication is the one shown, since that is the act being attributed. Takes the part IRI in the partid placeholder.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the MIRA arguments that opposes a claim";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/5ee93356ac9163d743a44466ee5cae3e537a0bb429b81354f72799d7f700c947>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix dct: <http://purl.org/dc/terms/>
+prefix mira: <http://purl.org/mira-science/mira#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?argument ?argument_label ?kind ?asserted_by ?asserted_by_label ?date
+       ?np (\"^\" as ?np_label) where {
+  # the link itself: PREDICATE is an assertion triple, so it lives in exactly one graph
+  graph ?la { ?argument mira:opposes ?_partid_iri . }
+  # the nanopublication making that judgement -- who asserted it, and when
+  graph npa:graph { ?np np:hasAssertion ?la ; dct:creator ?asserted_by ; dct:created ?date . }
+  optional {
+    select ?np (sample(?n) as ?asserterName) where {
+      graph npa:graph { ?np np:hasPublicationInfo ?pi ; dct:creator ?c . }
+      graph ?pi { ?c foaf:name ?n . }
+    } group by ?np
+  }
+  bind(coalesce(?asserterName, '') as ?asserted_by_label)
+  # the argument's own statement and kind, from wherever it is typed; ?argument is always
+  # bound here, so this optional cannot cross-join
+  optional {
+    graph ?aa { ?argument a ?atype ; dct:title ?at . }
+    values (?atype ?atypeName) {
+      (mira:Evidence \"Evidence item\") (mira:Claim \"Claim\")
+    }
+  }
+  bind(coalesce(?at, '') as ?argument_label)
+  bind(coalesce(?atypeName, '') as ?kind)
+} order by ?date""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-01T11:41:52Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-mira-opposing-arguments;
+    rdfs:label "Get the MIRA arguments that opposes a claim";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ZxS6fH/YF5UnDL2jP7C6UPIUr66Fq3PqTnuTMamhmV6cslOFGQB8RCFAAxVD9V6x9lGvFQBJeMsPmfEHIpEOsvtb/6Z0fe1kHpbemgDox8pWAGLtH2zElZ4EmG4ByLomaYM6J8cYD3HrdOaJq1x/izxJTEq0FUSyGcEFqCUONdY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

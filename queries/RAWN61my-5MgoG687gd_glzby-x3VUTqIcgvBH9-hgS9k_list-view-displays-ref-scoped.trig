@@ -1,0 +1,361 @@
+@prefix this: <https://w3id.org/np/RAWN61my-5MgoG687gd_glzby-x3VUTqIcgvBH9-hgS9k> .
+@prefix sub: <https://w3id.org/np/RAWN61my-5MgoG687gd_glzby-x3VUTqIcgvBH9-hgS9k/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:list-view-displays a grlc:grlc-query;
+    dct:description "Ref-scoped view displays for a single space ref. Like list-view-displays but takes TWO inputs: the space IRI (resource) and the ref's root nanopub (root_np). The authority gate is scoped to admins/maintainers of THAT ref (npa:forSpaceRef resolved from root_np) rather than the space IRI merged across all its refs. Both inputs are concrete (VALUES) so federation bindings propagate (a single auto-detecting param can't: a service-derived resource IRI does not push into the federated SERVICE blocks). Space-only companion to list-view-displays; same columns. Regenerate from the latest list-view-displays by adding the root_np VALUES, the ?passedRef npa:rootNanopub resolution, and npa:forSpaceRef ?passedRef on the gate's RoleInstantiation. Space-governed versions (gen:governedBy, nanodash docs/views-and-presets-as-maintained-resources.md): a referenced version declaring gen:governedBy resolves to the newest version of its (kind, space) pair signed by a current member+ (admin/maintainer/member) of that space -- with the kind validated as a maintained resource of the space -- taking precedence over the supersedes-based head; without a valid governed candidate the pinned version stands. Federation footprint (2026-08-20): endpoint rebased onto repo/full, so the former SERVICE hops to repo/full (preset branch) and to the ResourceView type repo (latest-version resolution, governed-version candidates and metadata) are local patterns; only the space-state lookups remain federated, to repo/spaces. The latest-version resolution was rewritten from a run-once repo-wide max-date sub-select (which cannot see outer bindings and would enumerate the whole repository on repo/full, timing out) to bound per-view lookups choosing the same-key, non-invalidated supersedes-head with no newer such sibling -- same heads, ties preserved. In the governed-resolution sub-select the candidate block is wrapped in a projecting sub-select; this wrapper is load-bearing on rdf4j 6.0.0, where bindings from raw local patterns are silently not joined into a following SERVICE clause. Validated result-identical to the previous version across spaces, refs, user and resource pages (columns produced by sample(), non-deterministic by definition, may vary as they already did between runs of the previous version). The per-hop loopback federation was an amplifier of the rdf4j connection-pool deadlock behind the fleet-wide /api wedges. Adds three columns for the per-row override actions (nanodash issue #664): override_target, the row's own view-display nanopublication, which the override action reopens in place; override_template, the template that nanopublication was created from, so each display reopens in the template it was made with; and override_view, the row's view, filled only on preset-borne rows. A preset-borne row has no view-display nanopublication of its own -- its source is the preset assignment -- so it cannot be overridden in place; it is overridden instead by publishing a standalone view display for the same view on this resource, which wins latest-wins over the preset-supplied one. override_target and override_view are exactly complementary, so each row is offered precisely one of the two override actions. All three are action-mapping sources and are therefore not rendered as table columns. They are produced by a wrapping projection that leaves the aggregation below unchanged; results on all previous columns are unaffected. Performance rewrite (2026-09-25; 55-60s+ and 502s on the Nanodash home page, ~3s after, rows identical): (1) the authority gate is materialized once as a single row (?ownClass, ?authKeys: the space-separated key hashes of the admins/maintainers) by a sub-select sharing no variable with the rest of the query, and checked with contains(?authKeys, ?pubkey) after the display/preset union -- joining the gate's ?pubkey rows directly made rdf4j start the display and preset lookups from the signing keys, i.e. walk every nanopub those keys ever signed (13k+ for knowledgepixels/nanodash); (2) in the latest-version resolution the same-key conditions compare separately bound key-hash variables by FILTER instead of sharing ?vKey as a join variable, for the same reason; (3) the governed winners of all (kind, space) pairs are computed once as a single '|kind>space>winner|' string and looked up per pin, instead of a winner sub-select (with its SERVICE) joined on ?pinKind/?pinSpace inside the OPTIONAL, which rdf4j re-ran per row.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "List view displays (ref-scoped)";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+
+# Wrapping projection adding the three columns the per-row override actions need:
+# the display's own nanopublication, the template it was created from, and -- for
+# preset-borne rows, which have no display nanopublication of their own -- the view
+# to pin here with a fresh standalone display. All three are action-mapping sources
+# and are therefore hidden from the rendered table. They are added here, around the
+# untouched aggregation below, so that the resolution and latest-wins logic keeps
+# evaluating exactly as before.
+select ?view ?view_label ?displayed_here ?position ?position_label
+       ?via_preset ?via_preset_label ?added_by ?deactivateView ?date_added
+       (if(bound(?via_preset), \"\", str(?np)) as ?override_target)
+       (if(bound(?via_preset), str(?view), \"\") as ?override_view)
+       (str(?srcTemplate) as ?override_template)
+       ?np ?np_label
+where {
+{
+select ?view
+       (sample(?view_label) as ?view_label)
+       (sample(?displayed_here) as ?displayed_here)
+       (sample(?position) as ?position)
+       (substr(sample(?position), 1, 3) as ?position_label)
+       (sample(?via_preset) as ?via_preset)
+       (sample(?via_preset_label) as ?via_preset_label)
+       (sample(?added_by) as ?added_by)
+       (sample(?deactivateView) as ?deactivateView)
+       (max(?date_added) as ?date_added)
+       (iri(strafter(max(concat(str(?date_added), \"\\\\t\", str(?np))), \"\\\\t\")) as ?np)
+       (\"^\" as ?np_label) where {
+select ?view ?view_label ?displayed_here ?position
+       (if(?displayed_here = \"\", ?target_multi_iri_raw, \"\") as ?target_multi_iri)
+       (if(?displayed_here = \"\", ?target_label_multi_raw, \"\") as ?target_label_multi)
+       ?via_preset ?via_preset_label ?added_by ?date_added ?deactivateView ?np ?np_label
+where {
+ select ?view ?view_label ?position
+       (if(bound(?presetScope), ?presetScope,
+         if(bound(?preset),
+            if(?aVHasTarget > 0, if(?aVMatch > 0, \"✓\", \"\"), \"✓\"),
+          if(?aDApplyHere > 0, \"✓\",
+           if(?aDHasTarget > 0, if(?aDMatch > 0, \"✓\", \"\"),
+            if(?aDHasApply > 0, \"\",
+             if(?aVHasTarget > 0, if(?aVMatch > 0, \"✓\", \"\"), \"✓\")))))) as ?displayed_here)
+       ?target_multi_iri_raw ?target_label_multi_raw
+       (?preset as ?via_preset) (?preset_label as ?via_preset_label)
+       (?user as ?added_by) (?date as ?date_added)
+       ?deactivateView ?np (\"^\" as ?np_label) where {
+  select ?view ?view_label ?position ?preset ?preset_label ?presetScope ?user ?date ?deactivateView ?np
+         (max(?fDApplyHere) as ?aDApplyHere) (max(?fDHasApply) as ?aDHasApply) (max(?fDHasTarget) as ?aDHasTarget)
+         (max(?fDMatch) as ?aDMatch) (max(?fVHasTarget) as ?aVHasTarget) (max(?fVMatch) as ?aVMatch)
+         (group_concat(distinct ?targetIri; separator=\" \") as ?target_multi_iri_raw)
+         (group_concat(distinct ?targetLabel; separator=\"\\\\n\") as ?target_label_multi_raw)
+  where {
+  {
+    select ?_resource_multi_iri ?viewRef ?viewLatest ?view_label ?position ?preset ?preset_label ?presetScope ?user ?date ?np
+           ?ownClass ?dApply ?dTarget ?effVTarget ?pinSpace ?governedLatest where {
+      values ?_resource_multi_iri {}
+      # Governed winners of all (kind, space) pairs, computed once as a single row
+      # (see the space-governed resolution below).
+      {
+        select (concat(\"|\", group_concat(concat(str(?wKind), \">\", str(?wSpace), \">\", str(?wLatest)); separator=\"|\"), \"|\") as ?govWinners) where {
+          select ?wKind ?wSpace (iri(strafter(max(concat(str(?cDate), \">\", str(?cver))), \">\")) as ?wLatest) where {
+            # Candidate versions. The sub-select wrapper is LOAD-BEARING: on rdf4j 6.0.0,
+            # bindings from raw local patterns are silently NOT joined into a following
+            # SERVICE clause (the spaces lookup below); a projecting sub-select restores
+            # the join (verified empirically, 2026-08-20).
+            { select ?wKind ?wSpace ?cver ?cpk ?cDate where {
+              graph npa:graph {
+                ?cnp dct:created ?cDate ; npa:hasValidSignatureForPublicKeyHash ?cpk ; npx:embeds ?cver ; np:hasAssertion ?ca .
+                filter not exists { ?ci npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKeyHash ?cpk . }
+              }
+              graph ?ca { ?cver dct:isVersionOf ?wKind ; gen:governedBy ?wSpace . }
+            } }
+            service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+              graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?gsg . }
+              graph ?gsg {
+                ?wKind npa:isMaintainedBy ?wSpace ; npa:hasGoverningSpaceRef ?gref .
+                ?gri a gen:RoleInstantiation ; npa:forSpace ?wSpace ; npa:forSpaceRef ?gref ; npa:hasRoleType ?gtier ; npa:forAgent ?gag .
+                filter(?gtier = gen:AdminRole || ?gtier = gen:MaintainerRole || ?gtier = gen:MemberRole)
+                ?gacct a npa:AccountState ; npa:agent ?gag ; npa:pubkey ?cpk .
+              }
+            }
+          } group by ?wKind ?wSpace
+        }
+      }
+      # Authority gate, materialized ONCE as a single row (?ownClass, ?authKeys) that
+      # shares no variable with the rest of this block. Joining the gate's ?pubkey rows
+      # directly made rdf4j start the display/preset lookups from the signing keys --
+      # i.e. walk every nanopub the space's admins ever signed (13k+ for knowledgepixels/
+      # nanodash) -- instead of from the few displays of this resource. The keys are
+      # checked with contains() after the union instead (hex hashes, space-separated).
+      {
+        select ?ownClass ?authKeys where {
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            select (sample(?oc) as ?ownClass) (group_concat(distinct ?pubkey; separator=\" \") as ?authKeys) where {
+              values ?_resource_multi_iri {}
+              values ?_root_np_multi_iri {}
+              graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+              graph npa:spacesGraph { ?passedRef npa:rootNanopub ?_root_np_multi_iri . }
+              {
+                # Authority gate (issue #130 / nanodash#510): a single mandatory hop through the
+                # governing space ref, which covers both a maintained resource and a space itself
+                # (the reflexive self-edge), keyed on the role tier materialized on the
+                # RoleInstantiation since #125. Ref variant: the governing ref is pinned to
+                # ?passedRef (resolved from root_np), so authority cannot bleed across rival
+                # refs claiming the same space IRI.
+                graph ?stateG {
+                  ?_resource_multi_iri npa:hasGoverningSpaceRef ?passedRef .
+                  ?ri a gen:RoleInstantiation ; npa:forSpaceRef ?passedRef ; npa:hasRoleType ?roleType ; npa:forAgent ?authAgent .
+                  filter(?roleType = gen:AdminRole || ?roleType = gen:MaintainerRole)
+                  ?authAcct a npa:AccountState ; npa:agent ?authAgent ; npa:pubkey ?pubkey .
+                }
+              } union {
+                graph ?stateG { ?selfAcct a npa:AccountState ; npa:agent ?_resource_multi_iri ; npa:pubkey ?pubkey . }
+              }
+              bind(if(exists { graph ?stateG { ?_resource_multi_iri npa:isMaintainedBy ?anyMaintainer } }, gen:MaintainedResource,
+                   if(exists { graph ?stateG { ?ownAcc a npa:AccountState ; npa:agent ?_resource_multi_iri } }, gen:IndividualAgent,
+                   gen:Space)) as ?oc)
+            }
+          }
+        }
+      }
+      {
+        graph npa:graph {
+          ?np npx:hasNanopubType gen:ViewDisplay ;
+              npa:hasValidSignatureForPublicKeyHash ?pubkey ;
+              dct:created ?date ;
+              npx:embeds ?display ;
+              np:hasAssertion ?a .
+          filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+          optional { ?np npx:signedBy ?user }
+        }
+        graph ?a {
+          ?display gen:isDisplayOfView ?viewRef ;
+                   gen:isDisplayFor ?_resource_multi_iri .
+          optional {
+            values ?displayMode { gen:ActivatedViewDisplay gen:DeactivatedViewDisplay }
+            ?display a ?displayMode .
+          }
+          optional { ?display gen:appliesTo ?dApply . }
+          optional { ?display (gen:appliesToInstancesOf|gen:appliesToNamespace) ?dTarget . }
+        }
+      }
+      union
+      {
+        select ?viewRef ?displayMode ?preset ?preset_label ?presetScope ?user ?date ?np ?pubkey ?_resource_multi_iri {
+          {  # was: service repo/full — now local on the repo/full endpoint
+            graph npa:graph {
+              ?np npx:hasNanopubType gen:PresetAssignment ;
+                  npa:hasValidSignatureForPublicKeyHash ?pubkey ;
+                  dct:created ?date ;
+                  npx:embeds ?assignment ;
+                  np:hasAssertion ?a .
+              filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+              optional { ?np npx:signedBy ?user }
+            }
+            graph ?a {
+              ?assignment gen:isAssignmentFor ?_resource_multi_iri ;
+                          gen:isAssignmentOfPreset ?preset .
+              optional {
+                values ?displayMode { gen:ActivatedPresetAssignment gen:DeactivatedPresetAssignment }
+                ?assignment a ?displayMode .
+              }
+            }
+            filter not exists {
+              graph npa:graph {
+                ?np2 npx:hasNanopubType gen:PresetAssignment ;
+                    npa:hasValidSignatureForPublicKeyHash ?pubkey2 ;
+                    dct:created ?date2 ;
+                    npx:embeds ?assignment2 ;
+                    np:hasAssertion ?a2 .
+                filter not exists { ?npx2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+              }
+              graph ?a2 {
+                ?assignment2 a gen:DeactivatedPresetAssignment ;
+                            gen:isAssignmentFor ?_resource_multi_iri ;
+                            gen:isAssignmentOfPreset ?preset .
+              }
+              filter(?date2 > ?date)
+            }
+            graph npa:graph { ?presetNp npx:embeds ?preset ; np:hasAssertion ?pa . }
+            graph ?pa {
+              ?preset a gen:Preset .
+              optional { ?preset rdfs:label ?preset_label . }
+              { ?preset gen:hasTopLevelView ?viewRef . bind(\"✓\" as ?presetScope) }
+              union { ?preset gen:hasView ?viewRef }
+            }
+          }
+        }
+      }
+      filter(contains(?authKeys, ?pubkey))
+      optional {
+        graph npa:graph { ?np np:hasAssertion ?npAssertion . }
+        graph ?npAssertion { ?npDisplay gen:hasStructuralPosition ?dispPos . }
+      }
+      filter(!bound(?displayMode) || !contains(str(?displayMode), \"Deactivated\"))
+      filter not exists {
+        graph npa:graph {
+          ?np2 npx:hasNanopubType gen:ViewDisplay ;
+              npa:hasValidSignatureForPublicKeyHash ?pubkey2 ;
+              dct:created ?date2 ;
+              npx:embeds ?display2 ;
+              np:hasAssertion ?a2 .
+          filter not exists { ?npx2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+        }
+        graph ?a2 {
+          ?display2 a gen:DeactivatedViewDisplay ;
+                    gen:isDisplayOfView ?viewRef ;
+                    gen:isDisplayFor ?_resource_multi_iri .
+        }
+        filter(?date2 > ?date)
+      }
+      optional {
+        # Resolve ?viewRef to its latest same-key non-invalidated version. Was a
+        # service on the ResourceView type shard with a run-once max-date sub-select;
+        # a sub-select cannot see outer bindings, so localized on repo/full it would
+        # enumerate the whole repository (measured: times out >10s). Rewritten as
+        # BOUND point lookups per ?viewRef: the head is the supersedes-connected,
+        # same-key, non-invalidated version with no newer such sibling (ties kept,
+        # matching the old max+join). Filters stay OUTSIDE graph blocks (rdf4j
+        # planner trap).
+        # Same-key comparisons are FILTERs on separately bound key variables, never a
+        # shared join variable: a shared ?vKey let rdf4j start from the signing key and
+        # walk every nanopub signed with it (thousands for active keys), >10s per page.
+        graph npa:graph { ?vnp npx:embeds ?viewRef ; npa:hasValidSignatureForPublicKeyHash ?vKey . }
+        graph npa:networkGraph { ?headNp (npx:supersedes)* ?vnp . }
+        graph npa:graph { ?headNp npa:hasValidSignatureForPublicKeyHash ?hKey ; dct:created ?headDate ;
+                           npx:embeds ?viewLatest ; np:hasAssertion ?hva . }
+        filter(str(?hKey) = str(?vKey))
+        filter not exists { graph npa:graph { ?i2 npx:invalidates ?headNp ; npa:hasValidSignatureForPublicKeyHash ?i2Key . } filter(str(?i2Key) = str(?vKey)) }
+        filter not exists {
+          graph npa:networkGraph { ?h2 (npx:supersedes)* ?vnp . }
+          graph npa:graph { ?h2 npa:hasValidSignatureForPublicKeyHash ?h2Key ; dct:created ?h2Date . }
+          filter(str(?h2Key) = str(?vKey))
+          filter not exists { graph npa:graph { ?i3 npx:invalidates ?h2 ; npa:hasValidSignatureForPublicKeyHash ?i3Key . } filter(str(?i3Key) = str(?vKey)) }
+          filter(?h2Date > ?headDate)
+        }
+        graph ?hva { ?viewLatest dct:title ?supLabel . }
+        optional { graph ?hva { ?viewLatest gen:hasStructuralPosition ?viewPos . } }
+        optional { graph ?hva { ?viewLatest (gen:appliesToInstancesOf|gen:appliesToNamespace) ?vTarget . } }
+      }
+      # Space-governed resolution (gen:governedBy; nanodash docs/views-and-presets-as-
+      # maintained-resources.md): if the pinned version declares a governing space, the
+      # newest version of its (kind, space) pair signed by a current member+ of that
+      # space wins, with the kind validated as maintained by the space. No valid
+      # candidate -> the pin stands. The winners of ALL governed (kind, space) pairs are
+      # computed once, as a single \"|kind>space>winner|...\" string (?govWinners, bound by
+      # the zero-shared-variable sub-select at the top of this block), and looked up per
+      # pin by string. The previous shape joined the winner sub-select on ?pinKind/
+      # ?pinSpace inside this OPTIONAL, which made rdf4j re-run it -- SERVICE included --
+      # once per row. '>' and '|' cannot occur in IRIs, so the keys are unambiguous.
+      optional {
+        graph npa:graph { ?pinNp npx:embeds ?viewRef ; np:hasAssertion ?pinA . }
+        graph ?pinA { ?viewRef dct:isVersionOf ?pinKind ; gen:governedBy ?pinSpace0 . }
+      }
+      bind(coalesce(iri(strbefore(strafter(?govWinners, concat(\"|\", str(?pinKind), \">\", str(?pinSpace0), \">\")), \"|\")),
+                    <http://purl.org/nanopub/admin/none>) as ?govJoin)
+      optional {
+        # Governed-winner metadata. ?govJoin is a dummy IRI when there is no winner, so
+        # this lookup never runs unbound.
+        graph npa:graph { ?gnp npx:embeds ?govJoin ; np:hasAssertion ?gva . }
+        graph ?gva { ?govJoin dct:title ?gTitle . }
+        optional { graph ?gva { ?govJoin gen:hasStructuralPosition ?gPos . } }
+        optional { graph ?gva { ?govJoin (gen:appliesToInstancesOf|gen:appliesToNamespace) ?gTarget . } }
+      }
+      bind(if(bound(?gTitle), ?govJoin, ?unboundGov) as ?governedLatest)
+      bind(if(bound(?gTitle), ?pinSpace0, ?unboundGov) as ?pinSpace)
+      bind(if(bound(?governedLatest), ?gTitle, ?supLabel) as ?view_label)
+      bind(if(bound(?governedLatest), ?gPos, ?viewPos) as ?effViewPos)
+      bind(if(bound(?governedLatest), ?gTarget, ?vTarget) as ?effVTarget)
+      bind(coalesce(?dispPos, ?effViewPos, \"\") as ?position)
+    }
+  }
+  bind(if(coalesce(str(?dApply) = str(?_resource_multi_iri), false), 1, 0) as ?fDApplyHere)
+  bind(if(bound(?dApply), 1, 0) as ?fDHasApply)
+  bind(if(bound(?dTarget), 1, 0) as ?fDHasTarget)
+  bind(if(coalesce(str(?dTarget) = str(?ownClass), false) || coalesce(strstarts(str(?_resource_multi_iri), str(?dTarget)), false), 1, 0) as ?fDMatch)
+  bind(if(bound(?effVTarget), 1, 0) as ?fVHasTarget)
+  bind(if(coalesce(str(?effVTarget) = str(?ownClass), false) || coalesce(strstarts(str(?_resource_multi_iri), str(?effVTarget)), false), 1, 0) as ?fVMatch)
+  bind(coalesce(?dTarget, ?effVTarget) as ?targetIri)
+  bind(replace(str(?targetIri), \"^.*[/#]\", \"\") as ?targetLocalName)
+  bind(if(coalesce(strlen(?targetLocalName) > 0, false), ?targetLocalName, str(?targetIri)) as ?targetLabel)
+  bind(if(bound(?pinSpace), coalesce(?governedLatest, ?viewRef), coalesce(?viewLatest, ?viewRef)) as ?view)
+  bind(str(?viewRef) as ?deactivateView)
+  }
+  group by ?view ?view_label ?position ?preset ?preset_label ?presetScope ?user ?date ?deactivateView ?np
+ }
+}
+}
+group by ?view
+}
+# A preset-borne row's ?np is the preset assignment rather than a view display, so
+# there is nothing to override in place there; ?override_target is blanked for those
+# rows above, which hides that action (an empty raw-key mapping value hides the
+# button). Such a row is instead overridden by publishing a standalone view display
+# for the same view on this resource, which wins latest-wins over the preset-supplied
+# one -- that is what ?override_view feeds, and it is blank on every other row, so
+# exactly one of the two override actions is offered per row.
+optional {
+  graph npa:graph { ?np np:hasPublicationInfo ?srcPubinfo . }
+  graph ?srcPubinfo { ?np nt:wasCreatedFromTemplate ?srcTemplate . }
+}
+}
+order by desc(?displayed_here) ?position""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-25T06:37:09Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:list-view-displays;
+    npx:supersedes <https://w3id.org/np/RAKFhW1TQDVqTcaF0VYeF7WbWhFDhBu_URKi-V6klA9E4>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "XzFpSRxFK/4LkvAOPc8mHMAzSx+6xad05ZC0ZDONM9LDt/HIZ9ohcoxzGYnb0V1RSP0ef4i3vcBKcYebB/K2gvmNnYoSyLkijOf8AxXebleUSMXQ7wvQLpUzU2sKZzxkbdOlO/ZboUzAG3fOrB/X9t5ggQw6DT3a12vPsez3Du4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

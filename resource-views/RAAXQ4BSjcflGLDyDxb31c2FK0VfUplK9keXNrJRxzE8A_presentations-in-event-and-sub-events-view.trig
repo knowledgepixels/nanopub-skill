@@ -1,0 +1,55 @@
+@prefix this: <https://w3id.org/np/RAAXQ4BSjcflGLDyDxb31c2FK0VfUplK9keXNrJRxzE8A> .
+@prefix sub: <https://w3id.org/np/RAAXQ4BSjcflGLDyDxb31c2FK0VfUplK9keXNrJRxzE8A/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:presentations-in-event-and-sub-events-view a gen:ResourceView, gen:TabularView;
+    dct:title "🎤 Presentations";
+    rdfs:label "Presentations in event and sub-events view";
+    gen:appliesToInstancesOf gen:Space;
+    gen:hasStructuralPosition "4.4.presentations";
+    gen:hasViewQuery <https://w3id.org/np/RAhuoOErCYvU0QE7QuyU_WELHNa2-PtcwMFMTdgAXxYMo/get-presentations-for-event-and-sub-events>;
+    gen:hasViewQueryTargetField "event" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo <https://orcid.org/0000-0001-8492-0354> .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-10-02T13:04:09Z"^^xsd:dateTime;
+    dct:creator <https://orcid.org/0000-0001-8492-0354>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:presentations-in-event-and-sub-events-view;
+    npx:supersedes <https://w3id.org/np/RAnpY7NhgJN2HoS1HYrs9zPEx1c7sjGDAZ1cwUtzM240U>;
+    rdfs:label "Presentations in event and sub-events view";
+    prov:wasDerivedFrom <https://w3id.org/np/RAKXxTaJRNjrp6kLGBvZtUCOUMuZjrveVFKlIok_hKlnU>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAXFrtnNYw2ns09arwNhIpA87WP3aNO2AIIckhjydKJGI> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+i9DV8ynzO944pYkYsDwtlqJHuk+b7FQt6Bb4TIQSDX3jGUURn6WpaNwESHmgMLWSydaH5XlabMzuqpPL4iyB+IAzvwIxdJBLhe39EQMu2j+FZ/5d/xu/gO3nZw2KoEvJ7cJisabuI05OylIRSJ+OG5CmzFxnjojUEJeCFi1njY1InhXrb0yHud9b1ifzweoN6YYOBecKs1gTOaT2bf+t4Wgzg3M0PmRVZ4F0OALsnh4T5+x7kFtiPcDKNpORi585JjKCZ4kczIF6oUKcwgC0kmIY97jtLqSLcXRkxHx5CDI6qz4XlRFs1ZbCUdSlzjdPZAkaBcNem1gIhWzkHkEnQIDAQAB";
+    npx:hasSignature "DvvoaRPXoLCt8VbilSvExWDi/f3QnTiuHnojqCduWUEILqNakAjSmV1ah8rcxvkYMwUDtkIX3etGoVJ6dhyEcIioKzi+fmwgX3qW0tVL96ivDVAZXq4OYpl0LkKuSrxrAYcKeVHqFEftYht3r/NPIDKr6+rrkdAEL/6a8iIhto1fVM+PVUW3gRl0SaAQVtbg+8E6w8ESoBTPETu7lHa/J1qtzxn4Oelo2ens7gdSPDaT26tdLXGsu3q/W+s7ktEfLnjOsgW5sONEQZ2pvLpBjkF7qm/JROKr/YEOh//XYZM3wimuLXLD+jQzTaf7TS51QWG7FI/UBtIeV5/LF1V1yQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://orcid.org/0000-0001-8492-0354> .
+  
+  <https://w3id.org/np/RAhuoOErCYvU0QE7QuyU_WELHNa2-PtcwMFMTdgAXxYMo/get-presentations-for-event-and-sub-events>
+    nt:hasLabelFromApi "Get presentations for event and its sub-events" .
+}
+

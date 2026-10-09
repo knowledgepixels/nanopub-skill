@@ -1,0 +1,155 @@
+@prefix this: <https://w3id.org/np/RAICNJb9Wa9bJKnCpp14oXiwZp3TTvC4O0M2Ns4ogaSp0> .
+@prefix sub: <https://w3id.org/np/RAICNJb9Wa9bJKnCpp14oXiwZp3TTvC4O0M2Ns4ogaSp0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-mira-record-info a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Shows the stored information about any MIRA record -- question, claim, evidence item, study, protocol, request or source document -- as a property/value table, one row per populated field, so a single view serves every element type. Fields absent from a given record simply produce no row. Referenced records are shown by their own statement, and a final Source row gives the nanopublication the values were read from. Takes the part IRI in the partid placeholder.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the information about a MIRA record";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/5ee93356ac9163d743a44466ee5cae3e537a0bb429b81354f72799d7f700c947>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix sioc: <http://rdfs.org/sioc/ns#>
+prefix mira: <http://purl.org/mira-science/mira#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+
+select ?Property_noheader ?Property_label
+       (group_concat(replace(str(?val), '[\\r\\n]+', ' '); separator='\\n') as ?Value_multi_val_noheader)
+       (group_concat(replace(str(?vallabel), '[\\r\\n]+', ' '); separator='\\n') as ?Value_label_multi)
+where {
+  {
+    select ?ord ?Property_noheader ?Property_label ?val (min(?vallabelRaw) as ?vallabel) where {
+      # The nanopublication that defines this record: the newest one whose assertion types
+      # it as a MIRA record. The type repository holds only current versions, so this is
+      # normally the only candidate; the limit guards against a second claimant.
+      {
+        select ?dnp ?da where {
+          graph npa:graph { ?dnp np:hasAssertion ?da ; dct:created ?ddate . }
+          graph ?da { ?_partid_iri a ?recordType . }
+          values ?recordType { mira:Question mira:Claim mira:Evidence mira:Study
+                               mira:Protocol mira:Request mira:SourceDocument }
+        } order by desc(?ddate) limit 1
+      }
+      {
+        graph ?da { ?_partid_iri a ?iri }
+        values (?iri ?typeName) {
+          (mira:Question \"Research question\") (mira:Claim \"Claim\")
+          (mira:Evidence \"Evidence item\") (mira:Study \"Study\")
+          (mira:Protocol \"Protocol\") (mira:Request \"Request\")
+          (mira:SourceDocument \"Source document\")
+        }
+        bind(1 as ?ord) bind(rdf:type as ?Property_noheader) bind('Type:' as ?Property_label)
+        bind(?typeName as ?lit)
+      } union {
+        graph ?da { ?_partid_iri dct:title ?lit }
+        bind(2 as ?ord) bind(dct:title as ?Property_noheader) bind('Statement:' as ?Property_label)
+      } union {
+        graph ?da { ?_partid_iri sioc:content ?lit }
+        bind(3 as ?ord) bind(sioc:content as ?Property_noheader) bind('Detail:' as ?Property_label)
+      } union {
+        graph ?da { ?_partid_iri mira:addresses ?iri }
+        bind(10 as ?ord) bind(mira:addresses as ?Property_noheader) bind('Addresses question:' as ?Property_label)
+      } union {
+        graph ?da { ?_partid_iri mira:observationStatement ?iri }
+        bind(11 as ?ord) bind(mira:observationStatement as ?Property_noheader) bind('Observation of claim:' as ?Property_label)
+      } union {
+        graph ?da { ?_partid_iri mira:observationBase ?iri }
+        bind(12 as ?ord) bind(mira:observationBase as ?Property_noheader) bind('Based on data:' as ?Property_label)
+      } union {
+        graph ?da { ?_partid_iri mira:is_grounded_in ?iri }
+        bind(13 as ?ord) bind(mira:is_grounded_in as ?Property_noheader) bind('Grounded in study:' as ?Property_label)
+      } union {
+        graph ?da { ?_partid_iri mira:sourceDocument ?iri }
+        bind(14 as ?ord) bind(mira:sourceDocument as ?Property_noheader) bind('Reported in:' as ?Property_label)
+      } union {
+        graph ?da { ?_partid_iri mira:follows ?iri }
+        bind(15 as ?ord) bind(mira:follows as ?Property_noheader) bind('Follows protocol:' as ?Property_label)
+      } union {
+        graph ?da { ?_partid_iri mira:grounds ?iri }
+        bind(16 as ?ord) bind(mira:grounds as ?Property_noheader) bind('Grounds evidence:' as ?Property_label)
+      } union {
+        graph ?da { ?_partid_iri mira:request_for ?iri }
+        bind(17 as ?ord) bind(mira:request_for as ?Property_noheader) bind('Requests study:' as ?Property_label)
+      } union {
+        graph ?da { ?_partid_iri mira:request_target ?iri }
+        bind(18 as ?ord) bind(mira:request_target as ?Property_noheader) bind('Targets claim:' as ?Property_label)
+      } union {
+        graph ?da { ?_partid_iri mira:describesActivity ?iri }
+        bind(19 as ?ord) bind(mira:describesActivity as ?Property_noheader) bind('Describes activity:' as ?Property_label)
+      } union {
+        graph npa:graph { ?dnp dct:creator ?iri ; np:hasPublicationInfo ?dpi . }
+        bind(30 as ?ord) bind(dct:creator as ?Property_noheader) bind('Created by:' as ?Property_label)
+      } union {
+        graph npa:graph { ?dnp dct:created ?lit . }
+        bind(31 as ?ord) bind(dct:created as ?Property_noheader) bind('Created:' as ?Property_label)
+      } union {
+        # the nanopublication these values were read from, as a final row rather than a
+        # column repeated on every row
+        bind(40 as ?ord) bind(dct:source as ?Property_noheader) bind('Source:' as ?Property_label)
+        # ?iri must be bound by a pattern, not by bind(?dnp as ?iri): inside a union branch
+        # ?dnp is not joined yet, so such a bind silently fails and leaves the value empty.
+        # Joining on ?da constrains ?iri to exactly the defining nanopublication.
+        graph npa:graph { ?iri np:hasAssertion ?da . }
+        optional { graph npa:graph { ?iri rdfs:label ?srclab . } }
+      }
+      # One label lookup serving every IRI-valued branch above. ?iri must be coalesced to
+      # a dummy first: left unbound on the literal-valued branches it would join against
+      # every titled resource in the repository and attach a stray label to them.
+      bind(coalesce(str(?iri), str(?lit)) as ?val)
+      bind(coalesce(?iri, <urn:mira:none>) as ?target)
+      optional {
+        graph npa:graph { ?tnp npx:introduces ?target ; np:hasAssertion ?ta . }
+        graph ?ta { ?target dct:title ?tt . }
+      }
+      optional { graph ?dpi { ?target foaf:name ?an . } }
+      bind(coalesce(?typeName, ?srclab, ?tt, ?an, '') as ?vallabelRaw)
+    } group by ?ord ?Property_noheader ?Property_label ?val
+  }
+} group by ?ord ?Property_noheader ?Property_label order by ?ord""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-01T11:55:15Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-mira-record-info;
+    npx:supersedes <https://w3id.org/np/RAsOWAUk3a2WM7_VU-lLIR-Pyb-70CVSrOtHykXq1nzuU>;
+    rdfs:label "Get the information about a MIRA record";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "eWurGSd7/743yhu++LeTwpthn6riKYoxImqqQz3dzOM5VZwXBdz3BIX8qlRJkocuQ3cfAcFwlooLC5HUWdUqgsaZbSfEfSZjFd1+bKarwzpttI1tTRMMqEXuSpvk2wTh31uJsA3HWTfhyDKsYvDet8iJ9igs6eWdPc6hH139r5g=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

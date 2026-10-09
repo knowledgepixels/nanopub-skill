@@ -1,0 +1,95 @@
+@prefix this: <https://w3id.org/np/RAkzKo1pLVxLa5CIb8lzTleaMCn2dY2n4-lEf__B7wXpA> .
+@prefix sub: <https://w3id.org/np/RAkzKo1pLVxLa5CIb8lzTleaMCn2dY2n4-lEf__B7wXpA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-domain-info a grlc:grlc-query;
+    dct:description "For a research domain or subdomain, gives the general information about it that its page would otherwise not show: its name, the broader domain(s) it is a subclass of, the top-level domain reached by walking the subClassOf chain to its root, how many subdomains it has, and how many FAIR Implementation Communities declare it as one of their research domains. Names are read from the research-domain vocabulary (the SRAO resource of the FAIR Implementation Space); domain pages otherwise show only the bare vocabulary identifier, such as c_3235 for Geophysics, because nothing looks the label up. One row per domain: a domain with several parents, such as Environmental Science, lists them in one cell rather than repeating the row.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the general info of a research domain";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+
+select (min(?name_x) as ?name)
+       (group_concat(distinct str(?broader_domain); separator=\" \") as ?broader_domains_multi_iri)
+       (group_concat(distinct ?broader_label; separator=\"\\n\") as ?broader_domains_label_multi)
+       (group_concat(distinct str(?top_level_domain); separator=\" \") as ?top_level_domains_multi_iri)
+       (group_concat(distinct ?top_label; separator=\"\\n\") as ?top_level_domains_label_multi)
+       (count(distinct ?subdomain) as ?number_of_subdomains)
+       (count(distinct ?community) as ?number_of_communities)
+       (min(?srao_np) as ?np) (min(\"^\") as ?np_label)
+where {
+  graph npa:graph {
+    ?srao_np npx:describes <https://w3id.org/spaces/FAIR-Implementation-Space/r/research-domains> ;
+             np:hasAssertion ?srao_a .
+    filter not exists { ?srao_x npx:invalidates ?srao_np }
+  }
+  graph ?srao_a { ?_domain_iri rdfs:label ?name_x . }
+  optional {
+    graph ?srao_a { ?_domain_iri rdfs:subClassOf ?broader_domain }
+    optional { graph ?srao_a { ?broader_domain rdfs:label ?broader_label_x } }
+    bind(coalesce(?broader_label_x, replace(str(?broader_domain), \"^.*[/#]\", \"\")) as ?broader_label)
+  }
+  optional {
+    graph ?srao_a { ?_domain_iri rdfs:subClassOf+ ?top_level_domain }
+    filter not exists { graph ?srao_a { ?top_level_domain rdfs:subClassOf ?any_parent } }
+    optional { graph ?srao_a { ?top_level_domain rdfs:label ?top_label_x } }
+    bind(coalesce(?top_label_x, replace(str(?top_level_domain), \"^.*[/#]\", \"\")) as ?top_label)
+  }
+  optional { graph ?srao_a { ?subdomain rdfs:subClassOf ?_domain_iri } }
+  optional {
+    graph npa:graph {
+      ?cnp npx:hasNanopubType fip:FAIR-Implementation-Community ; npx:introduces|npx:describes ?community ;
+           np:hasAssertion ?ca ; npa:hasValidSignatureForPublicKey ?cpk .
+      filter not exists { ?cx npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKey ?cpk . }
+    }
+    graph ?ca { ?community fip:has-research-domain ?_domain_iri }
+  }
+}
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-18T07:16:00Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-domain-info;
+    rdfs:label "Get the general info of a research domain";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "DPyjDc/la04dIiqQKeDWwyZCz7mad77BfnVmghAE8jL3Rj+LYWin9mxIxSZJsx4j1zgcUarGC77uWxFH6KXYHAY5GU30q/hW6gA0SU8b7tDNUtptokbYKs1omQLv6M9taM3sH2tOxpWIpVhR1PI1w1ey6CVEgcRBjsb05m8W0LM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,89 @@
+@prefix this: <https://w3id.org/np/RARFS9MyG2uXfgpmmW21ipVkl4ECZoqKgwkTqvXzWJluc> .
+@prefix sub: <https://w3id.org/np/RARFS9MyG2uXfgpmmW21ipVkl4ECZoqKgwkTqvXzWJluc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-reference-fips a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the reference FAIR Implementation Profiles (rFIPs), one row per community: the rFIP nanopublication with the newest dct:created among those declared by that community. Successive versions of an rFIP are not reliably chained by npx:supersedes -- the FIP wizard supersedes some earlier nanopublication rather than the preceding rFIP -- so filtering on invalidation alone leaves several versions of the same profile in the listing (three for PARC Toxicology). The community given by fip:declared-by is used as the identity of the profile, since each version re-introduces the rFIP under a new IRI and therefore cannot be grouped by it.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get reference FIPs (latest version per community)";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/1629a4570fbaa9e1e66389174008a5e7515d9b20d333686449c50ab3aa936e4c>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+prefix schema: <https://schema.org/>
+
+select (?rfip as ?rFIP) (?rfip_label as ?rFIP_label) ?version ?community ?np (\"^\" as ?np_label) where {
+  {
+    select ?community (max(?date) as ?latest) where {
+      graph npa:graph {
+        ?cnp npx:hasNanopubType fip:Reference-FAIR-Implementation-Profile .
+        ?cnp npa:hasValidSignatureForPublicKeyHash ?cpubkey .
+        filter not exists { ?cnpx npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKeyHash ?cpubkey . }
+        ?cnp dct:created ?date .
+        ?cnp np:hasAssertion ?ca .
+        ?cnp npx:introduces ?crfip .
+      }
+      graph ?ca { ?crfip fip:declared-by ?community . }
+    } group by ?community
+  }
+  graph npa:graph {
+    ?np npx:hasNanopubType fip:Reference-FAIR-Implementation-Profile .
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np dct:created ?latest .
+    ?np np:hasAssertion ?a .
+    ?np npx:introduces ?rfip .
+  }
+  graph ?a {
+    ?rfip a fip:Reference-FAIR-Implementation-Profile .
+    ?rfip rdfs:label ?rfip_label .
+    ?rfip fip:declared-by ?community .
+    optional { ?rfip schema:version ?version . }
+  }
+}
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-17T05:02:12Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-reference-fips;
+    prov:wasDerivedFrom <https://w3id.org/np/RAPaZK0lAPew2ZTibA62S090ae0Vu-pHmBRzaK2scbX_4>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Dxo3l/EufbQ4uN7QikPTkfIIdd5fTANu9DcwhdNWGkJzWLOBdGN6hTMEDJI9RQgWOkm6Z1gvRhNB5BAp9hxX0pOfv6/2wHub/DG8/Nj62sywuUDtwptxDf9G58WyfLy6dbk8yze+b2CLutMcJ01TZ4sPluRQ9pJeIyRzjfZSaVE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

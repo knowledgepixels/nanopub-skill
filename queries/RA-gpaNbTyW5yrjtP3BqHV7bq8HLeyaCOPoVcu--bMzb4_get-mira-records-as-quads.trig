@@ -1,0 +1,109 @@
+@prefix this: <https://w3id.org/np/RA-gpaNbTyW5yrjtP3BqHV7bq8HLeyaCOPoVcu--bMzb4> .
+@prefix sub: <https://w3id.org/np/RA-gpaNbTyW5yrjtP3BqHV7bq8HLeyaCOPoVcu--bMzb4/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-mira-records a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns every current MIRA record as quads, for bulk import into another system. Each row is one statement with its named graph, so the graph pointers inside a record resolve to graphs the caller also received. Columns: np (the nanopublication, fetch it with Accept: application/trig to get the signed original), created (the sync cursor), subj, pred, obj, graph. Optional parameters: class restricts to one MIRA class; since returns only records created strictly after that timestamp, so re-pulling with the newest value seen returns nothing; part selects head, assertion, provenance or pubinfo, or all, and defaults to assertion plus provenance; examples=include adds the demo records, which are excluded by default. Request application/sparql-results+json rather than CSV: CSV drops datatypes and language tags, and MIRA titles contain commas. Coupled to the shared MIRA record type (https://w3id.org/spaces/mira/r/MiraRecord).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get MIRA records as quads";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/5ee93356ac9163d743a44466ee5cae3e537a0bb429b81354f72799d7f700c947>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix mira: <http://purl.org/mira-science/mira#>
+
+select ?np ?created ?subj ?pred ?obj ?graph where {
+  # Every record of the shared MIRA record type. The type repository holds only
+  # current versions, so a superseded record never leaves this endpoint.
+  graph npa:graph {
+    ?np npx:hasNanopubType <https://w3id.org/spaces/mira/r/MiraRecord> ;
+        dct:created ?created .
+  }
+  # Optional narrowing to one MIRA class. Absent, ?class falls back to the record
+  # type itself, so the extra pattern is a no-op rather than a second binding.
+  bind(coalesce(?__class_iri, <https://w3id.org/spaces/mira/r/MiraRecord>) as ?class)
+  graph npa:graph { ?np npx:hasNanopubType ?class . }
+  # Incremental sync: pass the newest ?created seen on the previous pull.
+  # Strict, so re-pulling with the last timestamp returns only what is new.
+  bind(coalesce(?__since, \"0000\") as ?since)
+  filter(?since < str(?created))
+  # Demo records carry npx:ExampleNanopub. They are excluded by default: importing
+  # example data into a live system is worse than missing it. OPTIONAL + !bound rather
+  # than NOT EXISTS, which mis-plans here.
+  optional {
+    graph npa:graph { ?np npx:hasNanopubType ?example . }
+    filter(?example = npx:ExampleNanopub)
+  }
+  bind(coalesce(?__examples, \"exclude\") as ?ex)
+  filter(?ex = \"include\" || !bound(?example))
+  {
+    # The Head graph has no pointer predicate of its own: it is the graph in which the
+    # nanopublication declares itself. Must exclude npa:graph, which mirrors that triple.
+    graph ?graph { ?np a np:Nanopublication . }
+    filter(?graph != npa:graph)
+    bind(\"head\" as ?part)
+  } union {
+    graph npa:graph { ?np np:hasAssertion ?graph . }
+    bind(\"assertion\" as ?part)
+  } union {
+    graph npa:graph { ?np np:hasProvenance ?graph . }
+    bind(\"provenance\" as ?part)
+  } union {
+    graph npa:graph { ?np np:hasPublicationInfo ?graph . }
+    bind(\"pubinfo\" as ?part)
+  }
+  # Default is the MIRA content and its attribution: assertion + provenance. Head and
+  # pubinfo are available but not sent unless asked, so a default pull carries neither
+  # the role declarations nor dct:license. Pass part=all for a complete, self-consistent
+  # nanopublication; a single part name selects just that graph.
+  bind(coalesce(?__part, \"default\") as ?want)
+  filter(?want = \"all\" || ?want = ?part
+         || (?want = \"default\" && (?part = \"assertion\" || ?part = \"provenance\")))
+  graph ?graph { ?subj ?pred ?obj . }
+}
+order by ?created ?np ?graph ?subj ?pred ?obj
+limit 50000
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-02T09:24:44Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-mira-records;
+    rdfs:label "Get MIRA records as quads";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "TOkO9iC1qV4G7XwYYGZZEOAWHeaGTkMpn6nN38WWwVsRUveJ6UfbgQLYdLV5UHpVmLETgdNqmB1rbjAX643c0m1Gydpvi/C1K04u/L+QqtxECxqwN8i/aYulQr2iajBUKIIklO7dpwO/99BLsPwVKBgSHxeaawXwGi4I6SRxcys=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

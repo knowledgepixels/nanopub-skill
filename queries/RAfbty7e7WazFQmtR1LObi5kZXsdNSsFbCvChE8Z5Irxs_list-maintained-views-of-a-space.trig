@@ -1,0 +1,144 @@
+@prefix this: <https://w3id.org/np/RAfbty7e7WazFQmtR1LObi5kZXsdNSsFbCvChE8Z5Irxs> .
+@prefix sub: <https://w3id.org/np/RAfbty7e7WazFQmtR1LObi5kZXsdNSsFbCvChE8Z5Irxs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:list-maintained-views a grlc:grlc-query;
+    dct:description "Lists the resource views governed by a given space. First, the view kinds whose versions declare gen:governedBy the space but which the space does not list as maintained resources yet: they are marked as not listed yet and carry the kind IRI, label and description that an admin needs to list them as maintained resources (register_* columns, empty on listed rows). Then the kinds listed as maintained resources of the space. Each row shows the label and title of the kind's current version and links to that version's nanopublication. For a listed kind the current version is the newest non-invalidated version signed by a current member+ (admin/maintainer/member) of the governing space ref, mirroring the get-latest-governed-version resolver; for a kind not listed yet it is the newest non-invalidated version signed by a current member+ of the space. The federated lookup for the kinds not listed yet gathers the member keys and the listed kinds into a single row, so it runs once. Kinds without such a version do not appear. Ordered by status, then alphabetically by label.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "List maintained views of a space";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/ec6722efa3b44e0a18aa63afe5964158a1fdb7f0413ea5f23bfddf5c03ca0221>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?resource ?resource_label ?title ?status ?register_kind ?register_label ?register_description ?np (\"^\" as ?np_label) where {
+  {
+    select ?resource ?registered ?np (coalesce(min(if(lang(?label) = \"\", ?label, ?nolabel)), min(?label)) as ?resource_label) (coalesce(min(if(lang(?desc) = \"\", ?desc, ?nodesc)), min(?desc)) as ?description) (min(?titlex) as ?title) where {
+      {
+        select ?resource ?registered (max(concat(str(?gDate), \">\", str(?gNp))) as ?maxW) where {
+          {
+            # Kinds listed as maintained resources of the space: newest version signed by a
+            # current member+ of the governing space ref (as in get-latest-governed-version).
+            values ?_space_multi_iri {}
+            graph npa:graph {
+              ?gNp npa:hasValidSignatureForPublicKeyHash ?gPubkeyhash ;
+                   dct:created ?gDate ;
+                   npx:embeds ?gVersion ;
+                   np:hasAssertion ?gA .
+              filter not exists { ?gInv npx:invalidates ?gNp ; npa:hasValidSignatureForPublicKeyHash ?gPubkeyhash . }
+            }
+            graph ?gA { ?gVersion a gen:ResourceView ; dct:isVersionOf ?resource ; gen:governedBy ?_space_multi_iri . }
+            service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+              graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?stateG . }
+              graph ?stateG {
+                ?resource npa:isMaintainedBy ?_space_multi_iri ; npa:hasGoverningSpaceRef ?gRef .
+                ?gRi a gen:RoleInstantiation ; npa:forSpace ?_space_multi_iri ; npa:forSpaceRef ?gRef ;
+                     npa:hasRoleType ?gTier ; npa:forAgent ?gAgent .
+                filter(?gTier = gen:AdminRole || ?gTier = gen:MaintainerRole || ?gTier = gen:MemberRole)
+                ?gAcct a npa:AccountState ; npa:agent ?gAgent ; npa:pubkey ?gPubkeyhash .
+              }
+            }
+            bind(true as ?registered)
+          } union {
+            # Kinds whose versions declare gen:governedBy the space but which the space has not
+            # listed as maintained resources yet: newest version signed by a current member+ of the space. The member keys
+            # and listed kinds are gathered into one row, so the federated call runs once.
+            {
+              select (concat(\" \", group_concat(distinct str(?uKey); separator=\" \"), \" \") as ?uKeys)
+                     (concat(\" \", group_concat(distinct str(?uKind); separator=\" \"), \" \") as ?uKinds) where {
+                values ?_space_multi_iri {}
+                service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+                  graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?uState . }
+                  graph ?uState {
+                    ?uRi a gen:RoleInstantiation ; npa:forSpace ?_space_multi_iri ; npa:hasRoleType ?uTier ; npa:forAgent ?uAgent .
+                    filter(?uTier = gen:AdminRole || ?uTier = gen:MaintainerRole || ?uTier = gen:MemberRole)
+                    ?uAcct a npa:AccountState ; npa:agent ?uAgent ; npa:pubkey ?uKey .
+                  }
+                  optional { graph ?uState { ?uKind npa:isMaintainedBy ?_space_multi_iri . } }
+                }
+              }
+            }
+            values ?_space_multi_iri {}
+            graph npa:graph {
+              ?gNp npa:hasValidSignatureForPublicKeyHash ?gPubkeyhash ;
+                   dct:created ?gDate ;
+                   npx:embeds ?gVersion ;
+                   np:hasAssertion ?gA .
+              filter not exists { ?gInv npx:invalidates ?gNp ; npa:hasValidSignatureForPublicKeyHash ?gPubkeyhash . }
+            }
+            graph ?gA { ?gVersion a gen:ResourceView ; dct:isVersionOf ?resource ; gen:governedBy ?_space_multi_iri . }
+            filter(contains(?uKeys, concat(\" \", str(?gPubkeyhash), \" \")))
+            filter(!contains(?uKinds, concat(\" \", str(?resource), \" \")))
+            bind(false as ?registered)
+          }
+        } group by ?resource ?registered
+      }
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pubkeyhash ;
+            dct:created ?date ;
+            npx:embeds ?version ;
+            np:hasAssertion ?a .
+      }
+      filter(concat(str(?date), \">\", str(?np)) = ?maxW)
+      graph ?a { ?version a gen:ResourceView ; dct:isVersionOf ?resource . }
+      optional { graph ?a { ?version rdfs:label ?label } }
+      optional { graph ?a { ?version dct:title ?titlex } }
+      optional { graph ?a { ?version dct:description ?desc } }
+    } group by ?resource ?registered ?np
+  }
+  # The register_* columns are empty on listed rows, which hides the list action there.
+  bind(if(?registered, \"\", \"⏳ not listed yet\") as ?status)
+  bind(if(?registered, \"\", str(?resource)) as ?register_kind)
+  bind(if(?registered, \"\", ?resource_label) as ?register_label)
+  bind(if(?registered, \"\", coalesce(?description, ?resource_label)) as ?register_description)
+} order by ?registered lcase(str(?resource_label))""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-24T13:57:54Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:list-maintained-views;
+    npx:supersedes <https://w3id.org/np/RAJjD8o32LYZYFr10FUOTDCge4-qOHwE8Uus08HISCatk>;
+    rdfs:label "List maintained views of a space";
+    skos:changeNote "status text and description say not listed yet (as maintained resource) instead of not registered";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "EHswDVGH6KJ+czgIINdGERTqQX9j4/e+bgc1srXktM+Li0480IJpaTV+6PzYxU+mtUH2lTucw6JdEd4q1kzsvP3O1iPelqp+RqUwN+Zk4z0nDb/UNqgiFZC+3Xfp1TIzVwZDSQkA0tfO+6gB7+5HMvp1Lgblkfr6NrXILHsjNfg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

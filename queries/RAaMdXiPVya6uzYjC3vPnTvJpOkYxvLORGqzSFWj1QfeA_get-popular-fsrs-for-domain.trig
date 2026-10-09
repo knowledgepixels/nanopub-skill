@@ -1,0 +1,127 @@
+@prefix this: <https://w3id.org/np/RAaMdXiPVya6uzYjC3vPnTvJpOkYxvLORGqzSFWj1QfeA> .
+@prefix sub: <https://w3id.org/np/RAaMdXiPVya6uzYjC3vPnTvJpOkYxvLORGqzSFWj1QfeA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-popular-fsrs-for-domain a grlc:grlc-query;
+    dct:description "This query returns the most popular FAIR Supporting Resources (FSRs) for a given research domain, based on the current FIP declarations of the FAIR Implementation Communities in that domain (including its subdomains), across all FIP questions. For each FSR it shows the FIP questions it was declared under, the number of matched subdomains and the number of distinct declaring communities. The questions are returned as linked values: their IRIs in questions_multi_iri and their codes in the companion questions_label_multi. Each question exists under two namespaces (terms/ and latest/, linked by rdfs:isDefinedBy), so the canonical terms/ IRI is constructed from the question code; that way a code maps to exactly one IRI and the two lists stay parallel. Communities and subdomains are reported as counts rather than lists: the lists ran to twenty identifiers per row and the subdomain ones were bare vocabulary fragments such as c_3235, unreadable as well as long. This query backs the 'Most used FSRs' resource view shown on domain part pages.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get popular FSRs for domain";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+
+select ?fsr (min(?fsr_label_x) as ?fsr_label)
+       (group_concat(distinct str(?qiri); separator=\" \") as ?questions_multi_iri)
+       (group_concat(distinct ?qcode; separator=\"\\n\") as ?questions_label_multi)
+       (count(distinct ?subdomain) as ?number_of_subdomains)
+       (count(distinct ?community) as ?number_of_communities)
+       (min(?fsrnp_x) as ?np) (min(\"^\") as ?np_label)
+where {
+  { select distinct ?community ?subdomain where {
+    graph npa:graph {
+      ?cnp npa:hasValidSignatureForPublicKey ?cpubkey ;
+        npx:hasNanopubType fip:FAIR-Implementation-Community ;
+        np:hasAssertion ?ca .
+      ?cnp npx:introduces|npx:describes ?community .
+      filter not exists { ?cnp npx:hasNanopubType npx:ExampleNanopub . }
+      filter not exists { ?cnpx npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKey ?cpubkey . }
+    }
+    graph ?ca {
+      ?community a fip:FAIR-Implementation-Community ;
+        fip:has-research-domain ?subdomain .
+    }
+    graph <http://purl.org/np/RArRAOwj4QOppEPCR8WVvOBmrX7oRKOrPi-asX-7AY66I#assertion> {
+      ?subdomain rdfs:subClassOf* ?_domain_iri .
+    }
+  } }
+  graph ?fa {
+    ?fip fip:declared-by ?community ;
+      fip:has-declaration-index ?index .
+  }
+  graph npa:graph {
+    ?fipnp np:hasAssertion ?fa ;
+      npx:hasNanopubType fip:FAIR-Implementation-Profile ;
+      npa:hasValidSignatureForPublicKey ?fippubkey .
+    filter not exists { ?fipnp npx:hasNanopubType npx:ExampleNanopub . }
+    filter not exists { ?fipnpx npx:invalidates ?fipnp ; npa:hasValidSignatureForPublicKey ?fippubkey . }
+    ?index npa:hasValidSignatureForPublicKey ?ipubkey .
+    filter not exists { ?indexx npx:invalidates ?index ; npa:hasValidSignatureForPublicKey ?ipubkey . }
+  }
+  graph npa:networkGraph {
+    ?index npx:includesElement ?dnp .
+  }
+  graph npa:graph {
+    ?dnp npx:hasNanopubType fip:FIP-Declaration ;
+      np:hasAssertion ?da .
+  }
+  graph ?da {
+    ?decl fip:declared-by ?community ;
+      fip:refers-to-question ?question ;
+      (fip:declares-current-use-of|fip:declares-planned-use-of) ?fsr .
+  }
+  bind(replace(str(?question), \"^.*-([^-MD]+(-[MD]+)?)$\", \"$1\") as ?qcode)
+  # The same question exists under two namespaces (terms/ and latest/, linked by
+  # rdfs:isDefinedBy). The canonical terms/ IRI is built from the code, so each code
+  # maps to exactly one IRI and the _multi_iri and _label_multi lists stay parallel.
+  bind(iri(concat(\"https://w3id.org/fair/fip/terms/FIP-Question-\", ?qcode)) as ?qiri)
+  optional {
+    graph npa:graph {
+      ?fsrnp_x npx:introduces|npx:describes ?fsr ;
+        rdfs:label ?fsr_label_x ;
+        npa:hasValidSignatureForPublicKey ?fpubkey .
+      filter not exists { ?fsrnp_x npx:hasNanopubType npx:ExampleNanopub . }
+      filter not exists { ?fsrnpx npx:invalidates ?fsrnp_x ; npa:hasValidSignatureForPublicKey ?fpubkey . }
+    }
+  }
+  filter( bound(?fsrnp_x) || not exists { graph npa:graph { ?onp npx:introduces|npx:describes ?fsr . } } )
+}
+group by ?fsr
+order by desc(?number_of_communities)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-22T13:47:07Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-popular-fsrs-for-domain;
+    npx:supersedes <https://w3id.org/np/RA904fYKBO3ge1ohYlGZ1rf2hfo2JLqCPEcbKxNjOl5hY>;
+    rdfs:label "Get popular FSRs for domain";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYvkQOT9-zrcql5lzMW9OpiPjA9UvSh-RezaVwYmWvns> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "HAgxkoF12WiW4ruutzs5jb0y3l/Yfl3cRv8bU9QB8BKmS6qlsd8MZt4tBWd/F6AZRUxBGZedNXdVh0p1ZNQcjwIDurpiyuoCtU/FClwl/HVyBqblTq1DFeMMsGX8yN1f0lQ4So7lRrzyt+LATHRwTTGBmduTkqNYS4ItzeAZX9s=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

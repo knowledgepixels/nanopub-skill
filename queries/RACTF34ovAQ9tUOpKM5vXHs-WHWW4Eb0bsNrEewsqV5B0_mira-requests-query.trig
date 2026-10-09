@@ -1,0 +1,92 @@
+@prefix this: <https://w3id.org/np/RACTF34ovAQ9tUOpKM5vXHs-WHWW4Eb0bsNrEewsqV5B0> .
+@prefix sub: <https://w3id.org/np/RACTF34ovAQ9tUOpKM5vXHs-WHWW4Eb0bsNrEewsqV5B0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-mira-requests a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Lists every MIRA request -- a unit of work the community can pick up -- with the study it asks for and the claim it would settle. Runs against the shared MIRA record type repository.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "MIRA requests (query)";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/5ee93356ac9163d743a44466ee5cae3e537a0bb429b81354f72799d7f700c947>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix mira: <http://purl.org/mira-science/mira#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?request ?request_label ?flags
+       ?asks_for_multi_iri ?asks_for_label_multi
+       ?would_settle_multi_iri ?would_settle_label_multi
+       ?creator ?creator_label ?date ?np (\"^\" as ?np_label) where {
+  {
+    select ?request (sample(?t) as ?request_label)
+           (group_concat(distinct str(?s); separator=\" \") as ?asks_for_multi_iri)
+           (group_concat(distinct ?st; separator=\"\\n\") as ?asks_for_label_multi)
+           (group_concat(distinct str(?c); separator=\" \") as ?would_settle_multi_iri)
+           (group_concat(distinct ?ct; separator=\"\\n\") as ?would_settle_label_multi)
+    where {
+      graph ?ra { ?request a mira:Request ; dct:title ?t . }
+      optional { graph ?ra { ?request mira:request_for ?s . }
+                 optional { graph ?sa { ?s a mira:Study ; dct:title ?st . } } }
+      optional { graph ?ra { ?request mira:request_target ?c . }
+                 optional { graph ?cg { ?c a mira:Claim ; dct:title ?ct . } } }
+    } group by ?request
+  }
+  graph npa:graph { ?np npx:introduces ?request ; dct:creator ?creator ; dct:created ?date . }
+  optional {
+    select ?np (sample(?n) as ?creatorName) where {
+      graph npa:graph { ?np np:hasPublicationInfo ?pi ; dct:creator ?c9 . }
+      graph ?pi { ?c9 foaf:name ?n . }
+    } group by ?np
+  }
+  bind(coalesce(?creatorName, \"\") as ?creator_label)
+  optional {
+    select ?np (group_concat(distinct ?flag; separator=\", \") as ?flagList) where {
+      graph npa:graph { ?np npx:hasNanopubType ?flagType . }
+      values (?flagType ?flag) { (npx:ExampleNanopub \"Example\") }
+    } group by ?np
+  }
+  bind(coalesce(?flagList, \"\") as ?flags)
+} order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-01T12:06:21Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-mira-requests;
+    rdfs:label "MIRA requests (query)";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "BP6dLV8Vd8GPt5cAldC8PsJSMC6qzdhLAEXbxjJqdk9O46AV8Uyo+T8tw9jSj52Q6EK7o5GYY4Jb9jqGEy9lnlfP8Iq1p4FmNMDZGQiL34VHSvlbhreYbCdGPKEMjUBomLc03hYWNMKcEcszuNT4DcclOi9BO8ijJFf5fzT7n3M=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

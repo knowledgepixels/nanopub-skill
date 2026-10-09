@@ -1,0 +1,64 @@
+@prefix this: <https://w3id.org/np/RAOEElsvC23gQroohRUlPBgGuaQHRHxH51l4zwrTzybKc> .
+@prefix sub: <https://w3id.org/np/RAOEElsvC23gQroohRUlPBgGuaQHRHxH51l4zwrTzybKc/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:action a gen:ViewResultAction;
+    rdfs:label "➕ ask a question...";
+    gen:hasActionTemplate <https://w3id.org/np/RA6HD2lSLoEiZVkDccaFXEHMO2BrU1b_zPEFNl_H-9Ttc/template>;
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:mira-questions-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAhct8BJwRoD3H5uwE1SxGhMOPr6NUX3ZsWrS1O-PmF6I/viewKind>;
+    dct:title "❓ Questions";
+    rdfs:label "MIRA research questions";
+    gen:appliesToInstancesOf gen:Space;
+    gen:governedBy <https://w3id.org/spaces/mira>;
+    gen:hasStructuralPosition "4.1.miraQuestions";
+    gen:hasViewAction sub:action;
+    gen:hasViewQuery <https://w3id.org/np/RAyqcCfsEE1wUyuR_KMX7l0kEQOtJFoHccNnc3wY2HzjE/get-mira-questions>;
+    gen:hasViewQueryTargetField "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-01T12:20:31Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:mira-questions-view;
+    npx:introduces <https://w3id.org/np/RAhct8BJwRoD3H5uwE1SxGhMOPr6NUX3ZsWrS1O-PmF6I/viewKind>;
+    npx:supersedes <https://w3id.org/np/RAhct8BJwRoD3H5uwE1SxGhMOPr6NUX3ZsWrS1O-PmF6I>;
+    rdfs:label "MIRA research questions";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAJfQoTn4f7e8qHl0MYmn15qiHydwhr4F8Ow7agpMkWsE/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "i5008KhvQXBNT9ei8MzXhXl1zokhB5mTV8I896H/fllJxdMjwTzzfRqOqDXsBRS39aUQgsRR31Jyws1Uvrwx8gK/W+PdDlNnM5UyLzUycAJhNo7NNJCcbs5bWkFyWJ58drm9u9loWd1TW5yGL8ptmfORAY9I5x4VThsafTsE3/s=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

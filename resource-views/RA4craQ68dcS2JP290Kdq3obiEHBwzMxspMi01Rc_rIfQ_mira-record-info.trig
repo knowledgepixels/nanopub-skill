@@ -1,0 +1,61 @@
+@prefix this: <https://w3id.org/np/RA4craQ68dcS2JP290Kdq3obiEHBwzMxspMi01Rc_rIfQ> .
+@prefix sub: <https://w3id.org/np/RA4craQ68dcS2JP290Kdq3obiEHBwzMxspMi01Rc_rIfQ/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix mira: <http://purl.org/mira-science/mira#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:mira-record-info-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAoEw19_iqcdGzWSsO0S1GKHUloxzKAA4qXP1zhXDK6Vs/viewKind>;
+    dct:title "ℹ️ Info";
+    rdfs:label "MIRA record info";
+    gen:appliesToInstancesOf mira:Claim, mira:Evidence, mira:Protocol, mira:Question,
+      mira:Request, mira:SourceDocument, mira:Study;
+    gen:governedBy <https://w3id.org/spaces/mira>;
+    gen:hasPageSize "20";
+    gen:hasStructuralPosition "3.1.miraInfo";
+    gen:hasViewQuery <https://w3id.org/np/RAICNJb9Wa9bJKnCpp14oXiwZp3TTvC4O0M2Ns4ogaSp0/get-mira-record-info>;
+    gen:hasViewQueryTargetField "partid" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-01T11:55:15Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:mira-record-info-view;
+    npx:introduces <https://w3id.org/np/RAoEw19_iqcdGzWSsO0S1GKHUloxzKAA4qXP1zhXDK6Vs/viewKind>;
+    npx:supersedes <https://w3id.org/np/RAjPA9JaDLizOQYQQ4bnPEhH11XDQqxcfBrPYaevf7SHI>;
+    rdfs:label "MIRA record info";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAJfQoTn4f7e8qHl0MYmn15qiHydwhr4F8Ow7agpMkWsE/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ENsjHGX/6cR8MX92kil5RHEWRrTVSfsiYyFp6unH6XqxMiHzqbYm4cz8yuiBoc/Q1sUV9aH8rwaTLm2kEtYNzvu1qKEGp4a5JCY3KyacM7WgAYoQ1WmLrMXQwDYJqS1NekUfc0+Z4TkDWvHbNDC3Ol/1KKnz1Pp349dT7MDJSl4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,67 @@
+@prefix this: <https://w3id.org/np/RAZgDkcvU4jtRbV7ALJ1kDuFoX4_6haFVw57peN4h16lY> .
+@prefix sub: <https://w3id.org/np/RAZgDkcvU4jtRbV7ALJ1kDuFoX4_6haFVw57peN4h16lY/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-approved-users-and-software-agents a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns all approved (trust-state-loaded) users with their display name and a type column: software agent (declared npx:SoftwareAgent), human (an ORCID), or unknown (anything else).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "👥 Users (Human and Software Agents)";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/trust>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix np: <http://www.nanopub.org/nschema#>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?user_iri (sample(?name) as ?user_iri_label) (if(?isBot, \"🤖 software agent\", if(strstarts(str(?user_iri), \"https://orcid.org/\") || strstarts(str(?user_iri), \"http://orcid.org/\"), \"👤 human\", \"❔ unknown\")) as ?type) where {
+  graph npa:graph { npa:thisRepo npa:hasCurrentTrustState ?g . }
+  graph ?g { ?acct a npa:AccountState ; npa:agent ?user_iri ; npa:trustStatus npa:loaded . }
+  service <https://w3id.org/np/l/nanopub-query-1.1/repo/type/77757cabf6184c51c20b8b0fe5dc5e1365b7f628448335184ad54319a0affdfc> {
+    graph ?a { ?kd npx:declaredBy ?user_iri . }
+    bind(exists { graph ?a2 { ?user_iri a npx:SoftwareAgent } } as ?isBot)
+    optional { graph ?a { ?user_iri foaf:name ?name } }
+  }
+} group by ?user_iri ?isBot order by lcase(str(sample(?name)))""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-25T08:22:41Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-approved-users-and-software-agents;
+    npx:supersedes <https://w3id.org/np/RAN5tH4hFs2_S6AxsBy_lK8A__MueObof1ivTf7d_75pw>;
+    rdfs:label "Get approved users (human and software agents)";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "q9bEN0SgHprK0cSEmOwq2Zt51A/bI4A74fxsGW7FkMF09sIDaMwgUWF8Q339w52FRgzXDdckHlOxyF5M4AYRZELtug8W+A/sNzZU7eNOy00KqUDme01FlqPkgAxFGpUH/MN1fFHErISc9ZRIClwXqwhm+lfFk0RZR5y8oXHgI4E=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

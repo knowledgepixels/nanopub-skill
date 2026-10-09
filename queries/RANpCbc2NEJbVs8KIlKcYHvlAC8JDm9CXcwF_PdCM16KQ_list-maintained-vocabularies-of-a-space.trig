@@ -1,0 +1,67 @@
+@prefix this: <https://w3id.org/np/RANpCbc2NEJbVs8KIlKcYHvlAC8JDm9CXcwF_PdCM16KQ> .
+@prefix sub: <https://w3id.org/np/RANpCbc2NEJbVs8KIlKcYHvlAC8JDm9CXcwF_PdCM16KQ/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:list-maintained-vocabularies a grlc:grlc-query;
+    dct:description "Lists the vocabularies maintained by a given space: the maintained resources of the space (from the validated space state of the spaces repository) whose declaration types them as an OWL ontology (owl:Ontology) or a SKOS concept scheme (skos:ConceptScheme, in both the current 2004/02/skos/core and the legacy 2008/05/skos namespace), each with its label and kind (OWL ontology / SKOS vocabulary). Ordered alphabetically by label.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "List maintained vocabularies of a space";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?vocabulary (coalesce(min(if(lang(?label) = \"\", ?label, ?nolabel)), min(?label)) as ?vocabulary_label) (min(?kindx) as ?kind) where {
+  values ?_space_multi_iri {}
+  graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?g . }
+  graph ?g { ?_space_multi_iri npa:hasMaintainedResource ?vocabulary . }
+  values (?type ?kindx) {
+    (owl:Ontology \"OWL ontology\")
+    (<http://www.w3.org/2004/02/skos/core#ConceptScheme> \"SKOS vocabulary\")
+    (<http://www.w3.org/2008/05/skos#ConceptScheme> \"SKOS vocabulary\")
+  }
+  graph ?ag { ?vocabulary a ?type ; rdfs:label ?label . }
+} group by ?vocabulary order by lcase(str(?vocabulary_label))""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-09-23T14:21:23Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:list-maintained-vocabularies;
+    rdfs:label "List maintained vocabularies of a space";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "m0QKjl+sooUkjTWg6OovwXgpphD1KCR5g2CeVIXjWyf3OazfB1/CUF2q4wIye+0I9CSBD4/Rp/IJRvEEUn/NIyJgksXry9xgePLeXQs1nI/T4WJRvPTvmahso61aiVjoox+qRnc2WznhQD7ZFWDeZIzGK7uk2yydc8uLJzpVEng=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

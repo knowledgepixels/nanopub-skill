@@ -1,0 +1,99 @@
+@prefix this: <https://w3id.org/np/RAKflWhZmY5oaaMRefOjgDuKAFENcz60opmmd2aUVdg7w> .
+@prefix sub: <https://w3id.org/np/RAKflWhZmY5oaaMRefOjgDuKAFENcz60opmmd2aUVdg7w/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-agent-roles-in-space a grlc:grlc-query;
+    dct:description "For one agent seen in the context of one space or maintained resource, the roles that agent validly holds there: the role as the space named it (\"project lead\", \"data steward\", \"participant\"), the authority tier the role was validated at, who granted it, and the granting nanopublication. Reads the validated space state, so revocations are already applied and a self-declared claim that never validated does not appear. Written for a part page, where the agent arrives as the target and the owning resource as the context; an agent with no role there gets no rows.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the roles of an agent in a space";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces>;
+    grlc:sparql """prefix npa: <http://purl.org/nanopub/admin/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix schema: <http://schema.org/>
+
+select ?relation ?relation_label ?tier_label
+       (sample(?grantedBy) as ?granted_by) (sample(?grantedByName) as ?granted_by_label)
+       (sample(?grantNp) as ?np) (\"^\" as ?np_label)
+where {
+  values ?__context_multi_iri {}
+  graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?g . }
+  # The context is the space itself on a space page, and the maintaining space on the
+  # page of a maintained resource; the optional hop covers both.
+  graph ?g { ?__context_multi_iri npa:isMaintainedBy? ?space . }
+  graph ?g {
+    ?ri a gen:RoleInstantiation ;
+        npa:forSpace ?space ;
+        npa:forAgent ?_agent_iri ;
+        npa:hasRoleType ?tier .
+  }
+  # Nested deliberately: an admin row carries no gen:hasRole, and an unnested label
+  # lookup would join the unbound ?role against every role declaration in the store.
+  optional {
+    graph ?g { ?ri gen:hasRole ?role }
+    optional {
+      graph npa:spacesGraph { ?rd npa:role ?role ; npa:viaNanopub ?roleNp . }
+      graph npa:graph { ?roleNp np:hasAssertion ?ra . }
+      graph ?ra { ?role schema:name ?roleName }
+    }
+  }
+  # Nested for the same reason: an unbound ?grantPubkey would match every account.
+  optional {
+    graph ?g { ?ri npa:viaNanopub ?grantNp }
+    optional {
+      graph npa:graph { ?grantNp npa:hasValidSignatureForPublicKeyHash ?grantPubkey }
+      graph ?g { ?grantAcct a npa:AccountState ; npa:pubkey ?grantPubkey ; npa:agent ?grantedBy }
+      optional { graph ?g { ?grantedBy foaf:name ?grantedByName } }
+    }
+  }
+  bind(lcase(replace(strafter(str(?tier), \"gen/terms/\"), \"Role\", \"\")) as ?tier_label)
+  bind(if(?tier = gen:AdminRole, 1, if(?tier = gen:MaintainerRole, 2, if(?tier = gen:MemberRole, 3, 4))) as ?tier_rank)
+  bind(coalesce(?roleName, ?tier_label) as ?relation_label)
+  bind(coalesce(?role, ?tier) as ?relation)
+}
+group by ?relation ?relation_label ?tier_label ?tier_rank
+order by ?tier_rank ?relation_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-25T13:55:04Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-agent-roles-in-space;
+    rdfs:label "Get the roles of an agent in a space";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RAcm8OurwUk15WOgBM9wySo-T3a5h6as4K8YR5MBrrxUc>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "XDJA3pBmj6nN6jykiiUqPIHL+VP3niFUiw6IMNpQWwAsAukRM1ASNw/8dWb/uas2Mn85/G7MohErIDstx2mSeb5xC7qntaMvtVsDYglAlub12VuwyQYTWayxD8NxdOuFJw4blgz6GPXsZBmiSYMIVJf14hg6bHUyYNwimmsOBF4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

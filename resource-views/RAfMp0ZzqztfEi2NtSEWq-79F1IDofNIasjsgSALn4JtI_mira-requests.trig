@@ -1,0 +1,64 @@
+@prefix this: <https://w3id.org/np/RAfMp0ZzqztfEi2NtSEWq-79F1IDofNIasjsgSALn4JtI> .
+@prefix sub: <https://w3id.org/np/RAfMp0ZzqztfEi2NtSEWq-79F1IDofNIasjsgSALn4JtI/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:action a gen:ViewResultAction;
+    rdfs:label "➕ add a request...";
+    gen:hasActionTemplate <https://w3id.org/np/RAnhFaMe-SKEeE7z0Z8PnNQxV-SAM4WXc6GPIAdUZkarM/template>;
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:mira-requests-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAwfw-cLOUD9ALqKEI4dtcf_1a8bTevY5xuTnU4mTeCds/viewKind>;
+    dct:title "📋 Requests";
+    rdfs:label "MIRA requests";
+    gen:appliesToInstancesOf gen:Space;
+    gen:governedBy <https://w3id.org/spaces/mira>;
+    gen:hasStructuralPosition "4.9.miraRequests";
+    gen:hasViewAction sub:action;
+    gen:hasViewQuery <https://w3id.org/np/RACTF34ovAQ9tUOpKM5vXHs-WHWW4Eb0bsNrEewsqV5B0/get-mira-requests>;
+    gen:hasViewQueryTargetField "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-01T12:20:31Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:mira-requests-view;
+    npx:introduces <https://w3id.org/np/RAwfw-cLOUD9ALqKEI4dtcf_1a8bTevY5xuTnU4mTeCds/viewKind>;
+    npx:supersedes <https://w3id.org/np/RAwfw-cLOUD9ALqKEI4dtcf_1a8bTevY5xuTnU4mTeCds>;
+    rdfs:label "MIRA requests";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAJfQoTn4f7e8qHl0MYmn15qiHydwhr4F8Ow7agpMkWsE/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "pF8kfYM3yGaBvioFIHtPiHwbvHcDPRgbS4tfg2HVXMGwLT6Gv5CrkH5Uy95abxhlfqtfeaSE8c/9zj8jThfVDAA9yqdKigpOifLNPsnGJrYliyv0SwDsp3VECL+xl8Hs3Mzgi43m7l9lZZR5UzFFIERHh1DkrEgfJ0p4MMBB2I8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,92 @@
+@prefix this: <https://w3id.org/np/RADcUUHPe5ai9y6n9WYYH6oRZdODKzn2K2sn_WTnH9ypo> .
+@prefix sub: <https://w3id.org/np/RADcUUHPe5ai9y6n9WYYH6oRZdODKzn2K2sn_WTnH9ypo/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-recently-active-spaces a grlc:grlc-query;
+    dct:description "Lists the Spaces with activity in the last 30 days, most recently active first. Activity is any nanopublication of the last 30 days whose assertion has the space IRI as subject or object (posts, role grants, view displays, events, ...). One row per space: its name (label of its newest valid space-definition nanopublication), the time of its latest activity, the number of such nanopublications, and the np column linking the latest one. Runs on the last30d repo; the space list and names come from the spaces repo via SERVICE.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get recently active Spaces";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/last30d>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+select ?space_iri ?space_iri_label ?last_activity ?nanopubs ?np ?np_label where {
+  {
+    select ?space_iri (max(?label0) as ?space_iri_label) (max(?key) as ?lastKey) (count(distinct ?anyNp) as ?nanopubs) where {
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+        select ?space_iri ?label0 where {
+          {
+            select ?space_iri (max(?dc) as ?maxC) where {
+              graph npa:spacesGraph {
+                ?ref a npa:SpaceRef ; npa:spaceIri ?space_iri .
+                ?def a npa:SpaceDefinition ; npa:forSpaceRef ?ref ; npa:viaNanopub ?defNp .
+              }
+              graph npa:graph { ?defNp dct:created ?dc . }
+              optional { graph npa:graph { ?inv npx:invalidates ?defNp . } }
+              filter(!bound(?inv))
+            } group by ?space_iri
+          }
+          graph npa:spacesGraph {
+            ?ref2 a npa:SpaceRef ; npa:spaceIri ?space_iri .
+            ?def2 a npa:SpaceDefinition ; npa:forSpaceRef ?ref2 ; npa:viaNanopub ?defNp2 .
+          }
+          graph npa:graph { ?defNp2 dct:created ?maxC ; rdfs:label ?label0 . }
+        }
+      }
+      ?anyNp np:hasAssertion ?a .
+      { graph ?a { ?space_iri ?p ?o } } union { graph ?a { ?s ?p2 ?space_iri } }
+      graph npa:graph { ?anyNp dct:created ?c . }
+      bind(concat(str(?c), \" \", str(?anyNp)) as ?key)
+    } group by ?space_iri
+  }
+  bind(strdt(strbefore(?lastKey, \" \"), <http://www.w3.org/2001/XMLSchema#dateTime>) as ?last_activity)
+  bind(iri(strafter(?lastKey, \" \")) as ?np)
+  bind(\"^\" as ?np_label)
+}
+order by desc(?last_activity)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-24T07:29:45Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-recently-active-spaces;
+    rdfs:label "Get recently active Spaces";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "M4xQbW5FvutaAlWHnR1FVtZGKqh01cJuOtA+wcehEQ9bn4/VVfT/ytI+C3/mgWy14xem9aOfeucZyBlizzAzM1qtCr8Dk5DHFVWdhiS14y4kY8SWbqsaRE0cvrtts3vEex19cF9GmtZ7pjBKCVIKaPR1Qdj7EwG3s1rNEp7cpEE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

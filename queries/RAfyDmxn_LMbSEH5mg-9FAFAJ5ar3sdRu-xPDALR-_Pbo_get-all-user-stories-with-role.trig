@@ -1,0 +1,87 @@
+@prefix this: <https://w3id.org/np/RAfyDmxn_LMbSEH5mg-9FAFAJ5ar3sdRu-xPDALR-_Pbo> .
+@prefix sub: <https://w3id.org/np/RAfyDmxn_LMbSEH5mg-9FAFAJ5ar3sdRu-xPDALR-_Pbo/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-all-us a grlc:grlc-query;
+    dct:description "Returns all user stories (fff:User-Story) with the three parts they are written in: as-a (the role), i-want-to (the goal) and so-that (the benefit), each in its own column and in that reading order, next to the user story identifier. The previous version projected only the nanopublication label, so the three parts were not readable in the table. Variable names carry the column headers, and underscores render as spaces, which is why they are spelled As_a, I_want_to and So_that.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get all user stories with role, goal and benefit";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX dct: <http://purl.org/dc/terms/>
+PREFIX np: <http://www.nanopub.org/nschema#>
+PREFIX npa: <http://purl.org/nanopub/admin/>
+PREFIX npx: <http://purl.org/nanopub/x/>
+PREFIX fff: <https://w3id.org/fff/req/>
+
+SELECT DISTINCT ?UserStory ?As_a ?I_want_to ?So_that ?date ?np
+WHERE {
+
+  ## Info about this repo
+  npa:thisRepo ?repoPred ?repoObj .
+
+  ## Search for valid nanopublications
+  GRAPH npa:graph {
+    ?np npa:hasValidSignatureForPublicKey ?pubkey .
+    FILTER NOT EXISTS {
+      ?invalid npx:invalidates ?np ;
+               npa:hasValidSignatureForPublicKey ?pubkey .
+    }
+    ?np dct:created ?date .
+    ?np np:hasAssertion ?a .
+  }
+
+  ## Look inside the assertion graph
+  GRAPH ?a {
+    ?UserStory a fff:User-Story .
+    OPTIONAL { ?UserStory fff:as-a ?As_a }
+    OPTIONAL { ?UserStory fff:i-want-to ?I_want_to }
+    OPTIONAL { ?UserStory fff:so-that ?So_that }
+  }
+}
+ORDER BY DESC(?date)
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-17T08:36:42Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-all-us;
+    rdfs:label "Get all user stories with role, goal and benefit";
+    prov:wasDerivedFrom <https://w3id.org/np/RAt_M1kigSuiKv_1RQyZOcfisq6rBmuxgHl8mA9xzvEN0>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "JUJmWQHT1a/PQ9a3ick9pd9eQsbokWmBHaxxiMWLfa2b4kW+i8C8G/aKaHtjFcRvJZEAs2wvRXNeTeZKhzEZJKenZbZvsbjrK0iy6t8KQ+dqw3mrWPQEKm7Pou4K/6LDbQGqKo/yjLH+chMikOfp7frLBjQ4HkkYQqk4/TKEOa0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+
