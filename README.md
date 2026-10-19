@@ -137,9 +137,9 @@ the label is the nanopub's `rdfs:label` slugified.
 ## Keeping the mirrors in sync
 
 The three download scripts fetch the current list of published artifacts from
-Nanopub Query, download any nanopub not yet present, and delete local files
-whose artifact code is no longer listed (usually because a newer version
-superseded it):
+Nanopub Query (through the generic `w3id.org/np/l/nanopub-query-1.1/` prefix, so
+a single stale instance cannot empty the listing), download any nanopub not yet
+present, and clean up local files that no longer belong:
 
 ```bash
 bash scripts/download-assertion-templates.sh
@@ -147,10 +147,23 @@ bash scripts/download-queries.sh
 bash scripts/download-resource-views.sh
 ```
 
-The scripts delete without asking. If the listing is incomplete for any
-reason, live artifacts disappear locally, so review `git status` after a run
-and confirm that every deleted file has a superseding replacement before
-committing.
+They share one implementation, `scripts/lib/download-collection.sh`, and are
+safe to re-run: existing files are skipped, and a second run of an unchanged
+collection changes nothing.
+
+A local file is deleted only in two cases:
+
+- **Superseded.** Its artifact code is missing from the listing *and* the
+  nanopub is confirmed superseded, invalidated or retracted in the `full`
+  repository. A file that is merely absent from the listing is kept, with a
+  warning: these listings have been incomplete more than once and have asked
+  for live, latest-version nanopubs to be deleted.
+- **Duplicate.** Another file holds the same nanopub under a stale name (an
+  earlier truncated label, a hand-shortened name), so only the file named after
+  the current label is kept.
+
+Still review `git status` after a run: the deletions are checked, but the
+listings decide what gets downloaded.
 
 ## Checker scripts
 
