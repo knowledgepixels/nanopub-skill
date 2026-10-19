@@ -1,0 +1,87 @@
+@prefix this: <https://w3id.org/np/RAa_41GnXPxMGxcg-qKR4DI9fdGIrSsk128tZ0UqnB76I> .
+@prefix sub: <https://w3id.org/np/RAa_41GnXPxMGxcg-qKR4DI9fdGIrSsk128tZ0UqnB76I/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-scholarly-works-for-author a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "This query returns the scholarly works for a given author: papers, conference posters, book chapters, reports and any other work published in a nanopub with a FaBiO nanopub type. Publication date is taken from dct:date, or else from fabio:hasPublicationYear.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get scholarly works for author";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix fabio: <http://purl.org/spar/fabio/>
+prefix bibo: <http://purl.org/ontology/bibo/>
+
+select ?paper ?paper_label ?journal ?journal_label ?publication_date ?np (\"^\" as ?np_label) where {
+  values ?_author_multi_iri {}
+  graph npa:graph {
+    filter exists {
+      ?np npx:hasNanopubType ?nanopub_type .
+      filter(strstarts(str(?nanopub_type), str(fabio:)))
+    }
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np dct:created ?date .
+    ?np np:hasAssertion ?a .
+    ?np npx:introduces ?paper .
+  }
+  graph ?a {
+    ?paper dct:title ?paper_label .
+    ?paper bibo:authorList ?author_list .
+    ?author_list ?rdfseqpred ?_author_multi_iri .
+    filter(strstarts(str(?rdfseqpred), \"http://www.w3.org/1999/02/22-rdf-syntax-ns#_\"))
+    optional { ?paper dct:date ?full_date . }
+    optional { ?paper fabio:hasPublicationYear ?publication_year . }
+    bind(coalesce(str(?full_date), str(?publication_year)) as ?publication_date)
+    optional {
+      ?paper dct:isPartOf ?journal .
+      ?journal dct:title ?journal_label .
+    }
+  }
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-10-15T18:11:52.000Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-scholarly-works-for-author;
+    npx:supersedes <https://w3id.org/np/RAXaYiKs5cP05hrg4DMkIlTNb_8yodx-Y5g7a9vqp0OjQ>;
+    rdfs:label "Get scholarly works for author";
+    prov:wasDerivedFrom <https://w3id.org/np/RA-SYwh12YqSOePu9OX9VD94KVuoG69ddkE4XET_zJShY>;
+    <https://w3id.org/np/o/ntemplate/wasCreatedFromProvenanceTemplate> <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    <https://w3id.org/np/o/ntemplate/wasCreatedFromPubinfoTemplate> <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    <https://w3id.org/np/o/ntemplate/wasCreatedFromTemplate> <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+i9DV8ynzO944pYkYsDwtlqJHuk+b7FQt6Bb4TIQSDX3jGUURn6WpaNwESHmgMLWSydaH5XlabMzuqpPL4iyB+IAzvwIxdJBLhe39EQMu2j+FZ/5d/xu/gO3nZw2KoEvJ7cJisabuI05OylIRSJ+OG5CmzFxnjojUEJeCFi1njY1InhXrb0yHud9b1ifzweoN6YYOBecKs1gTOaT2bf+t4Wgzg3M0PmRVZ4F0OALsnh4T5+x7kFtiPcDKNpORi585JjKCZ4kczIF6oUKcwgC0kmIY97jtLqSLcXRkxHx5CDI6qz4XlRFs1ZbCUdSlzjdPZAkaBcNem1gIhWzkHkEnQIDAQAB";
+    npx:hasSignature "rnui6fXOMWlbwO6VxbXwERVtevoSI2jq92wKjCOKYfedhcFo6PPG2MNrCOxvVAnodXrXJ2/yVU0cdGUWVzJVGhT1kMdjlpjEw9gsm65K1aKeBLeoU8kb1hAUuIVjqyFeWuZSXVEXJ+aTtQJDofUnp0MKEG9MUpAHarKx8GwlruqdJ9zQjXdzGQHErL6Kj+kfejSGhnBzBQyoDmuusf3fKOcvjU22tioFghjrCYKPtBGi02Uhclh83n4D3obZncet2mH3lynIvPhhHV3AsnXt9xsNoFtUUJRrD2iEZO38LoEubLg3TjNa3AGueIlnpU9ZKg9uK41XxuU2+XA76b7LYA==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

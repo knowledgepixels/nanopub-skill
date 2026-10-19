@@ -1,0 +1,67 @@
+@prefix this: <https://w3id.org/np/RAUFX_ZkS1o52VNsJhM5EgsZm6qVNUiiY_Y6iviWLqMVY> .
+@prefix sub: <https://w3id.org/np/RAUFX_ZkS1o52VNsJhM5EgsZm6qVNUiiY_Y6iviWLqMVY/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:01addClaimAction a gen:ViewResultAction;
+    rdfs:label "➕ add claim...";
+    gen:hasActionTemplate <https://w3id.org/np/RApE-nGpCMigXqZjeHuYuMJEVTGmTlNTlZl7IcHi_fhdQ/template> .
+  
+  sub:02editClaimAction a gen:ViewEntryAction;
+    rdfs:label "✏ edit...";
+    gen:hasActionTemplate <https://w3id.org/np/RApE-nGpCMigXqZjeHuYuMJEVTGmTlNTlZl7IcHi_fhdQ/template>;
+    gen:hasActionTemplateQueryMapping "override_target:@override" .
+  
+  sub:claims-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAZRB_C_3jXOSoidZ-XsE8frYvqPJlBHziV07-jbqBjAk/claims-view-kind>;
+    dct:title "🔬 Claims";
+    rdfs:label "ProbKnow claims view";
+    gen:appliesToInstancesOf gen:Space;
+    gen:hasStructuralPosition "4.5.claims";
+    gen:hasViewAction sub:01addClaimAction, sub:02editClaimAction;
+    gen:hasViewQuery <https://w3id.org/np/RAuySlwfh8IxbfitvgscblYBLhGIFo5BCcf083RHlFYmg/list-probknow-claims>;
+    gen:hasViewQueryTargetField "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-16T05:12:52Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:claims-view;
+    npx:introduces <https://w3id.org/np/RAZRB_C_3jXOSoidZ-XsE8frYvqPJlBHziV07-jbqBjAk/claims-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAZRB_C_3jXOSoidZ-XsE8frYvqPJlBHziV07-jbqBjAk>;
+    rdfs:label "ProbKnow claims view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAJfQoTn4f7e8qHl0MYmn15qiHydwhr4F8Ow7agpMkWsE/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ImczZYdlHwpe8VLXpria7/uDuTWHGSsbGmkO8VF9e+GB18DQS4/nJg5bf6+VIBD9ovwpUAwqEpaOhfBB1+rXJbIdCUqt+J8A476Gahe9PoCH6Zi7YPqLmxbJb5YVMyrOyJRSiM3uZRdLLcQ71+z1WvLDix1c8SZT5WCmx1Ceh/0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

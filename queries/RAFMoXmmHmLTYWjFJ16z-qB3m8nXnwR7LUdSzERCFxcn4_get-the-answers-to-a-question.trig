@@ -1,0 +1,83 @@
+@prefix this: <https://w3id.org/np/RAFMoXmmHmLTYWjFJ16z-qB3m8nXnwR7LUdSzERCFxcn4> .
+@prefix sub: <https://w3id.org/np/RAFMoXmmHmLTYWjFJ16z-qB3m8nXnwR7LUdSzERCFxcn4/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-answers a grlc:grlc-query;
+    dct:description "This query returns the answers to a single question, oldest first: the answer text, who answered and when, with the answer's nanopublication as the row's source. Answers are discourse contributions (schema:Statement) replying to the question via as:inReplyTo, following the Nanoarguments discourse model. Each answer is identified by its own nanopublication rather than by its statement node, so that several answers remain distinct even when the template they were created from reuses one statement IRI. Retracted nanopublications and example nanopublications are excluded. Meant for the part page of a question, with the question IRI passed as the 'question' parameter.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the answers to a question";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/29e2f808e4864fca4930806dee70c4a32df54a63ee90156244910a47d3443736>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix as: <https://www.w3.org/ns/activitystreams#>
+
+select (min(?textV) as ?answer) (min(?byV) as ?answered_by) (min(?nameV) as ?answered_by_label)
+  ?date ?np ?np_label
+where {
+  values ?_question_multi_iri {}
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+        np:hasAssertion ?a ; np:hasProvenance ?prov ; np:hasPublicationInfo ?pi ;
+        dct:created ?date .
+    filter not exists {
+      ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk .
+    }
+  }
+  graph ?a { ?ans as:inReplyTo ?_question_multi_iri ; rdf:value ?textV . }
+  filter not exists { graph ?pi { ?np npx:hasNanopubType npx:ExampleNanopub } }
+  optional { graph ?prov { ?a prov:wasAttributedTo ?byV } }
+  optional { graph ?pi { ?byV foaf:name ?nameV } }
+  bind(\"^\" as ?np_label)
+}
+# Grouped by the answering nanopublication, not by the statement node: the stock
+# discourse-contribution template reuses one statement IRI across all its answers.
+group by ?date ?np ?np_label
+order by ?date""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-13T05:24:08Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-answers;
+    rdfs:label "Get the answers to a question";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "nrJwr4nd/XVvCXlyb6rSJ3gnAU+YViQAr57AW+IkM42wwU2l/eD5fm0evFrxEBAj7mHGBAN6cGbsmKcXT2zyti7VhqFRh2VM5kTJa42zcK58UohfyIaMopGKX337MNS90oBN/MFKX+5WYi6scNgxZK9gmxcfXmCnoUVqew7wLn0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

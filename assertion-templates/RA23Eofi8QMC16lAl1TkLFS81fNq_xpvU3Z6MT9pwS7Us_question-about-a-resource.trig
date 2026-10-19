@@ -1,0 +1,61 @@
+@prefix this: <https://w3id.org/np/RA23Eofi8QMC16lAl1TkLFS81fNq_xpvU3Z6MT9pwS7Us> .
+@prefix sub: <https://w3id.org/np/RA23Eofi8QMC16lAl1TkLFS81fNq_xpvU3Z6MT9pwS7Us/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assignment a gen:ActivatedPresetAssignment, gen:PresetAssignment;
+    gen:isAssignmentFor <https://w3id.org/np/RAOCirX5i7BGflopf6c8m7JH7hYfS3E_Bhvz8aScqBJj0/templateKind>;
+    gen:isAssignmentOfPreset <https://w3id.org/np/RAsfqb0NCvXnSsJgsx75aqbR-O_4q8uqp0YDgeX83fHIE/maintained-template-preset> .
+  
+  <https://w3id.org/np/RAOCirX5i7BGflopf6c8m7JH7hYfS3E_Bhvz8aScqBJj0/templateKind> a
+      gen:MaintainedResource, nt:AssertionTemplate;
+    dct:description "A question about a specific resource (e.g. a space, a maintained resource, or any other entity): a schema:Question carrying its text in rdf:value and anchored to the resource it is about via schema:about. It is also typed as a schema:Statement, i.e. a discourse content node, so that it and the contributions replying to it live in the same discourse graph. It may cite evidence or context. Answers and other follow-ups are separate discourse contributions that target this question via as:inReplyTo.";
+    rdfs:label "Question about a resource";
+    gen:isMaintainedBy <https://w3id.org/spaces/knowledgepixels/nanoarguments> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-14T06:52:54.199Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:assignment;
+    npx:hasNanopubType gen:MaintainedResource, gen:PresetAssignment;
+    npx:introduces <https://w3id.org/np/RAOCirX5i7BGflopf6c8m7JH7hYfS3E_Bhvz8aScqBJj0/templateKind>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Question about a resource is a template maintained by Nanoarguments";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1_mJ1G8d-5riusOFBQHtR8gG6pQHIH1W_e6S7ahIRTQ/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "SKCpLyHIy2nE+sSXVoIWOYirtOAlg2ztZ95Rm4Ms24mVcEVjaq8VD/1efeZIfqBmLLpu1sKwVszLgW9ptH2vNjKSkbabUifXiil6mAka95sdBIOy1ILyh0cBabCbe6pkeotUctvQAmwRCY8KiDhU3hVgZ1QZV0gpcp+W6WndG9k=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/spaces/knowledgepixels/nanoarguments> nt:hasLabelFromApi "Nanoarguments" .
+}
+

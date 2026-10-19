@@ -1,0 +1,81 @@
+@prefix this: <https://w3id.org/np/RAUOQLwcSzTY5GVQoiKXt1Z_lrlAyJ57NAEsenPhDcq3E> .
+@prefix sub: <https://w3id.org/np/RAUOQLwcSzTY5GVQoiKXt1Z_lrlAyJ57NAEsenPhDcq3E/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.obolibrary.org/obo/ECOCORE_00000111> rdfs:label "Monophagy" .
+  
+  <http://purl.obolibrary.org/obo/ECOCORE_00000112> rdfs:label "Oligophagy" .
+  
+  <http://purl.obolibrary.org/obo/ECOCORE_00000113> rdfs:label "Polyphagy" .
+  
+  <https://w3id.org/np/RA-lzRsR4-2LiFpQnWBUlzWGX8L0H2pBYVcUAea1PJtEg/hasTrophicNicheBreadth>
+    rdfs:label "has trophic niche" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication assigns a trophic niche breadth to a carabid species, for outlining how specialized a carabid's diet is, among monophagy, oligophagy and polyphagy";
+    rdfs:label "(test2 don't use) Assigning a trophic niche breadth to a carabid species";
+    nt:hasNanopubLabelPattern "${subjtaxonname} - has trophic niche breadth - ${nichebreadth}";
+    nt:hasStatement sub:st;
+    nt:hasTag "Biodiversity";
+    nt:hasTargetNamespace <https://w3id.org/spaces/carabid-beetles>;
+    nt:hasTargetNanopubType <https://w3id.org/kpxl/biodiv/terms/BiodivNanopub> .
+  
+  sub:nichebreadth a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose among monophagy, oligophagy, polyphagy";
+    nt:possibleValue <http://purl.obolibrary.org/obo/ECOCORE_00000111>, <http://purl.obolibrary.org/obo/ECOCORE_00000112>,
+      <http://purl.obolibrary.org/obo/ECOCORE_00000113> .
+  
+  sub:st rdf:object sub:nichebreadth;
+    rdf:predicate <https://w3id.org/np/RA-lzRsR4-2LiFpQnWBUlzWGX8L0H2pBYVcUAea1PJtEg/hasTrophicNicheBreadth>;
+    rdf:subject sub:subjtaxonname .
+  
+  sub:subjtaxonname a nt:GuidedChoicePlaceholder;
+    rdfs:label "start typing species name";
+    nt:possibleValuesFromApi "https://api.gbif.org/v1/species/suggest?datasetKey=d7dddbf4-2cf0-4f39-9b2a-bb099caae36c&q=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-4587-3476 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-4587-3476 foaf:name "roberto pizzolotto" .
+  
+  this: a <https://w3id.org/kpxl/biodiv/terms/BiodivNanopub>;
+    dct:created "2026-10-09T14:33:50.147Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-4587-3476;
+    dct:license <https://creativecommons.org/licenses/by-sa/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA-8VpSW6wWA-SINARCK510UJq70uEJ_7QL1SKaU2HZN8>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "(test2 don't use) Assigning a trophic niche breadth to a carabid species";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAdyqI6k07V5nAS82C6hvIDtNWk179EIV4DV-sLbOFKg4,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUDeKXhXlFhZOfNX+50fX31+K+KNwHGyuh65vqoj49E+Sc920NGPGIEmoyGDFtPONltIEFzp80aEY5mn+V+r27uUpDORorw6OlGGepR0dnWNwEJ8jyFVu7z7d+eIqC5t9V+tQbU4c1H2b8IEzlbpTT0n7DY6gjP0jDjwTBC94mdQIDAQAB";
+    npx:hasSignature "BC9uo9qU9Aqatl7OKSYoGCocyI0WnP24hKunqs5xMaOtYqXVcChyF7XupnP+KyeO5KPE05WdNb2oH9rpPz9tswdiaoeF4a96iuJh9GsedXM92oAihxcdhOTCPOREyCuAh5kjsnbMx0Lqy4XVI/+C+nTdQassh1Os/uVUG2F5HRo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-4587-3476 .
+}
+

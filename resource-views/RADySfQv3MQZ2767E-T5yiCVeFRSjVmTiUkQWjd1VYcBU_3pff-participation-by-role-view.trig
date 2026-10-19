@@ -1,0 +1,65 @@
+@prefix this: <https://w3id.org/np/RADySfQv3MQZ2767E-T5yiCVeFRSjVmTiUkQWjd1VYcBU> .
+@prefix sub: <https://w3id.org/np/RADySfQv3MQZ2767E-T5yiCVeFRSjVmTiUkQWjd1VYcBU/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:3pff-participation-by-role-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:3pff-participation-by-role-view-kind;
+    dct:title "🙋 3PFF participants by role";
+    rdfs:label "3PFF participation by role view";
+    gen:appliesToInstancesOf gen:MaintainedResource, gen:Space;
+    gen:hasDisplayWidth gen:ColumnWidth06of12;
+    gen:hasStructuralPosition "3.4.space3pffParticipationByRole";
+    gen:hasViewAction sub:declareParticipationAction;
+    gen:hasViewQuery <https://w3id.org/np/RA04XumUN65iDcGHodAmR-tEaMC5RTEeDx80a1KFff6Wc/list-3pff-participation-by-role>;
+    gen:hasViewQueryTargetField "resource" .
+  
+  sub:declareParticipationAction a gen:ViewResultAction;
+    rdfs:label "➕ declare participation...";
+    gen:hasActionTemplate <https://w3id.org/np/RA0otJmSxlUuZtNpMtGNNKmGtwo3mASwd8ZDWcErWfiwY>;
+    gen:hasActionTemplateTargetField "3PFFevent";
+    gen:isVisibleTo gen:EveryoneRole .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-16T09:26:15Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:3pff-participation-by-role-view;
+    npx:introduces sub:3pff-participation-by-role-view-kind;
+    prov:wasDerivedFrom <https://w3id.org/np/RAA_BSBkOkZ6INV5a0JAzX8bZpv9q7ryWhi_59flgiffc>,
+      <https://w3id.org/np/RAdQws6ENiXCkrPfRKOeZoeD3HY4QuFXFnpJLHO44ziIk>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAJfQoTn4f7e8qHl0MYmn15qiHydwhr4F8Ow7agpMkWsE/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "mG9MOgpLtMF2SBzvok1n6FLvIFqAi7UDaqlWWhYQubiaKD+RHhWIVrYx40Wi957EgcEYQQ8NCvcJGXmQWPpn/LVpMivhbwXGOBwAkFfgsE8fwwawcjKGExZNcAFwpm+vjVurw6T/R2f4rceNJCW0i8kUDa5N6OWXsG0yAWdLKN0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

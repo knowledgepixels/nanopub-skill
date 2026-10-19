@@ -1,0 +1,119 @@
+@prefix this: <https://w3id.org/np/RAv7OxBOFAHf7huRaSemSepHOX-0JkrUX2vH-z_IAwu0A> .
+@prefix sub: <https://w3id.org/np/RAv7OxBOFAHf7huRaSemSepHOX-0JkrUX2vH-z_IAwu0A/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-question-info a grlc:grlc-query;
+    dct:description "This query returns the basic information about a single question as a key-value table: the question text, who asked it, when it was asked, the resource the question is anchored to, and the nanopublication the question comes from. Questions are schema:Question nodes carrying their text in rdf:value and their anchor in schema:about, following the Nanoarguments discourse model. The question is described by the most recent non-invalidated nanopublication that types it as a question and gives it a text, so that an overridden question shows its current wording. Rows without a value are left out. Meant for the part page of a question, with the question IRI passed as the 'question' parameter.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the basic information about a question";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix schema: <https://schema.org/>
+
+select ?Property_noheader ?Value_noheader ?Value_label
+where {
+  {
+    select ?np (min(?dateV) as ?date) (min(?textV) as ?text)
+      (min(?askedByV) as ?askedBy) (min(?nameV) as ?askedByName)
+      (min(?aboutV) as ?about)
+    where {
+      values ?_question_multi_iri {}
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+            np:hasAssertion ?a ; np:hasProvenance ?prov ; np:hasPublicationInfo ?pi ;
+            dct:created ?dateV .
+        filter not exists {
+          ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk .
+        }
+      }
+      graph ?a { ?_question_multi_iri a schema:Question ; rdf:value ?textV . }
+      # Latest wins: a newer still-valid nanopublication restating the question
+      # (an override of its wording) replaces this one.
+      filter not exists {
+        graph npa:graph {
+          ?np2 npa:hasValidSignatureForPublicKeyHash ?pk2 ; np:hasAssertion ?a2 ; dct:created ?date2 .
+          filter not exists {
+            ?inv2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pk2 .
+          }
+        }
+        graph ?a2 { ?_question_multi_iri a schema:Question ; rdf:value ?text2 . }
+        filter(?date2 > ?dateV)
+      }
+      optional { graph ?a { ?_question_multi_iri schema:about ?aboutV } }
+      optional { graph ?prov { ?a prov:wasAttributedTo ?askedByV } }
+      optional { graph ?pi { ?askedByV foaf:name ?nameV } }
+    }
+    group by ?np
+  }
+  # Every row's value is produced as a string first: RDF4J evaluates both branches of
+  # if(), so an unbound optional reaching str() would leave the whole expression -- and
+  # with it every row -- unbound.
+  bind(coalesce(str(?askedBy), \"\") as ?askedByS)
+  bind(coalesce(str(?about), \"\") as ?aboutS)
+  values (?k ?Property_noheader ?ord) {
+    (\"text\" \"Question:\" 1)
+    (\"by\" \"Asked by:\" 2)
+    (\"date\" \"Asked on:\" 3)
+    (\"about\" \"About:\" 4)
+    (\"np\" \"Nanopublication:\" 5)
+  }
+  bind(if(?k = \"text\", ?text,
+       if(?k = \"by\", ?askedByS,
+       if(?k = \"date\", str(?date),
+       if(?k = \"about\", ?aboutS, str(?np))))) as ?Value_noheader)
+  filter(?Value_noheader != \"\")
+  # An empty label is no label: the agent, the anchor resource and the nanopublication
+  # are then named by Nanodash itself from its own registries.
+  bind(if(?k = \"by\", coalesce(?askedByName, \"\"),
+       if(?k = \"np\", substr(replace(str(?np), \"^.*/np/\", \"\"), 1, 10), \"\")) as ?Value_label)
+}
+order by ?ord""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-13T05:24:08Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-question-info;
+    rdfs:label "Get the basic information about a question";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "IVyQtc2kH3xA/NFaWH3IdyzzRSOuWqz0kCmqVIYwnNiiBpIHu+ouGBoa4EdX4uisR65BftUMAh5PY7xGvxr7IP25gOz4MMHL44Dm9VnD35Z01yLql47gfZGTDDb7kj8cMgd9QCYvIH9wKwAykaS7OscY24NTE5fGbcPpquRQYLc=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

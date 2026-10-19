@@ -1,0 +1,111 @@
+@prefix this: <https://w3id.org/np/RAd7RwyaCvZanb1hRzcS8S_B2S8mtQh9y3xNRsMk-KTpI> .
+@prefix sub: <https://w3id.org/np/RAd7RwyaCvZanb1hRzcS8S_B2S8mtQh9y3xNRsMk-KTpI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:list-sub-space-projects a grlc:grlc-query;
+    dct:description "Lists the projects among the sub-spaces of a given space, that is, those direct sub-spaces whose current definition types them as a project. The current definition of a sub-space is the newest validly signed nanopublication that introduces it and is not invalidated; label and dates are read from that one definition only, so superseded versions contribute no stale values, and a sub-space whose definitions are all retracted is left out. The period column gives start and end date when both are declared, and reads 'from' or 'until' when only one of them is. Ordered by start date, most recent first, then alphabetically by label. Meant for the page of a space, with the space IRI passed as the 'space' parameter.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "List the sub-space projects of a space";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces>;
+    grlc:sparql """prefix np: <http://www.nanopub.org/nschema#>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix schema: <http://schema.org/>
+prefix schemas: <https://schema.org/>
+
+select ?project ?project_label ?period ?np (\"^\" as ?np_label) where {
+  {
+    select ?project ?np
+           (min(?labelV) as ?project_label)
+           (min(?startDayV) as ?startDay)
+           (min(?endDayV) as ?endDay)
+    where {
+      # The plain sub-select below keeps the definition look-up pinned to the sub-spaces of the
+      # given space. Without it, RDF4J plans the patterns inside it against every space
+      # definition in the repository, which takes tens of seconds instead of half of one.
+      {
+        select ?project ?np ?labelV ?startDayV ?endDayV where {
+          {
+            select ?project (max(str(?npCandidate)) as ?npString) where {
+              {
+                select ?project (max(?created) as ?maxCreated) where {
+                  values ?_space_multi_iri {}
+                  graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?g . }
+                  graph ?g { ?_space_multi_iri npa:hasSubSpace ?project . }
+                  graph npa:graph {
+                    ?defNp npx:introduces ?project ;
+                      dct:created ?created ;
+                      npa:hasValidSignatureForPublicKeyHash ?pubkey .
+                  }
+                  filter not exists {
+                    graph npa:graph { ?inv npx:invalidates ?defNp ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+                  }
+                } group by ?project
+              }
+              graph npa:graph { ?npCandidate npx:introduces ?project ; dct:created ?maxCreated . }
+            } group by ?project
+          }
+          bind(iri(?npString) as ?np)
+          graph npa:graph { ?np np:hasAssertion ?a . }
+          graph ?a { ?project a gen:Project , gen:Space ; rdfs:label ?labelV . }
+          optional {
+            graph ?a { ?project (schema:startDate|schemas:startDate) ?startDate . }
+            bind(substr(str(?startDate), 1, 10) as ?startDayV)
+          }
+          optional {
+            graph ?a { ?project (schema:endDate|schemas:endDate) ?endDate . }
+            bind(substr(str(?endDate), 1, 10) as ?endDayV)
+          }
+        }
+      }
+    } group by ?project ?np
+  }
+  bind(coalesce(concat(?startDay, \" – \", ?endDay), concat(\"from \", ?startDay), concat(\"until \", ?endDay), \"\") as ?period)
+}
+order by desc(?startDay) lcase(str(?project_label))""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-14T06:01:24Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:list-sub-space-projects;
+    rdfs:label "List the sub-space projects of a space";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "C8uQ9s4dkuEiZy1QIeS4EGCA/gt3nRSHcT/pl2D2C82CjXJ7i3Kh81atV6JcNcDmlVtC6A4/L5yG/9GVgFYkQX2RpLb0xg04n14575WCPnXbmjRt4mRmYaDcuAHRD7dQE7TGbyCMLSdlfq27Acv4P1gVJhXU4WdoLg4qzSapvZI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

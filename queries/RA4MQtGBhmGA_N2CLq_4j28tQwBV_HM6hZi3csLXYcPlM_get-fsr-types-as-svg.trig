@@ -1,0 +1,119 @@
+@prefix this: <https://w3id.org/np/RA4MQtGBhmGA_N2CLq_4j28tQwBV_HM6hZi3csLXYcPlM> .
+@prefix sub: <https://w3id.org/np/RA4MQtGBhmGA_N2CLq_4j28tQwBV_HM6hZi3csLXYcPlM/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-fsr-types a grlc:grlc-query;
+    dct:description "Returns one row with an SVG column: a horizontal bar chart of the number of metadata nanopublications of FAIR Supporting Resources (FSRs, including FAIR-Enabling Resources) per FSR type. The types are read dynamically from the FIP Ontology: every class in the fip namespace that is a (transitive) subclass of FAIR-Supporting-Resource, excluding the structural classes (FER/FSR, Available-*, *-to-be-Developed) and a hard-coded list of types that were left out of the chart on request. Type labels come from the published class definitions. Example nanopublications and invalidated nanopublications are excluded. Bars are sorted by count, and each label links root-relatively to the part page of the FSR type (/part?id=...), where the resources of that type are shown. Bar positions are computed with rank subqueries, so the output is deterministic. This is the query behind the \"FSR types\" SVG view.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get FSR types as SVG";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+
+select ?svg where {
+  # One bar per FSR type, ordered by count: rank is the number of types scoring at
+  # least as high, which gives the row its y position.
+  { select (group_concat(?bar; separator=\"\") as ?bars) (max(?rank) as ?k) where {
+    { select ?type ?label ?n (max(?n2) as ?max) (count(*) as ?rank) where {
+    { select distinct ?type (min(?label_x) as ?label) (count(distinct ?N_np) as ?n) where {
+      { select distinct ?type (min(?tl) as ?label_x) where {
+        ?type rdfs:subClassOf+ fip:FAIR-Supporting-Resource .
+        filter(strstarts(str(?type), \"https://w3id.org/fair/fip/terms/\"))
+        filter(?type not in (fip:FAIR-Enabling-Resource, fip:FAIR-Supporting-Resource, fip:Available-FAIR-Enabling-Resource, fip:Available-FAIR-Supporting-Resource, fip:FAIR-Enabling-Resource-to-be-Developed, fip:FAIR-Supporting-Resource-to-be-Developed))
+        # Types left out of the chart on request:
+        filter(?type not in (fip:Mature-Community, fip:Emerging-Community, fip:Generalist-Registry, fip:Domain-Specific-Registry, fip:FAIR-Supporting-Service, fip:FAIR-Implementation-Community, fip:FAIR-Supporting-Software, fip:Reference-FAIR-Implementation-Profile, fip:FAIR-Specification, fip:FAIR-Data-Stewardship-Event, fip:Web-API))
+        graph npa:graph { ?tnpa npx:introduces ?type ; np:hasAssertion ?taa . }
+        graph ?taa { ?type rdfs:label ?tl . }
+      } group by ?type }
+      graph npa:graph {
+        ?N_np npx:hasNanopubType ?type ; npx:hasNanopubType ?fsrtypea ; npa:hasValidSignatureForPublicKey ?pka ; dct:created ?datea .
+        values ?fsrtypea { fip:FAIR-Enabling-Resource fip:FAIR-Supporting-Resource }
+        filter(str(?datea) > \"2022\")
+        filter not exists { ?N_np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists { ?xa npx:invalidates ?N_np ; npa:hasValidSignatureForPublicKey ?pka . }
+      }
+    } group by ?type }
+    { select distinct ?type2 (min(?label2_x) as ?label2) (count(distinct ?n2_np) as ?n2) where {
+      { select distinct ?type2 (min(?tl) as ?label2_x) where {
+        ?type2 rdfs:subClassOf+ fip:FAIR-Supporting-Resource .
+        filter(strstarts(str(?type2), \"https://w3id.org/fair/fip/terms/\"))
+        filter(?type2 not in (fip:FAIR-Enabling-Resource, fip:FAIR-Supporting-Resource, fip:Available-FAIR-Enabling-Resource, fip:Available-FAIR-Supporting-Resource, fip:FAIR-Enabling-Resource-to-be-Developed, fip:FAIR-Supporting-Resource-to-be-Developed))
+        # Types left out of the chart on request:
+        filter(?type2 not in (fip:Mature-Community, fip:Emerging-Community, fip:Generalist-Registry, fip:Domain-Specific-Registry, fip:FAIR-Supporting-Service, fip:FAIR-Implementation-Community, fip:FAIR-Supporting-Software, fip:Reference-FAIR-Implementation-Profile, fip:FAIR-Specification, fip:FAIR-Data-Stewardship-Event, fip:Web-API))
+        graph npa:graph { ?tnpc npx:introduces ?type2 ; np:hasAssertion ?tac . }
+        graph ?tac { ?type2 rdfs:label ?tl . }
+      } group by ?type2 }
+      graph npa:graph {
+        ?n2_np npx:hasNanopubType ?type2 ; npx:hasNanopubType ?fsrtypec ; npa:hasValidSignatureForPublicKey ?pkc ; dct:created ?datec .
+        values ?fsrtypec { fip:FAIR-Enabling-Resource fip:FAIR-Supporting-Resource }
+        filter(str(?datec) > \"2022\")
+        filter not exists { ?n2_np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists { ?xc npx:invalidates ?n2_np ; npa:hasValidSignatureForPublicKey ?pkc . }
+      }
+    } group by ?type2 }
+      filter(?n2 > ?n || (?n2 = ?n && str(?type2) <= str(?type)))
+    } group by ?type ?label ?n }
+    bind(34 + (?rank - 1) * 20 as ?y)
+    bind(round(280 * ?n / ?max) as ?w)
+    bind(replace(replace(replace(?label, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\") as ?lbl)
+    bind(concat(
+      '<a href=\"/part?id=', encode_for_uri(str(?type)), '\"><text x=\"280\" y=\"', str(?y + 13), '\" text-anchor=\"end\" font-size=\"12\" fill=\"#333\">', ?lbl, '</text></a>',
+      '<rect x=\"288\" y=\"', str(?y + 2), '\" width=\"', str(?w), '\" height=\"14\" fill=\"#4a7fb5\"></rect>',
+      '<text x=\"', str(292 + ?w), '\" y=\"', str(?y + 13), '\" font-size=\"11\" fill=\"#333\">', str(?n), '</text>'
+    ) as ?bar)
+  } }
+  bind(34 + ?k * 20 + 8 as ?height)
+  bind(concat(
+    '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 640 ', str(?height), '\" width=\"640\" height=\"', str(?height), '\" font-family=\"sans-serif\">',
+    '<text x=\"0\" y=\"16\" font-size=\"14\" font-weight=\"bold\" fill=\"#222\">FAIR Supporting Resources per type</text>',
+    ?bars,
+    '</svg>') as ?svg)
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-16T07:56:28Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-fsr-types;
+    npx:supersedes <https://w3id.org/np/RAuYPL0yBL70Evl59X_hmNil3U_k9SSGA7dWryBcCbsLA>;
+    rdfs:label "Get FSR types as SVG";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzZAkv4Mu1YSUxQMriBnhYunqosX5wpuQ3FjUyzW8wTC51wjCmhsChyhS+mCx7Od+2MTDpdhxDWA+pH1r9AX508X2rIY/sbpMS+pd56e0qKPQ0t4folln1TgamPN9iOlY/yLc2x27AdipWIGXUdtL2iAcb+P/Y5dQS2AkHMS3lP2e5JBL5/bD/10qvTLKvdsqIKts8qjuLpxr9CFbsS2gLjMkXL5D2IsJ0cL5sgmIfS1inLVxIfXrS/OgqYNFqeNznUYCVWfo0g7DKjnjiICz3omeQeJFLYwlJ6PhUhYDQS6O318DGwUCwhnuXbBbwL9evZa2I/0Pwu5xpZdNLYJ5UwIDAQAB";
+    npx:hasSignature "MgSONOxxq2R07tNAABY1dwmGaCzmAn1rgxefKUV+5toYvFoZwvp+DzvX309j0I9H1D5wEC1OWa6a/90yjXdyokp/TwXcmi8gDohthhjrxYuE+IsVtBroCzV+jEw4p8WXXGBB8BJH9rNwgwwBpBczLZRiGncj/GDNrlDeBq6xQI0reYjJIV7g0USMmCJiQVAkceJrmoI9XNKU/Xw4l3SN3GPXpV4NAOX0UB90YUtsvb35XtxhYw9OE7JnYuHBSYE4QiuSGwVLcSs4W+g8tShPxgyyeGxs6mTLql33/Ah+mt8sNZbPhBZTYWLDVVXOI/xa1WqfpA7o8zTqWDEbD3i7AA==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot> .
+}
+

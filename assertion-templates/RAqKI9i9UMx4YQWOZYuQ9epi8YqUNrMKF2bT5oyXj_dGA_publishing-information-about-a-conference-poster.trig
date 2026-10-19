@@ -1,0 +1,155 @@
+@prefix this: <https://w3id.org/np/RAqKI9i9UMx4YQWOZYuQ9epi8YqUNrMKF2bT5oyXj_dGA> .
+@prefix sub: <https://w3id.org/np/RAqKI9i9UMx4YQWOZYuQ9epi8YqUNrMKF2bT5oyXj_dGA/> .
+@prefix schema: <https://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix fabio: <http://purl.org/spar/fabio/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix bibo: <http://purl.org/ontology/bibo/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "is described as" .
+  
+  dct:isPartOf rdfs:label "is part of" .
+  
+  dct:title rdfs:label "has the title" .
+  
+  bibo:authorList rdfs:label "has the author list" .
+  
+  fabio:ConferencePoster rdfs:label "conference poster" .
+  
+  fabio:hasPublicationYear rdfs:label "has the publication year" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:seeAlso rdfs:label "see also" .
+  
+  schema:about rdfs:label "is about" .
+  
+  sub:author a nt:AgentPlaceholder;
+    rdfs:label "an author of the poster";
+    nt:hasDefaultValue nt:CREATOR .
+  
+  sub:author-list a nt:LocalResource;
+    rdfs:label "this author list" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "abstract or description of the poster" .
+  
+  sub:event a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "event or conference";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Event" .
+  
+  sub:membership-property a nt:SequenceElementPlaceholder;
+    rdfs:label "has at position ${number}";
+    nt:hasPrefix "http://www.w3.org/1999/02/22-rdf-syntax-ns#_";
+    nt:hasPrefixLabel "includes as element number";
+    nt:hasRegex "[1-9][0-9]*" .
+  
+  sub:poster a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID suffix for the poster" .
+  
+  sub:posterUrl a nt:UriPlaceholder;
+    rdfs:label "URL to poster, DOI, or related resource" .
+  
+  sub:st01 rdf:object fabio:ConferencePoster;
+    rdf:predicate rdf:type;
+    rdf:subject sub:poster .
+  
+  sub:st02 rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:poster .
+  
+  sub:st02a rdf:object sub:year;
+    rdf:predicate fabio:hasPublicationYear;
+    rdf:subject sub:poster .
+  
+  sub:st03 rdf:object sub:author-list;
+    rdf:predicate bibo:authorList;
+    rdf:subject sub:poster .
+  
+  sub:st03a a nt:RepeatableStatement;
+    rdf:object sub:author;
+    rdf:predicate sub:membership-property;
+    rdf:subject sub:author-list .
+  
+  sub:st04 a nt:OptionalStatement;
+    rdf:object sub:event;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:poster .
+  
+  sub:st05 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:posterUrl;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:poster .
+  
+  sub:st06 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:poster .
+  
+  sub:st07 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:topic;
+    rdf:predicate schema:about;
+    rdf:subject sub:poster .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Publish metadata about a conference poster, including title, year, authors, the event it was part of, and optionally links to the poster or related resources, a description and topics.";
+    rdfs:label "Publishing information about a conference poster";
+    nt:hasNanopubLabelPattern "Poster: ${title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st02a, sub:st03, sub:st03a, sub:st04, sub:st05,
+      sub:st06, sub:st07;
+    nt:hasTag "Posters";
+    nt:hasTargetNanopubType fabio:ConferencePoster .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title of the poster" .
+  
+  sub:topic a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "topic or subject of the poster";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:year a nt:LiteralPlaceholder;
+    rdfs:label "year of the poster";
+    nt:hasDatatype xsd:gYear .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-10-15T16:19:43Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:supersedes <https://w3id.org/np/RA9u4Z-6KDVpIIzdTSQ2xh9vFZgvDlFtKdL5wetxTywf4>;
+    rdfs:label "Publishing information about a conference poster";
+    skos:changeNote "Adds the year of the poster as fabio:hasPublicationYear with an xsd:gYear literal.";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAWwJ-TzFhUJN5l6cTUIeCIUqqzS8ek-_zumlDczSUipk/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+i9DV8ynzO944pYkYsDwtlqJHuk+b7FQt6Bb4TIQSDX3jGUURn6WpaNwESHmgMLWSydaH5XlabMzuqpPL4iyB+IAzvwIxdJBLhe39EQMu2j+FZ/5d/xu/gO3nZw2KoEvJ7cJisabuI05OylIRSJ+OG5CmzFxnjojUEJeCFi1njY1InhXrb0yHud9b1ifzweoN6YYOBecKs1gTOaT2bf+t4Wgzg3M0PmRVZ4F0OALsnh4T5+x7kFtiPcDKNpORi585JjKCZ4kczIF6oUKcwgC0kmIY97jtLqSLcXRkxHx5CDI6qz4XlRFs1ZbCUdSlzjdPZAkaBcNem1gIhWzkHkEnQIDAQAB";
+    npx:hasSignature "uNIF16TtzhKv6BTshANerC7dnWi0BmZjil0qrMU0r0cuB26Ak/NywVBqfhhqn96GS4LBUcDGYzvCG3ToJ5T085bmSfTPOEXWQPQwZJ9cKxhjptvzXfcode8u3aVk4GSYLnEEeyrHYK/TflERhpVFaHYXI93I3iarekqAwkuKVHOGMNBNWipiuTyv0AxTnxEsMGLuPqJpk2GvG2x0rpCiGy32DoUSVlJAFxaRW+BHn4u4oRZchmhwyRFa197WJ5oc6yV2X+qNBIcoZ10hmqg402fryDJJJr0qYZkl9mNdwJJoh4U0QgiOYL8kLntr0WJJ0ZMg0fhMpfMHe3ixD93ioQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

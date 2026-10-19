@@ -1,0 +1,131 @@
+@prefix this: <https://w3id.org/np/RAuySlwfh8IxbfitvgscblYBLhGIFo5BCcf083RHlFYmg> .
+@prefix sub: <https://w3id.org/np/RAuySlwfh8IxbfitvgscblYBLhGIFo5BCcf083RHlFYmg/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:list-probknow-claims a grlc:grlc-query;
+    dct:description "Lists the claims (pk:Claim, https://w3id.org/probknow/ontology/Claim) published on the network, one row per claim resource. Of all validly signed, non-invalidated nanopublications that introduce a given claim, only the newest by timestamp is read (ties broken by nanopublication URI), so a claim that was published more than once appears once, with its current content. No publisher restriction is applied: every claim is listed, whoever signed it. The weight of evidence is given on the claim's own scale from 0 to 1, rounded to two decimals -- the claim's own pk:weightOfEvidence where it declares one, otherwise the score of its overall assessment, that is the assessment it links to with pk:hasAssessment whose pk:assessmentType ends in '/overall', read from pk:hasProbability or pk:weightOfEvidence, whichever that assessment carries. The verdict comes from the same overall assessment. Where a claim has several overall assessments, the newest one by nanopublication timestamp wins both columns. The assessments column counts the distinct assessments the claim is linked to by pk:hasAssessment, wherever that triple is asserted: in the claim's own nanopublication, as the ProbKnow claim template produces it, or in the assessment's nanopublication, as the earlier audit batches did. Because the link lives on either side, the count cannot be read from the claim nanopublication alone, which is why this query runs on the full repository rather than on the pk:Claim type repository. The override_target column is action data rather than content: it carries the row's nanopublication so that a view can offer a per-row in-place re-edit action. Ordered by date, most recent first, then alphabetically by label.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "List the ProbKnow claims";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix pk: <https://w3id.org/probknow/ontology/>
+
+select ?claim ?claim_label ?weight_of_evidence ?verdict ?assessments
+       ?date
+       (?np as ?override_target) ?np (\"^\" as ?np_label) where {
+  {
+    select ?claim ?np ?date
+           (min(?labelRank) as ?labelWin)
+           (min(?claimWeightStr) as ?claimWeightWin)
+           (max(?scoreRank) as ?scoreWin)
+           (max(?verdictRank) as ?verdictWin)
+           (count(distinct ?as) as ?assessments)
+    where {
+      graph npa:graph {
+        ?np npx:hasNanopubType pk:Claim ;
+          npa:hasValidSignatureForPublicKeyHash ?pubkey ;
+          dct:created ?date ;
+          npx:introduces ?claim ;
+          np:hasAssertion ?a .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+      }
+      filter not exists {
+        graph npa:graph {
+          ?np2 npx:hasNanopubType pk:Claim ;
+            npa:hasValidSignatureForPublicKeyHash ?pubkey2 ;
+            dct:created ?date2 ;
+            npx:introduces ?claim .
+          filter not exists { ?inv2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+        }
+        filter(?date2 > ?date || (?date2 = ?date && str(?np2) > str(?np)))
+      }
+      graph ?a { ?claim a pk:Claim . optional { ?claim rdfs:label ?label } }
+      bind(concat(if(lang(?label) = \"\", \"1\", \"2\"), \"|\", str(?label)) as ?labelRank)
+      optional {
+        graph ?a { ?claim pk:weightOfEvidence ?claimWeight }
+        bind(xsd:integer(round(?claimWeight * 100)) as ?claimWeightPct)
+        bind(if(?claimWeightPct >= 100, \"1.00\",
+             concat(\"0.\", if(?claimWeightPct < 10, concat(\"0\", str(?claimWeightPct)), str(?claimWeightPct)))) as ?claimWeightStr)
+      }
+      optional { graph ?ga { ?claim pk:hasAssessment ?as } }
+      optional {
+        graph ?gb { ?claim pk:hasAssessment ?overall }
+        graph npa:graph {
+          ?onp npx:introduces ?overall ;
+            np:hasAssertion ?oa ;
+            np:hasPublicationInfo ?opi ;
+            dct:created ?odate ;
+            npa:hasValidSignatureForPublicKeyHash ?opubkey .
+          filter not exists { ?oinv npx:invalidates ?onp ; npa:hasValidSignatureForPublicKeyHash ?opubkey . }
+        }
+        { graph ?oa { ?overall pk:assessmentType ?atype } }
+        union
+        { graph ?opi { ?onp pk:assessmentType ?atype } }
+        filter(strends(str(?atype), \"/overall\"))
+        optional { graph ?oa { ?overall pk:hasProbability ?p1 } }
+        optional { graph ?oa { ?overall pk:weightOfEvidence ?p2 } }
+        optional { graph ?oa { ?overall pk:hasVerdict ?overallVerdict } }
+        bind(coalesce(?p1, ?p2) as ?overallScore)
+        bind(xsd:integer(round(?overallScore * 100)) as ?overallPct)
+        bind(concat(str(?odate), \"|\",
+             if(?overallPct >= 100, \"1.00\",
+             concat(\"0.\", if(?overallPct < 10, concat(\"0\", str(?overallPct)), str(?overallPct))))) as ?scoreRank)
+        bind(concat(str(?odate), \"|\", str(?overallVerdict)) as ?verdictRank)
+      }
+    } group by ?claim ?np ?date
+  }
+  bind(strafter(?labelWin, \"|\") as ?claim_label)
+  bind(if(bound(?verdictWin), strafter(?verdictWin, \"|\"), \"\") as ?verdict)
+  bind(if(bound(?claimWeightWin), ?claimWeightWin,
+       if(bound(?scoreWin), strafter(?scoreWin, \"|\"), \"\")) as ?weight_of_evidence)
+}
+order by desc(?date) lcase(?claim_label)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-16T05:12:00Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:list-probknow-claims;
+    npx:supersedes <https://w3id.org/np/RAOs7JIPorkosGgKBlryvBlbJt1nbDSQ-FWhp5Wt4OjUE>;
+    rdfs:label "List the ProbKnow claims";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "KfjJGXfZT0P/yiY1rYWt+7uC6VjCtLaFGP2hRFmyKUsN/0UsJOXxlYFJ1Dx5ewSY12HcSKZ0JsptHV0ioj3nCqBc5NQ9B8Lt0EZ2ETe5gj4/1G3nrVrS8KJKxg+qCtsIeXRm1UGIGDUp6SU4XZeYAENy+2jdejZVugqSixva6cc=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

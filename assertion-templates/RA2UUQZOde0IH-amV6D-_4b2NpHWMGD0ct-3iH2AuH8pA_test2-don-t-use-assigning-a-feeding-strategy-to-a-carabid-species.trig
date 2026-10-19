@@ -1,0 +1,72 @@
+@prefix this: <https://w3id.org/np/RA2UUQZOde0IH-amV6D-_4b2NpHWMGD0ct-3iH2AuH8pA> .
+@prefix sub: <https://w3id.org/np/RA2UUQZOde0IH-amV6D-_4b2NpHWMGD0ct-3iH2AuH8pA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "To assign a feeding strategy to a carabid species, for example expressing that the subject taxon has herbivory feeding strategy. A feeding strategy is usually assigned after critical evaluation of literature and/or field lab experiments, rather than on the basis of a single observation";
+    rdfs:label "(test2 don't use) Assigning a feeding strategy to a carabid species";
+    nt:hasNanopubLabelPattern "${subjtaxonname} - has feeding strategy - ${feedingstrategy}";
+    nt:hasStatement sub:st;
+    nt:hasTag "Biodiversity";
+    nt:hasTargetNamespace <https://w3id.org/spaces/carabid-beetles>;
+    nt:hasTargetNanopubType <https://w3id.org/kpxl/biodiv/terms/BiodivNanopub> .
+  
+  sub:feedingstrategy a nt:GuidedChoicePlaceholder;
+    rdfs:label "start typing feeding strategy";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=ecocore&fieldList=iri,label,description&q=" .
+  
+  sub:st rdf:object sub:feedingstrategy;
+    rdf:predicate <https://w3id.org/np/RAwzHXJpSgCWL151wjTEttV2gxaR36xaUhLr5MHKgcB7Y/feedingstrategy>;
+    rdf:subject sub:subjtaxonname .
+  
+  sub:subjtaxonname a nt:GuidedChoicePlaceholder;
+    rdfs:label "start typing species name";
+    nt:possibleValuesFromApi "https://api.gbif.org/v1/species/suggest?datasetKey=d7dddbf4-2cf0-4f39-9b2a-bb099caae36c&q=" .
+  
+  <https://w3id.org/np/RAwzHXJpSgCWL151wjTEttV2gxaR36xaUhLr5MHKgcB7Y/feedingstrategy>
+    rdfs:label "has feeding strategy" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-4587-3476 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-4587-3476 foaf:name "roberto pizzolotto" .
+  
+  this: dct:created "2026-10-09T14:32:35.880Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-4587-3476;
+    dct:license <https://creativecommons.org/licenses/by-sa/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAkFVA79S3GaCULzGFLFkLBOMGbri5P72iLGvZiQCyqX4>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "(test2 don't use) Assigning a feeding strategy to a carabid species";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUDeKXhXlFhZOfNX+50fX31+K+KNwHGyuh65vqoj49E+Sc920NGPGIEmoyGDFtPONltIEFzp80aEY5mn+V+r27uUpDORorw6OlGGepR0dnWNwEJ8jyFVu7z7d+eIqC5t9V+tQbU4c1H2b8IEzlbpTT0n7DY6gjP0jDjwTBC94mdQIDAQAB";
+    npx:hasSignature "kHiiCin+TKrPS0QWb+xwvRgkyw+RYGm2U4T1l6c2zhzkmwi81oJCPFbE7LLusUYr7gV4CQu4laBtg0r6DNONDWdZPqCNWA3rKA1f/c549wN6+peH4NLsd+t1TebTCcpqBDTN6xSVIRRIrOBb77S/1aVdEKLyMqfXYSZ5K6JJInY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-4587-3476 .
+}
+

@@ -1,0 +1,109 @@
+@prefix this: <https://w3id.org/np/RAVfB06PHhdOO8S-6bDnrvtFTmkU5PuuGGaLBTqB4u4hM> .
+@prefix sub: <https://w3id.org/np/RAVfB06PHhdOO8S-6bDnrvtFTmkU5PuuGGaLBTqB4u4hM/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-ongoing-and-upcoming-events a grlc:grlc-query;
+    dct:description "Returns all ongoing and upcoming events that are defined as Spaces, with the ones that are in progress at this moment marked as ongoing instead of a date. Start and end times are compared as points in time, so an event that only starts later today is shown with its date and not as ongoing. Events starting on the same day are listed with overarching spaces before their sub-spaces.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get ongoing and upcoming events";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/8ad572d99071cc1ba0c16e54087b43594bdd9e8b2cfb62d2a0b16945fc49e53c>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix schema: <http://schema.org/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+
+select ?event ?event_label ?when ?np (\"^\" as ?np_label) where {
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np npx:introduces ?event .
+    ?np np:hasAssertion ?a .
+    ?np dct:created ?npDate .
+    filter not exists {
+      ?np2 npx:introduces ?event .
+      ?np2 npa:hasValidSignatureForPublicKeyHash ?pubkey2 .
+      filter not exists { ?npx2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+      ?np2 dct:created ?npDate2 .
+      filter(?npDate2 > ?npDate)
+    }
+  }
+  graph ?a {
+    ?event a gen:Space .
+    ?event a gen:Event .
+    ?event rdfs:label ?event_label .
+    ?event schema:startDate ?datetime .
+    optional { ?event schema:endDate ?endDatetime . }
+  }
+  bind(if(exists { graph ?a { ?event gen:isSubSpaceOf ?parentSpace . } }, 1, 0) as ?subSpaceOrder)
+  bind(xsd:date(substr(str(?datetime), 1, 10)) as ?date)
+  bind(xsd:date(substr(str(now()), 1, 10)) as ?today)
+  optional { bind(xsd:date(substr(str(?endDatetime), 1, 10)) as ?endDate) }
+  bind(if(bound(?endDate), ?endDate, ?date) as ?effectiveEnd)
+  filter(?effectiveEnd >= ?today)
+  # Whether an event is ongoing is a question about this moment, not about the day: one that
+  # starts later today has not started yet, and one that ended earlier today is over. Start
+  # and end are therefore normalized to instants and compared with now(). A value carrying no
+  # time counts from the start of its day (start) or to the end of it (end), and one carrying
+  # no timezone is read as UTC; where even that cannot be parsed, the coalesce falls back to
+  # the day-level comparison.
+  bind(if(contains(str(?datetime), \"T\"), str(?datetime), concat(str(?date), \"T00:00:00\")) as ?startText)
+  bind(if(regex(?startText, \"(Z|[+-][0-9][0-9]:[0-9][0-9])$\"), ?startText, concat(?startText, \"Z\")) as ?startTextTz)
+  bind(xsd:dateTime(?startTextTz) as ?start)
+  optional {
+    bind(if(contains(str(?endDatetime), \"T\"), str(?endDatetime), concat(str(?endDate), \"T23:59:59\")) as ?endText)
+    bind(if(regex(?endText, \"(Z|[+-][0-9][0-9]:[0-9][0-9])$\"), ?endText, concat(?endText, \"Z\")) as ?endTextTz)
+    bind(xsd:dateTime(?endTextTz) as ?end)
+  }
+  bind(coalesce(?start <= now(), ?date <= ?today) as ?hasStarted)
+  bind(coalesce(?end < now(), false) as ?hasEnded)
+  bind(if(?hasStarted && !?hasEnded, 1, 2) as ?statusOrder)
+  bind(if(?hasStarted && !?hasEnded, \"ongoing\", str(?date)) as ?when)
+} order by ?statusOrder ?date ?subSpaceOrder ?event_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-13T05:25:41Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:introduces sub:get-ongoing-and-upcoming-events;
+    npx:supersedes <https://w3id.org/np/RA177VGaNZhfVHwJkdZuwWwQ0LP9wGImQbRAlJIPZqfRQ>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "p/SpzOoigtGj21Ws59iB139iOVV93vkKhjLBrClu1FP2t1/K0GLFbelgRgsmB6UboPsvOEVl5cQYPt8wK0wMDhbKHYzwuU82jTeKOjcPGoM0oy7S3HMGJ0qzf35muoODSLqMWFfSWtEzy3uK+jDl06AdBd6+qJf3n2F7g0PNsAo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

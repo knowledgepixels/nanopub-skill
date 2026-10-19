@@ -1,0 +1,75 @@
+@prefix this: <https://w3id.org/np/RASRAZLtPzWqgd1kgStNJpJi3K0Uol4fhm6K4xpqKgWrY> .
+@prefix sub: <https://w3id.org/np/RASRAZLtPzWqgd1kgStNJpJi3K0Uol4fhm6K4xpqKgWrY/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix mira: <http://purl.org/mira-science/mira#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  mira:supports rdfs:label "supports the claim" .
+  
+  sub:argument a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "the MIRA claim or evidence item making the case";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=http%3A%2F%2Fpurl.org%2Fmira-science%2Fmira%23Claim",
+      "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=http%3A%2F%2Fpurl.org%2Fmira-science%2Fmira%23Evidence" .
+  
+  sub:claim a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "the MIRA claim it is about";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=http%3A%2F%2Fpurl.org%2Fmira-science%2Fmira%23Claim" .
+  
+  sub:st01 rdf:object sub:claim;
+    rdf:predicate mira:supports;
+    rdf:subject sub:argument .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "States that an existing MIRA claim or evidence item supports a MIRA claim. This is the epistemic judgement itself, signed by whoever makes it, so it is published separately from the records it links - anyone may support anyone else's claim.";
+    dct:isVersionOf <https://w3id.org/np/RAb0ACMx-JaGq7YA_YvBj3VCsnCy-aF55GWBQWIkrVrDE/templateKind>;
+    rdfs:label "Supporting a MIRA claim";
+    gen:governedBy <https://w3id.org/spaces/mira>;
+    nt:hasStatement sub:st01;
+    nt:hasTag "MIRA";
+    nt:hasTargetNanopubType mira:supports, <https://w3id.org/spaces/mira/r/MiraRecord> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234;
+    prov:wasDerivedFrom <https://github.com/MIRA-science/schema>, <https://mira.science/> .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-01T10:51:22Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:introduces <https://w3id.org/np/RAb0ACMx-JaGq7YA_YvBj3VCsnCy-aF55GWBQWIkrVrDE/templateKind>;
+    npx:supersedes <https://w3id.org/np/RAb0ACMx-JaGq7YA_YvBj3VCsnCy-aF55GWBQWIkrVrDE>;
+    rdfs:label "Supporting a MIRA claim";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RAefFjYMSnydcZtTqdT8TG8rJeJa76ryG7h10VHQiWKgY>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAWwJ-TzFhUJN5l6cTUIeCIUqqzS8ek-_zumlDczSUipk/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "dX2hkWkMLjRyj7NFX5s6gRgUlbmPowHZshiRgcDefmKcyHjXxPT5gS7pAVmDeeH0Fp3b5izSHrgGG8eMeHmstZEp1GH1Y+vSxbLQH5HVRlOiTEZQgXktCLBZlbf1U6M9/gj2OUr3uSwN/Axvdi16nTnVJg3KcThQ0tTSLjcg5Uc=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

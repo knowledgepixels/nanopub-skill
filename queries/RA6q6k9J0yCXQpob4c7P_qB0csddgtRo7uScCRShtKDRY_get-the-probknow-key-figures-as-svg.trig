@@ -1,0 +1,121 @@
+@prefix this: <https://w3id.org/np/RA6q6k9J0yCXQpob4c7P_qB0csddgtRo7uScCRShtKDRY> .
+@prefix sub: <https://w3id.org/np/RA6q6k9J0yCXQpob4c7P_qB0csddgtRo7uScCRShtKDRY/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-probknow-key-figures a grlc:grlc-query;
+    dct:description "Returns one row with an SVG column: a strip of key figures for the ProbKnow space, showing the number of claims, assessments, cited papers and ProbKnow nanopublications on the network. No publisher restriction is applied to any of the four figures: everything published counts, whoever signed it, and in each case only validly signed nanopublications that have not been invalidated by their own signing key are read. The claims figure repeats the gates of the \"Claims\" view that lists the same claims further down the page - nanopublications typed pk:Claim that introduce a claim their assertion also types pk:Claim - counted as distinct claim resources, so a claim published more than once counts once and the figure cannot disagree with the list it links to. The assessments figure counts distinct assessment resources introduced by nanopublications typed pk:Assessment, pk:BayesianAssessment or pk:LLMClaimAssessment whose assertion types the resource the same way, so it covers the Bayesian, LLM and rubric assessment kinds alike. The papers figure counts distinct papers, that is the distinct objects of pk:derivedFromPaper together with the resources typed pk:Paper, read from any nanopublication's assertion rather than only from ProbKnow-typed ones, since the paper is cited by the citing resource wherever that citation is asserted; these are mostly DOIs. The nanopublications figure counts the nanopublications whose npx:hasNanopubType is in the ProbKnow ontology namespace, which is the set the other three figures are read from; the space's own governance nanopublications (the space definition, its templates, roles, views and maintained-resource declarations) carry gen: types instead and are not counted, and neither is the pre-ontology batch published in 2026 under example.org identifiers, which carries no nanopublication type at all. The claims number links to the claims list on the page; the other three have no list on the page yet and render as plain figures. This is the query behind the \"In numbers\" SVG view of the ProbKnow space.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the ProbKnow key figures as SVG";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix pk: <https://w3id.org/probknow/ontology/>
+
+select ?svg where {
+  # The claims figure repeats the gates of the view that lists the same claims on
+  # this page, so the number can never disagree with the list it links to.
+  { select (count(distinct ?claim) as ?n_claim) where {
+    graph npa:graph {
+      ?cnp npx:hasNanopubType pk:Claim ; npa:hasValidSignatureForPublicKeyHash ?cpubkey ;
+           npx:introduces ?claim ; np:hasAssertion ?ca .
+      filter not exists { ?cinv npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKeyHash ?cpubkey . }
+    }
+    graph ?ca { ?claim a pk:Claim . }
+  } }
+  # Assessments of every kind: Bayesian, LLM and rubric assessments alike.
+  { select (count(distinct ?as) as ?n_as) where {
+    graph npa:graph {
+      ?anp npx:hasNanopubType ?atype ; npa:hasValidSignatureForPublicKeyHash ?apubkey ;
+           npx:introduces ?as ; np:hasAssertion ?aa .
+      values ?atype { pk:Assessment pk:BayesianAssessment pk:LLMClaimAssessment }
+      filter not exists { ?ainv npx:invalidates ?anp ; npa:hasValidSignatureForPublicKeyHash ?apubkey . }
+    }
+    graph ?aa { ?as a ?atype . }
+  } }
+  # Papers: cited by pk:derivedFromPaper or declared as papers in their own right,
+  # read wherever that is asserted rather than only from ProbKnow-typed nanopubs.
+  { select (count(distinct ?paper) as ?n_paper) where {
+    graph npa:graph {
+      ?pnp npa:hasValidSignatureForPublicKeyHash ?ppubkey ; np:hasAssertion ?pa .
+      filter not exists { ?pinv npx:invalidates ?pnp ; npa:hasValidSignatureForPublicKeyHash ?ppubkey . }
+    }
+    graph ?pa { { ?citing pk:derivedFromPaper ?paper . } union { ?paper a pk:Paper . } }
+  } }
+  # The nanopublications the three figures above are read from: those carrying a
+  # nanopublication type from the ProbKnow ontology.
+  { select (count(distinct ?np) as ?n_np) where {
+    graph npa:graph {
+      ?np npx:hasNanopubType ?nptype ; npa:hasValidSignatureForPublicKeyHash ?npubkey .
+      filter(strstarts(str(?nptype), \"https://w3id.org/probknow/ontology/\"))
+      filter not exists { ?ninv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?npubkey . }
+    }
+  } }
+  bind(concat(
+    '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 900 52\" width=\"100%\" height=\"52\" font-family=\"Inter, Verdana, Helvetica, sans-serif\">',
+    '<a href=\"#claims\">',
+    '<text x=\"113\" y=\"22\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"bold\" fill=\"#4a7fb5\">',
+    str(?n_claim),
+    '</text>',
+    '<text x=\"113\" y=\"41\" text-anchor=\"middle\" font-size=\"13\" fill=\"#555\">Claims</text>',
+    '</a>',
+    '<line x1=\"225\" y1=\"6\" x2=\"225\" y2=\"46\" stroke=\"#ddd\" stroke-width=\"1\"></line>',
+    '<text x=\"338\" y=\"22\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"bold\" fill=\"#4a7fb5\">',
+    str(?n_as),
+    '</text>',
+    '<text x=\"338\" y=\"41\" text-anchor=\"middle\" font-size=\"13\" fill=\"#555\">Assessments</text>',
+    '<line x1=\"450\" y1=\"6\" x2=\"450\" y2=\"46\" stroke=\"#ddd\" stroke-width=\"1\"></line>',
+    '<text x=\"563\" y=\"22\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"bold\" fill=\"#4a7fb5\">',
+    str(?n_paper),
+    '</text>',
+    '<text x=\"563\" y=\"41\" text-anchor=\"middle\" font-size=\"13\" fill=\"#555\">Papers</text>',
+    '<line x1=\"675\" y1=\"6\" x2=\"675\" y2=\"46\" stroke=\"#ddd\" stroke-width=\"1\"></line>',
+    '<text x=\"788\" y=\"22\" text-anchor=\"middle\" font-size=\"16\" font-weight=\"bold\" fill=\"#4a7fb5\">',
+    str(?n_np),
+    '</text>',
+    '<text x=\"788\" y=\"41\" text-anchor=\"middle\" font-size=\"13\" fill=\"#555\">Nanopublications</text>',
+    '</svg>') as ?svg)
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-18T18:06:33Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-probknow-key-figures;
+    rdfs:label "Get the ProbKnow key figures as SVG";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "NCXJEdwiYBmewam2W1XDshIwzCC43+CgqO05yfd0hLfms/BnlfaFp/PVD7Lpc4cA6UBy4EzH27m897CDYel3B9Y63XeAaIlbK/BJWVy4/KwEva3sykMBA76KSN6QhLmxml7fgXRY3HaWtWDJ95IjLv/5p+OVuN5IuBShnZ4qbEI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

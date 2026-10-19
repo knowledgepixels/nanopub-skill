@@ -1,0 +1,59 @@
+@prefix this: <https://w3id.org/np/RATmSTrng63kJCf1x-1IiURJnsg9EDDBb_HPfVHxpljEw> .
+@prefix sub: <https://w3id.org/np/RATmSTrng63kJCf1x-1IiURJnsg9EDDBb_HPfVHxpljEw/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <https://w3id.org/np/RAMlaof5zHWBC0Q3m8FbrJM4dsz4Y6M8DMKvJwnha88Gc/templateKind> a
+      gen:MaintainedResource, nt:AssertionTemplate;
+    dct:description "The MIRA template 'Registering a MIRA source document' (all its versions), maintained by the MIRA space so that its members can publish the next version.";
+    rdfs:label "Registering a MIRA source document";
+    gen:isMaintainedBy <https://w3id.org/spaces/mira> .
+  
+  sub:assignment a gen:ActivatedPresetAssignment, gen:PresetAssignment;
+    gen:isAssignmentFor <https://w3id.org/np/RAMlaof5zHWBC0Q3m8FbrJM4dsz4Y6M8DMKvJwnha88Gc/templateKind>;
+    gen:isAssignmentOfPreset <https://w3id.org/np/RAsfqb0NCvXnSsJgsx75aqbR-O_4q8uqp0YDgeX83fHIE/maintained-template-preset> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-01T08:59:20Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:assignment;
+    npx:hasNanopubType gen:MaintainedResource, gen:PresetAssignment;
+    npx:introduces <https://w3id.org/np/RAMlaof5zHWBC0Q3m8FbrJM4dsz4Y6M8DMKvJwnha88Gc/templateKind>;
+    npx:supersedes <https://w3id.org/np/RAMaMcavogBBdGD8qetf1dOuudvCsozWHh4HLHI8yCMkE>;
+    rdfs:label "Registering a MIRA source document";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1_mJ1G8d-5riusOFBQHtR8gG6pQHIH1W_e6S7ahIRTQ/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "QgvZzQ1wwA1MFlJK46UyKd0mXf5HcxnCTWqN6cj6PvngzvaObBfutZTTQrjrnSX3lfAfofe7braajKkmKhV8nq/fpdZXX5bNS7q1mKcPJzcl4NeHjyFsTPioKKQkOHPyYgDyNeRR/nkSSIdtsvdwxnWbcS0FoNE0eyJdRkTvu5k=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

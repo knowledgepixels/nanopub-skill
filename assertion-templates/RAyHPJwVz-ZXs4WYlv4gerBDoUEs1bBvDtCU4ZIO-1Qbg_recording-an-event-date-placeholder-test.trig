@@ -1,0 +1,99 @@
+@prefix this: <https://w3id.org/np/RAyHPJwVz-ZXs4WYlv4gerBDoUEs1bBvDtCU4ZIO-1Qbg> .
+@prefix sub: <https://w3id.org/np/RAyHPJwVz-ZXs4WYlv4gerBDoUEs1bBvDtCU4ZIO-1Qbg/> .
+@prefix schema: <https://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:date rdfs:label "took place on" .
+  
+  dct:temporal rdfs:label "is recorded for the period" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  schema:Event rdfs:label "event" .
+  
+  schema:startDate rdfs:label "started at" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Test template for date placeholders (nanodash#726): each date field takes a value at whatever precision is known and publishes it typed by what was entered (xsd:gYear, xsd:gYearMonth, xsd:date or xsd:dateTime). The first field takes any precision, the second only a date or a date and time, the third only a year or a year and month.";
+    rdfs:label "Recording an event - date placeholder test";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st03, sub:st04 .
+  
+  sub:date a nt:DatePlaceholder;
+    rdfs:label "date of the event, as precise as known" .
+  
+  sub:event a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "the event" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the name of the event" .
+  
+  sub:period a nt:DatePlaceholder;
+    rdfs:label "period of the record (a year, or a year and month)";
+    nt:hasDatatype xsd:gYear, xsd:gYearMonth .
+  
+  sub:st00 rdf:object schema:Event;
+    rdf:predicate rdf:type;
+    rdf:subject sub:event .
+  
+  sub:st01 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:event .
+  
+  sub:st02 dct:description "Enter only the year if that is all you know; the month, day, time and timezone are offered as you go.";
+    rdf:object sub:date;
+    rdf:predicate dct:date;
+    rdf:subject sub:event .
+  
+  sub:st03 a nt:OptionalStatement;
+    dct:description "Takes at least a full date: a year or a month alone is refused on publishing.";
+    rdf:object sub:start;
+    rdf:predicate schema:startDate;
+    rdf:subject sub:event .
+  
+  sub:st04 a nt:OptionalStatement;
+    dct:description "Takes a year or a year and month only: no day is offered.";
+    rdf:object sub:period;
+    rdf:predicate dct:temporal;
+    rdf:subject sub:event .
+  
+  sub:start a nt:DatePlaceholder;
+    rdfs:label "start of the event (a date, or a date and time)";
+    nt:hasDatatype xsd:date, xsd:dateTime .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  this: a npx:ExampleNanopub;
+    dct:created "2026-10-19T09:47:21Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Recording an event - date placeholder test" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+i9DV8ynzO944pYkYsDwtlqJHuk+b7FQt6Bb4TIQSDX3jGUURn6WpaNwESHmgMLWSydaH5XlabMzuqpPL4iyB+IAzvwIxdJBLhe39EQMu2j+FZ/5d/xu/gO3nZw2KoEvJ7cJisabuI05OylIRSJ+OG5CmzFxnjojUEJeCFi1njY1InhXrb0yHud9b1ifzweoN6YYOBecKs1gTOaT2bf+t4Wgzg3M0PmRVZ4F0OALsnh4T5+x7kFtiPcDKNpORi585JjKCZ4kczIF6oUKcwgC0kmIY97jtLqSLcXRkxHx5CDI6qz4XlRFs1ZbCUdSlzjdPZAkaBcNem1gIhWzkHkEnQIDAQAB";
+    npx:hasSignature "cN5zWg6bnrqTv352jTDBQ8JwFOjLcK+bPuDbF6xq19L8TsOJ356HBqzbOBvtmbUdtVP9b+c1YPpIilt3pV358z3yG+eFRpypR53bxIlMYiehaADlwDNFVY2l9A0GpfNeLWRGMZu+Mr9EoG0v4MbV8h/fHfVNVal9Pan5wpS/IRSumy2uu+GuYgus2oI68h13EARQLzOaQvvMJe1ySd3SJRgQYUMj2Cs2Fdnuj2IYMYfSdVRyKJFgxtnH0/0+K/i+ejtNgxF/yK9CkTKukfDXCtqwh7lRIPMFAjbeMl528l3yMj4EtnR61xNROhIo/1fXx4CbMSpODw0okhEiIRVMKw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

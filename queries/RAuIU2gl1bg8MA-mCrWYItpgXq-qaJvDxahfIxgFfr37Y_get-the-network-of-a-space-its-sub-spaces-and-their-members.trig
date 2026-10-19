@@ -1,0 +1,101 @@
+@prefix this: <https://w3id.org/np/RAuIU2gl1bg8MA-mCrWYItpgXq-qaJvDxahfIxgFfr37Y> .
+@prefix sub: <https://w3id.org/np/RAuIU2gl1bg8MA-mCrWYItpgXq-qaJvDxahfIxgFfr37Y/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-space-network a grlc:grlc-query;
+    dct:description "Returns the space family around a space as a network, one row per edge, for a network view (gen:NetworkView): the space's parent, its sub-spaces at any depth, and the agents holding a validated role in any of them, with the role tier as the relation. Agents carry their name; spaces are left to be named by the renderer. Hosted on the spaces repo, reading the current validated space state.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the network of a space, its sub-spaces and their members";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces>;
+    grlc:sparql """prefix npa: <http://purl.org/nanopub/admin/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select distinct ?source ?source_label ?source_type ?target ?target_label ?target_type
+       ?edge ?edge_label ?np ('^' as ?np_label)
+where {
+  # The state graph is resolved and read in the same query, so a rebuild cannot
+  # leave this reading a graph that no longer exists.
+  graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?g . }
+  {
+    # The space this page is about, under its parent.
+    graph ?g { ?_resource_iri npa:isSubSpaceOf ?parent . }
+    bind(?parent as ?source)
+    bind(?_resource_iri as ?target)
+    bind(gen:Space as ?source_type)
+    bind(gen:Space as ?target_type)
+    bind(\"has sub-space\" as ?edge_label)
+  } union {
+    # Its sub-spaces, at any depth.
+    graph ?g { ?_resource_iri npa:hasSubSpace* ?space . ?space npa:hasSubSpace ?child . }
+    bind(?space as ?source)
+    bind(?child as ?target)
+    bind(gen:Space as ?source_type)
+    bind(gen:Space as ?target_type)
+    bind(\"has sub-space\" as ?edge_label)
+  } union {
+    # Everyone holding a validated role in the space or in one of its sub-spaces. An
+    # agent in several of them links those spaces together, which is what makes this
+    # worth drawing rather than listing.
+    graph ?g {
+      ?_resource_iri npa:hasSubSpace* ?space .
+      ?ri a gen:RoleInstantiation ;
+        npa:forSpace ?space ;
+        npa:forAgent ?agent ;
+        npa:hasRoleType ?tier ;
+        npa:viaNanopub ?grantNp .
+    }
+    optional { graph ?g { ?agent foaf:name ?agentName . } }
+    bind(?space as ?source)
+    bind(?agent as ?target)
+    bind(gen:Space as ?source_type)
+    bind(gen:IndividualAgent as ?target_type)
+    bind(?agentName as ?target_label)
+    bind(?tier as ?edge)
+    bind(lcase(replace(replace(str(?tier), \"^.*/\", \"\"), \"Role$\", \"\")) as ?edge_label)
+    bind(?grantNp as ?np)
+  }
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-19T08:19:35Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-space-network;
+    rdfs:label "Get the network of a space, its sub-spaces and their members";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Eb3DpdsoV6L4twd6DPzg4H4L9fl9qdImGqwExOGeYpL+n2nz9yIXpN7Vz6OC6AxTBVlOFvq/Y19IZrRShNo+BuoUMmLPw0EQYAzgWtcTwdd1PVSXkA89QWAq8xtnHV46+rav29GO7madXo93jO/csfJGSLgmG9wvAKGFyDxlD/w=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

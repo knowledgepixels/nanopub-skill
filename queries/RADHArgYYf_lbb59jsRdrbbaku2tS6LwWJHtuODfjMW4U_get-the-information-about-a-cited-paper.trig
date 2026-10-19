@@ -1,0 +1,93 @@
+@prefix this: <https://w3id.org/np/RADHArgYYf_lbb59jsRdrbbaku2tS6LwWJHtuODfjMW4U> .
+@prefix sub: <https://w3id.org/np/RADHArgYYf_lbb59jsRdrbbaku2tS6LwWJHtuODfjMW4U/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-paper-info a grlc:grlc-query;
+    dct:description "Returns what is known about a cited paper as a property/value table, for the page of that paper (its IRI passed as the 'paper' parameter): its title, its year of publication where one is recorded, and how many claims cite it. ProbKnow publishes no nanopublication that defines a paper, so the title is taken from the nanopublications that cite it with pk:derivedFromPaper, rather than from any statement about the IRI elsewhere on the network; within those, it is looked up in the assertion graph or the provenance graph, because the claims carry it in one or the other depending on their vintage. Where several citing nanopublications give a title or a year, the lexicographically first is shown. Rows whose value is empty are left out, so a paper with no recorded year simply has fewer rows. Both value columns carry the _noheader marker, so the table renders without a header row. This view exists chiefly to name the paper: a paper's part page has no defining nanopublication, so its heading is only the identifier.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the information about a cited paper";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix pk: <https://w3id.org/probknow/ontology/>
+
+select ?Property_noheader ?Value_noheader (\"\" as ?Value_label) where {
+  {
+    select (min(?titleV) as ?title) (min(?yearV) as ?year) (count(distinct ?claim) as ?claims) where {
+      values ?_paper_multi_iri {}
+      # Scoped to the nanopublications that actually cite this paper, so that the title
+      # is the one the citing claims give it and not any statement about the IRI
+      # elsewhere on the network. The claims carry it in the assertion graph or in the
+      # provenance graph depending on their vintage, hence the alternative path.
+      graph npa:graph { ?cnp npx:hasNanopubType pk:Claim ; np:hasAssertion ?ca . }
+      graph ?ca { ?claim pk:derivedFromPaper ?_paper_multi_iri . }
+      optional {
+        graph npa:graph { ?cnp (np:hasAssertion|np:hasProvenance) ?tg . }
+        graph ?tg { ?_paper_multi_iri dct:title ?titleV . }
+      }
+      optional {
+        graph npa:graph { ?cnp (np:hasAssertion|np:hasProvenance) ?yg . }
+        graph ?yg { ?_paper_multi_iri dct:date ?d . }
+        bind(substr(str(?d), 1, 4) as ?yearV)
+      }
+    }
+  }
+  bind(coalesce(?title, \"\") as ?titleS)
+  bind(coalesce(?year, \"\") as ?yearS)
+  values (?k ?Property_noheader ?ord) {
+    (\"title\" \"Title:\" 1)
+    (\"year\" \"Year:\" 2)
+    (\"claims\" \"Cited by:\" 3)
+  }
+  bind(if(?k = \"title\", ?titleS,
+       if(?k = \"year\", ?yearS,
+       if(?claims = 1, \"1 claim\", concat(str(?claims), \" claims\")))) as ?Value_noheader)
+  filter(?Value_noheader != \"\")
+}
+order by ?ord""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-16T05:29:45Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-paper-info;
+    rdfs:label "Get the information about a cited paper";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "rBV6yDNnVAOISZXC1gDOoP09maVGMQIiHRWkHTmrmrElPX06L+ji7R/bviGU3bejGGQ17Ya7bDqu9HfpUAQu+2AqPIfNZIG8r6Bae9rN15CLj6ky0VMxX680TINP6Kk69d9EXqgWHNIJkL2N1fYS2SOEusjDp6TZBubDdc31wzI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,146 @@
+@prefix this: <https://w3id.org/np/RAL2ZatVJstki7zguxa8L9rQMq7tvZasIRB3M65brLhxU> .
+@prefix sub: <https://w3id.org/np/RAL2ZatVJstki7zguxa8L9rQMq7tvZasIRB3M65brLhxU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix fair: <https://w3id.org/fair/principles/terms/> .
+@prefix fip: <https://w3id.org/fair/fip/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "is called" .
+  
+  owl:NamedIndividual rdfs:label "named individual" .
+  
+  skos:definition rdfs:label "has the definition" .
+  
+  fip:FIP-Data-related-Question rdfs:label "FIP question about data" .
+  
+  fip:FIP-Metadata-related-Question rdfs:label "FIP question about metadata" .
+  
+  fip:FIP-Question rdfs:label "FIP question" .
+  
+  fip:refers-to-principle rdfs:label "is about the FAIR principle" .
+  
+  fair:A1.1 rdfs:label "A1.1 — the protocol is open, free, and universally implementable" .
+  
+  fair:A1.2 rdfs:label "A1.2 — the protocol allows for an authentication and authorization procedure, where necessary" .
+  
+  fair:A2 rdfs:label "A2 — metadata are accessible, even when the data are no longer available" .
+  
+  fair:F1 rdfs:label "F1 — (meta)data are assigned a globally unique and persistent identifier" .
+  
+  fair:F2 rdfs:label "F2 — data are described with rich metadata" .
+  
+  fair:F3 rdfs:label "F3 — metadata clearly and explicitly include the identifier of the data it describes" .
+  
+  fair:F4 rdfs:label "F4 — (meta)data are registered or indexed in a searchable resource" .
+  
+  fair:I1 rdfs:label "I1 — (meta)data use a formal, accessible, shared, and broadly applicable language for knowledge representation" .
+  
+  fair:I2 rdfs:label "I2 — (meta)data use vocabularies that follow FAIR principles" .
+  
+  fair:I3 rdfs:label "I3 — (meta)data include qualified references to other (meta)data" .
+  
+  fair:R1.1 rdfs:label "R1.1 — (meta)data are released with a clear and accessible data usage license" .
+  
+  fair:R1.2 rdfs:label "R1.2 — (meta)data are associated with detailed provenance" .
+  
+  fair:R1.3 rdfs:label "R1.3 — (meta)data meet domain-relevant community standards" .
+  
+  sub:definition a nt:LanguageTaggedLiteralPlaceholder, nt:LiteralPlaceholder;
+    rdfs:label "the question as put to a community";
+    nt:hasLanguageTag "en" .
+  
+  sub:kind a nt:RestrictedChoicePlaceholder;
+    rdfs:label "data, metadata, or neither";
+    nt:possibleValue fip:FIP-Data-related-Question, fip:FIP-Metadata-related-Question,
+      fip:FIP-Question .
+  
+  sub:label a nt:LanguageTaggedLiteralPlaceholder, nt:LiteralPlaceholder;
+    rdfs:label "short name, e.g. FIP Question F2";
+    nt:hasLanguageTag "en" .
+  
+  sub:principle a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the FAIR principle it is about";
+    nt:possibleValue fair:A1.1, fair:A1.2, fair:A2, fair:F1, fair:F2, fair:F3, fair:F4,
+      fair:I1, fair:I2, fair:I3, fair:R1.1, fair:R1.2, fair:R1.3 .
+  
+  sub:question a nt:IntroducedResource, nt:NewUriPlaceholder, nt:UriPlaceholder;
+    rdfs:label "term suffix, e.g. FIP-S-Question-crosswalk";
+    nt:hasPrefix "https://w3id.org/fair/fip/terms/";
+    nt:hasPrefixLabel "fip:";
+    nt:hasRegex "FIP-(S-)?Question-[A-Za-z0-9.\\-]+" .
+  
+  sub:st1 rdf:object owl:NamedIndividual;
+    rdf:predicate rdf:type;
+    rdf:subject sub:question .
+  
+  sub:st2 rdf:object sub:kind;
+    rdf:predicate rdf:type;
+    rdf:subject sub:question .
+  
+  sub:st3 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:question .
+  
+  sub:st4 rdf:object sub:definition;
+    rdf:predicate skos:definition;
+    rdf:subject sub:question .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:principle;
+    rdf:predicate fip:refers-to-principle;
+    rdf:subject sub:question .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Such a nanopublication defines a question of a FAIR Implementation Profile (FIP): the term that FIP declarations point at with fip:refers-to-question. Use it for the supplementary \"S\" questions (fip:FIP-S-Question-*), which FIP declarations already use but which have never been defined, and for any further question term. The question text entered as the definition is what the Declared FSRs view of the FAIR Implementation Space shows as the heading above the resources declared under the question, so write it as it is put to a community. Enter the term suffix exactly as the declarations spell it, for instance FIP-S-Question-crosswalk; Nanodash refuses to publish if the term is already introduced elsewhere, which keeps the twenty-one questions of the FIP Ontology (fip:FIP-Question-F2 and its siblings) from being redefined here — those are revised through the ontology itself. Saying whether the question is about data or about metadata records a distinction that the question identifiers have so far only carried in their -D and -MD endings.";
+    rdfs:label "Defining a FIP question";
+    nt:hasNanopubLabelPattern "${question}: ${definition}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st4, sub:st5;
+    nt:hasTag "FIP";
+    nt:hasTargetNanopubType fip:FIP-Question .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-19T11:08:18Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:supersedes <https://w3id.org/np/RAXAIqDJOet9kIke5nFmPSZM_4zjDbHWnpi4rPMX5eyXE>;
+    rdfs:label "Defining a FIP question";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAWwJ-TzFhUJN5l6cTUIeCIUqqzS8ek-_zumlDczSUipk> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzZAkv4Mu1YSUxQMriBnhYunqosX5wpuQ3FjUyzW8wTC51wjCmhsChyhS+mCx7Od+2MTDpdhxDWA+pH1r9AX508X2rIY/sbpMS+pd56e0qKPQ0t4folln1TgamPN9iOlY/yLc2x27AdipWIGXUdtL2iAcb+P/Y5dQS2AkHMS3lP2e5JBL5/bD/10qvTLKvdsqIKts8qjuLpxr9CFbsS2gLjMkXL5D2IsJ0cL5sgmIfS1inLVxIfXrS/OgqYNFqeNznUYCVWfo0g7DKjnjiICz3omeQeJFLYwlJ6PhUhYDQS6O318DGwUCwhnuXbBbwL9evZa2I/0Pwu5xpZdNLYJ5UwIDAQAB";
+    npx:hasSignature "o55KoE+5a7itnzONNhUxKIdE9nRIiDs8kA6hqQ9rJtLaIYM8c4wm7lryC/VuIltRrD83aRGRYxvUwZDgZakwZKi43+UY4qupKYueHYy4TcL41+/njfADLa5qJCzaAEcK9mR6oQMVpKoMYyqVlR4fvb8tVXhUl+Zu2h/JERBEbvWf0ZzJcbcfdePIz50x0e+UAL8gfsulif5mE4fCI7TU/nTCoQwKyt5aGVrYELjrzyrwJF5FhziVjgryr3yqz+52QKZDbyF1B8WinEAfxs2nK7ln/KDkv3mPRtE7LhuG4iYIdovM9zpBKxfAvTXUlrfOduK57D/6N/7dUj4fcH0D5w==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot> .
+}
+

@@ -1,0 +1,113 @@
+@prefix this: <https://w3id.org/np/RAIeuY8SxuEhwwHaXrCBRpdet36U0_7QGqSwChYxly6fs> .
+@prefix sub: <https://w3id.org/np/RAIeuY8SxuEhwwHaXrCBRpdet36U0_7QGqSwChYxly6fs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-claim-assessments a grlc:grlc-query;
+    dct:description "Lists the assessments of a claim, one row per assessment, for the page of that claim (its IRI passed as the 'claim' parameter). The assessments are the ones the claim is linked to by pk:hasAssessment, wherever that triple is asserted: in the claim's own nanopublication, as the ProbKnow claim template produces it, or in the assessment's own nanopublication, as the earlier audit batches did -- which is why this query runs on the full repository rather than on a type repository. Of all validly signed, non-invalidated nanopublications introducing a given assessment, only the newest is read (ties broken by nanopublication URI), so a re-assessed criterion appears once, with its current score. The criterion is the rubric concept the assessment declares with pk:assessmentType -- on the assessment in the assertion graph, as the earlier batches did, or on the nanopublication in pubinfo, as the template produces it -- resolved to its name through the published rubric concept, a pk:Concept whose dct:identifier is that same string. The pk:Concept restriction on that lookup is load-bearing: the per-criterion hypothesis nodes carry the same dct:identifier values, so an unrestricted join names each criterion after some other claim's hypothesis. An overall assessment is named 'Overall' and sorted first; an assessment type with no published concept falls back to the last segment of its identifier. The score is the assessment's pk:hasProbability or, in the earlier batches, its pk:weightOfEvidence, on the rubric's scale from 0 to 1 rounded to two decimals. Ordered with the overall assessment first, then alphabetically by criterion.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the assessments of a claim";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix pk: <https://w3id.org/probknow/ontology/>
+
+select ?criterion ?score ?verdict ?model ?model_label ?np (\"^\" as ?np_label) where {
+  {
+    select ?as ?np
+           (min(?criterionV) as ?criterion)
+           (min(?ordV) as ?ord)
+           (min(?scoreV) as ?score)
+           (min(?verdictV) as ?verdict)
+           (min(?modelStrV) as ?modelStr)
+           (min(?modelLabelV) as ?model_label)
+    where {
+      values ?_claim_multi_iri {}
+      graph ?gl { ?_claim_multi_iri pk:hasAssessment ?as }
+      graph npa:graph {
+        ?np npx:introduces ?as ;
+          np:hasAssertion ?aa ;
+          np:hasPublicationInfo ?api ;
+          dct:created ?date ;
+          npa:hasValidSignatureForPublicKeyHash ?pubkey .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+      }
+      graph ?aa { ?as a pk:LLMClaimAssessment }
+      filter not exists {
+        graph npa:graph {
+          ?np2 npx:introduces ?as ;
+            np:hasAssertion ?a2 ;
+            dct:created ?date2 ;
+            npa:hasValidSignatureForPublicKeyHash ?pubkey2 .
+          filter not exists { ?inv2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+        }
+        graph ?a2 { ?as a pk:LLMClaimAssessment }
+        filter(?date2 > ?date || (?date2 = ?date && str(?np2) > str(?np)))
+      }
+      { graph ?aa { ?as pk:assessmentType ?atype } }
+      union
+      { graph ?api { ?np pk:assessmentType ?atype } }
+      optional { graph ?cg { ?concept a pk:Concept ; dct:identifier ?atype ; rdfs:label ?conceptLabel } }
+      bind(if(strends(str(?atype), \"/overall\"), \"Overall\",
+           coalesce(?conceptLabel, replace(str(?atype), \"^.*/\", \"\"))) as ?criterionV)
+      bind(if(strends(str(?atype), \"/overall\"), \"0\", concat(\"1\", ?criterionV)) as ?ordV)
+      optional { graph ?aa { ?as pk:hasProbability ?p1 } }
+      optional { graph ?aa { ?as pk:weightOfEvidence ?p2 } }
+      bind(coalesce(?p1, ?p2) as ?sc)
+      bind(xsd:integer(round(?sc * 100)) as ?pct)
+      bind(if(?pct >= 100, \"1.00\",
+           concat(\"0.\", if(?pct < 10, concat(\"0\", str(?pct)), str(?pct)))) as ?scoreV)
+      optional { graph ?aa { ?as pk:hasVerdict ?verdictV } }
+      optional { graph ?aa { ?as pk:assessedBy ?modelV } bind(str(?modelV) as ?modelStrV) }
+      optional { graph ?aa { ?modelV rdfs:label ?modelLabelV } }
+    } group by ?as ?np
+  }
+  bind(iri(?modelStr) as ?model)
+}
+order by ?ord""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-16T05:12:00Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-claim-assessments;
+    rdfs:label "Get the assessments of a claim";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "LxVkYn6Bj+c2/VjHiI+r5JKXtjdiVV15Q+dfNKkdIKalmdyQEkEVCbX+ZYZ83iu+ikaJa3Oqy4gg20tpXDzIogb/H73Sptrc/Kg2FW/mjaDl6IQKxkvLLOiL3EqUxR16RSHMUxNuqSuVKvpWvvsvV1z0hlg9Tjw4nbX2b85L7gM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

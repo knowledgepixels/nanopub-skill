@@ -1,0 +1,88 @@
+@prefix this: <https://w3id.org/np/RAVkMbMivaYLFDHnAG11Lgnx8co0B2bOT6t4_EO-h7FEo> .
+@prefix sub: <https://w3id.org/np/RAVkMbMivaYLFDHnAG11Lgnx8co0B2bOT6t4_EO-h7FEo/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-claim-source-papers a grlc:grlc-query;
+    dct:description "Lists the papers a claim was derived from (pk:derivedFromPaper), for the page of that claim (its IRI passed as the 'claim' parameter), read from the claim's current definition: of all validly signed, non-invalidated nanopublications that introduce the claim, the newest one (ties broken by nanopublication URI). Each paper's title and year are looked up wherever they are asserted rather than in one fixed graph, because the claims carry them in the nanopublication's provenance graph or in its assertion graph depending on their vintage: restricting the lookup to the provenance graph finds a title for 7 of the 18 papers published so far, while an unrestricted one finds all 18. The year is blank for a paper whose dct:date is not published anywhere. Ordered by year, most recent first, then alphabetically by title.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the source papers of a claim";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix pk: <https://w3id.org/probknow/ontology/>
+
+select ?paper ?paper_label ?year ?np (\"^\" as ?np_label) where {
+  {
+    select ?np ?paper (min(?titleV) as ?paper_label) (min(?yearV) as ?year) where {
+      values ?_claim_multi_iri {}
+      graph npa:graph {
+        ?np npx:introduces ?_claim_multi_iri ;
+          np:hasAssertion ?a ;
+          dct:created ?date ;
+          npa:hasValidSignatureForPublicKeyHash ?pubkey .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+      }
+      graph ?a { ?_claim_multi_iri a pk:Claim ; pk:derivedFromPaper ?paper }
+      filter not exists {
+        graph npa:graph {
+          ?np2 npx:introduces ?_claim_multi_iri ;
+            np:hasAssertion ?a2 ;
+            dct:created ?date2 ;
+            npa:hasValidSignatureForPublicKeyHash ?pubkey2 .
+          filter not exists { ?inv2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+        }
+        graph ?a2 { ?_claim_multi_iri a pk:Claim }
+        filter(?date2 > ?date || (?date2 = ?date && str(?np2) > str(?np)))
+      }
+      optional { graph ?tg { ?paper dct:title ?titleV } }
+      optional { graph ?yg { ?paper dct:date ?d } bind(substr(str(?d), 1, 4) as ?yearV) }
+    } group by ?np ?paper
+  }
+}
+order by desc(?year) lcase(str(coalesce(?paper_label, \"\")))""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-16T05:12:00Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-claim-source-papers;
+    rdfs:label "Get the source papers of a claim";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "QrfuO4r/ghZuyfdJlqFqgUX6Bs1Xn8Gn3NrX+TaagY4pZpVmXD6ZDT/8SZmIvXVLIv5bzV8ZxW4holZlCChyjnHQQVivEgBZk20pHEW5i+AeTb1gsFxr439mlyyxs8fPjZtlpY4BS1dqGr3hnxz3SWBfd1X3MVlvuQObbfq+dvk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

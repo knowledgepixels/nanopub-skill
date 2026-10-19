@@ -1,0 +1,123 @@
+@prefix this: <https://w3id.org/np/RAGr6BbuO49yvtLt9YhTD5MdkOe8Iuk24OVJ9mt4nyHzs> .
+@prefix sub: <https://w3id.org/np/RAGr6BbuO49yvtLt9YhTD5MdkOe8Iuk24OVJ9mt4nyHzs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-mira-studies a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Lists every MIRA study with how much evidence is grounded in it, how many claims that evidence observes, how many protocols the study follows, and the source documents it is reported in. Shows which studies carry the weight of the graph. Runs against the shared MIRA record type repository.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "MIRA studies (query)";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/5ee93356ac9163d743a44466ee5cae3e537a0bb429b81354f72799d7f700c947>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix mira: <http://purl.org/mira-science/mira#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?study ?study_label ?flags ?evidence ?claims ?protocols
+       ?source_multi_iri ?source_label_multi
+       ?creator ?creator_label ?date ?np (\"^\" as ?np_label) where {
+  {
+    select ?study (sample(?t) as ?study_label) where {
+      graph ?sa { ?study a mira:Study ; dct:title ?t . }
+    } group by ?study
+  }
+  # evidence grounded in this study
+  optional {
+    select ?study (count(distinct ?e) as ?nev) where {
+      graph ?eg { ?e mira:is_grounded_in ?study . }
+    } group by ?study
+  }
+  # claims that evidence observes
+  optional {
+    select ?study (count(distinct ?c) as ?ncl) where {
+      graph ?eg2 { ?e2 mira:is_grounded_in ?study ; mira:observationStatement ?c . }
+    } group by ?study
+  }
+  # protocols the study follows
+  optional {
+    select ?study (count(distinct ?p) as ?nprot) where {
+      graph ?pg { ?study mira:follows ?p . }
+    } group by ?study
+  }
+  bind(coalesce(?nev, 0) as ?evidence)
+  bind(coalesce(?ncl, 0) as ?claims)
+  bind(coalesce(?nprot, 0) as ?protocols)
+  # source documents, reached through the study's evidence or from the document itself
+  optional {
+    select ?study (group_concat(distinct ?src; separator=\" \") as ?source_multi_iri)
+                  (group_concat(?srcLabel; separator=\"\\n\") as ?source_label_multi) where {
+      {
+        select distinct ?study ?src where {
+          { graph ?eg3 { ?e3 mira:is_grounded_in ?study ; mira:sourceDocument ?src . } }
+          union
+          { graph ?dg { ?src mira:describesActivity ?study . } }
+        }
+      }
+      optional {
+        select ?src (sample(?l) as ?lbl) where {
+          graph ?sd { ?src dct:title ?l . }
+        } group by ?src
+      }
+      bind(coalesce(?lbl, str(?src)) as ?srcLabel)
+    } group by ?study
+  }
+  graph npa:graph { ?np npx:introduces ?study ; dct:creator ?creator ; dct:created ?date . }
+  optional {
+    select ?np (sample(?n) as ?creatorName) where {
+      graph npa:graph { ?np np:hasPublicationInfo ?pi ; dct:creator ?c3 . }
+      graph ?pi { ?c3 foaf:name ?n . }
+    } group by ?np
+  }
+  bind(coalesce(?creatorName, '') as ?creator_label)
+  optional {
+    select ?np (group_concat(distinct ?flag; separator=\", \") as ?flagList) where {
+      graph npa:graph { ?np npx:hasNanopubType ?flagType . }
+      values (?flagType ?flag) { (npx:ExampleNanopub \"Example\") }
+    } group by ?np
+  }
+  bind(coalesce(?flagList, '') as ?flags)
+} order by desc(?evidence) lcase(str(?study_label))
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-13T05:53:08Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-mira-studies;
+    rdfs:label "MIRA studies (query)";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Ha/EBt6j6MXo19GlOKCYntpFFEKkM14i/w6Jqeef6co3g27FVqL2Fn50M1/N7Sw4c7L89O17hus2eEceUHAXSIZvoTqR0T9ENvQ8pUb15qWuAtk49WngeTeTeJaalDIhSuxbBIAOpHvV2oCYMM1ONqSAZE1j+NvHOvpt5LrduGM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

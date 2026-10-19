@@ -1,0 +1,143 @@
+@prefix this: <https://w3id.org/np/RA1_mJ1G8d-5riusOFBQHtR8gG6pQHIH1W_e6S7ahIRTQ> .
+@prefix sub: <https://w3id.org/np/RA1_mJ1G8d-5riusOFBQHtR8gG6pQHIH1W_e6S7ahIRTQ/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  gen:ActivatedPresetAssignment rdfs:label "activated preset assignment" .
+  
+  gen:MaintainedResource rdfs:label "maintained resource" .
+  
+  gen:PresetAssignment rdfs:label "preset assignment" .
+  
+  gen:isAssignmentFor rdfs:label "is an assignment for" .
+  
+  gen:isAssignmentOfPreset rdfs:label "is an assignment of the preset" .
+  
+  gen:isMaintainedBy rdfs:label "is maintained by" .
+  
+  sub:assignment a nt:EmbeddedResource, nt:LocalResource;
+    rdfs:label "this" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "the description of the template" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the name of the template" .
+  
+  sub:resource a nt:ExternalUriPlaceholder, nt:IntroducedResource;
+    rdfs:label "the template's cross-version ID (template kind URI)" .
+  
+  sub:space a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "the space maintaining this template";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st00 rdf:object gen:MaintainedResource;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st01 rdf:object nt:AssertionTemplate;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:resource .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:resource .
+  
+  sub:st04 rdf:object sub:space;
+    rdf:predicate gen:isMaintainedBy;
+    rdf:subject sub:resource .
+  
+  sub:st10 a nt:AdvancedStatement;
+    rdf:object gen:PresetAssignment;
+    rdf:predicate rdf:type;
+    rdf:subject sub:assignment .
+  
+  sub:st12 a nt:AdvancedStatement;
+    rdf:object gen:ActivatedPresetAssignment;
+    rdf:predicate rdf:type;
+    rdf:subject sub:assignment .
+  
+  sub:st20 a nt:AdvancedStatement;
+    rdf:object <https://w3id.org/np/RAsfqb0NCvXnSsJgsx75aqbR-O_4q8uqp0YDgeX83fHIE/maintained-template-preset>;
+    rdf:predicate gen:isAssignmentOfPreset;
+    rdf:subject sub:assignment .
+  
+  sub:st30 a nt:AdvancedStatement;
+    rdf:object sub:resource;
+    rdf:predicate gen:isAssignmentFor;
+    rdf:subject sub:assignment .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description """<p>List an <strong>assertion template</strong> as a maintained resource of a space, so the space governs its versions and the template gets its own resource page.</p>
+
+<p>Unlike the general \"Defining a maintained resource\" template, this one is specific to templates: the resource type is fixed to <code>nt:AssertionTemplate</code>, and the same nanopublication also assigns the <em>Maintained template preset</em>, which supplies the standard views for a template page (template info, version history, and the latest nanopublications published from the template). Listing a template and giving it its standard page is therefore a single act.</p>
+
+<p>The preset assignment is identified by the <em>(preset, resource)</em> pair, not by this nanopublication's URI, so it can later be deactivated on its own without superseding this nanopublication.</p>""";
+    dct:isVersionOf sub:templateKind;
+    rdfs:label "Listing a template as a maintained resource";
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels>;
+    nt:hasNanopubLabelPattern "${label} is a template maintained by ${space}";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st03, sub:st04, sub:st10, sub:st12,
+      sub:st20, sub:st30;
+    nt:hasTag "Spaces";
+    nt:hasTargetNanopubType gen:MaintainedResource, gen:PresetAssignment .
+  
+  <https://w3id.org/np/RAsfqb0NCvXnSsJgsx75aqbR-O_4q8uqp0YDgeX83fHIE/maintained-template-preset>
+    rdfs:label "Maintained template preset" .
+  
+  nt:AssertionTemplate rdfs:label "assertion template" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234;
+    prov:wasDerivedFrom <https://w3id.org/np/RAuoIiBPtkpMCALeI5AWNlQHoXdBfqZwqj_sVHiBGbfQo> .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-25T13:56:39Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:introduces sub:templateKind;
+    rdfs:label "Listing a template as a maintained resource";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAWwJ-TzFhUJN5l6cTUIeCIUqqzS8ek-_zumlDczSUipk/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ABOHeeSCyu7KHEAAAD424YuP3CC7wl69WkqTNVxHHr57Q/YecwQjtAU8bjJ3zjh5CPr/Qsa/YH43Hof+Y5Ji5HsiYrRs3DOdwUq4oWEB+WdHHGCa5ncDTZC0ZZAXtCuOoSrUzU0itjRZpd/WOItvpixg7GKVGQUggS9Q8XUbm7A=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

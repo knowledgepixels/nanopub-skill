@@ -1,0 +1,61 @@
+@prefix this: <https://w3id.org/np/RAP8glO8g1eV9Y_VjQ_6vR8XX7Vc1Od9SQ9Eids3F-yjA> .
+@prefix sub: <https://w3id.org/np/RAP8glO8g1eV9Y_VjQ_6vR8XX7Vc1Od9SQ9Eids3F-yjA/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:assignment a gen:ActivatedPresetAssignment, gen:PresetAssignment;
+    gen:isAssignmentFor <https://w3id.org/np/RAyqTyJN6BBXFVOArX3TyxHKjMXXLQ5UKTfFUEfUbfd-M/templateKind>;
+    gen:isAssignmentOfPreset <https://w3id.org/np/RAsfqb0NCvXnSsJgsx75aqbR-O_4q8uqp0YDgeX83fHIE/maintained-template-preset> .
+  
+  <https://w3id.org/np/RAyqTyJN6BBXFVOArX3TyxHKjMXXLQ5UKTfFUEfUbfd-M/templateKind> a
+      gen:MaintainedResource, nt:AssertionTemplate;
+    dct:description "Allows to describe a microorganism isolated from an environmental or organic sample.";
+    rdfs:label "Describing a microorganism";
+    gen:isMaintainedBy <https://w3id.org/spaces/zdouclab> .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-6534-6609 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-6534-6609 foaf:name "Mitja M. Zdouc" .
+  
+  this: dct:created "2026-10-10T07:56:00.527Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-6534-6609;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:assignment;
+    npx:hasNanopubType gen:MaintainedResource, gen:PresetAssignment;
+    npx:introduces <https://w3id.org/np/RAyqTyJN6BBXFVOArX3TyxHKjMXXLQ5UKTfFUEfUbfd-M/templateKind>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Describing a microorganism is a template maintained by ZdoucLab";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1_mJ1G8d-5riusOFBQHtR8gG6pQHIH1W_e6S7ahIRTQ/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnj9AmTE2Q7RxppglmQDLGezpd8yHXSVP7AqgUhyZ36SjaTCdhOlYhCIapxtat5RBYFjIQ5OreKs7GRf29kXtKqAsBR4skDZ10RviKdb52YvZEC+r1CsqOOuMCpG8fQhIWiD53PonxeeyjL9RXWFh1n4lGQ+Bo8qhIQQKgjEHnpwOgb+rLSg1V/K0j6DDW21ScOC1w1FGn+rgf2U3f0jnr9/EL8wV6uhUsRmVyPQF5YqoYsu1e10cxoXO3A63BZFg6GYeUWBenxlSo/8ZIM0Q/mk3Rt6W46aj9srX9o6KyQotN1Hux6QkgtG6usCaQEHr0g37Ip6NMPScT/rTfu3fZwIDAQAB";
+    npx:hasSignature "Rg+CpQTmmPWRIaE9ziOgi2Urk6DveREfUJhD2A/n5Fz8Ds/5oG6QW+IrywCk1NP0xGhC+ydqHxCRzp8LKJMFQ9qOPve7RYVi4175kWPnCdAOZrpzLwQsB9ECa/XnrpzteoPkw9YFDkZeh8QCUWFQBadED6mhSKo8i1xLD36LYTDLUYi9kDz/aFr5DkIx9PwMkdxsz6ld5twehjN0uv1ese1QtupQhCoRNJpCk2T30h7MGln+JOqjqTLsCTBkH/oIl2rN+B0pxXqDwcWzjBF4RngdU2be4nLt5iDweVdgDBYn5cwpO5IfW19WaOuaOWWRhZMlWL2fzGiasvqsRae9gQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-6534-6609 .
+  
+  <https://w3id.org/spaces/zdouclab> nt:hasLabelFromApi "ZdoucLab" .
+}
+

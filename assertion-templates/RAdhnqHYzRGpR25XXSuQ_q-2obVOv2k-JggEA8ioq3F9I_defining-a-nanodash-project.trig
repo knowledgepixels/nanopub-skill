@@ -1,0 +1,137 @@
+@prefix this: <https://w3id.org/np/RAdhnqHYzRGpR25XXSuQ_q-2obVOv2k-JggEA8ioq3F9I> .
+@prefix sub: <https://w3id.org/np/RAdhnqHYzRGpR25XXSuQ_q-2obVOv2k-JggEA8ioq3F9I/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  gen:NanodashProject rdfs:label "Nanodash project" .
+  
+  gen:hasOwner rdfs:label "has as owner" .
+  
+  gen:hasPinnedQuery rdfs:label "has as pinned query" .
+  
+  gen:hasPinnedTemplate rdfs:label "has as pinned template" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Such nanopublications define project pages that are shown on Nanodash.";
+    rdfs:label "Defining a Nanodash Project";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st06, sub:st07, sub:st08;
+    nt:hasTag "Projects" .
+  
+  sub:defaultProvenance a nt:TrustyUriPlaceholder;
+    rdfs:label "the default provenance template" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "the description of the project" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the name of the project" .
+  
+  sub:owner a nt:AgentPlaceholder;
+    rdfs:label "an owner of the project" .
+  
+  sub:project a nt:ExternalUriPlaceholder, nt:IntroducedResource;
+    rdfs:label "project identifier";
+    nt:hasPrefix "https://w3id.org/kpxl/custom/project/terms/";
+    nt:hasPrefixLabel "project:" .
+  
+  sub:query a nt:ExternalUriPlaceholder;
+    rdfs:label "a query URI to show the results for" .
+  
+  sub:st01 rdf:object gen:NanodashProject;
+    rdf:predicate rdf:type;
+    rdf:subject sub:project .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:project .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:project .
+  
+  sub:st04 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:owner;
+    rdf:predicate gen:hasOwner;
+    rdf:subject sub:project .
+  
+  sub:st06 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st06a, sub:st06b .
+  
+  sub:st06a rdf:object sub:template;
+    rdf:predicate gen:hasPinnedTemplate;
+    rdf:subject sub:project .
+  
+  sub:st06b rdf:object sub:templatetag;
+    rdf:predicate nt:hasTag;
+    rdf:subject sub:template .
+  
+  sub:st07 a nt:OptionalStatement;
+    rdf:object sub:defaultProvenance;
+    rdf:predicate nt:hasDefaultProvenance;
+    rdf:subject sub:project .
+  
+  sub:st08 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:query;
+    rdf:predicate gen:hasPinnedQuery;
+    rdf:subject sub:project .
+  
+  sub:template a nt:TrustyUriPlaceholder;
+    rdfs:label "identifier for template (with tag)" .
+  
+  sub:templatetag a nt:LiteralPlaceholder;
+    rdfs:label "tag for the template (used to group them)" .
+  
+  nt:hasDefaultProvenance rdfs:label "has the default provenance" .
+  
+  nt:hasTag rdfs:label "has the tag - This tag is used to group templates on the project page." .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-09-25T12:26:12.369Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAxUxo3PDFfPMsyZj0JKLLKieMg4BHIiKVzmYW3zCl6Tc>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Defining a Nanodash Project";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "5RGvWin9E4gp7yk2wzA65W5BfVb+W6l8L0jTsRpL5OvDQ+KEEi5YHNgk6NZuIEolQVVsZRk4ulLXpcKPX70Ubws2M6in4Dw5mPsyZJ4z3ftTROtNfPhIFrrdbNwIsUgscHno5lvnL6710Y5T1IpgCvWA2sj2UcubZthEIW+esTM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

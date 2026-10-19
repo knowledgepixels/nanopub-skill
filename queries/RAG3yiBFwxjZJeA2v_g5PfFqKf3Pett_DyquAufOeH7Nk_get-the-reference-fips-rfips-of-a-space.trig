@@ -1,0 +1,109 @@
+@prefix this: <https://w3id.org/np/RAG3yiBFwxjZJeA2v_g5PfFqKf3Pett_DyquAufOeH7Nk> .
+@prefix sub: <https://w3id.org/np/RAG3yiBFwxjZJeA2v_g5PfFqKf3Pett_DyquAufOeH7Nk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-space-rfips a grlc:grlc-query;
+    dct:description "Returns the reference FAIR Implementation Profiles (rFIPs) of a space, one row per community: the rFIP nanopublication with the newest dct:created among those declared by that community, restricted to the FAIR communities of the given space and of its sub-spaces. The space-scoped counterpart of the \"Get reference FIPs (latest version per community)\" query, with the same columns. Successive versions of an rFIP are not reliably chained by npx:supersedes -- the FIP wizard supersedes some earlier nanopublication rather than the preceding rFIP -- so filtering on invalidation alone leaves several versions of the same profile in the listing (three for PARC Toxicology). The community given by fip:declared-by is used as the identity of the profile, since each version re-introduces the rFIP under a new IRI and therefore cannot be grouped by it. Three steps lead from the space to the communities: Nanodash fills the multi placeholder with the space IRI and the alt IDs of its root definition (its owl:sameAs objects, which for a space that is also a FAIR community is the community IRI the rFIPs point at); gen:isSubSpaceOf adds the sub-spaces, taken from non-invalidated nanopublications and followed transitively, so nested sub-spaces count too; and owl:sameAs in a non-invalidated nanopublication that introduces or describes a space in scope maps each of them to its FAIR community, in either direction. The sub-space links are read from the plain nanopublication graphs rather than from the materialised space state of the spaces repository, which the rFIP data is not in: any non-invalidated sub-space declaration counts, without the admin-side authority check that the spaces repository applies. The scope is resolved inside the per-community sub-select, so the newest version is only computed for the communities in scope; running against the full repository rather than the rFIP type repository is what makes the space definitions reachable in the first place.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the reference FIPs (rFIPs) of a space";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix schema: <https://schema.org/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+prefix tpff: <https://w3id.org/fair/3pff/>
+prefix search: <http://www.openrdf.org/contrib/lucenesail#>
+
+select (?rfip as ?rFIP) (?rfip_label as ?rFIP_label) ?version ?community ?np (\"^\" as ?np_label) where {
+  { select ?community (max(?date) as ?latest) where {
+      { select distinct ?community where {
+          { select distinct ?scope where {
+              { values ?_space_multi_iri {} bind(?_space_multi_iri as ?scope) }
+              union
+              { values ?_space_multi_iri {}
+                graph npa:graph {
+                  ?sub_np np:hasAssertion ?sub_a ; npa:hasValidSignatureForPublicKey ?sub_pk .
+                  filter not exists { ?sub_x npx:invalidates ?sub_np ; npa:hasValidSignatureForPublicKey ?sub_pk . }
+                }
+                graph ?sub_a { ?scope gen:isSubSpaceOf ?parent . }
+                ?parent gen:isSubSpaceOf* ?_space_multi_iri .
+              }
+          } }
+          ?scope (owl:sameAs|^owl:sameAs)? ?community .
+          filter(?community = ?scope || exists {
+            graph npa:graph {
+              ?same_np npx:introduces|npx:describes ?scope ; np:hasAssertion ?same_a ; npa:hasValidSignatureForPublicKey ?same_pk .
+              filter not exists { ?same_x npx:invalidates ?same_np ; npa:hasValidSignatureForPublicKey ?same_pk . }
+            }
+            graph ?same_a { { ?scope owl:sameAs ?community } union { ?community owl:sameAs ?scope } }
+          })
+      } }
+      graph npa:graph {
+        ?cnp npx:hasNanopubType fip:Reference-FAIR-Implementation-Profile ; npa:hasValidSignatureForPublicKeyHash ?cpubkey ; dct:created ?date ; np:hasAssertion ?ca ; npx:introduces ?crfip .
+        filter not exists { ?cnpx npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKeyHash ?cpubkey . }
+      }
+      graph ?ca { ?crfip fip:declared-by ?community . }
+  } group by ?community }
+  graph npa:graph {
+    ?np npx:hasNanopubType fip:Reference-FAIR-Implementation-Profile ; npa:hasValidSignatureForPublicKeyHash ?pubkey ; dct:created ?latest ; np:hasAssertion ?a ; npx:introduces ?rfip .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+  }
+  graph ?a {
+    ?rfip a fip:Reference-FAIR-Implementation-Profile ; rdfs:label ?rfip_label ; fip:declared-by ?community .
+    optional { ?rfip schema:version ?version . }
+  }
+}
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-12T10:53:10Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-space-rfips;
+    rdfs:label "Get the reference FIPs (rFIPs) of a space";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzZAkv4Mu1YSUxQMriBnhYunqosX5wpuQ3FjUyzW8wTC51wjCmhsChyhS+mCx7Od+2MTDpdhxDWA+pH1r9AX508X2rIY/sbpMS+pd56e0qKPQ0t4folln1TgamPN9iOlY/yLc2x27AdipWIGXUdtL2iAcb+P/Y5dQS2AkHMS3lP2e5JBL5/bD/10qvTLKvdsqIKts8qjuLpxr9CFbsS2gLjMkXL5D2IsJ0cL5sgmIfS1inLVxIfXrS/OgqYNFqeNznUYCVWfo0g7DKjnjiICz3omeQeJFLYwlJ6PhUhYDQS6O318DGwUCwhnuXbBbwL9evZa2I/0Pwu5xpZdNLYJ5UwIDAQAB";
+    npx:hasSignature "I3EVot9chuOpnI68CsQM6anBJWRXp9OwUJPIoO20qYnmDkx6Hh/g/KtUj+obsbDKImqs/4cIntKNBCOyhQEn5a79ecKa5zOcYfgZgNACpMtWNQv6ElOeW5+f/FKofNG1hWfV+yUY7zUl2RABx6bNJ+JvfDVc4nq83E69U1RuRAzHYk7YU4F++LjJItPzF6eZUM2iMYDMcAxB5pz+F76VOX4oOX+i04a6w+vJVfDnt12/xP3lCcWzRbh8MLcVhqqrHImS3x4LCbUlH5Y2Pzeujm0RcSIxOmC0ce16PSZ8k/3PrmjPHNJd+e9eafJluv5VuzrifJVIVW0Jhsq5xSYHyg==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot> .
+}
+

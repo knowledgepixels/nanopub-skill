@@ -1,0 +1,97 @@
+@prefix this: <https://w3id.org/np/RAS9LuxPA52ZlBpmJL7MIV_BNk_9amv1fFhdvZUP-_xao> .
+@prefix sub: <https://w3id.org/np/RAS9LuxPA52ZlBpmJL7MIV_BNk_9amv1fFhdvZUP-_xao/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-mira-contributions a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Lists the MIRA records a given person contributed - claims, evidence, studies, protocols, source documents, questions, requests, and stances taken on a claim - with the record type and whether the person published the nanopublication themselves or it was attributed to them by whoever did (an import bot, for instance). Takes the person as the contributor parameter. Runs against the shared MIRA record type repository.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "MIRA contributions by a person (query)";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/5ee93356ac9163d743a44466ee5cae3e537a0bb429b81354f72799d7f700c947>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix mira: <http://purl.org/mira-science/mira#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix prov: <http://www.w3.org/ns/prov#>
+
+select ?record ?record_label ?type ?via ?flags ?date ?np (\"^\" as ?np_label) where {
+  values ?_contributor_multi_iri {}
+  graph npa:graph {
+    ?np npx:hasNanopubType <https://w3id.org/spaces/mira/r/MiraRecord> ;
+        np:hasAssertion ?a ;
+        np:hasProvenance ?pg ;
+        dct:creator ?creator ;
+        dct:created ?date .
+  }
+  graph ?pg { ?a prov:wasAttributedTo ?_contributor_multi_iri . }
+  {
+    select ?np ?record (sample(?t) as ?record_label) (sample(?cls) as ?class) where {
+      graph npa:graph { ?np np:hasAssertion ?a2 . }
+      {
+        # a titled MIRA record introduced by this nanopub
+        graph ?a2 { ?record a ?cls ; dct:title ?t . }
+        values ?cls { mira:Claim mira:Evidence mira:Study mira:Protocol
+                      mira:SourceDocument mira:Question mira:Request }
+      } union {
+        # a stance taken on someone else's claim: no title of its own
+        graph ?a2 { ?item ?cls ?record . }
+        values ?cls { mira:supports mira:opposes }
+        optional { graph ?cg { ?record dct:title ?ct . } }
+        bind(coalesce(?ct, str(?record)) as ?t)
+      }
+    } group by ?np ?record
+  }
+  bind(strafter(str(?class), \"#\") as ?type)
+  bind(if(?creator = ?_contributor_multi_iri, \"published\", \"attributed\") as ?via)
+  optional {
+    select ?np (group_concat(distinct ?flag; separator=\", \") as ?flagList) where {
+      graph npa:graph { ?np npx:hasNanopubType ?flagType . }
+      values (?flagType ?flag) { (npx:ExampleNanopub \"Example\") }
+    } group by ?np
+  }
+  bind(coalesce(?flagList, '') as ?flags)
+}
+order by desc(?date) ?type
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-13T09:42:51Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-mira-contributions;
+    rdfs:label "MIRA contributions by a person (query)";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "MKx52UMlrgvYCccVSJ8/egkBk/bg65edV9XGq7YfyGNL5HgXZUrr6gdvG7FvgMUi0n/MPwCHOgIf6n6oCLG+Z4EJa2wAZHE3wgIW6wVSTJXXOLmUT5/aGeW6ZhCXFKu8IbqAG65nJZz06yQDHnIxDuY9BFH6jPWOTBuaanb2m7s=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

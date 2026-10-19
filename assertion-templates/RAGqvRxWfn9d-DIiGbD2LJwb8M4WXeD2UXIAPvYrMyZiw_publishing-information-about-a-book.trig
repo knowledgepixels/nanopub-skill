@@ -1,0 +1,196 @@
+@prefix this: <https://w3id.org/np/RAGqvRxWfn9d-DIiGbD2LJwb8M4WXeD2UXIAPvYrMyZiw> .
+@prefix sub: <https://w3id.org/np/RAGqvRxWfn9d-DIiGbD2LJwb8M4WXeD2UXIAPvYrMyZiw/> .
+@prefix schema: <https://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix fabio: <http://purl.org/spar/fabio/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix bibo: <http://purl.org/ontology/bibo/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:abstract rdfs:label "has the abstract" .
+  
+  dct:publisher rdfs:label "is published by" .
+  
+  dct:title rdfs:label "has the title" .
+  
+  bibo:authorList rdfs:label "has the author list" .
+  
+  bibo:editorList rdfs:label "has the editor list" .
+  
+  bibo:isbn13 rdfs:label "has the ISBN-13" .
+  
+  bibo:numPages rdfs:label "has the number of pages" .
+  
+  fabio:Book rdfs:label "book" .
+  
+  fabio:hasPublicationYear rdfs:label "has the publication year" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:seeAlso rdfs:label "see also" .
+  
+  schema:about rdfs:label "is about" .
+  
+  sub:abstract a nt:LongLiteralPlaceholder;
+    rdfs:label "abstract or description of the book" .
+  
+  sub:author a nt:AgentPlaceholder;
+    rdfs:label "an author of the book";
+    nt:hasDefaultValue nt:CREATOR .
+  
+  sub:author-list a nt:LocalResource;
+    rdfs:label "this author list" .
+  
+  sub:author-position a nt:SequenceElementPlaceholder;
+    rdfs:label "has at position ${number}";
+    nt:hasPrefix "http://www.w3.org/1999/02/22-rdf-syntax-ns#_";
+    nt:hasPrefixLabel "includes as element number";
+    nt:hasRegex "[1-9][0-9]*" .
+  
+  sub:book a nt:ExternalUriPlaceholder, nt:IntroducedResource;
+    rdfs:label "the book: a DOI or an https ISBN link" .
+  
+  sub:editor a nt:AgentPlaceholder;
+    rdfs:label "an editor of the book" .
+  
+  sub:editor-list a nt:LocalResource;
+    rdfs:label "this editor list" .
+  
+  sub:editor-position a nt:SequenceElementPlaceholder;
+    rdfs:label "has at position ${number}";
+    nt:hasPrefix "http://www.w3.org/1999/02/22-rdf-syntax-ns#_";
+    nt:hasPrefixLabel "includes as element number";
+    nt:hasRegex "[1-9][0-9]*" .
+  
+  sub:isbn a nt:LiteralPlaceholder;
+    rdfs:label "ISBN-13, digits only";
+    nt:hasRegex "97[89][0-9]{10}" .
+  
+  sub:link a nt:UriPlaceholder;
+    rdfs:label "URL to the book or a related resource" .
+  
+  sub:pages a nt:LiteralPlaceholder;
+    rdfs:label "number of pages";
+    nt:hasRegex "[0-9]+" .
+  
+  sub:publisher a nt:LiteralPlaceholder;
+    rdfs:label "publisher of the book" .
+  
+  sub:st01 rdf:object fabio:Book;
+    rdf:predicate rdf:type;
+    rdf:subject sub:book .
+  
+  sub:st02 rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:book .
+  
+  sub:st03 rdf:object sub:year;
+    rdf:predicate fabio:hasPublicationYear;
+    rdf:subject sub:book .
+  
+  sub:st04 rdf:object sub:author-list;
+    rdf:predicate bibo:authorList;
+    rdf:subject sub:book .
+  
+  sub:st04a a nt:RepeatableStatement;
+    rdf:object sub:author;
+    rdf:predicate sub:author-position;
+    rdf:subject sub:author-list .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:editor-list;
+    rdf:predicate bibo:editorList;
+    rdf:subject sub:book .
+  
+  sub:st05a a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:editor;
+    rdf:predicate sub:editor-position;
+    rdf:subject sub:editor-list .
+  
+  sub:st06 a nt:OptionalStatement;
+    rdf:object sub:publisher;
+    rdf:predicate dct:publisher;
+    rdf:subject sub:book .
+  
+  sub:st07 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:isbn;
+    rdf:predicate bibo:isbn13;
+    rdf:subject sub:book .
+  
+  sub:st08 a nt:OptionalStatement;
+    rdf:object sub:pages;
+    rdf:predicate bibo:numPages;
+    rdf:subject sub:book .
+  
+  sub:st09 a nt:OptionalStatement;
+    rdf:object sub:abstract;
+    rdf:predicate dct:abstract;
+    rdf:subject sub:book .
+  
+  sub:st10 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:link;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:book .
+  
+  sub:st11 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:topic;
+    rdf:predicate schema:about;
+    rdf:subject sub:book .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Publish metadata about a book: title, year, ordered authors, and optionally editors, publisher, ISBN, number of pages, abstract, links and topics. Identify the book by a DOI or an https ISBN link such as https://books.google.com/books?vid=ISBN9781234567890, so that chapters described with the book chapter template can point to the same IRI.";
+    rdfs:label "Publishing information about a book";
+    nt:hasNanopubLabelPattern "Book: ${title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st04a, sub:st05, sub:st05a,
+      sub:st06, sub:st07, sub:st08, sub:st09, sub:st10, sub:st11;
+    nt:hasTag "Publications";
+    nt:hasTargetNanopubType fabio:Book .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title of the book" .
+  
+  sub:topic a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "topic or subject of the book";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+  
+  sub:year a nt:LiteralPlaceholder;
+    rdfs:label "year of publication";
+    nt:hasDatatype xsd:gYear .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-10-15T18:04:34Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    rdfs:label "Publishing information about a book";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAWwJ-TzFhUJN5l6cTUIeCIUqqzS8ek-_zumlDczSUipk/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+i9DV8ynzO944pYkYsDwtlqJHuk+b7FQt6Bb4TIQSDX3jGUURn6WpaNwESHmgMLWSydaH5XlabMzuqpPL4iyB+IAzvwIxdJBLhe39EQMu2j+FZ/5d/xu/gO3nZw2KoEvJ7cJisabuI05OylIRSJ+OG5CmzFxnjojUEJeCFi1njY1InhXrb0yHud9b1ifzweoN6YYOBecKs1gTOaT2bf+t4Wgzg3M0PmRVZ4F0OALsnh4T5+x7kFtiPcDKNpORi585JjKCZ4kczIF6oUKcwgC0kmIY97jtLqSLcXRkxHx5CDI6qz4XlRFs1ZbCUdSlzjdPZAkaBcNem1gIhWzkHkEnQIDAQAB";
+    npx:hasSignature "UNS1GQ/FeVRKvuDXmjomlhWqKq0fs8h72iOEuDyMxaP1+d69D5dwUaxPygRTlCdUu8e4VTf2ssGWxllkhOmFC8spK6yVNpCl2HNm+6jvt34eDilXLBxuxwW9ybtp1rT+s0NneYYdC7akoJseN2S2eDj8tGBMR2TElrAiFLMmyhSlWs25/wzIBUfl6udaT3aV2tn50gYMHpWEip7EnFfuivoh2JIeB5Z0dRai7IDJGyokdiwU24njBIeUXu1j761A+95V8yBe7tf+nOGrLgzw25MO68HCkwuEuyGFSz9tIT7bWtEZEgKkxQoxvTz7vclhBV3o0jb31QRQiak7OdmEBw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

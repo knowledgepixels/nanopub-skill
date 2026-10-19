@@ -1,0 +1,166 @@
+@prefix this: <https://w3id.org/np/RAKcOUm2q4DVFMJNppZU2916PvWG_Xb01kcNfzytf3xYE> .
+@prefix sub: <https://w3id.org/np/RAKcOUm2q4DVFMJNppZU2916PvWG_Xb01kcNfzytf3xYE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-claim-info a grlc:grlc-query;
+    dct:description "Returns the basic information about a claim as a property/value table, for the page of that claim (its IRI passed as the 'claim' parameter). Everything is read from the claim's current definition: of all validly signed, non-invalidated nanopublications that introduce the claim, the newest one (ties broken by nanopublication URI). The weight of evidence is the claim's own pk:weightOfEvidence where it declares one, otherwise the score of its overall assessment -- the assessment it links to with pk:hasAssessment whose pk:assessmentType ends in '/overall', read from pk:hasProbability or pk:weightOfEvidence, whichever that assessment carries -- on the scale from 0 to 1 rounded to two decimals; the verdict comes from the same overall assessment, and where several exist the newest by nanopublication timestamp wins. The domain and the publishing agent are given as IRIs, with a label only where the nanopublication supplies one, so that Nanodash names them from its own registries otherwise. Rows whose value is empty are left out, so a claim that declares no context or no verdict simply has fewer rows. Both columns carry the _noheader marker, so the table renders without a header row.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the basic information about a claim";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix pk: <https://w3id.org/probknow/ontology/>
+
+select ?Property_noheader ?Value_noheader ?Value_label where {
+  {
+    select ?np
+           (min(?descriptionV) as ?description)
+           (min(?contextV) as ?context)
+           (min(?claimWeightStrV) as ?claimWeightStr)
+           (max(?scoreRankV) as ?scoreRank)
+           (max(?verdictRankV) as ?verdictRank)
+           (min(?domainStrV) as ?domainStr)
+           (min(?domainLabelV) as ?domainLabel)
+           (min(?byStrV) as ?byStr)
+           (min(?byNameV) as ?byName)
+           (min(?dateV) as ?date)
+    where {
+      values ?_claim_multi_iri {}
+      graph npa:graph {
+        ?np npx:introduces ?_claim_multi_iri ;
+          np:hasAssertion ?a ;
+          np:hasProvenance ?prov ;
+          np:hasPublicationInfo ?pi ;
+          dct:created ?dateV ;
+          npa:hasValidSignatureForPublicKeyHash ?pubkey .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+      }
+      graph ?a { ?_claim_multi_iri a pk:Claim }
+      filter not exists {
+        graph npa:graph {
+          ?np2 npx:introduces ?_claim_multi_iri ;
+            np:hasAssertion ?a2 ;
+            dct:created ?date2 ;
+            npa:hasValidSignatureForPublicKeyHash ?pubkey2 .
+          filter not exists { ?inv2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+        }
+        graph ?a2 { ?_claim_multi_iri a pk:Claim }
+        filter(?date2 > ?dateV || (?date2 = ?dateV && str(?np2) > str(?np)))
+      }
+      optional { graph ?a { ?_claim_multi_iri dct:description ?descriptionV } }
+      optional { graph ?a { ?_claim_multi_iri pk:context ?contextV } }
+      optional {
+        graph ?a { ?_claim_multi_iri pk:weightOfEvidence ?claimWeight }
+        bind(xsd:integer(round(?claimWeight * 100)) as ?cwPct)
+        bind(if(?cwPct >= 100, \"1.00\",
+             concat(\"0.\", if(?cwPct < 10, concat(\"0\", str(?cwPct)), str(?cwPct)))) as ?claimWeightStrV)
+      }
+      optional { graph ?pi { ?np pk:domain ?domainV } bind(str(?domainV) as ?domainStrV) }
+      optional { graph ?pi { ?domainV rdfs:label ?domainLabelV } }
+      optional { graph ?prov { ?a prov:wasAttributedTo ?byV } bind(str(?byV) as ?byStrV) }
+      optional { graph ?pi { ?byV foaf:name ?byNameV } }
+      optional {
+        graph ?gb { ?_claim_multi_iri pk:hasAssessment ?overall }
+        graph npa:graph {
+          ?onp npx:introduces ?overall ;
+            np:hasAssertion ?oa ;
+            np:hasPublicationInfo ?opi ;
+            dct:created ?odate ;
+            npa:hasValidSignatureForPublicKeyHash ?opubkey .
+          filter not exists { ?oinv npx:invalidates ?onp ; npa:hasValidSignatureForPublicKeyHash ?opubkey . }
+        }
+        { graph ?oa { ?overall pk:assessmentType ?atype } }
+        union
+        { graph ?opi { ?onp pk:assessmentType ?atype } }
+        filter(strends(str(?atype), \"/overall\"))
+        optional { graph ?oa { ?overall pk:hasProbability ?p1 } }
+        optional { graph ?oa { ?overall pk:weightOfEvidence ?p2 } }
+        optional { graph ?oa { ?overall pk:hasVerdict ?overallVerdict } }
+        bind(coalesce(?p1, ?p2) as ?oscore)
+        bind(xsd:integer(round(?oscore * 100)) as ?oPct)
+        bind(concat(str(?odate), \"|\",
+             if(?oPct >= 100, \"1.00\",
+             concat(\"0.\", if(?oPct < 10, concat(\"0\", str(?oPct)), str(?oPct))))) as ?scoreRankV)
+        bind(concat(str(?odate), \"|\", str(?overallVerdict)) as ?verdictRankV)
+      }
+    } group by ?np
+  }
+  bind(if(bound(?scoreRank), strafter(?scoreRank, \"|\"), \"\") as ?overallScore)
+  bind(if(bound(?claimWeightStr), ?claimWeightStr, ?overallScore) as ?weightS)
+  bind(if(bound(?verdictRank), strafter(?verdictRank, \"|\"), \"\") as ?verdictS)
+  bind(coalesce(?description, \"\") as ?descriptionS)
+  bind(coalesce(?context, \"\") as ?contextS)
+  bind(coalesce(?domainStr, \"\") as ?domainS)
+  bind(coalesce(?byStr, \"\") as ?byS)
+  values (?k ?Property_noheader ?ord) {
+    (\"description\" \"Claim:\" 1)
+    (\"context\" \"Context:\" 2)
+    (\"weight\" \"Weight of evidence:\" 3)
+    (\"verdict\" \"Verdict:\" 4)
+    (\"domain\" \"Domain:\" 5)
+    (\"by\" \"Published by:\" 6)
+    (\"date\" \"Published on:\" 7)
+    (\"np\" \"Nanopublication:\" 8)
+  }
+  bind(if(?k = \"description\", ?descriptionS,
+       if(?k = \"context\", ?contextS,
+       if(?k = \"weight\", ?weightS,
+       if(?k = \"verdict\", ?verdictS,
+       if(?k = \"domain\", ?domainS,
+       if(?k = \"by\", ?byS,
+       if(?k = \"date\", str(?date), str(?np))))))))  as ?Value_noheader)
+  filter(?Value_noheader != \"\")
+  bind(if(?k = \"domain\", coalesce(?domainLabel, \"\"),
+       if(?k = \"by\", coalesce(?byName, \"\"),
+       if(?k = \"np\", substr(replace(str(?np), \"^.*/np/\", \"\"), 1, 10), \"\"))) as ?Value_label)
+}
+order by ?ord""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-16T05:12:00Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-claim-info;
+    rdfs:label "Get the basic information about a claim";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "DxKFXnrmr5cBSepRian2Hds/HdhdBYoUNgclDcdEBx8WI2tGdT2s3Pq/cN3n6qjGfvF6PKZzYWdkEBlf3Y7Dy9MoVCnYD1qOanBjcS0QCxoN8dDJdl+UXXYY6VuW+HPVdoStkYIPnDInsRaJrog7HVdzxtSrTkzUCx/q0/cxM9Q=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

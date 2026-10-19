@@ -1,0 +1,202 @@
+@prefix this: <https://w3id.org/np/RA5OrG1-PCAa3Z4kTLKTxq8lhgNAsopAtQM5h0-xj3MSA> .
+@prefix sub: <https://w3id.org/np/RA5OrG1-PCAa3Z4kTLKTxq8lhgNAsopAtQM5h0-xj3MSA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix spdx: <http://spdx.org/rdf/terms#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix npfdo: <https://w3id.org/npfdo/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix bibo: <http://purl.org/ontology/bibo/> .
+@prefix fdof: <https://w3id.org/fdof/ontology#> .
+@prefix dcat: <http://www.w3.org/ns/dcat#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:accessURL a nt:ExternalUriPlaceholder;
+    rdfs:label "access URL" .
+  
+  sub:algorithm a nt:RestrictedChoicePlaceholder;
+    rdfs:label "checksum algorithm";
+    nt:hasDefaultValue spdx:checksumAlgorithm_sha256;
+    nt:possibleValue spdx:checksumAlgorithm_sha256, spdx:checksumAlgorithm_sha512 .
+  
+  sub:byteSize a nt:LiteralPlaceholder;
+    rdfs:label "byte size";
+    nt:hasDatatype xsd:nonNegativeInteger .
+  
+  sub:checksum a nt:LocalResource;
+    rdfs:label "checksum" .
+  
+  sub:checksumValue a nt:LiteralPlaceholder;
+    rdfs:label "checksum value" .
+  
+  sub:creator a nt:ExternalUriPlaceholder;
+    rdfs:label "creator" .
+  
+  sub:description a nt:LanguageTaggedLiteralPlaceholder;
+    rdfs:label "description";
+    nt:hasLanguageTag "en" .
+  
+  sub:downloadURL a nt:ExternalUriPlaceholder;
+    rdfs:label "download URL" .
+  
+  sub:file a nt:LocalResource;
+    rdfs:label "materialisation (file)" .
+  
+  sub:issued a nt:LiteralPlaceholder;
+    rdfs:label "issued date";
+    nt:hasDatatype xsd:date .
+  
+  sub:label a nt:LanguageTaggedLiteralPlaceholder;
+    rdfs:label "label";
+    nt:hasLanguageTag "en" .
+  
+  sub:license a nt:RestrictedChoicePlaceholder;
+    rdfs:label "license";
+    nt:hasDefaultValue <https://creativecommons.org/licenses/by/4.0/>;
+    nt:possibleValue <https://creativecommons.org/licenses/by-sa/4.0/>, <https://creativecommons.org/licenses/by/4.0/>,
+      <https://creativecommons.org/publicdomain/zero/1.0/> .
+  
+  sub:mediaType a nt:ExternalUriPlaceholder;
+    rdfs:label "media type";
+    nt:hasPrefix "http://www.iana.org/assignments/media-types/";
+    nt:hasPrefixLabel "IANA media type" .
+  
+  sub:referent a nt:UriPlaceholder;
+    rdfs:label "IRI of the object" .
+  
+  sub:relation a nt:RestrictedChoicePlaceholder;
+    rdfs:label "qualified relation";
+    nt:possibleValue dct:isPartOf, dct:replaces, bibo:presentedAt, prov:wasDerivedFrom .
+  
+  sub:s1 a nt:RepeatableStatement;
+    rdf:object sub:type;
+    rdf:predicate rdf:type;
+    rdf:subject sub:referent .
+  
+  sub:s2 a nt:RepeatableStatement;
+    rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:referent .
+  
+  sub:s3 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:referent .
+  
+  sub:s4 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:creator;
+    rdf:predicate dct:creator;
+    rdf:subject sub:referent .
+  
+  sub:s5 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:s5a, sub:s5b, sub:s5c, sub:s5d, sub:s5e, sub:s5f, sub:s5g, sub:s5h,
+      sub:s5i, sub:s5j, sub:s5k .
+  
+  sub:s5a rdf:object sub:referent;
+    rdf:predicate fdof:materializes;
+    rdf:subject sub:file .
+  
+  sub:s5b rdf:object sub:accessURL;
+    rdf:predicate dcat:accessURL;
+    rdf:subject sub:file .
+  
+  sub:s5c rdf:object sub:license;
+    rdf:predicate dct:license;
+    rdf:subject sub:file .
+  
+  sub:s5d a nt:OptionalStatement;
+    rdf:object sub:downloadURL;
+    rdf:predicate dcat:downloadURL;
+    rdf:subject sub:file .
+  
+  sub:s5e a nt:OptionalStatement;
+    rdf:object sub:mediaType;
+    rdf:predicate dcat:mediaType;
+    rdf:subject sub:file .
+  
+  sub:s5f a nt:OptionalStatement;
+    rdf:object sub:byteSize;
+    rdf:predicate dcat:byteSize;
+    rdf:subject sub:file .
+  
+  sub:s5g a nt:OptionalStatement;
+    rdf:object sub:issued;
+    rdf:predicate dct:issued;
+    rdf:subject sub:file .
+  
+  sub:s5h a nt:OptionalStatement;
+    rdf:object sub:checksum;
+    rdf:predicate spdx:checksum;
+    rdf:subject sub:file .
+  
+  sub:s5i a nt:OptionalStatement;
+    rdf:object spdx:Checksum;
+    rdf:predicate rdf:type;
+    rdf:subject sub:checksum .
+  
+  sub:s5j a nt:OptionalStatement;
+    rdf:object sub:algorithm;
+    rdf:predicate spdx:algorithm;
+    rdf:subject sub:checksum .
+  
+  sub:s5k a nt:OptionalStatement;
+    rdf:object sub:checksumValue;
+    rdf:predicate spdx:checksumValue;
+    rdf:subject sub:checksum .
+  
+  sub:s6 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:target;
+    rdf:predicate sub:relation;
+    rdf:subject sub:referent .
+  
+  sub:target a nt:ExternalUriPlaceholder;
+    rdfs:label "target of the qualified reference" .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Generic assertion template of the np-FDO core specification v0.1: type, label, and optionally materialisations, description, creator and qualified references. Use with the np-FDO publication-information template.";
+    rdfs:label "Describing a FAIR Digital Object (np-FDO core v0.1)";
+    nt:hasDefaultProvenance <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:hasStatement sub:s1, sub:s2, sub:s3, sub:s4, sub:s5, sub:s5a, sub:s5b, sub:s5c,
+      sub:s5d, sub:s5e, sub:s5f, sub:s5g, sub:s5h, sub:s5i, sub:s5j, sub:s5k, sub:s6;
+    nt:hasTag "np-FDO" .
+  
+  sub:type a nt:RestrictedChoicePlaceholder;
+    rdfs:label "type of the object";
+    nt:possibleValue bibo:Conference, bibo:Specification, skos:ConceptScheme, npfdo:Skill,
+      npfdo:SlideDeck .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8888-635X .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-09-27T20:02:22Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8888-635X;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RALmzqHlrRfeTD8ESZdKFyDNYY6eFuyQ8GAe_4N5eVytc>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAWwJ-TzFhUJN5l6cTUIeCIUqqzS8ek-_zumlDczSUipk/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD3w/IUb755GIzp3ueODYkgELhyq4Clygb5Kspge50xo+n8uC/IvXwi+ukRjEpdfX/JZ09yKUCJ2AMMr/QchrsP1Xhg9Q3fEZ4E12XqFd5jX00Qs0K5XZwjBaV8NdDTJW9I4gpcyh0cry7hSBAWHkXEkqbK+lQvR4UFAKejFq6u/wIDAQAB";
+    npx:hasSignature "p/0w9TW4KTKh4nR4n1VBrEqqw3XpFsL96p+CebPhqZ7RCOhc6qfMQjM8ef3ocU1yERb5wrlM9KyjcF3caY+v0IPE1fnbQKZ4js1ykcEY6bvZCwIS7kQLCwNaAW/N8QNhgLRS/wxU6LSIgg57Zsy/ap1bJmhFuWCSRYApWp3tRkg=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8888-635X .
+}
+

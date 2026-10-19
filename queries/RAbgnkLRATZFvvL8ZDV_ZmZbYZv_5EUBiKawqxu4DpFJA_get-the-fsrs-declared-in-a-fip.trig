@@ -1,0 +1,184 @@
+@prefix this: <https://w3id.org/np/RAbgnkLRATZFvvL8ZDV_ZmZbYZv_5EUBiKawqxu4DpFJA> .
+@prefix sub: <https://w3id.org/np/RAbgnkLRATZFvvL8ZDV_ZmZbYZv_5EUBiKawqxu4DpFJA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-fip-declared-fsrs a grlc:grlc-query;
+    dct:description "For a FAIR Implementation Profile (FIP), lists the FAIR Supporting Resources (FSRs) it declares, ordered like the FIP itself: by FAIR principle in FIP order (F1, F2, F3, F4, A1.1, A1.2, A2, I1, I2, I3, R1.1, R1.2), then the supplementary \"S\" questions (FIP-S-Question-*, answered by FIP-Supporting-Declaration and FIP-No-Choice-Supporting-Declaration nanopublications) in a fixed order, and then by resource. One row per FSR and FIP question; the data and metadata variants of a question are merged, with the scope column telling whether the FSR was declared for metadata, data or both (empty for the S questions, which have no such variants). Columns: the FIP question as a group header (principle code and the question text as in the FIP Wizard, with \"data / metadata\" where the two variants differ, and the I2 question worded as its metadata variant so that both variants share one header; for an S question \"S:\" followed by the question name derived from its identifier and, if the question term is introduced by a nanopublication with a skos:definition, that definition; the question_group column is rendered by Nanodash as a header row above the rows of that question), the FSR (labelled from its metadata nanopublication, or by its identifier), its FSR types, scope, the kind of use (current use, planned use, planned replacement), and the declaration nanopublication. A FIP is resolved through its declaration index, or, without one, through the declarations of the same community: those carrying the FIP's own version (ignoring a leading \"v\"), or else the declarations of the most recently published version. Reference FIPs (rFIPs) are no longer served by this query, and both arms skip a profile typed fip:Reference-FAIR-Implementation-Profile, the three that also carry a declaration index included. An rFIP's content is a set of recommendation nanopublications carrying neither a FIP question nor a use property, so the question grouping, the scope and the use column of this table are all empty for one; they have their own query and view instead, \"Get the FSRs recommended by a reference FIP\" and \"⭐ Recommended FSRs\". A question counts as defined only by a nanopublication that is either one of the FIP Ontology's own definition nanopublications (namespace https://w3id.org/fair/fip/np/, which is where all twenty-one FIP-Question-* terms are defined) or signed by a member of the FAIR Implementation Space: an admin named in the space's root definition RA41_bLIoJeSd…, or an agent that one of those admins granted a role of the space in a non-invalidated role-instantiation nanopublication. An agent's keys are the ones declared with npx:declaredBy in a nanopublication signed with the very key it declares, so the declaration proves possession. Pinning the root definition is what stops the admin test from being circular; the materialised space state that would answer it directly lives in the spaces repository, which holds no FIP data. Without the gate any nanopublication asserting a skos:definition for a question term would supply the heading, since the lookup has no key restriction. The ontology-namespace branch keeps the twenty-one headings independent of who holds a role today: were the membership ever to stop covering the key that signed them, a membership-only gate would blank the headings of every regular question. Supplementary \"S\" questions, which the ontology does not define, are the ones the gate actually governs; the \"Defining a FIP question\" template RAo9Hnp7fqG… produces nanopublications in the shape this lookup expects.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the FSRs declared in a FIP";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix schema: <https://schema.org/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+prefix tpff: <https://w3id.org/fair/3pff/>
+prefix search: <http://www.openrdf.org/contrib/lucenesail#>
+
+select ?question_group ?fsr ?fsr_label ?types_multi_iri ?types_label_multi ?scope ?use ?np ?np_label where {
+{ select ?principle (concat(min(?qbase), \": \", min(?qtext)) as ?question_group)
+  ?fsr (coalesce(min(?fsr_label_x), replace(str(?fsr), \"^.*[/#]\", \"\")) as ?fsr_label)
+  (group_concat(distinct str(?type); separator=\" \") as ?types_multi_iri) (group_concat(distinct ?type_label; separator=\"\\n\") as ?types_label_multi)
+  (if(max(?isMD) = 1 && max(?isD) = 1, \"Metadata, Data\", if(max(?isMD) = 1, \"Metadata\", if(max(?isD) = 1, \"Data\", \"\"))) as ?scope)
+  (group_concat(distinct ?use; separator=\", \") as ?use)
+  (min(?dnp) as ?np) (\"^\" as ?np_label) (min(?sortkey) as ?sk)
+where {
+  graph npa:graph {
+    ?fipnp npx:introduces ?_fip_iri ; np:hasAssertion ?fa ; npa:hasValidSignatureForPublicKey ?fpk .
+    filter not exists { ?fx npx:invalidates ?fipnp ; npa:hasValidSignatureForPublicKey ?fpk . }
+  }
+  graph ?fa { ?_fip_iri fip:declared-by ?community . optional { ?_fip_iri schema:version|<http://schema.org/version> ?version . } }
+  {
+    graph ?fa {
+      ?_fip_iri fip:has-declaration-index ?index .
+      filter not exists { ?_fip_iri a fip:Reference-FAIR-Implementation-Profile . }
+    }
+    graph npa:networkGraph { ?index npx:includesElement ?dnp . }
+  } union {
+    graph ?fa {
+      filter not exists { ?_fip_iri fip:has-declaration-index ?ix . }
+      filter not exists { ?_fip_iri a fip:Reference-FAIR-Implementation-Profile . }
+    }
+    {
+      select ?community (?dvC as ?chosenRawVersion) where {
+        graph npa:graph { ?fnpB npx:introduces ?_fip_iri ; np:hasAssertion ?faB . }
+        graph ?faB {
+          ?_fip_iri fip:declared-by ?community .
+          optional { ?_fip_iri schema:version|<http://schema.org/version> ?vB . }
+        }
+        bind(replace(str(coalesce(?vB, \"\")), \"^[vV][.]?\", \"\") as ?nverB)
+        graph ?daC { ?declC fip:declared-by ?community ; schema:version|<http://schema.org/version> ?dvC . }
+        graph npa:graph { ?dnpC np:hasAssertion ?daC ; npx:hasNanopubType fip:FIP-Declaration ; dct:created ?dtC . }
+        bind(if(replace(str(?dvC), \"^[vV][.]?\", \"\") = ?nverB, 0, 1) as ?pref)
+      } order by ?pref desc(?dtC) limit 1
+    }
+    graph ?da0 { ?decl0 fip:declared-by ?community ; schema:version|<http://schema.org/version> ?chosenRawVersion . }
+    graph npa:graph { ?dnp np:hasAssertion ?da0 . }
+  }
+  graph npa:graph { ?dnp np:hasAssertion ?da . }
+  values (?useProp ?use) {
+    (fip:declares-current-use-of \"current use\")
+    (fip:declares-planned-use-of \"planned use\")
+    (fip:declares-planned-replacement-of \"planned replacement\")
+    (fip:declares-replacement-from \"replacement from\")
+    (fip:declares-replacement-to \"replacement to\")
+  }
+  graph ?da {
+    ?decl fip:refers-to-question ?question ; ?useProp ?fsr .
+  }
+  graph npa:graph {
+    ?dnp npx:hasNanopubType ?dtype ; npa:hasValidSignatureForPublicKey ?dpk .
+    filter(?dtype in (fip:FIP-Declaration, fip:FIP-Supporting-Declaration, fip:FIP-No-Choice-Supporting-Declaration))
+    filter not exists { ?dx npx:invalidates ?dnp ; npa:hasValidSignatureForPublicKey ?dpk . }
+  }
+  bind(strstarts(str(?question), \"https://w3id.org/fair/fip/terms/FIP-S-Question-\") as ?isS)
+  bind(replace(str(?question), \"^.*FIP-(S-)?Question-\", \"\") as ?qcode)
+  bind(if(?isS, \"S\", replace(?qcode, \"-(MD|D)$\", \"\")) as ?qbase)
+  bind(if(!?isS && strends(?qcode, \"-MD\"), 1, 0) as ?isMD)
+  bind(if(!?isS && strends(?qcode, \"-D\"), 1, 0) as ?isD)
+  bind(if(?isS, ?question, iri(concat(\"https://w3id.org/fair/principles/terms/\", ?qbase))) as ?principle)
+  optional {
+    { # the definition nanopublications of the FIP Ontology itself
+      graph npa:graph { ?qnp npx:introduces ?question ; np:hasAssertion ?qa . }
+      filter(strstarts(str(?qnp), \"https://w3id.org/fair/fip/np/\")) }
+    union
+    { # or a definition signed by a member of the FAIR Implementation Space
+      { select distinct ?qpk where {
+          { select distinct ?member where {
+              { graph npa:graph { <https://w3id.org/np/RA41_bLIoJeSd_97C8PzUgtKop431O28YJ0lfJ42mp5Nc> np:hasAssertion ?spa . }
+                graph ?spa { <https://w3id.org/spaces/FAIR-Implementation-Space> gen:hasAdmin ?member . } }
+              union
+              { { select distinct ?adminpk where {
+                    graph npa:graph { <https://w3id.org/np/RA41_bLIoJeSd_97C8PzUgtKop431O28YJ0lfJ42mp5Nc> np:hasAssertion ?spa2 . }
+                    graph ?spa2 { <https://w3id.org/spaces/FAIR-Implementation-Space> gen:hasAdmin ?admin . }
+                    graph npa:graph { ?aknp np:hasAssertion ?aka ; npa:hasValidSignatureForPublicKey ?adminpk . }
+                    graph ?aka { ?akd npx:declaredBy ?admin ; npx:hasPublicKey ?adminpk . }
+                } }
+                graph npa:graph { ?gnp npx:hasNanopubType gen:RoleInstantiation ; np:hasAssertion ?ga ;
+                    npa:hasValidSignatureForPublicKey ?adminpk .
+                  filter not exists { ?gx npx:invalidates ?gnp ; npa:hasValidSignatureForPublicKey ?adminpk . } }
+                graph ?ga { <https://w3id.org/spaces/FAIR-Implementation-Space> ?roleProp ?member . }
+                filter(strstarts(str(?roleProp), \"https://w3id.org/kpxl/gen/terms/has\")) }
+          } }
+          graph npa:graph { ?mknp np:hasAssertion ?mka ; npa:hasValidSignatureForPublicKey ?qpk . }
+          graph ?mka { ?mkd npx:declaredBy ?member ; npx:hasPublicKey ?qpk . }
+      } }
+      graph npa:graph { ?qnp npx:introduces ?question ; np:hasAssertion ?qa ; npa:hasValidSignatureForPublicKey ?qpk .
+        filter not exists { ?qx npx:invalidates ?qnp ; npa:hasValidSignatureForPublicKey ?qpk . } }
+    }
+    graph ?qa { ?question skos:definition ?qdef . }
+  }
+  bind(replace(replace(replace(replace(?qdef, \" for datasets\", \" for data / metadata\"), \" your datasets\", \" your data / metadata\"), \"(for|annotate|your) metadata records\", \"$1 data / metadata\"), \"to encode your data / metadata\", \"to annotate your data / metadata\") as ?qtextDef)
+  bind(replace(?qcode, \"-\", \" \") as ?qname)
+  bind(if(?isS, if(bound(?qtextDef), concat(?qname, \" – \", ?qtextDef), ?qname), ?qtextDef) as ?qtext)
+  bind(if(?isS, concat(\"5\", lcase(?qcode)), concat(replace(replace(replace(replace(substr(?qbase, 1, 1), \"F\", \"1\"), \"A\", \"2\"), \"I\", \"3\"), \"R\", \"4\"), ?qbase)) as ?sortkey)
+  optional {
+    values ?p { npx:introduces npx:describes }
+    graph npa:graph {
+      ?fsrnp ?p ?fsr ; rdfs:label ?fsr_label_x ; npx:hasNanopubType ?sft ; npa:hasValidSignatureForPublicKey ?spk .
+      values ?sft { fip:FAIR-Enabling-Resource fip:FAIR-Supporting-Resource }
+      filter not exists { ?sx npx:invalidates ?fsrnp ; npa:hasValidSignatureForPublicKey ?spk . }
+    }
+    optional {
+      graph npa:graph { ?fsrnp npx:hasNanopubType ?type . }
+      filter(strstarts(str(?type), \"https://w3id.org/fair/fip/terms/\"))
+      filter(?type not in (fip:FAIR-Enabling-Resource, fip:FAIR-Supporting-Resource, fip:Available-FAIR-Enabling-Resource, fip:Available-FAIR-Supporting-Resource, fip:FAIR-Enabling-Resource-to-be-Developed, fip:FAIR-Supporting-Resource-to-be-Developed))
+      bind(replace(replace(str(?type), \"^.*/\", \"\"), \"-\", \" \") as ?type_label)
+    }
+  }
+} group by ?principle ?fsr }
+} order by ?sk ?fsr_label
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-19T07:39:28Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-fip-declared-fsrs;
+    npx:supersedes <https://w3id.org/np/RAYZOm2Lhfp5hPFanpX6R-iKioBUuDRcM63eTuuEzjl9w>;
+    rdfs:label "Get the FSRs declared in a FIP";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzZAkv4Mu1YSUxQMriBnhYunqosX5wpuQ3FjUyzW8wTC51wjCmhsChyhS+mCx7Od+2MTDpdhxDWA+pH1r9AX508X2rIY/sbpMS+pd56e0qKPQ0t4folln1TgamPN9iOlY/yLc2x27AdipWIGXUdtL2iAcb+P/Y5dQS2AkHMS3lP2e5JBL5/bD/10qvTLKvdsqIKts8qjuLpxr9CFbsS2gLjMkXL5D2IsJ0cL5sgmIfS1inLVxIfXrS/OgqYNFqeNznUYCVWfo0g7DKjnjiICz3omeQeJFLYwlJ6PhUhYDQS6O318DGwUCwhnuXbBbwL9evZa2I/0Pwu5xpZdNLYJ5UwIDAQAB";
+    npx:hasSignature "MuzVJN81QUjQ67kdyTtsZECuOtBbWWFwk84cMONvJIRWEhA9cBPKIsnmxj0Hvxp8qoa9rcRUg26yvqr1h7dCwwPOFW1P1FOC2fygBlDgOMJ5L2iWE0QnV2T6PytFW8teCA25Wr009DBvpAuwTP9HE1k9bdIbIUCNg+cBuMMtgNlnCzNwy4Pkg3PbHc9hwlpU1tMsqXxJ3lIw77uGzSHHC54qj3IZ7w27TSlxZCbXtBzt2sgvRvRfRxcGr783vdPiHS4JI1iOv7qUC87BA4mOcxmIw5Fj18j+fA20QhnJwiacohS//RrxlUd7i3oXB7InF3UPQBfi3eDRlPLWFKjHTQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot> .
+}
+

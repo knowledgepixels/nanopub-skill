@@ -1,0 +1,115 @@
+@prefix this: <https://w3id.org/np/RAqse_ArOujmpwqRV-0wwzj-UStjST1uUoxMOOP9F5c2c> .
+@prefix sub: <https://w3id.org/np/RAqse_ArOujmpwqRV-0wwzj-UStjST1uUoxMOOP9F5c2c/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix mira: <http://purl.org/mira-science/mira#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix sioc: <http://rdfs.org/sioc/ns#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:title rdfs:label "has the title" .
+  
+  mira:Study rdfs:label "MIRA study" .
+  
+  mira:follows rdfs:label "follows the protocol" .
+  
+  mira:grounds rdfs:label "grounds the evidence" .
+  
+  sioc:content rdfs:label "has the content" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  sub:content a nt:LongLiteralPlaceholder;
+    rdfs:label "description of what was done (optional)" .
+  
+  sub:evidence a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "a MIRA evidence item this study grounds";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=http%3A%2F%2Fpurl.org%2Fmira-science%2Fmira%23Evidence" .
+  
+  sub:protocol a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "a MIRA protocol this study follows";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=http%3A%2F%2Fpurl.org%2Fmira-science%2Fmira%23Protocol" .
+  
+  sub:st01 rdf:object mira:Study;
+    rdf:predicate rdf:type;
+    rdf:subject sub:study .
+  
+  sub:st02 rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:study .
+  
+  sub:st03 a nt:OptionalStatement;
+    rdf:object sub:content;
+    rdf:predicate sioc:content;
+    rdf:subject sub:study .
+  
+  sub:st04 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:protocol;
+    rdf:predicate mira:follows;
+    rdf:subject sub:study .
+  
+  sub:st05 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:evidence;
+    rdf:predicate mira:grounds;
+    rdf:subject sub:study .
+  
+  sub:study a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short URI suffix for this study";
+    nt:hasDefaultValue sub:study .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "Publishes a study as a MIRA record: an activity - an experiment or an analysis - that produces evidence. The protocols it follows and the evidence it grounds may be linked here, or in their own nanopublications.";
+    dct:isVersionOf <https://w3id.org/np/RANTf8rqSg5e4DCsyH6aQBYsYXEQNbGYQWmKhyVbOYhEo/templateKind>;
+    rdfs:label "Publishing a MIRA study";
+    gen:governedBy <https://w3id.org/spaces/mira>;
+    nt:hasNanopubLabelPattern "${title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05;
+    nt:hasTag "MIRA";
+    nt:hasTargetNanopubType mira:Study, <https://w3id.org/spaces/mira/r/MiraRecord> .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "the title of the study" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234;
+    prov:wasDerivedFrom <https://github.com/MIRA-science/schema>, <https://mira.science/> .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-01T10:51:22Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:introduces <https://w3id.org/np/RANTf8rqSg5e4DCsyH6aQBYsYXEQNbGYQWmKhyVbOYhEo/templateKind>;
+    npx:supersedes <https://w3id.org/np/RANTf8rqSg5e4DCsyH6aQBYsYXEQNbGYQWmKhyVbOYhEo>;
+    rdfs:label "Publishing a MIRA study";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RAefFjYMSnydcZtTqdT8TG8rJeJa76ryG7h10VHQiWKgY>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAWwJ-TzFhUJN5l6cTUIeCIUqqzS8ek-_zumlDczSUipk/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "mPq5FcF1GD4rF+AQ4Xv9zWa3CAmMl0xcYsG2pMf0Go4YznwdLUMrJ750VFtRES2o3QWY9HX+3CWQtT7Pujk1mEEhiWYyyRzglUrYLL4wBQIOi1ZEXy2p0PBvNz62SPAom9F4cfDP1jvIOueh6EVnCjImQhD1A/PAry9CMBZ5XSE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,124 @@
+@prefix this: <https://w3id.org/np/RA1iWKRwpLRniqSU7AIR31UmpuKgei8Hp0NyC2ZIaA_nw> .
+@prefix sub: <https://w3id.org/np/RA1iWKRwpLRniqSU7AIR31UmpuKgei8Hp0NyC2ZIaA_nw/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.org/dc/dcmitype/Collection> rdfs:label "collection" .
+  
+  dct:description rdfs:label "has the description" .
+  
+  <http://purl.org/spar/fabio/SystematicReview> rdfs:label "systematic review" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  <http://www.w3.org/2002/07/owl#Ontology> rdfs:label "OWL ontology" .
+  
+  <http://www.w3.org/2008/05/skos#ConceptScheme> rdfs:label "SKOS concept scheme" .
+  
+  gen:MaintainedResource rdfs:label "maintained resource" .
+  
+  gen:hasNamespace rdfs:label "has the namespace" .
+  
+  gen:isMaintainedBy rdfs:label "is maintained by" .
+  
+  sub:assertion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Test template for statement descriptions (nanodash#45): the same statements as the maintained-resource test template, most of them with a dct:description that tells how to fill them in.";
+    rdfs:label "Defining a maintained resource - statement descriptions test";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st03, sub:st04, sub:st05;
+    nt:hasTag "Spaces" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "the description of the resource" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the name of the resource" .
+  
+  sub:namespace a nt:ExternalUriPlaceholder;
+    rdfs:label "namespace URI prefix" .
+  
+  sub:resource a nt:ExternalUriPlaceholder, nt:IntroducedResource;
+    rdfs:label "resource identifier";
+    nt:hasPrefix "~~SPACE~~/r/";
+    nt:hasPrefixLabel "Resource" .
+  
+  sub:space a nt:GuidedChoicePlaceholder;
+    rdfs:label "the space maintaining this resource";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
+  
+  sub:st00 dct:description "Choose a short identifier for the resource. It is appended to the namespace of the space that maintains it.";
+    rdf:object gen:MaintainedResource;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st01 a nt:OptionalStatement;
+    dct:description "Optionally, say what <em>kind</em> of resource this is, e.g. an ontology or a SKOS concept scheme.";
+    rdf:object sub:type;
+    rdf:predicate rdf:type;
+    rdf:subject sub:resource .
+  
+  sub:st02 dct:description "A short, human-readable name, as it should appear in lists.";
+    rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:resource .
+  
+  sub:st03 dct:description "One or two sentences on what the resource contains and who it is for. See the <a href=\"https://nanodash.knowledgepixels.com/\">Nanodash</a> resource pages for examples.";
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:resource .
+  
+  sub:st04 rdf:object sub:space;
+    rdf:predicate gen:isMaintainedBy;
+    rdf:subject sub:resource .
+  
+  sub:st05 a nt:OptionalStatement;
+    dct:description "Only if the resource defines its own terms: the URI prefix they share, ending in <code>/</code> or <code>#</code>.";
+    rdf:object sub:namespace;
+    rdf:predicate gen:hasNamespace;
+    rdf:subject sub:resource .
+  
+  sub:type a nt:GuidedChoicePlaceholder;
+    rdfs:label "type of the resource";
+    nt:possibleValue <http://purl.org/dc/dcmitype/Collection>, <http://purl.org/spar/fabio/SystematicReview>,
+      <http://www.w3.org/2002/07/owl#Ontology>, <http://www.w3.org/2008/05/skos#ConceptScheme>,
+      nt:AssertionTemplate .
+  
+  nt:AssertionTemplate rdfs:label "assertion template" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-8492-0354 .
+}
+
+sub:pubinfo {
+  this: a npx:ExampleNanopub;
+    dct:created "2026-09-30T10:23:12Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Defining a maintained resource - statement descriptions test";
+    prov:wasDerivedFrom <https://w3id.org/np/RA5ScGkMLL9V4ah3ZQZsXp9N3O-Nes7eANLzeK0jU_Wms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA+i9DV8ynzO944pYkYsDwtlqJHuk+b7FQt6Bb4TIQSDX3jGUURn6WpaNwESHmgMLWSydaH5XlabMzuqpPL4iyB+IAzvwIxdJBLhe39EQMu2j+FZ/5d/xu/gO3nZw2KoEvJ7cJisabuI05OylIRSJ+OG5CmzFxnjojUEJeCFi1njY1InhXrb0yHud9b1ifzweoN6YYOBecKs1gTOaT2bf+t4Wgzg3M0PmRVZ4F0OALsnh4T5+x7kFtiPcDKNpORi585JjKCZ4kczIF6oUKcwgC0kmIY97jtLqSLcXRkxHx5CDI6qz4XlRFs1ZbCUdSlzjdPZAkaBcNem1gIhWzkHkEnQIDAQAB";
+    npx:hasSignature "Lzqv3iKXa9q+Bnvwpj86ZzJnVMLVKMxxQbX+s2Lf9FU6RPN406LY3cZZvdsHyE8DrWGwvR0bKHlG3nUlxpq+HU/Wnsp+wy8yY9JhcTQFzoNGvrWiUBDnVsUxz/64sMQkqGh8lV5tPI6OGgS5uAx/iTPwgL0yjavB07MpZ4zSUdYbNnaWYGbR3WnRaOnFjzD/ERZaiwemzmKWIU9JtjDJE3V2GTM+pLoElTEGTZMi5LkzP3QALcYPOIOZpwrzS595c2CDv+YM9rq6tQxMxL2aDtAIVIR50Jk9mkbiKBMyu7keL0A6H+ttnJpSGnLzLTrArztEDoQPAHSdGjY9wHIZjw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+
