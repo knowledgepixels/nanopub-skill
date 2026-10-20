@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAVERUC4uDthfAYfGBDEy0XR1Unm4uFg2vZmftY3KdYXI> .
-@prefix sub: <https://w3id.org/np/RAVERUC4uDthfAYfGBDEy0XR1Unm4uFg2vZmftY3KdYXI/> .
+@prefix this: <https://w3id.org/np/RABbR90qdJgdTiWeDBMpvZPpXNb6Otm7jbmI15-f7jHqg> .
+@prefix sub: <https://w3id.org/np/RABbR90qdJgdTiWeDBMpvZPpXNb6Otm7jbmI15-f7jHqg/> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -26,7 +26,7 @@ sub:assertion {
     gen:appliesToInstancesOf gen:Event, gen:Space;
     gen:hasDisplayWidth gen:ColumnWidth12of12;
     gen:hasStructuralPosition "3.0.takePart";
-    gen:hasViewQuery <https://w3id.org/np/RApOvPJIP2oLmESxH_rnKUnE1frQDYwP4swITSBZBdBHU/get-event-participation-actions>;
+    gen:hasViewQuery <https://w3id.org/np/RAN8xjlLO19pNHzXngkVEn-wn9W42eiTxJWyBmdHzYC-Y/get-event-participation-actions>;
     gen:hasViewQueryTargetField "space" .
 }
 
@@ -37,23 +37,26 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-15T11:53:07Z"^^xsd:dateTime;
+  this: dct:created "2026-10-20T12:45:24Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:event-participation-view;
     npx:introduces <https://w3id.org/np/RA4pVJ-4_tAI3xMbfG2vCuFxOlyjRMyM0cjcYMqYEfhnA/event-participation-view-kind>;
-    npx:supersedes <https://w3id.org/np/RAiNlNem-IUUwAmIGfrTJXR4IgVI6b-zdHnBapwz4v100>;
+    npx:supersedes <https://w3id.org/np/RAVERUC4uDthfAYfGBDEy0XR1Unm4uFg2vZmftY3KdYXI>;
     rdfs:label "Event participation call-to-action view";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
       <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>,
       <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
-    nt:wasCreatedFromTemplate <https://w3id.org/np/RAfa1tHtbOrV0YaCY0LyjHkpXoudrauhN8DUYPM63ZQ-k> .
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAgMavFN58iDGnwx3wbzyRPkRT04aXZ0ueZp9azTYWyXU/template> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "QAg7okF7z7DXoDE+Fnc7tjZWz1gdOhAFWU47TstQ2BUJu5GZ4AQy2ZDz1P/ilNHTDRkSeo0VPT4OMAcfIiyjPHxuwaK1/n45LdhPge4mQpJZm1KT9rrxQrcafLAJOx9DNuxIx+XLad27DcOpMedG5VT4ZgYS8YDvC7aMBqViQz0=";
+    npx:hasSignature "cMtyPC2BVpUhq6f+TiDu67zFpXz8Nf4+U9Wl8fT6/IY39tSqxTX91BFHA2+vHETW0Iny2R2NxmEjzsE7k48IAu+z2piNm7mt+u0R1aIYP1rU2Sb84UACdiidynWXpcTt7CsYEmMlJZRRS+HFkfuUCGpiKAlhmNHvC33z2KfM9Jg=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAN8xjlLO19pNHzXngkVEn-wn9W42eiTxJWyBmdHzYC-Y/get-event-participation-actions>
+    nt:hasLabelFromApi "Get the ways in relevant to the viewer of an event" .
 }
 

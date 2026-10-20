@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAZKvL6inMhdYZkJvIoSnHS6EgufXgX_-AyQVfOY2cBJ8> .
-@prefix sub: <https://w3id.org/np/RAZKvL6inMhdYZkJvIoSnHS6EgufXgX_-AyQVfOY2cBJ8/> .
+@prefix this: <https://w3id.org/np/RAFk46UuCAasXoaSBKFrvnZibZtQ2ws3go_ADxEpbEiMc> .
+@prefix sub: <https://w3id.org/np/RAFk46UuCAasXoaSBKFrvnZibZtQ2ws3go_ADxEpbEiMc/> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -26,7 +26,7 @@ sub:assertion {
     gen:appliesToInstancesOf gen:MaintainedResource;
     gen:hasDisplayWidth gen:ColumnWidth06of12;
     gen:hasStructuralPosition "3.4.templateInfo";
-    gen:hasViewQuery <https://w3id.org/np/RAxMEkv3BwEpkf4xRfPn1JmwRFYAduRgJ1GprGPXqjTNU/get-template-info>;
+    gen:hasViewQuery <https://w3id.org/np/RABQTD6IOzWDlcr0KQ0SEAHOD-B_DoTqMwM7bY5796TA0/get-template-info>;
     gen:hasViewQueryTargetField "resource" .
 }
 
@@ -37,12 +37,12 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-10-12T13:22:20Z"^^xsd:dateTime;
+  this: dct:created "2026-10-19T14:19:11Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:template-info-view;
     npx:introduces <https://w3id.org/np/RA8reGkHWtEmZkaOPqBqoilISxaXIG8b737HIuSRR8h4Q/template-info-view-kind>;
-    npx:supersedes <https://w3id.org/np/RAwjOVSGE8ci-RS5XDjZzG2QEstIfFBbRI5sn_YU2gXi4>;
+    npx:supersedes <https://w3id.org/np/RAZKvL6inMhdYZkJvIoSnHS6EgufXgX_-AyQVfOY2cBJ8>;
     rdfs:label "Template info view";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
@@ -51,7 +51,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "XhQj/GDsJEsk+PMdqfAjlaaA2ZT3fm6DoNMbchpr2u3MbnMTmSmgWpUkY1gPDs782TNsfsUDd0RXcDBpcrQ19/LNCE1eXQUOuryTtnutAdIafrfhVqDBPtEN+L/zADDyabKZ9I4plnJzjncw7bgR/7oAbPVjvrRONNusGaT8Chs=";
+    npx:hasSignature "kE43g2TyP4XFXr95dZe4jm9hRf5CTukDKc15GpRLIYJaxwqrTaBsWWmvb9NFTJysj9YRXq/IrtvOVdBZ1JdtXknaXA83zaiDSZottnt1gE53+dE//UJgFsPiqmJCPOUKDr9qWoPVe1IdQBI+CXR1f74CUywX3LjzNhIzAw8vKBY=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

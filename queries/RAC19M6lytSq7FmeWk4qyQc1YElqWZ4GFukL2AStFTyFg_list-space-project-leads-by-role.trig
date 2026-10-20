@@ -1,0 +1,89 @@
+@prefix this: <https://w3id.org/np/RAC19M6lytSq7FmeWk4qyQc1YElqWZ4GFukL2AStFTyFg> .
+@prefix sub: <https://w3id.org/np/RAC19M6lytSq7FmeWk4qyQc1YElqWZ4GFukL2AStFTyFg/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:list-space-project-leads-by-role a grlc:grlc-query;
+    dct:description "Lists the project leads of a given space (one row per agent): agents holding one of the project-lead roles (validated role instantiations in the current space state). Both published project-lead role declarations are matched, the observer-tier one and the maintainer-tier one, so the query serves spaces that attached either. The name shown is the agent's canonical name from the space state where there is one, falling back to the foaf:name stated by the grant nanopublication itself - without that fallback, everyone who has not yet published a key renders as a bare URI. The np column points to the project-lead-role grant nanopub. IRI-keyed by npa:forSpace (param space).";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "List space project leads by role";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+select ?user_iri ?user_iri_label ?np ?np_label where {
+  {
+    select ?user_iri
+           (sample(?name) as ?name)
+           (sample(?grantName) as ?grantName)
+           (max(?grantNpStr) as ?np0)
+    where {
+      values ?_space_multi_iri {}
+      values ?role {
+        <https://w3id.org/np/RAFF3vlNyTHSN8xKuOkztGgVQcbXimUIpfsPbO86Ir9lk/projectLeadRole>
+        <https://w3id.org/np/RAei8Dr3uv5mhWDfkgmX39wbhFe_1fsF_zFBrzYt94LZQ/projectLeadRole>
+      }
+      graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?g . }
+      graph ?g {
+        ?ri a gen:RoleInstantiation ; npa:forSpace ?_space_multi_iri ; npa:forAgent ?user_iri ; npa:viaNanopub ?grantNp ;
+            gen:hasRole ?role .
+      }
+      optional { graph ?g { ?user_iri foaf:name ?name } }
+      optional {
+        graph npa:graph { ?grantNp np:hasPublicationInfo ?grantPi . }
+        graph ?grantPi { ?user_iri foaf:name ?grantName . }
+      }
+      bind(str(?grantNp) as ?grantNpStr)
+    }
+    group by ?user_iri
+  }
+  bind(iri(?np0) as ?np)
+  bind(\"^\" as ?np_label)
+  bind(coalesce(str(?name), str(?grantName), \"\") as ?user_iri_label)
+}
+order by lcase(?user_iri_label)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-20T12:23:56Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:list-space-project-leads-by-role;
+    rdfs:label "List space project leads by role";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "JFKmv34vBpJP93vX1Vm+v9hEm9cKlyZrIPw2HUFqMnGIonxzXm9QlEQ+7jvQdiAFwOFYp3ih5723wGCooTQcSr8xRvS72EbIpiopXRmexNPP1u0CfVQORgPzqku5YKP2Y7kLSXQW0+gZgWo9ZDYsBFPPtfxupsANM2bFeBaH9BM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAxMEkv3BwEpkf4xRfPn1JmwRFYAduRgJ1GprGPXqjTNU> .
-@prefix sub: <https://w3id.org/np/RAxMEkv3BwEpkf4xRfPn1JmwRFYAduRgJ1GprGPXqjTNU/> .
+@prefix this: <https://w3id.org/np/RABQTD6IOzWDlcr0KQ0SEAHOD-B_DoTqMwM7bY5796TA0> .
+@prefix sub: <https://w3id.org/np/RABQTD6IOzWDlcr0KQ0SEAHOD-B_DoTqMwM7bY5796TA0/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix grlc: <https://w3id.org/kpxl/grlc/> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -20,7 +20,7 @@ sub:Head {
 
 sub:assertion {
   sub:get-template-info a grlc:grlc-query;
-    dct:description "Returns key-value facts about a space-governed template kind given as the resource, for display on its maintained-resource page: the label, description, tag, governing space, current governed version nanopub (shown as its short artifact code), and its last-modified date and author, all read off the current governed winner of the (kind, space) pair (newest non-invalidated version signed by a current member+ of the governing space, with the kind validated as maintained by that space -- mirroring get-latest-governed-version). It also yields two action rows, both root-relative links (/publish?...) that Nanodash renders as buttons: 'Use this template', which opens the current version's template node as a fillable form with the template's title as the link text, and 'Update this template', which opens that same version in the publish form's override fill mode, i.e. as the starting point of the next version. The update row is shown only to a viewer who currently holds admin, maintainer or member tier in the governing space, which is what the per-row override action it replaces expressed with gen:isVisibleTo gen:MemberRole: the tier holders of the kind's governing space ref are materialized once in a self-contained sub-select (its own values block, one federated call, no per-row lookup) and the viewer, bound by Nanodash into the magic parameter ?__CURRENTUSER_multi_iri, is matched against them by string containment. The match is coalesce-guarded rather than bound-tested, so a logged-out viewer -- for whom the variable stays unbound -- fails closed and simply gets no update row. The form it opens is the template the current version itself was created from (nt:wasCreatedFromTemplate in its publication info, at template-version=latest, so a provenance or pubinfo template kind opens its own meta-template), falling back to the assertion-template meta-template where that link is absent; the lookup keeps only the lexicographically first value, so a nanopub carrying several such links cannot multiply the rows of the table. Governed winners are materialized once per kind in a self-contained sub-select. Both columns use the '_noheader' convention so the redundant header row is dropped. Two things to keep in mind when editing this query: every sub-select scope needs its own values block for ?_resource_multi_iri, or a pattern inside it is left unscoped and matches every space; and a disjunctive filter inside a service block that is evaluated without incoming bindings returns nothing on RDF4J, which is why the tier restriction of the member sub-select is written as a values block rather than as the OR-filter used in the winner sub-select.";
+    dct:description "Returns key-value facts about a space-governed template kind given as the resource, for display on its maintained-resource page: the label, description, tag, governing space, current governed version nanopub (shown as its short artifact code), and its last-modified date and author, all read off the current governed winner of the (kind, space) pair (newest non-invalidated version signed by a current member+ of the governing space, with the kind validated as maintained by that space -- mirroring get-latest-governed-version). It also yields two action rows, both root-relative links (/publish?...) that Nanodash renders as buttons: 'Use this template', which opens the current version's template node as a fillable form with the template's title as the link text, and 'Update this template', which opens that same version in the publish form's override fill mode, i.e. as the starting point of the next version. The update row is shown only to a viewer who currently holds admin, maintainer or member tier in the governing space, which is what the per-row override action it replaces expressed with gen:isVisibleTo gen:MemberRole: the tier holders of the kind's governing space ref are materialized once in a self-contained sub-select (its own values block, one federated call, no per-row lookup) and the viewer, bound by Nanodash into the magic parameter ?__CURRENTUSER_multi_iri, is matched against them by string containment. The match is coalesce-guarded rather than bound-tested, so a logged-out viewer -- for whom the variable stays unbound -- fails closed and simply gets no update row. The form it opens is the template the current version itself was created from (nt:wasCreatedFromTemplate in its publication info, at template-version=latest, so a provenance or pubinfo template kind opens its own meta-template), falling back to the assertion-template meta-template where that link is absent; the lookup keeps only the lexicographically first value, so a nanopub carrying several such links cannot multiply the rows of the table. Governed winners are materialized once per kind in a self-contained sub-select. Both columns use the '_noheader' convention so the redundant header row is dropped. Two things to keep in mind when editing this query: every sub-select scope needs its own values block for ?_resource_multi_iri, or a pattern inside it is left unscoped and matches every space; and a disjunctive filter inside a service block loses part of its bindings on RDF4J, which is why the tier restriction of both the member and the winner sub-select is written as a values block. The winner sub-select carried the OR-filter until 2026-10-19 and silently dropped 28 of the 123 maintained kinds -- every kind whose current governed version is signed by a member-tier rather than an admin-tier agent, which is to say most bot-published views and templates: their Template info panel was empty while every fact behind it was in place.";
     dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
     rdfs:label "Get template info";
     grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
@@ -49,7 +49,7 @@ select ?Property_noheader ?Value_noheader ?Value_label where {
           ?gKind npa:isMaintainedBy ?gSpace ; npa:hasGoverningSpaceRef ?gRef .
           ?gRi a gen:RoleInstantiation ; npa:forSpace ?gSpace ; npa:forSpaceRef ?gRef ;
                npa:hasRoleType ?gTier ; npa:forAgent ?gAgent .
-          filter(?gTier = gen:AdminRole || ?gTier = gen:MaintainerRole || ?gTier = gen:MemberRole)
+          values ?gTier { gen:AdminRole gen:MaintainerRole gen:MemberRole }
           ?gAcct a npa:AccountState ; npa:agent ?gAgent ; npa:pubkey ?gPubkeyhash .
         }
       }
@@ -113,11 +113,11 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-10-12T13:21:13Z"^^xsd:dateTime;
+  this: dct:created "2026-10-19T14:12:05Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:get-template-info;
-    npx:supersedes <https://w3id.org/np/RAN90jOV0oxiJuFTTwiWyFkpXnSKu_t7Uto8zyO00ZGSs>;
+    npx:supersedes <https://w3id.org/np/RAxMEkv3BwEpkf4xRfPn1JmwRFYAduRgJ1GprGPXqjTNU>;
     rdfs:label "Get template info";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
@@ -126,7 +126,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "YtgeymvuP3XbFEdCq1BdQRXDyPRFs9bQe+UHEywonE9tYlCKbgETGuDh8jFfo7DwIO4/AxnS6aSoTYSki7piwzn702zvjtSWIqDw3Z3rDWHIqNTn8gOHYxn1XlhxwtrtejmvZP+tT1i8UgUZZBoBxJfPVwZUEFg6Xmn4hm7pG68=";
+    npx:hasSignature "coFAGwX4xXXm5W1yvJ5TOU65NtUT/Nn2rlsjbm6hEcpzCYCprt702dhR0g18V5cQtdzGy3eFKFv3IIGfftYu6u3hbq/pynTy24dD1PDlx+VWYOpCVNeqIhXc7z/hSMncAel/JO+yCZQXvic03vOpb9iVzfW2Il4iUP98S25Cwec=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

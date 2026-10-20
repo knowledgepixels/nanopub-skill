@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RApOvPJIP2oLmESxH_rnKUnE1frQDYwP4swITSBZBdBHU> .
-@prefix sub: <https://w3id.org/np/RApOvPJIP2oLmESxH_rnKUnE1frQDYwP4swITSBZBdBHU/> .
+@prefix this: <https://w3id.org/np/RAN8xjlLO19pNHzXngkVEn-wn9W42eiTxJWyBmdHzYC-Y> .
+@prefix sub: <https://w3id.org/np/RAN8xjlLO19pNHzXngkVEn-wn9W42eiTxJWyBmdHzYC-Y/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix grlc: <https://w3id.org/kpxl/grlc/> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -20,7 +20,7 @@ sub:Head {
 
 sub:assertion {
   sub:get-event-participation-actions a grlc:grlc-query;
-    dct:description "Backs a call-to-action panel on an event Space. Returns one row per way of taking part that is relevant to this particular viewer: either what they have already declared, shown back to them as a short confirmation with the np column pointing at the nanopublication that says it, or an invitation to declare it. The ways in are planned attendance (offered before the event's start date), actual participation (offered from the start date onwards) and observing, the last offered only to somebody who has declared neither of the other two - a person who is coming is not also an observer. A row is returned only when the space actually offers that way in, that is when a role carrying the corresponding property is attached to the space. What the viewer has declared is read from their validated role instantiations via the CURRENTUSER session parameter; a logged-out visitor has none, so they are offered everything the space offers. When the space offers nothing at all, a single row with empty content is returned instead of no rows, so the panel renders blank rather than showing \"(nothing found)\". The content column holds ready-made root-relative /publish links with template-version=latest, which Nanodash renders as buttons; no title column is returned, so the rows carry no headings of their own.";
+    dct:description "Backs a call-to-action panel on an event Space. Returns one row per way of taking part that is relevant to this particular viewer: either what they have already declared, shown back to them as a short confirmation with the np column pointing at the nanopublication that says it, or an invitation to declare it. The ways in are planned attendance (offered before the event's start date), actual participation (offered from the start date onwards) and observing, the last offered only to somebody who has declared neither of the other two - a person who is coming is not also an observer. A row is returned only when the space actually offers that way in, that is when a role carrying the corresponding property is attached to the space. An attachment counts whether it was published directly as a gen:hasRole triple or supplied by a preset assigned to the space: both are read as the validated gen:RoleAssignment rows of the current space state, so an attachment made by somebody without the authority to make it is not offered. What the viewer has declared is read from their validated role instantiations via the CURRENTUSER session parameter; a logged-out visitor has none, so they are offered everything the space offers. When the space offers nothing at all, a single row with empty content is returned instead of no rows, so the panel renders blank rather than showing \"(nothing found)\". The content column holds ready-made root-relative /publish links with template-version=latest, which Nanodash renders as buttons; no title column is returned, so the rows carry no headings of their own.";
     dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
     rdfs:label "Get the ways in relevant to the viewer of an event";
     grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces>;
@@ -53,23 +53,19 @@ select ?content (sample(?npRow) as ?np) where {
   bind(now() >= ?start as ?started)
 
   # Which ways in does this space actually offer? A role only takes effect once it
-  # is attached to the space, so an unattached one is not offered.
+  # is attached to the space, so an unattached one is not offered. The attachments are
+  # read as the validated gen:RoleAssignment rows of the current space state, which
+  # covers both a directly published gen:hasRole and one that a preset assignment supplies.
   bind(exists {
-    graph npa:graph { ?an1 npa:hasValidSignatureForPublicKeyHash ?ak1 ; np:hasAssertion ?aa1 .
-      filter not exists { ?ai1 npx:invalidates ?an1 ; npa:hasValidSignatureForPublicKeyHash ?ak1 . } }
-    graph ?aa1 { ?_space_multi_iri gen:hasRole ?role1 . }
+    graph ?state { ?ra1 a gen:RoleAssignment ; npa:forSpace ?_space_multi_iri ; gen:hasRole ?role1 . }
     graph ?rd1 { ?role1 gen:hasRegularProperty gen:plansToAttend . }
   } as ?offersPlanned)
   bind(exists {
-    graph npa:graph { ?an2 npa:hasValidSignatureForPublicKeyHash ?ak2 ; np:hasAssertion ?aa2 .
-      filter not exists { ?ai2 npx:invalidates ?an2 ; npa:hasValidSignatureForPublicKeyHash ?ak2 . } }
-    graph ?aa2 { ?_space_multi_iri gen:hasRole ?role2 . }
+    graph ?state { ?ra2 a gen:RoleAssignment ; npa:forSpace ?_space_multi_iri ; gen:hasRole ?role2 . }
     graph ?rd2 { ?role2 gen:hasRegularProperty wd:P1344 . }
   } as ?offersParticipation)
   bind(exists {
-    graph npa:graph { ?an3 npa:hasValidSignatureForPublicKeyHash ?ak3 ; np:hasAssertion ?aa3 .
-      filter not exists { ?ai3 npx:invalidates ?an3 ; npa:hasValidSignatureForPublicKeyHash ?ak3 . } }
-    graph ?aa3 { ?_space_multi_iri gen:hasRole ?role3 . }
+    graph ?state { ?ra3 a gen:RoleAssignment ; npa:forSpace ?_space_multi_iri ; gen:hasRole ?role3 . }
     graph ?rd3 { ?role3 gen:hasInverseProperty gen:hasObserver . }
   } as ?offersObserver)
 
@@ -144,11 +140,11 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-07T09:06:05Z"^^xsd:dateTime;
+  this: dct:created "2026-10-20T12:44:21Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:get-event-participation-actions;
-    npx:supersedes <https://w3id.org/np/RABHQ7LBjgQgrh35OJbCU58Aj1I-rXHZ96nfrnTYXg3dU>;
+    npx:supersedes <https://w3id.org/np/RApOvPJIP2oLmESxH_rnKUnE1frQDYwP4swITSBZBdBHU>;
     rdfs:label "Get the ways in relevant to the viewer of an event";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
@@ -158,7 +154,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "WY7M51l7e4Zwyz0c68S+ZnigxKwDBnmvevJEXenqI8glkwHGGgX96PFObRZY1q5kTyjnHe/g3Y8IShBBj2teVhyv0uGD72Qo65rRzpUTmJaYQfs5/KiMHK4Bz2Y1NpeG3QRa/gxMOeKlQqxKVUpoA0QEO+VE8dF2v0AFL1VI7mo=";
+    npx:hasSignature "ZdIibsJZbb2ehukJwzDL8NCBOEGK9NzwpJZ2lCMSpkL7iQLjM8uqhKraTOwE2VIDvwKRyMW8xNe5OTM+/fgUWhpN2Ep7mSM8UUTCLtZGRpmMyGIs09RS4mtb9BFviZODBs6C7aC3XeoQ2VqtEuHhInvzoaJBSOmgDxbfyoS5TT4=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

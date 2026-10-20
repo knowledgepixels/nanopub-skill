@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAJfQoTn4f7e8qHl0MYmn15qiHydwhr4F8Ow7agpMkWsE> .
-@prefix sub: <https://w3id.org/np/RAJfQoTn4f7e8qHl0MYmn15qiHydwhr4F8Ow7agpMkWsE/> .
+@prefix this: <https://w3id.org/np/RAgMavFN58iDGnwx3wbzyRPkRT04aXZ0ueZp9azTYWyXU> .
+@prefix sub: <https://w3id.org/np/RAgMavFN58iDGnwx3wbzyRPkRT04aXZ0ueZp9azTYWyXU/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -66,6 +66,8 @@ sub:assertion {
   gen:MemberRole rdfs:label "members" .
   
   gen:NanopubSetView rdfs:label "nanopub set view" .
+  
+  gen:NetworkView rdfs:label "network view" .
   
   gen:ObserverRole rdfs:label "observers" .
   
@@ -345,7 +347,7 @@ sub:assertion {
     rdfs:label "choose the type of view";
     nt:hasDefaultValue gen:TabularView;
     nt:possibleValue gen:HeaderView, gen:ItemListView, gen:ListView, gen:NanopubSetView,
-      gen:PlainParagraphView, gen:SvgView, gen:TabularView, gen:ThreadView .
+      gen:NetworkView, gen:PlainParagraphView, gen:SvgView, gen:TabularView, gen:ThreadView .
   
   sub:width a nt:RestrictedChoicePlaceholder;
     rdfs:label "choose display width";
@@ -362,14 +364,14 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-24T09:20:57Z"^^xsd:dateTime;
+  this: dct:created "2026-10-19T08:13:51Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:template;
     npx:introduces <https://w3id.org/np/RAnMcenHc46myXb_Yp-dPu62pywUIsqYJ5oJvSgV38XiQ/templateKind>;
-    npx:supersedes <https://w3id.org/np/RA95oAREm0Z2DNQltk4Dn-aZJOo8WyntU5kH1x6Ea3mu8>;
+    npx:supersedes <https://w3id.org/np/RAJfQoTn4f7e8qHl0MYmn15qiHydwhr4F8Ow7agpMkWsE>;
     rdfs:label "Declaring a resource view";
-    skos:changeNote "The guided choices for the governing space, query, fill query, action template and visibility role are now also external URI placeholders: they must refer to existing resources, so Nanodash no longer offers to mint a typed plain name locally.";
+    skos:changeNote "Adds the network view (gen:NetworkView) to the choices of view type: a view whose query returns one row per edge, drawn as an interactive node-link diagram (nanodash issue #792).";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
@@ -378,7 +380,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "WSJOLTmt/bQGipmlFcok8SidOAFdFwo+99c9Lr8/ZcGwmxZpXGyruu33kfmU+nA5leHmolYyY5WbyEh1k7s+qRcqKuDGEABb22iN/6VeR+AvZk77MQ6wyGmvxDgmDxha8Sa8URxshlmPtGHlbmWW2+bnvIA/mowBTMsmEjUgKfs=";
+    npx:hasSignature "SMH+ZENA0+kRxfyBhdT6hYAYBsHa5HMNy0C7bDQAoKqwagTk2EJP6vsh81NSNfTz68dsjJ7uJgbx8rc2Q6+MJLfF99JuottW33DFZ6R6DfyF1wZ2BWSxn4mhNRE7fxbTgpNRb/bq6llZaQgULie/lV3G8iNJmhXNOwaIfxF4FrU=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
   

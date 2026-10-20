@@ -1,0 +1,61 @@
+@prefix this: <https://w3id.org/np/RAbrtseQbwGKsqBVuJqyhkAKSU86QSKSplBJotT08vVYI> .
+@prefix sub: <https://w3id.org/np/RAbrtseQbwGKsqBVuJqyhkAKSU86QSKSplBJotT08vVYI/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:space-network-view a gen:NetworkView, gen:ResourceView;
+    dct:isVersionOf <https://w3id.org/np/RAivJzJASdZpG8cTFB62xQihjXheRyV_ixVRMSUnTLuDc/space-network-view-kind>;
+    dct:title "🕸 Space network";
+    rdfs:label "Space network view";
+    gen:appliesToInstancesOf gen:Space;
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels/nanodash>;
+    gen:hasStructuralPosition "5.5.network";
+    gen:hasViewQuery <https://w3id.org/np/RAoB9DXaOFSDhylmTQgsgYOqI2g7lW-rhZRyWysyXmcqE/get-space-network>;
+    gen:hasViewQueryTargetField "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-19T12:33:56Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:space-network-view;
+    npx:introduces <https://w3id.org/np/RAivJzJASdZpG8cTFB62xQihjXheRyV_ixVRMSUnTLuDc/space-network-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAivJzJASdZpG8cTFB62xQihjXheRyV_ixVRMSUnTLuDc>;
+    rdfs:label "Space network view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAgMavFN58iDGnwx3wbzyRPkRT04aXZ0ueZp9azTYWyXU/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "gLtVdHxFPjaj7d+TwjIvEejnec//0M6UgzelmeSeGElRhs9Q+ii/yWnPb4FPWXI9eDZC4Equ2OiwYnpfjh3kmfTa7iWZXYcMpPZDddC0aQ9o/YzzJWObQruKNSXRr7VtVkFRZ0dw9Xx1zaKKYx1E7rqH7HHgPPnxVpBx+D5/8g0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/spaces/knowledgepixels/nanodash> nt:hasLabelFromApi "Nanodash" .
+}
+

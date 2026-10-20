@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RASuN2BXIaNvpNZLvjZ_qGfDT9pd884vNBJwqi0fnp308> .
-@prefix sub: <https://w3id.org/np/RASuN2BXIaNvpNZLvjZ_qGfDT9pd884vNBJwqi0fnp308/> .
+@prefix this: <https://w3id.org/np/RAYE43H5SxhRvkAvMMJB5Qk_VHgXLcgsayB5w45FxMD3k> .
+@prefix sub: <https://w3id.org/np/RAYE43H5SxhRvkAvMMJB5Qk_VHgXLcgsayB5w45FxMD3k/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -128,9 +128,9 @@ sub:assertion {
     rdfs:label "type of placeholder: IRI, literal, restricted, etc.";
     nt:possibleValue nt:AgentPlaceholder, nt:AutoEscapeUriPlaceholder, nt:EmbeddedResource,
       nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder, nt:IntroducedResource, nt:LanguageTaggedLiteralPlaceholder,
-      nt:LiteralPlaceholder, nt:LocalResource, nt:LongLiteralPlaceholder, nt:RestrictedChoicePlaceholder,
-      nt:RootNanopubPlaceholder, nt:SequenceElementPlaceholder, nt:TrustyUriPlaceholder,
-      nt:UriPlaceholder, nt:ValuePlaceholder .
+      nt:LiteralPlaceholder, nt:LocalResource, nt:LongLiteralPlaceholder, nt:NewUriPlaceholder,
+      nt:RestrictedChoicePlaceholder, nt:RootNanopubPlaceholder, nt:SequenceElementPlaceholder,
+      nt:TrustyUriPlaceholder, nt:UriPlaceholder, nt:ValuePlaceholder .
   
   sub:possibleLanguageTag a nt:LiteralPlaceholder;
     rdfs:label "possible language tag";
@@ -425,6 +425,8 @@ sub:assertion {
   
   nt:LongLiteralPlaceholder rdfs:label "Long literal placeholder" .
   
+  nt:NewUriPlaceholder rdfs:label "New URI placeholder (must not exist yet)" .
+  
   nt:OptionalStatement rdfs:label "optional statement" .
   
   nt:RepeatableStatement rdfs:label "repeatable statement" .
@@ -487,23 +489,22 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-10-12T14:31:03.368+02:00"^^xsd:dateTime;
+  this: dct:created "2026-10-19T14:37:52Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:template;
-    npx:supersedes <https://w3id.org/np/RAWwJ-TzFhUJN5l6cTUIeCIUqqzS8ek-_zumlDczSUipk>;
-    npx:wasCreatedAt <http://localhost:37373/>;
+    npx:supersedes <https://w3id.org/np/RASuN2BXIaNvpNZLvjZ_qGfDT9pd884vNBJwqi0fnp308>;
     rdfs:label "Defining an assertion template (new version)";
-    skos:changeNote "Addresses https://github.com/knowledgepixels/nanodash/issues/770";
+    skos:changeNote "Adds nt:NewUriPlaceholder to the placeholder types. Nanodash has implemented it since https://github.com/knowledgepixels/nanodash/issues/646 — the publish form checks the IRI entered into such a field against the identifiers already in use — but the type was not offered here, so a template carrying it could not be round-tripped through this form: the type triple was reported as content that could not be filled in and would have been dropped from the next version.";
     nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
       <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
-    nt:wasCreatedFromTemplate <https://w3id.org/np/RAWwJ-TzFhUJN5l6cTUIeCIUqqzS8ek-_zumlDczSUipk/template> .
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RASuN2BXIaNvpNZLvjZ_qGfDT9pd884vNBJwqi0fnp308/template> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "nIxjZyflaRT7GvX1Z8g7M/sq/0gylulhKGlLa9X7bZ5hzb581MAvADLRfoArV9Za4b/2P6Isd0kXRIvaKoP9NErj7yFsTh4ag1e8eh4XSecRb3dJK6c9TLP7tXxjTOOVqu/Uppw54nf/+F7qTt8LrmpdzCAUtoUk3JTYZJmAh1M=";
+    npx:hasSignature "IM9NXlyyvbCay96MJw0WTcBejxa6XMIv9DKrxO2WexnBF/COjImjjLm6FNzFVD3ZAvhbvgWbvp8leRnCS0fxY9dSQ//xxyfYKnsa2c+cm4yzPxOmC2fDtvaU/9oRTQI4s23EIsyb/FlghP2M12NbBSRHB83RshYup9msKWewyZI=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }
