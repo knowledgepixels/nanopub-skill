@@ -24,11 +24,15 @@ from governance_check import report as report_governance
 NT = "https://w3id.org/np/o/ntemplate/"
 nt = lambda n: URIRef(NT + n)
 CACHE = os.environ.get("TPL_CACHE", "/tmp/nptpl")
-PH_TYPES = {'AgentPlaceholder','AutoEscapeUriPlaceholder','ExternalUriPlaceholder',
+PH_TYPES = {'AgentPlaceholder','AutoEscapeUriPlaceholder','DatePlaceholder','ExternalUriPlaceholder',
  'GuidedChoicePlaceholder','IntroducedResource','LanguageTaggedLiteralPlaceholder','LiteralPlaceholder',
- 'LocalResource','LongLiteralPlaceholder','RestrictedChoicePlaceholder','RootNanopubPlaceholder',
- 'SequenceElementPlaceholder','TrustyUriPlaceholder','UriPlaceholder','ValuePlaceholder','EmbeddedResource'}
-LITERAL_PH = {'LiteralPlaceholder','LongLiteralPlaceholder','LanguageTaggedLiteralPlaceholder'}
+ 'LocalResource','LongLiteralPlaceholder','NewUriPlaceholder','RestrictedChoicePlaceholder',
+ 'RootNanopubPlaceholder','SequenceElementPlaceholder','TrustyUriPlaceholder','UriPlaceholder',
+ 'ValuePlaceholder','EmbeddedResource'}
+# A date placeholder is filled with a literal typed by the precision entered, so it belongs here
+# even though it carries no nt:LiteralPlaceholder type of its own.
+LITERAL_PH = {'LiteralPlaceholder','LongLiteralPlaceholder','LanguageTaggedLiteralPlaceholder',
+ 'DatePlaceholder'}
 
 def graphs_of(path_or_text, is_text=False):
     d = Dataset()

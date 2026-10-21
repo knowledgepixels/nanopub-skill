@@ -16,9 +16,12 @@ def assertion(path):
 g=assertion(sys.argv[1])
 tmpl=[s for s,_,_ in g.triples((None,RDF.type,nt('AssertionTemplate')))][0]
 
-PH_TYPES={'AgentPlaceholder','AutoEscapeUriPlaceholder','EmbeddedResource','ExternalUriPlaceholder',
- 'GuidedChoicePlaceholder','IntroducedResource','LanguageTaggedLiteralPlaceholder','LiteralPlaceholder',
- 'LocalResource','LongLiteralPlaceholder','RestrictedChoicePlaceholder','RootNanopubPlaceholder',
+# DatePlaceholder is supported by Nanodash but not yet among the meta-template's
+# placeholder-type choices, so it is accepted here rather than reported.
+PH_TYPES={'AgentPlaceholder','AutoEscapeUriPlaceholder','DatePlaceholder','EmbeddedResource',
+ 'ExternalUriPlaceholder','GuidedChoicePlaceholder','IntroducedResource',
+ 'LanguageTaggedLiteralPlaceholder','LiteralPlaceholder','LocalResource','LongLiteralPlaceholder',
+ 'NewUriPlaceholder','RestrictedChoicePlaceholder','RootNanopubPlaceholder',
  'SequenceElementPlaceholder','TrustyUriPlaceholder','UriPlaceholder','ValuePlaceholder'}
 ST_TYPES={RDF.Statement, nt('AdvancedStatement'), nt('OptionalStatement'), nt('RepeatableStatement')}
 
