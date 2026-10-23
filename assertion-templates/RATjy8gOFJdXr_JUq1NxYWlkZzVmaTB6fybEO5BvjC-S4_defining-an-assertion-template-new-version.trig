@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAYE43H5SxhRvkAvMMJB5Qk_VHgXLcgsayB5w45FxMD3k> .
-@prefix sub: <https://w3id.org/np/RAYE43H5SxhRvkAvMMJB5Qk_VHgXLcgsayB5w45FxMD3k/> .
+@prefix this: <https://w3id.org/np/RATjy8gOFJdXr_JUq1NxYWlkZzVmaTB6fybEO5BvjC-S4> .
+@prefix sub: <https://w3id.org/np/RATjy8gOFJdXr_JUq1NxYWlkZzVmaTB6fybEO5BvjC-S4/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -93,8 +93,8 @@ sub:assertion {
     rdfs:label "type of nanopub created (can be class of assertion or nanopub, or main prediate in assertion)" .
   
   sub:newtemplate a nt:EmbeddedResource, nt:LocalResource, nt:UriPlaceholder;
-    rdfs:label "short local name of this template";
-    nt:hasDefaultValue sub:template .
+    rdfs:label "short local name of this template version";
+    nt:hasDefaultValue sub:templateVersion .
   
   sub:placeholder a nt:LocalResource, nt:RestrictedChoicePlaceholder;
     rdfs:label "placeholder mentioned above";
@@ -349,7 +349,14 @@ sub:assertion {
   sub:targetnamespace a nt:ExternalUriPlaceholder;
     rdfs:label "the target namespace (URI prefix) in which the nanopublication ID is minted" .
   
-  sub:template a nt:AssertionTemplate;
+  sub:templateKind a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "cross-version ID for this template" .
+  
+  sub:templateType a nt:RestrictedChoicePlaceholder;
+    rdfs:label "template can be marked as unlisted here";
+    nt:possibleValue nt:UnlistedTemplate .
+  
+  sub:templateVersion a nt:AssertionTemplate;
     dct:description "This nanopublication defines an assertion template. Such templates are used to generate the input form for the assertion part of nanopublications. A role predicate used above (fixed IRI or placeholder) can be pinned as gen:InverseRoleProperty / gen:RegularRoleProperty in the publication info to declare its direction.";
     rdfs:label "Defining an assertion template (new version)";
     nt:hasNanopubLabelPattern "${tlabel}";
@@ -360,13 +367,6 @@ sub:assertion {
       sub:stD030, sub:stD040, sub:stD045, sub:stD046, sub:stD047, sub:stD048, sub:stD050,
       sub:stD060, sub:stD061, sub:stD062, sub:stD070;
     nt:hasTag "Templates" .
-  
-  sub:templateKind a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
-    rdfs:label "cross-version ID for this template" .
-  
-  sub:templateType a nt:RestrictedChoicePlaceholder;
-    rdfs:label "template can be marked as unlisted here";
-    nt:possibleValue nt:UnlistedTemplate .
   
   sub:tgstatementref a nt:LocalResource, nt:RestrictedChoicePlaceholder;
     rdfs:label "short ID of grouped statement";
@@ -489,13 +489,13 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-10-19T14:37:52Z"^^xsd:dateTime;
+  this: dct:created "2026-10-23T08:39:27Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:embeds sub:template;
-    npx:supersedes <https://w3id.org/np/RASuN2BXIaNvpNZLvjZ_qGfDT9pd884vNBJwqi0fnp308>;
+    npx:embeds sub:templateVersion;
+    npx:supersedes <https://w3id.org/np/RAr1Pklx8ZYYzINqEHG4UjWhBoyAV2cep_TE4jcXbjk6E>;
     rdfs:label "Defining an assertion template (new version)";
-    skos:changeNote "Adds nt:NewUriPlaceholder to the placeholder types. Nanodash has implemented it since https://github.com/knowledgepixels/nanodash/issues/646 — the publish form checks the IRI entered into such a field against the identifiers already in use — but the type was not offered here, so a template carrying it could not be round-tripped through this form: the type triple was reported as content that could not be filled in and would have been dropped from the next version.";
+    skos:changeNote "Renames this template's own embedded node from <np>/template to <np>/templateVersion, applying the convention this form itself now defaults to: the embedded node identifies one immutable version, while the IRI declared with dct:isVersionOf identifies the template across versions. Naming only: identity is carried by npx:embeds and npx:introduces, and nothing reads these IRI suffixes.";
     nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
@@ -504,7 +504,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "IM9NXlyyvbCay96MJw0WTcBejxa6XMIv9DKrxO2WexnBF/COjImjjLm6FNzFVD3ZAvhbvgWbvp8leRnCS0fxY9dSQ//xxyfYKnsa2c+cm4yzPxOmC2fDtvaU/9oRTQI4s23EIsyb/FlghP2M12NbBSRHB83RshYup9msKWewyZI=";
+    npx:hasSignature "imxS0xTJ8iNTFL9OeaDEAmhJDRMmofxn3S5A+2cgsfcIP/G41Z/9uYLWLTPDX2hjqRW27STZu3zC+pj1m0Tjr7tn5PfqbJRRMUqacdATG1HFWw3ODFDqVoAIzcftncxB0/3Md2GtfhSVj2zjSSi+ZkME8bpCwRYOyFdlONmisQQ=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

@@ -1,0 +1,134 @@
+@prefix this: <https://w3id.org/np/RAht45YdHiMMu5zWXYiML-p1EA5YndDyKVEz4rLN8aK3M> .
+@prefix sub: <https://w3id.org/np/RAht45YdHiMMu5zWXYiML-p1EA5YndDyKVEz4rLN8aK3M/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:type rdfs:label "has evidence type" .
+  
+  <http://purl.org/spar/cito/citesAsAuthority> rdfs:label "cites as authority" .
+  
+  <http://purl.org/spar/cito/citesAsEvidence> rdfs:label "cites as evidence" .
+  
+  <http://purl.org/spar/cito/usesDataFrom> rdfs:label "uses data from" .
+  
+  <http://semanticscience.org/resource/SIO_001394> rdfs:label "evidence" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdf:value rdfs:label "has the text" .
+  
+  prov:wasDerivedFrom rdfs:label "was derived from" .
+  
+  <https://schema.org/Statement> rdfs:label "statement" .
+  
+  <https://w3id.org/nanoarguments/implements> rdfs:label "implements" .
+  
+  <https://w3id.org/nanoarguments/tests> rdfs:label "tests" .
+  
+  sub:claim a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the claim" .
+  
+  sub:evidenceType a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "evidence type (ECO)";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=eco&allChildrenOf=http://purl.obolibrary.org/obo/ECO_0000000&fieldList=iri,label,description&q=" .
+  
+  sub:finding a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID of this finding" .
+  
+  sub:findingText a nt:LongLiteralPlaceholder;
+    rdfs:label "text of the finding presented as evidence" .
+  
+  sub:source a nt:ExternalUriPlaceholder;
+    rdfs:label "source URL" .
+  
+  sub:sourceRelation a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose the source relation";
+    nt:possibleValue <http://purl.org/spar/cito/citesAsAuthority>, <http://purl.org/spar/cito/citesAsEvidence>,
+      <http://purl.org/spar/cito/usesDataFrom>, prov:wasDerivedFrom, <https://w3id.org/nanoarguments/implements> .
+  
+  sub:st1 rdf:object <https://schema.org/Statement>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:finding .
+  
+  sub:st2 rdf:object <http://semanticscience.org/resource/SIO_001394>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:finding .
+  
+  sub:st3 rdf:object sub:findingText;
+    rdf:predicate rdf:value;
+    rdf:subject sub:finding .
+  
+  sub:st4 rdf:object sub:claim;
+    rdf:predicate sub:stance;
+    rdf:subject sub:finding .
+  
+  sub:st5 a nt:OptionalStatement;
+    rdf:object sub:evidenceType;
+    rdf:predicate dct:type;
+    rdf:subject sub:finding .
+  
+  sub:st6 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:source;
+    rdf:predicate sub:sourceRelation;
+    rdf:subject sub:finding .
+  
+  sub:stance a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose the stance relation";
+    nt:possibleValue <https://w3id.org/nanoarguments/tests>;
+    nt:possibleValuesFrom <https://w3id.org/np/RAZt5kzfoJg2m4dMRdMm2SP6JeUDD_GMzSq9xyRPMgP5k> .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "A finding presented as evidence: a statement typed as the SIO evidence class that bears on a claim through a typed (CiTO) relation. It is an ordinary discourse contribution (a schema:Statement carrying rdf:value and a CiTO stance) additionally typed as evidence, so it flows through the same discourse queries as any other contribution. It may also have an ECO evidence type and cite its sources.";
+    dct:isVersionOf <https://w3id.org/np/RAdGQVeqqUoTNJe52OSMhY8EX1MkFA1LI4oQh-NAgrYV8/templateKind>;
+    rdfs:label "Evidence finding";
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels/nanoarguments>;
+    nt:hasNanopubLabelPattern "${findingText}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6;
+    nt:hasTag "Discourse" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-22T09:48:58Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:introduces <https://w3id.org/np/RAdGQVeqqUoTNJe52OSMhY8EX1MkFA1LI4oQh-NAgrYV8/templateKind>;
+    rdfs:label "Evidence finding";
+    skos:changeNote "Add evidence type field and source relation choice.";
+    prov:wasDerivedFrom <https://w3id.org/np/RA37ziOe7Js7sUaGV3z_TwIsn_q9SY9fJRuTp4p-xj54U>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYE43H5SxhRvkAvMMJB5Qk_VHgXLcgsayB5w45FxMD3k/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "UehXLBTeZXz/3YlyaWO5DEchMytQ+T/rrvGDS+K0z/kLicujGlK7i/utP5P214AXM9BJ69KNHyD+5m/pHmLuKuUxjibY91kYv73djbmEHD+BRJtKOfYrrnD1lkQCDN0WiOfqxicv9zAAmMIvq/U1nRbbk+4V5Xm8AUjVOtQi70Q=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

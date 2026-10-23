@@ -1,0 +1,127 @@
+@prefix this: <https://w3id.org/np/RA6V9zHjUU3wO9-lWPaehBZM9DzmZCkGrpz33d-lE8uiU> .
+@prefix sub: <https://w3id.org/np/RA6V9zHjUU3wO9-lWPaehBZM9DzmZCkGrpz33d-lE8uiU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.org/spar/cito/citesAsEvidence> rdfs:label "cites as evidence" .
+  
+  <http://semanticscience.org/resource/SIO_000259> rdfs:label "argument - a set of one or more declarative sentences (or propositions) known as the premises along with another declarative sentence (or proposition) known as the conclusion" .
+  
+  <http://semanticscience.org/resource/SIO_000284> rdfs:label "hypothesis - a proposed explanation for a phenomenon" .
+  
+  <http://semanticscience.org/resource/SIO_001394> rdfs:label "evidence - the body of facts or information indicating whether a belief or proposition is true or valid" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdf:value rdfs:label "has the text" .
+  
+  <https://schema.org/Statement> rdfs:label "statement" .
+  
+  sub:evidence a nt:ExternalUriPlaceholder;
+    rdfs:label "evidence URL" .
+  
+  sub:st1 a rdf:Statement;
+    rdf:object <https://schema.org/Statement>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:statement .
+  
+  sub:st1b a nt:OptionalStatement;
+    rdf:object sub:subtype;
+    rdf:predicate rdf:type;
+    rdf:subject sub:statement .
+  
+  sub:st2 a rdf:Statement;
+    rdf:object sub:statementText;
+    rdf:predicate rdf:value;
+    rdf:subject sub:statement .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:target;
+    rdf:predicate sub:stance;
+    rdf:subject sub:statement .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:target;
+    rdf:predicate <https://www.w3.org/ns/activitystreams#inReplyTo>;
+    rdf:subject sub:statement .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:evidence;
+    rdf:predicate <http://purl.org/spar/cito/citesAsEvidence>;
+    rdf:subject sub:statement .
+  
+  sub:stance a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose the stance";
+    nt:possibleValuesFrom <https://w3id.org/np/RAZt5kzfoJg2m4dMRdMm2SP6JeUDD_GMzSq9xyRPMgP5k> .
+  
+  sub:statement a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this" .
+  
+  sub:statementText a nt:LongLiteralPlaceholder;
+    rdfs:label "statement text" .
+  
+  sub:subtype a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose a more specific type";
+    nt:possibleValue <http://semanticscience.org/resource/SIO_000259>, <http://semanticscience.org/resource/SIO_000284>,
+      <http://semanticscience.org/resource/SIO_001394> .
+  
+  sub:target a nt:ExternalUriPlaceholder;
+    rdfs:label "target URL" .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "A discourse statement that takes a typed (CiTO) stance toward, and/or replies to, another contribution, and may cite evidence. A statement with no stance, reply, or evidence is a valid standalone claim (e.g. a thread root). It may also be typed as a hypothesis, evidence, or argument.";
+    dct:isVersionOf <https://w3id.org/np/RAFpID-NunXGUAZebXPfhD9efjvfpZqB5gDBrgP2Lp5N8/templateKind>;
+    rdfs:label "Discourse contribution";
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels/nanoarguments>;
+    nt:hasNanopubLabelPattern "${statementText}";
+    nt:hasStatement sub:st1, sub:st1b, sub:st2, sub:st3, sub:st4, sub:st5;
+    nt:hasTag "Discourse" .
+  
+  <https://www.w3.org/ns/activitystreams#inReplyTo> rdfs:label "is in reply to" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-22T09:12:11Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:introduces <https://w3id.org/np/RAFpID-NunXGUAZebXPfhD9efjvfpZqB5gDBrgP2Lp5N8/templateKind>;
+    rdfs:label "Discourse contribution";
+    skos:changeNote "Add optional subtype field (hypothesis, evidence, argument).";
+    prov:wasDerivedFrom <https://w3id.org/np/RAUEWFWLBntdwIbOq9kvsGY8r183GoE5u5aUB8WAWOQNw>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAYE43H5SxhRvkAvMMJB5Qk_VHgXLcgsayB5w45FxMD3k/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "hTwTB3keDG6uwmUmckxv88Y/i7WscTXZ5U91ZdpOCJVvslHfjkyOzG26QyTCCeRXudTHoC+0VgAWvDUgw5/Dc/UhLCT73Lwzq1SMoXbnPU9nq/xlxz6l1FowqwiUWAynTwBofG3OBpnk2KBnl4IfMKkET+uLCtBI0V41w1UdFfs=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

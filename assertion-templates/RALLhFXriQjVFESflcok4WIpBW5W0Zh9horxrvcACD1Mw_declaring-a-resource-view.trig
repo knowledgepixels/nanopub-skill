@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAgMavFN58iDGnwx3wbzyRPkRT04aXZ0ueZp9azTYWyXU> .
-@prefix sub: <https://w3id.org/np/RAgMavFN58iDGnwx3wbzyRPkRT04aXZ0ueZp9azTYWyXU/> .
+@prefix this: <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw> .
+@prefix sub: <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -323,7 +323,7 @@ sub:assertion {
     rdfs:label "digits for section/subsection + short id like '5.5.thing'";
     nt:hasRegex "[1-9]\\.[1-9]\\..*" .
   
-  sub:template a nt:AssertionTemplate;
+  sub:templateVersion a nt:AssertionTemplate;
     dct:description "Declaring a view that is to be shown on a resource page (i.e. user/space/maintained resource page), optionally governed by a space: declaring 'is governed by' makes the newest version of this view's kind published by a current member of that space the canonical one (authority-scoped latest-wins; the kind needs to be a maintained resource of the space).";
     dct:isVersionOf <https://w3id.org/np/RAnMcenHc46myXb_Yp-dPu62pywUIsqYJ5oJvSgV38XiQ/templateKind>;
     rdfs:label "Declaring a resource view";
@@ -338,10 +338,11 @@ sub:assertion {
     rdfs:label "title to be shown as table header" .
   
   sub:view a nt:EmbeddedResource, nt:LocalResource, nt:UriPlaceholder;
-    rdfs:label "short ID suffix for the view" .
+    rdfs:label "short ID suffix for this view version";
+    nt:hasDefaultValue sub:viewVersion .
   
   sub:viewKind a nt:IntroducedResource, nt:UriPlaceholder;
-    rdfs:label "short suffix or existing URI of view kind" .
+    rdfs:label "short suffix or existing URI of the view (same across versions)" .
   
   sub:viewType a nt:RestrictedChoicePlaceholder;
     rdfs:label "choose the type of view";
@@ -364,14 +365,14 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-10-19T08:13:51Z"^^xsd:dateTime;
+  this: dct:created "2026-10-23T08:39:27Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:embeds sub:template;
+    npx:embeds sub:templateVersion;
     npx:introduces <https://w3id.org/np/RAnMcenHc46myXb_Yp-dPu62pywUIsqYJ5oJvSgV38XiQ/templateKind>;
-    npx:supersedes <https://w3id.org/np/RAJfQoTn4f7e8qHl0MYmn15qiHydwhr4F8Ow7agpMkWsE>;
+    npx:supersedes <https://w3id.org/np/RApfaGkXbqOwVw1U8ZkFNPny62OX9xhU15zTmquRx2bfo>;
     rdfs:label "Declaring a resource view";
-    skos:changeNote "Adds the network view (gen:NetworkView) to the choices of view type: a view whose query returns one row per edge, drawn as an interactive node-link diagram (nanodash issue #792).";
+    skos:changeNote "Renames this template's own embedded node from <np>/template to <np>/templateVersion, applying the convention this form itself now defaults to: the embedded node identifies one immutable version, while the IRI declared with dct:isVersionOf identifies the template across versions. Naming only: identity is carried by npx:embeds and npx:introduces, and nothing reads these IRI suffixes.";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
@@ -380,7 +381,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "SMH+ZENA0+kRxfyBhdT6hYAYBsHa5HMNy0C7bDQAoKqwagTk2EJP6vsh81NSNfTz68dsjJ7uJgbx8rc2Q6+MJLfF99JuottW33DFZ6R6DfyF1wZ2BWSxn4mhNRE7fxbTgpNRb/bq6llZaQgULie/lV3G8iNJmhXNOwaIfxF4FrU=";
+    npx:hasSignature "boQoai0BWLPblvdvP1LQoxaFacgV9wYxRuct2lhN/BIqshrRHlEOZoqFNS0NdfEEka0fHtEFObw+YNmqef1s1SKP0Nb8V8KRVjk50E74xC+AUZi6L08FLFGupaa5Zh3SvZ6EgLsHDXIduP9OSo8f6QysRKCsyUsajwGNV6pY7/U=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
   
