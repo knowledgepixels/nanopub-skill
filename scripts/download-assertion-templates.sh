@@ -13,7 +13,7 @@ source "$SCRIPT_DIR/lib/download-collection.sh"
 
 download_collection \
   "assertion templates" \
-  "RAi6EPio6sbvJ06mqfYm_QBmisWQnJ8cvzm-DKRHKPGUg" \
+  "RA1RlUGUZ1cUJYzT00k2PaX-nHgpczcJiFjVSzxMtXVTA" \
   "get-assertion-templates" \
   "label" \
   "${1:-$SCRIPT_DIR/../assertion-templates}"

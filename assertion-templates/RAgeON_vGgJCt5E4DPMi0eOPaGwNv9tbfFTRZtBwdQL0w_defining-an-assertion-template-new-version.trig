@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RATjy8gOFJdXr_JUq1NxYWlkZzVmaTB6fybEO5BvjC-S4> .
-@prefix sub: <https://w3id.org/np/RATjy8gOFJdXr_JUq1NxYWlkZzVmaTB6fybEO5BvjC-S4/> .
+@prefix this: <https://w3id.org/np/RAgeON_vGgJCt5E4DPMi0eOPaGwNv9tbfFTRZtBwdQL0w> .
+@prefix sub: <https://w3id.org/np/RAgeON_vGgJCt5E4DPMi0eOPaGwNv9tbfFTRZtBwdQL0w/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -358,7 +358,9 @@ sub:assertion {
   
   sub:templateVersion a nt:AssertionTemplate;
     dct:description "This nanopublication defines an assertion template. Such templates are used to generate the input form for the assertion part of nanopublications. A role predicate used above (fixed IRI or placeholder) can be pinned as gen:InverseRoleProperty / gen:RegularRoleProperty in the publication info to declare its direction.";
+    dct:isVersionOf sub:template;
     rdfs:label "Defining an assertion template (new version)";
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels/nanodash>;
     nt:hasNanopubLabelPattern "${tlabel}";
     nt:hasStatement sub:stA010, sub:stA020, sub:stA021, sub:stA021a, sub:stA021b, sub:stA022,
       sub:stA025, sub:stA030, sub:stA040, sub:stA050, sub:stA060, sub:stA065, sub:stA070,
@@ -489,13 +491,14 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-10-23T08:39:27Z"^^xsd:dateTime;
+  this: dct:created "2026-10-23T11:31:36Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:templateVersion;
-    npx:supersedes <https://w3id.org/np/RAr1Pklx8ZYYzINqEHG4UjWhBoyAV2cep_TE4jcXbjk6E>;
+    npx:introduces sub:template;
+    npx:supersedes <https://w3id.org/np/RATjy8gOFJdXr_JUq1NxYWlkZzVmaTB6fybEO5BvjC-S4>;
     rdfs:label "Defining an assertion template (new version)";
-    skos:changeNote "Renames this template's own embedded node from <np>/template to <np>/templateVersion, applying the convention this form itself now defaults to: the embedded node identifies one immutable version, while the IRI declared with dct:isVersionOf identifies the template across versions. Naming only: identity is carried by npx:embeds and npx:introduces, and nothing reads these IRI suffixes.";
+    skos:changeNote "Puts this meta template under the governance of the Nanodash space: it now declares a version-independent IRI (dct:isVersionOf, introduced here for the first time) and gen:governedBy, so that any current member of that space can publish the next version without the key that signed this one. Its content is bound to what Nanodash's template engine supports — the placeholder types it offers are the classes that engine parses — so the space maintaining that engine is the one able to judge a next version. The declaration takes effect once the space lists the IRI as a maintained resource; until then this chain resolves by npx:supersedes as before.";
     nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
@@ -504,7 +507,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "imxS0xTJ8iNTFL9OeaDEAmhJDRMmofxn3S5A+2cgsfcIP/G41Z/9uYLWLTPDX2hjqRW27STZu3zC+pj1m0Tjr7tn5PfqbJRRMUqacdATG1HFWw3ODFDqVoAIzcftncxB0/3Md2GtfhSVj2zjSSi+ZkME8bpCwRYOyFdlONmisQQ=";
+    npx:hasSignature "a0XcotxTq4tf4c2yjFtMT6x3sHhqF8LqbW6ce2l+pm8RQltjNHFv/zX2ZfdunqpFdeblR3HakXzzeBtvBm5RBRZlA/5+fVOFa1TAtrXPUR4B8LTSQGpOtiFlXT233F3lGs9mrWXEytYMskc0ayC5neACU2S++P/O+ViN924vpcY=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

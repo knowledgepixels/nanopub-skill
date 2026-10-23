@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RA-AgakdU88vxLkUGZ0vqYuha4S06ckWJd37EPK6xq4AU> .
-@prefix sub: <https://w3id.org/np/RA-AgakdU88vxLkUGZ0vqYuha4S06ckWJd37EPK6xq4AU/> .
+@prefix this: <https://w3id.org/np/RA-yPZEYODCS39dWOWm7NA_ClOGFHzPi8iYhLzoZf19GI> .
+@prefix sub: <https://w3id.org/np/RA-yPZEYODCS39dWOWm7NA_ClOGFHzPi8iYhLzoZf19GI/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -88,7 +88,7 @@ sub:assertion {
     nt:possibleValue sub:tobj, sub:tpred, sub:tsubj .
   
   sub:placeholderWithDefaultValue a nt:LocalResource, nt:RestrictedChoicePlaceholder;
-    rdfs:label "placeholder";
+    rdfs:label "short ID of placeholder";
     nt:possibleValue sub:tobj, sub:tpred, sub:tsubj .
   
   sub:placeholderWithPossibleValues a nt:LocalResource, nt:RestrictedChoicePlaceholder;
@@ -141,7 +141,7 @@ sub:assertion {
   sub:regex a nt:LiteralPlaceholder;
     rdfs:label "regular expression" .
   
-  sub:stA010 rdf:object nt:PubinfoTemplate;
+  sub:stA010 rdf:object nt:ProvenanceTemplate;
     rdf:predicate rdf:type;
     rdf:subject sub:newtemplate .
   
@@ -165,7 +165,7 @@ sub:assertion {
     rdf:predicate dct:description;
     rdf:subject sub:newtemplate .
   
-  sub:stA030 a nt:OptionalStatement, nt:RepeatableStatement;
+  sub:stA030 a nt:OptionalStatement;
     rdf:object sub:templateType;
     rdf:predicate rdf:type;
     rdf:subject sub:newtemplate .
@@ -283,13 +283,15 @@ sub:assertion {
     rdfs:label "cross-version ID for this template" .
   
   sub:templateType a nt:RestrictedChoicePlaceholder;
-    rdfs:label "template can be marked as unlisted or transient here";
-    nt:possibleValue nt:TransientTemplate, nt:UnlistedTemplate .
+    rdfs:label "template can be marked as unlisted here";
+    nt:possibleValue nt:UnlistedTemplate .
   
   sub:templateVersion a nt:AssertionTemplate;
-    dct:description "This nanopublication defines a publication info template. Such templates are used to generate the input form for one element of the publication info part of nanopublications.";
-    rdfs:label "Defining a publication info template";
-    nt:hasNanopubLabelPattern "Pubinfo template: ${tlabel}";
+    dct:description "This nanopublication defines a provenance template. Such templates are used to generate the input form for the provenance part of nanopublications.";
+    dct:isVersionOf sub:template;
+    rdfs:label "Defining a provenance template";
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels/nanodash>;
+    nt:hasNanopubLabelPattern "${tlabel}";
     nt:hasStatement sub:stA010, sub:stA020, sub:stA021, sub:stA021a, sub:stA021b, sub:stA022,
       sub:stA030, sub:stB000, sub:stB010, sub:stB020, sub:stB030, sub:stC010, sub:stC020,
       sub:stC030, sub:stC040, sub:stC050, sub:stD010, sub:stD020, sub:stD030, sub:stD040,
@@ -357,7 +359,7 @@ sub:assertion {
   
   nt:OptionalStatement rdfs:label "optional statement" .
   
-  nt:PubinfoTemplate rdfs:label "publication info template" .
+  nt:ProvenanceTemplate rdfs:label "provenance template" .
   
   nt:RepeatableStatement rdfs:label "repeatable statement" .
   
@@ -366,8 +368,6 @@ sub:assertion {
   nt:RootNanopubPlaceholder rdfs:label "Root nanopublication placeholder" .
   
   nt:SequenceElementPlaceholder rdfs:label "Sequence element placeholder" .
-  
-  nt:TransientTemplate rdfs:label "Transient template (content not carried over)" .
   
   nt:TrustyUriPlaceholder rdfs:label "Trusty URI placeholder" .
   
@@ -397,8 +397,6 @@ sub:assertion {
   
   nt:possibleValuesFrom rdfs:label "has possible values from" .
   
-  nt:possibleValuesFromApi rdfs:label "has possible values from API" .
-  
   nt:statementOrder rdfs:label "has statement order value" .
 }
 
@@ -409,13 +407,15 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-10-23T09:36:21Z"^^xsd:dateTime;
+  this: dct:created "2026-10-23T11:31:36Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:templateVersion;
-    npx:supersedes <https://w3id.org/np/RA3KyKGBWWXKZa-Tgq1XW8djl-9veFZDC2lcXIOeNz1WE>;
-    rdfs:label "Defining a publication info template";
-    skos:changeNote "Brings this meta template in line with the assertion meta template (nanodash issue #787): the template it defines now gets its own embedded node instead of being the assertion URI, and can declare dct:isVersionOf plus gen:governedBy, a dct:description, and language-tagged literal placeholders; the placeholder-type choices are the full current list. This nanopublication's own node moves to <np>/templateVersion for the same reason.";
+    npx:introduces sub:template;
+    npx:supersedes <https://w3id.org/np/RAdBR_u_Ai7H-7xJhqIjPtqeOop_gXd0AZTXvYoAE2DGc>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Defining a provenance template";
+    skos:changeNote "Puts this meta template under the governance of the Nanodash space: it now declares a version-independent IRI (dct:isVersionOf, introduced here for the first time) and gen:governedBy, so that any current member of that space can publish the next version without the key that signed this one. Its content is bound to what Nanodash's template engine supports — the placeholder types it offers are the classes that engine parses — so the space maintaining that engine is the one able to judge a next version. The declaration takes effect once the space lists the IRI as a maintained resource; until then this chain resolves by npx:supersedes as before.";
     nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
       <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
@@ -423,7 +423,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "ZJZOsq0OTqRgTzbxrMlQChhwF7/HdqNwRs2lMxHmBW3xH5fjqMJ91EDKbmBIDBdrUexcI0qqhyHZgzUyXhTM0X0EL9bCH3EalFFC+6SwdSonkYHTEa8b5mxZa2kR8ir2yILdEr68YDQCfoHf69w7mThmKuZvUeO/b4sEmnEN+aQ=";
+    npx:hasSignature "I0nm9EBk9FPbRPaj0f0SzQLarxznU8+7/28vVsCa5J2WxlOX7TBMqLpRdmQi6VOYsGuvb6xvzbDUdeH8EYL8vmLELtNl5HeKez1BXwCsPH2BLk86ogczmx3/eqRBRZiRIOgyoez4svcmvT8RjpaIWHcEIzyIfmg5Br9vUfrvx5I=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }
