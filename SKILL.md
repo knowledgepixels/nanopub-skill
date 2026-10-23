@@ -184,10 +184,10 @@ bash scripts/download-assertion-templates.sh
 Assertion templates define the structure for creating nanopubs of a specific type (e.g. expressing a claim, defining a class, declaring event participation). They can be listed via the API:
 
 ```bash
-curl -s "https://query.knowledgepixels.com/api/RAi6EPio6sbvJ06mqfYm_QBmisWQnJ8cvzm-DKRHKPGUg/get-assertion-templates"
+curl -s "https://query.knowledgepixels.com/api/RA1RlUGUZ1cUJYzT00k2PaX-nHgpczcJiFjVSzxMtXVTA/get-assertion-templates"
 ```
 
-(Sibling queries: `RA4ynLpmZXQjnMQzvm7OPt-q8uPPXU8qMxSHm4oSxlw5Y/get-provenance-templates` and `RAxzYV8Pr9vgTcajVMKrZ4GRO8xjxYgEzHCLN_BE0FQfs/get-pubinfo-templates`. These read the label off the typed template node, so they cover both template identity shapes below, and they list only the current governed winner per template, not every version.)
+(Sibling queries: `RAd49_ERRKQxWqrXZ0Gdy9cluP9H8vbCTtW5Un4yKBVqw/get-provenance-templates` and `RAi5QKbupXbqI0JGyHJBAZVB3MYfG3PkiPyJrI13XEQ8s/get-pubinfo-templates`. These read the label off the typed template node, so they cover both template identity shapes below, and they list only the current governed winner per template, not every version. All three require that node to carry at least one `nt:hasStatement` (2026-10-23 versions, superseding `RAi6EPio…`/`RA4ynLpm…`/`RAxzYV8P…`): nanopub-query infers the nanopub type from an assertion type triple, so a **maintained-resource declaration of a template's version-independent IRI**, a preset assignment or an FDO/SHACL profile that merely claims the type would otherwise be listed as a template and then fail to load — `MalformedTemplateException: Embedded template node must be in the nanopub's namespace`, 77 assertion + 1 provenance + 1 pubinfo rows network-wide. Nanodash points at the new versions from nanodash#826 on.)
 
 **Template shapes (legacy vs embedded identity):** A template nanopub comes in two shapes:
 

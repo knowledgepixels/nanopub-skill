@@ -1,11 +1,12 @@
-@prefix this: <https://w3id.org/np/RAi6EPio6sbvJ06mqfYm_QBmisWQnJ8cvzm-DKRHKPGUg> .
-@prefix sub: <https://w3id.org/np/RAi6EPio6sbvJ06mqfYm_QBmisWQnJ8cvzm-DKRHKPGUg/> .
+@prefix this: <https://w3id.org/np/RA1RlUGUZ1cUJYzT00k2PaX-nHgpczcJiFjVSzxMtXVTA> .
+@prefix sub: <https://w3id.org/np/RA1RlUGUZ1cUJYzT00k2PaX-nHgpczcJiFjVSzxMtXVTA/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix grlc: <https://w3id.org/kpxl/grlc/> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix npx: <http://purl.org/nanopub/x/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix orcid: <https://orcid.org/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
@@ -71,6 +72,7 @@ select ?np ?pubkey ?pubkeyhash ?date ?label ?tag ?unlisted ?creator where {
   }
   optional { graph ?a { ?tnode a nt:AssertionTemplate } }
   bind(coalesce(?tnode, ?a) as ?t)
+  filter exists { graph ?a { ?t nt:hasStatement ?anystatement } }
   optional { graph ?a { ?t rdfs:label ?label } }
   optional { graph ?a { ?t nt:hasTag ?tag . } }
   bind(exists { graph ?a { ?t a nt:UnlistedTemplate } } as ?unlisted)
@@ -89,11 +91,12 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-07-09T14:18:32Z"^^xsd:dateTime;
+  this: dct:created "2026-10-23T10:34:49Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:get-assertion-templates;
-    npx:supersedes <https://w3id.org/np/RAoEo6jLZlH6sJeI6Lw3CIBfirDOscT8dI8Mab58BS8Sc>;
+    npx:supersedes <https://w3id.org/np/RAi6EPio6sbvJ06mqfYm_QBmisWQnJ8cvzm-DKRHKPGUg>;
+    skos:changeNote "Skips a nanopublication that only claims the template type without defining a template, the same way get-all-templates does: the typed node must carry at least one nt:hasStatement. Such rows come from maintained-resource declarations of a template's version-independent IRI — the server infers the nanopub type from the assertion's type triple — and made Nanodash try to parse the declaration as a template, which fails because the typed node lives in another nanopublication's namespace (MalformedTemplateException, 40 such nanopublications network-wide: 38 assertion, 1 provenance, 1 pubinfo).";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
       <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
@@ -101,7 +104,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "HP3Tac6K2mwpZScrXGS9EVUc0c9068mh9OafmiG841/EEPhxzJDumRiyqOq3yEOK5ZI3hk/Ao9dbElC5HnrFPLsvcQId/vOdGm7+wKNQ3K/2TbbQSxnDOy/XmUu3ROEAr7lkN2QFPvDyGpGnI3fa3apzbKDvcXq39IgseiGu9xg=";
+    npx:hasSignature "SHElSIFkq57xtrt0jny14gTXBLwmxHf5tANTs4NTJY2MUs0GC+03fNPSlzMhzSEDShhW9gX6agoHHzI5/EKrYbsFI75iR5Dv2i53/vNTAl2X60E7CLEDFyssxuinbQAVjEXqWsobuHcRvcPxWfjICRAr/OOGtLj40drCspSdfWo=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }
