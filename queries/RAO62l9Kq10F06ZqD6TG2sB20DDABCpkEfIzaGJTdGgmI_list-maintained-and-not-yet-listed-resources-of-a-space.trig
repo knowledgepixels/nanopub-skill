@@ -1,11 +1,12 @@
-@prefix this: <https://w3id.org/np/RAWZab2iKc3cB6TwqHdUEn1ZgMh817nfiwFKAVMrypVlI> .
-@prefix sub: <https://w3id.org/np/RAWZab2iKc3cB6TwqHdUEn1ZgMh817nfiwFKAVMrypVlI/> .
+@prefix this: <https://w3id.org/np/RAO62l9Kq10F06ZqD6TG2sB20DDABCpkEfIzaGJTdGgmI> .
+@prefix sub: <https://w3id.org/np/RAO62l9Kq10F06ZqD6TG2sB20DDABCpkEfIzaGJTdGgmI/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix grlc: <https://w3id.org/kpxl/grlc/> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix npx: <http://purl.org/nanopub/x/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix orcid: <https://orcid.org/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
@@ -20,7 +21,7 @@ sub:Head {
 
 sub:assertion {
   sub:list-maintained-and-not-yet-listed-resources a grlc:grlc-query;
-    dct:description "Lists the resources a space maintains, preceded by the kinds of the definitions (views, templates and the like) that say they are governed by the space but that the space does not list as maintained resources yet, marked as not listed yet. The maintained resources are those of the space ref whose root nanopublication is given (root_np) or, without it, of every ref of the space IRI (space), as in list-maintained-resources. A not-yet-listed kind is shown with the label it would get when listed; its row points to the kind's newest version that declares gen:governedBy <space>, embedded in a nanopublication signed by a current admin, maintainer or member of the space and not invalidated by its own key. Left out are kinds the space already maintains, kinds that were re-minted (the nanopublication minting the kind supersedes a version of another kind), and versions whose latest verdict by an admin of the space is npx:disapprovesOf (a later npx:approvesOf brings them back), as in list-maintained-resources-pending-approval. Hidden columns pre-fill the admin actions on the not-yet-listed rows and are empty on the others: list_* for listing the kind as a maintained resource of the space, dismiss_target and dismiss_choice for dismissing the version, which only takes it off the list. Hosted on the full repo; the space state comes from the spaces repo in two federated calls that each run once.";
+    dct:description "Lists the resources a space maintains, preceded by the version-independent IRIs of the definitions (views, templates and the like) that say they are governed by the space but that the space does not list as maintained resources yet, marked as not listed yet. The maintained resources are those of the space ref whose root nanopublication is given (root_np) or, without it, of every ref of the space IRI (space), as in list-maintained-resources. A not-yet-listed one is shown with the label it would get when listed; its row points to its newest version that declares gen:governedBy <space>, embedded in a nanopublication signed by a current admin, maintainer or member of the space and not invalidated by its own key. Left out are IRIs the space already maintains, ones that were re-minted (the nanopublication minting it supersedes a version declaring another one), and versions whose latest verdict by an admin of the space is npx:disapprovesOf (a later npx:approvesOf brings them back), as in list-maintained-resources-pending-approval. Hidden columns pre-fill the admin actions on the not-yet-listed rows and are empty on the others: list_* for listing it as a maintained resource of the space, dismiss_target and dismiss_choice for dismissing the version, which only takes it off the list. Hosted on the full repo; the space state comes from the spaces repo in two federated calls that each run once.";
     dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
     rdfs:label "List maintained and not yet listed resources of a space";
     grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
@@ -144,8 +145,8 @@ where {
              if(?rdftype = gen:Preset, 'preset', 'definition'))))), 'definition') as ?dtype)
         bind(coalesce(?title, ?label, str(?definition)) as ?dlabel)
         bind(coalesce(?label, ?title, str(?kind)) as ?baseLabel)
-        bind(if(?dtype = 'view', concat(str(?baseLabel), ' kind'), concat(str(?baseLabel), ' (', ?dtype, ' kind)')) as ?klabel)
-        bind(coalesce(?description, concat('The kind of the ', ?dtype, ' «', str(?dlabel), '», maintained by this space so that any of its members can publish the next version.')) as ?kdesc)
+        bind(if(?dtype = 'view', str(?baseLabel), concat(str(?baseLabel), ' (', ?dtype, ')')) as ?klabel)
+        bind(coalesce(?description, concat('The ', ?dtype, ' «', str(?dlabel), '» itself, across versions, maintained by this space so that any of its members can publish the next version.')) as ?kdesc)
       }
       group by ?kind ?np
       having (coalesce(!strends(max(?verdict), 'd'), true))
@@ -164,11 +165,13 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-24T14:43:13Z"^^xsd:dateTime;
+  this: dct:created "2026-10-23T09:07:47Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:list-maintained-and-not-yet-listed-resources;
+    npx:supersedes <https://w3id.org/np/RAWZab2iKc3cB6TwqHdUEn1ZgMh817nfiwFKAVMrypVlI>;
     rdfs:label "List maintained and not yet listed resources of a space";
+    skos:changeNote "Drops \"kind\" from the label and description this query generates for a not-yet-listed resource: a view now proposes the view's own label instead of «label» + \" kind\", and other definitions «label» + \" (template)\" rather than \" (template kind)\". Those strings pre-fill the listing action, so they are what every future maintained resource gets named. Wording in the description follows the same convention.";
     prov:wasDerivedFrom <https://w3id.org/np/RAACDhEU3OF8BF52aaHDMfs-djySEp_i-yv1Yb5We6zxc>,
       <https://w3id.org/np/RAPthUMRDXiJeD2BrOsZigTsbA0LktBc-HC4alDSfVNKM>;
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
@@ -178,7 +181,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "WMWWzFgZ7P6OHZDbsCRXiv381f8OHAqGNj0cCtZxYabGQiBRK+CGezLijIyc/fJJ95mO+sqM68N7zCTvyxmfUgwljL1SijFH/PMi7PQVA6ejvHguchNwOFb9rb3FamqqdXD4I6jBHUOpCuyMlOIT2dG0aa2BvuhobUDK4rDLeDw=";
+    npx:hasSignature "Jygx8aGt/ROZbxQ2iiA57SC1YHyh1AmwAlcUywVQMPa4wwbAghAGtSYt0RpjYTTWQWTt1J7l0Nqm02RzfskOIPV/uD5kqJT+ne4XuquYuANfHOkW7vYVcP64R9XEMrWUfPhhrF0m5rc9dOYXxffSRaE04gDvKvMCFttnQiw0XSc=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

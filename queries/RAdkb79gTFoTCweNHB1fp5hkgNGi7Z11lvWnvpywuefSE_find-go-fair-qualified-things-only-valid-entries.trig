@@ -1,10 +1,11 @@
-@prefix this: <https://w3id.org/np/RA9rho2HHeT5zl2z7dk6ntdzCE3CWYHfdqdg10dCk5kJc> .
-@prefix sub: <https://w3id.org/np/RA9rho2HHeT5zl2z7dk6ntdzCE3CWYHfdqdg10dCk5kJc/> .
+@prefix this: <https://w3id.org/np/RAdkb79gTFoTCweNHB1fp5hkgNGi7Z11lvWnvpywuefSE> .
+@prefix sub: <https://w3id.org/np/RAdkb79gTFoTCweNHB1fp5hkgNGi7Z11lvWnvpywuefSE/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix npx: <http://purl.org/nanopub/x/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix orcid: <https://orcid.org/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
@@ -59,19 +60,17 @@ select distinct ?thing ?label ?description ?np ?date ?pubkey ?qualifier ?qualifi
   filter( contains(?text, lcase(str(?_searchterm))) )
   
   optional {
+    graph ?da {
+      ?dsomebody ( npx:disapproves-of | npx:disapprovesOf ) ?np .
+    }
     graph npa:graph {
+      ?disapproval np:hasAssertion ?da .
       ?disapproval npa:hasValidSignatureForPublicKey ?dpubkey .
     }
     graph ?latest_curators_assertion {
       ?dpubkeys npx:hasPublicKey ?dpubkey .
     }
-    graph npa:graph {
-      filter not exists { ?disapproval_x npx:invalidates ?disapproval ; npa:hasValidSignatureForPublicKey ?dpubkey . }
-      ?disapproval np:hasAssertion ?da .
-    }
-    graph ?da {
-      ?dsomebody ( npx:disapproves-of | npx:disapprovesOf ) ?np .
-    }
+    filter not exists { graph npa:graph { ?disapproval_x npx:invalidates ?disapproval ; npa:hasValidSignatureForPublicKey ?dpubkey . } }
   } filter(!bound(?disapproval))  # Faster than \"filter not exists\" for some reason
 
   optional {
@@ -111,20 +110,18 @@ select distinct ?thing ?label ?description ?np ?date ?pubkey ?qualifier ?qualifi
     }
   }
   optional {
+    graph ?qa {
+      ?qualifier npx:qualifies ?np .
+    }
     graph npa:graph {
+      ?qualification_np np:hasAssertion ?qa .
       ?qualification_np npx:hasNanopubType npx:qualifies .
       ?qualification_np npa:hasValidSignatureForPublicKey ?qpubkey .
     }
     graph ?latest_curators_assertion {
       ?qpubkeys npx:hasPublicKey ?qpubkey .
     }
-    graph npa:graph {
-      filter not exists { ?qualification_np_x npx:invalidates ?qualification_np ; npa:hasValidSignatureForPublicKey ?qpubkey . }
-      ?qualification_np np:hasAssertion ?qa .
-    }
-    graph ?qa {
-      ?qualifier npx:qualifies ?np .
-    }
+    filter not exists { graph npa:graph { ?qualification_np_x npx:invalidates ?qualification_np ; npa:hasValidSignatureForPublicKey ?qpubkey . } }
   }
 
   optional {
@@ -156,22 +153,22 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-06-15T14:16:50.994Z"^^xsd:dateTime;
+  this: dct:created "2026-10-21T06:52:25.246Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
     npx:embeds sub:find-gofair-qualified-things-valid;
-    npx:supersedes <https://w3id.org/np/RACIjwEYXjz60_kM3Yzp-5WdmgHBi__FKzsMa_3zWGfLU>;
+    npx:supersedes <https://w3id.org/np/RA9rho2HHeT5zl2z7dk6ntdzCE3CWYHfdqdg10dCk5kJc>;
     npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
-    prov:wasDerivedFrom <https://w3id.org/np/RAfgJE8nia_5dXordL1zE2J2fSWWqVAFjloOt6IaToWtU>;
+    skos:changeNote "Refactor to make query faster.";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
-      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
       <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
     nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
-    npx:hasSignature "f4MxUNzZcJQKxpkyH5mC5kn8kmrP/c9lYLAeRmSB+ZFlDELFiuHh8jFvrBUhiVnUyOMaeRb2GMjMwgXI/BRD0cfdn1JhD6WdfMqnNowphWUj7fZz7cwC86h3qRrzSYSrvQisSJOQO63ceGzaSPOhOjBMcaOmOAuCx++fwFixxys=";
+    npx:hasSignature "OGQOZpEGWdM/ZOQsRYzEO7yOLjy19/XI2xaQFilqxHYNfh6w5DlRfCfGkQDQpAYMcnhNgXqofJg03sQBcoMYOTyRdyNzhj9hns4XzeZb5+1RdUgdfM0oJHoDACDIszO5xAfaDEP7zJF611xCeMRh8xPDSTlOonBH9oDqDhJc/4c=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

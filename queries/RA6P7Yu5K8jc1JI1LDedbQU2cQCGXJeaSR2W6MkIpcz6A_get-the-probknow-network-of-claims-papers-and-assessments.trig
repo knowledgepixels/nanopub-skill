@@ -1,0 +1,250 @@
+@prefix this: <https://w3id.org/np/RA6P7Yu5K8jc1JI1LDedbQU2cQCGXJeaSR2W6MkIpcz6A> .
+@prefix sub: <https://w3id.org/np/RA6P7Yu5K8jc1JI1LDedbQU2cQCGXJeaSR2W6MkIpcz6A/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-probknow-network a grlc:grlc-query;
+    dct:description "Returns the ProbKnow record network as one row per edge, for a network view (gen:NetworkView): the claims published on the network, the papers they were derived from, their overall assessment and the model that made it. Of all validly signed, non-invalidated nanopublications introducing a given claim or assessment, only the newest by timestamp is read (ties broken by nanopublication URI), so a record published more than once appears once, with its current content. No publisher restriction is applied: every claim is drawn, whoever signed it. Four kinds of node, each its own colour: claims (pk:Claim), their source papers (pk:derivedFromPaper, typed pk:Paper), the one overall assessment of each claim -- the assessment it links to with pk:hasAssessment whose pk:assessmentType ends in '/overall', read from the assessment's assertion or from its nanopublication's pubinfo, since the batches put it in either -- and the models those assessments were made by (pk:assessedBy, typed pk:Model). The per-criterion assessments under each overall one are left out: they are eight spokes per claim, identical in shape for every claim, and they bury the structure the diagram is for. What the diagram shows instead is which claims share a source paper and which model assessed which claim. Captions are cut to 55 characters, with the full text on hover: a claim is captioned with its label up to ' faithfully reproduces' and hovers with its label and description, a paper with its title (from wherever on the network it is stated, the lexicographically first where several differ) and hovers with title and DOI, an assessment with its verdict and score on the 0-to-1 scale and hovers with its label and the first 300 characters of its comment. A claim with neither a source paper nor an overall assessment is part of no edge and so is not drawn. Clicking an edge opens the nanopublication asserting it: the claim's for the paper and assessment links, the assessment's for the model link. Hosted on the full repository, because the claim-to-assessment link is asserted on either side.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the ProbKnow network of claims, papers and assessments";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix pk: <https://w3id.org/probknow/ontology/>
+
+select distinct ?source ?source_label ?source_desc ?source_type ?source_type_label
+       ?edge_type ?edge_label
+       ?target ?target_label ?target_desc ?target_type ?target_type_label
+       ?np (\"^\" as ?np_label)
+where {
+  {
+    # A claim and a paper it was derived from. A paper two claims share is what makes this
+    # worth drawing rather than listing: it ties those claims together.
+    graph npa:graph {
+      ?cnp npx:hasNanopubType pk:Claim ;
+        npa:hasValidSignatureForPublicKeyHash ?pubkey ;
+        dct:created ?date ;
+        npx:introduces ?claim ;
+        np:hasAssertion ?ca .
+      filter not exists { ?inv npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    }
+    filter not exists {
+      graph npa:graph {
+        ?cnpX npx:hasNanopubType pk:Claim ;
+          npa:hasValidSignatureForPublicKeyHash ?pubkeyX ;
+          dct:created ?dateX ;
+          npx:introduces ?claim .
+        filter not exists { ?invX npx:invalidates ?cnpX ; npa:hasValidSignatureForPublicKeyHash ?pubkeyX . }
+      }
+      filter(?dateX > ?date || (?dateX = ?date && str(?cnpX) > str(?cnp)))
+    }
+    graph ?ca { ?claim pk:derivedFromPaper ?paper }
+    filter(isIri(?paper))
+    optional { graph ?ca { ?claim rdfs:label ?claimLabel } }
+    optional { graph ?ca { ?claim dct:description ?claimDesc } }
+    optional {
+      graph ?pg { ?paper dct:title ?paperTitle }
+      filter not exists { graph ?pgX { ?paper dct:title ?titleX } filter(str(?titleX) < str(?paperTitle)) }
+    }
+    bind(coalesce(?claimLabel, replace(str(?claim), \"^.*/\", \"\")) as ?claimName)
+    bind(if(contains(?claimName, \" faithfully reproduces\"), strbefore(?claimName, \" faithfully reproduces\"), ?claimName) as ?claimShort)
+    bind(replace(replace(str(?paper), \"^https?://(dx[.])?doi[.]org/\", \"doi:\"), \"^https?://(www[.])?\", \"\") as ?paperIri)
+    bind(coalesce(?paperTitle, ?paperIri) as ?paperName)
+    bind(?claim as ?source)
+    bind(if(strlen(?claimShort) > 55, concat(substr(?claimShort, 1, 54), \"…\"), ?claimShort) as ?source_label)
+    bind(coalesce(concat(?claimName, \" — \", ?claimDesc), ?claimName) as ?source_desc)
+    bind(pk:Claim as ?source_type)
+    bind(\"claim\" as ?source_type_label)
+    bind(pk:derivedFromPaper as ?edge_type)
+    bind(\"derived from\" as ?edge_label)
+    bind(?paper as ?target)
+    bind(if(strlen(?paperName) > 55, concat(substr(?paperName, 1, 54), \"…\"), ?paperName) as ?target_label)
+    bind(coalesce(concat(?paperTitle, \" — \", ?paperIri), ?paperIri) as ?target_desc)
+    bind(pk:Paper as ?target_type)
+    bind(\"source paper\" as ?target_type_label)
+    bind(?cnp as ?np)
+  } union {
+    # A claim and its overall assessment, captioned with the verdict and the score.
+    graph npa:graph {
+      ?cnp npx:hasNanopubType pk:Claim ;
+        npa:hasValidSignatureForPublicKeyHash ?pubkey ;
+        dct:created ?date ;
+        npx:introduces ?claim ;
+        np:hasAssertion ?ca .
+      filter not exists { ?inv npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    }
+    filter not exists {
+      graph npa:graph {
+        ?cnpX npx:hasNanopubType pk:Claim ;
+          npa:hasValidSignatureForPublicKeyHash ?pubkeyX ;
+          dct:created ?dateX ;
+          npx:introduces ?claim .
+        filter not exists { ?invX npx:invalidates ?cnpX ; npa:hasValidSignatureForPublicKeyHash ?pubkeyX . }
+      }
+      filter(?dateX > ?date || (?dateX = ?date && str(?cnpX) > str(?cnp)))
+    }
+    graph ?ca { ?claim pk:hasAssessment ?as }
+    graph npa:graph {
+      ?anp npx:introduces ?as ;
+        npa:hasValidSignatureForPublicKeyHash ?apubkey ;
+        dct:created ?adate ;
+        np:hasAssertion ?aa ;
+        np:hasPublicationInfo ?api .
+      filter not exists { ?ainv npx:invalidates ?anp ; npa:hasValidSignatureForPublicKeyHash ?apubkey . }
+    }
+    filter not exists {
+      graph npa:graph {
+        ?anpX npx:introduces ?as ;
+          npa:hasValidSignatureForPublicKeyHash ?apubkeyX ;
+          dct:created ?adateX .
+        filter not exists { ?ainvX npx:invalidates ?anpX ; npa:hasValidSignatureForPublicKeyHash ?apubkeyX . }
+      }
+      filter(?adateX > ?adate || (?adateX = ?adate && str(?anpX) > str(?anp)))
+    }
+    filter(exists { graph ?aa { ?as pk:assessmentType ?atypeA } filter(strends(str(?atypeA), \"/overall\")) }
+        || exists { graph ?api { ?anp pk:assessmentType ?atypeP } filter(strends(str(?atypeP), \"/overall\")) })
+    optional { graph ?ca { ?claim rdfs:label ?claimLabel } }
+    optional { graph ?ca { ?claim dct:description ?claimDesc } }
+    optional { graph ?aa { ?as rdfs:label ?asLabel } }
+    optional { graph ?aa { ?as rdfs:comment ?asComment } }
+    optional { graph ?aa { ?as pk:hasVerdict ?verdict } }
+    optional { graph ?aa { ?as pk:hasProbability ?p1 } }
+    optional { graph ?aa { ?as pk:weightOfEvidence ?p2 } }
+    bind(xsd:integer(round(coalesce(?p1, ?p2) * 100)) as ?pct)
+    bind(if(?pct >= 100, \"1.00\", concat(\"0.\", if(?pct < 10, concat(\"0\", str(?pct)), str(?pct)))) as ?scoreStr)
+    bind(coalesce(concat(?verdict, \" (\", ?scoreStr, \")\"), ?verdict, ?scoreStr, \"overall assessment\") as ?asCaption)
+    bind(if(strlen(coalesce(?asComment, \"\")) > 300, concat(substr(?asComment, 1, 299), \"…\"), ?asComment) as ?asNote)
+    bind(coalesce(?asLabel, ?asCaption) as ?asName)
+    bind(coalesce(concat(?asName, \" — \", ?asNote), ?asName) as ?asHover)
+    bind(coalesce(?claimLabel, replace(str(?claim), \"^.*/\", \"\")) as ?claimName)
+    bind(if(contains(?claimName, \" faithfully reproduces\"), strbefore(?claimName, \" faithfully reproduces\"), ?claimName) as ?claimShort)
+    bind(?claim as ?source)
+    bind(if(strlen(?claimShort) > 55, concat(substr(?claimShort, 1, 54), \"…\"), ?claimShort) as ?source_label)
+    bind(coalesce(concat(?claimName, \" — \", ?claimDesc), ?claimName) as ?source_desc)
+    bind(pk:Claim as ?source_type)
+    bind(\"claim\" as ?source_type_label)
+    bind(pk:hasAssessment as ?edge_type)
+    bind(\"has assessment\" as ?edge_label)
+    bind(?as as ?target)
+    bind(?asCaption as ?target_label)
+    bind(?asHover as ?target_desc)
+    bind(pk:LLMClaimAssessment as ?target_type)
+    bind(\"overall assessment\" as ?target_type_label)
+    bind(?cnp as ?np)
+  } union {
+    # The model behind that overall assessment. One model assessing every claim is the
+    # kind of thing a diagram says at a glance and a table does not.
+    graph npa:graph {
+      ?cnp npx:hasNanopubType pk:Claim ;
+        npa:hasValidSignatureForPublicKeyHash ?pubkey ;
+        dct:created ?date ;
+        npx:introduces ?claim ;
+        np:hasAssertion ?ca .
+      filter not exists { ?inv npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    }
+    filter not exists {
+      graph npa:graph {
+        ?cnpX npx:hasNanopubType pk:Claim ;
+          npa:hasValidSignatureForPublicKeyHash ?pubkeyX ;
+          dct:created ?dateX ;
+          npx:introduces ?claim .
+        filter not exists { ?invX npx:invalidates ?cnpX ; npa:hasValidSignatureForPublicKeyHash ?pubkeyX . }
+      }
+      filter(?dateX > ?date || (?dateX = ?date && str(?cnpX) > str(?cnp)))
+    }
+    graph ?ca { ?claim pk:hasAssessment ?as }
+    graph npa:graph {
+      ?anp npx:introduces ?as ;
+        npa:hasValidSignatureForPublicKeyHash ?apubkey ;
+        dct:created ?adate ;
+        np:hasAssertion ?aa ;
+        np:hasPublicationInfo ?api .
+      filter not exists { ?ainv npx:invalidates ?anp ; npa:hasValidSignatureForPublicKeyHash ?apubkey . }
+    }
+    filter not exists {
+      graph npa:graph {
+        ?anpX npx:introduces ?as ;
+          npa:hasValidSignatureForPublicKeyHash ?apubkeyX ;
+          dct:created ?adateX .
+        filter not exists { ?ainvX npx:invalidates ?anpX ; npa:hasValidSignatureForPublicKeyHash ?apubkeyX . }
+      }
+      filter(?adateX > ?adate || (?adateX = ?adate && str(?anpX) > str(?anp)))
+    }
+    filter(exists { graph ?aa { ?as pk:assessmentType ?atypeA } filter(strends(str(?atypeA), \"/overall\")) }
+        || exists { graph ?api { ?anp pk:assessmentType ?atypeP } filter(strends(str(?atypeP), \"/overall\")) })
+    graph ?aa { ?as pk:assessedBy ?model }
+    filter(isIri(?model))
+    optional { graph ?aa { ?model rdfs:label ?modelLabel } }
+    optional { graph ?aa { ?as rdfs:label ?asLabel } }
+    optional { graph ?aa { ?as rdfs:comment ?asComment } }
+    optional { graph ?aa { ?as pk:hasVerdict ?verdict } }
+    optional { graph ?aa { ?as pk:hasProbability ?p1 } }
+    optional { graph ?aa { ?as pk:weightOfEvidence ?p2 } }
+    bind(xsd:integer(round(coalesce(?p1, ?p2) * 100)) as ?pct)
+    bind(if(?pct >= 100, \"1.00\", concat(\"0.\", if(?pct < 10, concat(\"0\", str(?pct)), str(?pct)))) as ?scoreStr)
+    bind(coalesce(concat(?verdict, \" (\", ?scoreStr, \")\"), ?verdict, ?scoreStr, \"overall assessment\") as ?asCaption)
+    bind(if(strlen(coalesce(?asComment, \"\")) > 300, concat(substr(?asComment, 1, 299), \"…\"), ?asComment) as ?asNote)
+    bind(coalesce(?asLabel, ?asCaption) as ?asName)
+    bind(coalesce(concat(?asName, \" — \", ?asNote), ?asName) as ?asHover)
+    bind(coalesce(?modelLabel, replace(str(?model), \"^.*/\", \"\")) as ?modelName)
+    bind(?as as ?source)
+    bind(?asCaption as ?source_label)
+    bind(?asHover as ?source_desc)
+    bind(pk:LLMClaimAssessment as ?source_type)
+    bind(\"overall assessment\" as ?source_type_label)
+    bind(pk:assessedBy as ?edge_type)
+    bind(\"assessed by\" as ?edge_label)
+    bind(?model as ?target)
+    bind(if(strlen(?modelName) > 55, concat(substr(?modelName, 1, 54), \"…\"), ?modelName) as ?target_label)
+    bind(?modelName as ?target_desc)
+    bind(pk:Model as ?target_type)
+    bind(\"assessing model\" as ?target_type_label)
+    bind(?anp as ?np)
+  }
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-21T15:12:02Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-probknow-network;
+    rdfs:label "Get the ProbKnow network of claims, papers and assessments";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Nrd58nIamkk9KpgyYJCaJe1rENtCXj+d1TjXZ+a4MnyDNZl8m5oA+Pzp4kULdO6AtOC4qIpSc4C1D3mFqC+MI9p82PtbRyQ41vCxJcd6YllCD40XrKuAduYqap2oMe5Mhr5EcuAA8SRD49tEjbGpXVfoCFoTjTCRzKox3Fs5IR8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

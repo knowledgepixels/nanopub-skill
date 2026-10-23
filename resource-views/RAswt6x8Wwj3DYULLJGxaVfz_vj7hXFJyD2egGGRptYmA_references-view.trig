@@ -1,11 +1,12 @@
-@prefix this: <https://w3id.org/np/RAZ0EGsBlca8unLqQzGl5kVapGgllKvDbGFlTA_FFD7oM> .
-@prefix sub: <https://w3id.org/np/RAZ0EGsBlca8unLqQzGl5kVapGgllKvDbGFlTA_FFD7oM/> .
+@prefix this: <https://w3id.org/np/RAswt6x8Wwj3DYULLJGxaVfz_vj7hXFJyD2egGGRptYmA> .
+@prefix sub: <https://w3id.org/np/RAswt6x8Wwj3DYULLJGxaVfz_vj7hXFJyD2egGGRptYmA/> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix npx: <http://purl.org/nanopub/x/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix orcid: <https://orcid.org/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
@@ -24,7 +25,7 @@ sub:assertion {
     dct:title "🔗 References (max. 100)";
     rdfs:label "References view";
     gen:hasStructuralPosition "5.5.references";
-    gen:hasViewQuery <https://w3id.org/np/RAHZTUImPCkBt_ZI21DLJR7JvAAHA8vSqb-g8Oo_FE3n8/get-uri-references> .
+    gen:hasViewQuery <https://w3id.org/np/RAus8BE0l3nA4J9i6ziSQ4fmYdPXNY69ACit0-J9pTqE8/get-uri-references> .
 }
 
 sub:provenance {
@@ -34,21 +35,27 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-05-29T11:24:54Z"^^xsd:dateTime;
+  this: dct:created "2026-10-21T06:55:00Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:references-view;
     npx:introduces <https://w3id.org/np/RASHkAzB74pdlufkPLYyOBaR9Zv3iBGdWurnejPwa2W_U/references-view-kind>;
-    npx:supersedes <https://w3id.org/np/RASHkAzB74pdlufkPLYyOBaR9Zv3iBGdWurnejPwa2W_U>;
+    npx:supersedes <https://w3id.org/np/RAZ0EGsBlca8unLqQzGl5kVapGgllKvDbGFlTA_FFD7oM>;
+    rdfs:label "References view";
+    skos:changeNote "Point to the new version of the query, which returns the nanopublication as the first column instead of a trailing source column";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
-    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
-      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
-    nt:wasCreatedFromTemplate <https://w3id.org/np/RARLsTlqbTesu1b0WJZ-zL1z96xumOiqbK3l_vV6iZoww> .
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>,
+      <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAgMavFN58iDGnwx3wbzyRPkRT04aXZ0ueZp9azTYWyXU/template> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "XTBo+nbkHkHaDHtTEwKSvo2pxeLHW9IsblNu4AlKn1qe23VzqOQOc729+Z0Mb9s2OByOmXRkpSmTF0a4NdzUhQBoZSld7M7m+H8J30beC245Pwe6D7fKzLlT7neQ0rLE5lTBwSWuHo73PtAYnKVPGkrzb1r9cZE1f9FDRKlFT0M=";
+    npx:hasSignature "Ir2EnG30CizCyDSv0yuwWZBV6w/JwmYEhZSaUiDia+see3SQugGB9EJumbhPYMQ60wS+KXvH7j+cmOfLHPZaFYZgKzwgoqy/2gx046ifOkW5zciHVhpu1n+Xg+n2vH4MEFysElnoZvJgcPiJHN9Z3cfhxtRdT5OUohDoELrdirE=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAus8BE0l3nA4J9i6ziSQ4fmYdPXNY69ACit0-J9pTqE8/get-uri-references>
+    nt:hasLabelFromApi "Get URI references" .
 }
 

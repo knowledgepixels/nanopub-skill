@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAqIxIZfZRU4qYiyFuZMGftmruuQOg6ZsMxd9Wvc4WcOc> .
-@prefix sub: <https://w3id.org/np/RAqIxIZfZRU4qYiyFuZMGftmruuQOg6ZsMxd9Wvc4WcOc/> .
+@prefix this: <https://w3id.org/np/RAn9HYIXoUoU3b_FeSjIxScERALZf2P-Y7zF3dc3cKew8> .
+@prefix sub: <https://w3id.org/np/RAn9HYIXoUoU3b_FeSjIxScERALZf2P-Y7zF3dc3cKew8/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -63,7 +63,7 @@ sub:assertion {
 <li>one or more <strong>role definitions</strong> to set up (e.g. to be assigned to the space).</li>
 </ul>
 
-<p>Like resource views, a preset has a stable <em>preset kind</em> (linked via <code>dct:isVersionOf</code>) that persists across superseding versions.</p>
+<p>Like resource views, a preset has a stable <em>version-independent IRI</em> (linked via <code>dct:isVersionOf</code>) that persists across superseding versions.</p>
 
 <p>This template introduces the proposed term <code>gen:Preset</code> (reusing the existing <code>gen:hasView</code> and <code>gen:hasRole</code> properties) and is a draft for <a href=\"https://github.com/knowledgepixels/nanodash/issues/302\" target=\"_blank\">nanodash issue #302</a>.</p>""";
     rdfs:label "Publishing a preset";
@@ -82,7 +82,7 @@ sub:assertion {
     rdfs:label "short ID suffix for the preset" .
   
   sub:presetKind a nt:IntroducedResource, nt:UriPlaceholder;
-    rdfs:label "short suffix or existing URI of the preset kind" .
+    rdfs:label "short suffix or existing URI of the preset (same across versions)" .
   
   sub:role a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
     rdfs:label "a role definition to include in this preset";
@@ -146,12 +146,12 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-24T09:38:44+00:00"^^xsd:dateTime;
+  this: dct:created "2026-10-23T09:03:28Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:supersedes <https://w3id.org/np/RAjdBPJa3HQ1Oa5knoSQEs1ui6bf69iO8vGuEhoogRmcQ>;
+    npx:supersedes <https://w3id.org/np/RAqIxIZfZRU4qYiyFuZMGftmruuQOg6ZsMxd9Wvc4WcOc>;
     rdfs:label "Publishing a preset";
-    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: role, topLevelView, view.";
+    skos:changeNote "Replaces \"preset kind\" with version-independent wording in the field label and the description, following the naming convention adopted on 2026-10-23.";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
       <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>,
@@ -160,7 +160,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "cOQGjKG2DUhDOMmhpsWxkM1d97CIZujscztOgMx8jLEgph4bXujJoX5s5t2u1IcXlkBkV3otZE9oh1EAjtgNtLj20lZU6RNelRnOy5CNqUsg3vYkO9AJku9Aej1as8Z5xv9NcphvKMAp2/v3jb3nBv7IbGqfsxw5dRR7tJ64DJw=";
+    npx:hasSignature "k4Z6PdoQEjP2UlXfYMkDryejyKMAyyPDk4hvJ8Au8KVn/ohuSdesn1mH9WOQ3+qxJhMnzBcX7XAg9AXZSPn7Hfjx1Fs6y+CffR88f2Hi0LF8AsBb5lHc+35qifyoQFxQXoyA96GPewpq1JA1j4PMc59N+P5OcTMsAc6tU9otQ7g=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

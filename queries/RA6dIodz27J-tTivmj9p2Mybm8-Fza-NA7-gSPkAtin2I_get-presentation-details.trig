@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAi2kCEUSclv_5X5dOcNfdkNj1sHDGlRHeAIkQrfwaEZM> .
-@prefix sub: <https://w3id.org/np/RAi2kCEUSclv_5X5dOcNfdkNj1sHDGlRHeAIkQrfwaEZM/> .
+@prefix this: <https://w3id.org/np/RA6dIodz27J-tTivmj9p2Mybm8-Fza-NA7-gSPkAtin2I> .
+@prefix sub: <https://w3id.org/np/RA6dIodz27J-tTivmj9p2Mybm8-Fza-NA7-gSPkAtin2I/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix grlc: <https://w3id.org/kpxl/grlc/> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -20,7 +20,7 @@ sub:Head {
 
 sub:assertion {
   sub:get-presentation-details a grlc:grlc-query;
-    dct:description "Returns the details of a presentation or poster, laid out for reading rather than as a raw property dump: authors (and speakers) are resolved to names and joined into a single row, and the start and end date/time are combined into one 'When' value - a plain date and time range when both fall on the same day, both dates spelled out when they do not. Legacy predicates (dct:date, dct:creator, and the http://schema.org/ forms) are recognised alongside the current ones, and any predicate not recognised is still listed, so nothing in the assertion is hidden. Known properties are shown first. The rdf:type row is omitted for a plain presentation, whose type the panel's own title already gives, and kept for anything else such as a poster. Where a talk records a schema:position - its place in the running order of a session whose talks all share the session's start and end - that is shown as an Order row directly after When, with the highest position in the same slot as the total, so a session whose first talk is not yet published still reads correctly. A final row links to the nanopublication that defines the presentation, labelled with the first ten characters of its trusty URI. Values are returned in a single multi-valued column so that each one renders as whatever it is: authors and speakers as links to the people themselves, with their names as the link text, and the rest as plain text. The property and value columns carry no header, the property naming each row. Which nanopublication is described is now decided by this query rather than by the page that shows it: among the still-valid nanopublications introducing the resource, it takes the newest one signed with an approved key of an admin, maintainer or member of the space given as the context -- members upwards, matching the tier the view offers its override action to. The page's own resolution of the defining nanopublication is therefore no longer used here, and the resourceNp parameter is gone; the context parameter (the space, or a resource maintained by one, that the page is about) is filled in automatically by Nanodash. When no candidate qualifies, no rows are returned rather than an unvetted fallback. Two extra columns carry action data rather than content: override_target_label, the chosen nanopublication, and override_template_label, the template it was made with, which the view's override action maps to the publish form. Their trailing _label is deliberate: every Nanodash version leaves a column named that way out of the rendered table, so this query and the view that reads the columns can be published before the version that understands them is released.";
+    dct:description "Returns the details of a presentation or poster, laid out for reading rather than as a raw property dump: authors (and speakers) are resolved to names and joined into a single row, and the start and end date/time are combined into one 'When' value - a plain date and time range when both fall on the same day, both dates spelled out when they do not. Legacy predicates (dct:date, dct:creator, and the http://schema.org/ forms) are recognised alongside the current ones, and any predicate not recognised is still listed, so nothing in the assertion is hidden. Known properties are shown first. The rdf:type row is omitted for a plain presentation, whose type the panel's own title already gives, and kept for anything else such as a poster. Where a talk records a schema:position - its place in the running order of a session whose talks all share the session's start and end - that is shown as an Order row directly after When, with the highest position in the same slot as the total, so a session whose first talk is not yet published still reads correctly. The session a talk belongs to (conference-ontology isSubEventOf) is shown as a Session row, and the track it was submitted to (schema:additionalType) as a Track row, where a trailing word 'Track' is dropped from the value because the property already says it. Both sit between Room and the containing event, so the rows read from the narrowest context outwards. A linked resource is named by its rdfs:label from the assertion where it has one and otherwise from the nanopublication's publication info, which is where the labels of resources that a nanopublication only refers to are normally recorded - without that, a session was shown as the tail of its IRI. A predicate the query does not recognise is named by its own local name, split at case changes, underscores and hyphens into words and capitalised, rather than by its full IRI, which stays available as the link behind it. A final row links to the nanopublication that defines the presentation, labelled with the first ten characters of its trusty URI. Values are returned in a single multi-valued column so that each one renders as whatever it is: authors and speakers as links to the people themselves, with their names as the link text, and the rest as plain text. The property and value columns carry no header, the property naming each row. Which nanopublication is described is decided by this query rather than by the page that shows it: among the still-valid nanopublications introducing the resource, it takes the newest one signed with an approved key of an admin, maintainer or member of the space given as the context -- members upwards, matching the tier the view offers its override action to. The page's own resolution of the defining nanopublication is therefore not used here, and there is no resourceNp parameter; the context parameter (the space, or a resource maintained by one, that the page is about) is filled in automatically by Nanodash. When no candidate qualifies, no rows are returned rather than an unvetted fallback. Two extra columns carry action data rather than content: override_target_label, the chosen nanopublication, and override_template_label, the template it was made with, which the view's override action maps to the publish form. Their trailing _label is deliberate: every Nanodash version leaves a column named that way out of the rendered table, so this query and the view that reads the columns can be published before the version that understands them is released.";
     dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
     rdfs:label "Get presentation details";
     grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
@@ -36,6 +36,7 @@ prefix pav: <http://purl.org/pav/>
 prefix foaf: <http://xmlns.com/foaf/0.1/>
 prefix gen: <https://w3id.org/kpxl/gen/terms/>
 prefix nt: <https://w3id.org/np/o/ntemplate/>
+prefix conf: <https://w3id.org/scholarlydata/ontology/conference-ontology.owl#>
 
 select ?property_noheader ?property_label ?value_multi_val_noheader ?value_label_multi
        ?override_target_label ?override_template_label where {
@@ -52,14 +53,14 @@ select ?property_noheader ?property_label ?value_multi_val_noheader ?value_label
     graph ?a { ?_resource_iri rdf:type ?value_multi_val_noheader }
     filter(?value_multi_val_noheader != wd:Q604733)
     bind(0 as ?sort) bind(rdf:type as ?property_noheader) bind(\"Type\" as ?property_label)
-    bind(if(?value_multi_val_noheader = gen:PosterPresentation, \"Poster presentation\", \"\") as ?value_label_multi)
+    bind(if(?value_multi_val_noheader = gen:PosterPresentation, \"Poster presentation\", \"\") as ?branch_label)
   } union {
     graph ?a { ?_resource_iri rdfs:label ?value_multi_val_noheader }
     bind(10 as ?sort) bind(rdfs:label as ?property_noheader) bind(\"Title\" as ?property_label)
   } union {
     select ?bnp ?sort ?property_noheader ?property_label
            (group_concat(distinct ?personIri ; separator=\"\\n\") as ?value_multi_val_noheader)
-           (group_concat(distinct ?who ; separator=\"\\n\") as ?value_label_multi)
+           (group_concat(distinct ?who ; separator=\"\\n\") as ?branch_label)
     where {
       graph npa:graph { ?bnp npx:introduces ?_resource_iri ; np:hasAssertion ?spa ; np:hasPublicationInfo ?sppi . }
       graph ?spa { ?_resource_iri wd:P823 ?person }
@@ -72,7 +73,7 @@ select ?property_noheader ?property_label ?value_multi_val_noheader ?value_label
   } union {
     select ?bnp ?sort ?property_noheader ?property_label
            (group_concat(distinct ?personIri ; separator=\"\\n\") as ?value_multi_val_noheader)
-           (group_concat(distinct ?who ; separator=\"\\n\") as ?value_label_multi)
+           (group_concat(distinct ?who ; separator=\"\\n\") as ?branch_label)
     where {
       graph npa:graph { ?bnp npx:introduces ?_resource_iri ; np:hasAssertion ?aua ; np:hasPublicationInfo ?aupi . }
       values ?authorPred { pav:authoredBy dct:creator }
@@ -129,11 +130,21 @@ select ?property_noheader ?property_label ?value_multi_val_noheader ?value_label
     values ?locPred { schema:location <http://schema.org/location> }
     graph ?a { ?_resource_iri ?locPred ?value_multi_val_noheader }
     bind(50 as ?sort) bind(?locPred as ?property_noheader) bind(\"Room\" as ?property_label)
-    optional { graph ?a { ?value_multi_val_noheader rdfs:label ?value_label_multi } }
+  } union {
+    # The session a talk sits in.
+    graph ?a { ?_resource_iri conf:isSubEventOf ?value_multi_val_noheader }
+    bind(55 as ?sort) bind(conf:isSubEventOf as ?property_noheader) bind(\"Session\" as ?property_label)
+  } union {
+    # The track a contribution was submitted to. The values conventionally end in the word
+    # \"Track\", which the row's own property already says, so it is dropped.
+    values ?trackPred { schema:additionalType <http://schema.org/additionalType> }
+    graph ?a { ?_resource_iri ?trackPred ?trackv }
+    bind(58 as ?sort) bind(?trackPred as ?property_noheader) bind(\"Track\" as ?property_label)
+    bind(if(isLiteral(?trackv), replace(str(?trackv), \"[ ]+[Tt]rack$\", \"\"), ?trackv)
+         as ?value_multi_val_noheader)
   } union {
     graph ?a { ?_resource_iri dct:isPartOf ?value_multi_val_noheader }
     bind(60 as ?sort) bind(dct:isPartOf as ?property_noheader) bind(\"Part of\" as ?property_label)
-    optional { graph ?a { ?value_multi_val_noheader rdfs:label ?value_label_multi } }
   } union {
     graph ?a { ?_resource_iri dct:description ?descRaw }
     bind(replace(str(?descRaw), \"[\\n\\r]+\", \" \") as ?value_multi_val_noheader)
@@ -142,7 +153,6 @@ select ?property_noheader ?property_label ?value_multi_val_noheader ?value_label
     values ?aboutPred { schema:about <http://schema.org/about> }
     graph ?a { ?_resource_iri ?aboutPred ?value_multi_val_noheader }
     bind(80 as ?sort) bind(?aboutPred as ?property_noheader) bind(\"Topic\" as ?property_label)
-    optional { graph ?a { ?value_multi_val_noheader rdfs:label ?value_label_multi } }
   } union {
     graph ?a { ?_resource_iri rdfs:seeAlso ?value_multi_val_noheader }
     bind(90 as ?sort) bind(rdfs:seeAlso as ?property_noheader) bind(\"Link\" as ?property_label)
@@ -151,17 +161,38 @@ select ?property_noheader ?property_label ?value_multi_val_noheader ?value_label
     bind(1000 as ?sort) bind(<http://purl.org/nanopub/x/introduces> as ?property_noheader)
     bind(\"Defined in\" as ?property_label)
     bind(?bnp as ?value_multi_val_noheader)
-    bind(substr(replace(str(?bnp), \"^.*/np/\", \"\"), 1, 10) as ?value_label_multi)
+    bind(substr(replace(str(?bnp), \"^.*/np/\", \"\"), 1, 10) as ?branch_label)
   } union {
+    # Anything the query has no row of its own for is still listed, named by the local name
+    # of its predicate - split at case changes, underscores and hyphens, and capitalised -
+    # rather than by the full IRI, which stays reachable as the link behind that name.
     graph ?a { ?_resource_iri ?pred ?value_multi_val_noheader }
     filter(?pred not in (rdf:type, rdfs:label, rdfs:seeAlso, wd:P823, pav:authoredBy, dct:creator,
       dct:date, dct:isPartOf, dct:description,
       schema:startDate, schema:endDate, schema:location, schema:about, schema:position,
+      schema:additionalType, conf:isSubEventOf,
       <http://schema.org/startDate>, <http://schema.org/endDate>,
-      <http://schema.org/location>, <http://schema.org/about>))
-    bind(990 as ?sort) bind(?pred as ?property_noheader) bind(str(?pred) as ?property_label)
-    optional { graph ?a { ?value_multi_val_noheader rdfs:label ?value_label_multi } }
+      <http://schema.org/location>, <http://schema.org/about>,
+      <http://schema.org/additionalType>))
+    bind(990 as ?sort) bind(?pred as ?property_noheader)
+    bind(replace(str(?pred), \"^.*[/#]([^/#]*)$\", \"$1\") as ?predLocal)
+    bind(replace(replace(?predLocal, \"[_-]+\", \" \"), \"([a-z0-9])([A-Z])\", \"$1 $2\") as ?predWords)
+    # Sentence case, as the query's own row names are, but a local name holding an acronym is
+    # left as it stands rather than turned into \"Has doi\".
+    bind(if(regex(?predWords, \"[A-Z][A-Z]\"), ?predWords, lcase(?predWords)) as ?predCased)
+    bind(if(?predCased = \"\", str(?pred),
+         concat(ucase(substr(?predCased, 1, 1)), substr(?predCased, 2))) as ?property_label)
   }
+  # A value that is a resource is named by its rdfs:label: from the assertion where it has one
+  # there, and otherwise from the publication info, which is where a nanopublication records
+  # the labels of the resources it merely refers to -- the session of a talk, for one. This
+  # sits outside the branches above on purpose: ?a and ?npi are bound out here but free inside
+  # a group, so an optional placed in a branch matches a label in any graph whatsoever and the
+  # join on the graph then drops the whole row (RDF4J, and bottom-up evaluation generally).
+  # A branch that names its value itself keeps its own wording.
+  optional { graph ?a { ?value_multi_val_noheader rdfs:label ?labelFromAssertion } }
+  optional { graph ?npi { ?value_multi_val_noheader rdfs:label ?labelFromPubinfo } }
+  bind(coalesce(?branch_label, ?labelFromAssertion, ?labelFromPubinfo) as ?value_label_multi)
   # Which candidate the panel shows is decided here, in the view's own query, rather than by
   # the page that shows it: the newest one signed with an approved key of an admin,
   # maintainer or member of the space the page is in -- members upwards, the same tier the
@@ -219,11 +250,11 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-09T14:00:58Z"^^xsd:dateTime;
+  this: dct:created "2026-10-23T07:13:52Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:get-presentation-details;
-    npx:supersedes <https://w3id.org/np/RA-TnHdB501Qs-Wmj0QtrW8t6rjFuqgcnMtH1aXYiLtf8>;
+    npx:supersedes <https://w3id.org/np/RAi2kCEUSclv_5X5dOcNfdkNj1sHDGlRHeAIkQrfwaEZM>;
     rdfs:label "Get presentation details";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
@@ -233,7 +264,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "LkNnLBsF4tLZO0NZFwv01IbfylFFvMMNWtAcE1Gwu8HETdbYFxoRBPbGrqHO0caalzZIV7y2Gyv/Z7umNwN8n8dQ/v43RVvw2Yy+70/v/bnZnb9WB+SCE05rLzYP215WEmzc0EwReiX/BJgbFT5GYELzQ73iVMn6/8wE8fPrBbk=";
+    npx:hasSignature "R2Iq6XG97pDr3U4/LkicvWQje303VH+x9ecfjAVosWfqNM56/3KGQ/d89ldwo97SQaLzf9JFmFgcQHGnh9CK3IFWfWDshICa52PdzBz9cqsM+ToaQlrXC2Aoj5k8ACno0iyxp5h+nszY8hkYwPVtCQW5QbEqj1jz4d64WGttz7w=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

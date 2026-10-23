@@ -1,15 +1,15 @@
-@prefix this: <https://w3id.org/np/RARzhuInsN7qNOFJnBKkDV4GAPQgdagSI_7cA1berGiE4> .
-@prefix sub: <https://w3id.org/np/RARzhuInsN7qNOFJnBKkDV4GAPQgdagSI_7cA1berGiE4/> .
+@prefix this: <https://w3id.org/np/RAQYuhBWTFBLGwQWzvbGXXs_H-cEQ8osCadaa9mwukLbs> .
+@prefix sub: <https://w3id.org/np/RAQYuhBWTFBLGwQWzvbGXXs_H-cEQ8osCadaa9mwukLbs/> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix orcid: <https://orcid.org/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix npx: <http://purl.org/nanopub/x/> .
 
 sub:Head {
   this: a np:Nanopublication;
@@ -19,11 +19,14 @@ sub:Head {
 }
 
 sub:assertion {
-  <https://w3id.org/np/RAViRgNY5UUksXi6NFZVOR0Fz78kSGuDoDhXfNIrAeybk/template-kind>
-    a gen:MaintainedResource, nt:AssertionTemplate;
-    dct:description "The stable kind of the template that links a documentation paragraph to a related one (rdfs:seeAlso). Registered as a maintained resource of the Nanopublication space so that any member can publish its next version.";
-    rdfs:label "Template kind: Relating a documentation paragraph to another";
-    gen:isMaintainedBy <https://w3id.org/spaces/nanopub> .
+  sub:agent-presentations-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:agent-presentations-view-kind;
+    dct:title "🎤 Presentations in this space";
+    rdfs:label "Presentations of an agent in a space";
+    gen:appliesToInstancesOf gen:IndividualAgent;
+    gen:hasStructuralPosition "3.2.agentPresentations";
+    gen:hasViewQuery <https://w3id.org/np/RA8IJ6eBomP0hnRSc-yiN8Ee9uX_lBJqWwvjeCvwGpWeg/get-agent-presentations-in-space>;
+    gen:hasViewQueryTargetField "agent" .
 }
 
 sub:provenance {
@@ -33,18 +36,20 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-15T07:23:38Z"^^xsd:dateTime;
+  this: dct:created "2026-10-22T12:39:59Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    rdfs:label "Template kind: Relating a documentation paragraph to another";
+    npx:embeds sub:agent-presentations-view;
+    npx:introduces sub:agent-presentations-view-kind;
+    rdfs:label "Presentations of an agent in a space";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
-      <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>;
-    nt:wasCreatedFromTemplate <https://w3id.org/np/RAuoIiBPtkpMCALeI5AWNlQHoXdBfqZwqj_sVHiBGbfQo> .
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAgMavFN58iDGnwx3wbzyRPkRT04aXZ0ueZp9azTYWyXU/template> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "b7D80ozCJNQLASnClLsEC3UofSfXKVx+Y4s993G4EwTC0ZTFBSIWbxjTuENdq0nVkjqnodg7hPDC1iZBiwApkR86cb/3O6gvsS2MZallcvEDNNxr5Boe0DvcdF5x2FbbhQVVFrXJ3NmYTikg7wbFEp6ns5b7p2GfGoVdZbIjGZg=";
+    npx:hasSignature "EL0kB9S96I57NEnZC+bgOBQmjOH6Pu8LF6gjsURBy3GGtJCZZduWq2yJlW9b4u4jEBBitFn9JskKpC0zk6x4gc7vkyQjr9h0fiTg9CbOROuGL3VP/WWtqx3HqzNRP0cm8P80S65i6RQRPCGXWRza1j4vxfHiAjicHUk9rZiphP4=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

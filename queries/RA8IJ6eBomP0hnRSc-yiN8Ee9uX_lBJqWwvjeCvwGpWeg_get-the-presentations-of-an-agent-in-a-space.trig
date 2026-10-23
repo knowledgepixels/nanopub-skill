@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RA0vadIa2PMNPDxnFu_J5OgUaMU1FDZIbebvC4zyRnB1E> .
-@prefix sub: <https://w3id.org/np/RA0vadIa2PMNPDxnFu_J5OgUaMU1FDZIbebvC4zyRnB1E/> .
+@prefix this: <https://w3id.org/np/RA8IJ6eBomP0hnRSc-yiN8Ee9uX_lBJqWwvjeCvwGpWeg> .
+@prefix sub: <https://w3id.org/np/RA8IJ6eBomP0hnRSc-yiN8Ee9uX_lBJqWwvjeCvwGpWeg/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix grlc: <https://w3id.org/kpxl/grlc/> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -19,10 +19,10 @@ sub:Head {
 }
 
 sub:assertion {
-  sub:get-presentations-for-event a grlc:grlc-query;
-    dct:description "Returns all presentations of the given event, with label, date and time, location, the people involved - the presenter first where known, then the authors - and any related links (slides, recordings) from rdfs:seeAlso, plus the nanopub link, in chronological order. Reads both the http:// and https:// schema.org namespaces. Authors who are also listed as presenter of the same presentation are excluded from the authors part of the people column by a per-presentation not-exists check, so a person never appears twice. Date and time share one column as plain text (\"2026-09-17 14:00–15:00\"): a bare date is rendered by Nanodash as a relative time from midnight UTC, which showed a talk later today as hours ago. The \"see also\" column holds every rdfs:seeAlso IRI, each labelled \"link\"; the labels are derived from the concatenated IRIs by a regex replace rather than a second group_concat, so they stay aligned with them even though the surrounding optionals produce a cross product.";
+  sub:get-agent-presentations-in-space a grlc:grlc-query;
+    dct:description "Returns the presentations an agent has at the event or space whose page they are shown on: the agent comes in as the queried resource and the space as the page's navigation context, which Nanodash fills by itself, so the same view serves every event. One row per presentation, with its title, the date and time, the room, the session, the track, and whether the person is recorded as its speaker or as one of its authors — a programme usually lists authors and names a speaker only for invited talks, so the column says which of the two it is rather than implying the stronger claim. Reads both the http:// and https:// schema.org namespaces, and takes the most recently created valid nanopublication per presentation, so a superseded version never shows. Rows are ordered by the start time and then by the recorded running position within a session. Outside any space context the result is empty, which is what a person's own page should show for an event they have nothing at.";
     dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
-    rdfs:label "Get presentations for event";
+    rdfs:label "Get the presentations of an agent in a space";
     grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/3952cad1a6d2561f045d33e5e79c03e7264b0a492b8becf6c62656c596cf398c>;
     grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
 prefix dct: <http://purl.org/dc/terms/>
@@ -34,15 +34,12 @@ prefix schema: <https://schema.org/>
 prefix schemaold: <http://schema.org/>
 prefix foaf: <http://xmlns.com/foaf/0.1/>
 prefix pav: <http://purl.org/pav/>
+prefix conf: <https://w3id.org/scholarlydata/ontology/conference-ontology.owl#>
 
-select ?presentation ?presentation_label ?date ?location ?people_multi_iri ?people_label_multi ?see_also_multi_iri ?see_also_label_multi ?np (\"^\" as ?np_label) (?np as ?override_target) where {
+select distinct ?presentation ?presentation_label ?date ?location ?session ?track ?role ?np (\"^\" as ?np_label) where {
   {
     select ?np ?presentation ?presentation_label ?startDate ?endDate ?location ?olddate
-           (group_concat(distinct ?spk; separator=\" \") as ?spkIris)
-           (group_concat(distinct ?spkLabel; separator=\"\\n\") as ?spkNames)
-           (group_concat(distinct ?auth; separator=\" \") as ?authIris)
-           (group_concat(distinct ?authLabel; separator=\"\\n\") as ?authNames)
-           (group_concat(distinct ?seeAlso; separator=\" \") as ?seeAlsoIris)
+           ?position ?sessionName ?track ?role
     where {
       graph npa:graph {
         ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
@@ -65,11 +62,15 @@ select ?presentation ?presentation_label ?date ?location ?people_multi_iri ?peop
         } group by ?presentation
       }
       filter(?npdate = ?latestdate)
-      values ?_event_multi_iri {}
+      values ?__context_multi_iri {}
+      values ?_agent_multi_iri {}
       graph ?a {
         ?presentation a wd:Q604733 .
-        ?presentation dct:isPartOf ?_event_multi_iri .
+        ?presentation dct:isPartOf ?__context_multi_iri .
+        ?presentation pav:authoredBy|wd:P823 ?_agent_multi_iri .
       }
+      bind(if(exists { graph ?a { ?presentation wd:P823 ?_agent_multi_iri } },
+              \"speaker\", \"author\") as ?role)
       optional { graph ?a { ?presentation rdfs:label ?presentation_label . } }
       optional { graph ?a { ?presentation schema:startDate ?startDateA . } }
       optional { graph ?a { ?presentation schemaold:startDate ?startDateB . } }
@@ -78,26 +79,18 @@ select ?presentation ?presentation_label ?date ?location ?people_multi_iri ?peop
       optional { graph ?a { ?presentation schema:location ?locationA . } }
       optional { graph ?a { ?presentation schemaold:location ?locationB . } }
       optional { graph ?a { ?presentation dct:date ?olddate . } }
+      optional { graph ?a { ?presentation schema:position ?position . } }
+      optional { graph ?a { ?presentation schema:additionalType ?track . } }
       optional {
-        graph ?a { ?presentation rdfs:seeAlso ?seeAlso . }
-        filter(isIri(?seeAlso))
-      }
-      optional {
-        graph ?a { ?presentation wd:P823 ?spk . }
-        optional { graph ?pi { ?spk foaf:name ?spkName . } }
-        bind(coalesce(?spkName, str(?spk)) as ?spkLabel)
-      }
-      optional {
-        graph ?a { ?presentation pav:authoredBy ?auth . }
-        filter not exists { graph ?a { ?presentation wd:P823 ?auth . } }
-        optional { graph ?pi { ?auth foaf:name ?authName . } }
-        bind(coalesce(?authName, str(?auth)) as ?authLabel)
+        graph ?a { ?presentation conf:isSubEventOf ?session . }
+        optional { graph ?pi { ?session rdfs:label ?sessionName . } }
       }
       bind(coalesce(?startDateA, ?startDateB) as ?startDate)
       bind(coalesce(?endDateA, ?endDateB) as ?endDate)
       bind(coalesce(?locationA, ?locationB) as ?location)
     }
     group by ?np ?presentation ?presentation_label ?startDate ?endDate ?location ?olddate
+             ?position ?sessionName ?track ?role
   }
   bind(coalesce(strbefore(str(?startDate), \"T\"), str(?olddate)) as ?day)
   bind(substr(strafter(str(?startDate), \"T\"), 1, 5) as ?starttime)
@@ -105,13 +98,8 @@ select ?presentation ?presentation_label ?date ?location ?people_multi_iri ?peop
   bind(coalesce(concat(?starttime, \"\\u2013\", ?endtime), ?starttime) as ?time)
   bind(if(bound(?time) && strlen(?time) > 0, concat(?day, \" \", ?time), ?day) as ?date)
   bind(coalesce(str(?startDate), str(?olddate)) as ?sortkey)
-  bind(if(strlen(?spkIris) > 0 && strlen(?authIris) > 0, concat(?spkIris, \" \", ?authIris),
-       concat(?spkIris, ?authIris)) as ?people_multi_iri)
-  bind(if(strlen(?spkNames) > 0 && strlen(?authNames) > 0, concat(?spkNames, \"\\n\", ?authNames),
-       concat(?spkNames, ?authNames)) as ?people_label_multi)
-  bind(?seeAlsoIris as ?see_also_multi_iri)
-  bind(replace(replace(?seeAlsoIris, \"[^ ]+\", \"link\"), \" \", \"\\n\") as ?see_also_label_multi)
-} order by ?sortkey""" .
+  bind(?sessionName as ?session)
+} order by ?sortkey coalesce(?position, 999) ?presentation_label""" .
 }
 
 sub:provenance {
@@ -121,12 +109,11 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-10-13T06:16:35Z"^^xsd:dateTime;
+  this: dct:created "2026-10-22T12:39:25Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:embeds sub:get-presentations-for-event;
-    npx:supersedes <https://w3id.org/np/RAza14obosgDGsnTP6JvhfrXWcQNX_AaHTHlKFMQlULpk>;
-    rdfs:label "Get presentations for event";
+    npx:embeds sub:get-agent-presentations-in-space;
+    rdfs:label "Get the presentations of an agent in a space";
     nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
       <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>,
@@ -135,7 +122,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "i5lUXwrktbsE/pDAvZO9rl3WWv+wjsj51M3mJv8ZZFAWXyEAVtvpOOQ2dEqTlo3t5xTudg4gptdS8+5JXlHyPd6Jvq+CXU5HxsS1iU7MW5E/qKmRiRjwyyuOFf8g5b3jQAENLqTHPjyNtcEfJrDfiuxD8b62+FAp8vr5iF3HuJw=";
+    npx:hasSignature "pujgmdWcJHsBDgyz1xTExuYsLTuBAHTsmRHgk/h32KgVyKR/qUWr5XHLEjftehoEaJD0O6OoOm4lJ6u+VaDlk5HfQd4MXW9cvpks+8XgdZubKJzJMG1Cz5/VyQKD4DdR8O+2R9/5s8yggUGiCbpkSHB3/S+tsWQtg0p/WSWB4tk=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

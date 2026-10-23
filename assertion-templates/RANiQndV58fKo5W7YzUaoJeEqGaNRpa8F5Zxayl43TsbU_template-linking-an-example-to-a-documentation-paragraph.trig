@@ -1,15 +1,15 @@
-@prefix this: <https://w3id.org/np/RA57S8kXeNc43XgxoK39a3vNSrnVLOUZFgnB-E3XMYGHw> .
-@prefix sub: <https://w3id.org/np/RA57S8kXeNc43XgxoK39a3vNSrnVLOUZFgnB-E3XMYGHw/> .
+@prefix this: <https://w3id.org/np/RANiQndV58fKo5W7YzUaoJeEqGaNRpa8F5Zxayl43TsbU> .
+@prefix sub: <https://w3id.org/np/RANiQndV58fKo5W7YzUaoJeEqGaNRpa8F5Zxayl43TsbU/> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix orcid: <https://orcid.org/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix npx: <http://purl.org/nanopub/x/> .
 
 sub:Head {
   this: a np:Nanopublication;
@@ -19,10 +19,10 @@ sub:Head {
 }
 
 sub:assertion {
-  <https://w3id.org/np/RAu3PzffCKMGGOI41sbOhqrpjMpvqrpPZ5M2rH0AXfPXw/template-kind>
+  <https://w3id.org/np/RAhfBdgcmxtE2VpqgNHlZbqf7KzED7mm9JAL-3popBDKI/template-kind>
     a gen:MaintainedResource, nt:AssertionTemplate;
-    dct:description "The stable kind of the template for declaring documentation topics. Registering it as a maintained resource of the Nanopublication space makes its gen:governedBy declaration effective: any member of that space can publish the next canonical version of the template.";
-    rdfs:label "Template kind: Declaring a documentation topic";
+    dct:description "The version-independent identifier of the template that links example nanopublications to documentation paragraphs. Listed as a maintained resource of the Nanopublication space so that any member can publish its next version.";
+    rdfs:label "Template: Linking an example to a documentation paragraph";
     gen:isMaintainedBy <https://w3id.org/spaces/nanopub> .
 }
 
@@ -33,10 +33,11 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-09T13:16:11Z"^^xsd:dateTime;
+  this: dct:created "2026-10-23T09:00:51Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    rdfs:label "Template kind: Declaring a documentation topic";
+    npx:supersedes <https://w3id.org/np/RATFJfFNLsuMCuF00VudNG1EXUyn02gthaFQvjIGtxoq8>;
+    rdfs:label "Template: Linking an example to a documentation paragraph";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
       <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>;
@@ -44,7 +45,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "IGQPEUVqZvzUAeEqJrZc3TXXGA8oySiIaEhTWGmE0d8KySsJlgZ10hPx5wr3OOjG+zbrRTEv8iw3omLDdJZ96RWgtguCP62YmrwKHFXQQYEnMKQJlDpqFKG/vWXXhUuxOpX0cKd6JCFGwsSlkcFL8xq3jl4OliKDfaWdK3tAmno=";
+    npx:hasSignature "DQoTiWgFWoPzsjTqszwYGYS+r08GwLc9SjdY+a5hEvl1Z6gf4Zrzw55q1mhTHYAKZUhFFSpl4L0fb6kHgMcDiB9OxYAn0LgRFYiyUN03xLvA1kh35AxRqTarbvVvG6Mkd34t8XSQD/4RRpa4DE/Vac0gEKy0E9ZgyCuignhqgnQ=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

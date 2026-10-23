@@ -1,14 +1,15 @@
-@prefix this: <https://w3id.org/np/RA1_mJ1G8d-5riusOFBQHtR8gG6pQHIH1W_e6S7ahIRTQ> .
-@prefix sub: <https://w3id.org/np/RA1_mJ1G8d-5riusOFBQHtR8gG6pQHIH1W_e6S7ahIRTQ/> .
-@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix this: <https://w3id.org/np/RAvFkzLEAPJUxhJ6kpkWVTmePx2_4NZxUm3b7ca2TJpD8> .
+@prefix sub: <https://w3id.org/np/RAvFkzLEAPJUxhJ6kpkWVTmePx2_4NZxUm3b7ca2TJpD8/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
-@prefix dct: <http://purl.org/dc/terms/> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
-@prefix npx: <http://purl.org/nanopub/x/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
@@ -38,6 +39,9 @@ sub:assertion {
   
   gen:isMaintainedBy rdfs:label "is maintained by" .
   
+  <https://w3id.org/np/RAsfqb0NCvXnSsJgsx75aqbR-O_4q8uqp0YDgeX83fHIE/maintained-template-preset>
+    rdfs:label "Maintained template preset" .
+  
   sub:assignment a nt:EmbeddedResource, nt:LocalResource;
     rdfs:label "this" .
   
@@ -48,7 +52,7 @@ sub:assertion {
     rdfs:label "the name of the template" .
   
   sub:resource a nt:ExternalUriPlaceholder, nt:IntroducedResource;
-    rdfs:label "the template's cross-version ID (template kind URI)" .
+    rdfs:label "the template's cross-version ID" .
   
   sub:space a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
     rdfs:label "the space maintaining this template";
@@ -100,7 +104,7 @@ sub:assertion {
 <p>Unlike the general \"Defining a maintained resource\" template, this one is specific to templates: the resource type is fixed to <code>nt:AssertionTemplate</code>, and the same nanopublication also assigns the <em>Maintained template preset</em>, which supplies the standard views for a template page (template info, version history, and the latest nanopublications published from the template). Listing a template and giving it its standard page is therefore a single act.</p>
 
 <p>The preset assignment is identified by the <em>(preset, resource)</em> pair, not by this nanopublication's URI, so it can later be deactivated on its own without superseding this nanopublication.</p>""";
-    dct:isVersionOf sub:templateKind;
+    dct:isVersionOf <https://w3id.org/np/RA1_mJ1G8d-5riusOFBQHtR8gG6pQHIH1W_e6S7ahIRTQ/templateKind>;
     rdfs:label "Listing a template as a maintained resource";
     gen:governedBy <https://w3id.org/spaces/knowledgepixels>;
     nt:hasNanopubLabelPattern "${label} is a template maintained by ${space}";
@@ -108,9 +112,6 @@ sub:assertion {
       sub:st20, sub:st30;
     nt:hasTag "Spaces";
     nt:hasTargetNanopubType gen:MaintainedResource, gen:PresetAssignment .
-  
-  <https://w3id.org/np/RAsfqb0NCvXnSsJgsx75aqbR-O_4q8uqp0YDgeX83fHIE/maintained-template-preset>
-    rdfs:label "Maintained template preset" .
   
   nt:AssertionTemplate rdfs:label "assertion template" .
 }
@@ -123,12 +124,14 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-25T13:56:39Z"^^xsd:dateTime;
+  this: dct:created "2026-10-23T09:03:28Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:template;
-    npx:introduces sub:templateKind;
+    npx:introduces <https://w3id.org/np/RA1_mJ1G8d-5riusOFBQHtR8gG6pQHIH1W_e6S7ahIRTQ/templateKind>;
+    npx:supersedes <https://w3id.org/np/RA1_mJ1G8d-5riusOFBQHtR8gG6pQHIH1W_e6S7ahIRTQ>;
     rdfs:label "Listing a template as a maintained resource";
+    skos:changeNote "Drops \"kind\" from the label of the field holding the template's cross-version ID, following the naming convention adopted on 2026-10-23. The IRI is unchanged: it is written out absolutely here so that this version keeps the same version-independent identity instead of minting a new one.";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
@@ -136,7 +139,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "ABOHeeSCyu7KHEAAAD424YuP3CC7wl69WkqTNVxHHr57Q/YecwQjtAU8bjJ3zjh5CPr/Qsa/YH43Hof+Y5Ji5HsiYrRs3DOdwUq4oWEB+WdHHGCa5ncDTZC0ZZAXtCuOoSrUzU0itjRZpd/WOItvpixg7GKVGQUggS9Q8XUbm7A=";
+    npx:hasSignature "XYx54c6i5XyexIMVvlQLxavdUb5WM/LmnzR3DToXsdMd1LJLr4SZ28o7G2xkWF/XnIQdsY4gnqPOurWBGrfU37q9353gHtAbnSVRGCGHhsizcY2mRqA7P1KLNJOsWM92rNJ0HbRLpUaPkOfeRZWqc/S9EadFEYN4DqwXJ30+2qM=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

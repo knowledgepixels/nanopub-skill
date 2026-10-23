@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAPG3v1ZzL8uf2mNlKTsgKmCumUkap8Gh8OsHz6kPoGNs> .
-@prefix sub: <https://w3id.org/np/RAPG3v1ZzL8uf2mNlKTsgKmCumUkap8Gh8OsHz6kPoGNs/> .
+@prefix this: <https://w3id.org/np/RAF-YWZda1BidpDr8p33ezm7JhTOzZ7fJzeYbvSsc2I80> .
+@prefix sub: <https://w3id.org/np/RAF-YWZda1BidpDr8p33ezm7JhTOzZ7fJzeYbvSsc2I80/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
@@ -7,9 +7,9 @@
 @prefix orcid: <https://orcid.org/> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix npx: <http://purl.org/nanopub/x/> .
-@prefix dcterms: <http://purl.org/dc/terms/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
@@ -21,11 +21,11 @@ sub:Head {
 }
 
 sub:assertion {
-  dcterms:description rdfs:label "has the description" .
+  dct:description rdfs:label "has the description" .
   
-  dcterms:isVersionOf rdfs:label "is a version of" .
+  dct:isVersionOf rdfs:label "is a version of" .
   
-  dcterms:title rdfs:label "has the title" .
+  dct:title rdfs:label "has the title" .
   
   rdf:type rdfs:label "is a" .
   
@@ -128,7 +128,7 @@ sub:assertion {
     rdf:subject sub:view .
   
   sub:st10b rdf:object sub:viewKind;
-    rdf:predicate dcterms:isVersionOf;
+    rdf:predicate dct:isVersionOf;
     rdf:subject sub:view .
   
   sub:st11 rdf:object gen:HeaderView;
@@ -140,12 +140,12 @@ sub:assertion {
     rdf:subject sub:view .
   
   sub:st21 rdf:object sub:title;
-    rdf:predicate dcterms:title;
+    rdf:predicate dct:title;
     rdf:subject sub:view .
   
   sub:st22 a nt:OptionalStatement;
     rdf:object sub:description;
-    rdf:predicate dcterms:description;
+    rdf:predicate dct:description;
     rdf:subject sub:view .
   
   sub:st35 a nt:RepeatableStatement;
@@ -203,7 +203,7 @@ sub:assertion {
     nt:hasRegex "[1-9]\\.[1-9]\\..*" .
   
   sub:template a nt:AssertionTemplate;
-    dcterms:description "Declaring a header view: a view that shows just a section header at its structural position on a resource page (i.e. user/space/maintained resource page), with a title, an optional description text below it, and optional result-level actions. Unlike other resource views, header views have no query.";
+    dct:description "Declaring a header view: a view that shows just a section header at its structural position on a resource page (i.e. user/space/maintained resource page), with a title, an optional description text below it, and optional result-level actions. Unlike other resource views, header views have no query.";
     rdfs:label "Declaring a header view";
     nt:hasStatement sub:st10, sub:st10b, sub:st11, sub:st20, sub:st21, sub:st22, sub:st35,
       sub:st36, sub:st40, sub:st44, sub:st50, sub:st51, sub:st51b, sub:st52, sub:st53, sub:st53b,
@@ -217,7 +217,7 @@ sub:assertion {
     rdfs:label "short ID suffix for the view" .
   
   sub:viewKind a nt:IntroducedResource, nt:UriPlaceholder;
-    rdfs:label "short suffix or existing URI of view kind" .
+    rdfs:label "short suffix or existing URI of the view (same across versions)" .
   
   sub:width a nt:RestrictedChoicePlaceholder;
     rdfs:label "choose display width";
@@ -233,13 +233,13 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dcterms:created "2026-09-24T09:38:44+00:00"^^xsd:dateTime;
-    dcterms:creator orcid:0000-0002-1267-0234;
-    dcterms:license <https://creativecommons.org/licenses/by/4.0/>;
+  this: dct:created "2026-10-23T09:05:05Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
     npx:embeds sub:template;
-    npx:supersedes <https://w3id.org/np/RAZYU_kQZ0B3ruoNSeZOaKR6M93PJ-z1jlArXl7_H4EEU>;
+    npx:supersedes <https://w3id.org/np/RA9hnOMnM0b6h4h91LTxfYIqlATbkSj-SSxfetQxZFtCQ>;
     rdfs:label "Declaring a header view";
-    skos:changeNote "Guided choices that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: actionTemplate, actionVisibilityRole. Group members of the action group are now also listed on the template node, as the meta-template expects.";
+    skos:changeNote "Corrects the creation timestamp, which the previous version carried over from its predecessor unchanged, putting it in the wrong place in date-ordered template listings. The content change of this version line is the field label: \"view kind\" replaced by version-independent wording.";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
       <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
@@ -248,7 +248,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "V4PfgU/w2IwgFhW48ygaoGLsIIXIPMK4GrConF2byf3TTTij2ecWtovM+NubnT9WABx/RuZdzHyH6xOrIuvW/QHfQWww0LI4npqGegU5uS9M+rqW4x/GjJYsWozWcP/NAjwPf5PJKYJwq+Em8BgM6fFy2EjtIKvWZDUH2uu0UGY=";
+    npx:hasSignature "jG0i8RUq2VxFmr0qDefHNIBh6hsEY7eaaBUOj6fNIH1fFcjpUaDl/5Uwb/a3PdS/WzyXdfDkckdgdseJMwbPqYhw18zVHSKgYFVRt1pjj/tclP15dn1AZ0DBbPCvxZRyftkJeAG84IhgYoyOZcF2gbgEb843xpxKd4SsELEw+iY=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

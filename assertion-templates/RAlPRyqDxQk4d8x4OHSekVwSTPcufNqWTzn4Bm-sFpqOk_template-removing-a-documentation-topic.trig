@@ -1,15 +1,15 @@
-@prefix this: <https://w3id.org/np/RAkx597r1sJHoVnbgrxM3krFnCvvd6ZLJl8b_gs4GdYRs> .
-@prefix sub: <https://w3id.org/np/RAkx597r1sJHoVnbgrxM3krFnCvvd6ZLJl8b_gs4GdYRs/> .
+@prefix this: <https://w3id.org/np/RAlPRyqDxQk4d8x4OHSekVwSTPcufNqWTzn4Bm-sFpqOk> .
+@prefix sub: <https://w3id.org/np/RAlPRyqDxQk4d8x4OHSekVwSTPcufNqWTzn4Bm-sFpqOk/> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix orcid: <https://orcid.org/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
-@prefix npx: <http://purl.org/nanopub/x/> .
 
 sub:Head {
   this: a np:Nanopublication;
@@ -19,10 +19,10 @@ sub:Head {
 }
 
 sub:assertion {
-  <https://w3id.org/np/RA7IFropt6dywZVeroeyM6t94AMrjvHYtRpdHubgMff7U/template-kind>
+  <https://w3id.org/np/RAHD8dmdwme3VFXE6FujA4USc8EquwG2KaTo2mbq9IN1k/template-kind>
     a gen:MaintainedResource, nt:AssertionTemplate;
-    dct:description "The stable kind of the template that removes a paragraph from the documentation by publishing a newer version marking it as removed. Registered as a maintained resource of the Nanopublication space so that any member can publish its next version.";
-    rdfs:label "Template kind: Removing a documentation paragraph";
+    dct:description "The version-independent identifier of the template that removes a topic from a documentation's contents by publishing a newer declaration marking it as removed. Listed as a maintained resource of the Nanopublication space so that any member can publish its next version.";
+    rdfs:label "Template: Removing a documentation topic";
     gen:isMaintainedBy <https://w3id.org/spaces/nanopub> .
 }
 
@@ -33,10 +33,11 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-16T15:15:35Z"^^xsd:dateTime;
+  this: dct:created "2026-10-23T09:00:51Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    rdfs:label "Template kind: Removing a documentation paragraph";
+    npx:supersedes <https://w3id.org/np/RAvUz7P93TKAZefPuzNCO0T2yMwu8uTxdnV7kfSeBZVnE>;
+    rdfs:label "Template: Removing a documentation topic";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
       <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>;
@@ -44,7 +45,7 @@ sub:pubinfo {
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "ad5e5+a6qD6hednVjFXn2lqkuQ7GXo/NwICaSduqU7PKdhKMBPflrf9IjhiDxiMDzb3HjFoMyCeQEwE8kh5Rm8QwxyFUZd9a5l2nGv1RA72bG5/KID48h2FlcijqRPusueya4P+TUnSvt881ZtYY/rbrIGzga7m/Sftqlzid+mQ=";
+    npx:hasSignature "kVUNcV7AKfRDnDNE2wfTVdG9n51jbvOqYcqvnSyhL6iRmLzShIu055M33QXvtTepWY/wi63TpJdxYOe9BX9OPbphvTVlFjQGILcY8SCv61B/i4MZfo+w6DV2h9hpM1nsqocHFn15IW5uo0cLlXTrvdP+sOQG95XnmaEWHdYYPTs=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

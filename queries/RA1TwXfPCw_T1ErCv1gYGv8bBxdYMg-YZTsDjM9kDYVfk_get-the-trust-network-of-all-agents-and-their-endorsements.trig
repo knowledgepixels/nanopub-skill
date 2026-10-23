@@ -1,0 +1,139 @@
+@prefix this: <https://w3id.org/np/RA1TwXfPCw_T1ErCv1gYGv8bBxdYMg-YZTsDjM9kDYVfk> .
+@prefix sub: <https://w3id.org/np/RA1TwXfPCw_T1ErCv1gYGv8bBxdYMg-YZTsDjM9kDYVfk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-trust-network a grlc:grlc-query;
+    dct:description "Returns the whole trust network of the nanopublication ecosystem as a network, one row per edge, for a network view (gen:NetworkView). The nodes are the agents of the current trust state and an edge is an endorsement: one agent approved the nanopublication that declares another agent's public key, which is what brought that agent into the network. This is the interactive counterpart of the 'Trust network overview' SVG view, which draws the same network as a static diagram with coordinates computed in SPARQL; here the query reports only the relations and the layout is left to the browser, so the network can be hovered, dragged and clicked through to the agents' user pages. Each node carries the agent's canonical name from the trust state, leaving the few agents that have none to the name Nanodash knows for them, and a description saying its depth from the trust seed, its trust status and how many agents it has endorsed and been endorsed by. Nodes are grouped by the part they play in the network: the trust seeds the calculation starts from, the agents who have endorsed others, and the agents who have endorsed nobody, with contested and rejected accounts called out instead, the way the diagram version colours those over everything else. An edge is typed with npx:approvesOf, is described by the two agents' names, and leads to the endorsing nanopublication on click. A pair of agents endorsed under several keys or by several nanopublications is one edge, named for the first of those nanopublications, and an agent endorsing another of its own keys is not drawn as an edge at all. Everything is read from the npa:EndorsementLink and npa:AccountState rows of the current trust state, so the query stays within the trust repository and needs no federated SERVICE call, which also means it cannot tell bots from people -- unlike the SVG version, which reads npx:Bot from the full repository. Per-pubkey account rows are collapsed to one node per agent. The 'resource' parameter is the page the view is shown on; it is not used, since the network is always the whole one.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the trust network of all agents and their endorsements";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/trust>;
+    grlc:sparql """prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?source ?source_label ?source_desc ?source_type ?source_type_label
+       ?edge_type ?edge_label ?edge_desc
+       ?target ?target_label ?target_desc ?target_type ?target_type_label
+       ?np ('^' as ?np_label)
+where {
+  bind(?_resource_iri as ?pageResource)
+
+  # One row per pair of distinct agents, with the first endorsing nanopublication named
+  # for the pair, so a pair endorsed under several keys is one edge rather than a bundle.
+  { select ?aS ?aT (min(str(?viaNp)) as ?npStr) where {
+      npa:thisRepo npa:hasCurrentTrustState ?tsE .
+      graph ?tsE {
+        ?link a npa:EndorsementLink ;
+          npa:fromAgent ?aS ;
+          npa:toAgent ?aT ;
+          npa:viaNanopub ?viaNp .
+      }
+      filter(?aS != ?aT)
+    } group by ?aS ?aT }
+
+  # What the trust state knows about the endorsing agent. Its per-pubkey account rows are
+  # collapsed here, which is why the two degrees are counted over distinct agents. The
+  # optionals sit outside the graph wrapper, which inside one would drop whole rows.
+  { select ?aS (min(?dS0) as ?depS) (min(?stS0) as ?statS) (min(?nmS0) as ?nameS)
+           (count(distinct ?tS0) as ?outS) (count(distinct ?fS0) as ?inS) where {
+      npa:thisRepo npa:hasCurrentTrustState ?tsS .
+      graph ?tsS { ?accS a npa:AccountState ; npa:agent ?aS ; npa:depth ?dS0 ; npa:trustStatus ?stS0 }
+      optional { graph ?tsS { ?aS foaf:name ?nmS0 } }
+      optional { graph ?tsS { ?lS1 a npa:EndorsementLink ; npa:fromAgent ?aS ; npa:toAgent ?tS0 } filter(?tS0 != ?aS) }
+      optional { graph ?tsS { ?lS2 a npa:EndorsementLink ; npa:toAgent ?aS ; npa:fromAgent ?fS0 } filter(?fS0 != ?aS) }
+    } group by ?aS }
+
+  # The same, for the endorsed agent.
+  { select ?aT (min(?dT0) as ?depT) (min(?stT0) as ?statT) (min(?nmT0) as ?nameT)
+           (count(distinct ?tT0) as ?outT) (count(distinct ?fT0) as ?inT) where {
+      npa:thisRepo npa:hasCurrentTrustState ?tsT .
+      graph ?tsT { ?accT a npa:AccountState ; npa:agent ?aT ; npa:depth ?dT0 ; npa:trustStatus ?stT0 }
+      optional { graph ?tsT { ?aT foaf:name ?nmT0 } }
+      optional { graph ?tsT { ?lT1 a npa:EndorsementLink ; npa:fromAgent ?aT ; npa:toAgent ?tT0 } filter(?tT0 != ?aT) }
+      optional { graph ?tsT { ?lT2 a npa:EndorsementLink ; npa:toAgent ?aT ; npa:fromAgent ?fT0 } filter(?fT0 != ?aT) }
+    } group by ?aT }
+
+  bind(?aS as ?source)
+  bind(?aT as ?target)
+  bind(?nameS as ?source_label)
+  bind(?nameT as ?target_label)
+  bind(iri(?npStr) as ?np)
+  bind(npx:approvesOf as ?edge_type)
+  bind(\"endorses\" as ?edge_label)
+
+  # The colour groups: the seeds the trust calculation starts from, the agents who brought
+  # others in, and the agents who have endorsed nobody; a contested or rejected account is
+  # called out instead of its part in the network, as in the diagram version of this view.
+  bind(if(?statS = npa:contested, \"contested\",
+       if(?statS = npa:skipped, \"rejected\",
+       if(?depS = 1, \"trust-seed\", if(?outS > 0, \"endorser\", \"endorsed-only\")))) as ?source_type)
+  bind(if(?statT = npa:contested, \"contested\",
+       if(?statT = npa:skipped, \"rejected\",
+       if(?depT = 1, \"trust-seed\", if(?outT > 0, \"endorser\", \"endorsed-only\")))) as ?target_type)
+  bind(replace(?source_type, \"-\", \" \") as ?source_type_label)
+  bind(replace(?target_type, \"-\", \" \") as ?target_type_label)
+
+  # What a node says when pointed at: its name in full, which the caption may have had to
+  # cut, and the facts a caption has no room for.
+  bind(coalesce(?nameS, replace(str(?aS), \"^.*/\", \"\")) as ?nmS)
+  bind(coalesce(?nameT, replace(str(?aT), \"^.*/\", \"\")) as ?nmT)
+  bind(concat(?nmS, \"\\n\",
+    if(?depS = 1, \"Trust seed (depth 1)\", concat(\"Depth \", str(?depS))),
+    \", trust status \", replace(str(?statS), \"^.*/\", \"\"), \".\\n\",
+    if(?outS = 0, \"Has endorsed no other agent\",
+      concat(\"Has endorsed \", str(?outS), if(?outS = 1, \" other agent\", \" other agents\"))),
+    if(?inS = 0, \"; endorsed by none.\",
+      concat(\"; endorsed by \", str(?inS), if(?inS = 1, \" agent.\", \" agents.\")))) as ?source_desc)
+  bind(concat(?nmT, \"\\n\",
+    if(?depT = 1, \"Trust seed (depth 1)\", concat(\"Depth \", str(?depT))),
+    \", trust status \", replace(str(?statT), \"^.*/\", \"\"), \".\\n\",
+    if(?outT = 0, \"Has endorsed no other agent\",
+      concat(\"Has endorsed \", str(?outT), if(?outT = 1, \" other agent\", \" other agents\"))),
+    if(?inT = 0, \"; endorsed by none.\",
+      concat(\"; endorsed by \", str(?inT), if(?inT = 1, \" agent.\", \" agents.\")))) as ?target_desc)
+  bind(concat(?nmS, \" endorsed the key declaration of \", ?nmT, \".\") as ?edge_desc)
+}
+order by ?depS desc(?outT) desc(?outS) ?aT""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-21T14:33:02Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-trust-network;
+    rdfs:label "Get the trust network of all agents and their endorsements";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "MExCvutvhB01507FsdzYFWDvXyxEpgV/AJ7RYDZvl1iINoUTdLMWLorfK4iZcKTXXyRkBx862/pwDJX67Un3OmkJAasyoxwcYLsyUp3FKdkOeJvUxKkktDRs7//waoGiCNAHV0jvNSh3T7wjBuY6AT8FMXXVijc0iLwYamAeTo0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,14 +1,16 @@
-@prefix this: <https://w3id.org/np/RA3KyKGBWWXKZa-Tgq1XW8djl-9veFZDC2lcXIOeNz1WE> .
-@prefix sub: <https://w3id.org/np/RA3KyKGBWWXKZa-Tgq1XW8djl-9veFZDC2lcXIOeNz1WE/> .
+@prefix this: <https://w3id.org/np/RAdBR_u_Ai7H-7xJhqIjPtqeOop_gXd0AZTXvYoAE2DGc> .
+@prefix sub: <https://w3id.org/np/RAdBR_u_Ai7H-7xJhqIjPtqeOop_gXd0AZTXvYoAE2DGc/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
-@prefix dct: <http://purl.org/dc/terms/> .
-@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix nt: <https://w3id.org/np/o/ntemplate/> .
-@prefix npx: <http://purl.org/nanopub/x/> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
 @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 @prefix orcid: <https://orcid.org/> .
 @prefix ns1: <http://purl.org/np/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
 @prefix prov: <http://www.w3.org/ns/prov#> .
 @prefix foaf: <http://xmlns.com/foaf/0.1/> .
 
@@ -20,6 +22,10 @@ sub:Head {
 }
 
 sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  dct:isVersionOf rdfs:label "is a version of" .
+  
   rdf:Statement rdfs:label "simple statement" .
   
   rdf:object rdfs:label "has as object" .
@@ -32,16 +38,17 @@ sub:assertion {
   
   rdfs:label rdfs:label "is labeled as" .
   
-  sub:assertion a nt:AssertionTemplate;
-    rdfs:label "Defining a publication info template";
-    nt:hasNanopubLabelPattern "Pubinfo template: ${tlabel}";
-    nt:hasStatement sub:stA010, sub:stA020, sub:stA030, sub:stB000, sub:stC010, sub:stC020,
-      sub:stC030, sub:stC040, sub:stC050, sub:stD010, sub:stD020, sub:stD030, sub:stD040,
-      sub:stD045, sub:stD046, sub:stD047, sub:stD050, sub:stD060, sub:stD070;
-    nt:hasTag "Templates" .
+  gen:governedBy rdfs:label "is governed by" .
   
   sub:defaultvalue a nt:ValuePlaceholder;
     rdfs:label "default value of the placeholder" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "provide a description / instructions for the template here" .
+  
+  sub:governingSpace a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "space whose members govern this template's versions";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=https://w3id.org/kpxl/gen/terms/Space" .
   
   sub:group a nt:LocalResource, nt:UriPlaceholder;
     rdfs:label "short ID of grouped statement" .
@@ -68,12 +75,20 @@ sub:assertion {
     rdfs:label "literal placeholder";
     nt:possibleValue sub:tobj .
   
+  sub:literalPlaceholderWithPossibleLanguageTags a nt:LocalResource, nt:RestrictedChoicePlaceholder;
+    rdfs:label "literal placeholder";
+    nt:possibleValue sub:tobj .
+  
+  sub:newtemplate a nt:EmbeddedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short local name of this template version";
+    nt:hasDefaultValue sub:templateVersion .
+  
   sub:placeholder a nt:LocalResource, nt:RestrictedChoicePlaceholder;
     rdfs:label "placeholder mentioned above";
     nt:possibleValue sub:tobj, sub:tpred, sub:tsubj .
   
   sub:placeholderWithDefaultValue a nt:LocalResource, nt:RestrictedChoicePlaceholder;
-    rdfs:label "placeholder";
+    rdfs:label "short ID of placeholder";
     nt:possibleValue sub:tobj, sub:tpred, sub:tsubj .
   
   sub:placeholderWithPossibleValues a nt:LocalResource, nt:RestrictedChoicePlaceholder;
@@ -98,10 +113,15 @@ sub:assertion {
   
   sub:placeholdertype a nt:RestrictedChoicePlaceholder;
     rdfs:label "type of placeholder: IRI, literal, restricted, etc.";
-    nt:possibleValue nt:AgentPlaceholder, nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder,
-      nt:IntroducedResource, nt:LiteralPlaceholder, nt:LocalResource, nt:LongLiteralPlaceholder,
-      nt:RestrictedChoicePlaceholder, nt:SequenceElementPlaceholder, nt:TrustyUriPlaceholder,
-      nt:UriPlaceholder, nt:ValuePlaceholder .
+    nt:possibleValue nt:AgentPlaceholder, nt:AutoEscapeUriPlaceholder, nt:EmbeddedResource,
+      nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder, nt:IntroducedResource, nt:LanguageTaggedLiteralPlaceholder,
+      nt:LiteralPlaceholder, nt:LocalResource, nt:LongLiteralPlaceholder, nt:NewUriPlaceholder,
+      nt:RestrictedChoicePlaceholder, nt:RootNanopubPlaceholder, nt:SequenceElementPlaceholder,
+      nt:TrustyUriPlaceholder, nt:UriPlaceholder, nt:ValuePlaceholder .
+  
+  sub:possibleLanguageTag a nt:LiteralPlaceholder;
+    rdfs:label "possible language tag";
+    nt:hasRegex "[0-9a-zA-Z-]{2,}" .
   
   sub:possiblevalue a nt:UriPlaceholder;
     rdfs:label "possible value" .
@@ -121,18 +141,34 @@ sub:assertion {
   sub:regex a nt:LiteralPlaceholder;
     rdfs:label "regular expression" .
   
-  sub:stA010 rdf:object nt:PubinfoTemplate;
+  sub:stA010 rdf:object nt:ProvenanceTemplate;
     rdf:predicate rdf:type;
-    rdf:subject nt:ASSERTION .
+    rdf:subject sub:newtemplate .
   
   sub:stA020 rdf:object sub:tlabel;
     rdf:predicate rdfs:label;
-    rdf:subject nt:ASSERTION .
+    rdf:subject sub:newtemplate .
   
-  sub:stA030 a nt:OptionalStatement, nt:RepeatableStatement;
+  sub:stA021 a nt:GroupedStatement, nt:OptionalStatement;
+    nt:hasStatement sub:stA021a, sub:stA021b .
+  
+  sub:stA021a rdf:object sub:templateKind;
+    rdf:predicate dct:isVersionOf;
+    rdf:subject sub:newtemplate .
+  
+  sub:stA021b rdf:object sub:governingSpace;
+    rdf:predicate gen:governedBy;
+    rdf:subject sub:newtemplate .
+  
+  sub:stA022 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:newtemplate .
+  
+  sub:stA030 a nt:OptionalStatement;
     rdf:object sub:templateType;
     rdf:predicate rdf:type;
-    rdf:subject nt:ASSERTION .
+    rdf:subject sub:newtemplate .
   
   sub:stB000 a nt:GroupedStatement, nt:RepeatableStatement;
     nt:hasStatement sub:stB010, sub:stB020, sub:stB030 .
@@ -152,7 +188,7 @@ sub:assertion {
   sub:stC010 a nt:RepeatableStatement;
     rdf:object sub:tstatementa;
     rdf:predicate nt:hasStatement;
-    rdf:subject nt:ASSERTION .
+    rdf:subject sub:newtemplate .
   
   sub:stC020 a nt:OptionalStatement, nt:RepeatableStatement;
     rdf:object nt:GroupedStatement;
@@ -209,6 +245,11 @@ sub:assertion {
     rdf:predicate nt:hasLanguageTag;
     rdf:subject sub:literalPlaceholderWithLanguageTag .
   
+  sub:stD048 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:possibleLanguageTag;
+    rdf:predicate nt:possibleLanguageTag;
+    rdf:subject sub:literalPlaceholderWithPossibleLanguageTags .
+  
   sub:stD050 a nt:OptionalStatement, nt:RepeatableStatement;
     rdf:object sub:label;
     rdf:predicate rdfs:label;
@@ -238,9 +279,23 @@ sub:assertion {
     rdfs:label "type of statement: simple, optional, repeatable";
     nt:possibleValue rdf:Statement, nt:OptionalStatement, nt:RepeatableStatement .
   
+  sub:templateKind a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "cross-version ID for this template" .
+  
   sub:templateType a nt:RestrictedChoicePlaceholder;
-    rdfs:label "template can be marked as unlisted or transient here";
-    nt:possibleValue nt:TransientTemplate, nt:UnlistedTemplate .
+    rdfs:label "template can be marked as unlisted here";
+    nt:possibleValue nt:UnlistedTemplate .
+  
+  sub:templateVersion a nt:AssertionTemplate;
+    dct:description "This nanopublication defines a provenance template. Such templates are used to generate the input form for the provenance part of nanopublications.";
+    rdfs:label "Defining a provenance template";
+    nt:hasNanopubLabelPattern "${tlabel}";
+    nt:hasStatement sub:stA010, sub:stA020, sub:stA021, sub:stA021a, sub:stA021b, sub:stA022,
+      sub:stA030, sub:stB000, sub:stB010, sub:stB020, sub:stB030, sub:stC010, sub:stC020,
+      sub:stC030, sub:stC040, sub:stC050, sub:stD010, sub:stD020, sub:stD030, sub:stD040,
+      sub:stD045, sub:stD046, sub:stD047, sub:stD048, sub:stD050, sub:stD060, sub:stD061,
+      sub:stD062, sub:stD070;
+    nt:hasTag "Templates" .
   
   sub:tgstatementref a nt:LocalResource, nt:RestrictedChoicePlaceholder;
     rdfs:label "short ID of grouped statement";
@@ -278,6 +333,10 @@ sub:assertion {
   
   nt:AgentPlaceholder rdfs:label "Agent placeholder" .
   
+  nt:AutoEscapeUriPlaceholder rdfs:label "Auto-escape URI placeholder" .
+  
+  nt:EmbeddedResource rdfs:label "Embedded resource" .
+  
   nt:ExternalUriPlaceholder rdfs:label "External URI placeholder" .
   
   nt:GroupedStatement rdfs:label "grouped statement" .
@@ -286,23 +345,27 @@ sub:assertion {
   
   nt:IntroducedResource rdfs:label "Introduced resource" .
   
+  nt:LanguageTaggedLiteralPlaceholder rdfs:label "Language-tagged literal placeholder" .
+  
   nt:LiteralPlaceholder rdfs:label "Literal placeholder" .
   
   nt:LocalResource rdfs:label "Local resource" .
   
   nt:LongLiteralPlaceholder rdfs:label "Long literal placeholder" .
   
+  nt:NewUriPlaceholder rdfs:label "New URI placeholder (must not exist yet)" .
+  
   nt:OptionalStatement rdfs:label "optional statement" .
   
-  nt:PubinfoTemplate rdfs:label "publication info template" .
+  nt:ProvenanceTemplate rdfs:label "provenance template" .
   
   nt:RepeatableStatement rdfs:label "repeatable statement" .
   
   nt:RestrictedChoicePlaceholder rdfs:label "Restricted choice placeholder" .
   
-  nt:SequenceElementPlaceholder rdfs:label "Sequence element placeholder" .
+  nt:RootNanopubPlaceholder rdfs:label "Root nanopublication placeholder" .
   
-  nt:TransientTemplate rdfs:label "Transient template (content not carried over)" .
+  nt:SequenceElementPlaceholder rdfs:label "Sequence element placeholder" .
   
   nt:TrustyUriPlaceholder rdfs:label "Trusty URI placeholder" .
   
@@ -326,11 +389,11 @@ sub:assertion {
   
   nt:hasStatement rdfs:label "includes" .
   
+  nt:possibleLanguageTag rdfs:label "has as possible language tag" .
+  
   nt:possibleValue rdfs:label "has as possible value" .
   
   nt:possibleValuesFrom rdfs:label "has possible values from" .
-  
-  nt:possibleValuesFromApi rdfs:label "has possible values from API" .
   
   nt:statementOrder rdfs:label "has statement order value" .
 }
@@ -342,19 +405,22 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-08-25T13:22:42Z"^^xsd:dateTime;
+  this: dct:created "2026-10-23T09:36:21Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:supersedes <https://w3id.org/np/RA6vg0hTAnvNkbmYZXa3LJFo9APQII1hotXePb9abHbMQ>;
-    rdfs:label "Defining a publication info template";
+    npx:embeds sub:templateVersion;
+    npx:supersedes <https://w3id.org/np/RAlxVeww5o6RsAzkcaMKjgAjPPaB1IMqqFg06_AzXNFZc>;
+    npx:wasCreatedAt <http://localhost:37373/>;
+    rdfs:label "Defining a provenance template";
+    skos:changeNote "Brings this meta template in line with the assertion meta template (nanodash issue #787): the template it defines now gets its own embedded node instead of being the assertion URI, and can declare dct:isVersionOf plus gen:governedBy, a dct:description, and language-tagged literal placeholders; the placeholder-type choices are the full current list. This nanopublication's own node moves to <np>/templateVersion for the same reason.";
     nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
       <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
-    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RATjy8gOFJdXr_JUq1NxYWlkZzVmaTB6fybEO5BvjC-S4/templateVersion> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "epp+w8cXbGaYOSn907Xu8YGuog5t2hwxDe2v/fIgvE/Oyq0XfTT2NcqyPlEC1HtbJZE0fnr8hjmvzQzXMm8weyrWXAJItLAI/OdjCpcx3pAy9WuApkpX+c0lpk8svuFYcW1iGQbiJ1Snk6ruocZHazBsFbvGg6dfiv66/ARaNLI=";
+    npx:hasSignature "TRe7XQTZKWWRNtCgpB7gfZKKhasK0hGQWsxGHFDWn5xecRn3b4vlw30mGEOjUsSAQlVg8/zZA3tF6T96om9XP+b7bLtjoXCSH2vFku5g525m+1dwiLGcnywiitmcx/Z8qYD+KwsRnCe4CMClLpENpEipW3wSt/drA7s3e7vvCPA=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }
