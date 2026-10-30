@@ -26,7 +26,9 @@ The skill guides the agent through the full workflow:
   file, with the right provenance and pubinfo (creator ORCID, timestamp,
   labels, `npx:introduces` / `npx:embeds`, nanopub types).
 - **Validate and sign** it with the `nanopub-java` CLI and the user's key.
-- **Publish** to the test server or the live network, only on explicit request.
+- **Publish** to the test server or the live network, only on explicit request,
+  superseding the previous version on the same network and recording what went
+  where.
 - **Fetch, inspect and query** nanopubs through Nanopub Query and its
   grlc-style query API.
 - **Supersede or retract** earlier versions with the right key and links.
