@@ -831,6 +831,8 @@ java -jar $JAR publish -u https://test.registry.knowledgepixels.com/ tmp/<name>-
 java -jar $JAR publish tmp/<name>-signed.trig
 ```
 
+**Supersede the previous version on the same network.** When publishing a new version to the test server, supersede the previous version on the test server; when publishing to the live network, supersede the previous version on the live network. If that network has no previous version, add no `npx:supersedes`.
+
 **Large batches: publish in the background.** Each `publish` is a JVM launch of a few seconds; 40+ files exceed the two-minute foreground window, so run the loop with `run_in_background` (or split it) from the start rather than losing the tail of a batch to a timeout.
 
 **Protected nanopubs never reach the live network.** A nanopub whose **pubinfo** types the nanopub itself `npx:ProtectedNanopub` (`<this> a npx:ProtectedNanopub`, an `rdf:type` on the nanopub URI — *not* an `npx:hasNanopubType`) is accepted, stored and served only by a **local/private Nanopub Registry** running with `REGISTRY_LOCAL_INSTANCE=true`; the public network refuses it, and Nanopub Query's loader drops it on any non-local instance. From nanopub-java 1.94.0, `publish` evaluates this per registry: a protected nanopub skips every registry that does not report `isLocalInstance` and fails with `Can't publish protected nanopublication: … None of the available registries is a local instance` if none is left — raised **before** the `--dry-run` branch, so a misconfiguration is not hidden behind "Nanopub NOT published: --dry-run". Older jars rejected any protected nanopub outright, with no way to publish one at all.
