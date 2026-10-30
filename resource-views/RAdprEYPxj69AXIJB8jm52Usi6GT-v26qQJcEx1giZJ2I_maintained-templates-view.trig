@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAqomZUwimETfSF2vmC0jqmN5_JyzHN_u_cfXcXt4fl3g> .
-@prefix sub: <https://w3id.org/np/RAqomZUwimETfSF2vmC0jqmN5_JyzHN_u_cfXcXt4fl3g/> .
+@prefix this: <https://w3id.org/np/RAdprEYPxj69AXIJB8jm52Usi6GT-v26qQJcEx1giZJ2I> .
+@prefix sub: <https://w3id.org/np/RAdprEYPxj69AXIJB8jm52Usi6GT-v26qQJcEx1giZJ2I/> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -20,20 +20,20 @@ sub:Head {
 }
 
 sub:assertion {
-  sub:list-kind-action a gen:ViewEntryAction;
+  sub:list-action a gen:ViewEntryAction;
     rdfs:label "📦 list as maintained resource...";
-    gen:hasActionTemplate <https://w3id.org/np/RA1_mJ1G8d-5riusOFBQHtR8gG6pQHIH1W_e6S7ahIRTQ/template>;
-    gen:hasActionTemplateQueryMapping "register_kind:!resource register_label:label register_description:description";
+    gen:hasActionTemplate <https://w3id.org/np/RA8x10ZUeKboFh1DpTeAWXuzGY5RoukonyzLa2rqqMPtA/templateVersion>;
+    gen:hasActionTemplateQueryMapping "register_kind:!resource register_label:label register_description:description register_type:!templatetype";
     gen:hasActionTemplateTargetField "space";
     gen:isVisibleTo gen:AdminRole .
   
   sub:list-template-action a gen:ViewResultAction;
     rdfs:label "📦 list a template...";
-    gen:hasActionTemplate <https://w3id.org/np/RA1_mJ1G8d-5riusOFBQHtR8gG6pQHIH1W_e6S7ahIRTQ/template>;
+    gen:hasActionTemplate <https://w3id.org/np/RA8x10ZUeKboFh1DpTeAWXuzGY5RoukonyzLa2rqqMPtA/templateVersion>;
     gen:hasActionTemplateTargetField "space";
     gen:isVisibleTo gen:AdminRole .
   
-  sub:maintained-templates-view a gen:ListView, gen:ResourceView;
+  sub:viewVersion a gen:ListView, gen:ResourceView;
     dct:isVersionOf <https://w3id.org/np/RAHokSK-M65XoTWcufOQWbwJR4mOShe5SB-JttP3Xjg4I/maintained-templates-view-kind>;
     dct:title "🧩 Maintained templates";
     rdfs:label "Maintained templates view";
@@ -42,8 +42,8 @@ sub:assertion {
     gen:hasDisplayWidth gen:ColumnWidth06of12;
     gen:hasPageSize "5";
     gen:hasStructuralPosition "5.4.maintainedUI.templates";
-    gen:hasViewAction sub:list-kind-action, sub:list-template-action;
-    gen:hasViewQuery <https://w3id.org/np/RAuJeC4oP6b2eoyC0WJaKlCcznbx_XUpo7SKBMovuZfB0/list-maintained-templates>;
+    gen:hasViewAction sub:list-action, sub:list-template-action;
+    gen:hasViewQuery <https://w3id.org/np/RAnIcGmT13ZyCOK2MtxWBpN1LkG7LX0Y3wwJEEOU4qcWM/list-maintained-templates>;
     gen:hasViewQueryTargetField "space" .
 }
 
@@ -54,23 +54,23 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-25T14:43:58Z"^^xsd:dateTime;
+  this: dct:created "2026-10-23T11:14:10Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:embeds sub:maintained-templates-view;
+    npx:embeds sub:viewVersion;
     npx:hasNanopubType gen:ResourceView;
     npx:introduces <https://w3id.org/np/RAHokSK-M65XoTWcufOQWbwJR4mOShe5SB-JttP3Xjg4I/maintained-templates-view-kind>;
-    npx:supersedes <https://w3id.org/np/RAaBBRHQXJGvSlJJ-Njdj8EB_VmVZImJMlU0nxVYsgxqU>;
-    skos:changeNote "Both list actions now use the template-specific \"Listing a template as a maintained resource\", which fixes the resource type and assigns the Maintained template preset in the same nanopublication, so a newly listed template gets its standard views at once; the register_type mapping and the corresponding query column are dropped.";
+    npx:supersedes <https://w3id.org/np/RAqomZUwimETfSF2vmC0jqmN5_JyzHN_u_cfXcXt4fl3g>;
+    skos:changeNote "Lists provenance and publication info templates besides assertion ones, using the widened query, and shows each row's template type. The list action fills that type into the listing template, which no longer fixes it. The view node moves to <np>/viewVersion following the naming convention; the version-independent IRI is unchanged.";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
       <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
       <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
-    nt:wasCreatedFromTemplate <https://w3id.org/np/RAJfQoTn4f7e8qHl0MYmn15qiHydwhr4F8Ow7agpMkWsE/template> .
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "NBK1/Y49wZEOgmXFc7cRDqN69FWsKHyk39VEXUz4thsqs/16QV/ahPe4GcCtb3LexR47wuD+tLgagJOy9cnftnNi7rglHoSsdayRXW+t4kQBlCMNa3XNke8WctQqAFrJ7+G/v/iRPysu/PCLUHpszZ3nWlItLOjMjMPSgS9w2ls=";
+    npx:hasSignature "C0nSzhuSfoFp1qHSJuuPtKKbLR9tDZEgAINYiHYuww3nxqBXbw65Bp1C+AIpLb5BNpOtqJ8z+jLS8vlOFF27tEBFIHyX18D4BlxZjspOTaow4x8p40KTMV0MIEtOxRKPhbLHYbZFyLKYMaItEew0ycV/VlTUuqDHXUwDO8aE7v0=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }

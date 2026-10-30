@@ -1,0 +1,58 @@
+@prefix this: <https://w3id.org/np/RAesewXSepiOI05h9OJ4LXNI3j5h5NcdOtojoHmRoatiY> .
+@prefix sub: <https://w3id.org/np/RAesewXSepiOI05h9OJ4LXNI3j5h5NcdOtojoHmRoatiY/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:viewVersion a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAQYuhBWTFBLGwQWzvbGXXs_H-cEQ8osCadaa9mwukLbs/agent-presentations-view-kind>;
+    dct:title "🎤 Presentations";
+    rdfs:label "Presentations of an agent in a space";
+    gen:appliesToInstancesOf gen:IndividualAgent;
+    gen:hasStructuralPosition "3.2.agentPresentations";
+    gen:hasViewQuery <https://w3id.org/np/RA8IJ6eBomP0hnRSc-yiN8Ee9uX_lBJqWwvjeCvwGpWeg/get-agent-presentations-in-space>;
+    gen:hasViewQueryTargetField "agent" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-25T06:29:31Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:viewVersion;
+    npx:introduces <https://w3id.org/np/RAQYuhBWTFBLGwQWzvbGXXs_H-cEQ8osCadaa9mwukLbs/agent-presentations-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAQYuhBWTFBLGwQWzvbGXXs_H-cEQ8osCadaa9mwukLbs>;
+    rdfs:label "Presentations of an agent in a space";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAgMavFN58iDGnwx3wbzyRPkRT04aXZ0ueZp9azTYWyXU/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "iVL4BcngMjIV0awA5SFvwb4ch58C9EGKuChnFTjX1rsO+GB/GIL5xapDE+HJU+WHkm60MLs00/irO0NJyy7Sksi+akEMgYx9O6vunO2W37WH0nBHPs7ikY2AGFrvSC1HZzq3t6yQi5/aX61MCHaj4nfrMmgqXaX/+HlV3wxlG4w=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,57 @@
+@prefix this: <https://w3id.org/np/RA1E_fMwxMZOSX74dW9tZ4gSvo4kGua2eiX2TR0pbjJWc> .
+@prefix sub: <https://w3id.org/np/RA1E_fMwxMZOSX74dW9tZ4gSvo4kGua2eiX2TR0pbjJWc/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:talks-by-topic-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:talks-by-topic-view-kind;
+    dct:title "🏷 Talks by topic";
+    rdfs:label "Talks of an event grouped by topic view";
+    gen:appliesToInstancesOf gen:Event, gen:Space;
+    gen:hasPageSize "0";
+    gen:hasStructuralPosition "3.6.topicProgramme";
+    gen:hasViewQuery <https://w3id.org/np/RAAxObckUbDhE1WZgtvVpDfYlSU3Nagb2nDVzY-C7KZfs/get-presentations-by-topic>;
+    gen:hasViewQueryTargetField "event" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-25T05:51:31Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:talks-by-topic-view;
+    npx:introduces sub:talks-by-topic-view-kind;
+    rdfs:label "Talks of an event grouped by topic view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAgMavFN58iDGnwx3wbzyRPkRT04aXZ0ueZp9azTYWyXU/template> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "gTAQ088K3zxhljzVHoKjGda2kT4xELpkwWJz1kICcRH5qzNpryTGoUXEMfpYxpwuSL2mkaCfl+bkpU5Cl/e5ItrUNxfJzax2fPo/8F0V+RRg8dMFjc5peKlaqmaMZapvmve8UQo0eo6cl5bPH0QrMXoU9zdNs9fmOHxa2hI7KTQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

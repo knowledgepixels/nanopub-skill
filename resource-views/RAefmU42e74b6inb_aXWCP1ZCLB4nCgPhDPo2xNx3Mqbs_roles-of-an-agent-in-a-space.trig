@@ -1,5 +1,5 @@
-@prefix this: <https://w3id.org/np/RAUcwq4x0-ZRRXjl_wfeKGpiyd1jGDO49AiNnKLhCxIMQ> .
-@prefix sub: <https://w3id.org/np/RAUcwq4x0-ZRRXjl_wfeKGpiyd1jGDO49AiNnKLhCxIMQ/> .
+@prefix this: <https://w3id.org/np/RAefmU42e74b6inb_aXWCP1ZCLB4nCgPhDPo2xNx3Mqbs> .
+@prefix sub: <https://w3id.org/np/RAefmU42e74b6inb_aXWCP1ZCLB4nCgPhDPo2xNx3Mqbs/> .
 @prefix gen: <https://w3id.org/kpxl/gen/terms/> .
 @prefix np: <http://www.nanopub.org/nschema#> .
 @prefix dct: <http://purl.org/dc/terms/> .
@@ -19,9 +19,9 @@ sub:Head {
 }
 
 sub:assertion {
-  sub:agent-roles-view a gen:ResourceView, gen:TabularView;
-    dct:isVersionOf sub:agent-roles-view-kind;
-    dct:title "🤝 Role in this space";
+  sub:viewVersion a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAUcwq4x0-ZRRXjl_wfeKGpiyd1jGDO49AiNnKLhCxIMQ/agent-roles-view-kind>;
+    dct:title "🤝 Role";
     rdfs:label "Roles of an agent in a space";
     gen:appliesToInstancesOf gen:IndividualAgent;
     gen:hasStructuralPosition "3.1.agentRoles";
@@ -36,20 +36,21 @@ sub:provenance {
 sub:pubinfo {
   orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
   
-  this: dct:created "2026-09-25T13:56:07Z"^^xsd:dateTime;
+  this: dct:created "2026-10-25T06:29:31Z"^^xsd:dateTime;
     dct:creator orcid:0000-0002-1267-0234;
     dct:license <https://creativecommons.org/licenses/by/4.0/>;
-    npx:embeds sub:agent-roles-view;
-    npx:introduces sub:agent-roles-view-kind;
+    npx:embeds sub:viewVersion;
+    npx:introduces <https://w3id.org/np/RAUcwq4x0-ZRRXjl_wfeKGpiyd1jGDO49AiNnKLhCxIMQ/agent-roles-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAUcwq4x0-ZRRXjl_wfeKGpiyd1jGDO49AiNnKLhCxIMQ>;
     rdfs:label "Roles of an agent in a space";
     nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RAcm8OurwUk15WOgBM9wySo-T3a5h6as4K8YR5MBrrxUc>;
     nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
-      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
     nt:wasCreatedFromTemplate <https://w3id.org/np/RAJfQoTn4f7e8qHl0MYmn15qiHydwhr4F8Ow7agpMkWsE/template> .
   
   sub:sig npx:hasAlgorithm "RSA";
     npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
-    npx:hasSignature "Qg6pnnyfQhCr9tyT23mv/wZ33+g1wTLk7+3rRpJ2tuS5hmK131FmPTuIJdrk4hFh4QbzlS/bOmKw8FyXkSgzgng+2I/PjUn2xrYx/Du5AMwzjsGZmeRX9LzGqwIzuXsOB9R2o9kfwpARd7DO1fSMHLsB3m9fBsgPvdzc/ikO84o=";
+    npx:hasSignature "W5kxEi/ZtH2DW3KikyJungctRLeFZIavzW3mQlH86srw9/Wi8O10sF967xm/EclUWPmqSeXgJhJPN32YWtAp0qbjZx3Nu0oldlxqAuLDBx28U+rTjX8f60eqsad+jwGSF4sa5TZF+SMHQbQRx4CGRAl7Ff/i11fOyg6BZiCQvKI=";
     npx:hasSignatureTarget this:;
     npx:signedBy orcid:0000-0002-1267-0234 .
 }
