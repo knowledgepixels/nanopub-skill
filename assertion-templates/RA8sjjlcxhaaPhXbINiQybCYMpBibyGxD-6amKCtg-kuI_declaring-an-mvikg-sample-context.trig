@@ -1,0 +1,116 @@
+@prefix this: <https://w3id.org/np/RA8sjjlcxhaaPhXbINiQybCYMpBibyGxD-6amKCtg-kuI> .
+@prefix sub: <https://w3id.org/np/RA8sjjlcxhaaPhXbINiQybCYMpBibyGxD-6amKCtg-kuI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix dcmitype: <http://purl.org/dc/dcmitype/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix mvikg: <http://example.org/mvikg/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix biolink: <https://w3id.org/biolink/vocab/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  mvikg:has_biome rdfs:label "has biome" .
+  
+  dcmitype:Dataset rdfs:label "dataset" .
+  
+  dct:isPartOf rdfs:label "is part of" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  sosa:Sample rdfs:label "sample" .
+  
+  biolink:in_taxon rdfs:label "in taxon" .
+  
+  biolink:mentions rdfs:label "mentions" .
+  
+  sub:biome a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "the biome the taxon was sampled from (GOLD biome recommended)";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols4/api/select?ontology=gold&fieldList=iri,label,description&q=" .
+  
+  sub:project a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "the PMC article/dataset that mentions this sample (search by title, PMC ID or PMID)";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/europepmc/webservices/rest/search?format=json&query=" .
+  
+  sub:sample a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this sample" .
+  
+  sub:st01 rdf:object sosa:Sample;
+    rdf:predicate rdf:type;
+    rdf:subject sub:sample .
+  
+  sub:st02 rdf:object <https://w3id.org/spaces/mvikg/r/kg>;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:sample .
+  
+  sub:st03 a nt:GroupedStatement, nt:OptionalStatement;
+    nt:hasStatement sub:st04, sub:st05 .
+  
+  sub:st04 rdf:object sub:sample;
+    rdf:predicate biolink:mentions;
+    rdf:subject sub:project .
+  
+  sub:st05 rdf:object dcmitype:Dataset;
+    rdf:predicate rdf:type;
+    rdf:subject sub:project .
+  
+  sub:st06 rdf:object sub:taxon;
+    rdf:predicate biolink:in_taxon;
+    rdf:subject sub:sample .
+  
+  sub:st07 a nt:OptionalStatement;
+    rdf:object sub:biome;
+    rdf:predicate mvikg:has_biome;
+    rdf:subject sub:taxon .
+  
+  sub:taxon a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "the organism taxon the sample belongs to (NCBITaxon)";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=ncbitaxon&fieldList=iri,label,description&q=" .
+  
+  sub:templateVersion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Declaring an MVIKG sample context (PMC article/dataset, taxon, biome), independent of any one gene -- a sample can have many genes observed in it. To be referenced by gene-variant observations, phenotype observations, and antibiogram observations.";
+    dct:isVersionOf <https://w3id.org/np/RAZBvSpT-wGLuGPQHvsTxue7NL-bSGMFB-74YtSvL_XUs/template>;
+    rdfs:label "Declaring an MVIKG sample context";
+    gen:governedBy <https://w3id.org/spaces/mvikg>;
+    nt:hasNanopubLabelPattern "this sample";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07;
+    nt:hasTag "Biology";
+    nt:hasTargetNanopubType sosa:Sample .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0005-5515-1230 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-11-07T20:21:25Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0005-5515-1230;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:templateVersion;
+    npx:introduces <https://w3id.org/np/RAZBvSpT-wGLuGPQHvsTxue7NL-bSGMFB-74YtSvL_XUs/template>;
+    npx:supersedes <https://w3id.org/np/RA_NDDx6ZeyCNCNhGxlFShlKPswjIbGzvGzqwOaUCLw5A>;
+    rdfs:label "Declaring an MVIKG sample context";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA-yPZEYODCS39dWOWm7NA_ClOGFHzPi8iYhLzoZf19GI>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA4o9JqSxNO2Z47itbAcxvpVfdR97t_7usxmdR90URXQs>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAgeON_vGgJCt5E4DPMi0eOPaGwNv9tbfFTRZtBwdQL0w> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjO3oH8Lq/l1oZIUY3FlCz5DnndybGvAhBdmEJ/yq7Nv3GZEYPrEro23rCBCp0GiriOXlVbk61pA/7JFE6tqzTresINW6QQMxE9sIhCBlX4cG66JFD8ud6bMvUyzCR8LQA6zfrSbafGE06rvglJd4MDUcTwvUKqtL9UCnOaowVfnZ3sPOe9EqlmJuO3iHGxBSXMPOPEJZUzMXsFDWFuMZTnrR8gY3r5nVF5a8L/MD135ZH8qW5yGXOB28CmVYCAbw2o07QEKzyzFKN+W1gfnprYZvuKzwGexnzcdzc1S8N/M5bzhWQ40EKCEqgUE8c81OzEMm1HUlUKEJ/o5I/FKKAwIDAQAB";
+    npx:hasSignature "H5FiG2w/9EbNXkLs8uJ2ae0bnhMhSDBwzsWG1p0q3ypIjN1v5GU7PFoFtPjkwfCoFKbHw/LeYUfHRMpz2aRPRONqfwAgR4zFo9XMdGfMgmfcpXOIWjHBJ7DwT+x+e5fHqfiwSXEWy5Aq8W4cUKsRLywZ7sg4K8H0IOWO61Pbr5LeIZpwY6eCUxtutkM1Wq8z5MfsCgh2HBNxS2j1V48nlZuzNfCos55rJj6JYxsiJITDMiKHpX5e5ceB8oRFk64KyikJRPtz3CxfOMbx9O8BhICxRO50XxW1c5iUpUvU5Ch7gv/eRygGzyZhSf6dlWIKqhL1QHfErF6eOYEE/EddiA==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0005-5515-1230 .
+}
+

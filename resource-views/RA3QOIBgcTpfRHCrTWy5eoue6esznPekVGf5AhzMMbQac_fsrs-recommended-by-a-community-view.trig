@@ -1,0 +1,61 @@
+@prefix this: <https://w3id.org/np/RA3QOIBgcTpfRHCrTWy5eoue6esznPekVGf5AhzMMbQac> .
+@prefix sub: <https://w3id.org/np/RA3QOIBgcTpfRHCrTWy5eoue6esznPekVGf5AhzMMbQac/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:community-recommended-fsrs-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAJbQVdA4SYrvzIqWK7yYSglc8Zf2ZDj28l3YRJQKqNf8/community-recommended-fsrs-view-kind>;
+    dct:title "⭐ Recommended FSRs";
+    rdfs:label "FSRs recommended by a community view";
+    gen:appliesToInstancesOf <https://w3id.org/fair/fip/terms/Cross-Domain-Community>,
+      <https://w3id.org/fair/fip/terms/Domain-Specific-Community>, <https://w3id.org/fair/fip/terms/Emerging-Community>,
+      <https://w3id.org/fair/fip/terms/FAIR-Implementation-Community>, <https://w3id.org/fair/fip/terms/Mature-Community>,
+      <https://w3id.org/fair/fip/terms/Specific-Community>;
+    gen:governedBy <https://w3id.org/spaces/FAIR-Implementation-Space>;
+    gen:hasStructuralPosition "4.3.communityRecommendedFsrs";
+    gen:hasViewQuery <https://w3id.org/np/RAqirVk89XeGjjLkX1NFT9Dk9Yvca7lrsdbMAVxXtgQv8/get-community-recommended-fsrs>;
+    gen:hasViewQueryTargetField "community" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-04T09:46:35Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:community-recommended-fsrs-view;
+    npx:introduces <https://w3id.org/np/RAJbQVdA4SYrvzIqWK7yYSglc8Zf2ZDj28l3YRJQKqNf8/community-recommended-fsrs-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAfsQ-4rBwkxtP5TqJXdsx-6wGXfVeeqn5PovNjofGCmc>;
+    rdfs:label "FSRs recommended by a community view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAfa1tHtbOrV0YaCY0LyjHkpXoudrauhN8DUYPM63ZQ-k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzZAkv4Mu1YSUxQMriBnhYunqosX5wpuQ3FjUyzW8wTC51wjCmhsChyhS+mCx7Od+2MTDpdhxDWA+pH1r9AX508X2rIY/sbpMS+pd56e0qKPQ0t4folln1TgamPN9iOlY/yLc2x27AdipWIGXUdtL2iAcb+P/Y5dQS2AkHMS3lP2e5JBL5/bD/10qvTLKvdsqIKts8qjuLpxr9CFbsS2gLjMkXL5D2IsJ0cL5sgmIfS1inLVxIfXrS/OgqYNFqeNznUYCVWfo0g7DKjnjiICz3omeQeJFLYwlJ6PhUhYDQS6O318DGwUCwhnuXbBbwL9evZa2I/0Pwu5xpZdNLYJ5UwIDAQAB";
+    npx:hasSignature "aHB/DXefSQLEFTCg15EFZ6dDYr0WPXQlc7QytSwcoYuAWMyjsB+cyNWCS3+UOBwqSXuVbZEVb8z1KgEwWJZahJMRjwD1zz+T084kvrJ2Sf6GjrE7Z6AdtIWx3h6Ekg5HLZ/I23bYnZthH+SDKdx8TcGopUhdBh4phUHdxZ2bxyLyITGIYEfN6aFjWpWD5AIZNDXKIrIrS7grFEgtMLbWwYTbB/TP3MnSp0xXpwuL+yCBl33ib4CJU6/QEaJw7zgtVZZ8hsur2OeqawFOtYwkUJ3d+JYY3hgaC9bAHkEd75NWFrIjzGtaeNrF2wSqVRMdS3dqIFNU83aysg45YWtIBw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot> .
+}
+

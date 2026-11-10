@@ -1,0 +1,144 @@
+@prefix this: <https://w3id.org/np/RA44nD-IyuPJBq3rPHMcYnSUqs3DHCH-vYvrqjW0VrsrU> .
+@prefix sub: <https://w3id.org/np/RA44nD-IyuPJBq3rPHMcYnSUqs3DHCH-vYvrqjW0VrsrU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  rdf:type rdfs:label "is an" .
+  
+  rdfs:comment rdfs:label "has the free-text comment" .
+  
+  <https://w3id.org/biolink/vocab/OrganismTaxonToEntityAssociation> rdfs:label "association between organism taxon and feeding strategy" .
+  
+  <https://w3id.org/biolink/vocab/object> rdfs:label "refers to the feeding strategy - links an association to its object" .
+  
+  <https://w3id.org/biolink/vocab/predicate> rdfs:label "default to --------------" .
+  
+  <https://w3id.org/biolink/vocab/subject> rdfs:label "refers to - links an association to its subject" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasSubjectLifeCycleStage> rdfs:label "refers to the subject taxon's life cycle stage" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition> rdfs:label "is used as defined in" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonName> rdfs:label "has the name - links a taxon usage to a taxon name" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such a nanopublication assigns a feeding strategy to a carabid species, for example expressing that the subject taxon has herbivory feeding strategy. A feeding strategy is usually assigned after critical evaluation of literature and/or field lab experiments, rather than on the basis of a single observation";
+    rdfs:label "Assigning a feeding strategy to a carabid species";
+    nt:hasDefaultProvenance <https://w3id.org/np/RASORV2mMEVpS4lWh2bwUTEcV-RWjbD9RPbN7J0PIeYAU>;
+    nt:hasNanopubLabelPattern "${subjtaxonname} - ${strategypredicate} - ${feedingstrategy}";
+    nt:hasStatement sub:st00, sub:st05, sub:st10, sub:st11, sub:st12, sub:st20, sub:st40,
+      sub:st60;
+    nt:hasTag "Biodiversity";
+    nt:hasTargetNamespace <https://w3id.org/spaces/carabid-beetles>;
+    nt:hasTargetNanopubType <https://w3id.org/kpxl/biodiv/terms/BiodivNanopub> .
+  
+  sub:association a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this association" .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "short explanation related to the above statement" .
+  
+  sub:feedingstrategy a nt:GuidedChoicePlaceholder;
+    rdfs:label "start typing feeding strategy and select from list";
+    nt:hasRegex "(https://doi.org/|https://treatment.plazi.org/id/).+";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=ecocore&fieldList=iri,label,description&q=" .
+  
+  sub:st00 rdf:object <https://w3id.org/biolink/vocab/OrganismTaxonToEntityAssociation>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:association .
+  
+  sub:st05 rdf:object sub:strategypredicate;
+    rdf:predicate <https://w3id.org/biolink/vocab/predicate>;
+    rdf:subject sub:association .
+  
+  sub:st10 rdf:object sub:subjtaxon;
+    rdf:predicate <https://w3id.org/biolink/vocab/subject>;
+    rdf:subject sub:association .
+  
+  sub:st11 rdf:object sub:subjtaxonname;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonName>;
+    rdf:subject sub:subjtaxon .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:subjtaxondef;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition>;
+    rdf:subject sub:subjtaxon .
+  
+  sub:st20 a nt:OptionalStatement;
+    rdf:object sub:subjlifecyclestage;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasSubjectLifeCycleStage>;
+    rdf:subject sub:association .
+  
+  sub:st40 rdf:object sub:feedingstrategy;
+    rdf:predicate <https://w3id.org/biolink/vocab/object>;
+    rdf:subject sub:association .
+  
+  sub:st60 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:association .
+  
+  sub:strategypredicate a nt:RestrictedChoicePlaceholder;
+    nt:hasDefaultValue <https://w3id.org/np/RAwzHXJpSgCWL151wjTEttV2gxaR36xaUhLr5MHKgcB7Y/feedingstrategy>;
+    nt:possibleValuesFrom <https://w3id.org/np/RAbFaY5e41J9AR2gNms51yvQMJFbcfNUS8d-CjGZwqxZk> .
+  
+  sub:subjlifecyclestage a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the life cycle stage of the subject taxon";
+    nt:possibleValuesFrom ns1:RAVZS2MV-siFEqsgFTtgSoKA5qJkp7r1nM_n-MqPkvgdE .
+  
+  sub:subjtaxon a nt:LocalResource;
+    rdfs:label "the subject taxon concept" .
+  
+  sub:subjtaxondef a nt:ExternalUriPlaceholder;
+    rdfs:label "publication DOI (https://doi.org/...) or taxon treatment ID (https://treatment.plazi.org/id/...)";
+    nt:hasRegex "(https://doi.org/|https://treatment.plazi.org/id/).+" .
+  
+  sub:subjtaxonname a nt:GuidedChoicePlaceholder;
+    rdfs:label "start typing and select from list";
+    nt:possibleValuesFromApi "https://api.gbif.org/v1/species/suggest?datasetKey=d7dddbf4-2cf0-4f39-9b2a-bb099caae36c&q=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-4587-3476 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-4587-3476 foaf:name "roberto pizzolotto" .
+  
+  this: a <https://w3id.org/kpxl/biodiv/terms/BiodivNanopub>;
+    dct:created "2026-11-01T19:14:09.718Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-4587-3476;
+    dct:license <https://creativecommons.org/licenses/by-sa/4.0/>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Assigning a feeding strategy to a carabid species";
+    prov:wasDerivedFrom <https://w3id.org/np/RAD5k0Zy7t4DAOKYq769KHtmvivhvVbneVq9VgYyGAfyY>;
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAdyqI6k07V5nAS82C6hvIDtNWk179EIV4DV-sLbOFKg4,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUDeKXhXlFhZOfNX+50fX31+K+KNwHGyuh65vqoj49E+Sc920NGPGIEmoyGDFtPONltIEFzp80aEY5mn+V+r27uUpDORorw6OlGGepR0dnWNwEJ8jyFVu7z7d+eIqC5t9V+tQbU4c1H2b8IEzlbpTT0n7DY6gjP0jDjwTBC94mdQIDAQAB";
+    npx:hasSignature "i5AtzeLxKYnDPgmPibycrsFJejJODwWEsUncBS+ffkUwC/a93yhFM5CoOhSqOG+c2e6q/E/r1wAJ/WVUAZZQW0P3D17dyFZLEJqDuzRBzIqtnoH8JbMcS5o38FJzvShJ48K2tl9PfmVHihKb7kujpBh+K36QSeATXpNkM1QeJw0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-4587-3476 .
+}
+

@@ -1,0 +1,89 @@
+@prefix this: <https://w3id.org/np/RAAxObckUbDhE1WZgtvVpDfYlSU3Nagb2nDVzY-C7KZfs> .
+@prefix sub: <https://w3id.org/np/RAAxObckUbDhE1WZgtvVpDfYlSU3Nagb2nDVzY-C7KZfs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-presentations-by-topic a grlc:grlc-query;
+    dct:description "Returns an event's talks grouped under the topics they are about, alphabetically by topic and chronologically within one, as the programme for a reader who wants a subject rather than a time. The event comes in as the queried resource, so the same query serves any event whose talks carry topics. A talk appears once per topic it has, which is what makes the overlaps visible: the groups are a view of the same seventeen papers from as many angles as they have subjects.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the presentations of an event grouped by topic";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/3952cad1a6d2561f045d33e5e79c03e7264b0a492b8becf6c62656c596cf398c>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix wd: <http://www.wikidata.org/entity/>
+prefix schema: <https://schema.org/>
+prefix schemaold: <http://schema.org/>
+
+select ?presentation ?presentation_label ?time ?np (\"^\" as ?np_label) ?topic_group where {
+  values ?_event_multi_iri {}
+  graph npa:graph {
+    ?tnp npa:hasValidSignatureForPublicKeyHash ?tpk .
+    filter not exists { ?tx npx:invalidates ?tnp ; npa:hasValidSignatureForPublicKeyHash ?tpk . }
+    ?tnp np:hasAssertion ?ta .
+    ?tnp np:hasPublicationInfo ?tpi .
+  }
+  graph ?ta { ?presentation dct:subject ?topic . }
+  optional { graph ?tpi { ?topic rdfs:label ?tl . } }
+  bind(coalesce(?tl, str(?topic)) as ?topic_label)
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np np:hasAssertion ?a .
+    ?np npx:introduces ?presentation .
+  }
+  graph ?a {
+    ?presentation a wd:Q604733 ;
+      dct:isPartOf ?_event_multi_iri ;
+      rdfs:label ?presentation_label .
+  }
+  optional { graph ?a { ?presentation schema:startDate ?sdA . } }
+  optional { graph ?a { ?presentation schemaold:startDate ?sdB . } }
+  bind(coalesce(?sdA, ?sdB) as ?startDate)
+  bind(substr(strafter(str(?startDate), \"T\"), 1, 5) as ?time)
+  bind(?topic_label as ?topic_group)
+} order by lcase(?topic_label) ?startDate""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-25T05:50:15Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-presentations-by-topic;
+    rdfs:label "Get the presentations of an event grouped by topic";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "VnJ3ZfPyhexXwlyeXlKPkBdSxaV12dIZsCVJhRzZ+IrYdia0g/IXQwbGuwU4PDbSsrXbYFvvk7NwsXjyK5dXSpqAsobryZfsJJqIum+jpK4feLmv58H0xWZvCj30YRhUf9zkVPBFtS2sAYOxwlkRDzlK6W/TgE72N5pKe3vBmu4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

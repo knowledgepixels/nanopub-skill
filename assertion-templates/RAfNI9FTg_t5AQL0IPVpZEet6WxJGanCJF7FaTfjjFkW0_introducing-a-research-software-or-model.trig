@@ -1,0 +1,123 @@
+@prefix this: <https://w3id.org/np/RAfNI9FTg_t5AQL0IPVpZEet6WxJGanCJF7FaTfjjFkW0> .
+@prefix sub: <https://w3id.org/np/RAfNI9FTg_t5AQL0IPVpZEet6WxJGanCJF7FaTfjjFkW0/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.org/cerif/frapo/isOutputOf> rdfs:label "was developed in the context of" .
+  
+  dct:created rdfs:label "was first released / created in" .
+  
+  dct:creator rdfs:label "was originally created by" .
+  
+  dct:description rdfs:label "has the short description" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the name" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Template for defining a Research software. Keep this record short. Fix mistakes by updating it; the identifier stays the same. Everything that changes over time goes in the description record.";
+    rdfs:label "Introducing a Research Software or Model";
+    nt:hasNanopubLabelPattern "Software: ${title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06;
+    nt:hasTag "Research Software";
+    nt:hasTargetNanopubType <http://purl.org/dc/dcmitype/Software> .
+  
+  sub:created a nt:LiteralPlaceholder;
+    rdfs:label "year the software was created";
+    nt:hasDatatype xsd:gYear;
+    nt:hasRegex "^[0-9]{4}$" .
+  
+  sub:creator a nt:UriPlaceholder;
+    rdfs:label "ORCID, ROR, or other URI of the developer" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "short software description" .
+  
+  sub:isoutputof a nt:UriPlaceholder;
+    rdfs:label "CORDIS, grant DOI, RAiD, or the funder’s page" .
+  
+  sub:software a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this software" .
+  
+  sub:softwaretype a nt:RestrictedChoicePlaceholder;
+    rdfs:label "type of the software";
+    nt:possibleValuesFrom <https://w3id.org/np/RASi03ZfBGMlEDOIEZpao4YCFFxisVi5yJwA4N5FHI0Eo> .
+  
+  sub:st01 a rdf:Statement, nt:RepeatableStatement;
+    rdf:object sub:softwaretype;
+    rdf:predicate rdf:type;
+    rdf:subject sub:software .
+  
+  sub:st02 a rdf:Statement;
+    rdf:object sub:title;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:software .
+  
+  sub:st03 a rdf:Statement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:software .
+  
+  sub:st04 a rdf:Statement, nt:RepeatableStatement;
+    rdf:object sub:creator;
+    rdf:predicate dct:creator;
+    rdf:subject sub:software .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:created;
+    rdf:predicate dct:created;
+    rdf:subject sub:software .
+  
+  sub:st06 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:isoutputof;
+    rdf:predicate <http://purl.org/cerif/frapo/isOutputOf>;
+    rdf:subject sub:software .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "the name of the software" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1297-3104 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1297-3104 foaf:name "Anastasios Papadiamantis" .
+  
+  this: dct:created "2026-10-29T13:35:12.974Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1297-3104;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAlxIIvtO3Ep2hUsqeTfy8OJWYLdyly9a3ojTGQga-BB4>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Introducing a Research Software or Model";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDLrgIs0zCX11YIad1vf4iKrxmu/l3phA4ES5BixalXnpd5LD/znJ3GlB95mZ/KOrhGhBZyj39QaZVpQQuPTsqmigo4blW6FtTc0iWkFSNEj6dyWeavF9nJ0cSr7k6KEx3i8ue+O53k2lmF/UzG/w0cOSV71T3qVBFPupy5WMCTwwIDAQAB";
+    npx:hasSignature "xYyq00KV4dgzsP4lIbPEUGkKDbJYBzdG1Dun6l5VWYlc8nQre5V48P/3BGxruftVH1Jz7sJVro2ATLUBcM/t2M57MqIFoBsRTOkQWUMUnneLFZHz2J8gvMav/p7u1HVUT8xhQq0arLl7IVNcfxH+zQ7O1KMIH0RmCjBjxBrDLT8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1297-3104 .
+}
+

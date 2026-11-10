@@ -1,0 +1,124 @@
+@prefix this: <https://w3id.org/np/RA3K01Yf7BiIdlAxfAHYBPGNZQGs1k4vtf05q1Ij8aIUQ> .
+@prefix sub: <https://w3id.org/np/RA3K01Yf7BiIdlAxfAHYBPGNZQGs1k4vtf05q1Ij8aIUQ/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-kg-pending-samples a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Lists mvikg/r/kg sample records whose approval status is 'pending' (latest admin npx:approvesOf/disapprovesOf verdict from a current mvikg admin decides the status; no verdict means pending). One row per record: its label, who created it and when.";
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Get mvikg/r/kg pending samples";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix npa: <http://purl.org/nanopub/admin/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select distinct ?Name ?ModifiedBy ?ModifiedBy_label ?Modified_noheader ?approve_target ?reject_target ?np ?np_label where {
+  {
+    select distinct ?dnp ?label ?creator ?created where {
+      {
+        select ?stableThing ?dnp where {
+          graph npa:graph {
+            ?dnp npx:introduces ?stableThing ; dct:created ?ddateRaw ; npa:hasValidSignatureForPublicKey ?pubkey .
+            filter not exists { ?inv npx:invalidates ?dnp ; npa:hasValidSignatureForPublicKey ?pubkey . }
+          }
+          filter not exists {
+            graph npa:graph {
+              ?dnp2 npx:introduces ?stableThing ; dct:created ?ddate2Raw ; npa:hasValidSignatureForPublicKey ?pubkey2 .
+              filter not exists { ?inv2 npx:invalidates ?dnp2 ; npa:hasValidSignatureForPublicKey ?pubkey2 . }
+            }
+            filter(?ddate2Raw > ?ddateRaw)
+          }
+        }
+      }
+      bind(iri(concat(str(?dnp), '/assertion')) as ?da)
+      graph ?da { ?stableThing a <http://www.w3.org/ns/sosa/Sample> ; dct:isPartOf <https://w3id.org/spaces/mvikg/r/kg> . }
+      bind(iri(concat(str(?dnp), '/pubinfo')) as ?pi)
+      graph ?pi { ?dnp dct:creator ?creator ; dct:created ?createdRaw . }
+      bind(replace(str(?createdRaw), '[.]000Z$', 'Z') as ?created)
+      optional { graph ?da { ?stableThing rdfs:label ?lblEntity } }
+      optional { graph ?pi { ?dnp rdfs:label ?lblPub } }
+      bind(coalesce(?lblEntity, ?lblPub, str(?stableThing)) as ?label)
+    }
+  }
+  optional {
+    graph ?vda { ?admin ?verdictPred ?dnp . filter(?verdictPred in (npx:approvesOf, npx:disapprovesOf)) }
+    filter(exists {
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+        graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?g . }
+        graph ?g { ?ri a gen:RoleInstantiation ; npa:forSpace <https://w3id.org/spaces/mvikg> ; npa:forAgent ?admin ; npa:hasRoleType gen:AdminRole . }
+      }
+    })
+    bind(iri(replace(str(?vda), '/assertion$', '')) as ?vnp)
+    graph ?vpi { ?vnp dct:created ?vcreatedRaw . }
+    bind(xsd:dateTime(?vcreatedRaw) as ?vcreated)
+    filter not exists {
+      graph ?vda2 { ?admin2 ?verdictPred2 ?dnp . filter(?verdictPred2 in (npx:approvesOf, npx:disapprovesOf)) }
+      filter(exists {
+        service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+          graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?g2 . }
+          graph ?g2 { ?ri2 a gen:RoleInstantiation ; npa:forSpace <https://w3id.org/spaces/mvikg> ; npa:forAgent ?admin2 ; npa:hasRoleType gen:AdminRole . }
+        }
+      })
+      bind(iri(replace(str(?vda2), '/assertion$', '')) as ?vnp2)
+      graph ?vpi2 { ?vnp2 dct:created ?vcreated2Raw . }
+      filter(xsd:dateTime(?vcreated2Raw) > ?vcreated)
+    }
+    optional { graph ?vda { ?vda rdfs:comment ?reason } }
+  }
+  bind(if(bound(?verdictPred), if(?verdictPred = npx:approvesOf, 'approved', 'rejected'), 'pending') as ?finalStatus)
+  filter(?finalStatus = 'pending')
+  bind(str(?dnp) as ?np) bind('^' as ?np_label)
+  bind(?label as ?Name)
+  optional { ?creator foaf:name ?cname }
+  bind(?creator as ?ModifiedBy)
+  bind(coalesce(?cname, replace(str(?creator), '^.*/', '')) as ?ModifiedBy_label)
+  bind(?created as ?Modified_noheader)
+  bind(npx:approvesOf as ?approve_target)
+  bind(npx:disapprovesOf as ?reject_target)
+  }""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0005-5515-1230 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-11-09T18:10:32Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0005-5515-1230;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-kg-pending-samples;
+    npx:supersedes <https://w3id.org/np/RA8StXC5NjyAsp129MQ8IlOqpmvwwlU4_OGUbQ8Y22f08>,
+      <https://w3id.org/np/RAq99ruXpxZZOAmRNMUHFNgRS_OxTHwcbWwc9QCU6vqas>, <https://w3id.org/np/RAtegOZVaZHKVU_DlZi2zqZRSbX4m3AcZfRJpmsdHuUAc>;
+    rdfs:label "Get mvikg/r/kg pending samples";
+    skos:changeNote "ModifiedBy now carries the creator's ORCID IRI (with ModifiedBy_label as the display-name companion), so it renders as a link back to the creator instead of plain text.",
+      "Replaced the supersedes-chain exclusion filter with the project's standard resolution pattern (npa:graph + npx:introduces + npa:hasValidSignatureForPublicKey, excluding npx:invalidates), matching how the real builder picks a resource's current defining nanopub. This requires the content nanopub to re-introduce the SAME stable entity IRI on every version (now fixed for the two phenotype records that had drifted to a fresh IRI per publish). Label now checks both the entity's own label and the nanopub-level label, preferring whichever is present (samples only have the latter, phenotypes only the former).";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjO3oH8Lq/l1oZIUY3FlCz5DnndybGvAhBdmEJ/yq7Nv3GZEYPrEro23rCBCp0GiriOXlVbk61pA/7JFE6tqzTresINW6QQMxE9sIhCBlX4cG66JFD8ud6bMvUyzCR8LQA6zfrSbafGE06rvglJd4MDUcTwvUKqtL9UCnOaowVfnZ3sPOe9EqlmJuO3iHGxBSXMPOPEJZUzMXsFDWFuMZTnrR8gY3r5nVF5a8L/MD135ZH8qW5yGXOB28CmVYCAbw2o07QEKzyzFKN+W1gfnprYZvuKzwGexnzcdzc1S8N/M5bzhWQ40EKCEqgUE8c81OzEMm1HUlUKEJ/o5I/FKKAwIDAQAB";
+    npx:hasSignature "CUbbFwS5uX4j4P4oRGxkRtnyvabZHZG8c0JLjhDUVtyBOPLvuJ99asY7d6m0ztbEjswfM598S7gC9mOHEK86WSwoqYScFRmwNLFxFQgKFNv9WsUuOhB7UOLWs30Iv+wuY52pZ+73BSSqRw1xI33doEvVqH9JmQXWclBvloDIzqEr8YBzDkJzGzwjEy74DzcL19k7xXkGhDPkia7sifiLVsfFC7qyTXyOS38QrdFw3DIy4IRNZbLFDNqWnLYET7+oXSp3AJ2R/PxLkuhFwkPRk36Qk3B1vexe9PzT7cBawT+CHoSITix1nGW221jEMx0sILBoCWDoZV/ArNA05t3Wqw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0005-5515-1230 .
+}
+

@@ -1,0 +1,227 @@
+@prefix this: <https://w3id.org/np/RATAYaETnnSW644kC79s-Cr_V8TxitN3qKdxtt_NjHEQA> .
+@prefix sub: <https://w3id.org/np/RATAYaETnnSW644kC79s-Cr_V8TxitN3qKdxtt_NjHEQA/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-delphi-network a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns the Project Delphi record network as one row per edge, for a network view (gen:NetworkView): the claims published on the network, the works they were derived from, their overall assessments and the models that made them. Of all validly signed, non-invalidated nanopublications introducing a given claim or assessment, only the newest by timestamp is read (ties broken by nanopublication URI), so a record published more than once appears once, with its current content. No publisher restriction is applied: every claim is drawn, whoever signed it. Four kinds of node, each its own colour: claims (delphi:Claim); their sources, that is the papers cited with delphi:derivedFromPaper together with the works the claim nanopublication's provenance derives its assertion from (prov:wasDerivedFrom; nanopublication-internal resources such as quotes are left out); the overall assessments of each claim (delphi:LLMClaimAssessment linked with delphi:hasAssessment, asserted in either nanopublication); and the models those assessments were made by, named with delphi:assessedBy or through the software agent the assessment is attributed to (prov:wasAttributedTo) and the model that agent uses (delphi:usesModel). An assessment counts as overall when its delphi:assessmentType, read from the assessment's assertion or its nanopublication's pubinfo, is a rubric and version alone (e.g. dataset-resolvability/0.2.0) or ends in '/overall'; the per-dimension assessments are left out, since they repeat the same shape for every claim and bury the structure the diagram is for. A claim assessed by several agents gets one assessment node per agent. Captions are cut to 55 characters, with the full text on hover: a claim with its label and description, a source with its title as stated in the claim's provenance (the lexicographically first where several differ) and its IRI, an assessment with its verdict and its score (delphi:hasScore, else delphi:hasProbability or delphi:weightOfEvidence) on the 0-to-1 scale, and a model with its label. A claim with neither a source nor an overall assessment is part of no edge and so is not drawn. Clicking an edge opens the nanopublication asserting it: the claim's for the source link, the assessment's for the assessment and model links. Hosted on the full repository, because the claim-to-assessment link may be asserted on either side.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the Project Delphi network of claims, sources and assessments";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix dc: <http://purl.org/dc/elements/1.1/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix delphi: <https://w3id.org/delphi/ontology/>
+
+select distinct ?source ?source_label ?source_desc ?source_type ?source_type_label
+       ?edge_type ?edge_label
+       ?target ?target_label ?target_desc ?target_type ?target_type_label
+       ?np (\"^\" as ?np_label)
+where {
+  {
+    # A claim and the work it was derived from: a paper cited with delphi:derivedFromPaper,
+    # or the source its nanopublication's provenance derives the assertion from.
+    graph npa:graph {
+      ?cnp npx:hasNanopubType delphi:Claim ;
+        npa:hasValidSignatureForPublicKeyHash ?pubkey ;
+        dct:created ?date ;
+        npx:introduces ?claim ;
+        np:hasAssertion ?ca ;
+        np:hasProvenance ?cp .
+      filter not exists { ?inv npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    }
+    filter not exists {
+      graph npa:graph {
+        ?cnpX npx:hasNanopubType delphi:Claim ;
+          npa:hasValidSignatureForPublicKeyHash ?pubkeyX ;
+          dct:created ?dateX ;
+          npx:introduces ?claim .
+        filter not exists { ?invX npx:invalidates ?cnpX ; npa:hasValidSignatureForPublicKeyHash ?pubkeyX . }
+      }
+      filter(?dateX > ?date || (?dateX = ?date && str(?cnpX) > str(?cnp)))
+    }
+    { graph ?ca { ?claim delphi:derivedFromPaper ?paper } }
+    union
+    { graph ?cp { ?ca prov:wasDerivedFrom ?paper } }
+    filter(isIri(?paper) && !strstarts(str(?paper), \"https://w3id.org/np/\"))
+    optional { graph ?ca { ?claim rdfs:label ?claimLabel } }
+    optional { graph ?ca { ?claim dct:description ?claimDescT } }
+    optional { graph ?ca { ?claim dc:description ?claimDescE } }
+    optional {
+      { graph ?cp { ?paper dct:title ?paperTitle } } union { graph ?cp { ?paper dc:title ?paperTitle } }
+      filter not exists {
+        { graph ?cp { ?paper dct:title ?titleX } } union { graph ?cp { ?paper dc:title ?titleX } }
+        filter(str(?titleX) < str(?paperTitle))
+      }
+    }
+    bind(coalesce(?claimDescT, ?claimDescE) as ?claimDesc)
+    bind(coalesce(?claimLabel, replace(str(?claim), \"^.*/\", \"\")) as ?claimName)
+    bind(replace(replace(str(?paper), \"^https?://(dx[.])?doi[.]org/\", \"doi:\"), \"^https?://(www[.])?\", \"\") as ?paperIri)
+    bind(coalesce(?paperTitle, ?paperIri) as ?paperName)
+    bind(?claim as ?source)
+    bind(if(strlen(?claimName) > 55, concat(substr(?claimName, 1, 54), \"…\"), ?claimName) as ?source_label)
+    bind(coalesce(concat(?claimName, \" — \", ?claimDesc), ?claimName) as ?source_desc)
+    bind(delphi:Claim as ?source_type)
+    bind(\"claim\" as ?source_type_label)
+    bind(prov:wasDerivedFrom as ?edge_type)
+    bind(\"derived from\" as ?edge_label)
+    bind(?paper as ?target)
+    bind(if(strlen(?paperName) > 55, concat(substr(?paperName, 1, 54), \"…\"), ?paperName) as ?target_label)
+    bind(coalesce(concat(?paperTitle, \" — \", ?paperIri), ?paperIri) as ?target_desc)
+    bind(delphi:Paper as ?target_type)
+    bind(\"source\" as ?target_type_label)
+    bind(?cnp as ?np)
+  } union {
+    # A claim and each of its overall assessments, captioned with the verdict and the score.
+    # An assessment counts as overall when its type is a rubric and version alone
+    # (e.g. dataset-resolvability/0.2.0) or ends in '/overall'; per-dimension ones are left out.
+    graph npa:graph {
+      ?anp npx:introduces ?as ;
+        npa:hasValidSignatureForPublicKeyHash ?apubkey ;
+        dct:created ?adate ;
+        np:hasAssertion ?aa ;
+        np:hasPublicationInfo ?api .
+      filter not exists { ?ainv npx:invalidates ?anp ; npa:hasValidSignatureForPublicKeyHash ?apubkey . }
+    }
+    graph ?aa { ?as a delphi:LLMClaimAssessment }
+    filter not exists {
+      graph npa:graph {
+        ?anpX npx:introduces ?as ;
+          npa:hasValidSignatureForPublicKeyHash ?apubkeyX ;
+          dct:created ?adateX .
+        filter not exists { ?ainvX npx:invalidates ?anpX ; npa:hasValidSignatureForPublicKeyHash ?apubkeyX . }
+      }
+      filter(?adateX > ?adate || (?adateX = ?adate && str(?anpX) > str(?anp)))
+    }
+    { graph ?aa { ?as delphi:assessmentType ?atype } } union { graph ?api { ?anp delphi:assessmentType ?atype } }
+    filter(strends(str(?atype), \"/overall\") || regex(str(?atype), \"^[^/]+/[^/]+$\"))
+    graph ?lg { ?claim delphi:hasAssessment ?as }
+    optional { graph ?aa { ?as rdfs:label ?asLabel } }
+    optional { graph ?aa { ?as dct:description ?asComment } }
+    optional { graph ?aa { ?as delphi:hasVerdict ?verdict } }
+    optional { graph ?aa { ?as delphi:hasScore ?p0 } }
+    optional { graph ?aa { ?as delphi:hasProbability ?p1 } }
+    optional { graph ?aa { ?as delphi:weightOfEvidence ?p2 } }
+    bind(xsd:integer(round(coalesce(?p0, ?p1, ?p2) * 100)) as ?pct)
+    bind(if(?pct >= 100, \"1.00\", concat(\"0.\", if(?pct < 10, concat(\"0\", str(?pct)), str(?pct)))) as ?scoreStr)
+    bind(coalesce(concat(?verdict, \" (\", ?scoreStr, \")\"), ?verdict, ?scoreStr, \"overall assessment\") as ?asCaption)
+    bind(if(strlen(coalesce(?asComment, \"\")) > 300, concat(substr(?asComment, 1, 299), \"…\"), ?asComment) as ?asNote)
+    bind(coalesce(?asLabel, ?asCaption) as ?asName)
+    bind(coalesce(concat(?asName, \" — \", ?asNote), ?asName) as ?asHover)
+    optional {
+      graph ?clg { ?claim a delphi:Claim ; rdfs:label ?claimLabel }
+      filter not exists { graph ?clgX { ?claim a delphi:Claim ; rdfs:label ?claimLabelX } filter(str(?claimLabelX) < str(?claimLabel)) }
+    }
+    bind(coalesce(?claimLabel, replace(str(?claim), \"^.*/\", \"\")) as ?claimName)
+    bind(?claim as ?source)
+    bind(if(strlen(?claimName) > 55, concat(substr(?claimName, 1, 54), \"…\"), ?claimName) as ?source_label)
+    bind(?claimName as ?source_desc)
+    bind(delphi:Claim as ?source_type)
+    bind(\"claim\" as ?source_type_label)
+    bind(delphi:hasAssessment as ?edge_type)
+    bind(\"has assessment\" as ?edge_label)
+    bind(?as as ?target)
+    bind(?asCaption as ?target_label)
+    bind(?asHover as ?target_desc)
+    bind(delphi:LLMClaimAssessment as ?target_type)
+    bind(\"overall assessment\" as ?target_type_label)
+    bind(?anp as ?np)
+  } union {
+    # The model behind each overall assessment: named with delphi:assessedBy, or through the
+    # software agent the assessment is attributed to and the model that agent uses.
+    graph npa:graph {
+      ?anp npx:introduces ?as ;
+        npa:hasValidSignatureForPublicKeyHash ?apubkey ;
+        dct:created ?adate ;
+        np:hasAssertion ?aa ;
+        np:hasPublicationInfo ?api .
+      filter not exists { ?ainv npx:invalidates ?anp ; npa:hasValidSignatureForPublicKeyHash ?apubkey . }
+    }
+    graph ?aa { ?as a delphi:LLMClaimAssessment }
+    filter not exists {
+      graph npa:graph {
+        ?anpX npx:introduces ?as ;
+          npa:hasValidSignatureForPublicKeyHash ?apubkeyX ;
+          dct:created ?adateX .
+        filter not exists { ?ainvX npx:invalidates ?anpX ; npa:hasValidSignatureForPublicKeyHash ?apubkeyX . }
+      }
+      filter(?adateX > ?adate || (?adateX = ?adate && str(?anpX) > str(?anp)))
+    }
+    { graph ?aa { ?as delphi:assessmentType ?atype } } union { graph ?api { ?anp delphi:assessmentType ?atype } }
+    filter(strends(str(?atype), \"/overall\") || regex(str(?atype), \"^[^/]+/[^/]+$\"))
+    { graph ?aa { ?as delphi:assessedBy ?model } }
+    union
+    { graph ?aa { ?as prov:wasAttributedTo ?agent . ?agent delphi:usesModel ?model } }
+    optional { graph ?aa { ?as delphi:hasVerdict ?verdict } }
+    optional { graph ?aa { ?as delphi:hasScore ?p0 } }
+    optional { graph ?aa { ?as delphi:hasProbability ?p1 } }
+    optional { graph ?aa { ?as delphi:weightOfEvidence ?p2 } }
+    optional { graph ?aa { ?as rdfs:label ?asLabel } }
+    optional { graph ?aa { ?model rdfs:label ?modelLabel } }
+    bind(xsd:integer(round(coalesce(?p0, ?p1, ?p2) * 100)) as ?pct)
+    bind(if(?pct >= 100, \"1.00\", concat(\"0.\", if(?pct < 10, concat(\"0\", str(?pct)), str(?pct)))) as ?scoreStr)
+    bind(coalesce(concat(?verdict, \" (\", ?scoreStr, \")\"), ?verdict, ?scoreStr, \"overall assessment\") as ?asCaption)
+    bind(coalesce(?modelLabel, replace(str(?model), \"^.*/\", \"\")) as ?modelName)
+    bind(?as as ?source)
+    bind(?asCaption as ?source_label)
+    bind(coalesce(?asLabel, ?asCaption) as ?source_desc)
+    bind(delphi:LLMClaimAssessment as ?source_type)
+    bind(\"overall assessment\" as ?source_type_label)
+    bind(delphi:assessedBy as ?edge_type)
+    bind(\"assessed by\" as ?edge_label)
+    bind(?model as ?target)
+    bind(if(strlen(?modelName) > 55, concat(substr(?modelName, 1, 54), \"…\"), ?modelName) as ?target_label)
+    bind(?modelName as ?target_desc)
+    bind(delphi:Model as ?target_type)
+    bind(\"model\" as ?target_type_label)
+    bind(?anp as ?np)
+  }
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-11-06T17:10:35.921Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-delphi-network;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAS2qiTOgW2Wj5VStsIdQ4suCIwS9b5oRLhrckUfPJih8>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCaQXE2B2hJ6QdWxaWerU4F/XOtCQdj2OkdrIYd1kpMY9hIUh8boxaO3uOBeqvvqKLf5HjpRF4DT1eghOSsa2Dhd5HRTM/XIamvwWkHpN4oB3Ml19pAAzjTqczYmFLfgG67mGL5+vSA8VEdHtKQCrvP4SpTibMBP1qaxt3k1tqD6wIDAQAB";
+    npx:hasSignature "TozD+UVdNsZLj4saIavXyDYTq3HrM5exd+tQXd4seMAtwDrwRQlfhviuThLHiM34sPxsRMrtzAqzJ5QfUtY3rQmqzrk7BWequQ2p87/PliX9FQwnBmlWnZJ9IHBOR/CSnkhLSlD0gmEOwq9UqWu58IbRhRTQA+uJWkHYY+tkumI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

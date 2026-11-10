@@ -1,0 +1,133 @@
+@prefix this: <https://w3id.org/np/RAYm1myemYanJ4R7zk0Sj7ay6rYJhCzDRUSpW5HKOKong> .
+@prefix sub: <https://w3id.org/np/RAYm1myemYanJ4R7zk0Sj7ay6rYJhCzDRUSpW5HKOKong/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-claim-assessments a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Lists the assessments of a claim, one row per assessment, for the page of that claim (its IRI passed as the 'claim' parameter). The assessments are the ones the claim is linked to by delphi:hasAssessment, wherever that triple is asserted -- in the claim's nanopublication or in the assessment's -- which is why this query runs on the full repository rather than on a type repository. An assessment is read from the nanopublication that introduces it or, for a per-dimension score, from the one that introduces the overall assessment it is part of (dct:isPartOf), since Project Delphi publishes the dimension scores inside the overall assessment's nanopublication; of all validly signed, non-invalidated nanopublications introducing that resource, only the newest is read (ties broken by nanopublication URI), so a re-assessed claim appears once, with its current scores. The criterion is the rubric concept the assessment names with dct:subject, a delphi:Concept, shown by its label; an assessment whose delphi:assessmentType (on the assessment in the assertion graph, or on the nanopublication in pubinfo) is a rubric and version alone, such as dataset-resolvability/0.2.0, or ends in '/overall' is the overall assessment, named 'Overall'; a criterion with no published concept falls back to the last segment of its assessment type. The score is the assessment's delphi:hasScore, else its delphi:hasProbability or delphi:weightOfEvidence, on the rubric's scale from 0 to 1 rounded to two decimals. The model is the one the assessment names with delphi:assessedBy, or the one the software agent it is attributed to (prov:wasAttributedTo) uses (delphi:usesModel), labelled from the assessment's nanopublication. A claim assessed by several models has one block of rows per model. Ordered by model, then with the overall assessment first, then alphabetically by criterion.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the assessments of a claim";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix delphi: <https://w3id.org/delphi/ontology/>
+
+select ?criterion ?score ?verdict ?model ?model_label ?np (\"^\" as ?np_label) where {
+  {
+    select ?as ?np
+           (min(?criterionV) as ?criterion)
+           (min(?ordV) as ?ord)
+           (min(?scoreV) as ?score)
+           (min(?verdictV) as ?verdict)
+           (min(?modelStrV) as ?modelStr)
+           (min(?modelLabelV) as ?model_label)
+    where {
+      values ?_claim_multi_iri {}
+      graph ?gl { ?_claim_multi_iri delphi:hasAssessment ?as }
+      # An assessment is defined by the nanopublication that introduces it, or, for a
+      # per-dimension score, by the one that introduces the overall assessment it is part of.
+      {
+        graph npa:graph { ?np npx:introduces ?as }
+        bind(?as as ?root)
+      } union {
+        graph ?gp { ?as dct:isPartOf ?root }
+        graph npa:graph { ?np npx:introduces ?root }
+      }
+      graph npa:graph {
+        ?np np:hasAssertion ?aa ;
+          np:hasPublicationInfo ?api ;
+          dct:created ?date ;
+          npa:hasValidSignatureForPublicKeyHash ?pubkey .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+      }
+      graph ?aa { ?as a delphi:LLMClaimAssessment }
+      filter not exists {
+        graph npa:graph {
+          ?np2 npx:introduces ?root ;
+            np:hasAssertion ?a2 ;
+            dct:created ?date2 ;
+            npa:hasValidSignatureForPublicKeyHash ?pubkey2 .
+          filter not exists { ?inv2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+        }
+        graph ?a2 { ?root a delphi:LLMClaimAssessment }
+        filter(?date2 > ?date || (?date2 = ?date && str(?np2) > str(?np)))
+      }
+      { graph ?aa { ?as delphi:assessmentType ?atype } }
+      union
+      { graph ?api { ?np delphi:assessmentType ?atype } }
+      bind(strends(str(?atype), \"/overall\") || regex(str(?atype), \"^[^/]+/[^/]+$\") as ?isOverall)
+      optional {
+        graph ?aa { ?as dct:subject ?rubric }
+        graph ?cg { ?rubric a delphi:Concept ; rdfs:label ?rubricLabel }
+      }
+      bind(if(?isOverall, \"Overall\",
+           coalesce(?rubricLabel, replace(str(?atype), \"^.*/\", \"\"))) as ?criterionV)
+      bind(if(?isOverall, \"0\", concat(\"1\", ?criterionV)) as ?ordV)
+      optional { graph ?aa { ?as delphi:hasScore ?p0 } }
+      optional { graph ?aa { ?as delphi:hasProbability ?p1 } }
+      optional { graph ?aa { ?as delphi:weightOfEvidence ?p2 } }
+      bind(coalesce(?p0, ?p1, ?p2) as ?sc)
+      bind(xsd:integer(round(?sc * 100)) as ?pct)
+      bind(if(?pct >= 100, \"1.00\",
+           concat(\"0.\", if(?pct < 10, concat(\"0\", str(?pct)), str(?pct)))) as ?scoreV)
+      optional { graph ?aa { ?as delphi:hasVerdict ?verdictV } }
+      optional {
+        { graph ?aa { ?as delphi:assessedBy ?modelV } }
+        union
+        { graph ?aa { ?as prov:wasAttributedTo ?agent . ?agent delphi:usesModel ?modelV } }
+        bind(str(?modelV) as ?modelStrV)
+        optional { graph ?aa { ?modelV rdfs:label ?modelLabelV } }
+      }
+    } group by ?as ?np
+  }
+  bind(iri(?modelStr) as ?model)
+}
+order by ?model_label ?ord ?criterion""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-11-06T17:49:06.108Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-claim-assessments;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAIeuY8SxuEhwwHaXrCBRpdet36U0_7QGqSwChYxly6fs>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCaQXE2B2hJ6QdWxaWerU4F/XOtCQdj2OkdrIYd1kpMY9hIUh8boxaO3uOBeqvvqKLf5HjpRF4DT1eghOSsa2Dhd5HRTM/XIamvwWkHpN4oB3Ml19pAAzjTqczYmFLfgG67mGL5+vSA8VEdHtKQCrvP4SpTibMBP1qaxt3k1tqD6wIDAQAB";
+    npx:hasSignature "R6dyenI1OEG/b/PP34b4Btw4EnPaXyA6RgXoi2NcAPh0TgfiiUxj6Lfox8WJ2MRkq/V3vOUhUoW7xWjG6uzqR2Foh0dVOFwsTz3BRoPnrGKHENyPgqu1zN2ehhzTG2eojH1f/JPL5IdB0vSELytY57RIuoSPINs81WNqm3jcL3I=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

@@ -1,0 +1,134 @@
+@prefix this: <https://w3id.org/np/RAKqX6LXoukK7GKdKIuiOiMZRtQlp6ZmiLHWy8FtAOHVg> .
+@prefix sub: <https://w3id.org/np/RAKqX6LXoukK7GKdKIuiOiMZRtQlp6ZmiLHWy8FtAOHVg/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:list-strongest-claims a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Lists the Project Delphi claims whose weight of evidence reaches a given threshold, one row per claim, strongest first. The threshold is the optional parameter min_weight on the claim's own scale from 0 to 1; left empty it defaults to 0.7. Claims are found through the nanopublication type delphi:Claim (https://w3id.org/delphi/ontology/Claim), and of all validly signed, non-invalidated nanopublications that introduce a given claim only the newest by timestamp is read (ties broken by nanopublication URI), so a claim that was published more than once appears once, with its current content. The weight of evidence is the claim's own weight where it declares one -- delphi:weightOfEvidence, delphi:hasScore or npx:hasEvidenceWeight -- and is otherwise the score of the claim's overall assessment, that is the assessment it links to with delphi:hasAssessment whose delphi:assessmentType is a rubric and version alone (e.g. dataset-resolvability/0.2.0) or ends in '/overall', read from delphi:hasScore, delphi:hasProbability or delphi:weightOfEvidence, whichever that assessment carries. The verdict comes from the same overall assessment. Where a claim has several overall assessments, the newest one by nanopublication timestamp wins both columns. Claims with no weight at all are left out rather than treated as zero. Ordered by weight of evidence, highest first, then alphabetically by label.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "List the strongest Project Delphi claims";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix delphi: <https://w3id.org/delphi/ontology/>
+
+select ?claim ?claim_label ?weight_of_evidence ?verdict ?date ?np (\"^\" as ?np_label) where {
+  {
+    select ?claim ?np ?date
+           (min(?labelRank) as ?labelWin)
+           (min(?claimWeightStr) as ?claimWeightWin)
+           (max(?scoreRank) as ?scoreWin)
+           (max(?verdictRank) as ?verdictWin)
+    where {
+      graph npa:graph {
+        ?np npx:hasNanopubType delphi:Claim ;
+          npa:hasValidSignatureForPublicKeyHash ?pubkey ;
+          dct:created ?date ;
+          npx:introduces ?claim ;
+          np:hasAssertion ?a .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+      }
+      filter not exists {
+        graph npa:graph {
+          ?np2 npx:hasNanopubType delphi:Claim ;
+            npa:hasValidSignatureForPublicKeyHash ?pubkey2 ;
+            dct:created ?date2 ;
+            npx:introduces ?claim .
+          filter not exists { ?inv2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+        }
+        filter(?date2 > ?date || (?date2 = ?date && str(?np2) > str(?np)))
+      }
+      graph ?a { ?claim a delphi:Claim . optional { ?claim rdfs:label ?label } }
+      bind(concat(if(lang(?label) = \"\", \"1\", \"2\"), \"|\", str(?label)) as ?labelRank)
+      optional {
+        { graph ?a { ?claim delphi:weightOfEvidence ?claimWeight } }
+        union
+        { graph ?a { ?claim delphi:hasScore ?claimWeight } }
+        union
+        { graph ?a { ?claim npx:hasEvidenceWeight ?claimWeight } }
+        bind(xsd:integer(round(?claimWeight * 100)) as ?claimWeightPct)
+        bind(if(?claimWeightPct >= 100, \"1.00\",
+             concat(\"0.\", if(?claimWeightPct < 10, concat(\"0\", str(?claimWeightPct)), str(?claimWeightPct)))) as ?claimWeightStr)
+      }
+      optional {
+        graph ?gb { ?claim delphi:hasAssessment ?overall }
+        graph npa:graph {
+          ?onp npx:introduces ?overall ;
+            np:hasAssertion ?oa ;
+            np:hasPublicationInfo ?opi ;
+            dct:created ?odate ;
+            npa:hasValidSignatureForPublicKeyHash ?opubkey .
+          filter not exists { ?oinv npx:invalidates ?onp ; npa:hasValidSignatureForPublicKeyHash ?opubkey . }
+        }
+        { graph ?oa { ?overall delphi:assessmentType ?atype } }
+        union
+        { graph ?opi { ?onp delphi:assessmentType ?atype } }
+        filter(strends(str(?atype), \"/overall\") || regex(str(?atype), \"^[^/]+/[^/]+$\"))
+        optional { graph ?oa { ?overall delphi:hasScore ?p0 } }
+        optional { graph ?oa { ?overall delphi:hasProbability ?p1 } }
+        optional { graph ?oa { ?overall delphi:weightOfEvidence ?p2 } }
+        optional { graph ?oa { ?overall delphi:hasVerdict ?overallVerdict } }
+        bind(coalesce(?p0, ?p1, ?p2) as ?overallScore)
+        bind(xsd:integer(round(?overallScore * 100)) as ?overallPct)
+        bind(concat(str(?odate), \"|\",
+             if(?overallPct >= 100, \"1.00\",
+             concat(\"0.\", if(?overallPct < 10, concat(\"0\", str(?overallPct)), str(?overallPct))))) as ?scoreRank)
+        bind(concat(str(?odate), \"|\", str(?overallVerdict)) as ?verdictRank)
+      }
+    } group by ?claim ?np ?date
+  }
+  bind(strafter(?labelWin, \"|\") as ?claim_label)
+  bind(if(bound(?verdictWin), strafter(?verdictWin, \"|\"), \"\") as ?verdict)
+  bind(if(bound(?claimWeightWin), ?claimWeightWin,
+       if(bound(?scoreWin), strafter(?scoreWin, \"|\"), \"\")) as ?weight_of_evidence)
+  bind(coalesce(?__min_weight, \"0.7\") as ?minWeightStr)
+  filter(?weight_of_evidence != \"\" && xsd:decimal(?weight_of_evidence) >= xsd:decimal(?minWeightStr))
+}
+order by desc(xsd:decimal(?weight_of_evidence)) lcase(?claim_label)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-11-06T19:00:12.151Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:list-strongest-claims;
+    npx:supersedes <https://w3id.org/np/RAp7HWUePjOLo-Qhq1kFaUzF0HXXgUC5s6ex4fgJWAyLQ>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCaQXE2B2hJ6QdWxaWerU4F/XOtCQdj2OkdrIYd1kpMY9hIUh8boxaO3uOBeqvvqKLf5HjpRF4DT1eghOSsa2Dhd5HRTM/XIamvwWkHpN4oB3Ml19pAAzjTqczYmFLfgG67mGL5+vSA8VEdHtKQCrvP4SpTibMBP1qaxt3k1tqD6wIDAQAB";
+    npx:hasSignature "bLE28VJbazXAtcTgPwCBDSGsHNP3t4RcdFCjs7HV8PgH22x44hHzxHnP4I3KfB4EtMT/MBlaKp67xwYz5fDvSmdchDgO8SN/5AxVgKllPivfzEAX0KlhJnCjg6l93/Tu5yAbUWDXMva460lGh7FWlMx9BLiDCmJiIpBnvISRhss=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

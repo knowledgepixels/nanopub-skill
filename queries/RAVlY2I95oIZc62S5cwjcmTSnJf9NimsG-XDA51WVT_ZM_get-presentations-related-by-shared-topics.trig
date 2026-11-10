@@ -1,0 +1,91 @@
+@prefix this: <https://w3id.org/np/RAVlY2I95oIZc62S5cwjcmTSnJf9NimsG-XDA51WVT_ZM> .
+@prefix sub: <https://w3id.org/np/RAVlY2I95oIZc62S5cwjcmTSnJf9NimsG-XDA51WVT_ZM/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-related-presentations a grlc:grlc-query;
+    dct:description "Returns the other talks that share at least one topic with this one, most overlap first, each with the number of topics shared and their names. The talk comes in as the queried resource and nothing is scoped to one event, so a workshop paper can surface a related talk from the main track or from another workshop entirely, which is the point of identifying topics by existing URIs rather than by a vocabulary of one event's own. A talk with no topic in common with any other returns no rows, which is the honest answer for the only paper on its subject.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get presentations related by shared topics";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/3952cad1a6d2561f045d33e5e79c03e7264b0a492b8becf6c62656c596cf398c>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix wd: <http://www.wikidata.org/entity/>
+
+select ?other ?other_label ?shared ?shared_topics ?np (\"^\" as ?np_label) where {
+  {
+    select ?other (count(distinct ?topic) as ?shared)
+                  (group_concat(distinct ?topic_label; separator=\" · \") as ?shared_topics)
+    where {
+      values ?_presentation_multi_iri {}
+      graph npa:graph {
+        ?tnp npa:hasValidSignatureForPublicKeyHash ?tpk .
+        filter not exists { ?tx npx:invalidates ?tnp ; npa:hasValidSignatureForPublicKeyHash ?tpk . }
+        ?tnp np:hasAssertion ?ta .
+        ?tnp np:hasPublicationInfo ?tpi .
+      }
+      graph ?ta { ?_presentation_multi_iri dct:subject ?topic . }
+      optional { graph ?tpi { ?topic rdfs:label ?tl . } }
+      bind(coalesce(?tl, str(?topic)) as ?topic_label)
+      graph npa:graph {
+        ?onp npa:hasValidSignatureForPublicKeyHash ?opk .
+        filter not exists { ?ox npx:invalidates ?onp ; npa:hasValidSignatureForPublicKeyHash ?opk . }
+        ?onp np:hasAssertion ?oa .
+      }
+      graph ?oa { ?other dct:subject ?topic . }
+      filter(?other != ?_presentation_multi_iri)
+    } group by ?other
+  }
+  graph npa:graph {
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np np:hasAssertion ?a .
+    ?np npx:introduces ?other .
+  }
+  graph ?a { ?other a wd:Q604733 ; rdfs:label ?other_label . }
+} order by desc(?shared) ?other_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-25T05:50:15Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-related-presentations;
+    rdfs:label "Get presentations related by shared topics";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "TU9JDic9rrjU1KJ8fwQmqWnF/lIJjKQr/PdMG4FVQukxHGiICCcAwSsBMFeg0hife8hktQN1Ls9D3zDqWeNsYPxBK5YDDBJ3qakGURSIPuthfosuumUm3jJhbTlej+awXGsX3YvnieFFMiSeRXlodQS/qWaJtPA/nlwsTq+ipKY=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

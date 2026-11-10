@@ -1,0 +1,173 @@
+@prefix this: <https://w3id.org/np/RA5DGrYmPxXqSa1wZ8eZH0osZaCpRWK4iLQC1H-UuMCdY> .
+@prefix sub: <https://w3id.org/np/RA5DGrYmPxXqSa1wZ8eZH0osZaCpRWK4iLQC1H-UuMCdY/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix ns1: <http://purl.org/np/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.obolibrary.org/obo/RO_0002470> rdfs:label "eats" .
+  
+  rdf:type rdfs:label "is an" .
+  
+  rdfs:comment rdfs:label "has the free-text comment" .
+  
+  <https://w3id.org/biolink/vocab/OrganismTaxonToOrganismTaxonAssociation> rdfs:label
+      "association between two organism taxa" .
+  
+  <https://w3id.org/biolink/vocab/object> rdfs:label "refers to - links an association to its object" .
+  
+  <https://w3id.org/biolink/vocab/predicate> rdfs:label "refers to the action of food consuming" .
+  
+  <https://w3id.org/biolink/vocab/subject> rdfs:label "refers to - links an association to its subject" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasObjectLifeCycleStage> rdfs:label "refers to the object taxon's life cycle stage" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasSubjectLifeCycleStage> rdfs:label "refers to the subject taxon's life cycle stage" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition> rdfs:label "is used as defined in" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonName> rdfs:label "has the name - links a taxon usage to a taxon name" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "A food is assigned to a carabid species on the basis of an observation, for example expressing that the carabid of the subject taxon eats organisms of the object taxon";
+    rdfs:label "Assigning a food to a carabid species";
+    nt:hasDefaultProvenance <https://w3id.org/np/RASORV2mMEVpS4lWh2bwUTEcV-RWjbD9RPbN7J0PIeYAU>;
+    nt:hasNanopubLabelPattern "${subjtaxonname} - ${feedingobs} - ${objtaxonname}";
+    nt:hasStatement sub:st00, sub:st05, sub:st10, sub:st11, sub:st12, sub:st20, sub:st40,
+      sub:st41, sub:st42, sub:st50, sub:st60;
+    nt:hasTag "Biodiversity";
+    nt:hasTargetNamespace <https://w3id.org/spaces/carabid-beetles>;
+    nt:hasTargetNanopubType <https://w3id.org/kpxl/biodiv/terms/BiodivNanopub> .
+  
+  sub:association a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this association" .
+  
+  sub:comment a nt:LongLiteralPlaceholder;
+    rdfs:label "short explanation related to the above statement" .
+  
+  sub:feedingobs a nt:RestrictedChoicePlaceholder;
+    nt:hasDefaultValue <http://purl.obolibrary.org/obo/RO_0002470>;
+    nt:possibleValue <http://purl.obolibrary.org/obo/RO_0002470> .
+  
+  sub:objlifecyclestage a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the life cycle stage of the object taxon";
+    nt:possibleValuesFrom ns1:RAVZS2MV-siFEqsgFTtgSoKA5qJkp7r1nM_n-MqPkvgdE .
+  
+  sub:objtaxon a nt:LocalResource;
+    rdfs:label "the object taxon concept" .
+  
+  sub:objtaxondef a nt:ExternalUriPlaceholder;
+    rdfs:label "publication DOI (https://doi.org/...) or taxon treatment ID (https://treatment.plazi.org/id/...)";
+    nt:hasRegex "(https://doi.org/|https://treatment.plazi.org/id/).+" .
+  
+  sub:objtaxonname a nt:GuidedChoicePlaceholder;
+    rdfs:label "start typing and select from list";
+    nt:possibleValuesFromApi "https://api.gbif.org/v1/species/suggest?datasetKey=d7dddbf4-2cf0-4f39-9b2a-bb099caae36c&q=" .
+  
+  sub:st00 rdf:object <https://w3id.org/biolink/vocab/OrganismTaxonToOrganismTaxonAssociation>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:association .
+  
+  sub:st05 rdf:object sub:feedingobs;
+    rdf:predicate <https://w3id.org/biolink/vocab/predicate>;
+    rdf:subject sub:association .
+  
+  sub:st10 rdf:object sub:subjtaxon;
+    rdf:predicate <https://w3id.org/biolink/vocab/subject>;
+    rdf:subject sub:association .
+  
+  sub:st11 rdf:object sub:subjtaxonname;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonName>;
+    rdf:subject sub:subjtaxon .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:subjtaxondef;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition>;
+    rdf:subject sub:subjtaxon .
+  
+  sub:st20 a nt:OptionalStatement;
+    rdf:object sub:subjlifecyclestage;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasSubjectLifeCycleStage>;
+    rdf:subject sub:association .
+  
+  sub:st40 rdf:object sub:objtaxon;
+    rdf:predicate <https://w3id.org/biolink/vocab/object>;
+    rdf:subject sub:association .
+  
+  sub:st41 rdf:object sub:objtaxonname;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonName>;
+    rdf:subject sub:objtaxon .
+  
+  sub:st42 a nt:OptionalStatement;
+    rdf:object sub:objtaxondef;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonConceptDefinition>;
+    rdf:subject sub:objtaxon .
+  
+  sub:st50 a nt:OptionalStatement;
+    rdf:object sub:objlifecyclestage;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasObjectLifeCycleStage>;
+    rdf:subject sub:association .
+  
+  sub:st60 a nt:OptionalStatement;
+    rdf:object sub:comment;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:association .
+  
+  sub:subjlifecyclestage a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the life cycle stage of the subject taxon";
+    nt:possibleValuesFrom ns1:RAVZS2MV-siFEqsgFTtgSoKA5qJkp7r1nM_n-MqPkvgdE .
+  
+  sub:subjtaxon a nt:LocalResource;
+    rdfs:label "the subject taxon concept" .
+  
+  sub:subjtaxondef a nt:ExternalUriPlaceholder;
+    rdfs:label "publication DOI (https://doi.org/...) or taxon treatment ID (https://treatment.plazi.org/id/...)";
+    nt:hasRegex "(https://doi.org/|https://treatment.plazi.org/id/).+" .
+  
+  sub:subjtaxonname a nt:GuidedChoicePlaceholder;
+    rdfs:label "start typing and select from list";
+    nt:possibleValuesFromApi "https://api.gbif.org/v1/species/suggest?datasetKey=d7dddbf4-2cf0-4f39-9b2a-bb099caae36c&q=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-4587-3476 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-4587-3476 foaf:name "roberto pizzolotto" .
+  
+  this: a <https://w3id.org/kpxl/biodiv/terms/BiodivNanopub>;
+    dct:created "2026-11-01T22:53:44.476Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-4587-3476;
+    dct:license <https://creativecommons.org/licenses/by-sa/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAD5k0Zy7t4DAOKYq769KHtmvivhvVbneVq9VgYyGAfyY>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Assigning a food to a carabid species";
+    nt:wasCreatedFromProvenanceTemplate ns1:RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM;
+    nt:wasCreatedFromPubinfoTemplate ns1:RAdyqI6k07V5nAS82C6hvIDtNWk179EIV4DV-sLbOFKg4,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCUDeKXhXlFhZOfNX+50fX31+K+KNwHGyuh65vqoj49E+Sc920NGPGIEmoyGDFtPONltIEFzp80aEY5mn+V+r27uUpDORorw6OlGGepR0dnWNwEJ8jyFVu7z7d+eIqC5t9V+tQbU4c1H2b8IEzlbpTT0n7DY6gjP0jDjwTBC94mdQIDAQAB";
+    npx:hasSignature "jiLDAvG6lKSjvTmC3GLYrpUCgugRDJdfJ5gvgFc4Maid09qJNED48xBjF3ui00wDykb3NdPKs429KeWuPXpGOK65lIqQVt/y01QWhwgzENLJ8IKtA9mfHdCn2lFmgvCbecr5v6Ind/Yg8P12Zc7JW9QRdC1ekz1q7tRk3ogtlAA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-4587-3476 .
+}
+

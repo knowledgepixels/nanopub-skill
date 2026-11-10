@@ -1,0 +1,200 @@
+@prefix this: <https://w3id.org/np/RAQR3WIWWyRDcW34blAeCDNqp0DXu5QFAIc1pK5rl9V-M> .
+@prefix sub: <https://w3id.org/np/RAQR3WIWWyRDcW34blAeCDNqp0DXu5QFAIc1pK5rl9V-M/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  <http://schema.org/endDate> rdfs:label "has the end date" .
+  
+  <http://schema.org/startDate> rdfs:label "has the start date" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  orcid:0000-0001-8492-0354 rdfs:label "Ashley Caselli" .
+  
+  orcid:0000-0002-1267-0234 rdfs:label "Tobias Kuhn" .
+  
+  orcid:0009-0008-3635-347X rdfs:label "Ziroli Plutschow" .
+  
+  orcid:0009-0009-0118-9195 rdfs:label "Virginia Balseiro" .
+  
+  gen:ActivatedPresetAssignment rdfs:label "activated preset assignment" .
+  
+  gen:Event rdfs:label "Event" .
+  
+  gen:PresetAssignment rdfs:label "preset assignment" .
+  
+  gen:Space rdfs:label "Space" .
+  
+  gen:hasAdmin rdfs:label "has as admin" .
+  
+  gen:hasRootDefinition rdfs:label "has as root definition" .
+  
+  gen:isAssignmentFor rdfs:label "is an assignment for" .
+  
+  gen:isAssignmentOfPreset rdfs:label "is an assignment of the preset" .
+  
+  gen:isSubSpaceOf rdfs:label "is a sub-space of" .
+  
+  <https://w3id.org/np/RA8reU0MC8CLO1FCoQtlZgau-bIiWUpVlxb8wB4ahQBx4/generalRegularMeetingPreset>
+    rdfs:label "General regular meeting preset" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description """<p>Add a new <strong>Nano Session</strong> as a sub-space of the <a href=\"https://w3id.org/spaces/nanopub/nanosessions\">Nano Sessions</a> space.</p>
+
+<p>The super-space, the type (an <code>Event</code>), and the admins are fixed. Enter the session number as digits only (e.g. <code>36</code>); it is appended to the fixed space prefix to form the sub-space identifier (<code>.../nanosessions/session36</code>). The name has to repeat that number in the form <code>#36</code>, because the <a href=\"https://nanopub.net/sessions/\">Nano Sessions page</a> reads the session number from the name. The dates are pre-filled with the usual 16:00-17:00 CET slot and need to be adjusted to the actual date. The created sub-space is also assigned the <em>General regular meeting preset</em>.</p>""";
+    rdfs:label "Adding a Nano Session";
+    nt:hasNanopubLabelPattern "${label}";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06,
+      sub:st07, sub:st08, sub:st11, sub:st12, sub:st99, sub:stp0, sub:stp1, sub:stp2, sub:stp3;
+    nt:hasTag "Spaces";
+    nt:hasTargetNanopubType gen:Event, gen:PresetAssignment, gen:Space .
+  
+  sub:assignment a nt:EmbeddedResource, nt:LocalResource;
+    rdfs:label "this assignment" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "the agenda or description of the session";
+    nt:hasDefaultValue "Agenda TBD" .
+  
+  sub:endDate a nt:LiteralPlaceholder;
+    rdfs:label "end date and time";
+    nt:hasDatatype xsd:dateTime;
+    nt:hasDefaultValue "2026-11-10T17:00:00+01:00" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the name of the session, including its number as #NN";
+    nt:hasDefaultValue "Nano Session #" .
+  
+  sub:rootDefinition a nt:RootNanopubPlaceholder .
+  
+  sub:space a nt:ExternalUriPlaceholder, nt:IntroducedResource, nt:NewUriPlaceholder;
+    rdfs:label "the number of the session (digits only)";
+    nt:hasPrefix "https://w3id.org/spaces/nanopub/nanosessions/session";
+    nt:hasPrefixLabel "Nano Session";
+    nt:hasRegex "[0-9]+" .
+  
+  sub:st00 a nt:AdvancedStatement;
+    rdf:object gen:Space;
+    rdf:predicate rdf:type;
+    rdf:subject sub:space .
+  
+  sub:st01 rdf:object gen:Event;
+    rdf:predicate rdf:type;
+    rdf:subject sub:space .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:space .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:space .
+  
+  sub:st04 rdf:object orcid:0000-0002-1267-0234;
+    rdf:predicate gen:hasAdmin;
+    rdf:subject sub:space .
+  
+  sub:st05 rdf:object orcid:0009-0009-0118-9195;
+    rdf:predicate gen:hasAdmin;
+    rdf:subject sub:space .
+  
+  sub:st06 rdf:object orcid:0000-0001-8492-0354;
+    rdf:predicate gen:hasAdmin;
+    rdf:subject sub:space .
+  
+  sub:st07 rdf:object orcid:0009-0008-3635-347X;
+    rdf:predicate gen:hasAdmin;
+    rdf:subject sub:space .
+  
+  sub:st08 rdf:object <https://w3id.org/spaces/nanopub/nanosessions>;
+    rdf:predicate gen:isSubSpaceOf;
+    rdf:subject sub:space .
+  
+  sub:st11 rdf:object sub:startDate;
+    rdf:predicate <http://schema.org/startDate>;
+    rdf:subject sub:space .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:endDate;
+    rdf:predicate <http://schema.org/endDate>;
+    rdf:subject sub:space .
+  
+  sub:st99 a nt:AdvancedStatement;
+    rdf:object sub:rootDefinition;
+    rdf:predicate gen:hasRootDefinition;
+    rdf:subject sub:space .
+  
+  sub:startDate a nt:LiteralPlaceholder;
+    rdfs:label "start date and time";
+    nt:hasDatatype xsd:dateTime;
+    nt:hasDefaultValue "2026-11-10T16:00:00+01:00" .
+  
+  sub:stp0 a nt:AdvancedStatement;
+    rdf:object gen:PresetAssignment;
+    rdf:predicate rdf:type;
+    rdf:subject sub:assignment .
+  
+  sub:stp1 a nt:AdvancedStatement;
+    rdf:object gen:ActivatedPresetAssignment;
+    rdf:predicate rdf:type;
+    rdf:subject sub:assignment .
+  
+  sub:stp2 a nt:AdvancedStatement;
+    rdf:object <https://w3id.org/np/RA8reU0MC8CLO1FCoQtlZgau-bIiWUpVlxb8wB4ahQBx4/generalRegularMeetingPreset>;
+    rdf:predicate gen:isAssignmentOfPreset;
+    rdf:subject sub:assignment .
+  
+  sub:stp3 a nt:AdvancedStatement;
+    rdf:object sub:space;
+    rdf:predicate gen:isAssignmentFor;
+    rdf:subject sub:assignment .
+  
+  <https://w3id.org/spaces/nanopub/nanosessions> rdfs:label "Nano Sessions" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-26T06:40:59Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Adding a Nano Session";
+    prov:wasDerivedFrom <https://w3id.org/np/RA45pL3A7bqxFpjVxnJ1aIfCYFnRky9SH9IKwEtmrWz7A>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAgeON_vGgJCt5E4DPMi0eOPaGwNv9tbfFTRZtBwdQL0w> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "oFVmecKzEwRx7wIel3rI9VGmXuf1WCunN3Wr7nN0ewmyQrYrKjBKksTTIZeavMGCIjXdf/bzJRSATAqKRMUHg8n2ae6d1D5yJQhpOYNGvN/hQi3l1wvp6whRg0Xmph+Vdcfdu0WyYhIoFNxHOTta0bhU3d/Uubn8UgsKSVQnSXk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

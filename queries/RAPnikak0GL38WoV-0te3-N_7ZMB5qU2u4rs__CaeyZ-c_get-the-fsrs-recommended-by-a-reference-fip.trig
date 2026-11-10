@@ -1,0 +1,196 @@
+@prefix this: <https://w3id.org/np/RAPnikak0GL38WoV-0te3-N_7ZMB5qU2u4rs__CaeyZ-c> .
+@prefix sub: <https://w3id.org/np/RAPnikak0GL38WoV-0te3-N_7ZMB5qU2u4rs__CaeyZ-c/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-rfip-recommended-fsrs a grlc:grlc-query;
+    dct:description "For a reference FAIR Implementation Profile (rFIP), lists the FAIR Supporting Resources (FSRs) it recommends, grouped by FAIR principle in FIP order (F1, F2, F3, F4, A1.1, A1.2, A2, I1, I2, I3, R1.1, R1.2, R1.3), then by label. A recommendation names no FIP question, so the principle comes from the FSR's types: an FSR type of the FIP Ontology enables (fip:enables) or supports (fip:supports) a principle, the same link as in \"Get the FAIR principles of an FSR\". An FSR with types linked to several principles appears under each of them; one whose types are linked to none appears last, under \"Other\". One row per principle and FSR. Columns: the principle as a group header (its code and its text from the FAIR Principles nanopublications, without F2's \"(defined by R1 below)\"; the principle_group column is rendered by Nanodash as a header row above the rows of that principle), the FSR (labelled from its metadata nanopublication, or by its identifier), its FSR types, whether its types enable or support the principle, and the recommendation nanopublication. An rFIP's content is the recommendation nanopublications of its community (nanopublication type fip:recommended-by, one FSR each): those whose provenance links them to this rFIP nanopublication (prov:wasDerivedFrom, as the FIP Wizard has published them since 2026); for an rFIP nanopublication without such recommendations, those published from the same FIP Wizard project as the profile nanopublication and not linked to an rFIP nanopublication; and where no recommendation of the community comes from a FIP Wizard project at all, all of its current recommendations. Profiles that carry a declaration index are treated the same way as the others, since an rFIP's recommendations are the authoritative statement of what it recommends. An FSR whose newest nanopublication a GO FAIR Foundation curator has disapproved of (npx:disapprovesOf, signed with a key from the curators list and not invalidated) is left out, as in the Recommended FSRs list of the space.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the FSRs recommended by a reference FIP";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix schema: <https://schema.org/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix fip: <https://w3id.org/fair/fip/terms/>
+prefix tpff: <https://w3id.org/fair/3pff/>
+prefix search: <http://www.openrdf.org/contrib/lucenesail#>
+
+select ?principle_group ?fsr ?fsr_label ?types_multi_iri ?types_label_multi ?relation ?np ?np_label where {
+{ select ?pkey (min(?pheader) as ?principle_group)
+  ?fsr (coalesce(min(?fsr_label_x), replace(str(?fsr), \"^.*[/#]\", \"\")) as ?fsr_label)
+  (group_concat(distinct str(?type); separator=\" \") as ?types_multi_iri) (group_concat(distinct ?type_label; separator=\"\\n\") as ?types_label_multi)
+  (group_concat(distinct ?rel_label; separator=\", \") as ?relation)
+  (min(?rnp) as ?np) (\"^\" as ?np_label) (min(?sortkey) as ?sk)
+where {
+  { select ?curators_a where {
+  graph npa:graph {
+    <https://w3id.org/np/RA27Uhopq4MHZziL2lKXX-wTb1jz4KVLbHaupxyAcCt9Y> npa:hasValidSignatureForPublicKey ?curators_pk .
+    ?curators_np npa:hasValidSignatureForPublicKey ?curators_pk ; np:hasAssertion ?curators_a .
+    filter not exists { ?curators_x npx:invalidates ?curators_np ; npa:hasValidSignatureForPublicKey ?curators_pk . }
+  }
+  graph npa:networkGraph {
+    ?curators_np (npx:supersedes)* <https://w3id.org/np/RA27Uhopq4MHZziL2lKXX-wTb1jz4KVLbHaupxyAcCt9Y> .
+    filter not exists { ?curators_y npx:supersedes ?curators_np }
+  }
+  } }
+  graph npa:graph {
+    ?fipnp npx:introduces ?_fip_iri ; np:hasAssertion ?fa ; npa:hasValidSignatureForPublicKey ?fpk .
+        filter not exists { ?fpkx npx:invalidates ?fipnp ; npa:hasValidSignatureForPublicKey ?fpk . }
+  }
+  graph ?fa { ?_fip_iri a fip:Reference-FAIR-Implementation-Profile ; fip:declared-by ?community . }
+  {
+    # Recommendations linked to this rFIP nanopublication (FIP Wizard, since 2026).
+    graph npa:graph {
+      ?rnp npx:hasNanopubType fip:recommended-by ; np:hasAssertion ?ra ; np:hasProvenance ?rp ;
+        npa:hasValidSignatureForPublicKey ?rpk .
+        filter not exists { ?rpkx npx:invalidates ?rnp ; npa:hasValidSignatureForPublicKey ?rpk . }
+    }
+    graph ?rp { ?ra prov:wasDerivedFrom ?fipnp . }
+    graph ?ra { ?fsr fip:recommended-by ?community . }
+  } union {
+    # None linked: the recommendations from the same FIP Wizard project that are not linked to an rFIP nanopublication.
+    filter not exists {
+      graph npa:graph { ?lnp npx:hasNanopubType fip:recommended-by ; np:hasAssertion ?la ; np:hasProvenance ?lp . }
+      graph ?lp { ?la prov:wasDerivedFrom ?fipnp . }
+    }
+    graph npa:graph { ?fipnp np:hasPublicationInfo ?fpi . }
+    graph ?fpi { ?fipnp prov:wasDerivedFrom ?project . }
+    filter(strstarts(str(?project), \"https://w3id.org/fip/wizard/\"))
+    graph npa:graph {
+      ?rnp npx:hasNanopubType fip:recommended-by ; np:hasAssertion ?ra ; np:hasProvenance ?rp ; np:hasPublicationInfo ?rpi ;
+        npa:hasValidSignatureForPublicKey ?rpk .
+        filter not exists { ?rpkx npx:invalidates ?rnp ; npa:hasValidSignatureForPublicKey ?rpk . }
+    }
+    graph ?rpi { ?rnp prov:wasDerivedFrom ?project . }
+    graph ?ra { ?fsr fip:recommended-by ?community . }
+    filter not exists { graph ?rp { ?ra prov:wasDerivedFrom ?otherfipnp . } }
+  } union {
+    # No recommendation of the community comes from a FIP Wizard project: all of its current recommendations.
+    graph npa:graph {
+      ?rnp npx:hasNanopubType fip:recommended-by ; np:hasAssertion ?ra ;
+        npa:hasValidSignatureForPublicKey ?rpk .
+        filter not exists { ?rpkx npx:invalidates ?rnp ; npa:hasValidSignatureForPublicKey ?rpk . }
+    }
+    graph ?ra { ?fsr fip:recommended-by ?community . }
+    filter not exists {
+      graph npa:graph { ?onp npx:hasNanopubType fip:recommended-by ; np:hasAssertion ?oa ; np:hasPublicationInfo ?opi . }
+      graph ?oa { ?ofsr fip:recommended-by ?community . }
+      graph ?opi { ?onp prov:wasDerivedFrom ?oproj . }
+      filter(strstarts(str(?oproj), \"https://w3id.org/fip/wizard/\"))
+    }
+  }
+  optional {
+    values ?p { npx:introduces npx:describes }
+    graph npa:graph {
+      ?fsrnp ?p ?fsr ; rdfs:label ?fsr_label_x ; npx:hasNanopubType ?sft ; npa:hasValidSignatureForPublicKey ?spk .
+        filter not exists { ?spkx npx:invalidates ?fsrnp ; npa:hasValidSignatureForPublicKey ?spk . }
+      values ?sft { fip:FAIR-Enabling-Resource fip:FAIR-Supporting-Resource }
+    }
+    optional {
+      graph npa:graph { ?fsrnp npx:hasNanopubType ?type . }
+      filter(strstarts(str(?type), \"https://w3id.org/fair/fip/terms/\"))
+      filter(?type not in (fip:FAIR-Enabling-Resource, fip:FAIR-Supporting-Resource, fip:Available-FAIR-Enabling-Resource, fip:Available-FAIR-Supporting-Resource, fip:FAIR-Enabling-Resource-to-be-Developed, fip:FAIR-Supporting-Resource-to-be-Developed))
+      bind(replace(replace(str(?type), \"^.*/\", \"\"), \"-\", \" \") as ?type_label)
+    }
+  }
+  # The FAIR principle: a type of the FSR (from its metadata nanopublication) enables or supports it.
+  optional {
+    values ?p2 { npx:introduces npx:describes }
+    graph npa:graph {
+      ?fsrnp2 ?p2 ?fsr ; npx:hasNanopubType ?ptype ; npa:hasValidSignatureForPublicKey ?spk2 .
+        filter not exists { ?spk2x npx:invalidates ?fsrnp2 ; npa:hasValidSignatureForPublicKey ?spk2 . }
+    }
+    filter(strstarts(str(?ptype), \"https://w3id.org/fair/fip/terms/\"))
+    graph npa:graph {
+      ?tnp npx:introduces ?ptype ; np:hasAssertion ?ta ; npa:hasValidSignatureForPublicKey ?tpk .
+        filter not exists { ?tpkx npx:invalidates ?tnp ; npa:hasValidSignatureForPublicKey ?tpk . }
+    }
+    values (?prel ?rel_label) { (fip:enables \"enables\") (fip:supports \"supports\") }
+    graph ?ta { ?ptype ?prel ?principle . }
+  }
+  # Left out when the newest nanopublication of the FSR is curator-disapproved, as in the space's Recommended FSRs.
+  filter not exists {
+    graph npa:graph { ?ndn npx:introduces|npx:describes ?fsr . }
+    graph ?dan { ?disapprovern npx:disapprovesOf ?ndn . }
+    graph npa:graph { ?dnpn np:hasAssertion ?dan ; npa:hasValidSignatureForPublicKey ?dpkn . filter not exists { ?dxn npx:invalidates ?dnpn ; npa:hasValidSignatureForPublicKey ?dpkn . } }
+    graph ?curators_a { ?dkn npx:hasPublicKey ?dpkn . }
+    graph npa:graph {
+      ?ndn npx:hasNanopubType ?ndtn ; npa:hasValidSignatureForPublicKey ?ndpkn ; dct:created ?nddn .
+      filter(?ndtn in (fip:FAIR-Enabling-Resource, fip:FAIR-Supporting-Resource))
+      filter not exists { ?ndxn npx:invalidates ?ndn ; npa:hasValidSignatureForPublicKey ?ndpkn . }
+      filter not exists { ?ndn npx:hasNanopubType npx:ExampleNanopub . }
+      filter not exists {
+        ?nnn npx:introduces|npx:describes ?fsr ; npx:hasNanopubType ?nntn ; npa:hasValidSignatureForPublicKey ?nnpkn ; dct:created ?nndn .
+        filter(?nntn in (fip:FAIR-Enabling-Resource, fip:FAIR-Supporting-Resource))
+        filter(?nndn > ?nddn)
+        filter not exists { ?nnxn npx:invalidates ?nnn ; npa:hasValidSignatureForPublicKey ?nnpkn . }
+        filter not exists { ?nnn npx:hasNanopubType npx:ExampleNanopub . }
+      }
+    }
+  }
+  bind(coalesce(?principle, <https://w3id.org/fair/principles/terms/none>) as ?pkey)
+  bind(replace(str(?pkey), \"^.*/\", \"\") as ?pcode)
+  optional {
+    graph npa:graph { ?pdnp npx:introduces|npx:describes ?pkey ; np:hasAssertion ?pda . }
+    filter(strstarts(str(?pdnp), \"https://w3id.org/fair/principles/np/\"))
+    graph ?pda { ?pkey skos:definition ?pdef . }
+  }
+  bind(if(!bound(?principle), \"Other: no FAIR principle linked to the FSR types\",
+    if(bound(?pdef), concat(?pcode, \": \", ucase(substr(?pdef, 1, 1)), replace(substr(?pdef, 2), \" [(]defined by R1 below[)]$\", \"\")), ?pcode)) as ?pheader)
+  bind(if(!bound(?principle), \"9\", concat(replace(replace(replace(replace(substr(?pcode, 1, 1), \"F\", \"1\"), \"A\", \"2\"), \"I\", \"3\"), \"R\", \"4\"), ?pcode)) as ?sortkey)
+} group by ?pkey ?fsr }
+} order by ?sk ?fsr_label
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-04T09:46:36Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-rfip-recommended-fsrs;
+    npx:supersedes <https://w3id.org/np/RAGwLAPqPxCf0dNtvydyUl-1w0CYQBwwNQAfWuo22XJj8>;
+    rdfs:label "Get the FSRs recommended by a reference FIP";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzZAkv4Mu1YSUxQMriBnhYunqosX5wpuQ3FjUyzW8wTC51wjCmhsChyhS+mCx7Od+2MTDpdhxDWA+pH1r9AX508X2rIY/sbpMS+pd56e0qKPQ0t4folln1TgamPN9iOlY/yLc2x27AdipWIGXUdtL2iAcb+P/Y5dQS2AkHMS3lP2e5JBL5/bD/10qvTLKvdsqIKts8qjuLpxr9CFbsS2gLjMkXL5D2IsJ0cL5sgmIfS1inLVxIfXrS/OgqYNFqeNznUYCVWfo0g7DKjnjiICz3omeQeJFLYwlJ6PhUhYDQS6O318DGwUCwhnuXbBbwL9evZa2I/0Pwu5xpZdNLYJ5UwIDAQAB";
+    npx:hasSignature "rHtNSPXY5pIiHv8i0CkmJNJ2rZmSq+fWUeHirpmpnt2Lsyzoz4pqHM+/dYcAKGrnnpOPynefW7GiiJdCJJ8AzRENbcW19yeDnmtpqY8Bnm2+nQW3V0MqLuqQFFguYwamGI94Pl3twQVQhxEvVJ39xn0+yAflNNoE/NNn2rS5ZTFvTCixuLVKgnRHsOMmYNECtgpy//3Kkg5kddGfwkX86+2vkz8OjQ9NSGteDJd1VYPKzUPPC4KG+4BWM+rp17oqe8PbWyGzHzIGOGyOz3kJDtU9PcE6/mw0/nCudgdXPvhVktnCFWRPxToJ4qaf0iVkf+nup4VxSTtC3ToifYB3MA==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot> .
+}
+

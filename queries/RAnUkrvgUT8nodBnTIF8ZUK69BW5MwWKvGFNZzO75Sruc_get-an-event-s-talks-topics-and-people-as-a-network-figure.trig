@@ -1,0 +1,634 @@
+@prefix this: <https://w3id.org/np/RAnUkrvgUT8nodBnTIF8ZUK69BW5MwWKvGFNZzO75Sruc> .
+@prefix sub: <https://w3id.org/np/RAnUkrvgUT8nodBnTIF8ZUK69BW5MwWKvGFNZzO75Sruc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-talk-topic-people-network-svg a grlc:grlc-query;
+    dct:description "Draws an event's talks, the people who give them and the topics they are about as one figure: a tripartite network with people on the left, talks in the middle and topics on the right, an edge from each person to every talk they author or present and from each talk to every topic recorded for it. A force-directed layout is not open to a SPARQL query, which has no trigonometry, so the columns are laid out by rank and the edges drawn as Beziers; people and topics are ordered by the first talk they attach to rather than alphabetically, which turns what is otherwise a hairball into bundles and makes a co-author or a shared topic visible as a crossing. Each column is spread over the same vertical band whatever its size, so the figure stays proportionate for an event with four talks or forty. Talk boxes link to the talk's own page; every node carries its full name as a tooltip, since labels are truncated to fit. The event comes in as the queried resource, so the same query serves any event whose talks carry authors or topics.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get an event's talks, topics and people as a network figure";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/3952cad1a6d2561f045d33e5e79c03e7264b0a492b8becf6c62656c596cf398c>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+prefix wd: <http://www.wikidata.org/entity/>
+prefix schema: <https://schema.org/>
+prefix schemaold: <http://schema.org/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix pav: <http://purl.org/pav/>
+
+select ?title (concat(
+    '<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 1160 1378\" width=\"1160\" height=\"1378\" font-family=\"sans-serif\">',
+    '<text x=\"242\" y=\"26\" font-size=\"12\" font-weight=\"bold\" text-anchor=\"end\" fill=\"#5e8f55\">People</text>' , '<text x=\"600\" y=\"26\" font-size=\"12\" font-weight=\"bold\" text-anchor=\"middle\" fill=\"#33475b\">Talks</text>' , '<text x=\"950\" y=\"26\" font-size=\"12\" font-weight=\"bold\" fill=\"#a9762f\">Topics</text>',
+    ?edgefrags, ?nodefrags, '</svg>') as ?svg)
+where {
+  {
+    select (group_concat(?efrag; separator=\"\") as ?edgefrags) where {
+      { select (?node as ?nodeA) (?col as ?colA) (?label as ?labelA) (?rank as ?rankA) (?total as ?totalA) where {
+  select ?node ?col ?label ?key (sum(if(?key2 <= ?key, 1, 0)) as ?rank) (count(?key2) as ?total)
+  where {
+    { select distinct ?node ?col ?key ?label where {
+      {
+        { select ?node ?label (min(?psd0) as ?psd) where {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+          optional { graph ?a { ?pres schema:startDate ?psdA } }
+          optional { graph ?a { ?pres schemaold:startDate ?psdB } }
+          bind(coalesce(str(?psdA), str(?psdB), \"\") as ?psd0)
+          graph ?a { ?pres pav:authoredBy|wd:P823 ?node }
+          graph ?pi { ?node foaf:name ?label }
+        } group by ?node ?label }
+        bind(0 as ?col)
+        bind(concat(?psd, \"|\", lcase(?label), \"|\", str(?node)) as ?key)
+      } union {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+        optional { graph ?a { ?pres schema:startDate ?sdA } }
+        optional { graph ?a { ?pres schemaold:startDate ?sdB } }
+        bind(coalesce(str(?sdA), str(?sdB), \"\") as ?sd)
+        bind(?pres as ?node)
+        bind(1 as ?col)
+        bind(?tlabel as ?label)
+        bind(concat(?sd, \"|\", str(?pres)) as ?key)
+      } union {
+        { select ?node ?label (min(?osd0) as ?osd) where {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+        graph npa:graph {
+          ?tnp npa:hasValidSignatureForPublicKeyHash ?tpk ;
+            np:hasAssertion ?ta ; np:hasPublicationInfo ?tpi .
+          filter not exists { ?tinv npx:invalidates ?tnp ; npa:hasValidSignatureForPublicKeyHash ?tpk . }
+          filter not exists { ?tnp npx:hasNanopubType npx:ExampleNanopub . }
+        }
+          optional { graph ?a { ?pres schema:startDate ?osdA } }
+          optional { graph ?a { ?pres schemaold:startDate ?osdB } }
+          bind(coalesce(str(?osdA), str(?osdB), \"\") as ?osd0)
+          graph ?ta { ?pres dct:subject ?node }
+          optional { graph ?tpi { ?node rdfs:label ?tl } }
+          bind(coalesce(?tl, str(?node)) as ?label)
+        } group by ?node ?label }
+        bind(2 as ?col)
+        bind(concat(?osd, \"|\", lcase(?label), \"|\", str(?node)) as ?key)
+      }
+      } }
+    { select distinct (?node as ?node2) (?col as ?col2) (?key as ?key2) where {
+  select distinct ?node ?col ?key ?label where {
+      {
+        { select ?node ?label (min(?psd0) as ?psd) where {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+          optional { graph ?a { ?pres schema:startDate ?psdA } }
+          optional { graph ?a { ?pres schemaold:startDate ?psdB } }
+          bind(coalesce(str(?psdA), str(?psdB), \"\") as ?psd0)
+          graph ?a { ?pres pav:authoredBy|wd:P823 ?node }
+          graph ?pi { ?node foaf:name ?label }
+        } group by ?node ?label }
+        bind(0 as ?col)
+        bind(concat(?psd, \"|\", lcase(?label), \"|\", str(?node)) as ?key)
+      } union {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+        optional { graph ?a { ?pres schema:startDate ?sdA } }
+        optional { graph ?a { ?pres schemaold:startDate ?sdB } }
+        bind(coalesce(str(?sdA), str(?sdB), \"\") as ?sd)
+        bind(?pres as ?node)
+        bind(1 as ?col)
+        bind(?tlabel as ?label)
+        bind(concat(?sd, \"|\", str(?pres)) as ?key)
+      } union {
+        { select ?node ?label (min(?osd0) as ?osd) where {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+        graph npa:graph {
+          ?tnp npa:hasValidSignatureForPublicKeyHash ?tpk ;
+            np:hasAssertion ?ta ; np:hasPublicationInfo ?tpi .
+          filter not exists { ?tinv npx:invalidates ?tnp ; npa:hasValidSignatureForPublicKeyHash ?tpk . }
+          filter not exists { ?tnp npx:hasNanopubType npx:ExampleNanopub . }
+        }
+          optional { graph ?a { ?pres schema:startDate ?osdA } }
+          optional { graph ?a { ?pres schemaold:startDate ?osdB } }
+          bind(coalesce(str(?osdA), str(?osdB), \"\") as ?osd0)
+          graph ?ta { ?pres dct:subject ?node }
+          optional { graph ?tpi { ?node rdfs:label ?tl } }
+          bind(coalesce(?tl, str(?node)) as ?label)
+        } group by ?node ?label }
+        bind(2 as ?col)
+        bind(concat(?osd, \"|\", lcase(?label), \"|\", str(?node)) as ?key)
+      }
+      } } }
+    filter(?col2 = ?col)
+  } group by ?node ?col ?label ?key
+} }
+      { select (?node as ?nodeB) (?col as ?colB) (?label as ?labelB) (?rank as ?rankB) (?total as ?totalB) where {
+  select ?node ?col ?label ?key (sum(if(?key2 <= ?key, 1, 0)) as ?rank) (count(?key2) as ?total)
+  where {
+    { select distinct ?node ?col ?key ?label where {
+      {
+        { select ?node ?label (min(?psd0) as ?psd) where {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+          optional { graph ?a { ?pres schema:startDate ?psdA } }
+          optional { graph ?a { ?pres schemaold:startDate ?psdB } }
+          bind(coalesce(str(?psdA), str(?psdB), \"\") as ?psd0)
+          graph ?a { ?pres pav:authoredBy|wd:P823 ?node }
+          graph ?pi { ?node foaf:name ?label }
+        } group by ?node ?label }
+        bind(0 as ?col)
+        bind(concat(?psd, \"|\", lcase(?label), \"|\", str(?node)) as ?key)
+      } union {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+        optional { graph ?a { ?pres schema:startDate ?sdA } }
+        optional { graph ?a { ?pres schemaold:startDate ?sdB } }
+        bind(coalesce(str(?sdA), str(?sdB), \"\") as ?sd)
+        bind(?pres as ?node)
+        bind(1 as ?col)
+        bind(?tlabel as ?label)
+        bind(concat(?sd, \"|\", str(?pres)) as ?key)
+      } union {
+        { select ?node ?label (min(?osd0) as ?osd) where {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+        graph npa:graph {
+          ?tnp npa:hasValidSignatureForPublicKeyHash ?tpk ;
+            np:hasAssertion ?ta ; np:hasPublicationInfo ?tpi .
+          filter not exists { ?tinv npx:invalidates ?tnp ; npa:hasValidSignatureForPublicKeyHash ?tpk . }
+          filter not exists { ?tnp npx:hasNanopubType npx:ExampleNanopub . }
+        }
+          optional { graph ?a { ?pres schema:startDate ?osdA } }
+          optional { graph ?a { ?pres schemaold:startDate ?osdB } }
+          bind(coalesce(str(?osdA), str(?osdB), \"\") as ?osd0)
+          graph ?ta { ?pres dct:subject ?node }
+          optional { graph ?tpi { ?node rdfs:label ?tl } }
+          bind(coalesce(?tl, str(?node)) as ?label)
+        } group by ?node ?label }
+        bind(2 as ?col)
+        bind(concat(?osd, \"|\", lcase(?label), \"|\", str(?node)) as ?key)
+      }
+      } }
+    { select distinct (?node as ?node2) (?col as ?col2) (?key as ?key2) where {
+  select distinct ?node ?col ?key ?label where {
+      {
+        { select ?node ?label (min(?psd0) as ?psd) where {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+          optional { graph ?a { ?pres schema:startDate ?psdA } }
+          optional { graph ?a { ?pres schemaold:startDate ?psdB } }
+          bind(coalesce(str(?psdA), str(?psdB), \"\") as ?psd0)
+          graph ?a { ?pres pav:authoredBy|wd:P823 ?node }
+          graph ?pi { ?node foaf:name ?label }
+        } group by ?node ?label }
+        bind(0 as ?col)
+        bind(concat(?psd, \"|\", lcase(?label), \"|\", str(?node)) as ?key)
+      } union {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+        optional { graph ?a { ?pres schema:startDate ?sdA } }
+        optional { graph ?a { ?pres schemaold:startDate ?sdB } }
+        bind(coalesce(str(?sdA), str(?sdB), \"\") as ?sd)
+        bind(?pres as ?node)
+        bind(1 as ?col)
+        bind(?tlabel as ?label)
+        bind(concat(?sd, \"|\", str(?pres)) as ?key)
+      } union {
+        { select ?node ?label (min(?osd0) as ?osd) where {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+        graph npa:graph {
+          ?tnp npa:hasValidSignatureForPublicKeyHash ?tpk ;
+            np:hasAssertion ?ta ; np:hasPublicationInfo ?tpi .
+          filter not exists { ?tinv npx:invalidates ?tnp ; npa:hasValidSignatureForPublicKeyHash ?tpk . }
+          filter not exists { ?tnp npx:hasNanopubType npx:ExampleNanopub . }
+        }
+          optional { graph ?a { ?pres schema:startDate ?osdA } }
+          optional { graph ?a { ?pres schemaold:startDate ?osdB } }
+          bind(coalesce(str(?osdA), str(?osdB), \"\") as ?osd0)
+          graph ?ta { ?pres dct:subject ?node }
+          optional { graph ?tpi { ?node rdfs:label ?tl } }
+          bind(coalesce(?tl, str(?node)) as ?label)
+        } group by ?node ?label }
+        bind(2 as ?col)
+        bind(concat(?osd, \"|\", lcase(?label), \"|\", str(?node)) as ?key)
+      }
+      } } }
+    filter(?col2 = ?col)
+  } group by ?node ?col ?label ?key
+} }
+      { select distinct ?nodeA ?nodeB where {
+      {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+        graph ?a { ?pres pav:authoredBy|wd:P823 ?nodeA }
+        graph ?pi { ?nodeA foaf:name ?nm }
+        bind(?pres as ?nodeB)
+      } union {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+        graph npa:graph {
+          ?tnp npa:hasValidSignatureForPublicKeyHash ?tpk ;
+            np:hasAssertion ?ta ; np:hasPublicationInfo ?tpi .
+          filter not exists { ?tinv npx:invalidates ?tnp ; npa:hasValidSignatureForPublicKeyHash ?tpk . }
+          filter not exists { ?tnp npx:hasNanopubType npx:ExampleNanopub . }
+        }
+        graph ?ta { ?pres dct:subject ?nodeB }
+        bind(?pres as ?nodeA)
+      }
+      } }
+      filter(?colB = ?colA + 1)
+      bind(round(52 + (?rankA - 0.5) * (1300 / ?totalA)) as ?ya)
+      bind(round(52 + (?rankB - 0.5) * (1300 / ?totalB)) as ?yb)
+      bind(if(?colA = 0, 254, 790) as ?xa)
+      bind(if(?colB = 1, 418, 945) as ?xb)
+      bind((?xa + ?xb) / 2 as ?xm)
+      bind(concat('<path d=\"M', str(?xa), ',', str(?ya),
+                  ' C', str(?xm), ',', str(?ya), ' ', str(?xm), ',', str(?yb), ' ',
+                  str(?xb), ',', str(?yb), '\" fill=\"none\" stroke=\"',
+                  if(?colA = 0, '#8fbf86', '#d9a55f'),
+                  '\" stroke-width=\"0.8\" stroke-opacity=\"0.45\"></path>') as ?efrag)
+    }
+  }
+  {
+    select (group_concat(?nfrag; separator=\"\") as ?nodefrags) where {
+      values ?_event_multi_iri {  }
+      { select ?node ?col ?label ?rank ?total where {
+  select ?node ?col ?label ?key (sum(if(?key2 <= ?key, 1, 0)) as ?rank) (count(?key2) as ?total)
+  where {
+    { select distinct ?node ?col ?key ?label where {
+      {
+        { select ?node ?label (min(?psd0) as ?psd) where {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+          optional { graph ?a { ?pres schema:startDate ?psdA } }
+          optional { graph ?a { ?pres schemaold:startDate ?psdB } }
+          bind(coalesce(str(?psdA), str(?psdB), \"\") as ?psd0)
+          graph ?a { ?pres pav:authoredBy|wd:P823 ?node }
+          graph ?pi { ?node foaf:name ?label }
+        } group by ?node ?label }
+        bind(0 as ?col)
+        bind(concat(?psd, \"|\", lcase(?label), \"|\", str(?node)) as ?key)
+      } union {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+        optional { graph ?a { ?pres schema:startDate ?sdA } }
+        optional { graph ?a { ?pres schemaold:startDate ?sdB } }
+        bind(coalesce(str(?sdA), str(?sdB), \"\") as ?sd)
+        bind(?pres as ?node)
+        bind(1 as ?col)
+        bind(?tlabel as ?label)
+        bind(concat(?sd, \"|\", str(?pres)) as ?key)
+      } union {
+        { select ?node ?label (min(?osd0) as ?osd) where {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+        graph npa:graph {
+          ?tnp npa:hasValidSignatureForPublicKeyHash ?tpk ;
+            np:hasAssertion ?ta ; np:hasPublicationInfo ?tpi .
+          filter not exists { ?tinv npx:invalidates ?tnp ; npa:hasValidSignatureForPublicKeyHash ?tpk . }
+          filter not exists { ?tnp npx:hasNanopubType npx:ExampleNanopub . }
+        }
+          optional { graph ?a { ?pres schema:startDate ?osdA } }
+          optional { graph ?a { ?pres schemaold:startDate ?osdB } }
+          bind(coalesce(str(?osdA), str(?osdB), \"\") as ?osd0)
+          graph ?ta { ?pres dct:subject ?node }
+          optional { graph ?tpi { ?node rdfs:label ?tl } }
+          bind(coalesce(?tl, str(?node)) as ?label)
+        } group by ?node ?label }
+        bind(2 as ?col)
+        bind(concat(?osd, \"|\", lcase(?label), \"|\", str(?node)) as ?key)
+      }
+      } }
+    { select distinct (?node as ?node2) (?col as ?col2) (?key as ?key2) where {
+  select distinct ?node ?col ?key ?label where {
+      {
+        { select ?node ?label (min(?psd0) as ?psd) where {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+          optional { graph ?a { ?pres schema:startDate ?psdA } }
+          optional { graph ?a { ?pres schemaold:startDate ?psdB } }
+          bind(coalesce(str(?psdA), str(?psdB), \"\") as ?psd0)
+          graph ?a { ?pres pav:authoredBy|wd:P823 ?node }
+          graph ?pi { ?node foaf:name ?label }
+        } group by ?node ?label }
+        bind(0 as ?col)
+        bind(concat(?psd, \"|\", lcase(?label), \"|\", str(?node)) as ?key)
+      } union {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+        optional { graph ?a { ?pres schema:startDate ?sdA } }
+        optional { graph ?a { ?pres schemaold:startDate ?sdB } }
+        bind(coalesce(str(?sdA), str(?sdB), \"\") as ?sd)
+        bind(?pres as ?node)
+        bind(1 as ?col)
+        bind(?tlabel as ?label)
+        bind(concat(?sd, \"|\", str(?pres)) as ?key)
+      } union {
+        { select ?node ?label (min(?osd0) as ?osd) where {
+      graph npa:graph {
+        ?np npa:hasValidSignatureForPublicKeyHash ?pk ;
+          np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+        filter not exists {
+          ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+          filter(?crw > ?cr)
+          filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+        }
+      }
+      values ?_event_multi_iri {  }
+      graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+        graph npa:graph {
+          ?tnp npa:hasValidSignatureForPublicKeyHash ?tpk ;
+            np:hasAssertion ?ta ; np:hasPublicationInfo ?tpi .
+          filter not exists { ?tinv npx:invalidates ?tnp ; npa:hasValidSignatureForPublicKeyHash ?tpk . }
+          filter not exists { ?tnp npx:hasNanopubType npx:ExampleNanopub . }
+        }
+          optional { graph ?a { ?pres schema:startDate ?osdA } }
+          optional { graph ?a { ?pres schemaold:startDate ?osdB } }
+          bind(coalesce(str(?osdA), str(?osdB), \"\") as ?osd0)
+          graph ?ta { ?pres dct:subject ?node }
+          optional { graph ?tpi { ?node rdfs:label ?tl } }
+          bind(coalesce(?tl, str(?node)) as ?label)
+        } group by ?node ?label }
+        bind(2 as ?col)
+        bind(concat(?osd, \"|\", lcase(?label), \"|\", str(?node)) as ?key)
+      }
+      } } }
+    filter(?col2 = ?col)
+  } group by ?node ?col ?label ?key
+} }
+      bind(round(52 + (?rank - 0.5) * (1300 / ?total)) as ?y)
+      bind(if(?col = 1,
+              if(strlen(?label) > 52, concat(substr(?label, 1, 51), \"\\u2026\"), ?label),
+              if(strlen(?label) > 30, concat(substr(?label, 1, 29), \"\\u2026\"), ?label)) as ?short)
+      bind(concat('<title>', replace(replace(replace(?label, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"), '</title>') as ?tip)
+      bind(if(?col = 1,
+        concat('<a href=\"/part?id=', encode_for_uri(str(?node)),
+               '&amp;context=', encode_for_uri(str(?_event_multi_iri)), '\">',
+          '<rect x=\"418\" y=\"', str(?y - 11), '\" width=\"380\" height=\"22\" rx=\"3\" ',
+            'fill=\"#eaf1f8\" stroke=\"#9bb4cc\"></rect>', ?tip,
+          '<text x=\"424\" y=\"', str(?y + 4), '\" font-size=\"10\" fill=\"#12263a\">', replace(replace(replace(?short, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"), '</text>',
+        '</a>'),
+      if(?col = 0,
+        concat('<circle cx=\"250\" cy=\"', str(?y), '\" r=\"4\" fill=\"#8fbf86\" stroke=\"#5e8f55\"></circle>', ?tip,
+          '<text x=\"242\" y=\"', str(?y + 3.5), '\" font-size=\"10\" text-anchor=\"end\" fill=\"#33475b\">', replace(replace(replace(?short, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"), '</text>'),
+        concat('<circle cx=\"950\" cy=\"', str(?y), '\" r=\"4.5\" fill=\"#d9a55f\" stroke=\"#a9762f\"></circle>', ?tip,
+          '<text x=\"962\" y=\"', str(?y + 3.5), '\" font-size=\"10.5\" fill=\"#5c4418\">', replace(replace(replace(?short, \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\"), '</text>')
+      )) as ?nfrag)
+    }
+  }
+  bind(\"Talks, topics and people\" as ?title)
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-25T07:15:57Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-talk-topic-people-network-svg;
+    rdfs:label "Get an event's talks, topics and people as a network figure";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "OCiNklLq3FENpTG5V8I0kYxQZdux8cjQNZ9lE8rVdDYvZKCPWtjNQN5lY/6PGKQU48yOxFtsqPT7+lUVjhSTqVk6tYOktN8YQ1TavfGv0pJD9kfFJi94lwIBBwk0XEKpea0gjakYaIEZ4uEOPh4F1SlTt3cDrtWk72W/8tFSK8s=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

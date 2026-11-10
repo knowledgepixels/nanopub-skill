@@ -1,0 +1,96 @@
+@prefix this: <https://w3id.org/np/RAUY_SQJLxVemhRKbWnpJv_a9W3d4pM-hSYX0HTzL_qKk> .
+@prefix sub: <https://w3id.org/np/RAUY_SQJLxVemhRKbWnpJv_a9W3d4pM-hSYX0HTzL_qKk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-paper-info a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns what is known about a cited paper as a property/value table, for the page of that paper (its IRI passed as the 'paper' parameter): its title, its year of publication where one is recorded, and how many claims cite it. Project Delphi publishes no nanopublication that defines a paper, so the title is taken from the claim nanopublications (delphi:Claim) whose provenance derives their assertion from the paper with prov:wasDerivedFrom, rather than from any statement about the IRI elsewhere on the network; within those, it is looked up in the assertion graph or the provenance graph (dct:title, and dct:date for the year). The claim count is the number of distinct claims those nanopublications introduce. Where several citing nanopublications give a title or a year, the lexicographically first is shown. Rows whose value is empty are left out, so a paper with no recorded year simply has fewer rows. Both value columns carry the _noheader marker, so the table renders without a header row. This view exists chiefly to name the paper: a paper's part page has no defining nanopublication, so its heading is only the identifier.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the information about a cited paper";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix delphi: <https://w3id.org/delphi/ontology/>
+
+select ?Property_noheader ?Value_noheader (\"\" as ?Value_label) where {
+  {
+    select (min(?titleV) as ?title) (min(?yearV) as ?year) (count(distinct ?claim) as ?claims) where {
+      values ?_paper_multi_iri {}
+      # Scoped to the claim nanopublications whose provenance derives their assertion from
+      # this paper, so that the title is the one the citing claims give it and not any
+      # statement about the IRI elsewhere on the network. It is read from the assertion
+      # graph or the provenance graph of those nanopublications.
+      graph npa:graph { ?cnp npx:hasNanopubType delphi:Claim ; npx:introduces ?claim ; np:hasAssertion ?ca ; np:hasProvenance ?cp . }
+      graph ?cp { ?ca prov:wasDerivedFrom ?_paper_multi_iri . }
+      graph ?ca { ?claim a delphi:Claim . }
+      optional {
+        graph npa:graph { ?cnp (np:hasAssertion|np:hasProvenance) ?tg . }
+        graph ?tg { ?_paper_multi_iri dct:title ?titleV . }
+      }
+      optional {
+        graph npa:graph { ?cnp (np:hasAssertion|np:hasProvenance) ?yg . }
+        graph ?yg { ?_paper_multi_iri dct:date ?d . }
+        bind(substr(str(?d), 1, 4) as ?yearV)
+      }
+    }
+  }
+  bind(coalesce(?title, \"\") as ?titleS)
+  bind(coalesce(?year, \"\") as ?yearS)
+  values (?k ?Property_noheader ?ord) {
+    (\"title\" \"Title:\" 1)
+    (\"year\" \"Year:\" 2)
+    (\"claims\" \"Cited by:\" 3)
+  }
+  bind(if(?k = \"title\", ?titleS,
+       if(?k = \"year\", ?yearS,
+       if(?claims = 1, \"1 claim\", concat(str(?claims), \" claims\")))) as ?Value_noheader)
+  filter(?Value_noheader != \"\")
+}
+order by ?ord""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-11-06T17:25:55.345Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-paper-info;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RADHArgYYf_lbb59jsRdrbbaku2tS6LwWJHtuODfjMW4U>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCaQXE2B2hJ6QdWxaWerU4F/XOtCQdj2OkdrIYd1kpMY9hIUh8boxaO3uOBeqvvqKLf5HjpRF4DT1eghOSsa2Dhd5HRTM/XIamvwWkHpN4oB3Ml19pAAzjTqczYmFLfgG67mGL5+vSA8VEdHtKQCrvP4SpTibMBP1qaxt3k1tqD6wIDAQAB";
+    npx:hasSignature "YdpXxW6k5QZ4TXC1w01+bHVLsL8/2dFV6LcqLQci9khY7Aje/qRbcalE2YtDFSqKFjULz0Aw8pWLZXQpe5t7EM3+z+G90/Bl6xqWopgk8ARpOOGbkgeL5MnRQsOyJCwhd1rwB/yeaHkrUgTvhwhz4ciw4QjQ2s4MVDLx1NoA5ms=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

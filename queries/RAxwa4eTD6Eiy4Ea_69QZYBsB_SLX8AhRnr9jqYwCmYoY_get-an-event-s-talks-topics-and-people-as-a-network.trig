@@ -1,0 +1,248 @@
+@prefix this: <https://w3id.org/np/RAxwa4eTD6Eiy4Ea_69QZYBsB_SLX8AhRnr9jqYwCmYoY> .
+@prefix sub: <https://w3id.org/np/RAxwa4eTD6Eiy4Ea_69QZYBsB_SLX8AhRnr9jqYwCmYoY/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-talk-topic-people-network a grlc:grlc-query;
+    dct:description "Returns an event's talks, the people who give them and the topics they are about as one graph, a row per edge in the shape a network view reads: person to talk for every authorship or presentation, talk to topic for every topic recorded, and — so that the conversation is part of the picture rather than beside it — a node per message posted about a talk, joined to the talk it is about and to the person who wrote it. A message is its own assertion graph, carrying its text as a label and its subject through schema:about, so the node is the message itself and its caption is the text, cut at a word boundary and quoted, with the whole message and its date in the hover box. The author's caption is deliberately left unbound: a message is signed by an account, and Nanodash resolves an ORCID to that account's own name better than a query can. This runs on the full repository rather than the presentations type repository, because a message is not typed as a presentation and so does not live there. The node types colour the three kinds apart and the edge label says which relation it is, distinguishing a declared speaker from an author, since a programme names a speaker only for invited talks. People are keyed on the IRI the nanopublication carries, never on their name: the same person may hold an ORCID and a minted IRI, and two different people may share a name, so a name-keyed graph would merge and split the wrong nodes. Names come from the talk's own publication info, which carries one for every author whether they are identified by ORCID or by a minted IRI. The event comes in as the queried resource, so the same query serves any event whose talks carry authors or topics; the result is empty for one with neither. Node captions are kept short enough to read on a canvas: a talk is named by the short form its own title gives before a colon, where that is short, and otherwise by its title cut at a word boundary, with the full title and the session time in the hover box, which is what a network view's description column is for. A topic that carries no label of its own — one added through the template, which records the URI and not a name — falls back to the last segment of its URI, so it reads Q29377821 or rdf12-concepts rather than a whole URL. Distinct, because a keynote whose speaker is also its author matches both properties and would otherwise contribute the same edge twice.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get an event's talks, topics and people as a network";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix wd: <http://www.wikidata.org/entity/>
+prefix schema: <https://schema.org/>
+prefix schemaold: <http://schema.org/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix pav: <http://purl.org/pav/>
+
+select distinct ?source ?source_label ?source_type ?source_type_label ?source_desc
+       ?target ?target_label ?target_type ?target_type_label ?target_desc
+       ?edge_type ?edge_label ?np
+where {
+  {
+    # ---- a person who authors or presents a talk ----
+    graph npa:graph {
+      ?tknp npa:hasValidSignatureForPublicKeyHash ?pk ;
+        np:hasAssertion ?a ; np:hasPublicationInfo ?pi ; npx:introduces ?pres ; dct:created ?cr .
+      filter not exists { ?inv npx:invalidates ?tknp ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+      filter not exists { ?tknp npx:hasNanopubType npx:ExampleNanopub . }
+      filter not exists {
+        ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+        filter(?crw > ?cr)
+        filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+      }
+    }
+    values ?_event_multi_iri {  }
+    graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+    graph ?a { ?pres pav:authoredBy|wd:P823 ?source }
+    graph ?pi { ?source foaf:name ?source_label }
+    optional { graph ?a { ?pres schema:startDate ?sdA } }
+    optional { graph ?a { ?pres schemaold:startDate ?sdB } }
+    bind(substr(strafter(coalesce(str(?sdA), str(?sdB), \"\"), \"T\"), 1, 5) as ?tstart)
+    bind(if(contains(?tlabel, \": \") && strlen(strbefore(?tlabel, \": \")) <= 32,
+            strbefore(?tlabel, \": \"), ?tlabel) as ?tshort0)
+    bind(if(strlen(?tshort0) > 36,
+            concat(replace(substr(?tshort0, 1, 36), \" [^ ]*$\", \"\"), \"…\"),
+            ?tshort0) as ?tshort)
+    bind(if(strlen(?tstart) > 0, concat(?tlabel, \" — \", ?tstart), ?tlabel) as ?tfull)
+    bind(?pres as ?target)
+    bind(?tshort as ?target_label)
+    bind(\"person\" as ?source_type)
+    bind(\"Person\" as ?source_type_label)
+    bind(\"talk\" as ?target_type)
+    bind(\"Talk\" as ?target_type_label)
+    bind(if(exists { graph ?a { ?pres wd:P823 ?source } }, \"presents\", \"author of\") as ?edge_label)
+    bind(if(exists { graph ?a { ?pres wd:P823 ?source } }, \"speaker\", \"author\") as ?edge_type)
+    bind(?tfull as ?target_desc)
+    bind(?tknp as ?np)
+  } union {
+    # ---- a talk and a topic it is about ----
+    graph npa:graph {
+      ?tknp npa:hasValidSignatureForPublicKeyHash ?pk ;
+        np:hasAssertion ?a ; npx:introduces ?pres ; dct:created ?cr .
+      filter not exists { ?inv npx:invalidates ?tknp ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+      filter not exists { ?tknp npx:hasNanopubType npx:ExampleNanopub . }
+      filter not exists {
+        ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+        filter(?crw > ?cr)
+        filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+      }
+    }
+    values ?_event_multi_iri {  }
+    graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+    optional { graph ?a { ?pres schema:startDate ?sdA } }
+    optional { graph ?a { ?pres schemaold:startDate ?sdB } }
+    bind(substr(strafter(coalesce(str(?sdA), str(?sdB), \"\"), \"T\"), 1, 5) as ?tstart)
+    graph npa:graph {
+      ?tgnp npa:hasValidSignatureForPublicKeyHash ?tpk ;
+        np:hasAssertion ?ta ; np:hasPublicationInfo ?tpi .
+      filter not exists { ?tinv npx:invalidates ?tgnp ; npa:hasValidSignatureForPublicKeyHash ?tpk . }
+      filter not exists { ?tgnp npx:hasNanopubType npx:ExampleNanopub . }
+    }
+    graph ?ta { ?pres dct:subject ?target }
+    optional { graph ?tpi { ?target rdfs:label ?tl } }
+    bind(if(contains(?tlabel, \": \") && strlen(strbefore(?tlabel, \": \")) <= 32,
+            strbefore(?tlabel, \": \"), ?tlabel) as ?tshort0)
+    bind(if(strlen(?tshort0) > 36,
+            concat(replace(substr(?tshort0, 1, 36), \" [^ ]*$\", \"\"), \"…\"),
+            ?tshort0) as ?tshort)
+    bind(if(strlen(?tstart) > 0, concat(?tlabel, \" — \", ?tstart), ?tlabel) as ?tfull)
+    bind(?pres as ?source)
+    bind(?tshort as ?source_label)
+    # A topic added through the template carries no label of its own, so fall back to the
+    # last segment of its URI (Q29377821, rdf12-concepts) rather than a whole URL.
+    bind(coalesce(?tl, replace(replace(str(?target), \"/$\", \"\"), \"^.*[/#]\", \"\")) as ?target_label)
+    bind(\"talk\" as ?source_type)
+    bind(\"Talk\" as ?source_type_label)
+    bind(\"topic\" as ?target_type)
+    bind(\"Topic\" as ?target_type_label)
+    bind(\"is about\" as ?edge_label)
+    bind(\"topic\" as ?edge_type)
+    bind(?tfull as ?source_desc)
+    bind(str(?target) as ?target_desc)
+    bind(?tgnp as ?np)
+  } union {
+    # ---- a message about a talk ----
+    graph npa:graph {
+      ?tknp npa:hasValidSignatureForPublicKeyHash ?pk ;
+        np:hasAssertion ?a ; npx:introduces ?pres ; dct:created ?cr .
+      filter not exists { ?inv npx:invalidates ?tknp ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+      filter not exists { ?tknp npx:hasNanopubType npx:ExampleNanopub . }
+      filter not exists {
+        ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+        filter(?crw > ?cr)
+        filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+      }
+    }
+    values ?_event_multi_iri {  }
+    graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+    optional { graph ?a { ?pres schema:startDate ?sdA } }
+    optional { graph ?a { ?pres schemaold:startDate ?sdB } }
+    bind(substr(strafter(coalesce(str(?sdA), str(?sdB), \"\"), \"T\"), 1, 5) as ?tstart)
+    bind(if(contains(?tlabel, \": \") && strlen(strbefore(?tlabel, \": \")) <= 32,
+            strbefore(?tlabel, \": \"), ?tlabel) as ?tshort0)
+    bind(if(strlen(?tshort0) > 36,
+            concat(replace(substr(?tshort0, 1, 36), \" [^ ]*$\", \"\"), \"…\"),
+            ?tshort0) as ?tshort)
+    graph npa:graph {
+      ?mnp npa:hasValidSignatureForPublicKeyHash ?mpk ;
+        np:hasAssertion ?ma ; dct:created ?mdate ; dct:creator ?muser .
+      filter not exists { ?minv npx:invalidates ?mnp ; npa:hasValidSignatureForPublicKeyHash ?mpk . }
+      filter not exists { ?mnp npx:hasNanopubType npx:ExampleNanopub . }
+    }
+    graph ?ma { ?ma rdfs:label ?mtext ; schema:about ?pres . }
+    bind(if(strlen(?mtext) > 40,
+            concat(replace(substr(?mtext, 1, 40), \" [^ ]*$\", \"\"), \"…\"),
+            ?mtext) as ?mshort)
+    bind(concat(\"“\", ?mshort, \"”\") as ?mquoted)
+    bind(concat(?mtext, \" — \", substr(str(?mdate), 1, 10), \" \", substr(str(?mdate), 12, 5)) as ?mfull)
+    bind(?ma as ?source)
+    bind(?mquoted as ?source_label)
+    bind(\"message\" as ?source_type)
+    bind(\"Message\" as ?source_type_label)
+    bind(?mfull as ?source_desc)
+    bind(?pres as ?target)
+    bind(?tshort as ?target_label)
+    bind(\"talk\" as ?target_type)
+    bind(\"Talk\" as ?target_type_label)
+    bind(if(strlen(?tstart) > 0, concat(?tlabel, \" — \", ?tstart), ?tlabel) as ?target_desc)
+    bind(\"about\" as ?edge_label)
+    bind(\"message\" as ?edge_type)
+    bind(?mnp as ?np)
+  } union {
+    # ---- who wrote a message: the label is left unbound on purpose, so Nanodash
+    # resolves the ORCID to the account's own name (NetworkGraph falls back to
+    # getKnownLabel for a node the query does not name).
+    graph npa:graph {
+      ?tknp npa:hasValidSignatureForPublicKeyHash ?pk ;
+        np:hasAssertion ?a ; npx:introduces ?pres ; dct:created ?cr .
+      filter not exists { ?inv npx:invalidates ?tknp ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+      filter not exists { ?tknp npx:hasNanopubType npx:ExampleNanopub . }
+      filter not exists {
+        ?nw npx:introduces ?pres ; npa:hasValidSignatureForPublicKeyHash ?pkw ; dct:created ?crw .
+        filter(?crw > ?cr)
+        filter not exists { ?inv2 npx:invalidates ?nw ; npa:hasValidSignatureForPublicKeyHash ?pkw . }
+      }
+    }
+    values ?_event_multi_iri {  }
+    graph ?a { ?pres a wd:Q604733 ; dct:isPartOf ?_event_multi_iri ; rdfs:label ?tlabel . }
+    optional { graph ?a { ?pres schema:startDate ?sdA } }
+    optional { graph ?a { ?pres schemaold:startDate ?sdB } }
+    bind(substr(strafter(coalesce(str(?sdA), str(?sdB), \"\"), \"T\"), 1, 5) as ?tstart)
+    bind(if(contains(?tlabel, \": \") && strlen(strbefore(?tlabel, \": \")) <= 32,
+            strbefore(?tlabel, \": \"), ?tlabel) as ?tshort0)
+    bind(if(strlen(?tshort0) > 36,
+            concat(replace(substr(?tshort0, 1, 36), \" [^ ]*$\", \"\"), \"…\"),
+            ?tshort0) as ?tshort)
+    graph npa:graph {
+      ?mnp npa:hasValidSignatureForPublicKeyHash ?mpk ;
+        np:hasAssertion ?ma ; dct:created ?mdate ; dct:creator ?muser .
+      filter not exists { ?minv npx:invalidates ?mnp ; npa:hasValidSignatureForPublicKeyHash ?mpk . }
+      filter not exists { ?mnp npx:hasNanopubType npx:ExampleNanopub . }
+    }
+    graph ?ma { ?ma rdfs:label ?mtext ; schema:about ?pres . }
+    bind(if(strlen(?mtext) > 40,
+            concat(replace(substr(?mtext, 1, 40), \" [^ ]*$\", \"\"), \"…\"),
+            ?mtext) as ?mshort)
+    bind(concat(\"“\", ?mshort, \"”\") as ?mquoted)
+    bind(concat(?mtext, \" — \", substr(str(?mdate), 1, 10), \" \", substr(str(?mdate), 12, 5)) as ?mfull)
+    bind(?muser as ?source)
+    bind(\"person\" as ?source_type)
+    bind(\"Person\" as ?source_type_label)
+    bind(?ma as ?target)
+    bind(?mquoted as ?target_label)
+    bind(\"message\" as ?target_type)
+    bind(\"Message\" as ?target_type_label)
+    bind(?mfull as ?target_desc)
+    bind(\"wrote\" as ?edge_label)
+    bind(\"message\" as ?edge_type)
+    bind(?mnp as ?np)
+  }
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-25T09:18:30Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-talk-topic-people-network;
+    npx:supersedes <https://w3id.org/np/RABXPVJHWfu_HgnR3cTGXcjY0obxsOR6JmWEqqMkOEK5E>;
+    rdfs:label "Get an event's talks, topics and people as a network";
+    nt:wasCreatedFromProvenanceTemplate <http://purl.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "GghShAWpiDhUsTz6fWXX8/0UumOcevCCEiLuPvH2gF38ccDFHNjkHAecmAh+p3QU4sZxWtdIFd8UBfNRhhAMV6rTetSecIhSulkhsaIQMDPINZFi5a8XWfepunFAXnqJ1NQ5qKuYcVK0crju3gXpRACnEb9C8GjAeYF0eSu2oss=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

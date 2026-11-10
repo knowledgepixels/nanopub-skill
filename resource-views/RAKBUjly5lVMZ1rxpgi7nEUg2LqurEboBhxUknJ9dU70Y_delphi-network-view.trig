@@ -1,0 +1,58 @@
+@prefix this: <https://w3id.org/np/RAKBUjly5lVMZ1rxpgi7nEUg2LqurEboBhxUknJ9dU70Y> .
+@prefix sub: <https://w3id.org/np/RAKBUjly5lVMZ1rxpgi7nEUg2LqurEboBhxUknJ9dU70Y/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:network-view a gen:NetworkView, gen:ResourceView;
+    dct:isVersionOf <https://w3id.org/np/RAxfs9jblUg-b8gXsBey8Sn6M7hEHfN3_37QqSbjnhsIM/network-view-kind>;
+    dct:title "🕸 Network";
+    rdfs:label "Delphi network view";
+    gen:appliesToInstancesOf gen:Space;
+    gen:hasStructuralPosition "3.5.network";
+    gen:hasViewQuery <https://w3id.org/np/RATAYaETnnSW644kC79s-Cr_V8TxitN3qKdxtt_NjHEQA/get-delphi-network>;
+    gen:hasViewQueryTargetField "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-11-06T17:11:41.431Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:network-view;
+    npx:introduces <https://w3id.org/np/RAxfs9jblUg-b8gXsBey8Sn6M7hEHfN3_37QqSbjnhsIM/network-view-kind>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAamkIowK53-5yntlNQwR7ngVyV_jM2dwdJndCkW4w0hM>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCaQXE2B2hJ6QdWxaWerU4F/XOtCQdj2OkdrIYd1kpMY9hIUh8boxaO3uOBeqvvqKLf5HjpRF4DT1eghOSsa2Dhd5HRTM/XIamvwWkHpN4oB3Ml19pAAzjTqczYmFLfgG67mGL5+vSA8VEdHtKQCrvP4SpTibMBP1qaxt3k1tqD6wIDAQAB";
+    npx:hasSignature "jIqisLY7Bs0jx7iBtkVP0Nfo5I4vuEfQddtVkmxZYmRNQDLwTF6j6JrChlAeIj6trjqNVkdv31vY8dLjD9kJNhVZONxpWF3NKBGFKdXSZLTHo0OfABDZ2SH1wB++IzhlN/XwBZrgLVqGFM00D5a1JaoBJ+3L5idKfbbKesqwop0=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

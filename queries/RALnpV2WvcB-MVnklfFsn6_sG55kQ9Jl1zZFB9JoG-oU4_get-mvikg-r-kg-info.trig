@@ -1,0 +1,84 @@
+@prefix this: <https://w3id.org/np/RALnpV2WvcB-MVnklfFsn6_sG55kQ9Jl1zZFB9JoG-oU4> .
+@prefix sub: <https://w3id.org/np/RALnpV2WvcB-MVnklfFsn6_sG55kQ9Jl1zZFB9JoG-oU4/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-mvikg-kg-info a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Key-value info table for the mvikg/r/kg maintained resource: description, type, namespace (shown only if declared), maintained-by space (linked, labelled), and the nanopub that declared it as a maintained resource (linked).";
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Get mvikg/r/kg info";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+
+select ?Property_noheader ?Property_label ?Value_noheader ?Value_label where {
+  {
+    select ?da ?dnp where {
+      graph ?da { <https://w3id.org/spaces/mvikg/r/kg> a gen:MaintainedResource }
+      bind(replace(str(?da), '/assertion$', '') as ?dnp)
+    } limit 1
+  }
+  {
+    bind(1 as ?ord) bind(dct:description as ?Property_noheader) bind('Description:' as ?Property_label)
+    graph ?da { <https://w3id.org/spaces/mvikg/r/kg> dct:description ?v }
+    bind(str(?v) as ?Value_noheader) bind('' as ?Value_label)
+  } union {
+    bind(2 as ?ord) bind(rdf:type as ?Property_noheader) bind('Type:' as ?Property_label)
+    bind('Nanopublication records curated from research papers' as ?Value_noheader) bind('' as ?Value_label)
+  } union {
+    graph ?da { <https://w3id.org/spaces/mvikg/r/kg> gen:hasNamespace ?v }
+    bind(3 as ?ord) bind(gen:hasNamespace as ?Property_noheader) bind('Namespace:' as ?Property_label)
+    bind(str(?v) as ?Value_noheader) bind('' as ?Value_label)
+  } union {
+    graph ?da { <https://w3id.org/spaces/mvikg/r/kg> gen:isMaintainedBy ?space }
+    optional { graph ?sg { ?space rdfs:label ?slabel } }
+    bind(4 as ?ord) bind(gen:isMaintainedBy as ?Property_noheader) bind('Maintained by:' as ?Property_label)
+    bind(str(?space) as ?Value_noheader) bind(coalesce(?slabel, replace(str(?space), '^.*/', '')) as ?Value_label)
+  } union {
+    { select ?dnp where { graph ?da { <https://w3id.org/spaces/mvikg/r/kg> a gen:MaintainedResource } bind(replace(str(?da), '/assertion$', '') as ?dnp) } limit 1 }
+    bind(5 as ?ord) bind(npa:viaNanopub as ?Property_noheader) bind('Declaration:' as ?Property_label)
+    bind(str(?dnp) as ?Value_noheader) bind(concat('^ ', substr(replace(str(?dnp), '^.*/np/', ''), 1, 10)) as ?Value_label)
+  }
+}
+order by ?ord""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0005-5515-1230 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-11-09T12:32:36Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0005-5515-1230;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-mvikg-kg-info;
+    rdfs:label "Get mvikg/r/kg info";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjO3oH8Lq/l1oZIUY3FlCz5DnndybGvAhBdmEJ/yq7Nv3GZEYPrEro23rCBCp0GiriOXlVbk61pA/7JFE6tqzTresINW6QQMxE9sIhCBlX4cG66JFD8ud6bMvUyzCR8LQA6zfrSbafGE06rvglJd4MDUcTwvUKqtL9UCnOaowVfnZ3sPOe9EqlmJuO3iHGxBSXMPOPEJZUzMXsFDWFuMZTnrR8gY3r5nVF5a8L/MD135ZH8qW5yGXOB28CmVYCAbw2o07QEKzyzFKN+W1gfnprYZvuKzwGexnzcdzc1S8N/M5bzhWQ40EKCEqgUE8c81OzEMm1HUlUKEJ/o5I/FKKAwIDAQAB";
+    npx:hasSignature "FitIdSjHLRLZSXyMrsRJ21BJAvcSrMB6C0teryEN6/wK3DM3stQVypPt5uzSIQKpeoaJbfmRVIJOXiGcNQ3vz3bz/SqDYnicnsNfxX36/kd2F80zvf4dEFdIuESxVR6Bqcl6Q68PhYeACv0XN3JPthd+I4wk8+feFfaH3zZlDEBt/attdquykPF+U33ZJPy7ymkPfCB6o3+owcg1NpVTrsmi588Qz/vlpff952qiTFJLytR6ef/nH4MS5t2wqHJuDbIGXpEbpHD8J72SL9vx6s52DIO5CcyB9Q+PV6p/A17hlZPAEh9a1Ym22CgUVt1EpoWOBZ5LEpFB9p7CLqpqbQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0005-5515-1230 .
+}
+

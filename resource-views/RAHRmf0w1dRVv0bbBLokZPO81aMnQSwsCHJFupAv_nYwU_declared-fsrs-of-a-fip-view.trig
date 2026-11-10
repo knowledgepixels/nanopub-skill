@@ -1,0 +1,59 @@
+@prefix this: <https://w3id.org/np/RAHRmf0w1dRVv0bbBLokZPO81aMnQSwsCHJFupAv_nYwU> .
+@prefix sub: <https://w3id.org/np/RAHRmf0w1dRVv0bbBLokZPO81aMnQSwsCHJFupAv_nYwU/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:viewVersion a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAExJLpFpQE5lArDomNipDBotZXRwLuBgZbDl3uKn0l58/fip-declared-fsrs-view-kind>;
+    dct:title "🧩 Declared FSRs";
+    rdfs:label "Declared FSRs of a FIP view";
+    gen:appliesToInstancesOf <https://w3id.org/fair/fip/terms/FAIR-Implementation-Profile>;
+    gen:governedBy <https://w3id.org/spaces/FAIR-Implementation-Space>;
+    gen:hasPageSize "0";
+    gen:hasStructuralPosition "4.2.declaredFsrs";
+    gen:hasViewQuery <https://w3id.org/np/RAR2tmRsTo1DKmslCAu72Wmlzr8bIY1j5ZSexu82pMvnk/get-fip-declared-fsrs>;
+    gen:hasViewQueryTargetField "fip" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-06T13:48:52Z"^^xsd:dateTime;
+    dct:creator <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot>;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:viewVersion;
+    npx:introduces <https://w3id.org/np/RAExJLpFpQE5lArDomNipDBotZXRwLuBgZbDl3uKn0l58/fip-declared-fsrs-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAzG12u-Sh5Kucl5wB11_jOp5anrrlrymmtuLWuJ8wJ3E>;
+    rdfs:label "Declared FSRs of a FIP view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAzZAkv4Mu1YSUxQMriBnhYunqosX5wpuQ3FjUyzW8wTC51wjCmhsChyhS+mCx7Od+2MTDpdhxDWA+pH1r9AX508X2rIY/sbpMS+pd56e0qKPQ0t4folln1TgamPN9iOlY/yLc2x27AdipWIGXUdtL2iAcb+P/Y5dQS2AkHMS3lP2e5JBL5/bD/10qvTLKvdsqIKts8qjuLpxr9CFbsS2gLjMkXL5D2IsJ0cL5sgmIfS1inLVxIfXrS/OgqYNFqeNznUYCVWfo0g7DKjnjiICz3omeQeJFLYwlJ6PhUhYDQS6O318DGwUCwhnuXbBbwL9evZa2I/0Pwu5xpZdNLYJ5UwIDAQAB";
+    npx:hasSignature "gVH3/CxPDlSUZtKTt15vos6Z9ghwJHmMEv1+537XVV8AWMXBOT6QPyquMI5dG3MsZfizAOdeEB4mKABHXN6sagdMtqFzMeh7K1MqAdsWxvOguSQDz39ZYRu3m3VjyVOK0b9u9fcMrW5rRGjRL+j9rYTgk7izOgZydx32EeAy4YmxDTpDk3J0QRp/XXWArXxeisbfBoBhJ94umcsF1KmZF7UThwdOZMoJRAYCylhN18ERsOYmnyP3nI59sAqsMNS7DR5i7Wh7gP+wEqGAVptryaap6vXOH06xmGPZUa5p7HYkaL8CO+Acd9slPy82ERFPy0vfZaRPpHarkQFBjqnvWA==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://w3id.org/np/RAlgF8um78nQxxJhJTNMZ3tpWJOntfTULJWMWr5Fmo4zU/fairimpl-bot> .
+}
+

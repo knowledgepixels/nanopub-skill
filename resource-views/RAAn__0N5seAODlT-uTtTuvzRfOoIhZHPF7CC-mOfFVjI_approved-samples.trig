@@ -1,0 +1,56 @@
+@prefix this: <https://w3id.org/np/RAAn__0N5seAODlT-uTtTuvzRfOoIhZHPF7CC-mOfFVjI> .
+@prefix sub: <https://w3id.org/np/RAAn__0N5seAODlT-uTtTuvzRfOoIhZHPF7CC-mOfFVjI/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:viewVersion a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAf9sYYf149wcxDMcuSPPrO_L1wLgSS8IJvdrrie4GH8U/kg-approved-samples-view>;
+    dct:title "✅ Approved samples";
+    rdfs:label "✅ Approved samples";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:hasDisplayWidth gen:ColumnWidth06of12;
+    gen:hasStructuralPosition "5.1.approved-sample";
+    gen:hasViewQuery <https://w3id.org/np/RAv7FGhqleb4WTOVp2zFOuGCEQMCKrnAhYWLi0ImwV-OI/get-kg-approved-samples>;
+    gen:hasViewQueryTargetField "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0005-5515-1230 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-11-09T18:16:45Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0005-5515-1230;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:viewVersion;
+    npx:introduces <https://w3id.org/np/RAf9sYYf149wcxDMcuSPPrO_L1wLgSS8IJvdrrie4GH8U/kg-approved-samples-view>;
+    npx:supersedes <https://w3id.org/np/RAX9Y3HokpgP4W4b6vrfWRt976K0qOMfPeKhbxYqv3GJ4>;
+    skos:changeNote "Repoints at the ModifiedBy-link-fixed query.";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjO3oH8Lq/l1oZIUY3FlCz5DnndybGvAhBdmEJ/yq7Nv3GZEYPrEro23rCBCp0GiriOXlVbk61pA/7JFE6tqzTresINW6QQMxE9sIhCBlX4cG66JFD8ud6bMvUyzCR8LQA6zfrSbafGE06rvglJd4MDUcTwvUKqtL9UCnOaowVfnZ3sPOe9EqlmJuO3iHGxBSXMPOPEJZUzMXsFDWFuMZTnrR8gY3r5nVF5a8L/MD135ZH8qW5yGXOB28CmVYCAbw2o07QEKzyzFKN+W1gfnprYZvuKzwGexnzcdzc1S8N/M5bzhWQ40EKCEqgUE8c81OzEMm1HUlUKEJ/o5I/FKKAwIDAQAB";
+    npx:hasSignature "bsJRhg/AbyiOu/J8/1Yn8QWllDZLLXl3g3EPp2XfdmwMFbqmfDeQFvs7k50EOAoetX7MdbLyaEKr5vDNzgcyNViz4A7MWxq7xdF1bYMT3zAabt93kJj51+GrrlyrYP4Ki+ADcWgeVBD3FKCvCl90TDHFDarQTWWYQbCxuNTKdsJKQCPGT5pfS90JOL9nSfjCT94wLZdnZPblk8ymx6hsN7y3ZgOkq3VFdxLlD5VcakCCxbAJFZk3iBaZ3JQzc1Qfrhnsbq2kK4xDiwF3V+K97KLWwqw40cCXWFrxbuM3NaIGOLIEU3ZHdACpy4/5LTm6yObg3M6rEP/V/CD3aWtxNQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0005-5515-1230 .
+}
+

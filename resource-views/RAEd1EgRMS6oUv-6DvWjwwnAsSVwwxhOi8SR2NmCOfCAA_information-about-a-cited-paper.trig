@@ -1,0 +1,59 @@
+@prefix this: <https://w3id.org/np/RAEd1EgRMS6oUv-6DvWjwwnAsSVwwxhOi8SR2NmCOfCAA> .
+@prefix sub: <https://w3id.org/np/RAEd1EgRMS6oUv-6DvWjwwnAsSVwwxhOi8SR2NmCOfCAA/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:paper-info-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAO45wrzVYcwOveZJfFtZeZH3drW5Ff2qFch3o_xgTrUU/paper-info-view-kind>;
+    dct:title "ℹ️ About this paper";
+    rdfs:label "Information about a cited paper";
+    gen:appliesToInstancesOf <https://schema.org/ScholarlyArticle>;
+    gen:appliesToNamespace <https://doi.org/>, <https://www.jstor.org/>;
+    gen:hasStructuralPosition "3.1.paperInfo";
+    gen:hasViewQuery <https://w3id.org/np/RAUY_SQJLxVemhRKbWnpJv_a9W3d4pM-hSYX0HTzL_qKk/get-paper-info>;
+    gen:hasViewQueryTargetField "paper" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-8492-0354 foaf:name "Ashley Caselli" .
+  
+  this: dct:created "2026-11-06T17:29:33.961Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-8492-0354;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:paper-info-view;
+    npx:introduces <https://w3id.org/np/RAO45wrzVYcwOveZJfFtZeZH3drW5Ff2qFch3o_xgTrUU/paper-info-view-kind>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAO45wrzVYcwOveZJfFtZeZH3drW5Ff2qFch3o_xgTrUU>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCaQXE2B2hJ6QdWxaWerU4F/XOtCQdj2OkdrIYd1kpMY9hIUh8boxaO3uOBeqvvqKLf5HjpRF4DT1eghOSsa2Dhd5HRTM/XIamvwWkHpN4oB3Ml19pAAzjTqczYmFLfgG67mGL5+vSA8VEdHtKQCrvP4SpTibMBP1qaxt3k1tqD6wIDAQAB";
+    npx:hasSignature "YbLnMMY+tTeJSkcL9G8bWW2yJhS8LGLGLHAwmQn1JwX9RL9fXlAfJVbALzeRGX9P4UJFB+W8TgIfXnFRZoJ0AnRNA+t1/f5DYM/6z4Tc1Xpn40Vw6nKRjf6Bh4DApG/q44CmPlarOUZw9rZhIpqdxdbgJ2LrXsvgMpdIl4MXlpk=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-8492-0354 .
+}
+

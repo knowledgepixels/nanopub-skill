@@ -1,0 +1,102 @@
+@prefix this: <https://w3id.org/np/RAz18A-jg43aKKd5KEsYfYjqwjbwEnMpO74jOsAtKBhno> .
+@prefix sub: <https://w3id.org/np/RAz18A-jg43aKKd5KEsYfYjqwjbwEnMpO74jOsAtKBhno/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-evidence-for-claim a grlc:grlc-query;
+    dct:description "For a given claim, lists the contributions that take a stance on it, with that stance.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get evidence for a claim";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix cito: <http://purl.org/spar/cito/>
+prefix oa: <http://www.w3.org/ns/oa#>
+prefix sio: <http://semanticscience.org/resource/>
+prefix na: <https://w3id.org/nanoarguments/>
+prefix schema: <https://schema.org/>
+
+select distinct ?evidence_iri ?evidence_iri_label ?stance ?stance_label ?user_iri where {
+  # Stance, label and group: 1 supporting, 2 opposing, 3 other.
+  values (?rel ?relLabel ?group) {
+    (cito:supports \"supports\" \"1\")
+    (cito:agreesWith \"agrees with\" \"1\")
+    (cito:extends \"extends\" \"1\")
+    (cito:disputes \"disputes\" \"2\")
+    (cito:critiques \"critiques\" \"2\")
+    (cito:corrects \"corrects\" \"2\")
+    (cito:qualifies \"qualifies\" \"3\")
+    (cito:discusses \"discusses\" \"3\")
+    (na:tests \"tests\" \"3\")
+    (na:implements \"implements\" \"3\")
+  }
+  graph npa:graph {
+    ?np np:hasAssertion ?a ; np:hasProvenance ?p ;
+        npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+  }
+  graph ?a {
+    { ?evidence_iri a schema:Statement } union { ?evidence_iri a sio:SIO_001394 }
+    { ?evidence_iri ?rel ?_claim_iri . }
+    union
+    { ?evidence_iri ?rel ?spec . ?spec oa:hasSource ?_claim_iri . }
+    optional { ?evidence_iri rdf:value ?text }
+  }
+  optional { graph ?p { ?a prov:wasAttributedTo ?user_iri } }
+  bind(concat(if(?group = \"1\", \"✓ \", if(?group = \"2\", \"✗ \", \"· \")), ?relLabel) as ?stance)
+  bind(if(?group = \"1\", \"#1a7f37\", if(?group = \"2\", \"#d1242f\", \"#57606a\")) as ?stancecolour)
+  bind(concat(\"<svg width='110' height='16' viewBox='0 0 110 16'><text x='0' y='12' font-size='12' font-weight='500' fill='\", ?stancecolour, \"'>\", ?stance, \"</text></svg>\") as ?stance_label)
+  bind(?text as ?evidence_iri_label)
+}
+order by ?group ?relLabel ?evidence_iri_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-10-23T15:05:41Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-evidence-for-claim;
+    npx:supersedes <https://w3id.org/np/RAsxZ0a6PXb-spzNV1NRu3SfMDYVsNf2GEMpvwG6dTXi0>;
+    rdfs:label "Get evidence for a claim";
+    skos:changeNote "Shorten the description and the comment in the query.";
+    prov:wasDerivedFrom <https://w3id.org/np/RA2-94_7lfJTzgvFj-7KARAP1-NZx5r_LSIcEnnBr6O8Q>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RA7NZ9N1vb-mbTo6pOyR14fdbQ8PpFtJHTY3UBPb6vMh4>, <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>,
+      <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "iEdXKFR86ot+vYanPSb1tB0EFJUOSzxHcUNS6YPUvJF+gvms0CH/x8+7ms2Q2Y+0X6eMvgmmq7jCauagUPEqLkfed5wlMz4uXep4/aVqG3zkWju43DqvfbQ+ysLwKZ6C8oBEK7qVmM0sptPXSXaIGxtEpBWt6xT/Zk4wt0LTXRM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

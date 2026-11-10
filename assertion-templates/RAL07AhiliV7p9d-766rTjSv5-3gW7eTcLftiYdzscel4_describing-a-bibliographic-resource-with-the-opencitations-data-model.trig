@@ -1,0 +1,472 @@
+@prefix this: <https://w3id.org/np/RAL07AhiliV7p9d-766rTjSv5-3gW7eTcLftiYdzscel4> .
+@prefix sub: <https://w3id.org/np/RAL07AhiliV7p9d-766rTjSv5-3gW7eTcLftiYdzscel4/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix fabio: <http://purl.org/spar/fabio/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix datacite: <http://purl.org/spar/datacite/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix pro: <http://purl.org/spar/pro/> .
+@prefix frbr: <http://purl.org/vocab/frbr/core#> .
+@prefix fr: <http://purl.org/spar/fr/> .
+@prefix literal: <http://www.essepuntato.it/2010/06/literalreification/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix doco: <http://purl.org/spar/doco/> .
+@prefix oco: <https://w3id.org/oc/ontology/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix prism: <http://prismstandard.org/namespaces/basic/2.0/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  prism:endingPage rdfs:label "ends at page" .
+  
+  prism:publicationDate rdfs:label "was published on" .
+  
+  prism:startingPage rdfs:label "starts at page" .
+  
+  dct:title rdfs:label "has title" .
+  
+  datacite:Identifier rdfs:label "identifier" .
+  
+  datacite:arxiv rdfs:label "arXiv ID" .
+  
+  datacite:crossref rdfs:label "Crossref" .
+  
+  datacite:doi rdfs:label "DOI" .
+  
+  datacite:hasIdentifier rdfs:label "has identifier" .
+  
+  datacite:isbn rdfs:label "ISBN" .
+  
+  datacite:issn rdfs:label "ISSN" .
+  
+  datacite:jid rdfs:label "JID" .
+  
+  datacite:omid rdfs:label "OMID" .
+  
+  datacite:openalex rdfs:label "OpenAlex ID" .
+  
+  datacite:orcid rdfs:label "ORCID" .
+  
+  datacite:pmcid rdfs:label "PubMed Central ID" .
+  
+  datacite:pmid rdfs:label "PubMed ID" .
+  
+  datacite:ror rdfs:label "ROR ID" .
+  
+  datacite:url rdfs:label "URL" .
+  
+  datacite:usesIdentifierScheme rdfs:label "of type" .
+  
+  datacite:viaf rdfs:label "VIAF ID" .
+  
+  datacite:wikidata rdfs:label "Wikidata ID" .
+  
+  datacite:wikipedia rdfs:label "Wikipedia" .
+  
+  doco:Abstract rdfs:label "abstract" .
+  
+  doco:Part rdfs:label "book part" .
+  
+  fabio:AcademicProceedings rdfs:label "proceedings" .
+  
+  fabio:ArchivalDocument rdfs:label "archival document" .
+  
+  fabio:AudioDocument rdfs:label "audio document" .
+  
+  fabio:Book rdfs:label "book" .
+  
+  fabio:BookChapter rdfs:label "book chapter" .
+  
+  fabio:BookSeries rdfs:label "book series" .
+  
+  fabio:BookSet rdfs:label "book set" .
+  
+  fabio:ComputerProgram rdfs:label "computer program" .
+  
+  fabio:DataFile rdfs:label "dataset" .
+  
+  fabio:DataManagementPlan rdfs:label "data management plan" .
+  
+  fabio:Editorial rdfs:label "editorial" .
+  
+  fabio:Expression rdfs:label "bibliographic resource" .
+  
+  fabio:ExpressionCollection rdfs:label "collection" .
+  
+  fabio:Journal rdfs:label "journal" .
+  
+  fabio:JournalArticle rdfs:label "journal article" .
+  
+  fabio:JournalEditorial rdfs:label "journal editorial" .
+  
+  fabio:JournalIssue rdfs:label "journal issue" .
+  
+  fabio:JournalVolume rdfs:label "journal volume" .
+  
+  fabio:Manifestation rdfs:label "manifestation" .
+  
+  fabio:Newspaper rdfs:label "newspaper" .
+  
+  fabio:NewspaperArticle rdfs:label "newspaper article" .
+  
+  fabio:NewspaperEditorial rdfs:label "newspaper editorial" .
+  
+  fabio:NewspaperIssue rdfs:label "newspaper issue" .
+  
+  fabio:Preprint rdfs:label "preprint" .
+  
+  fabio:Presentation rdfs:label "presentation" .
+  
+  fabio:ProceedingsPaper rdfs:label "proceedings paper" .
+  
+  fabio:ReferenceBook rdfs:label "reference book" .
+  
+  fabio:ReferenceEntry rdfs:label "reference entry" .
+  
+  fabio:ReportDocument rdfs:label "report" .
+  
+  fabio:RetractionNotice rdfs:label "retraction notice" .
+  
+  fabio:Series rdfs:label "series" .
+  
+  fabio:SpecificationDocument rdfs:label "standard" .
+  
+  fabio:Thesis rdfs:label "thesis" .
+  
+  fabio:WebContent rdfs:label "web content" .
+  
+  fabio:hasSequenceIdentifier rdfs:label "has number" .
+  
+  fabio:hasSubtitle rdfs:label "has subtitle" .
+  
+  fr:ReviewVersion rdfs:label "peer review" .
+  
+  pro:RoleInTime rdfs:label "role" .
+  
+  pro:author rdfs:label "author" .
+  
+  pro:editor rdfs:label "editor" .
+  
+  pro:isDocumentContextFor rdfs:label "has the role" .
+  
+  pro:isHeldBy rdfs:label "held by" .
+  
+  pro:publisher rdfs:label "publisher" .
+  
+  pro:withRole rdfs:label "of kind" .
+  
+  frbr:embodiment rdfs:label "is embodied in" .
+  
+  frbr:partOf rdfs:label "is part of" .
+  
+  literal:hasLiteralValue rdfs:label "has value" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  foaf:Agent rdfs:label "person or organization" .
+  
+  foaf:familyName rdfs:label "has family name" .
+  
+  foaf:givenName rdfs:label "has given name" .
+  
+  foaf:name rdfs:label "has name" .
+  
+  sub:agent a nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID for the person or organization (e.g. \"massari\")" .
+  
+  sub:agent-name a nt:LiteralPlaceholder;
+    rdfs:label "name, for organizations" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Describes a bibliographic resource and its related entities using the OpenCitations Data Model. It records the order of the responsible agents for every supported resource type. Identifiers are separate entities linked to the resource, so resources without a DOI can be published too. The supported resource types are abstracts, archival documents, audio documents, books, book chapters, book parts, computer programs, data management plans, datasets, editorials, journal articles, journal editorials, newspaper articles, newspaper editorials, peer reviews, preprints, presentations, proceedings papers, reference books, reference entries, reports, retraction notices, standards, theses, and web content. The supported identifiers are arXiv IDs, Crossref IDs, DOIs, ISBNs, ISSNs, JIDs, OMIDs, OpenAlex IDs, ORCIDs, PubMed Central IDs, PubMed IDs, ROR IDs, URLs, VIAF IDs, Wikidata IDs, and Wikipedia IDs.";
+    rdfs:label "Describing a bibliographic resource with the OpenCitations Data Model";
+    nt:hasNanopubLabelPattern "${title}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st09, sub:st10, sub:st11, sub:st12, sub:st13, sub:st14;
+    nt:hasTargetNanopubType fabio:Expression .
+  
+  sub:container a nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID for the containing resource (e.g. \"journal\", \"volume\")" .
+  
+  sub:container-title a nt:LiteralPlaceholder;
+    rdfs:label "title" .
+  
+  sub:container-type a nt:RestrictedChoicePlaceholder;
+    rdfs:label "type of the containing resource";
+    nt:possibleValue fabio:AcademicProceedings, fabio:Book, fabio:BookSeries, fabio:BookSet,
+      fabio:ExpressionCollection, fabio:Journal, fabio:JournalIssue, fabio:JournalVolume,
+      fabio:Newspaper, fabio:NewspaperIssue, fabio:ReferenceBook, fabio:Series .
+  
+  sub:date a nt:LiteralPlaceholder;
+    rdfs:label "full publication date (e.g. 2024-03-01)";
+    nt:hasDatatype xsd:date .
+  
+  sub:ending-page a nt:LiteralPlaceholder;
+    rdfs:label "last page" .
+  
+  sub:family-name a nt:LiteralPlaceholder;
+    rdfs:label "family name" .
+  
+  sub:given-name a nt:LiteralPlaceholder;
+    rdfs:label "given name" .
+  
+  sub:holder a nt:RestrictedChoicePlaceholder;
+    rdfs:label "person or organization (select from above)";
+    nt:possibleValue sub:agent .
+  
+  sub:identified a nt:RestrictedChoicePlaceholder;
+    rdfs:label "resource or agent (select from above)";
+    nt:possibleValue sub:agent, sub:container, sub:work .
+  
+  sub:identifier a nt:LocalResource;
+    rdfs:label "this identifier" .
+  
+  sub:identifier-value a nt:LiteralPlaceholder;
+    rdfs:label "identifier value, without prefix (e.g. 10.1162/qss_a_00292, 0000-0002-8420-0696)" .
+  
+  sub:manifestation a nt:LocalResource;
+    rdfs:label "this manifestation" .
+  
+  sub:next-role a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the role that comes right after it (select from above)";
+    nt:possibleValue sub:role .
+  
+  sub:part a nt:RestrictedChoicePlaceholder;
+    rdfs:label "resource (select from above)";
+    nt:possibleValue sub:container, sub:work .
+  
+  sub:previous-role a nt:RestrictedChoicePlaceholder;
+    rdfs:label "role (select from above)";
+    nt:possibleValue sub:role .
+  
+  sub:role a nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID for this role (e.g. \"author-1\")" .
+  
+  sub:role-context a nt:RestrictedChoicePlaceholder;
+    rdfs:label "resource the role belongs to: this resource or one that contains it";
+    nt:possibleValue sub:container, sub:work .
+  
+  sub:role-type a nt:RestrictedChoicePlaceholder;
+    rdfs:label "role";
+    nt:hasDefaultValue pro:author;
+    nt:possibleValue pro:author, pro:editor, pro:publisher .
+  
+  sub:scheme a nt:RestrictedChoicePlaceholder;
+    rdfs:label "identifier type";
+    nt:possibleValue datacite:arxiv, datacite:crossref, datacite:doi, datacite:isbn, datacite:issn,
+      datacite:jid, datacite:omid, datacite:openalex, datacite:orcid, datacite:pmcid, datacite:pmid,
+      datacite:ror, datacite:url, datacite:viaf, datacite:wikidata, datacite:wikipedia .
+  
+  sub:sequence-identifier a nt:LiteralPlaceholder;
+    rdfs:label "volume or issue number" .
+  
+  sub:st01 rdf:object fabio:Expression;
+    rdf:predicate rdf:type;
+    rdf:subject sub:work .
+  
+  sub:st02 rdf:object sub:work-type;
+    rdf:predicate rdf:type;
+    rdf:subject sub:work .
+  
+  sub:st03 rdf:object sub:title;
+    rdf:predicate dct:title;
+    rdf:subject sub:work .
+  
+  sub:st04 a nt:OptionalStatement;
+    rdf:object sub:subtitle;
+    rdf:predicate fabio:hasSubtitle;
+    rdf:subject sub:work .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:year;
+    rdf:predicate prism:publicationDate;
+    rdf:subject sub:work .
+  
+  sub:st06 a nt:OptionalStatement;
+    rdf:object sub:year-month;
+    rdf:predicate prism:publicationDate;
+    rdf:subject sub:work .
+  
+  sub:st07 a nt:OptionalStatement;
+    rdf:object sub:date;
+    rdf:predicate prism:publicationDate;
+    rdf:subject sub:work .
+  
+  sub:st08 a nt:GroupedStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st08a, sub:st08b, sub:st08c, sub:st08d .
+  
+  sub:st08a rdf:object foaf:Agent;
+    rdf:predicate rdf:type;
+    rdf:subject sub:agent .
+  
+  sub:st08b a nt:OptionalStatement;
+    rdf:object sub:given-name;
+    rdf:predicate foaf:givenName;
+    rdf:subject sub:agent .
+  
+  sub:st08c a nt:OptionalStatement;
+    rdf:object sub:family-name;
+    rdf:predicate foaf:familyName;
+    rdf:subject sub:agent .
+  
+  sub:st08d a nt:OptionalStatement;
+    rdf:object sub:agent-name;
+    rdf:predicate foaf:name;
+    rdf:subject sub:agent .
+  
+  sub:st09 a nt:GroupedStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st09a, sub:st09b, sub:st09c, sub:st09d .
+  
+  sub:st09a rdf:object sub:role;
+    rdf:predicate pro:isDocumentContextFor;
+    rdf:subject sub:role-context .
+  
+  sub:st09b rdf:object pro:RoleInTime;
+    rdf:predicate rdf:type;
+    rdf:subject sub:role .
+  
+  sub:st09c rdf:object sub:role-type;
+    rdf:predicate pro:withRole;
+    rdf:subject sub:role .
+  
+  sub:st09d rdf:object sub:holder;
+    rdf:predicate pro:isHeldBy;
+    rdf:subject sub:role .
+  
+  sub:st10 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:next-role;
+    rdf:predicate oco:hasNext;
+    rdf:subject sub:previous-role .
+  
+  sub:st11 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st11a, sub:st11b, sub:st11c, sub:st11d .
+  
+  sub:st11a rdf:object fabio:Expression;
+    rdf:predicate rdf:type;
+    rdf:subject sub:container .
+  
+  sub:st11b rdf:object sub:container-type;
+    rdf:predicate rdf:type;
+    rdf:subject sub:container .
+  
+  sub:st11c a nt:OptionalStatement;
+    rdf:object sub:container-title;
+    rdf:predicate dct:title;
+    rdf:subject sub:container .
+  
+  sub:st11d a nt:OptionalStatement;
+    rdf:object sub:sequence-identifier;
+    rdf:predicate fabio:hasSequenceIdentifier;
+    rdf:subject sub:container .
+  
+  sub:st12 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:whole;
+    rdf:predicate frbr:partOf;
+    rdf:subject sub:part .
+  
+  sub:st13 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st13a, sub:st13b, sub:st13c, sub:st13d .
+  
+  sub:st13a rdf:object sub:identifier;
+    rdf:predicate datacite:hasIdentifier;
+    rdf:subject sub:identified .
+  
+  sub:st13b rdf:object datacite:Identifier;
+    rdf:predicate rdf:type;
+    rdf:subject sub:identifier .
+  
+  sub:st13c rdf:object sub:scheme;
+    rdf:predicate datacite:usesIdentifierScheme;
+    rdf:subject sub:identifier .
+  
+  sub:st13d rdf:object sub:identifier-value;
+    rdf:predicate literal:hasLiteralValue;
+    rdf:subject sub:identifier .
+  
+  sub:st14 a nt:GroupedStatement, nt:OptionalStatement;
+    nt:hasStatement sub:st14a, sub:st14b, sub:st14c, sub:st14d .
+  
+  sub:st14a rdf:object sub:manifestation;
+    rdf:predicate frbr:embodiment;
+    rdf:subject sub:work .
+  
+  sub:st14b rdf:object fabio:Manifestation;
+    rdf:predicate rdf:type;
+    rdf:subject sub:manifestation .
+  
+  sub:st14c rdf:object sub:starting-page;
+    rdf:predicate prism:startingPage;
+    rdf:subject sub:manifestation .
+  
+  sub:st14d rdf:object sub:ending-page;
+    rdf:predicate prism:endingPage;
+    rdf:subject sub:manifestation .
+  
+  sub:starting-page a nt:LiteralPlaceholder;
+    rdfs:label "first page" .
+  
+  sub:subtitle a nt:LiteralPlaceholder;
+    rdfs:label "subtitle" .
+  
+  sub:title a nt:LiteralPlaceholder;
+    rdfs:label "title" .
+  
+  sub:whole a nt:RestrictedChoicePlaceholder;
+    rdfs:label "the resource it belongs to (select from above)";
+    nt:possibleValue sub:container .
+  
+  sub:work a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID for this bibliographic resource (e.g. \"br\")" .
+  
+  sub:work-type a nt:RestrictedChoicePlaceholder;
+    rdfs:label "type of the bibliographic resource";
+    nt:hasDefaultValue fabio:JournalArticle;
+    nt:possibleValue doco:Abstract, doco:Part, fabio:ArchivalDocument, fabio:AudioDocument,
+      fabio:Book, fabio:BookChapter, fabio:ComputerProgram, fabio:DataFile, fabio:DataManagementPlan,
+      fabio:Editorial, fabio:JournalArticle, fabio:JournalEditorial, fabio:NewspaperArticle,
+      fabio:NewspaperEditorial, fabio:Preprint, fabio:Presentation, fabio:ProceedingsPaper,
+      fabio:ReferenceBook, fabio:ReferenceEntry, fabio:ReportDocument, fabio:RetractionNotice,
+      fabio:SpecificationDocument, fabio:Thesis, fabio:WebContent, fr:ReviewVersion .
+  
+  sub:year a nt:LiteralPlaceholder;
+    rdfs:label "publication year, if the month is unknown (e.g. 2024)";
+    nt:hasDatatype xsd:gYear .
+  
+  sub:year-month a nt:LiteralPlaceholder;
+    rdfs:label "publication year and month, if the day is unknown (e.g. 2024-03)";
+    nt:hasDatatype xsd:gYearMonth .
+  
+  oco:hasNext rdfs:label "is followed by" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo <https://orcid.org/0000-0002-8420-0696>;
+    prov:wasDerivedFrom <https://doi.org/10.6084/m9.figshare.3443876> .
+}
+
+sub:pubinfo {
+  <https://orcid.org/0000-0002-8420-0696> foaf:name "Arcangelo Massari" .
+  
+  this: dct:created "2026-10-31T11:56:05Z"^^xsd:dateTime;
+    dct:creator <https://orcid.org/0000-0002-8420-0696>;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:supersedes <https://w3id.org/np/RAM_STAXlg--RZwzMPFBx8WaLfzhxmhCOsK2q1hK4eBi4>;
+    rdfs:label "Describing a bibliographic resource with the OpenCitations Data Model" .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAr2ap1e+lnnSpJABslsGOWg5OMmoJHQaBmKiv15MSKQ9uso+TJoPkRPvTqcvd6FtucT+DlIjH7gd6caXNaZ1nMXRZXKsNgoTm7tGo/8lLz39mTjwnmlC6gGMKCTRbQZX7mqsb/kBXpyX0vAs2PxqK1czmWdV5wlWc88T4073EoCWieQ+7aUUBgbC2L17sXqknrXs0YPoG2QJ4JSRfgXFReFlAB+o1V9CHjmdAFEfoB8yBZjC7CJUieOUri7o64k3ZTLA0pjUIX3a4vStxjN0egyE+rjrwaNidUa2P8akUpQhsmrAg0anAVYwMRTKXPzrqs+5f0j2j1vro0/yIzFlyLwIDAQAB";
+    npx:hasSignature "YhoKjT8QkoH9WsYMRoKhnmBEOOfxElSSzHl5dEsn4rZPQpV2oGbDn5YvRJPpcVLWgMk6IfQ8q3HH8b9MZxXaHfCmRk/kOiLt1bGKGbkXNBMBtZNQk6z+n70r5NDOYqihFYnAapZhKohHuX8Na0vf6gO/xRIQBzFo9GT1begsJxT6932bv6o2wGLSjKFoHlNjqyNJMtiD68oTdGVlNPMbtyFltoLh5U2P/ieEFIW/hnXg+Vg+OlVjke8DM3+KUPenERA0R0gzVPCIaUVaY5NheHHMY5accrVjsG8RbJuPRFzXQPMBBkUhYFwLE454IkZXNMwQLYAV3d/Wl4BcHU7uNQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy <https://orcid.org/0000-0002-8420-0696> .
+}
+

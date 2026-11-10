@@ -1,0 +1,69 @@
+@prefix this: <https://w3id.org/np/RA1RchakGi7AwtiK85fOZ3xjcE6b7LK8gaiVpqzjnxNis> .
+@prefix sub: <https://w3id.org/np/RA1RchakGi7AwtiK85fOZ3xjcE6b7LK8gaiVpqzjnxNis/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:approveAction a gen:ViewEntryAction;
+    rdfs:label "✔ approve...";
+    gen:hasActionTemplate <https://w3id.org/np/RAkhTlKa-i0miq_DN3V4HSv-btlDgwzg8qPUesrsJ0k9Q/template>;
+    gen:hasActionTemplateQueryMapping "np:!nanopub approve_target:!approveOrDisapprove";
+    gen:isVisibleTo gen:AdminRole .
+  
+  sub:rejectAction a gen:ViewEntryAction;
+    rdfs:label "✖ reject...";
+    gen:hasActionTemplate <https://w3id.org/np/RAkhTlKa-i0miq_DN3V4HSv-btlDgwzg8qPUesrsJ0k9Q/template>;
+    gen:hasActionTemplateQueryMapping "np:!nanopub reject_target:!approveOrDisapprove";
+    gen:isVisibleTo gen:AdminRole .
+  
+  sub:viewVersion a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAx4tqQmpHWogD1o4nzsoHPgdKL-5fDPh8Bn5xiVb7FbI/kg-pending-samples-view>;
+    dct:title "⏳ Pending samples";
+    rdfs:label "⏳ Pending samples";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:hasDisplayWidth gen:ColumnWidth06of12;
+    gen:hasStructuralPosition "6.1.pending-sample";
+    gen:hasViewAction sub:approveAction, sub:rejectAction;
+    gen:hasViewQuery <https://w3id.org/np/RA3K01Yf7BiIdlAxfAHYBPGNZQGs1k4vtf05q1Ij8aIUQ/get-kg-pending-samples>;
+    gen:hasViewQueryTargetField "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0005-5515-1230 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-11-09T18:16:45Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0005-5515-1230;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:viewVersion;
+    npx:introduces <https://w3id.org/np/RAx4tqQmpHWogD1o4nzsoHPgdKL-5fDPh8Bn5xiVb7FbI/kg-pending-samples-view>;
+    npx:supersedes <https://w3id.org/np/RAB-t8yP_W0JqV0nk9wopi4Aw5R7KQmM3APr9gpHpYNw0>;
+    skos:changeNote "Repoints at the ModifiedBy-link-fixed query.";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjO3oH8Lq/l1oZIUY3FlCz5DnndybGvAhBdmEJ/yq7Nv3GZEYPrEro23rCBCp0GiriOXlVbk61pA/7JFE6tqzTresINW6QQMxE9sIhCBlX4cG66JFD8ud6bMvUyzCR8LQA6zfrSbafGE06rvglJd4MDUcTwvUKqtL9UCnOaowVfnZ3sPOe9EqlmJuO3iHGxBSXMPOPEJZUzMXsFDWFuMZTnrR8gY3r5nVF5a8L/MD135ZH8qW5yGXOB28CmVYCAbw2o07QEKzyzFKN+W1gfnprYZvuKzwGexnzcdzc1S8N/M5bzhWQ40EKCEqgUE8c81OzEMm1HUlUKEJ/o5I/FKKAwIDAQAB";
+    npx:hasSignature "Q1B/lIhqAWJcctudWRq4F2Wz7CBzkwUKR7mfky3U3eQcbn8aH4eN+PT8SXg+pPpFQ98lk8GbR16vTeIGJ1GPJq9mZngMIiJ2mnEmCB5Kr4VCDhosoxNuJgbzEUUy0aqN+pbKDiNlQ6l5GELvk0qdnCgJ4SPx3JN7YIeJLKjthZMXy103dEORfYvHaROpFaXal95bDqJGn6fWV+RrpOpw2/d7Iod7YqTv2LKNFSN7i3Hxi1+4jN+rqvoR3G2Y4ZV86+u6P+zvlEkBUXjReEr1PM54HFXmU2zg8N1EElYgKt7hcbd/Y0PaluBXqbtnHeypHM2aW+twe9awK2HarARvxA==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0005-5515-1230 .
+}
+
