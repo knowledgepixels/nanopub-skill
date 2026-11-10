@@ -755,6 +755,13 @@ sub:pubinfo {
 }
 ```
 
+**When the user supplies a schema, every assertion triple must be an edge in it.** This applies to nanopubs and assertion templates alike, whatever form the schema takes: a diagram, OWL, SHACL, LinkML, or an existing template. Treat it as a closed list of allowed links: each triple's *(subject class, predicate, object class)* must match a link the schema draws or declares *between those classes*.
+
+- **Never shortcut a path.** If the schema links A → B → C, do not add a direct A → C triple, even when a predicate with a fitting name exists. Keep the intermediate node. Example (nanopub-skill#6): the schema had `Gene ← sosa:hasFeatureOfInterest — Sample — sosa:isSampleOf → Dataset`, and the generated template added `Dataset biolink:has_gene Gene`, which the schema never drew.
+- **A property being declared in the ontology does not let you use it anywhere.** OWL files built from large vocabularies (Biolink, schema.org, SIO) declare far more properties than the model uses, and many have no `rdfs:domain`. In OWL a missing domain means "unconstrained", not "allowed between any two classes of this model". `has_gene` above has no domain and appears only in a restriction on `SequenceVariant`. If the user gave a diagram or a written model as well, that is the spec, and the OWL file is only where its terms are defined.
+- **Before writing the TriG, list the links you will use** in a short table (subject class | predicate | object class | where in the schema), and show it to the user for a non-trivial model. Drop any row you cannot point to a source for, or ask about it.
+- **If the data seems to need a link the schema lacks, ask.** Don't add it on your own: once the nanopub is published the link can't be edited away, and it reads as part of the user's model.
+
 ### 4. Validate and sign
 
 First, ensure the nanopub CLI jar is available. If not already present, download the latest release from Maven Central:
