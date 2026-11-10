@@ -173,11 +173,18 @@ listings decide what gets downloaded.
 python3 scripts/check-nanopub-conformance.py <file.trig> [...]   # a nanopub vs. the template it declares
 python3 scripts/check-template-conformance.py <template.trig>    # a template vs. the meta-template
 python3 scripts/show-template.py <artifact-code>                 # a template's statements, author-friendly
+python3 scripts/governance_check.py <file.trig> [...]            # governed versions: does the space maintain the resource?
+python3 scripts/supersede_check.py <file.trig> [...]             # new versions: are the earlier version's introduced IRIs kept?
 ```
 
 `check-nanopub-conformance.py` is for ordinary nanopubs (views, queries,
 instances). It reports false positives on template nanopubs, which use grouped
 statement patterns; use `check-template-conformance.py` for those.
+
+Both conformance checkers also run the last two scripts. `supersede_check.py`
+fails a new version that introduces a fresh `sub:` IRI where the version it
+supersedes introduced another one: an introduced resource keeps its IRI across
+versions (see *Introduced vs embedded resources* in `SKILL.md`).
 
 ## Contributing
 
