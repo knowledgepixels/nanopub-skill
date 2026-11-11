@@ -107,8 +107,9 @@ frontmatter (`name`, `description`) and the body follow the
 - **Java** runtime able to run the `nanopub-java` CLI. The current jars are
   built for JDK 23.
 - **The nanopub CLI jar** (`nanopub-<version>-jar-with-dependencies.jar`).
-  The skill downloads the latest release from Maven Central into the working
-  directory when it is missing. Jars are gitignored.
+  The skill downloads the latest release from Maven Central into
+  `~/.nanopub/lib/` when it is missing, the same folder nanopub-java's
+  installer uses, so one copy serves all projects.
 - **A nanopub profile** in `~/.nanopub/`: `profile.yaml` with the user's
   `orcid_id` and an RSA key pair (`id_rsa`, `id_rsa.pub`), as set up by
   Nanodash or by `java -jar nanopub-*.jar mkkeys`. Never delete or alter these

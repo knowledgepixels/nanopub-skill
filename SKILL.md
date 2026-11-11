@@ -6,6 +6,8 @@ argument-hint: [nanopub URL, description, or action]
 
 Help the user work with nanopublications. This includes creating new nanopubs, fetching and inspecting existing ones, superseding or retracting nanopubs, and publishing to the test server or live network.
 
+**Where things are.** `<skill-dir>` below means the directory this SKILL.md is in. The helper scripts (`<skill-dir>/scripts/`) and the mirror folders (`<skill-dir>/queries/`, `<skill-dir>/assertion-templates/`, `<skill-dir>/resource-views/`) live there, not in the project you are working in, so run the scripts by that full path. The project may have its own `scripts/` folder, templates or instructions (such as a CLAUDE.md); don't mix them up with this skill's. The project's instructions decide how the project is organized (where nanopub files go, naming, its own build scripts); this skill covers how nanopubs work. Scratch TriG files go in `tmp/` in the current working directory unless the project says otherwise. The nanopub CLI jar goes in `~/.nanopub/lib/` (step 4), never into the project.
+
 ## Creating an Agent/Bot Identity
 
 To publish nanopubs on behalf of a software agent (bot), you need to create a dedicated identity with its own key pair and introduction nanopub.
@@ -172,7 +174,7 @@ This returns all published query templates and can be used as a starting point t
 Run the [download script](scripts/download-queries.sh) to fetch all query template nanopublications as individual TriG files into the [queries/](queries/) folder:
 
 ```bash
-bash scripts/download-queries.sh
+bash <skill-dir>/scripts/download-queries.sh
 ```
 
 This is useful for browsing, searching, or analyzing the full set of available queries offline. Files are named `<trusty-id>_<label>.trig`. Re-running the script skips already-downloaded files, renames a file whose label has since changed, and removes a local file only once the nanopub is confirmed superseded, invalidated or retracted (see [README](README.md#keeping-the-mirrors-in-sync)).
@@ -182,7 +184,7 @@ This is useful for browsing, searching, or analyzing the full set of available q
 Similarly, run the [assertion template download script](scripts/download-assertion-templates.sh) to fetch all assertion template nanopublications into the [assertion-templates/](assertion-templates/) folder:
 
 ```bash
-bash scripts/download-assertion-templates.sh
+bash <skill-dir>/scripts/download-assertion-templates.sh
 ```
 
 Assertion templates define the structure for creating nanopubs of a specific type (e.g. expressing a claim, defining a class, declaring event participation). They can be listed via the API:
@@ -209,7 +211,7 @@ The current template-creation meta-template is `RAgeON_vGgJCt5E4DPMi0eOPaGwNv9tb
 Run the [resource view download script](scripts/download-resource-views.sh) to fetch all resource view nanopublications into the [resource-views/](resource-views/) folder:
 
 ```bash
-bash scripts/download-resource-views.sh
+bash <skill-dir>/scripts/download-resource-views.sh
 ```
 
 Resource views define how data is displayed on resource pages (user/space/maintained resource pages). They specify a query, view type (tabular, list, nanopub set, etc.), and optional action templates. When creating a new resource view, prefix its `dct:title` with a thematically matching emoji (e.g. "📢 My posts", "📚 My Papers", "🎤 Presentations"). Every resource view **must** include `gen:appliesToInstancesOf` with one or more of `gen:IndividualAgent`, `gen:Space`, or `gen:MaintainedResource` to specify which types of resource pages the view should appear on. If no specific type applies, use `gen:MaintainedResource` (and possibly `gen:Space`). They can be listed via the API:
@@ -227,12 +229,12 @@ The current view-creation template is `RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcAC
 Six helper scripts sit next to the download scripts. The checkers take TriG files, signed or unsigned, and fetch whatever they need from the network, so they work **before** publishing:
 
 ```bash
-python3 scripts/check-nanopub-conformance.py <file.trig> [...]   # a nanopub vs. the template it declares
-python3 scripts/check-template-conformance.py <template.trig>    # a template vs. the meta-template
-python3 scripts/show-template.py <artifact-code>                 # a template's statements, author-friendly
-python3 scripts/governance_check.py <file.trig> [...]            # governed versions: does the space maintain the resource?
-python3 scripts/supersede_check.py <file.trig> [...]             # new versions: are the earlier version's introduced IRIs kept?
-python3 scripts/template_links_check.py <file.trig> [...]        # do the template links name templates of the right kind?
+python3 <skill-dir>/scripts/check-nanopub-conformance.py <file.trig> [...]   # a nanopub vs. the template it declares
+python3 <skill-dir>/scripts/check-template-conformance.py <template.trig>    # a template vs. the meta-template
+python3 <skill-dir>/scripts/show-template.py <artifact-code>                 # a template's statements, author-friendly
+python3 <skill-dir>/scripts/governance_check.py <file.trig> [...]            # governed versions: does the space maintain the resource?
+python3 <skill-dir>/scripts/supersede_check.py <file.trig> [...]             # new versions: are the earlier version's introduced IRIs kept?
+python3 <skill-dir>/scripts/template_links_check.py <file.trig> [...]        # do the template links name templates of the right kind?
 ```
 
 `show-template.py` takes a published template's artifact code (`RAxxx…`, not a URI) and prints one line per statement with the placeholder types, their labels, and an `OPT` marker — the quickest way to see what a template expects before hand-authoring against it. It handles provenance and pubinfo templates as well as assertion templates. Both it and `check-template-conformance.py` find the assertion graph through the head graph, so they also read old `http://purl.org/np/…` templates, whose graph IRIs end in `#assertion` (before 2026-09-24 both failed on those).
@@ -783,15 +785,18 @@ sub:pubinfo {
 
 ### 4. Validate and sign
 
-First, ensure the nanopub CLI jar is available. If not already present, download the latest release from Maven Central:
+First, ensure the nanopub CLI jar is available. If not already present, download the latest release from Maven Central into `~/.nanopub/lib/`, the folder nanopub-java's own installer uses, so one copy serves every project:
 
 ```bash
 NP_VERSION=$(curl -s "https://repo1.maven.org/maven2/org/nanopub/nanopub/maven-metadata.xml" | grep -o '<release>[^<]*</release>' | sed 's/<[^>]*>//g')
-JAR="nanopub-${NP_VERSION}-jar-with-dependencies.jar"
+JAR="$HOME/.nanopub/lib/nanopub-${NP_VERSION}-jar-with-dependencies.jar"
 if [ ! -f "$JAR" ]; then
-  curl -L -o "$JAR" "https://repo1.maven.org/maven2/org/nanopub/nanopub/${NP_VERSION}/${JAR}"
+  mkdir -p "$HOME/.nanopub/lib"
+  curl -fL -o "$JAR.part" "https://repo1.maven.org/maven2/org/nanopub/nanopub/${NP_VERSION}/$(basename "$JAR")" && mv "$JAR.part" "$JAR"
 fi
 ```
+
+Shell variables may not carry over from one command to the next; if `$JAR` is unset in a later command, set it again with the first two lines.
 
 **Validate** the TriG file before signing to catch structural errors early:
 
@@ -930,7 +935,7 @@ Then append the publication to the project's record (step 7): registry, trusty U
 
 - **CRITICAL: Never publish unless explicitly instructed to do so.** After signing and testing, always stop and wait for the user to explicitly ask you to publish. Do not publish automatically as part of the workflow. Do not publish just because the user says the results "look good" — only publish when the user gives a clear, unambiguous instruction to publish (e.g. "publish it", "go ahead and publish"). This applies to all nanopubs: queries, views, templates, retractions of previous versions, etc.
 - **Never write a Java class** for one-off nanopub creation. Always create the TriG file directly and use the CLI jar.
-- Download the CLI jar from Maven Central if not present (see step 4); reuse it across invocations by keeping it in the working directory.
+- Download the CLI jar from Maven Central if not present (see step 4). It is kept in `~/.nanopub/lib/` and reused across projects and invocations; don't download it into the project.
 - Nanopubs use **trusty URIs** — the `sign` command computes and replaces the placeholder URI everywhere in the file.
 - The temp URI must end with `/` so sub-resources are correctly derived and transformed.
 - Never copy the original nanopub's author ORCID into `dct:creator`/`prov:wasAttributedTo` — always use the current user's ORCID from their profile.
