@@ -81,11 +81,14 @@ sub:pubinfo {
 Sign the introduction with the **agent's own key** (not the owner's key), and name the agent itself as the signer by passing its **temporary sub-IRI** to `-s`:
 
 ```bash
+java -jar "$JAR" udtime -o tmp/<agent>-intro-dated.trig tmp/<agent>-intro.trig
 java -jar "$JAR" sign -k ~/.nanopub/<agent>_id_rsa \
   -s http://purl.org/nanopub/temp/np001/<agent-name> \
-  -o tmp/<agent>-intro-signed.trig tmp/<agent>-intro.trig
+  -o tmp/<agent>-intro-signed.trig tmp/<agent>-intro-dated.trig
 java -jar "$JAR" publish tmp/<agent>-intro-signed.trig
 ```
+
+(`udtime` refreshes the timestamp before signing; see step 4.)
 
 The signer IRI goes through the same temp-URI replacement as the rest of the nanopub, so `npx:signedBy` comes out as the agent's own trusty sub-IRI (`sub:<agent-name>`, i.e. `<trusty-uri>/<agent-name>`): the introduction is **self-signed** by the very agent it introduces, and `check -v` lists that IRI under CREATORS. This needs **nanopub-java ≥ 1.92.0** — earlier versions added the signer statement after the replacement pass, so `npx:signedBy` kept the raw `http://purl.org/nanopub/temp/...` IRI and `check -v` reported "The signer is not a creator".
 
@@ -98,7 +101,8 @@ After publishing, note the trusty URI — the agent's IRI becomes `<trusty-uri>/
 When creating nanopubs as this agent, sign with `-k` and pass the published agent IRI to `-s`, so that `npx:signedBy` matches the key that signed and the agent IRI used as `dct:creator`:
 
 ```bash
-java -jar "$JAR" sign -k ~/.nanopub/<agent>_id_rsa -s <agent-IRI> -o tmp/<name>-signed.trig tmp/<name>.trig
+java -jar "$JAR" udtime -o tmp/<name>-dated.trig tmp/<name>.trig
+java -jar "$JAR" sign -k ~/.nanopub/<agent>_id_rsa -s <agent-IRI> -o tmp/<name>-signed.trig tmp/<name>-dated.trig
 ```
 
 (Here the agent already exists, so `-s` takes its full trusty IRI; the temp sub-IRI form above is only for the introduction that mints it.)
@@ -795,17 +799,21 @@ fi
 java -jar "$JAR" check tmp/<name>.trig
 ```
 
-**Sign** with the default user key (from `~/.nanopub/profile.yaml`):
+**Refresh the timestamp, then sign** with the default user key (from `~/.nanopub/profile.yaml`). Always run both commands together, every time a file is signed, including when re-signing a file after edits:
 
 ```bash
-java -jar "$JAR" sign -o tmp/<name>-signed.trig tmp/<name>.trig
+java -jar "$JAR" udtime -o tmp/<name>-dated.trig tmp/<name>.trig
+java -jar "$JAR" sign -o tmp/<name>-signed.trig tmp/<name>-dated.trig
 ```
 
 To sign with a **specific key** (e.g. for a bot identity):
 
 ```bash
-java -jar "$JAR" sign -k ~/.nanopub/<bot>_id_rsa -s <bot-IRI> -o tmp/<name>-signed.trig tmp/<name>.trig
+java -jar "$JAR" udtime -o tmp/<name>-dated.trig tmp/<name>.trig
+java -jar "$JAR" sign -k ~/.nanopub/<bot>_id_rsa -s <bot-IRI> -o tmp/<name>-signed.trig tmp/<name>-dated.trig
 ```
+
+`udtime` sets the nanopub's own `dct:created` (on `this:` in pubinfo) to the current time and leaves everything else alone, including any `dct:created` in the assertion. The timestamp written in step 3 goes stale as soon as the file is edited and signed again later, and the nanopub then goes out backdated (nanopub-skill#8). Running `udtime` as part of signing makes refreshing it automatic instead of something to remember. Keep editing `tmp/<name>.trig`: `udtime` rewrites its output without comments, which is why it goes to a separate `-dated` file. **Never give `udtime` the same file as input and output**: up to nanopub-java 1.95.1 that empties the file. Those versions also write the time in the machine's local time zone (e.g. `…+01:00`), which is valid but not UTC.
 
 From **nanopub-java 1.94.0** `sign` no longer creates or truncates the `-o` file before signing, so a run that fails (an unparseable SPARQL, an ill-typed literal, a missing signer) leaves any previous output intact instead of replacing it with an empty file. On older jars a zero-byte `-signed.trig` is the tell-tale of a failed sign; on 1.94.0 a **stale** one is, so check the timestamp rather than the existence of the file when a sign command errors.
 
@@ -926,7 +934,7 @@ Then append the publication to the project's record (step 7): registry, trusty U
 - Nanopubs use **trusty URIs** — the `sign` command computes and replaces the placeholder URI everywhere in the file.
 - The temp URI must end with `/` so sub-resources are correctly derived and transformed.
 - Never copy the original nanopub's author ORCID into `dct:creator`/`prov:wasAttributedTo` — always use the current user's ORCID from their profile.
-- Always get the current UTC time by running `date -u +"%Y-%m-%dT%H:%M:%SZ"` for `dct:created` timestamps. Never use a date-only or zeroed time. When updating a nanopub before publishing (e.g. after revisions), always refresh the timestamp to the current time.
+- Always get the current UTC time by running `date -u +"%Y-%m-%dT%H:%M:%SZ"` for `dct:created` timestamps. Never use a date-only or zeroed time. Before every `sign`, run `udtime` (step 4): it sets the timestamp to the signing time, so a file revised and re-signed later is not published with the time it was first written.
 - **Correcting what is already published: supersede, retract or derive.** *Supersede* (`npx:supersedes`, same key, same network) when the thing continues as a new version — a wrong provenance link under a correct assertion, a changed label, an updated query: the old version stays resolvable and is marked outdated, latest-version resolution and listings move to the new one, and nothing else is needed — do not retract it as well. *Retract* (`retract -i <uri> -p`, same key) when the nanopub should not have been published at all — a missing or wrong `npx:signedBy`, a duplicate, test content that reached the live network — and publish the corrected version, if there is one, afresh rather than as a supersede of the retracted one. *Derive* (`prov:wasDerivedFrom`) when the key that signed the original is not available, with the space-governed route of the next bullet as the alternative for governed definitions. In every case the old nanopub stays on the network — immutability is the point — so an error that reached the live network always costs a new nanopub; that is what the test server is for.
 - **Superseding requires the same signing key**, and the superseded version must be on the network the new one is published to (step 7): `npx:supersedes` is only valid when the new nanopub is signed with the same key (same public key hash) as the original. Before adding `npx:supersedes`, verify that the current signing key matches the original nanopub's public key. If the keys differ (e.g. the original was signed via Nanodash with a different key than the local `~/.nanopub/id_rsa`), do **not** use `npx:supersedes` — instead use `prov:wasDerivedFrom` to link to the original. For **space-governed definitions** (views/templates with `gen:governedBy` whose version-independent IRI the space maintains), there is a third option: publish the new version with the same `(resource, space)` pair and no `npx:supersedes` at all — it becomes canonical via space membership (see space-governed definition versions above).
 - Provenance should reflect the actual origin of the assertion content: use `prov:wasDerivedFrom` when content comes from an external source, `prov:wasAttributedTo` when the user authored it, or both when the user modified external content.
