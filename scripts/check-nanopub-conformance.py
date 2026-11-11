@@ -7,7 +7,8 @@ Reports, per nanopub:
   - assertion triples that match no statement of the declared template
     (these are what Nanodash renders as "unmatched statements")
   - non-optional template statements with no matching triple
-  - RestrictedChoicePlaceholder values outside the allowed set
+  - RestrictedChoicePlaceholder values outside the allowed set (nt:possibleValue, plus the
+    labelled subjects of any nt:possibleValuesFrom nanopub, as Nanodash reads them)
 Exit code 1 if any nanopub has problems.
 
 Also notes, without failing, a space-governed definition whose kind is not registered
@@ -137,6 +138,23 @@ def ph_kinds(g, term):
 # so they behave like URI placeholders rather than fixed IRIs.
 SUBSTITUTED = {nt('CREATOR'), nt('ASSERTION')}
 
+VALUE_LISTS = {}
+
+def listed_values(ref):
+    """The values a nt:possibleValuesFrom nanopub offers, or None if it could not be read.
+
+    As in Nanodash (Template.getPossibleValues), these are the subjects of the rdfs:label
+    triples in its assertion."""
+    if ref not in VALUE_LISTS:
+        try:
+            _, d = fetch_template(ref)
+        except Exception:
+            d = None
+        ag = assertion_graph(d) if d is not None else None
+        VALUE_LISTS[ref] = ({s for s in ag.subjects(RDFS.label, None) if isinstance(s, URIRef)}
+                            if ag is not None else None)
+    return VALUE_LISTS[ref]
+
 def term_matches(g, tterm, value):
     """Does a template term (fixed IRI or placeholder) match an instance term?"""
     if tterm in SUBSTITUTED:
@@ -145,7 +163,15 @@ def term_matches(g, tterm, value):
         return tterm == value
     kinds = ph_kinds(g, tterm)
     allowed = set(g.objects(tterm, nt('possibleValue')))
-    if 'RestrictedChoicePlaceholder' in kinds and allowed:
+    complete = True
+    for ref in g.objects(tterm, nt('possibleValuesFrom')):
+        values = listed_values(ref)
+        if values is None:
+            complete = False  # an unreadable list: enforcing the rest would give false alarms
+        else:
+            allowed |= values
+    # Nanodash's restricted choice ignores nt:possibleValuesFromApi, so the list above is all it allows.
+    if 'RestrictedChoicePlaceholder' in kinds and allowed and complete:
         return value in allowed
     if kinds & LITERAL_PH:
         return isinstance(value, Literal)
