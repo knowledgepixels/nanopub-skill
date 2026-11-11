@@ -12,7 +12,9 @@ Exit code 1 if any nanopub has problems.
 
 Also notes, without failing, a space-governed definition whose kind is not registered
 with its space (see governance_check.py), and fails a new version that re-mints an IRI
-the version it supersedes introduces (see supersede_check.py).
+the version it supersedes introduces (see supersede_check.py), as well as a nanopub whose
+provenance or pubinfo template link names something other than a template of that kind
+(see template_links_check.py).
 
 NOT for template nanopubs: the template meta-template uses grouped, role-restricted
 statement patterns that this flat matcher does not model, so it reports false
@@ -22,6 +24,7 @@ import re, sys, os, urllib.request
 from rdflib import Dataset, Graph, URIRef, Literal, BNode, RDF, RDFS
 from governance_check import report as report_governance
 from supersede_check import report as report_supersede
+from template_links_check import report as report_template_links
 
 NT = "https://w3id.org/np/o/ntemplate/"
 nt = lambda n: URIRef(NT + n)
@@ -204,6 +207,8 @@ def check(path):
             print(f"{name}  vs {npuri.rsplit('/',1)[-1]}:  OK ({len(list(ag))} assertion triples all matched)")
     report_governance(path)
     if not report_supersede(path):
+        ok = False
+    if not report_template_links(path):
         ok = False
     return ok
 

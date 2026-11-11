@@ -2,6 +2,7 @@ import sys
 from rdflib import Dataset, URIRef, Literal, RDF, RDFS
 from governance_check import report as report_governance
 from supersede_check import report as report_supersede
+from template_links_check import report as report_template_links
 
 NT="https://w3id.org/np/o/ntemplate/"; DCT="http://purl.org/dc/terms/"
 GEN="https://w3id.org/kpxl/gen/terms/"
@@ -107,3 +108,5 @@ for st in simple:
 report_governance(sys.argv[1])
 # a new version: does it keep the IRIs the version it supersedes introduces?
 report_supersede(sys.argv[1])
+# do its provenance and pubinfo template links name templates of those kinds?
+report_template_links(sys.argv[1])

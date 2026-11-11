@@ -175,16 +175,20 @@ python3 scripts/check-template-conformance.py <template.trig>    # a template vs
 python3 scripts/show-template.py <artifact-code>                 # a template's statements, author-friendly
 python3 scripts/governance_check.py <file.trig> [...]            # governed versions: does the space maintain the resource?
 python3 scripts/supersede_check.py <file.trig> [...]             # new versions: are the earlier version's introduced IRIs kept?
+python3 scripts/template_links_check.py <file.trig> [...]        # do the template links name templates of the right kind?
 ```
 
 `check-nanopub-conformance.py` is for ordinary nanopubs (views, queries,
 instances). It reports false positives on template nanopubs, which use grouped
 statement patterns; use `check-template-conformance.py` for those.
 
-Both conformance checkers also run the last two scripts. `supersede_check.py`
+Both conformance checkers also run the last three scripts. `supersede_check.py`
 fails a new version that introduces a fresh `sub:` IRI where the version it
 supersedes introduced another one: an introduced resource keeps its IRI across
 versions (see *Introduced vs embedded resources* in `SKILL.md`).
+`template_links_check.py` fails a nanopub whose provenance or pubinfo template
+link names something other than a template of that kind, such as the assertion
+templates that make provenance and pubinfo templates.
 
 ## Contributing
 
