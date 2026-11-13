@@ -1,0 +1,57 @@
+@prefix this: <https://w3id.org/np/RAmKNLh86s0ZAO8JR_ElOCMAFHdCd3jGGFbSaNWl8qeGg> .
+@prefix sub: <https://w3id.org/np/RAmKNLh86s0ZAO8JR_ElOCMAFHdCd3jGGFbSaNWl8qeGg/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:viewVersion a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAYspXd20go6AomLRyC9vqDUs4KaskXO-E9m4vMMxR5_o/kg-rejected-phenotypes-view>;
+    dct:title "🚫 Rejected phenotypes";
+    rdfs:label "🚫 Rejected phenotypes";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:governedBy <https://w3id.org/spaces/mvikg>;
+    gen:hasDisplayWidth gen:ColumnWidth06of12;
+    gen:hasStructuralPosition "7.2.rejected-phenotype";
+    gen:hasViewQuery <https://w3id.org/np/RAxBTmNACgoNnr9URQ9msw23iEcaxUo27hjEBzQWjAS7s/get-kg-rejected-phenotypes>;
+    gen:hasViewQueryTargetField "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0005-5515-1230 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-11-10T15:38:07Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0005-5515-1230;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:viewVersion;
+    npx:introduces <https://w3id.org/np/RAYspXd20go6AomLRyC9vqDUs4KaskXO-E9m4vMMxR5_o/kg-rejected-phenotypes-view>;
+    npx:supersedes <https://w3id.org/np/RAk7IbrBYwqD9m7HTEqPSMMZr8Aj5ljI-3Li-6re0TNuI>;
+    skos:changeNote "Repointed gen:hasViewQuery at the query version whose Name column now links directly to the record's nanopub (Name_label carries the display text).";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjO3oH8Lq/l1oZIUY3FlCz5DnndybGvAhBdmEJ/yq7Nv3GZEYPrEro23rCBCp0GiriOXlVbk61pA/7JFE6tqzTresINW6QQMxE9sIhCBlX4cG66JFD8ud6bMvUyzCR8LQA6zfrSbafGE06rvglJd4MDUcTwvUKqtL9UCnOaowVfnZ3sPOe9EqlmJuO3iHGxBSXMPOPEJZUzMXsFDWFuMZTnrR8gY3r5nVF5a8L/MD135ZH8qW5yGXOB28CmVYCAbw2o07QEKzyzFKN+W1gfnprYZvuKzwGexnzcdzc1S8N/M5bzhWQ40EKCEqgUE8c81OzEMm1HUlUKEJ/o5I/FKKAwIDAQAB";
+    npx:hasSignature "UdXJQcA8+a+TeBSXIgOTM/TgLKBBeJCW3MmXTXuo94O6/kCSVkn4JZ8BhkQ6YwuvBCl+L5sJ1MLxgWCCMhRzAD05aPQqAHU5d3gn3sIQQBb2YDDvfGIDk1pWyDWlQnncRDO6NDBLvGm+8/p0BzkKCambAS0OpnyS+u7qx9oKjjh65pHxd1TmWzlRaKXkDVItBdQG9yWSVgc8Qa2RDw9UgwaHpVxYnQg1QNavzvePDbfGC19iJW3phQi22SSsLyNSWF8rZ8032oetsTgkeK9fO6xhmYzITZzzE/qZFzOntC/i7HZCxErwL5hSWwBIuULmgnL0rvYrJJreVi5x704KSA==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0005-5515-1230 .
+}
+

@@ -1,0 +1,80 @@
+@prefix this: <https://w3id.org/np/RAjMz-D5Wpehx4sUAcFEQllvD8_8RDJBDGcl2jPAvXoIk> .
+@prefix sub: <https://w3id.org/np/RAjMz-D5Wpehx4sUAcFEQllvD8_8RDJBDGcl2jPAvXoIk/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:subject rdfs:label "is about" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  <http://www.wikidata.org/entity/Q604733> rdfs:label "presentation" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Records what a talk is about: one or more topics, each identified by a URI that already exists — a Wikidata item, found by typing a word and picking from the list, or any other URI pasted in, such as a W3C specification for a standard Wikidata does not yet cover. Nothing new is minted, which is what lets the topics link talks beyond one event: two talks that share a topic are related to each other wherever in the network they were published. The topic statement is repeatable, so a talk can carry as many as it needs.";
+    rdfs:label "Topics of a presentation";
+    nt:hasNanopubLabelPattern "Topics of: ${presentation}";
+    nt:hasStatement sub:st01, sub:st02;
+    nt:hasTag "Events";
+    nt:hasTargetNanopubType <http://www.wikidata.org/entity/Q604733> .
+  
+  sub:presentation a nt:GuidedChoicePlaceholder;
+    rdfs:label "the talk or presentation";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAyMrQ89RECTi9gZK5q7gjL1wKTiP8StkLy0NIkkCiyew/find-things?type=http://www.wikidata.org/entity/Q604733" .
+  
+  sub:st01 rdf:object <http://www.wikidata.org/entity/Q604733>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:presentation .
+  
+  sub:st02 a nt:RepeatableStatement;
+    rdf:object sub:topic;
+    rdf:predicate dct:subject;
+    rdf:subject sub:presentation .
+  
+  sub:topic a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "a topic the talk is about (type a word to search Wikidata, or paste any URI)";
+    nt:possibleValuesFromApi "https://www.wikidata.org/w/api.php?action=wbsearchentities&language=en&format=json&limit=5&search=" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-13T13:26:59+00:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RA_12l69SWZmyVh4wjuvwoVs-_b1n9ZKDNFtXLTz2KIwc>;
+    rdfs:label "Topics of a presentation";
+    skos:changeNote "Agent and guided-choice fields that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: topic.";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>,
+      <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "bQZoLtP3q1FX0Cnk2n5H+z3K3z+RY7ikd2hpDMYEqsyRvPPLY7vZ9bELakV8SIeLnkr4lytX2kauofE6SkN33sg96dxf4UMOl8W6Q7v5k8/KqdhdMdeBT80eZ9LRGugR58liy2TJYR+KeeXYSoIrsTJEMQcKvUUMpysjkkMweiA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

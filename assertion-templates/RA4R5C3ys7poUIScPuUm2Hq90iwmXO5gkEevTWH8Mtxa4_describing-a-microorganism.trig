@@ -1,0 +1,416 @@
+@prefix this: <https://w3id.org/np/RA4R5C3ys7poUIScPuUm2Hq90iwmXO5gkEevTWH8Mtxa4> .
+@prefix sub: <https://w3id.org/np/RA4R5C3ys7poUIScPuUm2Hq90iwmXO5gkEevTWH8Mtxa4/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.jp/bio/10/mpo#MPO_10004> rdfs:label "is confirmed to grow at pH" .
+  
+  <http://purl.jp/bio/10/mpo#MPO_10008> rdfs:label "is confirmed to grow at temperature (°C)" .
+  
+  <http://purl.jp/bio/10/mpo#MPO_10020> rdfs:label "has minimum optimal growth temperature (°C)" .
+  
+  <http://purl.jp/bio/10/mpo#MPO_10021> rdfs:label "has maximum optimal growth temperature (°C)" .
+  
+  <http://purl.jp/bio/10/mpo#MPO_10026> rdfs:label "has morphology" .
+  
+  <http://purl.obolibrary.org/obo/MICRO_0000069> rdfs:label "liquid" .
+  
+  <http://purl.obolibrary.org/obo/MICRO_0000070> rdfs:label "solid" .
+  
+  <http://purl.obolibrary.org/obo/MICRO_0000472> rdfs:label "is culture medium used by" .
+  
+  <http://purl.obolibrary.org/obo/OMP_0000188> rdfs:label "gram-positive" .
+  
+  <http://purl.obolibrary.org/obo/OMP_0000189> rdfs:label "gram-negative" .
+  
+  <http://purl.obolibrary.org/obo/OMP_0007143> rdfs:label "sporulating" .
+  
+  <http://purl.obolibrary.org/obo/OMP_0007236> rdfs:label "non-sporulating" .
+  
+  <http://purl.obolibrary.org/obo/OMP_0007811> rdfs:label "pigmentation phenotype" .
+  
+  <http://purl.obolibrary.org/obo/RO_0000087> rdfs:label "has ecological role" .
+  
+  <http://purl.obolibrary.org/obo/RO_0002200> rdfs:label "has phenotype" .
+  
+  <http://purl.obolibrary.org/obo/RO_0002215> rdfs:label "has enzymatic activity" .
+  
+  <http://purl.obolibrary.org/obo/RO_0002556> rdfs:label "is pathogen of" .
+  
+  dct:description rdfs:label "has description" .
+  
+  dct:identifier rdfs:label "has 16S rRNA accession (GenBank)" .
+  
+  <http://purl.org/spar/cito/isDescribedBy> rdfs:label "is described in publication (DOI)" .
+  
+  <http://rs.tdwg.org/dwc/iri/identifiedBy> rdfs:label "is identified by" .
+  
+  <http://rs.tdwg.org/dwc/iri/inCollection> rdfs:label "is available in collection" .
+  
+  rdf:type rdfs:label "is an instance of" .
+  
+  rdfs:label rdfs:label "has label" .
+  
+  prov:wasAttributedTo rdfs:label "is isolated by" .
+  
+  prov:wasDerivedFrom rdfs:label "is derived from sample" .
+  
+  <http://www.wikidata.org/prop/direct/P4333> rdfs:label "has genome assembly accession" .
+  
+  <https://schema.org/contactPoint> rdfs:label "has contact person" .
+  
+  <https://w3id.org/kpxl/biodiv/terms/hasTaxonName> rdfs:label "belongs to taxon" .
+  
+  <https://w3id.org/mixs/0000015> rdfs:label "has oxygen requirement" .
+  
+  <https://w3id.org/mixs/0000016> rdfs:label "has processing history" .
+  
+  <https://w3id.org/mixs/0000110> rdfs:label "has storage temperature (°C)" .
+  
+  <https://w3id.org/mixs/RelToOxygenEnum#aerobe> rdfs:label "aerobe" .
+  
+  <https://w3id.org/mixs/RelToOxygenEnum#anaerobe> rdfs:label "anaerobe" .
+  
+  <https://w3id.org/mixs/RelToOxygenEnum#microaerophilic> rdfs:label "microaerophilic" .
+  
+  sub:accessionID a nt:LiteralPlaceholder;
+    rdfs:label "enter GenBank accession of 16S rRNA sequence (e.g. ‘MN123456’)" .
+  
+  sub:collection a nt:ExternalUriPlaceholder;
+    rdfs:label "enter URL/Information of culture collection entry" .
+  
+  sub:contactPerson a nt:ValuePlaceholder;
+    rdfs:label "ORCID URL or full name of contact person" .
+  
+  sub:ecologicalRole a nt:GuidedChoicePlaceholder;
+    rdfs:label "select ecological role (e.g. ‘symbiont’, ‘decomposer’)";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=chebi&q=" .
+  
+  sub:enzymeActivity a nt:GuidedChoicePlaceholder;
+    rdfs:label "select enzymatic activity (e.g. ‘chitinase activity’)";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=go&q=" .
+  
+  sub:genomeAccession a nt:LiteralPlaceholder;
+    rdfs:label "enter genome assembly accession (e.g. ‘GCA_012345678.1’)" .
+  
+  sub:gramStain a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select Gram stain result (positive / negative)";
+    nt:possibleValue <http://purl.obolibrary.org/obo/OMP_0000188>, <http://purl.obolibrary.org/obo/OMP_0000189> .
+  
+  sub:group10 a nt:GroupedStatement;
+    nt:hasStatement sub:st10, sub:st11, sub:st12;
+    nt:statementOrder "10" .
+  
+  sub:group11 a nt:GroupedStatement, nt:OptionalStatement;
+    nt:hasStatement sub:st32, sub:st33, sub:st34;
+    nt:statementOrder "190" .
+  
+  sub:group12 a nt:GroupedStatement, nt:OptionalStatement;
+    nt:hasStatement sub:st35, sub:st36, sub:st37;
+    nt:statementOrder "200" .
+  
+  sub:group13 a nt:GroupedStatement;
+    nt:hasStatement sub:st13, sub:st14;
+    nt:statementOrder "20" .
+  
+  sub:group14 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st39, sub:st40, sub:st41;
+    nt:statementOrder "170" .
+  
+  sub:group15 a nt:GroupedStatement, nt:OptionalStatement;
+    nt:hasStatement sub:st17, sub:st18, sub:st42, sub:st43;
+    nt:statementOrder "180" .
+  
+  sub:growthMedium a nt:LocalResource;
+    rdfs:label "describe the growth medium (e.g. ‘ISP2 agar’)" .
+  
+  sub:host a nt:GuidedChoicePlaceholder;
+    rdfs:label "select host organism (e.g. ‘Homo sapiens’)";
+    nt:possibleValuesFromApi "https://api.catalogueoflife.org/dataset/3LR/nameusage/search?q=" .
+  
+  sub:identifier a nt:ValuePlaceholder;
+    rdfs:label "ORCID URL or full name of the person who identified the microorganism" .
+  
+  sub:isolator a nt:ValuePlaceholder;
+    rdfs:label "ORCID URL or full name of the person who isolated the microorganism" .
+  
+  sub:label a nt:LiteralPlaceholder .
+  
+  sub:mediumDescription a nt:LiteralPlaceholder .
+  
+  sub:mediumType a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue <http://purl.obolibrary.org/obo/MICRO_0000069>, <http://purl.obolibrary.org/obo/MICRO_0000070> .
+  
+  sub:microorganism a nt:IntroducedResource, nt:LocalResource .
+  
+  sub:morphology a nt:LongLiteralPlaceholder;
+    rdfs:label "describe morphology (e.g. ‘rod-shaped, forms aerial mycelium’)" .
+  
+  sub:optimalPH a nt:LiteralPlaceholder;
+    rdfs:label "enter pH (e.g. '7.4 [pH]')" .
+  
+  sub:optimalTempMax a nt:LiteralPlaceholder .
+  
+  sub:optimalTempMin a nt:LiteralPlaceholder .
+  
+  sub:optimalTemperature a nt:LiteralPlaceholder .
+  
+  sub:oxygenRequirement a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select oxygen requirement (e.g. aerobic, anaerobic)";
+    nt:possibleValue <https://w3id.org/mixs/RelToOxygenEnum#aerobe>, <https://w3id.org/mixs/RelToOxygenEnum#anaerobe>,
+      <https://w3id.org/mixs/RelToOxygenEnum#microaerophilic> .
+  
+  sub:pigmentation a nt:LocalResource;
+    rdfs:label "pigmentation" .
+  
+  sub:pigmentationDescription a nt:LongLiteralPlaceholder .
+  
+  sub:processingHistory a nt:LongLiteralPlaceholder;
+    rdfs:label "describe processing steps (e.g. ‘isolated on ISP2, stored at -80 °C in glycerol’)" .
+  
+  sub:publication a nt:ExternalUriPlaceholder;
+    rdfs:label "enter DOI URL" .
+  
+  sub:sampleSource a nt:ExternalUriPlaceholder;
+    rdfs:label "enter nanopublication declaring the collection of the sample" .
+  
+  sub:sporulation a nt:LocalResource;
+    rdfs:label "select sporulation phenotype (e.g. spore-forming, non-spore-forming)" .
+  
+  sub:sporulationDescription a nt:LongLiteralPlaceholder .
+  
+  sub:sporulationValue a nt:RestrictedChoicePlaceholder;
+    nt:possibleValue <http://purl.obolibrary.org/obo/OMP_0007143>, <http://purl.obolibrary.org/obo/OMP_0007236> .
+  
+  sub:st10 rdf:object <https://w3id.org/spaces/biodiversity/r/ontology/Microorganism>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:microorganism .
+  
+  sub:st11 rdf:object sub:taxon;
+    rdf:predicate <https://w3id.org/kpxl/biodiv/terms/hasTaxonName>;
+    rdf:subject sub:microorganism .
+  
+  sub:st12 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:microorganism .
+  
+  sub:st13 a nt:OptionalStatement;
+    rdf:object sub:isolator;
+    rdf:predicate prov:wasAttributedTo;
+    rdf:subject sub:microorganism .
+  
+  sub:st14 a nt:OptionalStatement;
+    rdf:object sub:contactPerson;
+    rdf:predicate <https://schema.org/contactPoint>;
+    rdf:subject sub:microorganism .
+  
+  sub:st15 a nt:OptionalStatement;
+    rdf:object sub:morphology;
+    rdf:predicate <http://purl.jp/bio/10/mpo#MPO_10026>;
+    rdf:subject sub:microorganism;
+    nt:statementOrder "30" .
+  
+  sub:st16 a nt:OptionalStatement;
+    rdf:object sub:oxygenRequirement;
+    rdf:predicate <https://w3id.org/mixs/0000015>;
+    rdf:subject sub:microorganism;
+    nt:statementOrder "40" .
+  
+  sub:st17 a nt:OptionalStatement;
+    rdf:object sub:storageTemperature;
+    rdf:predicate <https://w3id.org/mixs/0000110>;
+    rdf:subject sub:microorganism .
+  
+  sub:st18 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:optimalTemperature;
+    rdf:predicate <http://purl.jp/bio/10/mpo#MPO_10008>;
+    rdf:subject sub:microorganism .
+  
+  sub:st19 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:optimalPH;
+    rdf:predicate <http://purl.jp/bio/10/mpo#MPO_10004>;
+    rdf:subject sub:microorganism;
+    nt:statementOrder "50" .
+  
+  sub:st21 a nt:OptionalStatement;
+    rdf:object sub:processingHistory;
+    rdf:predicate <https://w3id.org/mixs/0000016>;
+    rdf:subject sub:microorganism;
+    nt:statementOrder "60" .
+  
+  sub:st22 a nt:OptionalStatement;
+    rdf:object sub:accessionID;
+    rdf:predicate dct:identifier;
+    rdf:subject sub:microorganism;
+    nt:statementOrder "70" .
+  
+  sub:st23 a nt:OptionalStatement;
+    rdf:object sub:genomeAccession;
+    rdf:predicate <http://www.wikidata.org/prop/direct/P4333>;
+    rdf:subject sub:microorganism;
+    nt:statementOrder "80" .
+  
+  sub:st24 a nt:OptionalStatement;
+    rdf:object sub:collection;
+    rdf:predicate <http://rs.tdwg.org/dwc/iri/inCollection>;
+    rdf:subject sub:microorganism;
+    nt:statementOrder "90" .
+  
+  sub:st25 a nt:OptionalStatement;
+    rdf:object sub:publication;
+    rdf:predicate <http://purl.org/spar/cito/isDescribedBy>;
+    rdf:subject sub:microorganism;
+    nt:statementOrder "100" .
+  
+  sub:st26 a nt:OptionalStatement;
+    rdf:object sub:enzymeActivity;
+    rdf:predicate <http://purl.obolibrary.org/obo/RO_0002215>;
+    rdf:subject sub:microorganism;
+    nt:statementOrder "110" .
+  
+  sub:st28 a nt:OptionalStatement;
+    rdf:object sub:host;
+    rdf:predicate <http://purl.obolibrary.org/obo/RO_0002556>;
+    rdf:subject sub:microorganism;
+    nt:statementOrder "120" .
+  
+  sub:st29 a nt:OptionalStatement;
+    rdf:object sub:ecologicalRole;
+    rdf:predicate <http://purl.obolibrary.org/obo/RO_0000087>;
+    rdf:subject sub:microorganism;
+    nt:statementOrder "130" .
+  
+  sub:st30 a nt:OptionalStatement;
+    rdf:object sub:sampleSource;
+    rdf:predicate prov:wasDerivedFrom;
+    rdf:subject sub:microorganism;
+    nt:statementOrder "140" .
+  
+  sub:st31 a nt:OptionalStatement;
+    rdf:object sub:identifier;
+    rdf:predicate <http://rs.tdwg.org/dwc/iri/identifiedBy>;
+    rdf:subject sub:microorganism;
+    nt:statementOrder "150" .
+  
+  sub:st32 rdf:object sub:sporulation;
+    rdf:predicate <http://purl.obolibrary.org/obo/RO_0002200>;
+    rdf:subject sub:microorganism .
+  
+  sub:st33 rdf:object sub:sporulationValue;
+    rdf:predicate rdf:type;
+    rdf:subject sub:sporulation .
+  
+  sub:st34 a nt:OptionalStatement;
+    rdf:object sub:sporulationDescription;
+    rdf:predicate dct:description;
+    rdf:subject sub:sporulation .
+  
+  sub:st35 rdf:object sub:pigmentation;
+    rdf:predicate <http://purl.obolibrary.org/obo/RO_0002200>;
+    rdf:subject sub:microorganism .
+  
+  sub:st36 rdf:object <http://purl.obolibrary.org/obo/OMP_0007811>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:pigmentation .
+  
+  sub:st37 rdf:object sub:pigmentationDescription;
+    rdf:predicate dct:description;
+    rdf:subject sub:pigmentation .
+  
+  sub:st38 a nt:OptionalStatement;
+    rdf:object sub:gramStain;
+    rdf:predicate <http://purl.obolibrary.org/obo/RO_0002200>;
+    rdf:subject sub:microorganism;
+    nt:statementOrder "160" .
+  
+  sub:st39 rdf:object sub:microorganism;
+    rdf:predicate <http://purl.obolibrary.org/obo/MICRO_0000472>;
+    rdf:subject sub:growthMedium .
+  
+  sub:st40 rdf:object sub:mediumType;
+    rdf:predicate rdf:type;
+    rdf:subject sub:growthMedium .
+  
+  sub:st41 rdf:object sub:mediumDescription;
+    rdf:predicate dct:description;
+    rdf:subject sub:growthMedium .
+  
+  sub:st42 a nt:OptionalStatement;
+    rdf:object sub:optimalTempMin;
+    rdf:predicate <http://purl.jp/bio/10/mpo#MPO_10020>;
+    rdf:subject sub:microorganism .
+  
+  sub:st43 a nt:OptionalStatement;
+    rdf:object sub:optimalTempMax;
+    rdf:predicate <http://purl.jp/bio/10/mpo#MPO_10021>;
+    rdf:subject sub:microorganism .
+  
+  sub:storageTemperature a nt:LiteralPlaceholder;
+    rdfs:label "enter storage temperature (e.g. ‘-80 [°C]’)" .
+  
+  sub:taxon a nt:GuidedChoicePlaceholder;
+    rdfs:label "enter taxon from checklistbank.org (e.g. ‘Streptomyces griseus’)";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols/api/select?ontology=ncbitaxon&q=" .
+  
+  sub:template a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Allows to describe a microorganism isolated from an environmental or organic sample.";
+    dct:isVersionOf <https://w3id.org/np/RAyqTyJN6BBXFVOArX3TyxHKjMXXLQ5UKTfFUEfUbfd-M/templateKind>;
+    rdfs:label "Describing a microorganism";
+    gen:governedBy <https://w3id.org/spaces/zdouclab>;
+    nt:hasStatement sub:group10, sub:group11, sub:group12, sub:group13, sub:group14, sub:group15,
+      sub:st10, sub:st11, sub:st12, sub:st13, sub:st14, sub:st15, sub:st16, sub:st17, sub:st18,
+      sub:st19, sub:st21, sub:st22, sub:st23, sub:st24, sub:st25, sub:st26, sub:st28, sub:st29,
+      sub:st30, sub:st31, sub:st32, sub:st33, sub:st34, sub:st35, sub:st36, sub:st37, sub:st38,
+      sub:st39, sub:st40, sub:st41, sub:st42, sub:st43;
+    nt:hasTag "naturalProducts" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-6534-6609 .
+}
+
+sub:pubinfo {
+  orcid:0009-0008-9871-6504 foaf:name "Tanja Gesslbauer" .
+  
+  this: dct:created "2026-11-12T10:17:01.053Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0008-9871-6504;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:template;
+    npx:introduces <https://w3id.org/np/RAyqTyJN6BBXFVOArX3TyxHKjMXXLQ5UKTfFUEfUbfd-M/templateKind>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Describing a microorganism";
+    skos:changeNote "added input hints with examples for enzymatic activity, host, ecological role, sample link, storage temperature, taxon, Gram stain, sporulation, isolator and growth medium";
+    prov:wasDerivedFrom <https://w3id.org/np/RAkm0SJxATYEtHVEKtfM3M-hZQ8cw9LQQnOc3hy0NlJD8>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAgeON_vGgJCt5E4DPMi0eOPaGwNv9tbfFTRZtBwdQL0w/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA02y93vFEAcWMFzbjCOCcrlPWaGl07plaXnSH0AXWipcRv4YCsGxl14yKnifk08+Aq73oCj74FmgJbn5wDOLxyqLMfxmTEPDllEMDtM54qOUFE5ic8SubIGke/a2G6p+ud3N/u4Ca+9jSnknuzEK++xXxq2sCgqagmUQNql+Qev3vlCphclSfHmcwjh+coHq/CP69nZ2mMtocI59VQ6A5zAPgnseRkVFCseeunKtNPZ4myL0Q0bv+Jh2bRz7feilwsI4Dq0SnLWYa3xGnZME3yOZNs/RhicGECa9jk7+S0WW2ddJnpelMlDxRZBRY+Riv1uDAj+HrfrHEtKFMxP4kSwIDAQAB";
+    npx:hasSignature "0PIo2NoXPYU8+pBLSc0lAPcPeNsXGMVgElR73F5JM/2A0DgkwywlJwZm4LWHF0elhoMKgnHu81CzTSBuupaeRVBxX+Z+YI9zzHClX4pYwy1SD1hBrj1e8vm+vikiB1IWoDbX6NSKfXvdazijlcih/XqLjjNdhnT9KeIAn37iy+fcDwKzuq/XldmxZEcXkENRP+A31YSd78tTFAhCuhSO4Bh1qDjABNf9UG/rls3QHb9XnOEcDukK8kHkxkuBtDU1trznL202pgL0IWE0QuHvg6LOJnSRnPC8RiGrC9EKYyjMxkp7SIl7ml+wcz/YmnzNcDklRfeUGET5J+HXg5FVzw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0008-9871-6504 .
+  
+  <https://w3id.org/spaces/zdouclab> nt:hasLabelFromApi "ZdoucLab - Describes the activities of the ZdoucLab group at the University of Vienna." .
+}
+

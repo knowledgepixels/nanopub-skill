@@ -1,0 +1,318 @@
+@prefix this: <https://w3id.org/np/RAR_AJPxw3ESxZbBmViamUnWwjznkslqeBaEoJyRo-2tY> .
+@prefix sub: <https://w3id.org/np/RAR_AJPxw3ESxZbBmViamUnWwjznkslqeBaEoJyRo-2tY/> .
+@prefix schema: <https://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix frapo: <http://purl.org/cerif/frapo/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  frapo:hasAcronym rdfs:label "has the acronym" .
+  
+  frapo:hasOutput rdfs:label "has the output" .
+  
+  dct:description rdfs:label "has the description" .
+  
+  dct:subject rdfs:label "has the topic" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the name" .
+  
+  rdfs:seeAlso rdfs:label "has a page at" .
+  
+  owl:sameAs rdfs:label "is the same thing as" .
+  
+  skos:altLabel rdfs:label "has the other name" .
+  
+  schema:OrganizationRole rdfs:label "participation (organization role)" .
+  
+  schema:ResearchProject rdfs:label "research project" .
+  
+  schema:endDate rdfs:label "ends on" .
+  
+  schema:funding rdfs:label "is funded by the grant" .
+  
+  schema:member rdfs:label "has" .
+  
+  schema:roleName rdfs:label "has the role" .
+  
+  schema:startDate rdfs:label "starts on" .
+  
+  <https://vocabulary.raid.org/contributor.position.schema/307> rdfs:label "principal or chief investigator" .
+  
+  <https://vocabulary.raid.org/contributor.position.schema/308> rdfs:label "co-investigator or collaborator" .
+  
+  <https://vocabulary.raid.org/contributor.position.schema/309> rdfs:label "partner investigator" .
+  
+  <https://vocabulary.raid.org/contributor.position.schema/310> rdfs:label "consultant" .
+  
+  <https://vocabulary.raid.org/contributor.position.schema/311> rdfs:label "other participant" .
+  
+  <https://vocabulary.raid.org/organisation.role.schema/182> rdfs:label "lead research organisation" .
+  
+  <https://vocabulary.raid.org/organisation.role.schema/183> rdfs:label "other research organisation" .
+  
+  <https://vocabulary.raid.org/organisation.role.schema/184> rdfs:label "partner organisation" .
+  
+  <https://vocabulary.raid.org/organisation.role.schema/185> rdfs:label "contractor" .
+  
+  <https://vocabulary.raid.org/organisation.role.schema/186> rdfs:label "funder" .
+  
+  <https://vocabulary.raid.org/organisation.role.schema/187> rdfs:label "facility" .
+  
+  <https://vocabulary.raid.org/organisation.role.schema/188> rdfs:label "other organisation" .
+  
+  sub:acronym a nt:LiteralPlaceholder;
+    rdfs:label "the acronym" .
+  
+  sub:altlabel a nt:LiteralPlaceholder;
+    rdfs:label "another name" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "a description" .
+  
+  sub:enddate a nt:LiteralPlaceholder;
+    rdfs:label "the end date";
+    nt:hasDatatype xsd:date .
+  
+  sub:grant a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "IRI of a grant (not of the funder)";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAom4OoQ8U2K6A629YRXKo9-XU-ZJM7-KZs1h11OD6c1w/find-things?type=https%3A%2F%2Fschema.org%2FGrant" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the name" .
+  
+  sub:organization a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "ROR ID or other IRI of the organization";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAom4OoQ8U2K6A629YRXKo9-XU-ZJM7-KZs1h11OD6c1w/find-things?type=https%3A%2F%2Fschema.org%2FOrganization" .
+  
+  sub:orgname a nt:LiteralPlaceholder;
+    rdfs:label "name of the organization" .
+  
+  sub:orgparticipation a nt:LocalResource;
+    rdfs:label "a participation of an organization" .
+  
+  sub:orgrole a nt:RestrictedChoicePlaceholder;
+    rdfs:label "role, from RAiD's organisation roles";
+    nt:possibleValue <https://vocabulary.raid.org/organisation.role.schema/182>, <https://vocabulary.raid.org/organisation.role.schema/183>,
+      <https://vocabulary.raid.org/organisation.role.schema/184>, <https://vocabulary.raid.org/organisation.role.schema/185>,
+      <https://vocabulary.raid.org/organisation.role.schema/186>, <https://vocabulary.raid.org/organisation.role.schema/187>,
+      <https://vocabulary.raid.org/organisation.role.schema/188> .
+  
+  sub:orgroletext a nt:LiteralPlaceholder;
+    rdfs:label "role in the source's words, e.g. coordinator" .
+  
+  sub:output a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "DOI or other IRI of an output";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAom4OoQ8U2K6A629YRXKo9-XU-ZJM7-KZs1h11OD6c1w/find-things?type=https%3A%2F%2Fschema.org%2FCreativeWork" .
+  
+  sub:page a nt:ExternalUriPlaceholder;
+    rdfs:label "address of a page about it" .
+  
+  sub:person a nt:AgentPlaceholder;
+    rdfs:label "ORCID or other IRI of the person";
+    nt:hasRegex "https?://.+" .
+  
+  sub:personname a nt:LiteralPlaceholder;
+    rdfs:label "name of the person" .
+  
+  sub:personparticipation a nt:LocalResource;
+    rdfs:label "a participation of a person" .
+  
+  sub:personrole a nt:RestrictedChoicePlaceholder;
+    rdfs:label "position, from RAiD's positions";
+    nt:possibleValue <https://vocabulary.raid.org/contributor.position.schema/307>, <https://vocabulary.raid.org/contributor.position.schema/308>,
+      <https://vocabulary.raid.org/contributor.position.schema/309>, <https://vocabulary.raid.org/contributor.position.schema/310>,
+      <https://vocabulary.raid.org/contributor.position.schema/311> .
+  
+  sub:personroletext a nt:LiteralPlaceholder;
+    rdfs:label "role in the source's words" .
+  
+  sub:project a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "RAiD, funder's project page, or a new short name" .
+  
+  sub:sameas a nt:ExternalUriPlaceholder;
+    rdfs:label "another IRI of the same thing" .
+  
+  sub:st01 rdf:object schema:ResearchProject;
+    rdf:predicate rdf:type;
+    rdf:subject sub:project .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:project .
+  
+  sub:st03 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:altlabel;
+    rdf:predicate skos:altLabel;
+    rdf:subject sub:project .
+  
+  sub:st04 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:project .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:acronym;
+    rdf:predicate frapo:hasAcronym;
+    rdf:subject sub:project .
+  
+  sub:st06 a nt:OptionalStatement;
+    rdf:object sub:startdate;
+    rdf:predicate schema:startDate;
+    rdf:subject sub:project .
+  
+  sub:st07 a nt:OptionalStatement;
+    rdf:object sub:enddate;
+    rdf:predicate schema:endDate;
+    rdf:subject sub:project .
+  
+  sub:st08 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:grant;
+    rdf:predicate schema:funding;
+    rdf:subject sub:project .
+  
+  sub:st09 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st10, sub:st11, sub:st12, sub:st13, sub:st14, sub:st15 .
+  
+  sub:st10 rdf:object sub:orgparticipation;
+    rdf:predicate schema:member;
+    rdf:subject sub:project .
+  
+  sub:st11 rdf:object schema:OrganizationRole;
+    rdf:predicate rdf:type;
+    rdf:subject sub:orgparticipation .
+  
+  sub:st12 rdf:object sub:organization;
+    rdf:predicate schema:member;
+    rdf:subject sub:orgparticipation .
+  
+  sub:st13 a nt:OptionalStatement;
+    rdf:object sub:orgrole;
+    rdf:predicate schema:roleName;
+    rdf:subject sub:orgparticipation .
+  
+  sub:st14 a nt:OptionalStatement;
+    rdf:object sub:orgroletext;
+    rdf:predicate schema:roleName;
+    rdf:subject sub:orgparticipation .
+  
+  sub:st15 a nt:OptionalStatement;
+    rdf:object sub:orgname;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:organization .
+  
+  sub:st16 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st17, sub:st18, sub:st19, sub:st20, sub:st21, sub:st22 .
+  
+  sub:st17 rdf:object sub:personparticipation;
+    rdf:predicate schema:member;
+    rdf:subject sub:project .
+  
+  sub:st18 rdf:object schema:OrganizationRole;
+    rdf:predicate rdf:type;
+    rdf:subject sub:personparticipation .
+  
+  sub:st19 rdf:object sub:person;
+    rdf:predicate schema:member;
+    rdf:subject sub:personparticipation .
+  
+  sub:st20 a nt:OptionalStatement;
+    rdf:object sub:personrole;
+    rdf:predicate schema:roleName;
+    rdf:subject sub:personparticipation .
+  
+  sub:st21 a nt:OptionalStatement;
+    rdf:object sub:personroletext;
+    rdf:predicate schema:roleName;
+    rdf:subject sub:personparticipation .
+  
+  sub:st22 a nt:OptionalStatement;
+    rdf:object sub:personname;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:person .
+  
+  sub:st23 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:output;
+    rdf:predicate frapo:hasOutput;
+    rdf:subject sub:project .
+  
+  sub:st24 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:topic;
+    rdf:predicate dct:subject;
+    rdf:subject sub:project .
+  
+  sub:st25 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:sameas;
+    rdf:predicate owl:sameAs;
+    rdf:subject sub:project .
+  
+  sub:st26 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:page;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:project .
+  
+  sub:startdate a nt:LiteralPlaceholder;
+    rdfs:label "the start date";
+    nt:hasDatatype xsd:date .
+  
+  sub:templateVersion a nt:AssertionTemplate;
+    dct:description "Describes a research project with its names, dates, grants, participating organizations and persons, outputs and topics, following the AI-FAIR Compendia schema recommendation. The project is named by its RAiD, or else by its funder's project page, or else by a newly minted IRI.";
+    dct:isVersionOf sub:template;
+    rdfs:label "Describing a research project";
+    gen:governedBy <https://w3id.org/spaces/pensoft>;
+    nt:hasNanopubLabelPattern "${label}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st09, sub:st10, sub:st11, sub:st12, sub:st13, sub:st14, sub:st15, sub:st16,
+      sub:st17, sub:st18, sub:st19, sub:st20, sub:st21, sub:st22, sub:st23, sub:st24, sub:st25,
+      sub:st26;
+    nt:hasTag "Pensoft";
+    nt:hasTargetNanopubType schema:ResearchProject .
+  
+  sub:topic a nt:ExternalUriPlaceholder;
+    rdfs:label "IRI of a topic" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-13T14:08:45.239+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:templateVersion;
+    npx:introduces sub:template;
+    rdfs:label "Describing a research project";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAgeON_vGgJCt5E4DPMi0eOPaGwNv9tbfFTRZtBwdQL0w/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "gXCUyMJJcCab5SpgQ+FL3gUl52GvUI+E3Q7RThyS2dkiw+2AOreouDKYRTrVEsJaJeu4XbVNGr87H7g1IMYxlREgVDG+mHc8MisezroOXtN/oVXXNg8rOdzj7apifjF+LqnNX/FY4DAsy115eO23ca2lkzZmyLCEsmxkgJdAKBo=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

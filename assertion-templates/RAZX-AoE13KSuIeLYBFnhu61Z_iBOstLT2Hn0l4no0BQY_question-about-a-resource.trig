@@ -1,0 +1,100 @@
+@prefix this: <https://w3id.org/np/RAZX-AoE13KSuIeLYBFnhu61Z_iBOstLT2Hn0l4no0BQY> .
+@prefix sub: <https://w3id.org/np/RAZX-AoE13KSuIeLYBFnhu61Z_iBOstLT2Hn0l4no0BQY/> .
+@prefix schema: <https://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix cito: <http://purl.org/spar/cito/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  cito:citesAsEvidence rdfs:label "cites as evidence" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdf:value rdfs:label "has the text" .
+  
+  schema:Question rdfs:label "question" .
+  
+  schema:about rdfs:label "is about" .
+  
+  sub:evidence a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the evidence cited by this question" .
+  
+  sub:question a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this question" .
+  
+  sub:questionText a nt:LongLiteralPlaceholder;
+    rdfs:label "text of the question" .
+  
+  sub:st1 rdf:object schema:Question;
+    rdf:predicate rdf:type;
+    rdf:subject sub:question .
+  
+  sub:st2 rdf:object sub:questionText;
+    rdf:predicate rdf:value;
+    rdf:subject sub:question .
+  
+  sub:st3 rdf:object sub:target;
+    rdf:predicate schema:about;
+    rdf:subject sub:question .
+  
+  sub:st4 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:evidence;
+    rdf:predicate cito:citesAsEvidence;
+    rdf:subject sub:question .
+  
+  sub:target a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the resource this question is about" .
+  
+  sub:template a nt:AssertionTemplate;
+    dct:description "A question about a specific resource (e.g. a space, a maintained resource, or any other entity): a schema:Question carrying its text in rdf:value and anchored to the resource it is about via schema:about. It may cite evidence or context. Answers and other follow-ups are separate discourse contributions that target this question via as:inReplyTo.";
+    dct:isVersionOf <https://w3id.org/np/RAOCirX5i7BGflopf6c8m7JH7hYfS3E_Bhvz8aScqBJj0/templateKind>;
+    rdfs:label "Question about a resource";
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels/nanoarguments>;
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st4;
+    nt:hasTag "Discourse" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-11-13T09:04:57.119+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:template;
+    npx:introduces <https://w3id.org/np/RAOCirX5i7BGflopf6c8m7JH7hYfS3E_Bhvz8aScqBJj0/templateKind>;
+    npx:supersedes <https://w3id.org/np/RAsqh6SzmNU8NJnxOZ-viynv0tCWi8n2GFMlZ59dWZpVY>;
+    rdfs:label "Question about a resource";
+    skos:changeNote "Remove the schema:Statement type.";
+    prov:wasDerivedFrom <https://w3id.org/np/RAsqh6SzmNU8NJnxOZ-viynv0tCWi8n2GFMlZ59dWZpVY>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAMEgudZsQ1bh1fZhfYnkthqH6YSXpghSE_DEN1I-6eAI>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAgeON_vGgJCt5E4DPMi0eOPaGwNv9tbfFTRZtBwdQL0w/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "eCMVKoNZYkZeV4R4bQK2i2G+mjMG3BJdZlk5W9Y7NQX5gx6fgobLfMcUwh88Rf3Z7y16mQJSP8mPLbxX+LJA1dNvWiqy75zN+AqFCzUfPmMf+dMnBgy14/O6gHGOJLmNfDOidML/PhpRVALqj5T3GYrfU8zEUMchMUH3wGQ5C3Y=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

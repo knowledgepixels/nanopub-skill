@@ -1,0 +1,95 @@
+@prefix this: <https://w3id.org/np/RAvHvITJeoyUiUo7v6WFg3UgZof7Z12Jd65jp4vfKg1CY> .
+@prefix sub: <https://w3id.org/np/RAvHvITJeoyUiUo7v6WFg3UgZof7Z12Jd65jp4vfKg1CY/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-agent-presentations a grlc:grlc-query;
+    dct:description "Returns the presentations a given agent is recorded for, either as speaker (wd:P823) or as one of the authors (pav:authoredBy), with a role column saying which of the two it is. Conference programmes usually list authors and name a speaker only for invited talks, so imported programme presentations show up as author. The date is the start date (schema:startDate in either scheme) or else dct:date, and the event is the dct:isPartOf target. Newest first.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the presentations of an agent";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/3952cad1a6d2561f045d33e5e79c03e7264b0a492b8becf6c62656c596cf398c>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix wd: <http://www.wikidata.org/entity/>
+prefix pav: <http://purl.org/pav/>
+prefix schema: <https://schema.org/>
+prefix schemaold: <http://schema.org/>
+
+select ?presentation ?presentation_label ?role ?date ?event ?event_label ?np (\"^\" as ?np_label) where {
+  {
+    select ?np ?presentation ?role (sample(?plabel) as ?presentation_label) (min(?d) as ?date)
+           (sample(?ev) as ?event) (sample(?evlabel) as ?event_label) where {
+      graph ?a {
+        ?presentation pav:authoredBy|wd:P823 ?_agent_iri .
+        ?presentation a wd:Q604733 .
+      }
+      graph npa:graph {
+        ?np np:hasAssertion ?a .
+        ?np npx:introduces ?presentation .
+        ?np np:hasPublicationInfo ?pi .
+        ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+        filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+        filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+      }
+      bind(if(exists { graph ?a { ?presentation wd:P823 ?_agent_iri } }, \"speaker\", \"author\") as ?role)
+      optional { graph ?a { ?presentation rdfs:label ?plabel . } }
+      optional { graph ?a { ?presentation schema:startDate ?startDateA . } }
+      optional { graph ?a { ?presentation schemaold:startDate ?startDateB . } }
+      optional { graph ?a { ?presentation dct:date ?olddate . } }
+      bind(coalesce(str(?startDateA), str(?startDateB), str(?olddate)) as ?d)
+      optional {
+        graph ?a { ?presentation dct:isPartOf ?ev . }
+        optional { graph ?a { ?ev rdfs:label ?evlabelA . } }
+        optional { graph ?pi { ?ev rdfs:label ?evlabelB . } }
+      }
+      bind(coalesce(?evlabelA, ?evlabelB) as ?evlabel)
+    } group by ?np ?presentation ?role
+  }
+} order by desc(?date) ?presentation_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-11T18:25:51.934+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-agent-presentations;
+    npx:supersedes <https://w3id.org/np/RA_IcmwsJjICvGpSudP3AgR9ckFFoNQh7m5m8-veaHSJM>;
+    rdfs:label "Get the presentations of an agent";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "dv4QTabYbQXx+Lx/tBwohXyLCYsGhDGUib+l3ytI4gnWOexAJzJQ33oKNoZ2QY8Zhw4MbJLpq3gZnhv9ONw/bBQGLhRjfiHDDQVj7PqdOghN+B0uUOZ+E4rddQsLEOG8ezMpTWU3Kc9y3NVfHkkPqiJDN2XoDZRWMtQDxllDlM4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

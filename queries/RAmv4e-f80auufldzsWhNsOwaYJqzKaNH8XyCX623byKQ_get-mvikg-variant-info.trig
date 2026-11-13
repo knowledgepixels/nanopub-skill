@@ -1,0 +1,207 @@
+@prefix this: <https://w3id.org/np/RAmv4e-f80auufldzsWhNsOwaYJqzKaNH8XyCX623byKQ> .
+@prefix sub: <https://w3id.org/np/RAmv4e-f80auufldzsWhNsOwaYJqzKaNH8XyCX623byKQ/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-mvikg-variant-info a grlc:grlc-query;
+    dct:description "Key-value Info card for a sequence variant record ('partid') of the MVIKG knowledge graph: name, comment, Sequence Ontology type, gene, sample, effect, alleles, coordinates, length, frequency, evidence text, review status and defining nanopub. Rows of absent fields are omitted. Only records signed by a current admin, maintainer or member of the mvikg space count, in their newest non-invalidated version; the review status is the latest npx:approvesOf / npx:disapprovesOf verdict of a current mvikg admin on that version (none: pending).";
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Get MVIKG variant info";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix sosa: <http://www.w3.org/ns/sosa/>
+prefix biolink: <https://w3id.org/biolink/vocab/>
+prefix mvikg: <http://example.org/mvikg/>
+prefix obo: <http://purl.obolibrary.org/obo/>
+
+select ?Property_noheader ?Property_label
+       (group_concat(replace(str(?val), '[\\r\\n]+', ' '); separator='\\n') as ?Value_multi_val_noheader)
+       (group_concat(replace(str(?vallabel), '[\\r\\n]+', ' '); separator='\\n') as ?Value_label_multi)
+where {
+  {
+    select ?ord ?Property_noheader ?Property_label ?val (min(?vallabelRaw) as ?vallabel) where {
+      {
+        select ?dnp ?da (max(?verdict) as ?mv) where {
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            select (group_concat(distinct ?pk; separator=' ') as ?memberKeys) (group_concat(distinct ?apk; separator=' ') as ?adminKeys) where {
+              graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?sg . }
+              graph ?sg {
+                ?ri a gen:RoleInstantiation ; npa:forSpace <https://w3id.org/spaces/mvikg> ; npa:hasRoleType ?tier ; npa:forAgent ?agent .
+                filter(?tier in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?pk .
+                bind(if(?tier = gen:AdminRole, ?pk, '') as ?apk)
+              }
+            }
+          }
+          graph npa:graph {
+            ?dnp npx:introduces ?_partid_iri ; np:hasAssertion ?da ; dct:created ?ddate ;
+                 npa:hasValidSignatureForPublicKeyHash ?dpk .
+            filter not exists { ?dinv npx:invalidates ?dnp ; npa:hasValidSignatureForPublicKeyHash ?dpk . }
+          }
+          filter(contains(?memberKeys, ?dpk))
+          optional {
+            values ?vpred { npx:approvesOf npx:disapprovesOf }
+            graph ?va { ?vagent ?vpred ?dnp . }
+            graph npa:graph {
+              ?vnp np:hasAssertion ?va ; dct:created ?vdate ; npa:hasValidSignatureForPublicKeyHash ?vpk .
+              filter not exists { ?vinv npx:invalidates ?vnp ; npa:hasValidSignatureForPublicKeyHash ?vpk . }
+            }
+            filter(contains(?adminKeys, ?vpk))
+            bind(concat(str(?vdate), '>', if(?vpred = npx:disapprovesOf, 'd', 'a')) as ?verdict)
+          }
+        } group by ?dnp ?da ?ddate order by desc(?ddate) limit 1
+      }
+      { select ?da ?ord ?Property_noheader ?Property_label ?val0 ?lab0 where {
+      {
+        graph ?da { ?_partid_iri rdfs:label ?v }
+        bind(1 as ?ord) bind(rdfs:label as ?Property_noheader) bind('Name:' as ?Property_label)
+        bind(str(?v) as ?val0) bind('' as ?lab0)
+      }
+      union
+      {
+        graph ?da { ?_partid_iri rdfs:comment ?v }
+        bind(2 as ?ord) bind(rdfs:comment as ?Property_noheader) bind('Comment:' as ?Property_label)
+        bind(str(?v) as ?val0) bind('' as ?lab0)
+      }
+      union
+      {
+        graph ?da { ?_partid_iri rdf:type ?iri . filter(?iri != biolink:SequenceVariant) }
+        bind(3 as ?ord) bind(rdf:type as ?Property_noheader) bind('Type:' as ?Property_label)
+        bind(str(?iri) as ?val0) bind(if(?iri = obo:SO_0000159, 'deletion', if(?iri = obo:SO_0000667, 'insertion', if(?iri = obo:SO_0000694, 'SNP', if(?iri = obo:SO_0001483, 'SNV', if(?iri = obo:SO_0001059, 'sequence alteration', if(?iri = obo:SO_1000002, 'substitution', if(?iri = obo:SO_1000032, 'delins', if(?iri = obo:SO_0002007, 'MNV', replace(replace(str(?iri), '^.*[/#]', ''), '_', ':'))))))))) as ?lab0)
+      }
+      union
+      {
+        graph ?da { ?iri biolink:has_sequence_variant ?_partid_iri }
+        bind(4 as ?ord) bind(biolink:has_sequence_variant as ?Property_noheader) bind('Gene:' as ?Property_label)
+        bind(str(?iri) as ?val0) bind(replace(str(?iri), '^.*[/#]', '') as ?lab0)
+      }
+      union
+      {
+        graph ?da { ?gene biolink:has_sequence_variant ?_partid_iri ; sosa:isFeatureOfInterestOf ?iri }
+        optional {
+          graph npa:graph {
+            ?onp npx:introduces ?iri . ?cnp npx:supersedes* ?onp ; npx:introduces ?ciri ; rdfs:label ?llab ;
+                 npa:hasValidSignatureForPublicKeyHash ?cpk .
+            filter not exists { ?cinv npx:invalidates ?cnp ; npa:hasValidSignatureForPublicKeyHash ?cpk . }
+          }
+        }
+        bind(5 as ?ord) bind(sosa:isFeatureOfInterestOf as ?Property_noheader) bind('Sample:' as ?Property_label)
+        bind(str(coalesce(?ciri, ?iri)) as ?val0) bind(coalesce(str(?llab), replace(str(?iri), '^.*[/#]', '')) as ?lab0)
+      }
+      union
+      {
+        graph ?da { ?_partid_iri mvikg:effect ?v }
+        bind(6 as ?ord) bind(mvikg:effect as ?Property_noheader) bind('Effect:' as ?Property_label)
+        bind(str(?v) as ?val0) bind('' as ?lab0)
+      }
+      union
+      {
+        graph ?da { ?_partid_iri mvikg:ref ?v }
+        bind(7 as ?ord) bind(mvikg:ref as ?Property_noheader) bind('Reference allele:' as ?Property_label)
+        bind(str(?v) as ?val0) bind('' as ?lab0)
+      }
+      union
+      {
+        graph ?da { ?_partid_iri mvikg:alt ?v }
+        bind(8 as ?ord) bind(mvikg:alt as ?Property_noheader) bind('Alternate allele:' as ?Property_label)
+        bind(str(?v) as ?val0) bind('' as ?lab0)
+      }
+      union
+      {
+        graph ?da { ?_partid_iri biolink:start_coordinate ?v }
+        bind(9 as ?ord) bind(biolink:start_coordinate as ?Property_noheader) bind('Start:' as ?Property_label)
+        bind(str(?v) as ?val0) bind('' as ?lab0)
+      }
+      union
+      {
+        graph ?da { ?_partid_iri biolink:end_coordinate ?v }
+        bind(10 as ?ord) bind(biolink:end_coordinate as ?Property_noheader) bind('End:' as ?Property_label)
+        bind(str(?v) as ?val0) bind('' as ?lab0)
+      }
+      union
+      {
+        graph ?da { ?_partid_iri mvikg:length ?v }
+        bind(11 as ?ord) bind(mvikg:length as ?Property_noheader) bind('Length:' as ?Property_label)
+        bind(str(?v) as ?val0) bind('' as ?lab0)
+      }
+      union
+      {
+        graph ?da { ?_partid_iri mvikg:frequencyValue ?v . optional { ?_partid_iri mvikg:frequencyUnit ?fu } }
+        bind(12 as ?ord) bind(mvikg:frequencyValue as ?Property_noheader) bind('Frequency:' as ?Property_label)
+        bind(concat(str(?v), if(coalesce(strends(str(?fu), 'PERCENT'), false), ' %', '')) as ?val0) bind('' as ?lab0)
+      }
+      union
+      {
+        graph ?da { ?_partid_iri mvikg:evidenceText ?v }
+        bind(13 as ?ord) bind(mvikg:evidenceText as ?Property_noheader) bind('Evidence:' as ?Property_label)
+        bind(str(?v) as ?val0) bind('' as ?lab0)
+      }
+      union
+      {
+        bind(15 as ?ord) bind(dct:isPartOf as ?Property_noheader) bind('Part of:' as ?Property_label)
+        graph ?da { ?_partid_iri dct:isPartOf ?iri }
+        bind(str(?iri) as ?val0) bind('MVIKG knowledge graph' as ?lab0)
+      }
+      } }
+      union
+      {
+        bind(16 as ?ord) bind(npa:viaNanopub as ?Property_noheader) bind('Defined in:' as ?Property_label)
+        bind('DNP' as ?val0)
+      }
+      union
+      {
+        bind(14 as ?ord) bind(npx:approvesOf as ?Property_noheader) bind('Review status:' as ?Property_label)
+        bind('STATUS' as ?val0)
+      }
+      bind(if(?val0 = 'DNP', str(?dnp), if(?val0 = 'STATUS', if(!bound(?mv), '⏳ pending', if(strends(?mv, 'd'), '🚫 rejected', '✅ approved')), ?val0)) as ?val)
+      bind(if(?val0 = 'DNP', substr(replace(str(?dnp), '^.*/np/', ''), 1, 10), if(?val0 = 'STATUS', '', ?lab0)) as ?vallabelRaw)
+    } group by ?ord ?Property_noheader ?Property_label ?val
+  }
+}
+group by ?ord ?Property_noheader ?Property_label
+order by ?ord""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-11-12T12:26:36.903+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-mvikg-variant-info;
+    rdfs:label "Get MVIKG variant info";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "SrhQl1ghhRC0xXxZIgRaou8aoYiE61L6nqMUbf6IRikG9Za4wR4ZQPTPTFbaA3uKarAYr/qq5u5bpqqvf/OUfY9GnndZRgGMl4Nq1GLq7DnkBM6XS3Z4muQaeudQqfDR1f2NRkk0x75AEyzw/IE59IFmJ4FiPpj2T6r4ewmPIN4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

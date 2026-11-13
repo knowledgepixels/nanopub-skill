@@ -1,0 +1,57 @@
+@prefix this: <https://w3id.org/np/RAAGk4rrP4shJKww1gX_QMl3ce9eSboEnlneVGazHHW9k> .
+@prefix sub: <https://w3id.org/np/RAAGk4rrP4shJKww1gX_QMl3ce9eSboEnlneVGazHHW9k/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:viewVersion a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAJ5mOhuyCRpJuczfbXYC48cg6U9np242P8qYRQbrkJJE/kg-approved-variants-view>;
+    dct:title "✅ Approved variants";
+    rdfs:label "✅ Approved variants";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:governedBy <https://w3id.org/spaces/mvikg>;
+    gen:hasDisplayWidth gen:ColumnWidth06of12;
+    gen:hasStructuralPosition "5.1.approved-variant";
+    gen:hasViewQuery <https://w3id.org/np/RAafIXvToNmXnG5lYr8Qt5yD4NC_1VpyIOQW2LWvyTHds/get-kg-approved-variants>;
+    gen:hasViewQueryTargetField "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0005-5515-1230 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-11-10T15:38:07Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0005-5515-1230;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:viewVersion;
+    npx:introduces <https://w3id.org/np/RAJ5mOhuyCRpJuczfbXYC48cg6U9np242P8qYRQbrkJJE/kg-approved-variants-view>;
+    npx:supersedes <https://w3id.org/np/RAw53tMs1yj1N2PZFc7NIUb1Uqm4nSziHbMkE1lTcqgDI>;
+    skos:changeNote "Repointed gen:hasViewQuery at the query version whose Name column now links directly to the record's nanopub (Name_label carries the display text).";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjO3oH8Lq/l1oZIUY3FlCz5DnndybGvAhBdmEJ/yq7Nv3GZEYPrEro23rCBCp0GiriOXlVbk61pA/7JFE6tqzTresINW6QQMxE9sIhCBlX4cG66JFD8ud6bMvUyzCR8LQA6zfrSbafGE06rvglJd4MDUcTwvUKqtL9UCnOaowVfnZ3sPOe9EqlmJuO3iHGxBSXMPOPEJZUzMXsFDWFuMZTnrR8gY3r5nVF5a8L/MD135ZH8qW5yGXOB28CmVYCAbw2o07QEKzyzFKN+W1gfnprYZvuKzwGexnzcdzc1S8N/M5bzhWQ40EKCEqgUE8c81OzEMm1HUlUKEJ/o5I/FKKAwIDAQAB";
+    npx:hasSignature "Tg3aO4DdWKiXNvTrvrpkA/lTnyL8dvImZAOslx8kUidKqRbjcYvZi84jQ/yPyUDVEBQLtJJqghD7lcAl85G6qkW8xIYvCg0+0hJObpZabgTVgYt45Ha7YqQObkCfI4d0bQTr8zQ6MAPrk67w3gjbK6/htwR5jjbcqFYY6WLp2ieMghQi6DgtsjID7s9V91sqmMwhcbK5XBxkbBir4C3OnUiWH5paJ/BbNlUvy4s/8fhq7c7vlboYjYqTY04jDLL565ani83ft7hvXJA7qyLFutcRI4zWl0goXgozEyFbfpFR6OamZ7I0QI5YwgEOhUZkBX3HROoUbbzGw5qzKUSBsQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0005-5515-1230 .
+}
+

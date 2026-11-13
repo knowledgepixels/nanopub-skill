@@ -1,0 +1,313 @@
+@prefix this: <https://w3id.org/np/RA81ZhTK6TRN6tra0ENOCYoxFN1uHPQrXxePc3jEh8X3c> .
+@prefix sub: <https://w3id.org/np/RA81ZhTK6TRN6tra0ENOCYoxFN1uHPQrXxePc3jEh8X3c/> .
+@prefix schema: <https://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix bibo: <http://purl.org/ontology/bibo/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  dct:isPartOf rdfs:label "is part of" .
+  
+  dct:subject rdfs:label "has the topic" .
+  
+  bibo:presentedAt rdfs:label "was presented at" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the name" .
+  
+  rdfs:seeAlso rdfs:label "has a page at" .
+  
+  owl:sameAs rdfs:label "is the same thing as" .
+  
+  skos:altLabel rdfs:label "has the other name" .
+  
+  <https://credit.niso.org/contributor-roles/conceptualization/> rdfs:label "conceptualization" .
+  
+  <https://credit.niso.org/contributor-roles/data-curation/> rdfs:label "data curation" .
+  
+  <https://credit.niso.org/contributor-roles/formal-analysis/> rdfs:label "formal analysis" .
+  
+  <https://credit.niso.org/contributor-roles/funding-acquisition/> rdfs:label "funding acquisition" .
+  
+  <https://credit.niso.org/contributor-roles/investigation/> rdfs:label "investigation" .
+  
+  <https://credit.niso.org/contributor-roles/methodology/> rdfs:label "methodology" .
+  
+  <https://credit.niso.org/contributor-roles/project-administration/> rdfs:label "project administration" .
+  
+  <https://credit.niso.org/contributor-roles/resources/> rdfs:label "resources" .
+  
+  <https://credit.niso.org/contributor-roles/software/> rdfs:label "software" .
+  
+  <https://credit.niso.org/contributor-roles/supervision/> rdfs:label "supervision" .
+  
+  <https://credit.niso.org/contributor-roles/validation/> rdfs:label "validation" .
+  
+  <https://credit.niso.org/contributor-roles/visualization/> rdfs:label "visualization" .
+  
+  <https://credit.niso.org/contributor-roles/writing-original-draft/> rdfs:label "writing original draft" .
+  
+  <https://credit.niso.org/contributor-roles/writing-review-editing/> rdfs:label "writing review editing" .
+  
+  schema:CreativeWork rdfs:label "output (creative work)" .
+  
+  schema:Role rdfs:label "authorship (role)" .
+  
+  schema:affiliation rdfs:label "has the declared affiliation" .
+  
+  schema:author rdfs:label "has the author" .
+  
+  schema:funding rdfs:label "is funded by the grant" .
+  
+  schema:position rdfs:label "has the position" .
+  
+  schema:roleName rdfs:label "has the role" .
+  
+  sub:affiliationauthorship a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select an authorship from above";
+    nt:possibleValue sub:authorship .
+  
+  sub:affiliationorganization a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select an organization from above";
+    nt:possibleValue sub:organization .
+  
+  sub:agent a nt:AgentPlaceholder;
+    rdfs:label "ORCID or other IRI of the author";
+    nt:hasRegex "https?://.+" .
+  
+  sub:altlabel a nt:LiteralPlaceholder;
+    rdfs:label "another name" .
+  
+  sub:authorname a nt:LiteralPlaceholder;
+    rdfs:label "name of the author" .
+  
+  sub:authorship a nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID, e.g. author-1";
+    nt:hasDefaultValue sub:author;
+    nt:hasRegex "[a-zA-Z0-9_\\-]+" .
+  
+  sub:container a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "IRI of the venue or of the containing output";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAom4OoQ8U2K6A629YRXKo9-XU-ZJM7-KZs1h11OD6c1w/find-things?type=https%3A%2F%2Fschema.org%2FCreativeWork",
+      "https://w3id.org/np/l/nanopub-query-1.1/api/RAom4OoQ8U2K6A629YRXKo9-XU-ZJM7-KZs1h11OD6c1w/find-things?type=https%3A%2F%2Fschema.org%2FPeriodical" .
+  
+  sub:creditrole a nt:RestrictedChoicePlaceholder;
+    rdfs:label "role, from CRediT";
+    nt:possibleValue <https://credit.niso.org/contributor-roles/conceptualization/>, <https://credit.niso.org/contributor-roles/data-curation/>,
+      <https://credit.niso.org/contributor-roles/formal-analysis/>, <https://credit.niso.org/contributor-roles/funding-acquisition/>,
+      <https://credit.niso.org/contributor-roles/investigation/>, <https://credit.niso.org/contributor-roles/methodology/>,
+      <https://credit.niso.org/contributor-roles/project-administration/>, <https://credit.niso.org/contributor-roles/resources/>,
+      <https://credit.niso.org/contributor-roles/software/>, <https://credit.niso.org/contributor-roles/supervision/>,
+      <https://credit.niso.org/contributor-roles/validation/>, <https://credit.niso.org/contributor-roles/visualization/>,
+      <https://credit.niso.org/contributor-roles/writing-original-draft/>, <https://credit.niso.org/contributor-roles/writing-review-editing/> .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "a description or abstract" .
+  
+  sub:event a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "IRI of the event";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAom4OoQ8U2K6A629YRXKo9-XU-ZJM7-KZs1h11OD6c1w/find-things?type=https%3A%2F%2Fschema.org%2FEvent" .
+  
+  sub:grant a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "IRI of a grant (not of the funder)";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAom4OoQ8U2K6A629YRXKo9-XU-ZJM7-KZs1h11OD6c1w/find-things?type=https%3A%2F%2Fschema.org%2FGrant" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the name" .
+  
+  sub:organization a nt:GuidedChoicePlaceholder, nt:UriPlaceholder;
+    rdfs:label "ROR ID, other IRI, or a new short name";
+    nt:hasRegex "(https?://.+|[a-zA-Z0-9_\\-]+)";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAom4OoQ8U2K6A629YRXKo9-XU-ZJM7-KZs1h11OD6c1w/find-things?type=https%3A%2F%2Fschema.org%2FOrganization" .
+  
+  sub:organizationname a nt:LiteralPlaceholder;
+    rdfs:label "name of the organization" .
+  
+  sub:output a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "DOI, Handle, ARK, or a new short name" .
+  
+  sub:outputtype a nt:ExternalUriPlaceholder;
+    rdfs:label "e.g. https://schema.org/ScholarlyArticle" .
+  
+  sub:page a nt:ExternalUriPlaceholder;
+    rdfs:label "address of a page about it" .
+  
+  sub:position a nt:LiteralPlaceholder;
+    rdfs:label "place in the author order: 1, 2, 3, ...";
+    nt:hasDatatype xsd:integer;
+    nt:hasRegex "[1-9][0-9]*" .
+  
+  sub:roleauthorship a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select an authorship from above";
+    nt:possibleValue sub:authorship .
+  
+  sub:roletext a nt:LiteralPlaceholder;
+    rdfs:label "role in the source's words" .
+  
+  sub:roletextauthorship a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select an authorship from above";
+    nt:possibleValue sub:authorship .
+  
+  sub:sameas a nt:ExternalUriPlaceholder;
+    rdfs:label "another IRI of the same thing" .
+  
+  sub:st01 rdf:object schema:CreativeWork;
+    rdf:predicate rdf:type;
+    rdf:subject sub:output .
+  
+  sub:st02 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:outputtype;
+    rdf:predicate rdf:type;
+    rdf:subject sub:output .
+  
+  sub:st03 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:output .
+  
+  sub:st04 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:altlabel;
+    rdf:predicate skos:altLabel;
+    rdf:subject sub:output .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:output .
+  
+  sub:st06 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:container;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:output .
+  
+  sub:st07 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:event;
+    rdf:predicate bibo:presentedAt;
+    rdf:subject sub:output .
+  
+  sub:st08 a nt:GroupedStatement, nt:OptionalStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st09, sub:st10, sub:st11, sub:st12, sub:st13 .
+  
+  sub:st09 rdf:object sub:authorship;
+    rdf:predicate schema:author;
+    rdf:subject sub:output .
+  
+  sub:st10 rdf:object schema:Role;
+    rdf:predicate rdf:type;
+    rdf:subject sub:authorship .
+  
+  sub:st11 rdf:object sub:agent;
+    rdf:predicate schema:author;
+    rdf:subject sub:authorship .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:position;
+    rdf:predicate schema:position;
+    rdf:subject sub:authorship .
+  
+  sub:st13 a nt:OptionalStatement;
+    rdf:object sub:authorname;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:agent .
+  
+  sub:st14 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:organizationname;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:organization .
+  
+  sub:st15 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:affiliationorganization;
+    rdf:predicate schema:affiliation;
+    rdf:subject sub:affiliationauthorship .
+  
+  sub:st16 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:creditrole;
+    rdf:predicate schema:roleName;
+    rdf:subject sub:roleauthorship .
+  
+  sub:st17 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:roletext;
+    rdf:predicate schema:roleName;
+    rdf:subject sub:roletextauthorship .
+  
+  sub:st18 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:grant;
+    rdf:predicate schema:funding;
+    rdf:subject sub:output .
+  
+  sub:st19 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:topic;
+    rdf:predicate dct:subject;
+    rdf:subject sub:output .
+  
+  sub:st20 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:sameas;
+    rdf:predicate owl:sameAs;
+    rdf:subject sub:output .
+  
+  sub:st21 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:page;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:output .
+  
+  sub:templateVersion a nt:AssertionTemplate;
+    dct:description "Describes a research output, such as an article, dataset, software or presentation, with its authors in order, their declared affiliations and roles, the venue it appeared in, the event it was presented at, its grants and topics, following the AI-FAIR Compendia schema recommendation. The output is named by its DOI, or else by its Handle, or else by its ARK, or else by a newly minted IRI.";
+    dct:isVersionOf sub:template;
+    rdfs:label "Describing an output";
+    gen:governedBy <https://w3id.org/spaces/pensoft>;
+    nt:hasNanopubLabelPattern "${label}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08, sub:st09, sub:st10, sub:st11, sub:st12, sub:st13, sub:st14, sub:st15, sub:st16,
+      sub:st17, sub:st18, sub:st19, sub:st20, sub:st21;
+    nt:hasTag "Pensoft";
+    nt:hasTargetNanopubType schema:CreativeWork .
+  
+  sub:topic a nt:ExternalUriPlaceholder;
+    rdfs:label "IRI of a topic" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-13T14:09:57.660+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:templateVersion;
+    npx:introduces sub:template;
+    rdfs:label "Describing an output";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAgeON_vGgJCt5E4DPMi0eOPaGwNv9tbfFTRZtBwdQL0w/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "U7PGDZ4cnfSuj9qibaFtc7l8URr3NwHW2Mr2UPP7TEZf7Cghw76gYv3pK6EyEDNEuHyiwljOuuV6z4qHzUCQzgPpWhCZwAEWMc1eA+E2FbidyuTqEEyPEr8fC7leFFUWucQx8pQfrG4TTiYEAkbateYhz/eiSPskJRdr1RBgJXU=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

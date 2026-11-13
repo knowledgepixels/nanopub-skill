@@ -1,0 +1,56 @@
+@prefix this: <https://w3id.org/np/RAsh88Gpy0G3z3t9TwVPq2HsBXV0QT9gD-J8vwp11IoRY> .
+@prefix sub: <https://w3id.org/np/RAsh88Gpy0G3z3t9TwVPq2HsBXV0QT9gD-J8vwp11IoRY/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:viewVersion a gen:ResourceView, gen:SvgView;
+    dct:isVersionOf <https://w3id.org/np/RATompYp51ngr0rNU26AiYlkeqGx3Qog70DNC_4ybjNUw/kg-landscape-view>;
+    dct:title "🌐 KG landscape";
+    rdfs:label "🌐 KG landscape";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:governedBy <https://w3id.org/spaces/mvikg>;
+    gen:hasStructuralPosition "8.1.landscape";
+    gen:hasViewQuery <https://w3id.org/np/RARZQfZ3IxhLJsivgDDxEgJgX8WCMKjl4Ta4cV5SSIt5s/get-kg-landscape-svg>;
+    gen:hasViewQueryTargetField "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0005-5515-1230 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-11-11T19:41:10Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0005-5515-1230;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:viewVersion;
+    npx:introduces <https://w3id.org/np/RATompYp51ngr0rNU26AiYlkeqGx3Qog70DNC_4ybjNUw/kg-landscape-view>;
+    npx:supersedes <https://w3id.org/np/RAWPkhvufMUcpDByyEOY-cl4CVgV3qbFAQRq-cw5jFspc>;
+    skos:changeNote "Repoints at the deeper performance fix (RARZQfZ3...): the previous repoint (RAWPkhvu...) used query RAcRJ8tC..., which at ~15-20s was still borderline against Nanodash's call timeout and intermittently showed 'couldn't refresh, showing old results'. RARZQfZ3 wraps each entity's approval-verdict check as its own deduplicating subquery within every multi-entity leg, cutting measured runtime to ~3-3.5s with identical correct result values.";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjO3oH8Lq/l1oZIUY3FlCz5DnndybGvAhBdmEJ/yq7Nv3GZEYPrEro23rCBCp0GiriOXlVbk61pA/7JFE6tqzTresINW6QQMxE9sIhCBlX4cG66JFD8ud6bMvUyzCR8LQA6zfrSbafGE06rvglJd4MDUcTwvUKqtL9UCnOaowVfnZ3sPOe9EqlmJuO3iHGxBSXMPOPEJZUzMXsFDWFuMZTnrR8gY3r5nVF5a8L/MD135ZH8qW5yGXOB28CmVYCAbw2o07QEKzyzFKN+W1gfnprYZvuKzwGexnzcdzc1S8N/M5bzhWQ40EKCEqgUE8c81OzEMm1HUlUKEJ/o5I/FKKAwIDAQAB";
+    npx:hasSignature "USq+BQszioVkiySfzizKYdb5Y3YRYw3mQs1r9Cxh7DmAA7oj6vQ24iijBNFSZjg0KpJMR7jorDODDAPF3iosST+0Adk2JYTZjU7NU47Qz1EwnpcHjOrFWfmIIyv1rJk6AR8UnvPIbQrEZ10nb/Uz3klQ3m9XWqMZmihl1eZfxRZqYSGPaHf6/hBYaRq9wskpAsIUFarwgmGW4iDNimR79jLg2NhFRpIxvibnkZiVz4WOoSRJhWW7oZypMcdWHpxX/Vd4sgNaHGHtfCAO25ReL1iTuHurbtqXa+5VfvvHB8r1N2UPKX7wE1z49GAt2ubyugicHWR2digB/UrXKiqRaA==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0005-5515-1230 .
+}
+

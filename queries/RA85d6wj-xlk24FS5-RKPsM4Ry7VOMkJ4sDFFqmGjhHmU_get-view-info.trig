@@ -1,0 +1,175 @@
+@prefix this: <https://w3id.org/np/RA85d6wj-xlk24FS5-RKPsM4Ry7VOMkJ4sDFFqmGjhHmU> .
+@prefix sub: <https://w3id.org/np/RA85d6wj-xlk24FS5-RKPsM4Ry7VOMkJ4sDFFqmGjhHmU/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-view-info a grlc:grlc-query;
+    dct:description "Returns key-value facts about a space-governed resource view given as the resource (its version-independent IRI), for display on its maintained-resource page: the title (falling back to the label), description, view type (with a note when the view shows a query form first), the query it runs (labelled with the query's own label), the kinds of page it applies to, the governing space, the current governed version nanopub (shown as its short artifact code), and its last-modified date and author, all read off the current governed winner of the (view, space) pair (newest non-invalidated version signed by a current member+ of the governing space, with the view validated as maintained by that space -- mirroring get-latest-governed-version). The view counterpart of get-template-info. A last row, 'Update this view', is a root-relative link that Nanodash renders as a button: it opens the current version in the publish form's override fill mode, i.e. as the starting point of the next version, with the template the current version was created from (nt:wasCreatedFromTemplate, at template-version=latest, lexicographically first where there are several) or else the generic view template. It is shown only to a viewer who currently holds admin, maintainer or member tier in the governing space: the tier holders of the view's governing space ref are materialized once in a self-contained sub-select and matched against the viewer, bound by Nanodash into the magic parameter ?__CURRENTUSER_multi_iri, by string containment; the match is coalesce-guarded, so a logged-out viewer fails closed and gets no update row. A view with no display type is reported as tabular, which is how Nanodash renders it. Both columns use the '_noheader' convention so the redundant header row is dropped.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get view info";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?Property_noheader ?Value_noheader ?Value_label where {
+  values ?_resource_multi_iri {}
+  values ?__CURRENTUSER_multi_iri {}
+  {
+    select ?np ?version ?dateVal ?authorVal ?spaceVal ?queryVal ?metaTmplVal ?isForm
+           (coalesce(min(if(lang(?titleRaw) = '', ?titleRaw, ?noTitle)), min(?titleRaw)) as ?titleVal)
+           (coalesce(min(if(lang(?labelRaw) = '', ?labelRaw, ?noLabel)), min(?labelRaw)) as ?labelVal)
+           (coalesce(min(if(lang(?descRaw) = '', ?descRaw, ?noDesc)), min(?descRaw)) as ?descVal)
+           (min(?typeName) as ?typeVal)
+           (min(?qLabelRaw) as ?queryLabel)
+           (group_concat(distinct ?apClassName; separator=', ') as ?apClasses)
+           (group_concat(distinct ?apNsName; separator=', ') as ?apNamespaces) where {
+      values ?_resource_multi_iri {}
+      {
+        select ?gKind (max(concat(str(?gDate), '>', str(?gNp))) as ?maxW) where {
+          values ?_resource_multi_iri {}
+          graph ?gA { ?gVersion dct:isVersionOf ?_resource_multi_iri ; gen:governedBy ?gSpace . }
+          bind(?_resource_multi_iri as ?gKind)
+          graph npa:graph {
+            ?gNp npa:hasValidSignatureForPublicKeyHash ?gPubkeyhash ;
+                 dct:created ?gDate ; npx:embeds ?gVersion ; np:hasAssertion ?gA .
+            filter not exists { ?gInv npx:invalidates ?gNp ; npa:hasValidSignatureForPublicKeyHash ?gPubkeyhash . }
+          }
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+            graph ?stateG {
+              ?gKind npa:isMaintainedBy ?gSpace ; npa:hasGoverningSpaceRef ?gRef .
+              ?gRi a gen:RoleInstantiation ; npa:forSpace ?gSpace ; npa:forSpaceRef ?gRef ;
+                   npa:hasRoleType ?gTier ; npa:forAgent ?gAgent .
+              values ?gTier { gen:AdminRole gen:MaintainerRole gen:MemberRole }
+              ?gAcct a npa:AccountState ; npa:agent ?gAgent ; npa:pubkey ?gPubkeyhash .
+            }
+          }
+        } group by ?gKind
+      }
+      filter(?gKind = ?_resource_multi_iri)
+      bind(iri(strafter(?maxW, '>')) as ?np)
+      graph npa:graph {
+        ?np npx:embeds ?version ; dct:created ?dateVal ; np:hasAssertion ?a ; np:hasPublicationInfo ?pi .
+      }
+      graph ?a { ?version a gen:ResourceView ; dct:isVersionOf ?_resource_multi_iri ; gen:governedBy ?spaceVal . }
+      optional { graph npa:graph { ?np npx:signedBy ?authorVal . } }
+      optional { graph ?a { ?version dct:title ?titleRaw } }
+      optional { graph ?a { ?version rdfs:label ?labelRaw } }
+      optional { graph ?a { ?version dct:description ?descRaw } }
+      optional { graph ?a { ?version gen:hasViewQuery ?queryVal } }
+      optional {
+        graph ?a { ?version a ?vType }
+        values (?vType ?typeName) {
+          (gen:TabularView 'tabular') (gen:ListView 'list') (gen:ItemListView 'item list')
+          (gen:NanopubSetView 'nanopub set') (gen:PlainParagraphView 'plain paragraph')
+          (gen:HeaderView 'header') (gen:SvgView 'SVG') (gen:NetworkView 'network') (gen:ThreadView 'thread')
+        }
+      }
+      bind(exists { graph ?a { ?version a gen:QueryFormView } } as ?isForm)
+      optional {
+        graph ?a { ?version gen:appliesToInstancesOf ?apClass }
+        bind(if(?apClass = gen:Space, 'spaces', if(?apClass = gen:MaintainedResource, 'maintained resources',
+             if(?apClass = gen:IndividualAgent, 'users', replace(str(?apClass), '^.*[/#]', '')))) as ?apClassName)
+      }
+      optional {
+        graph ?a { ?version gen:appliesToNamespace ?apNs }
+        bind(concat('IRIs starting with ', str(?apNs)) as ?apNsName)
+      }
+      bind(iri(replace(str(?queryVal), '/[^/]*$', '')) as ?queryNp)
+      optional {
+        graph npa:graph { ?queryNp np:hasAssertion ?qa . }
+        graph ?qa { ?queryVal rdfs:label ?qLabelRaw }
+      }
+      optional {
+        graph ?pi { ?np nt:wasCreatedFromTemplate ?metaTmplVal . }
+        filter not exists { graph ?pi { ?np nt:wasCreatedFromTemplate ?metaOther . filter(str(?metaOther) < str(?metaTmplVal)) } }
+      }
+    } group by ?np ?version ?dateVal ?authorVal ?spaceVal ?queryVal ?metaTmplVal ?isForm
+  }
+  {
+    select (group_concat(distinct ?mEntry; separator='|') as ?memberList) where {
+      values ?_resource_multi_iri {}
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+        graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?mStateG . }
+        graph ?mStateG {
+          ?_resource_multi_iri npa:hasGoverningSpaceRef ?mRef .
+          values ?mTier { gen:AdminRole gen:MaintainerRole gen:MemberRole }
+          ?mRi a gen:RoleInstantiation ; npa:forSpaceRef ?mRef ;
+               npa:hasRoleType ?mTier ; npa:forAgent ?mAgent .
+        }
+      }
+      bind(str(?mAgent) as ?mEntry)
+    }
+  }
+  bind(coalesce(?titleVal, ?labelVal) as ?nameVal)
+  bind(concat(coalesce(?typeVal, 'tabular'), if(?isForm, ', with a query form first', '')) as ?viewTypeVal)
+  bind(if(?apClasses != '' && ?apNamespaces != '', concat(?apClasses, ', ', ?apNamespaces),
+       if(?apClasses != '', ?apClasses, if(?apNamespaces != '', ?apNamespaces, ?noApplies))) as ?appliesVal)
+  bind(coalesce(str(?metaTmplVal), 'https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion') as ?metaTmpl)
+  bind(coalesce(contains(concat('|', ?memberList, '|'), concat('|', str(?__CURRENTUSER_multi_iri), '|')), false) as ?isMember)
+  bind(if(?isMember, concat('<span><a href=\"/publish?template=', encode_for_uri(?metaTmpl), '&template-version=latest&override=', encode_for_uri(str(?np)), '\">✏ publish a new version</a></span>'), ?noUpdateLink) as ?updateLink)
+  values (?ord ?Property_noheader) {
+    (1 'Title:')
+    (2 'Description:')
+    (3 'View type:')
+    (4 'Query:')
+    (5 'Applies to:')
+    (6 'Governed by:')
+    (7 'Current version:')
+    (8 'Last modified:')
+    (9 'Last modified by:')
+    (10 'Update this view:')
+  }
+  bind(if(?ord=1, ?nameVal, if(?ord=2, ?descVal, if(?ord=3, ?viewTypeVal, if(?ord=4, ?queryVal, if(?ord=5, ?appliesVal,
+       if(?ord=6, ?spaceVal, if(?ord=7, ?np, if(?ord=8, str(?dateVal), if(?ord=9, ?authorVal, if(?ord=10, ?updateLink, '')))))))))) as ?Value_noheader)
+  filter(bound(?Value_noheader))
+  bind(if(?ord=7, concat(substr(strafter(str(?np), '/np/'), 1, 10), '…'), if(?ord=4, coalesce(?queryLabel, ''), '')) as ?Value_label)
+}
+order by ?ord""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-10T20:29:45Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-view-info;
+    rdfs:label "Get view info";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ZX+ynKMj0E6kDzYxFrHNPU8Qm9r0iUqmsyqGlg4kDIMP15w47MMS5TVhEGdCUgDsQe20Z6gOwgds50nNuUj/dQrXiGBUyFK/fhFC/HEubmKWQxkrvC9qW0QMwUQ/xXuIHIoLJ/95BcFXb75lvFr86IyWqKqKk7wIbbGPR7B41+I=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

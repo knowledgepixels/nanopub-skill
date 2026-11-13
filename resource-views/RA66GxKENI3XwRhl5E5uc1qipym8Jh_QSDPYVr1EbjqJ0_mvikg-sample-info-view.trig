@@ -1,0 +1,56 @@
+@prefix this: <https://w3id.org/np/RA66GxKENI3XwRhl5E5uc1qipym8Jh_QSDPYVr1EbjqJ0> .
+@prefix sub: <https://w3id.org/np/RA66GxKENI3XwRhl5E5uc1qipym8Jh_QSDPYVr1EbjqJ0/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:viewVersion a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:mvikg-sample-info-view;
+    dct:title "ℹ️ Info";
+    rdfs:label "MVIKG sample info view";
+    gen:appliesToInstancesOf sosa:Sample;
+    gen:governedBy <https://w3id.org/spaces/mvikg>;
+    gen:hasDisplayWidth gen:ColumnWidth06of12;
+    gen:hasStructuralPosition "3.1.info";
+    gen:hasViewQuery <https://w3id.org/np/RA_VlZ1Y9g2pGyPadCoqhjo-L7ZZx45e0ov8ObvO6dOek/get-mvikg-sample-info>;
+    gen:hasViewQueryTargetField "partid" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-11-12T12:26:59.824+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:viewVersion;
+    npx:introduces sub:mvikg-sample-info-view;
+    rdfs:label "MVIKG sample info view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "XEZkNFimps6HUOcxkfnbw4GRF9vkYmLMmFK9/Ud1CGHTDvHLkzapmYVTFoDzyh7xNhmaj3FOoom9MvXNg1144tNMVYw9JzfLWmXOg4D1qZl6/xLph2IxapwXoYau6G01RvCBKraB4a4NiZrIy0Iu8TVBsq9fTEKPBZVBuxetaRM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

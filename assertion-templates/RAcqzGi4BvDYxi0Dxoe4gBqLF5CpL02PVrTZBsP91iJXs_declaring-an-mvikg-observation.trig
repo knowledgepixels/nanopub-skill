@@ -1,0 +1,235 @@
+@prefix this: <https://w3id.org/np/RAcqzGi4BvDYxi0Dxoe4gBqLF5CpL02PVrTZBsP91iJXs> .
+@prefix sub: <https://w3id.org/np/RAcqzGi4BvDYxi0Dxoe4gBqLF5CpL02PVrTZBsP91iJXs/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mvikg: <http://example.org/mvikg/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix unit: <http://qudt.org/vocab/unit/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix biolink: <https://w3id.org/biolink/vocab/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  mvikg:alt rdfs:label "alternate allele" .
+  
+  mvikg:effect rdfs:label "variant effect" .
+  
+  mvikg:evidenceText rdfs:label "evidence text" .
+  
+  mvikg:frequencyUnit rdfs:label "frequency unit" .
+  
+  mvikg:frequencyValue rdfs:label "frequency value" .
+  
+  mvikg:length rdfs:label "variant length" .
+  
+  mvikg:ref rdfs:label "reference allele" .
+  
+  dct:isPartOf rdfs:label "is part of" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "comment" .
+  
+  rdfs:label rdfs:label "label" .
+  
+  sosa:isFeatureOfInterestOf rdfs:label "is feature of interest of" .
+  
+  biolink:Gene rdfs:label "gene" .
+  
+  biolink:SequenceVariant rdfs:label "sequence variant" .
+  
+  biolink:end_coordinate rdfs:label "end coordinate" .
+  
+  biolink:has_sequence_variant rdfs:label "has sequence variant" .
+  
+  biolink:start_coordinate rdfs:label "start coordinate" .
+  
+  sub:alt a nt:LiteralPlaceholder;
+    rdfs:label "alternate allele" .
+  
+  sub:effect a nt:LiteralPlaceholder;
+    rdfs:label "variant effect" .
+  
+  sub:endCoordinate a nt:LiteralPlaceholder;
+    rdfs:label "end coordinate (variant position)";
+    nt:hasDatatype xsd:integer .
+  
+  sub:evidenceText a nt:LiteralPlaceholder;
+    rdfs:label "evidence text (quote/description from the source)" .
+  
+  sub:freqUnit a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "frequency unit";
+    nt:possibleValue unit:PERCENT, unit:UNITLESS .
+  
+  sub:freqValue a nt:LiteralPlaceholder;
+    rdfs:label "frequency value";
+    nt:hasDatatype xsd:decimal .
+  
+  sub:gene a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "the gene this variant belongs to (search existing genes, or enter an NCBI Gene ID)";
+    nt:possibleValuesFromApi "https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esummary.fcgi?db=gene&retmode=json&id=",
+      "https://w3id.org/np/l/nanopub-query-1.1/api/RAom4OoQ8U2K6A629YRXKo9-XU-ZJM7-KZs1h11OD6c1w/find-things?type=https://w3id.org/biolink/vocab/Gene" .
+  
+  sub:length a nt:LiteralPlaceholder;
+    rdfs:label "variant length (free text — not all source rows give a clean integer)" .
+  
+  sub:ref a nt:LiteralPlaceholder;
+    rdfs:label "reference allele" .
+  
+  sub:sample a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "the sample this gene was observed in (declared via the sample-context template)";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAom4OoQ8U2K6A629YRXKo9-XU-ZJM7-KZs1h11OD6c1w/find-things?type=http://www.w3.org/ns/sosa/Sample" .
+  
+  sub:soType a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "sequence variant type (Sequence Ontology)";
+    nt:possibleValuesFromApi "https://www.ebi.ac.uk/ols4/api/select?ontology=so&fieldList=iri,label,description&q=" .
+  
+  sub:st01 rdf:object sub:sample;
+    rdf:predicate sosa:isFeatureOfInterestOf;
+    rdf:subject sub:gene .
+  
+  sub:st02 rdf:object <https://w3id.org/spaces/mvikg/r/kg>;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:variant .
+  
+  sub:st08 rdf:object biolink:Gene;
+    rdf:predicate rdf:type;
+    rdf:subject sub:gene .
+  
+  sub:st09 rdf:object sub:variant;
+    rdf:predicate biolink:has_sequence_variant;
+    rdf:subject sub:gene .
+  
+  sub:st10 rdf:object biolink:SequenceVariant;
+    rdf:predicate rdf:type;
+    rdf:subject sub:variant .
+  
+  sub:st11 rdf:object sub:variantId;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:variant .
+  
+  sub:st11b a nt:OptionalStatement;
+    rdf:object sub:variantName;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:variant .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:soType;
+    rdf:predicate rdf:type;
+    rdf:subject sub:variant .
+  
+  sub:st13 a nt:OptionalStatement;
+    rdf:object sub:effect;
+    rdf:predicate mvikg:effect;
+    rdf:subject sub:variant .
+  
+  sub:st14 a nt:OptionalStatement;
+    rdf:object sub:length;
+    rdf:predicate mvikg:length;
+    rdf:subject sub:variant .
+  
+  sub:st15 a nt:OptionalStatement;
+    rdf:object sub:alt;
+    rdf:predicate mvikg:alt;
+    rdf:subject sub:variant .
+  
+  sub:st16 a nt:OptionalStatement;
+    rdf:object sub:ref;
+    rdf:predicate mvikg:ref;
+    rdf:subject sub:variant .
+  
+  sub:st17 a nt:OptionalStatement;
+    rdf:object sub:startCoordinate;
+    rdf:predicate biolink:start_coordinate;
+    rdf:subject sub:variant .
+  
+  sub:st18 a nt:OptionalStatement;
+    rdf:object sub:endCoordinate;
+    rdf:predicate biolink:end_coordinate;
+    rdf:subject sub:variant .
+  
+  sub:st19 a nt:OptionalStatement;
+    rdf:object sub:evidenceText;
+    rdf:predicate mvikg:evidenceText;
+    rdf:subject sub:variant .
+  
+  sub:st20 a nt:GroupedStatement, nt:OptionalStatement;
+    nt:hasStatement sub:st23, sub:st24 .
+  
+  sub:st23 rdf:object sub:freqValue;
+    rdf:predicate mvikg:frequencyValue;
+    rdf:subject sub:variant .
+  
+  sub:st24 rdf:object sub:freqUnit;
+    rdf:predicate mvikg:frequencyUnit;
+    rdf:subject sub:variant .
+  
+  sub:startCoordinate a nt:LiteralPlaceholder;
+    rdfs:label "start coordinate (variant position)";
+    nt:hasDatatype xsd:integer .
+  
+  sub:templateVersion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Declaring an MVIKG observation";
+    dct:isVersionOf <https://w3id.org/np/RATaU30_DTYcbG3bqZQb4fLRktnxKyjASwI5fFFIumAeo/template>;
+    rdfs:label "Declaring an MVIKG observation";
+    gen:governedBy <https://w3id.org/spaces/mvikg>;
+    nt:hasNanopubLabelPattern "${variantId}";
+    nt:hasStatement sub:st01, sub:st02, sub:st08, sub:st09, sub:st10, sub:st11, sub:st11b,
+      sub:st12, sub:st13, sub:st14, sub:st15, sub:st16, sub:st17, sub:st18, sub:st19, sub:st20,
+      sub:st23, sub:st24;
+    nt:hasTag "Biology";
+    nt:hasTargetNanopubType biolink:SequenceVariant, <https://w3id.org/spaces/mvikg/Record> .
+  
+  sub:variant a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this sequence variant" .
+  
+  sub:variantId a nt:LiteralPlaceholder;
+    rdfs:label "short name/identifier of this variant" .
+  
+  sub:variantName a nt:LiteralPlaceholder;
+    rdfs:label "variant name/notation (e.g. T77I)" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0005-5515-1230 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-12T11:23:51+00:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:templateVersion;
+    npx:introduces <https://w3id.org/np/RATaU30_DTYcbG3bqZQb4fLRktnxKyjASwI5fFFIumAeo/template>;
+    npx:supersedes <https://w3id.org/np/RAxh65i-lelMIAK3By-aVOElaEqosPBU-B4Um1Dy7Sgkw>;
+    rdfs:label "Declaring an MVIKG observation";
+    skos:changeNote "Adds the optional comment statement the variant nanopublications carry but the template lacked: the variant name/notation goes into the comment, and the label is now described as what the data puts there, a short name/identifier. Adds the MVIKG record class as a further target nanopublication type, the common type of all nanopublications created from the MVIKG templates.";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAgeON_vGgJCt5E4DPMi0eOPaGwNv9tbfFTRZtBwdQL0w/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Mnu8GTiywiTcfH9hSy0qXrCyYYNSjC6+7xzvBKA9ZNZVkTbrLKoNRuvfp1zjuAztgO9lYtRCmtXnM6lPQf4e3esAQvTBexRMGCQRizziWYMT+96B5CkesiXhhvDV09fdQYNozzntyLD6soT48Zwc1n4kfbGDTZQ4P7UCOihNQ7s=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

@@ -1,0 +1,54 @@
+@prefix this: <https://w3id.org/np/RAGbVGaeF5bEpk6Yg8g3Gf34jr5lztlwx2JDmst1UQdOo> .
+@prefix sub: <https://w3id.org/np/RAGbVGaeF5bEpk6Yg8g3Gf34jr5lztlwx2JDmst1UQdOo/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:viewVersion a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAH2h-7PUI0qh72AWUP8EaKeavOUVB50KlsRA-FGS5ikg/kg-info-view>;
+    dct:title "ℹ️ Info";
+    rdfs:label "ℹ️ Info";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:governedBy <https://w3id.org/spaces/mvikg>;
+    gen:hasStructuralPosition "4.1.info";
+    gen:hasViewQuery <https://w3id.org/np/RALnpV2WvcB-MVnklfFsn6_sG55kQ9Jl1zZFB9JoG-oU4/get-mvikg-kg-info>;
+    gen:hasViewQueryTargetField "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0005-5515-1230 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-11-10T12:38:39Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0005-5515-1230;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:viewVersion;
+    npx:introduces <https://w3id.org/np/RAH2h-7PUI0qh72AWUP8EaKeavOUVB50KlsRA-FGS5ikg/kg-info-view>;
+    npx:supersedes <https://w3id.org/np/RAH2h-7PUI0qh72AWUP8EaKeavOUVB50KlsRA-FGS5ikg>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjO3oH8Lq/l1oZIUY3FlCz5DnndybGvAhBdmEJ/yq7Nv3GZEYPrEro23rCBCp0GiriOXlVbk61pA/7JFE6tqzTresINW6QQMxE9sIhCBlX4cG66JFD8ud6bMvUyzCR8LQA6zfrSbafGE06rvglJd4MDUcTwvUKqtL9UCnOaowVfnZ3sPOe9EqlmJuO3iHGxBSXMPOPEJZUzMXsFDWFuMZTnrR8gY3r5nVF5a8L/MD135ZH8qW5yGXOB28CmVYCAbw2o07QEKzyzFKN+W1gfnprYZvuKzwGexnzcdzc1S8N/M5bzhWQ40EKCEqgUE8c81OzEMm1HUlUKEJ/o5I/FKKAwIDAQAB";
+    npx:hasSignature "Nue4xE36Stn8CWZ1wyHvx2YLBLS1/DXb2TD+Gw6J+6fDopg0qtSz6wJbsyRKvrzB13JBxJrEcN/2/kUb7oCoMiavKw4Hvmj/OLubItu9D+PcYLiW/+tL06Z+HcJLJaNrh8YhMzzH2EhxmaOLiBnpNAlu6XG7RQ02dCSA5XsEl1qGKH1/HkC+7u2lORKo8mfrQAb/JJMHqGOyob5U6yrb1rmErQi7FIo/mLp3HH/KUBXLr77Rivj8IqSf+njV6Qo5YDVOV7A2asy0tMWmbbOg0MNBXUdo7VqeDGS2UxMuARa77bjljmhhZ0LnS2bBlrvlIkordjEM7vH5C2t7fiQajw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0005-5515-1230 .
+}
+

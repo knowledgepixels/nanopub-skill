@@ -1,0 +1,55 @@
+@prefix this: <https://w3id.org/np/RAGaFwf6DzWIbAaQ-4zRMmYQ6U2kkTI3vxba0J3Xf4huU> .
+@prefix sub: <https://w3id.org/np/RAGaFwf6DzWIbAaQ-4zRMmYQ6U2kkTI3vxba0J3Xf4huU/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix biolink: <https://w3id.org/biolink/vocab/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:viewVersion a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf sub:mvikg-variant-phenotypes-view;
+    dct:title "🔬 Associated phenotypes";
+    rdfs:label "MVIKG phenotypes of a variant view";
+    gen:appliesToInstancesOf biolink:SequenceVariant;
+    gen:governedBy <https://w3id.org/spaces/mvikg>;
+    gen:hasStructuralPosition "4.1.phenotypes";
+    gen:hasViewQuery <https://w3id.org/np/RAg11HQ_ijrRE1ufnrWBPISgSH4scD7WBb_gVOYhLwh6M/get-mvikg-variant-phenotypes>;
+    gen:hasViewQueryTargetField "partid" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-11-12T12:26:59.864+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:viewVersion;
+    npx:introduces sub:mvikg-variant-phenotypes-view;
+    rdfs:label "MVIKG phenotypes of a variant view";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "WUWIhdntrrYcIW6xhM8eGwOASZnx66JZ3lRlEGUk4lAc1fIyIfEyovQGyyB/v9fmOmvpDpDFMZ9gqbhfYYBD48F0uWLoYRcuUaahhW/uAR13SUhT6sArWN3gjjmn8FFdfPRk2NyDSam5oE0RP91LrqeqsE4s5eeevMz9J0nNlSs=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

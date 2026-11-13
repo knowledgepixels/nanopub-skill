@@ -1,0 +1,145 @@
+@prefix this: <https://w3id.org/np/RAJfRGlpqrkcSJVILAuqC4ICRIwJdUHc8GmR7OSXMkYHk> .
+@prefix sub: <https://w3id.org/np/RAJfRGlpqrkcSJVILAuqC4ICRIwJdUHc8GmR7OSXMkYHk/> .
+@prefix schema: <https://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the name" .
+  
+  rdfs:seeAlso rdfs:label "has a page at" .
+  
+  owl:sameAs rdfs:label "is the same thing as" .
+  
+  skos:altLabel rdfs:label "has the other name" .
+  
+  skos:notation rdfs:label "has the code" .
+  
+  schema:Periodical rdfs:label "venue (periodical)" .
+  
+  schema:publisher rdfs:label "has the publisher" .
+  
+  sub:altlabel a nt:LiteralPlaceholder;
+    rdfs:label "another name" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "a description" .
+  
+  sub:issn a nt:LiteralPlaceholder;
+    rdfs:label "ISSN of one medium, e.g. 1314-4049";
+    nt:hasDatatype <https://bioregistry.io/registry/issn>;
+    nt:hasRegex "[0-9]{4}-[0-9]{3}[0-9X]" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the name" .
+  
+  sub:page a nt:ExternalUriPlaceholder;
+    rdfs:label "address of a page about it" .
+  
+  sub:publisher a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "ROR ID or other IRI of the publisher";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAom4OoQ8U2K6A629YRXKo9-XU-ZJM7-KZs1h11OD6c1w/find-things?type=https%3A%2F%2Fschema.org%2FOrganization" .
+  
+  sub:sameas a nt:ExternalUriPlaceholder;
+    rdfs:label "another IRI of the same thing" .
+  
+  sub:st01 rdf:object schema:Periodical;
+    rdf:predicate rdf:type;
+    rdf:subject sub:venue .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:venue .
+  
+  sub:st03 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:altlabel;
+    rdf:predicate skos:altLabel;
+    rdf:subject sub:venue .
+  
+  sub:st04 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:venue .
+  
+  sub:st05 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:issn;
+    rdf:predicate skos:notation;
+    rdf:subject sub:venue .
+  
+  sub:st06 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:publisher;
+    rdf:predicate schema:publisher;
+    rdf:subject sub:venue .
+  
+  sub:st07 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:sameas;
+    rdf:predicate owl:sameAs;
+    rdf:subject sub:venue .
+  
+  sub:st08 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:page;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:venue .
+  
+  sub:templateVersion a nt:AssertionTemplate;
+    dct:description "Describes a venue, that is a serial that outputs appear in: a journal, a book series or a proceedings series, following the AI-FAIR Compendia schema recommendation. A single volume or issue is an output, and a conference is an event. The venue is named by its ISSN-L, or else by the Crossref DOI of the serial, or else by a newly minted IRI.";
+    dct:isVersionOf sub:template;
+    rdfs:label "Describing a venue";
+    gen:governedBy <https://w3id.org/spaces/pensoft>;
+    nt:hasNanopubLabelPattern "${label}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08;
+    nt:hasTag "Pensoft";
+    nt:hasTargetNanopubType schema:Periodical .
+  
+  sub:venue a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "ISSN-L IRI, serial DOI, or a new short name" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-13T14:10:14.061+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:templateVersion;
+    npx:introduces sub:template;
+    rdfs:label "Describing a venue";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAgeON_vGgJCt5E4DPMi0eOPaGwNv9tbfFTRZtBwdQL0w/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ZDJ9KuT/hYtSw6hiaVo1XJ3WVBmkMbFdNneqfAXke035HrBqlfCkme5JSJIzehax3HMybJAIb3CnpQAC8GcntYq1AgzZxX3pfcUmqtLlOWCqWvKsBroTqLTuufj9PPbFXuZgsE7J9BZpH7fXWp2rtrr1n9W1ChO+uL3Ov41nAQs=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

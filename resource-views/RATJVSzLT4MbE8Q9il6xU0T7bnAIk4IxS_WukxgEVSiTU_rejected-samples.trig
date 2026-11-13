@@ -1,0 +1,57 @@
+@prefix this: <https://w3id.org/np/RATJVSzLT4MbE8Q9il6xU0T7bnAIk4IxS_WukxgEVSiTU> .
+@prefix sub: <https://w3id.org/np/RATJVSzLT4MbE8Q9il6xU0T7bnAIk4IxS_WukxgEVSiTU/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:viewVersion a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAjZSSznXQT6PptLJyqJ29M8CJtInZYlv8H7B1IJhtoN0/kg-rejected-samples-view>;
+    dct:title "🚫 Rejected samples";
+    rdfs:label "🚫 Rejected samples";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:governedBy <https://w3id.org/spaces/mvikg>;
+    gen:hasDisplayWidth gen:ColumnWidth06of12;
+    gen:hasStructuralPosition "7.1.rejected-sample";
+    gen:hasViewQuery <https://w3id.org/np/RAlw5B9y-Nnip8Ds4E10qZ-onwbSLVX-8cAEJhn9uhcGc/get-kg-rejected-samples>;
+    gen:hasViewQueryTargetField "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0005-5515-1230 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-11-10T15:38:07Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0005-5515-1230;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:viewVersion;
+    npx:introduces <https://w3id.org/np/RAjZSSznXQT6PptLJyqJ29M8CJtInZYlv8H7B1IJhtoN0/kg-rejected-samples-view>;
+    npx:supersedes <https://w3id.org/np/RAP1LCwUGi8SOxIRkSInxZAB-XH22bBoVzwQpq0sg6-6g>;
+    skos:changeNote "Repointed gen:hasViewQuery at the query version whose Name column now links directly to the record's nanopub (Name_label carries the display text).";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjO3oH8Lq/l1oZIUY3FlCz5DnndybGvAhBdmEJ/yq7Nv3GZEYPrEro23rCBCp0GiriOXlVbk61pA/7JFE6tqzTresINW6QQMxE9sIhCBlX4cG66JFD8ud6bMvUyzCR8LQA6zfrSbafGE06rvglJd4MDUcTwvUKqtL9UCnOaowVfnZ3sPOe9EqlmJuO3iHGxBSXMPOPEJZUzMXsFDWFuMZTnrR8gY3r5nVF5a8L/MD135ZH8qW5yGXOB28CmVYCAbw2o07QEKzyzFKN+W1gfnprYZvuKzwGexnzcdzc1S8N/M5bzhWQ40EKCEqgUE8c81OzEMm1HUlUKEJ/o5I/FKKAwIDAQAB";
+    npx:hasSignature "MR2dRKiW73+iTwzNKGRuEnQWd6HKd7pbBGYPyb4goxSvr97P9EeiohKSQ6Y4sS3rHgNy54ptUB3EQFRO5Cu7HsMtVetQJJqpsxQDF9vfRbIjSvWxq5sQKxEld9fBNPaFfWmb+Hko0LWs0aT67G4lLmPT6snL4x0XcKYfkjinDyvj+Vc20DWFP3TEa40zKOuQ2sLxcrKc7m3YdcY6iSguNAu1iGw9kSjPCC+Eps9kujRYcL3vp5Ra4wvhjgWIaG08bN90pj/7+iO2VcyGq5Di0du/T8c9pt2EuB7zZOIqXZ9az9bEFC4VMPnf66OVVMAcRXuLNZT3H91PmR7vp1tQpw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0005-5515-1230 .
+}
+

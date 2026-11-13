@@ -1,0 +1,80 @@
+@prefix this: <https://w3id.org/np/RAT33WsCkJr-HPl7lo8dLssSNkMbO3JkTtO74jILHfhuw> .
+@prefix sub: <https://w3id.org/np/RAT33WsCkJr-HPl7lo8dLssSNkMbO3JkTtO74jILHfhuw/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:action a gen:ViewResultAction;
+    rdfs:label "➕ add...";
+    gen:hasActionTemplate <https://w3id.org/np/RAr8odwaHXvlXco7M3a5iIxyjyfnBxdmlpkoW8m8N8C50>;
+    gen:hasActionTemplatePartField "ontologyVersion";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "ontology";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:ontology-version-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAU_E344fwuBkGlrYjHZYhwuL8WiwLk3cI2lbscVcnV6o/ontology-version-view-kind>;
+    dct:title "🔢 Ontology versions";
+    rdfs:label "View of OWL ontology versions";
+    gen:appliesToInstancesOf <http://www.w3.org/2002/07/owl#Ontology>, gen:MaintainedResource;
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels>;
+    gen:hasDisplayWidth gen:ColumnWidth06of12;
+    gen:hasPageSize "5";
+    gen:hasStructuralPosition "3.8.versions.1";
+    gen:hasViewAction sub:action;
+    gen:hasViewQuery <https://w3id.org/np/RA_TneG2gCGpKaeRhXFvXdlVDim-FLpp_R47sw0um9Ubo/get-ontology-versions>;
+    gen:hasViewQueryTargetField "ontology" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-11T10:32:22.189Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:ontology-version-view;
+    npx:introduces <https://w3id.org/np/RAU_E344fwuBkGlrYjHZYhwuL8WiwLk3cI2lbscVcnV6o/ontology-version-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAXnTpujL7rWE2L34DdqjldrjtDoAYI1O1QdpaxVDe5aQ>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    skos:changeNote "Make governed by Knowledge Pixels";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQD4Wj537OijfOWVtsHMznuXKISqBhtGDQZfdO6pbb4hg9EHMcUFGTLbWaPrP783PHv8HMAAPjvEkHLaOHMIknqhaIa5236lfBO3r+ljVdYBElBcLvROmwG+ZGtmPNZf7lMhI15xf5TfoaSa84AFRd5J2EXekK6PhaFQhRm1IpSYtwIDAQAB";
+    npx:hasSignature "G8DMdZBXSOX4glKsL56tLTer+eFJyYqWLqkCuKGA6m6ZzeIkzzMzPjZnGF7yd6Y6mq35w5LRA+nqWJxq5DqU00Xwc3Be1GesF75K4LGi4z2UbjthHwHxE59BTtCBPb1qto9T+JaspodvsKcmNfLvGktywmDkehcsKmbGY1/CdBw=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RA_TneG2gCGpKaeRhXFvXdlVDim-FLpp_R47sw0um9Ubo/get-ontology-versions>
+    nt:hasLabelFromApi "Get ontology versions - This query returns the ontology versions for a given ontology." .
+  
+  <https://w3id.org/np/RAr8odwaHXvlXco7M3a5iIxyjyfnBxdmlpkoW8m8N8C50> nt:hasLabelFromApi
+      "Defining a version of an OWL ontology" .
+  
+  <https://w3id.org/spaces/knowledgepixels> nt:hasLabelFromApi "Knowledge Pixels" .
+}
+

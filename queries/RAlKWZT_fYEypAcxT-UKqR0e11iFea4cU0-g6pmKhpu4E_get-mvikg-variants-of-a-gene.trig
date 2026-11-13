@@ -1,0 +1,120 @@
+@prefix this: <https://w3id.org/np/RAlKWZT_fYEypAcxT-UKqR0e11iFea4cU0-g6pmKhpu4E> .
+@prefix sub: <https://w3id.org/np/RAlKWZT_fYEypAcxT-UKqR0e11iFea4cU0-g6pmKhpu4E/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-mvikg-gene-variants a grlc:grlc-query;
+    dct:description "Lists the sequence variant records of the MVIKG knowledge graph that belong to a gene ('partid'), with the sample they were observed in, Sequence Ontology type, effect and review status. Only records signed by a current admin, maintainer or member of the mvikg space count, in their newest non-invalidated version; the review status is the latest npx:approvesOf / npx:disapprovesOf verdict of a current mvikg admin on that version (none: pending).";
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Get MVIKG variants of a gene";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix sosa: <http://www.w3.org/ns/sosa/>
+prefix biolink: <https://w3id.org/biolink/vocab/>
+prefix mvikg: <http://example.org/mvikg/>
+prefix obo: <http://purl.obolibrary.org/obo/>
+
+select ?variant ?variant_label ?sample ?sample_label ?type ?effect ?status ?np ?np_label where {
+  {
+    select ?variant ?np (sample(?l) as ?vl) (sample(coalesce(?samc, ?sam)) as ?sample) (min(?saml) as ?sl) (group_concat(distinct ?tl; separator=', ') as ?type) (sample(?e) as ?effect) (max(?verdict) as ?mv) where {
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+        select (group_concat(distinct ?pk; separator=' ') as ?memberKeys) (group_concat(distinct ?apk; separator=' ') as ?adminKeys) where {
+          graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?sg . }
+          graph ?sg {
+            ?ri a gen:RoleInstantiation ; npa:forSpace <https://w3id.org/spaces/mvikg> ; npa:hasRoleType ?tier ; npa:forAgent ?agent .
+            filter(?tier in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+            ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?pk .
+            bind(if(?tier = gen:AdminRole, ?pk, '') as ?apk)
+          }
+        }
+      }
+
+      graph ?a { ?_partid_iri biolink:has_sequence_variant ?variant . ?variant a biolink:SequenceVariant ; dct:isPartOf <https://w3id.org/spaces/mvikg/r/kg> . }
+      graph npa:graph {
+        ?np np:hasAssertion ?a ; npx:introduces ?variant ; dct:created ?date ;
+            npa:hasValidSignatureForPublicKeyHash ?pubkey .
+        filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+      }
+      filter(contains(?memberKeys, ?pubkey))
+      optional {
+        graph npa:graph {
+          ?np2 npx:introduces ?variant ; dct:created ?date2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 .
+          filter not exists { ?inv2 npx:invalidates ?np2 ; npa:hasValidSignatureForPublicKeyHash ?pubkey2 . }
+        }
+        filter(contains(?memberKeys, ?pubkey2) && concat(str(?date2), '>', str(?np2)) > concat(str(?date), '>', str(?np)))
+      }
+      filter(!bound(?np2))
+      optional { graph ?a { ?variant rdfs:label ?l } }
+      optional { graph ?a { ?variant mvikg:effect ?e } }
+      optional { graph ?a { ?variant a ?t . filter(?t != biolink:SequenceVariant) } bind(if(?t = obo:SO_0000159, 'deletion', if(?t = obo:SO_0000667, 'insertion', if(?t = obo:SO_0000694, 'SNP', if(?t = obo:SO_0001483, 'SNV', if(?t = obo:SO_0001059, 'sequence alteration', if(?t = obo:SO_1000002, 'substitution', if(?t = obo:SO_1000032, 'delins', if(?t = obo:SO_0002007, 'MNV', replace(replace(str(?t), '^.*[/#]', ''), '_', ':'))))))))) as ?tl) }
+      optional { graph ?a { ?_partid_iri sosa:isFeatureOfInterestOf ?sam } }
+      optional {
+        graph npa:graph {
+          ?samonp npx:introduces ?sam . ?samnp npx:supersedes* ?samonp ; npx:introduces ?samc ; rdfs:label ?saml ;
+               npa:hasValidSignatureForPublicKeyHash ?sampk .
+          filter not exists { ?saminv npx:invalidates ?samnp ; npa:hasValidSignatureForPublicKeyHash ?sampk . }
+        }
+      }
+      optional {
+        values ?vpred { npx:approvesOf npx:disapprovesOf }
+        graph ?va { ?vagent ?vpred ?np . }
+        graph npa:graph {
+          ?vnp np:hasAssertion ?va ; dct:created ?vdate ; npa:hasValidSignatureForPublicKeyHash ?vpk .
+          filter not exists { ?vinv npx:invalidates ?vnp ; npa:hasValidSignatureForPublicKeyHash ?vpk . }
+        }
+        filter(contains(?adminKeys, ?vpk))
+        bind(concat(str(?vdate), '>', if(?vpred = npx:disapprovesOf, 'd', 'a')) as ?verdict)
+      }
+    } group by ?variant ?np
+  }
+  bind(coalesce(str(?vl), replace(str(?variant), '^.*/np/', '')) as ?variant_label)
+  bind(coalesce(str(?sl), replace(str(?sample), '^.*/np/', '')) as ?sample_label)
+  bind(if(!bound(?mv), '⏳ pending', if(strends(?mv, 'd'), '🚫 rejected', '✅ approved')) as ?status)
+  bind('^' as ?np_label)
+}
+order by ?variant_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-11-12T13:26:12.587+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-mvikg-gene-variants;
+    rdfs:label "Get MVIKG variants of a gene";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "HguU3mxaPNid16sHokcs+pOAYbB53kW3StSFQeQ6cCM7aJ1oqSf32YiqLfuv6cLMe3v+wpdKu36BPb/P5tao81zJfM+n+Uw9oHCua7c4CIETXzeIoVC9je+gouSIMKMg1/jwMEr/fdETkgq88Ia38jVjt0id552Ty7QbOXrBr+Y=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

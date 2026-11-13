@@ -1,0 +1,70 @@
+@prefix this: <https://w3id.org/np/RAa5z5kwyciyAVCgEH_ypCTyce4GFsy256WoXA5FaXhqY> .
+@prefix sub: <https://w3id.org/np/RAa5z5kwyciyAVCgEH_ypCTyce4GFsy256WoXA5FaXhqY/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:approveAction a gen:ViewEntryAction;
+    rdfs:label "✔ approve...";
+    gen:hasActionTemplate <https://w3id.org/np/RAkhTlKa-i0miq_DN3V4HSv-btlDgwzg8qPUesrsJ0k9Q/template>;
+    gen:hasActionTemplateQueryMapping "np:!nanopub approve_target:!approveOrDisapprove";
+    gen:isVisibleTo gen:AdminRole .
+  
+  sub:rejectAction a gen:ViewEntryAction;
+    rdfs:label "✖ reject...";
+    gen:hasActionTemplate <https://w3id.org/np/RAkhTlKa-i0miq_DN3V4HSv-btlDgwzg8qPUesrsJ0k9Q/template>;
+    gen:hasActionTemplateQueryMapping "np:!nanopub reject_target:!approveOrDisapprove";
+    gen:isVisibleTo gen:AdminRole .
+  
+  sub:viewVersion a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAEo7UtJ-URvVMRpCslgueGsgtCQDOlZeSga2ttcL_HFg/kg-pending-variants-view>;
+    dct:title "⏳ Pending variants";
+    rdfs:label "⏳ Pending variants";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:governedBy <https://w3id.org/spaces/mvikg>;
+    gen:hasDisplayWidth gen:ColumnWidth06of12;
+    gen:hasStructuralPosition "6.1.pending-variant";
+    gen:hasViewAction sub:approveAction, sub:rejectAction;
+    gen:hasViewQuery <https://w3id.org/np/RAAby6NwDrtA83noSeFJlHIammY4k1HDzvfXI-Ekf3IO8/get-kg-pending-variants>;
+    gen:hasViewQueryTargetField "void" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0005-5515-1230 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-11-10T15:38:07Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0005-5515-1230;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:viewVersion;
+    npx:introduces <https://w3id.org/np/RAEo7UtJ-URvVMRpCslgueGsgtCQDOlZeSga2ttcL_HFg/kg-pending-variants-view>;
+    npx:supersedes <https://w3id.org/np/RAbrPhA-lwKNjDSScFWL2iPfR5NV3UhX2UWkbVUo0jG94>;
+    skos:changeNote "Repointed gen:hasViewQuery at the query version whose Name column now links directly to the record's nanopub (Name_label carries the display text).";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAjO3oH8Lq/l1oZIUY3FlCz5DnndybGvAhBdmEJ/yq7Nv3GZEYPrEro23rCBCp0GiriOXlVbk61pA/7JFE6tqzTresINW6QQMxE9sIhCBlX4cG66JFD8ud6bMvUyzCR8LQA6zfrSbafGE06rvglJd4MDUcTwvUKqtL9UCnOaowVfnZ3sPOe9EqlmJuO3iHGxBSXMPOPEJZUzMXsFDWFuMZTnrR8gY3r5nVF5a8L/MD135ZH8qW5yGXOB28CmVYCAbw2o07QEKzyzFKN+W1gfnprYZvuKzwGexnzcdzc1S8N/M5bzhWQ40EKCEqgUE8c81OzEMm1HUlUKEJ/o5I/FKKAwIDAQAB";
+    npx:hasSignature "S97RfrR+8aAihYB613IuZ3NRKmupHNFLCf2ntOKWOsLr4JSyyHN4JSt3ILfxDGrv6zvR3EbSmFFFbc6AGqOnd/JyDXLCq+f2dVD8y2JbxmLSO0CoPLaCbJ4rW2XaMSCd2CxXVzhI7EyztT8cckW2yFRE/ZmpTYP/BPYVX06gbBX+rQloJ44T/LES+UYpA6bT5A6SUm/RiKhn/JfoMXT1kdKMRqRW//PEBfDonfymcSitW3RSvXPceLo/7yOK2JbIVppYMXU15ea4R24MYaL1nqqyWlM5/v9TuSHhacW6gUGg5EeZ6/+mCqBDTeOwzyGylpp16/whXe0xqNFh5Cssdg==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0005-5515-1230 .
+}
+

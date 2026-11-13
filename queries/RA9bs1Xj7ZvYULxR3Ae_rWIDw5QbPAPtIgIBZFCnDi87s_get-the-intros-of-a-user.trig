@@ -1,0 +1,73 @@
+@prefix this: <https://w3id.org/np/RA9bs1Xj7ZvYULxR3Ae_rWIDw5QbPAPtIgIBZFCnDi87s> .
+@prefix sub: <https://w3id.org/np/RA9bs1Xj7ZvYULxR3Ae_rWIDw5QbPAPtIgIBZFCnDi87s/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-user-intros a grlc:grlc-query;
+    dct:description "Returns the key declarations made for one given user: one row per introduction and declared public key, with the introduction's creation date if stated, the key, its hash, the key location if stated, and whether the introduction is signed with the very key the row declares (authoritative). Introductions invalidated with their own signing key are left out. This is the per-user counterpart of get-all-user-intros, for callers that only need to know about a single user.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the intros of a user";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/77757cabf6184c51c20b8b0fe5dc5e1365b7f628448335184ad54319a0affdfc>;
+    grlc:sparql """prefix np: <http://www.nanopub.org/nschema#>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix dct: <http://purl.org/dc/terms/>
+
+select ?user ?intronp ?date ?pubkey ?pubkeyHash ?authoritative ?keyLocation where {
+  graph ?a {
+    ?keydeclaration npx:declaredBy ?_user_iri .
+    ?keydeclaration npx:hasPublicKey ?pubkey .
+    optional { ?keydeclaration npx:hasKeyLocation ?keyLocation . }
+  }
+  graph npa:graph {
+    ?intronp np:hasAssertion ?a .
+    ?intronp npa:hasValidSignatureForPublicKey ?introPubkey .
+    filter not exists { ?intronpx npx:invalidates ?intronp ; npa:hasValidSignatureForPublicKey ?introPubkey . }
+  }
+  optional { graph npa:graph { ?intronp dct:created ?date . } }
+  bind(?_user_iri as ?user)
+  bind(?pubkey = ?introPubkey as ?authoritative)
+  bind(sha256(?pubkey) as ?pubkeyHash)
+}
+order by ?date ?intronp""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-11T19:14:34.550+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-user-intros;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RANwQa4ICWS5SOjw7gp99nBpXBasapwtZF1fIM3H2gYTM>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "ol4MZywjwNoMemp8hZiq8nERQqJYJKvgpjVFMzua6WcWkHc9htT+yOeIwzrnkEJlYgdldk86Mz5QHkKQpj1dZ5WUqU+ZXafVgd4DBE1NIB30tIAuvlWqlmjg0KE6v0pc9YuOT1UFww1sHAnyz3eKD8vofY9CGvmj8n/iSnBLag4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

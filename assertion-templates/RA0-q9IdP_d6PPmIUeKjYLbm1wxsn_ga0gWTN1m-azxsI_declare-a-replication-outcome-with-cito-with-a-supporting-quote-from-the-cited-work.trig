@@ -1,0 +1,98 @@
+@prefix this: <https://w3id.org/np/RA0-q9IdP_d6PPmIUeKjYLbm1wxsn_ga0gWTN1m-azxsI> .
+@prefix sub: <https://w3id.org/np/RA0-q9IdP_d6PPmIUeKjYLbm1wxsn_ga0gWTN1m-azxsI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:isPartOf rdfs:label "is part of a collection" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Declare a citation between a replication or reproduction and original study using the Citation Typing Ontology (CiTO), together with a short verbatim quote from the replication that characterises the relation.";
+    rdfs:label "Declare a replication outcome with CiTO, with a supporting quote from the cited work.";
+    nt:hasDefaultProvenance <https://w3id.org/np/RAhi2xdx4ezLZVacCnXb_dWOM3VD9LNp5TGZSdx_Ee0JA>;
+    nt:hasNanopubLabelPattern "Replication outcome of: ${work}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04;
+    nt:hasTag "Journals";
+    nt:hasTargetNanopubType <http://purl.org/spar/cito/cites> .
+  
+  sub:cited a nt:ExternalUriPlaceholder;
+    rdfs:label "DOI (https://doi.org/10...) or other URL of the cited article" .
+  
+  sub:cites a nt:RestrictedChoicePlaceholder;
+    rdfs:label "select the citation type";
+    nt:possibleValuesFrom <https://w3id.org/np/RAZt5kzfoJg2m4dMRdMm2SP6JeUDD_GMzSq9xyRPMgP5k> .
+  
+  sub:collection a nt:ExternalUriPlaceholder;
+    rdfs:label "DOI (https://doi.org/10...) or other URL of the collection" .
+  
+  sub:outcome a nt:LongLiteralPlaceholder;
+    rdfs:label "Quote the replication/reproduction outcome" .
+  
+  sub:st01 rdf:object <https://w3id.org/sciencelive/o/terms/FORRT-Replication-Study>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:work .
+  
+  sub:st02 rdf:object sub:cited;
+    rdf:predicate sub:cites;
+    rdf:subject sub:work .
+  
+  sub:st03 rdf:object sub:outcome;
+    rdf:predicate <https://w3id.org/sciencelive/o/terms/FORRT-Replication-Outcome>;
+    rdf:subject sub:work .
+  
+  sub:st04 a nt:OptionalStatement;
+    rdf:object sub:collection;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:work .
+  
+  sub:work a nt:ExternalUriPlaceholder;
+    rdfs:label "DOI (https://doi.org/10...) or other URL of the citing article" .
+  
+  <https://w3id.org/sciencelive/o/terms/FORRT-Replication-Outcome> rdfs:label "has the outcome" .
+  
+  <https://w3id.org/sciencelive/o/terms/FORRT-Replication-Study> rdfs:label "FORRT Replication/Reproduction Study" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-9911-526X .
+}
+
+sub:pubinfo {
+  orcid:0000-0001-9911-526X foaf:name "Josefina Weinerova" .
+  
+  this: dct:created "2026-11-12T16:58:13.677Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0001-9911-526X;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAv5GSYMLrwVmH7XUxWG05DNdV9BKV3et2Rxdf8LcD7lc>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Declare a replication outcome with CiTO, with a supporting quote from the cited work.";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA97ErZmL97PuPlwui1_qIdVTi5Ag8IaDdKeXlumYD_ms> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA5eQoyf6ParXgJw5FojDnif0pahmLF76cRRuYA6Y5gX470YRQzJc5jTccuUBV5NTphWgtlouYE0is8XEcQGLP09q4abFleK6wSfJ8kC04ZNQxw+XrGShSDcUv4Fj+Ma7Tn7FLRkgeyixDX3FjGjMqIQxn2i/cjoUgmJ8kNUY9nuLBZdKSmK9jEze8Jr9pkdkHFDc09d5EcroDr/3zkwdIwYqlCev6SrMTPasW7jIYAEddd0WBxE5xNa+fbypUyxVeY+z1Ee2v3jCk6FeZgCuJ76jfXrMxj/MRZ2awWrmmivXP6NuLJHf9BCuwSpEEUOEwC8RA/+Jxzs1vnoCnL0sPiwIDAQAB";
+    npx:hasSignature "HRPj9HNq2knJ5Iyz5Y12a+WQRdQwOU7vk32P6AKhh27r2pNueK+SNznggBXmd1ndfo3M8Mzfp+HN/QrPYlBQh3YWqj4aBUsGzfgyeDWRddsE4bJu3Gh6KSxF9cLHZEEZVWK0vSORw6kua9k9TTEupuoWrnKp7mEZ/O64as4OyDfl92TDd0x3meBIUrj2OprwGEZx+greyeLtonOGOD8A0BQ/JC8ioJILuwNEwU6PiSfsUOhiN7BB8zdMWLHNuLaLq/y/TCxRZeVufjStqw+V6p+7dg+Yi3F23iw/25HpgG9rk91mjA9zpcDEjwx2Xbchrc5UV6kXaAP3GpVafr32fA==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0001-9911-526X .
+}
+

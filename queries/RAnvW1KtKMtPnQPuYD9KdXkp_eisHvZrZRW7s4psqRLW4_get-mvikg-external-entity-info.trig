@@ -1,0 +1,110 @@
+@prefix this: <https://w3id.org/np/RAnvW1KtKMtPnQPuYD9KdXkp_eisHvZrZRW7s4psqRLW4> .
+@prefix sub: <https://w3id.org/np/RAnvW1KtKMtPnQPuYD9KdXkp_eisHvZrZRW7s4psqRLW4/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-mvikg-entity-info a grlc:grlc-query;
+    dct:description "Key-value Info card for an external entity ('partid') that records of the MVIKG knowledge graph point at: an NCBI Taxonomy taxon, a UniProt gene entry or a PubMed Central article. Shows its identifier, kind and a link to its external page, and its name where a member of the mvikg space has published a nanopub describing the entity with an rdfs:label.";
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    rdfs:label "Get MVIKG external entity info";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix sosa: <http://www.w3.org/ns/sosa/>
+prefix biolink: <https://w3id.org/biolink/vocab/>
+prefix mvikg: <http://example.org/mvikg/>
+prefix obo: <http://purl.obolibrary.org/obo/>
+
+select ?Property_noheader ?Property_label ?Value_noheader ?Value_label where {
+  {
+    bind(1 as ?ord) bind(dct:identifier as ?Property_noheader) bind('Identifier:' as ?Property_label)
+    bind(replace(replace(str(?_partid_iri), '^.*[/#]', ''), '_', ':') as ?Value_noheader) bind('' as ?Value_label)
+  }
+  union
+  {
+    {
+      select (min(?l) as ?name) where {
+        service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+          select (group_concat(distinct ?pk; separator=' ') as ?memberKeys) (group_concat(distinct ?apk; separator=' ') as ?adminKeys) where {
+            graph npa:graph { npa:thisRepo npa:hasCurrentSpaceState ?sg . }
+            graph ?sg {
+              ?ri a gen:RoleInstantiation ; npa:forSpace <https://w3id.org/spaces/mvikg> ; npa:hasRoleType ?tier ; npa:forAgent ?agent .
+              filter(?tier in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+              ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?pk .
+              bind(if(?tier = gen:AdminRole, ?pk, '') as ?apk)
+            }
+          }
+        }
+        graph npa:graph {
+          ?lnp npx:describes|npx:introduces ?_partid_iri ; np:hasAssertion ?la ; npa:hasValidSignatureForPublicKeyHash ?lpk .
+          filter not exists { ?linv npx:invalidates ?lnp ; npa:hasValidSignatureForPublicKeyHash ?lpk . }
+        }
+        filter(contains(?memberKeys, ?lpk))
+        graph ?la { ?_partid_iri rdfs:label ?l }
+      }
+    }
+    filter(bound(?name))
+    bind(2 as ?ord) bind(rdfs:label as ?Property_noheader) bind('Name:' as ?Property_label)
+    bind(str(?name) as ?Value_noheader) bind('' as ?Value_label)
+  }
+  union
+  {
+    bind(3 as ?ord) bind(rdf:type as ?Property_noheader) bind('Kind:' as ?Property_label)
+    bind(if(strstarts(str(?_partid_iri), 'http://purl.obolibrary.org/obo/NCBITaxon_'), 'Organism taxon (NCBI Taxonomy)',
+         if(strstarts(str(?_partid_iri), 'https://www.uniprot.org/uniprot/'), 'Gene (UniProt entry)',
+         if(strstarts(str(?_partid_iri), 'https://www.ncbi.nlm.nih.gov/pmc/articles/'), 'Source article (PubMed Central)', 'External entity'))) as ?Value_noheader)
+    bind('' as ?Value_label)
+  }
+  union
+  {
+    bind(4 as ?ord) bind(rdfs:seeAlso as ?Property_noheader) bind('External page:' as ?Property_label)
+    bind(if(strstarts(str(?_partid_iri), 'http://purl.obolibrary.org/obo/NCBITaxon_'), concat('https://www.ncbi.nlm.nih.gov/Taxonomy/Browser/wwwtax.cgi?id=', strafter(str(?_partid_iri), 'http://purl.obolibrary.org/obo/NCBITaxon_')), str(?_partid_iri)) as ?url)
+    bind(if(strstarts(str(?_partid_iri), 'http://purl.obolibrary.org/obo/NCBITaxon_'), 'NCBI Taxonomy', if(strstarts(str(?_partid_iri), 'https://www.uniprot.org/uniprot/'), 'UniProt', if(strstarts(str(?_partid_iri), 'https://www.ncbi.nlm.nih.gov/pmc/articles/'), 'PubMed Central', 'source'))) as ?site)
+    bind(concat('<span><a href=\"', ?url, '\">', ?site, ' ↗</a></span>') as ?Value_noheader) bind('' as ?Value_label)
+  }
+}
+order by ?ord""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  this: dct:created "2026-11-12T13:26:12.560+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-mvikg-entity-info;
+    rdfs:label "Get MVIKG external entity info";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "b7p3Nt6zsIZ0qz6rXSJzoKmz4hS4Qx797CjYKb56YL/aUaQLS9R1gsutFjZNBkUcSuzd0Eb/3ZhlUctzIdIfHTyYvSd7D4dGwzm/Hc1oaW4B7AKtN+zKKlaX70UkSh8kmvCxrO7eWU5h3B+dszlSWzQeD9q46Xs6Il822MMYPYE=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

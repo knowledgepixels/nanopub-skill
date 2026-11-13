@@ -1,0 +1,132 @@
+@prefix this: <https://w3id.org/np/RAKyTWME5xA7O89W2N6NEZr5cnR8y9uqpGX5GMKYnE4uE> .
+@prefix sub: <https://w3id.org/np/RAKyTWME5xA7O89W2N6NEZr5cnR8y9uqpGX5GMKYnE4uE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  <http://schema.org/endDate> rdfs:label "has the end date" .
+  
+  <http://schema.org/startDate> rdfs:label "has the start date" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the label" .
+  
+  gen:Campaign rdfs:label "Campaign - (with focus on outreach)" .
+  
+  gen:Event rdfs:label "Event - (with focus on exchange)" .
+  
+  gen:Initiative rdfs:label "Initiative - (with focus on coordination)" .
+  
+  gen:Project rdfs:label "Project - (with focus on getting work done)" .
+  
+  gen:Space rdfs:label "Space" .
+  
+  gen:hasAdmin rdfs:label "has as admin" .
+  
+  sub:admin a nt:AgentPlaceholder, nt:ExternalUriPlaceholder;
+    rdfs:label "an admin of the Space" .
+  
+  sub:assertion a nt:AssertionTemplate;
+    dct:description "Such nanopublications defines a time-limited Space, i.e. a project, initiative, campaign, or event.";
+    rdfs:label "Defining a time-limited Space with existing URI";
+    nt:hasStatement sub:st00, sub:st01, sub:st02, sub:st03, sub:st04, sub:st11, sub:st12;
+    nt:hasTag "Spaces" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "the description of the Space" .
+  
+  sub:endDate a nt:LiteralPlaceholder;
+    rdfs:label "end date (and optionally time)";
+    nt:hasDatatype xsd:dateTime .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the name of the Space" .
+  
+  sub:space a nt:ExternalUriPlaceholder, nt:IntroducedResource;
+    rdfs:label "Space identifier" .
+  
+  sub:st00 rdf:object gen:Space;
+    rdf:predicate rdf:type;
+    rdf:subject sub:space .
+  
+  sub:st01 rdf:object sub:type;
+    rdf:predicate rdf:type;
+    rdf:subject sub:space .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:space .
+  
+  sub:st03 rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:space .
+  
+  sub:st04 a nt:RepeatableStatement;
+    rdf:object sub:admin;
+    rdf:predicate gen:hasAdmin;
+    rdf:subject sub:space .
+  
+  sub:st11 rdf:object sub:startDate;
+    rdf:predicate <http://schema.org/startDate>;
+    rdf:subject sub:space .
+  
+  sub:st12 a nt:OptionalStatement;
+    rdf:object sub:endDate;
+    rdf:predicate <http://schema.org/endDate>;
+    rdf:subject sub:space .
+  
+  sub:startDate a nt:LiteralPlaceholder;
+    rdfs:label "start date (and optionally time)";
+    nt:hasDatatype xsd:dateTime .
+  
+  sub:type a nt:RestrictedChoicePlaceholder;
+    rdfs:label "type of the Space";
+    nt:possibleValue gen:Campaign, gen:Event, gen:Initiative, gen:Project .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-13T13:26:59+00:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:supersedes <https://w3id.org/np/RAuIQw2ihemTW8JoIUa2mL8pFboITQtNQE4RWnhJUizpI>;
+    rdfs:label "Defining a time-limited Space with existing URI";
+    skos:changeNote "Agent and guided-choice fields that must refer to existing resources are now also external URI placeholders, so Nanodash no longer offers to mint a typed plain name locally for them: admin.";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RA1XuAdO6LOtlPJgWiytJHFuK4BFHjQK5x7d9FVymzFnc> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "k7iV26PQKHFLZyZLf5bL6nsysZR4LZXt7SzUJaNof5CuHzGRWKgV9ctSXmZ9FunI15uRYFg0bxn0IM+1Bm2AOFuK2LVrsSNG2WBPvpRA1DevDCiSNCAcj7WT66HqoVZpBNeN8GoSVP8eX3xCK9o6NBdDH/Ox/+/pUShXV/g7crM=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

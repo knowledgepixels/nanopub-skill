@@ -1,0 +1,103 @@
+@prefix this: <https://w3id.org/np/RAiUgtO4YmGSPlo8auOylTb-6m-WTc1prEnPxbuey2Ih4> .
+@prefix sub: <https://w3id.org/np/RAiUgtO4YmGSPlo8auOylTb-6m-WTc1prEnPxbuey2Ih4/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-concepts-of-skos-scheme a grlc:grlc-query;
+    dct:description "This query returns all concepts that specify to be in the given SKOS scheme. Of several versions of the same term, only the newest valid declaration is shown.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the concepts of a SKOS scheme";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/af79dec054ac75f59327aa4e560e3ed0c243130f9852d4e7027aee5beefed2f3>;
+    grlc:sparql """prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+select ?concept
+       (coalesce(min(?label_u), min(?label_a)) as ?label)
+       (group_concat(distinct str(?broader); separator=\" \") as ?broaderConcept_multi_iri)
+       (coalesce(min(?definition_u), min(?definition_a)) as ?description)
+       ?np (group_concat(distinct ?flagLabel; separator=\" \") as ?flags) where {
+  values ?_scheme_multi_iri {}
+  {
+    select ?concept (iri(strafter(max(concat(str(?date0), \"|\", str(?np0))), \"|\")) as ?np) where {
+      values ?_scheme_multi_iri {}
+      graph npa:graph {
+        ?np0 npx:hasNanopubType skos:Concept .
+        ?np0 npa:hasValidSignatureForPublicKeyHash ?pubkey0 .
+        filter not exists { ?npx0 npx:invalidates ?np0 ; npa:hasValidSignatureForPublicKeyHash ?pubkey0 . }
+        ?np0 dct:created ?date0 .
+        ?np0 npx:introduces ?concept .
+        ?np0 np:hasAssertion ?a0 .
+      }
+      graph ?a0 {
+        ?concept skos:inScheme ?_scheme_multi_iri .
+      }
+    } group by ?concept
+  }
+  graph npa:graph { ?np np:hasAssertion ?a . }
+  optional {
+    graph npa:graph {
+      values (?flag ?flagLabel) { ( npx:ExampleNanopub \"Example\") ( npx:DraftNanopub \"Draft\") }
+      ?np npx:hasNanopubType ?flag .
+    }
+  }
+  graph ?a {
+    ?concept skos:inScheme ?_scheme_multi_iri .
+    optional { ?concept skos:broader ?broader . }
+    optional { ?concept skos:prefLabel ?label_u . filter(lang(?label_u) = \"\") }
+    optional { ?concept skos:prefLabel ?label_a . }
+    optional { ?concept skos:definition ?definition_u . filter(lang(?definition_u) = \"\") }
+    optional { ?concept skos:definition ?definition_a . }
+  }
+}
+group by ?concept ?np
+order by lcase(str(coalesce(?label, \"\")))""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-11T10:23:37Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-concepts-of-skos-scheme;
+    skos:changeNote "Show only the newest valid declaration of each concept (argmax by creation date, ties broken by nanopub URI); prefer untagged labels and definitions; merge several broader concepts into one multi-value column; sort labels case-insensitively.";
+    prov:wasDerivedFrom <https://w3id.org/np/RAul10Jretr7ykLaQ9dS_kdYRr9v4Cp2homA9W3Demzxg>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "cey1nz4VF+VHRlh8FjmMQSZW4V+YMVja4itZqvFy4zI956P5vb8TyPNyN0anewkGxtdA9MV7eudKJ2USXGv7VtGUDs3hC9wDyz4bivdxC4s428FYAQjwU2hebBv7gy1brPr79oz6ZnTyjdIbGwqpg5bsjqKvg27um7oEEfiEeak=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

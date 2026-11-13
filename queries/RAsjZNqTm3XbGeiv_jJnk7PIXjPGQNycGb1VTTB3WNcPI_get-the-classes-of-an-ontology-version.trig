@@ -1,0 +1,96 @@
+@prefix this: <https://w3id.org/np/RAsjZNqTm3XbGeiv_jJnk7PIXjPGQNycGb1VTTB3WNcPI> .
+@prefix sub: <https://w3id.org/np/RAsjZNqTm3XbGeiv_jJnk7PIXjPGQNycGb1VTTB3WNcPI/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-classes-of-ontology-version a grlc:grlc-query;
+    dct:description "This query returns all classes that are part of a given version of an ontology. Each class is listed once.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the classes of an ontology version";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+
+select ?class
+       (coalesce(min(?class_label_u), min(?class_label_a)) as ?class_label)
+       (coalesce(min(?definition_u), min(?definition_a)) as ?description)
+       (?termNp as ?np) (\"^\" as ?np_label) where {
+  graph npa:graph {
+    ?_ontologyVersionNp_iri npx:introduces ?ontologyVersion .
+    ?_ontologyVersionNp_iri np:hasAssertion ?ontologyVersionNpA .
+  }
+  graph ?ontologyVersionNpA {
+    ?ontologyVersion a owl:Ontology .
+    ?ontologyVersion gen:hasContentIndex ?contentIndex .
+  }
+  graph npa:graph {
+    ?contentIndex np:hasAssertion ?contentIndexA .
+  }
+  graph ?contentIndexA {
+    ?contentIndex npx:includesElement ?termNp .
+  }
+  graph npa:graph {
+    ?termNp npx:introduces ?class .
+    ?termNp np:hasAssertion ?termNpA .
+  }
+  graph ?termNpA {
+    ?class a owl:Class .
+    optional { ?class rdfs:label ?class_label_u . filter(lang(?class_label_u) = \"\") }
+    optional { ?class rdfs:label ?class_label_a . }
+    optional { ?class skos:definition ?definition_u . filter(lang(?definition_u) = \"\") }
+    optional { ?class skos:definition ?definition_a . }
+  }
+}
+group by ?class ?termNp
+order by lcase(str(coalesce(?class_label, \"\")))""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-11T10:23:37Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-classes-of-ontology-version;
+    skos:changeNote "One row per class instead of one per label and definition variant (several languages); prefer untagged labels and definitions; sort labels case-insensitively.";
+    prov:wasDerivedFrom <https://w3id.org/np/RAFmmzto-WVxcSYYoys8qYgCk62rZs7qxxkGIphDnBqUs>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "pf0Q2w8s+nr0CgbrhwybbJnUu8BySr/H/6Zt+v38wL3s7IluuW0LISYcmPqcF8Bvp4dsSIe/aWZhzLcNGll3EvQ3KhrenI5QCP2axKb4ci1Aa9vU4PqAFMLIsIzn6eIYxQM3rDluHFEKN64gBdDbUTo1UmbLe4l1C9sDp72o/WI=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

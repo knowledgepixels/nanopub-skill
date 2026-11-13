@@ -1,0 +1,132 @@
+@prefix this: <https://w3id.org/np/RAEDhYb1HlFdyc_fkI5N5IVvz5L8NcXGHpqnK81d_5y_k> .
+@prefix sub: <https://w3id.org/np/RAEDhYb1HlFdyc_fkI5N5IVvz5L8NcXGHpqnK81d_5y_k/> .
+@prefix schema: <https://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix frapo: <http://purl.org/cerif/frapo/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  frapo:hasAcronym rdfs:label "has the acronym" .
+  
+  dct:description rdfs:label "has the description" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the name" .
+  
+  rdfs:seeAlso rdfs:label "has a page at" .
+  
+  owl:sameAs rdfs:label "is the same thing as" .
+  
+  skos:altLabel rdfs:label "has the other name" .
+  
+  schema:Organization rdfs:label "organization" .
+  
+  sub:acronym a nt:LiteralPlaceholder;
+    rdfs:label "the acronym" .
+  
+  sub:altlabel a nt:LiteralPlaceholder;
+    rdfs:label "another name" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "a description" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "the name" .
+  
+  sub:organization a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "ROR ID, Funder ID, ISNI, or a new short name" .
+  
+  sub:page a nt:ExternalUriPlaceholder;
+    rdfs:label "address of a page about it" .
+  
+  sub:sameas a nt:ExternalUriPlaceholder;
+    rdfs:label "another IRI of the same thing" .
+  
+  sub:st01 rdf:object schema:Organization;
+    rdf:predicate rdf:type;
+    rdf:subject sub:organization .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:organization .
+  
+  sub:st03 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:altlabel;
+    rdf:predicate skos:altLabel;
+    rdf:subject sub:organization .
+  
+  sub:st04 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:organization .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:acronym;
+    rdf:predicate frapo:hasAcronym;
+    rdf:subject sub:organization .
+  
+  sub:st06 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:sameas;
+    rdf:predicate owl:sameAs;
+    rdf:subject sub:organization .
+  
+  sub:st07 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:page;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:organization .
+  
+  sub:templateVersion a nt:AssertionTemplate;
+    dct:description "Describes an organization with its names and identifiers, following the AI-FAIR Compendia schema recommendation. The organization is named by its ROR ID, or else by a Crossref Funder ID that names the organization, or else by its ISNI, or else by a newly minted IRI.";
+    dct:isVersionOf sub:template;
+    rdfs:label "Describing an organization";
+    gen:governedBy <https://w3id.org/spaces/pensoft>;
+    nt:hasNanopubLabelPattern "${label}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07;
+    nt:hasTag "Pensoft";
+    nt:hasTargetNanopubType schema:Organization .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-13T14:09:18.740+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:templateVersion;
+    npx:introduces sub:template;
+    rdfs:label "Describing an organization";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAgeON_vGgJCt5E4DPMi0eOPaGwNv9tbfFTRZtBwdQL0w/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "DLKs28dS0brw9Ix26hxK5gU2e+C6j9Dktp7bg79W9SbVQFUe75HpPmJ++/42catH/Tbg3lVtWlcZiDSPr6Gf7unQh+4cGdG8Iaa7s9A278PtRr3jclyW5LUZVCyTFUcXxBNDe0auTlV/rbdM99k5jBJ2ExLPqjSeMGIgaPtpgbc=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

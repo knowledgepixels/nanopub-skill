@@ -1,0 +1,80 @@
+@prefix this: <https://w3id.org/np/RAEdY3FEckI128K5q45heT-s7hKf56cY9qDrg7vrtVQyc> .
+@prefix sub: <https://w3id.org/np/RAEdY3FEckI128K5q45heT-s7hKf56cY9qDrg7vrtVQyc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-reasoning-chain a grlc:grlc-query;
+    dct:description "Lists the contributions that test a claim or are derived from it, directly or indirectly.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get reasoning chain for a claim";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix na: <https://w3id.org/nanoarguments/>
+prefix schema: <https://schema.org/>
+
+select distinct ?step_iri ?step_iri_label ?relation ?target_iri ?target_iri_label ?user_iri ?np (\"^\" as ?np_label) where {
+  values (?rel ?relation) {
+    (na:tests \"tests\")
+    (prov:wasDerivedFrom \"was derived from\")
+  }
+  # The claim or anything on its chain.
+  ?target_iri (prov:wasDerivedFrom|na:tests)* ?_claim_iri .
+  graph npa:graph {
+    ?np np:hasAssertion ?a ; np:hasProvenance ?p ;
+        npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?inv npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+  }
+  graph ?a {
+    ?step_iri a schema:Statement ; ?rel ?target_iri .
+    optional { ?step_iri rdf:value ?step_iri_label }
+  }
+  optional { ?target_iri rdf:value ?target_iri_label }
+  optional { graph ?p { ?a prov:wasAttributedTo ?user_iri } }
+}
+order by ?target_iri_label ?relation ?step_iri_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-13T09:16:53.971+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-reasoning-chain;
+    rdfs:label "Get reasoning chain for a claim";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA0J4vUn_dekg-U1kK3AOEt02p9mT2WO03uGxLDec1jLw>,
+      <https://w3id.org/np/RARJj78P72NR5edKOnu_f4ePE9NYYuW2m2pM-fEoobMBk>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "AHxga0Xev2YjJB1xzB9z0jUAuYZ2KOsTz8tRuMPagxstkKgUXjTPKelunsKTzqEzck57KhEv1CPy1M5OQDlXiVKypQ5ysGZJcw+paByWPs6AH9fVdqk8qBZ+55qaftwj2rFeaWdK67a6MBwCJ4Ei1MjXQjMG0CKa+XeVOB1QDRs=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

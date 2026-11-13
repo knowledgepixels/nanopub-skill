@@ -1,0 +1,135 @@
+@prefix this: <https://w3id.org/np/RALVLXhBNWuhsFknPAfGMPsrB0Rpi1QFwsWy8RnC5xHvc> .
+@prefix sub: <https://w3id.org/np/RALVLXhBNWuhsFknPAfGMPsrB0Rpi1QFwsWy8RnC5xHvc/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix mvikg: <http://example.org/mvikg/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix biolink: <https://w3id.org/biolink/vocab/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix sosa: <http://www.w3.org/ns/sosa/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  mvikg:comparedTo rdfs:label "compared to" .
+  
+  mvikg:isAssociatedWithVariant rdfs:label "is associated with variant" .
+  
+  dct:isPartOf rdfs:label "is part of" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:comment rdfs:label "comment" .
+  
+  rdfs:label rdfs:label "label" .
+  
+  sosa:isResultOf rdfs:label "is result of" .
+  
+  biolink:PhenotypicFeature rdfs:label "phenotypic feature" .
+  
+  sub:comparedTo a nt:LiteralPlaceholder;
+    rdfs:label "compared to (the baseline/control the phenotype outcome was compared against)" .
+  
+  sub:phenotype a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "this phenotype observation" .
+  
+  sub:phenotypeDescription a nt:LiteralPlaceholder;
+    rdfs:label "phenotype description (prose, e.g. \"DeltarfaH mutant elicited ROS production...\")" .
+  
+  sub:phenotypeName a nt:LiteralPlaceholder;
+    rdfs:label "short name/identifier of this phenotype observation" .
+  
+  sub:sample a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "the sample this phenotype was observed in (declared via the sample-context template)";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAom4OoQ8U2K6A629YRXKo9-XU-ZJM7-KZs1h11OD6c1w/find-things?type=http://www.w3.org/ns/sosa/Sample" .
+  
+  sub:st01 rdf:object sub:sample;
+    rdf:predicate sosa:isResultOf;
+    rdf:subject sub:phenotype .
+  
+  sub:st02 rdf:object <https://w3id.org/spaces/mvikg/r/kg>;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:phenotype .
+  
+  sub:st03 a nt:GroupedStatement, nt:OptionalStatement;
+    nt:hasStatement sub:st04 .
+  
+  sub:st04 rdf:object sub:variant;
+    rdf:predicate mvikg:isAssociatedWithVariant;
+    rdf:subject sub:phenotype .
+  
+  sub:st05 rdf:object biolink:PhenotypicFeature;
+    rdf:predicate rdf:type;
+    rdf:subject sub:phenotype .
+  
+  sub:st06 rdf:object sub:phenotypeName;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:phenotype .
+  
+  sub:st06b a nt:OptionalStatement;
+    rdf:object sub:phenotypeDescription;
+    rdf:predicate rdfs:comment;
+    rdf:subject sub:phenotype .
+  
+  sub:st07 a nt:OptionalStatement;
+    rdf:object sub:comparedTo;
+    rdf:predicate mvikg:comparedTo;
+    rdf:subject sub:phenotype .
+  
+  sub:templateVersion a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Declaring a single phenotype observation for an MVIKG sample, optionally tied to a specific sequence variant. Split out of the gene-variant-phenotype template so that many phenotype observations can reference the same variant and/or the same sample (one variant, many phenotypes).";
+    dct:isVersionOf <https://w3id.org/np/RAR0BDV3XFKzSqviAGWtP_qnWTlYxMbCDQ0YYGbsbfdt4/template>;
+    rdfs:label "Declaring an MVIKG phenotype observation";
+    gen:governedBy <https://w3id.org/spaces/mvikg>;
+    nt:hasNanopubLabelPattern "phenotype: ${phenotypeName}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st06b,
+      sub:st07;
+    nt:hasTag "Biology";
+    nt:hasTargetNanopubType biolink:PhenotypicFeature, <https://w3id.org/spaces/mvikg/Record> .
+  
+  sub:variant a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "the specific sequence variant this phenotype is tied to, if known (declared via the gene-variant template)";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAom4OoQ8U2K6A629YRXKo9-XU-ZJM7-KZs1h11OD6c1w/find-things?type=https://w3id.org/biolink/vocab/SequenceVariant" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0005-5515-1230 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-12T11:23:51+00:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:templateVersion;
+    npx:introduces <https://w3id.org/np/RAR0BDV3XFKzSqviAGWtP_qnWTlYxMbCDQ0YYGbsbfdt4/template>;
+    npx:supersedes <https://w3id.org/np/RA_Xh_c0F-cmzx-VTZ1ApfLksZxjU8Amdxilo3dSwfgr8>;
+    rdfs:label "Declaring an MVIKG phenotype observation";
+    skos:changeNote "Adds the optional comment statement the phenotype nanopublications carry but the template lacked: the prose phenotype description goes into the comment, and the label is now described as what the data puts there, a short name/identifier. Adds the MVIKG record class as a further target nanopublication type, the common type of all nanopublications created from the MVIKG templates.";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>, <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAgeON_vGgJCt5E4DPMi0eOPaGwNv9tbfFTRZtBwdQL0w/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "BuDUpYxR2RoK+kpezX0NLRbWfFsrgKUT4SyeyFLmsvrqDjchKGeJc9km/U1ZKxT5EvU/VkgZllrXguojE8B24vN72uxy3wQgU4euM4Il3Te3V6o8A3vns15G4OT2KXH2eExp2mfpmLGBmPPTdHvYag4CER/GQeSwpAtxpqy+hXQ=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

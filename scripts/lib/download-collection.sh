@@ -24,7 +24,9 @@ obsolete_nanopubs() {
   local IDS VALUES QUERY
   IDS=$(cat)
   [ -n "$IDS" ] || return 0
-  VALUES=$(printf '%s\n' "$IDS" | sed 's|^|<https://w3id.org/np/|;s|$|>|' | tr '\n' ' ')
+  # Both URI forms: old nanopubs live under http://purl.org/np/, and that is the IRI a
+  # nanopub superseding one of them names.
+  VALUES=$(printf '%s\n' "$IDS" | sed 's|.*|<https://w3id.org/np/&> <http://purl.org/np/&>|' | tr '\n' ' ')
   QUERY="prefix npx: <http://purl.org/nanopub/x/>
 select distinct ?old where {
   values ?old { $VALUES }

@@ -1,0 +1,100 @@
+@prefix this: <https://w3id.org/np/RAZKVVXBGd9wyOWyFhMYnqT4NBDLPRhTRMz9Hk1k3gRIE> .
+@prefix sub: <https://w3id.org/np/RAZKVVXBGd9wyOWyFhMYnqT4NBDLPRhTRMz9Hk1k3gRIE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-properties-of-ontology a grlc:grlc-query;
+    dct:description "This query returns all properties that specify to be part of a given ontology. Of several versions of the same term, only the newest valid declaration is shown.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the properties of an ontology";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/0ecf438131f3cf9e7777966e39e6c8302684a3d64cf48d80902cc0f66fc85fe6>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix owl: <http://www.w3.org/2002/07/owl#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+select ?property
+       (coalesce(min(?property_label_u), min(?property_label_a)) as ?property_label)
+       (group_concat(distinct str(?domain); separator=\" \") as ?domain_multi_iri)
+       (group_concat(distinct str(?range); separator=\" \") as ?range_multi_iri)
+       (coalesce(min(?definition_u), min(?definition_a)) as ?description)
+       ?np (\"^\" as ?np_label) where {
+  values ?_ontology_multi_iri {}
+  {
+    select ?property (iri(strafter(max(concat(str(?date0), \"|\", str(?np0))), \"|\")) as ?np) where {
+      values ?_ontology_multi_iri {}
+      graph npa:graph {
+        ?np0 npx:hasNanopubType rdf:Property .
+        ?np0 npa:hasValidSignatureForPublicKeyHash ?pubkey0 .
+        filter not exists { ?npx0 npx:invalidates ?np0 ; npa:hasValidSignatureForPublicKeyHash ?pubkey0 . }
+        ?np0 dct:created ?date0 .
+        ?np0 npx:introduces ?property .
+        ?np0 np:hasAssertion ?a0 .
+      }
+      graph ?a0 {
+        ?property (dct:partOf|dct:isPartOf) ?_ontology_multi_iri .
+      }
+    } group by ?property
+  }
+  graph npa:graph { ?np np:hasAssertion ?a . }
+  graph ?a {
+    ?property (dct:partOf|dct:isPartOf) ?_ontology_multi_iri .
+    optional { ?property rdfs:label ?property_label_u . filter(lang(?property_label_u) = \"\") }
+    optional { ?property rdfs:label ?property_label_a . }
+    optional { ?property skos:definition ?definition_u . filter(lang(?definition_u) = \"\") }
+    optional { ?property skos:definition ?definition_a . }
+    optional { ?property rdfs:domain ?domain . filter(isIRI(?domain)) }
+    optional { ?property rdfs:range ?range . filter(isIRI(?range)) }
+  }
+}
+group by ?property ?np
+order by lcase(str(coalesce(?property_label, \"\")))""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-11T09:44:21Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-properties-of-ontology;
+    npx:supersedes <https://w3id.org/np/RAA9ivHlu0zTIXFBcOSoVO1nBWiEYx8eDNwg9inPC5VTQ>;
+    skos:changeNote "Show only the newest valid declaration of each term (argmax by creation date, ties broken by nanopub URI), so terms with several versions, forked chains or overrides by another key appear once. Prefer untagged labels and definitions, sort labels case-insensitively, and keep a required pattern in the assertion-graph block, which RDF4J otherwise sometimes plans so that rows are lost. Domains and ranges are aggregated into multi-value columns, so a property with several of them stays one row.";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "VSeORAGPiarOUgBUB0Colz0m5TPUoD4M8I50Fw/9d+HqfmyH+j7bBVDamhlyt+B75MXRG9uwSm6WwaEaKJLXWaqzrF5yoltKqtC/cMLLDUKhspZdxIWnwxlOSOwrhKCleNwvXelzYsFnzsc0/HRy0ueF0n5Pmj4tK3MBC3Yo6c4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

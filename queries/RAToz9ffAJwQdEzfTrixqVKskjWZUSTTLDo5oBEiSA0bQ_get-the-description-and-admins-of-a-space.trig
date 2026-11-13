@@ -1,0 +1,120 @@
+@prefix this: <https://w3id.org/np/RAToz9ffAJwQdEzfTrixqVKskjWZUSTTLDo5oBEiSA0bQ> .
+@prefix sub: <https://w3id.org/np/RAToz9ffAJwQdEzfTrixqVKskjWZUSTTLDo5oBEiSA0bQ/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-space-about-with-admins a grlc:grlc-query;
+    dct:description "Returns one HTML block for the given space: the description of its newest definition signed by one of its admins, split into paragraphs at line breaks and with www links made clickable, followed by its admins in alphabetical order (up to 25), each linked to their user page.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the description and admins of a space";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/8ad572d99071cc1ba0c16e54087b43594bdd9e8b2cfb62d2a0b16945fc49e53c>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?content where {
+  {
+    select (max(if(?rank = 1, ?link, \"\")) as ?a1) (max(if(?rank = 2, ?link, \"\")) as ?a2) (max(if(?rank = 3, ?link, \"\")) as ?a3) (max(if(?rank = 4, ?link, \"\")) as ?a4) (max(if(?rank = 5, ?link, \"\")) as ?a5) (max(if(?rank = 6, ?link, \"\")) as ?a6) (max(if(?rank = 7, ?link, \"\")) as ?a7) (max(if(?rank = 8, ?link, \"\")) as ?a8) (max(if(?rank = 9, ?link, \"\")) as ?a9) (max(if(?rank = 10, ?link, \"\")) as ?a10) (max(if(?rank = 11, ?link, \"\")) as ?a11) (max(if(?rank = 12, ?link, \"\")) as ?a12) (max(if(?rank = 13, ?link, \"\")) as ?a13) (max(if(?rank = 14, ?link, \"\")) as ?a14) (max(if(?rank = 15, ?link, \"\")) as ?a15) (max(if(?rank = 16, ?link, \"\")) as ?a16) (max(if(?rank = 17, ?link, \"\")) as ?a17) (max(if(?rank = 18, ?link, \"\")) as ?a18) (max(if(?rank = 19, ?link, \"\")) as ?a19) (max(if(?rank = 20, ?link, \"\")) as ?a20) (max(if(?rank = 21, ?link, \"\")) as ?a21) (max(if(?rank = 22, ?link, \"\")) as ?a22) (max(if(?rank = 23, ?link, \"\")) as ?a23) (max(if(?rank = 24, ?link, \"\")) as ?a24) (max(if(?rank = 25, ?link, \"\")) as ?a25) where {
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+        select ?agent ?name (count(distinct ?agent2) as ?rank) where {
+            {
+              select ?agent (coalesce(sample(?nm1), str(?agent)) as ?name) where {
+                values ?_space_multi_iri {}
+                graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG1 . }
+                graph ?stateG1 { ?ri1 a gen:RoleInstantiation ; npa:forSpace ?_space_multi_iri ; npa:forAgent ?agent ; npa:hasRoleType gen:AdminRole . }
+                optional { graph ?stateG1 { ?agent foaf:name ?nm1 . } }
+              } group by ?agent
+            }
+            {
+              select ?agent2 (coalesce(sample(?nm2), str(?agent2)) as ?name2) where {
+                values ?_space_multi_iri {}
+                graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG2 . }
+                graph ?stateG2 { ?ri2 a gen:RoleInstantiation ; npa:forSpace ?_space_multi_iri ; npa:forAgent ?agent2 ; npa:hasRoleType gen:AdminRole . }
+                optional { graph ?stateG2 { ?agent2 foaf:name ?nm2 . } }
+              } group by ?agent2
+            }
+            filter(concat(lcase(?name2), \" \", str(?agent2)) <= concat(lcase(?name), \" \", str(?agent)))
+        } group by ?agent ?name
+      }
+      bind(concat(', <a href=\"/user?id=', encode_for_uri(str(?agent)), '\">', replace(replace(?name, \"&\", \"&amp;\"), \"<\", \"&lt;\"), '</a>') as ?link)
+    }
+  }
+  optional {
+    select ?desc where {
+      service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+        select (group_concat(?apk; separator=\" \") as ?adminPubkeys) where {
+          values ?_space_multi_iri {}
+          graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG3 . }
+          graph ?stateG3 {
+            ?ri3 a gen:RoleInstantiation ; npa:forSpace ?_space_multi_iri ; npa:forAgent ?admin3 ; npa:hasRoleType gen:AdminRole .
+            ?acct3 a npa:AccountState ; npa:agent ?admin3 ; npa:pubkey ?apk .
+          }
+        }
+      }
+      values ?_space_multi_iri {}
+      graph npa:graph {
+        ?dNp npx:introduces ?_space_multi_iri ;
+          dct:created ?dDate ;
+          npa:hasValidSignatureForPublicKeyHash ?dPubkey ;
+          np:hasAssertion ?dA .
+      }
+      graph ?dA { ?_space_multi_iri a gen:Space ; dct:description ?desc . }
+
+      filter(contains(?adminPubkeys, ?dPubkey))
+    } order by desc(?dDate) limit 1
+  }
+  bind(replace(replace(replace(str(?desc), \"&\", \"&amp;\"), \"<\", \"&lt;\"), \">\", \"&gt;\") as ?d0)
+  bind(replace(?d0, \"[\\r\\n]+\", \"</p><p>\") as ?d1)
+  bind(replace(?d1, \"(^|[ (>])(www[.][^ )<]*[^ )<.,;])\", '$1<a href=\"https://$2\">$2</a>') as ?d3)
+  bind(substr(concat(?a1, ?a2, ?a3, ?a4, ?a5, ?a6, ?a7, ?a8, ?a9, ?a10, ?a11, ?a12, ?a13, ?a14, ?a15, ?a16, ?a17, ?a18, ?a19, ?a20, ?a21, ?a22, ?a23, ?a24, ?a25), 3) as ?owners)
+  bind(concat(if(bound(?d3), concat(\"<p>\", ?d3, \"</p>\"), \"\"),
+              if(strlen(?owners) > 0, concat(\"<p><b>Admins:</b> \", ?owners, \"</p>\"), \"\")) as ?content)
+}""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-11T11:08:12Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-space-about-with-admins;
+    rdfs:label "Get the description and admins of a space";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "bvv9ZVD9fp4beo2Y9/NRLI60wyCV70IocXQv9hSb0IBxNqkj0RV/rMOgqD6FYkhu8a6SKO1/lp88egU5NwgJ2JsY3OPCd8KPmAGGIGZ7jcCQXdzODXLIjTpJJJYLdi7QEN6tH1r4V3SvzEoRf4M+fkH0+XRUcODWEi9uRaBDQv4=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

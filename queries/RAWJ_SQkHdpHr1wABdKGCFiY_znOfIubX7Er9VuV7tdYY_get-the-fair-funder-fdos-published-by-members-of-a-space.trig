@@ -1,0 +1,181 @@
+@prefix this: <https://w3id.org/np/RAWJ_SQkHdpHr1wABdKGCFiY_znOfIubX7Er9VuV7tdYY> .
+@prefix sub: <https://w3id.org/np/RAWJ_SQkHdpHr1wABdKGCFiY_znOfIubX7Er9VuV7tdYY/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-fair-funder-fdos-of-space-members a grlc:grlc-query;
+    dct:description "Returns the FAIR Digital Objects of the FAIR Funder Framework (research programmes, calls for proposals, projects, data management plans, datasets, methods and articles), plus those made with the core template 'Declaring a FAIR Digital Object', that admins, maintainers and members of the given space have published, grouped by type in the order of the framework, with the number of FDOs of each type in the group heading. An FDO that was published several times under the same local name (re-mints after corrections) is shown once, in its newest version. Invalidated and example nanopublications are left out. Each row shows the label, a shortened description, the first access URL of its materializations with its format, and the publication date.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the FAIR Funder FDOs published by members of a space";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/type/f82fa5e467e6ba40c5d14402c3590f2ad8ed9a13e982133ab26ef1a889b34ebd>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix nt: <https://w3id.org/np/o/ntemplate/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix gen: <https://w3id.org/kpxl/gen/terms/>
+prefix fdof: <https://w3id.org/fdof/ontology#>
+prefix dcat: <https://www.w3.org/ns/dcat#>
+
+select ?category_group ?fdo ?fdo_label ?description ?file ?file_label ?date ?np ?np_label where {
+  {
+    select ?category ?fdo ?np ?date (sample(?label) as ?fdo_label) (sample(?comment) as ?fullDescription) (min(?fileEntry) as ?fileKey) where {
+      {
+        select ?category ?localName (max(?cDate) as ?maxDate) (sample(?memberPubkeys) as ?members) where {
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+              values ?_space_multi_iri {}
+              graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+              graph ?stateG {
+                ?_space_multi_iri npa:isMaintainedBy? ?space .
+                ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?roleType .
+                filter(?roleType in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+              }
+            }
+          }
+          graph npa:graph {
+            ?cNp npx:hasNanopubType fdof:FAIRDigitalObject ;
+              npa:hasValidSignatureForPublicKeyHash ?cPubkey ;
+              npx:introduces ?cFdo ;
+              dct:created ?cDate ;
+              np:hasAssertion ?cA ;
+              np:hasPublicationInfo ?cPi .
+            filter not exists { ?x npx:invalidates ?cNp ; npa:hasValidSignatureForPublicKeyHash ?cPubkey . }
+            filter not exists { ?cNp npx:hasNanopubType npx:ExampleNanopub . }
+          }
+          filter(contains(?memberPubkeys, ?cPubkey))
+          graph ?cA { ?cFdo a ?cType . }
+          optional { graph ?cPi { ?cNp nt:wasCreatedFromTemplate ?cTpl . } }
+          bind(if(strstarts(str(?cType), \"https://w3id.org/fair/ff/terms/\"), lcase(strafter(str(?cType), \"https://w3id.org/fair/ff/terms/\")),
+               if(?cType = fdof:FAIRDigitalObject && bound(?cTpl) && ?cTpl in (
+                   <https://w3id.org/np/RAi83vD8PqKwvHz7zHs01Vfy7-VzEu3h3JYmRZBqQF-nc>, <https://w3id.org/np/RADTamCLFyVFKNCDWG_gkK45_gGwKO_y--faVrgyr2MCw>,
+                   <https://w3id.org/np/RAeaohXN1TMacPpvMGb3uqX-XwyQAQlxf0pA58UDLJG5E>, <https://w3id.org/np/RAZlYVLxNLEln-_BdCOiKUQXVuvjQe6XeeXRYKXTKecS8>,
+                   <https://w3id.org/np/RABDn_JzgwOiwuo-d2PNRrwFd8sCmehlt_TxqYzVvYyyQ>, <https://w3id.org/np/RAIJSjZ-vz-6UCiT5au3hPZNEBpz0ANPpIJLww9l_kjkE>,
+                   <https://w3id.org/np/RA4jpwawVTV6SsNhaqD6Mjpu1ph5pfR8nInrPDZzHw_Yg>, <https://w3id.org/np/RAI9OaTk9VYAoJILuNXoH0LxfqJ5DITCOZNPCUTzT7K5M>,
+                   <https://w3id.org/np/RA6GvARuaxukex9ATCwedB8RUXZu2fhszDQFOUXiUheaI>, <https://w3id.org/np/RAFNJCAnFSxX_VvkzEaUPPDrJ8gqYW_LL8GmmgoohQ9ic>),
+                 \"fdo\", ?unbound)) as ?category)
+          filter(bound(?category))
+          bind(replace(str(?cFdo), \"^https://w3id.org/np/RA[A-Za-z0-9_-]{43}[/#]\", \"\") as ?localName)
+        } group by ?category ?localName
+      }
+      graph npa:graph {
+        ?np dct:created ?maxDate ;
+          npx:introduces ?fdo ;
+          npa:hasValidSignatureForPublicKeyHash ?pubkey ;
+          np:hasAssertion ?a .
+      }
+      filter(contains(?members, ?pubkey))
+      filter(replace(str(?fdo), \"^https://w3id.org/np/RA[A-Za-z0-9_-]{43}[/#]\", \"\") = ?localName)
+      graph ?a { ?fdo a ?type . }
+      filter(lcase(strafter(str(?type), \"https://w3id.org/fair/ff/terms/\")) = ?category || (?category = \"fdo\" && ?type = fdof:FAIRDigitalObject))
+      bind(?maxDate as ?date)
+      optional { graph ?a { ?fdo rdfs:label ?label . } }
+      optional { graph ?a { ?fdo rdfs:comment ?comment . } }
+      optional { graph ?a { ?mat fdof:materializes ?fdo ; dcat:accessURL ?accessUrl . } }
+      optional { graph ?a { ?mat fdof:hasEncodingFormat ?format . } }
+      bind(if(bound(?accessUrl), concat(str(?accessUrl), \" \", if(bound(?format), replace(str(?format), \"^.*/\", \"\"), \"file\")), ?unbound) as ?fileEntry)
+    } group by ?category ?fdo ?np ?date
+  }
+  {
+    select ?category (count(*) as ?categoryCount) where {
+      {
+        select ?category ?localName (max(?cDate) as ?maxDate) (sample(?memberPubkeys) as ?members) where {
+          service <https://w3id.org/np/l/nanopub-query-1.1/repo/spaces> {
+            select (group_concat(?mpk; separator=\" \") as ?memberPubkeys) where {
+              values ?_space_multi_iri {}
+              graph npa:graph { <http://purl.org/nanopub/admin/thisRepo> npa:hasCurrentSpaceState ?stateG . }
+              graph ?stateG {
+                ?_space_multi_iri npa:isMaintainedBy? ?space .
+                ?ri a gen:RoleInstantiation ; npa:forSpace ?space ; npa:forAgent ?agent ; npa:hasRoleType ?roleType .
+                filter(?roleType in (gen:AdminRole, gen:MaintainerRole, gen:MemberRole))
+                ?acct a npa:AccountState ; npa:agent ?agent ; npa:pubkey ?mpk .
+              }
+            }
+          }
+          graph npa:graph {
+            ?cNp npx:hasNanopubType fdof:FAIRDigitalObject ;
+              npa:hasValidSignatureForPublicKeyHash ?cPubkey ;
+              npx:introduces ?cFdo ;
+              dct:created ?cDate ;
+              np:hasAssertion ?cA ;
+              np:hasPublicationInfo ?cPi .
+            filter not exists { ?x npx:invalidates ?cNp ; npa:hasValidSignatureForPublicKeyHash ?cPubkey . }
+            filter not exists { ?cNp npx:hasNanopubType npx:ExampleNanopub . }
+          }
+          filter(contains(?memberPubkeys, ?cPubkey))
+          graph ?cA { ?cFdo a ?cType . }
+          optional { graph ?cPi { ?cNp nt:wasCreatedFromTemplate ?cTpl . } }
+          bind(if(strstarts(str(?cType), \"https://w3id.org/fair/ff/terms/\"), lcase(strafter(str(?cType), \"https://w3id.org/fair/ff/terms/\")),
+               if(?cType = fdof:FAIRDigitalObject && bound(?cTpl) && ?cTpl in (
+                   <https://w3id.org/np/RAi83vD8PqKwvHz7zHs01Vfy7-VzEu3h3JYmRZBqQF-nc>, <https://w3id.org/np/RADTamCLFyVFKNCDWG_gkK45_gGwKO_y--faVrgyr2MCw>,
+                   <https://w3id.org/np/RAeaohXN1TMacPpvMGb3uqX-XwyQAQlxf0pA58UDLJG5E>, <https://w3id.org/np/RAZlYVLxNLEln-_BdCOiKUQXVuvjQe6XeeXRYKXTKecS8>,
+                   <https://w3id.org/np/RABDn_JzgwOiwuo-d2PNRrwFd8sCmehlt_TxqYzVvYyyQ>, <https://w3id.org/np/RAIJSjZ-vz-6UCiT5au3hPZNEBpz0ANPpIJLww9l_kjkE>,
+                   <https://w3id.org/np/RA4jpwawVTV6SsNhaqD6Mjpu1ph5pfR8nInrPDZzHw_Yg>, <https://w3id.org/np/RAI9OaTk9VYAoJILuNXoH0LxfqJ5DITCOZNPCUTzT7K5M>,
+                   <https://w3id.org/np/RA6GvARuaxukex9ATCwedB8RUXZu2fhszDQFOUXiUheaI>, <https://w3id.org/np/RAFNJCAnFSxX_VvkzEaUPPDrJ8gqYW_LL8GmmgoohQ9ic>),
+                 \"fdo\", ?unbound)) as ?category)
+          filter(bound(?category))
+          bind(replace(str(?cFdo), \"^https://w3id.org/np/RA[A-Za-z0-9_-]{43}[/#]\", \"\") as ?localName)
+        } group by ?category ?localName
+      }
+    } group by ?category
+  }
+  bind(if(?category = \"research-programme\", \"1. Research Programme\",
+       if(?category = \"call-for-proposals\", \"2. Call for Proposals\",
+       if(?category = \"project\", \"3. Research Project\",
+       if(?category = \"data-management-plan\", \"4. Data Management Plan\",
+       if(?category = \"dataset\", \"5. Dataset\",
+       if(?category = \"method\", \"6. Method\",
+       if(?category = \"article\", \"7. Article\",
+       if(?category = \"fdo\", \"8. Core Model: FAIR Digital Object\", concat(\"9. \", ?category))))))))) as ?categoryName)
+  bind(concat(?categoryName, \" (\", str(?categoryCount), \")\") as ?category_group)
+  bind(if(bound(?fullDescription) && strlen(str(?fullDescription)) > 200, concat(substr(str(?fullDescription), 1, 197), \"...\"), ?fullDescription) as ?description)
+  bind(if(bound(?fileKey), iri(strbefore(?fileKey, \" \")), ?unbound) as ?file)
+  bind(if(bound(?fileKey), strafter(?fileKey, \" \"), ?unbound) as ?file_label)
+  bind(\"^\" as ?np_label)
+} order by ?category_group lcase(str(?fdo_label)) desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-11T10:56:37Z"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-fair-funder-fdos-of-space-members;
+    npx:supersedes <https://w3id.org/np/RAB0OHQnkhy-ryqqR-sL3rqPty-0QORxyWhhMsXKLiyYQ>;
+    rdfs:label "Get the FAIR Funder FDOs published by members of a space";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "MoJ9gPEBQd0h7MCJBx4QXSWyqFSw1K8rMkblaE9Dj3sG8ogO7Ls4jfCmhsaPOJvDWz2XBedkBx3qq5cBQSqrnAOgOBbhRrz5hhfK7UaWnJ+MrAP98AiG2myKCqE97zJPi13OLvRqcZEXhfGM89+ODBWw8bnWGKpgBgnmCG4b0/c=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+
