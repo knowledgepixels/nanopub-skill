@@ -16,7 +16,19 @@ def assertion(path):
     return d.graph(next(head.objects(None,has_assertion)))
 
 g=assertion(sys.argv[1])
-tmpl=[s for s,_,_ in g.triples((None,RDF.type,nt('AssertionTemplate')))][0]
+
+# Assertion, provenance and pubinfo templates each have their own meta-template:
+# RAgeON_v… ("Defining an assertion template"), RA-yPZEY… ("Defining a provenance
+# template") and RA4o9JqS… ("Defining a publication info template"). The two
+# latter share their shape and differ from the first as noted where it matters.
+KINDS={'AssertionTemplate':'assertion','ProvenanceTemplate':'provenance','PubinfoTemplate':'pubinfo'}
+found=[(s,o) for k in KINDS for s,_,o in g.triples((None,RDF.type,nt(k)))]
+if not found:
+    sys.exit(f"{sys.argv[1]}: no node typed nt:AssertionTemplate, nt:ProvenanceTemplate or "
+             "nt:PubinfoTemplate in the assertion; not a template")
+tmpl,tmpl_type=found[0]
+kind=KINDS[str(tmpl_type)[len(NT):]]
+is_assertion = kind=='assertion'
 
 # DatePlaceholder is supported by Nanodash but not yet among the meta-template's
 # placeholder-type choices, so it is accepted here rather than reported.
@@ -25,17 +37,31 @@ PH_TYPES={'AgentPlaceholder','AutoEscapeUriPlaceholder','DatePlaceholder','Embed
  'LanguageTaggedLiteralPlaceholder','LiteralPlaceholder','LocalResource','LongLiteralPlaceholder',
  'NewUriPlaceholder','RestrictedChoicePlaceholder','RootNanopubPlaceholder',
  'SequenceElementPlaceholder','TrustyUriPlaceholder','UriPlaceholder','ValuePlaceholder'}
-ST_TYPES={RDF.Statement, nt('AdvancedStatement'), nt('OptionalStatement'), nt('RepeatableStatement')}
+# only the assertion meta-template offers AdvancedStatement
+ST_TYPES={RDF.Statement, nt('OptionalStatement'), nt('RepeatableStatement')} | \
+         ({nt('AdvancedStatement')} if is_assertion else set())
+# stA030: only the pubinfo meta-template offers TransientTemplate
+TEMPLATE_FLAGS={nt('UnlistedTemplate')} | ({nt('TransientTemplate')} if kind=='pubinfo' else set())
 
 # roles, as the meta-template defines them
 top_stmts=set(g.objects(tmpl, nt('hasStatement')))
-groups={s for s in top_stmts if (s,RDF.type,nt('GroupedStatement')) in g}
-members=set()
-for gr in groups: members |= set(g.objects(gr, nt('hasStatement')))
-simple={s for s in top_stmts|members if (s,RDF.subject,None) in g}
-# only statements linked from the template node are "introduced"; a member reachable
-# solely via its group is NOT (stC030's object is restricted to sub:tstatement)
-all_stmts=top_stmts
+if is_assertion:
+    groups={s for s in top_stmts if (s,RDF.type,nt('GroupedStatement')) in g}
+    members=set()
+    for gr in groups: members |= set(g.objects(gr, nt('hasStatement')))
+    simple={s for s in top_stmts|members if (s,RDF.subject,None) in g}
+    # only statements linked from the template node are "introduced"; a member reachable
+    # solely via its group is NOT (stC030's object is restricted to sub:tstatement)
+    all_stmts=top_stmts
+else:
+    # here sub:tstatement is bound by the repeatable stB010/20/30 group itself and
+    # sub:group by stC020, so a statement counts whether or not the template node
+    # links it, and stC010 then links the template node to either kind
+    groups=set(g.subjects(RDF.type, nt('GroupedStatement')))
+    members=set()
+    for gr in groups: members |= set(g.objects(gr, nt('hasStatement')))
+    simple=set(g.subjects(RDF.subject, None))
+    all_stmts=simple|groups
 
 # tsubj / tpred / tobj = anything appearing in those roles
 tsubj={o for s in all_stmts for o in g.objects(s,RDF.subject)}
@@ -44,7 +70,8 @@ tobj ={o for s in all_stmts for o in g.objects(s,RDF.object)}
 spo=tsubj|tpred|tobj
 possiblevalue={o for s in spo for o in g.objects(s, nt('possibleValue'))}
 defaultvalue ={o for s in spo for o in g.objects(s, nt('hasDefaultValue'))}
-labeled = spo | possiblevalue | defaultvalue
+# stD050: default values can carry a label only in the assertion meta-template
+labeled = spo | possiblevalue | (defaultvalue if is_assertion else set())
 
 matched=set(); reasons={}
 def mark(t,why): matched.add(t); reasons[t]=why
@@ -52,13 +79,15 @@ def mark(t,why): matched.add(t); reasons[t]=why
 for s,p,o in g:
     t=(s,p,o)
     if s==tmpl:
-        if p==RDF.type and o==nt('AssertionTemplate'): mark(t,'stA010')
+        if p==RDF.type and o==tmpl_type: mark(t,'stA010')
         elif p==RDFS.label and isinstance(o,Literal): mark(t,'stA020')
         elif p==URIRef(DCT+'isVersionOf'): mark(t,'stA021a')
         elif p==URIRef(GEN+'governedBy'): mark(t,'stA021b')
         elif p==URIRef(DCT+'description'): mark(t,'stA022')
+        elif p==RDF.type and o in TEMPLATE_FLAGS: mark(t,'stA030')
+        elif not is_assertion:
+            if p==nt('hasStatement') and o in all_stmts: mark(t,'stC010')
         elif p==nt('hasTag'): mark(t,'stA025')
-        elif p==RDF.type and o==nt('UnlistedTemplate'): mark(t,'stA030')
         elif p==nt('hasDefaultProvenance'): mark(t,'stA040')
         elif p==nt('hasRequiredPubinfoElement'): mark(t,'stA050')
         elif p==nt('hasTargetNamespace'): mark(t,'stA060')
@@ -66,13 +95,13 @@ for s,p,o in g:
         elif p==nt('hasNanopubLabelPattern'): mark(t,'stA070')
         elif p==nt('hasStatement') and o in groups: mark(t,'stC021')
         elif p==nt('hasStatement'): mark(t,'stB001')
-    elif s in groups and p==nt('hasStatement') and o in top_stmts: mark(t,'stC030')
-    elif s in groups and p==RDF.type and o==nt('GroupedStatement'): mark(t,'stC022')
+    elif s in groups and p==nt('hasStatement') and o in (top_stmts if is_assertion else simple): mark(t,'stC030')
+    elif s in groups and p==RDF.type and o==nt('GroupedStatement'): mark(t,'stC022' if is_assertion else 'stC020')
     elif s in all_stmts and p in (RDF.subject,RDF.predicate,RDF.object): mark(t,'stB010/20/30')
     elif s in all_stmts and p==RDF.type and o in ST_TYPES: mark(t,'stC040')
     elif s in all_stmts and p==nt('statementOrder'): mark(t,'stC050')
     elif s in spo and p==RDF.type and str(o).startswith(NT) and str(o)[len(NT):] in PH_TYPES: mark(t,'stD010')
-    elif s in tpred and p==RDF.type and o in (URIRef(GEN+'InverseRoleProperty'),URIRef(GEN+'RegularRoleProperty')): mark(t,'stD015')
+    elif is_assertion and s in tpred and p==RDF.type and o in (URIRef(GEN+'InverseRoleProperty'),URIRef(GEN+'RegularRoleProperty')): mark(t,'stD015')
     elif s in spo and p==nt('possibleValue'): mark(t,'stD020')
     elif s in spo and p==nt('possibleValuesFrom'): mark(t,'stD030')
     elif s in spo and p==nt('possibleValuesFromApi'): mark(t,'stD040')
@@ -86,7 +115,8 @@ for s,p,o in g:
     elif s in spo and p==nt('hasRegex'): mark(t,'stD070')
 
 un=[t for t in g if t not in matched]
-print(f"triples: {len(list(g))}   matched: {len(matched)}   UNMATCHED: {len(un)}")
+print(f"triples: {len(list(g))}   matched: {len(matched)}   UNMATCHED: {len(un)}"
+      + ("" if is_assertion else f"   ({kind} template)"))
 for s,p,o in sorted(un, key=lambda t:(str(t[0]),str(t[1]))):
     sh=lambda v: str(v).rsplit('/',1)[-1] if isinstance(v,URIRef) else '"'+str(v)[:40]+'"'
     print("   !", sh(s), sh(p), sh(o))
@@ -102,7 +132,11 @@ for ph in spo:
 for st in simple:
     for r,n in ((RDF.subject,'subject'),(RDF.predicate,'predicate'),(RDF.object,'object')):
         if (st,r,None) not in g: print(f"   ! stB000 on {st}: missing rdf:{n}")
-    if st not in top_stmts: print(f"   ! {st} not linked from the template node (stB001)")
+    if is_assertion:
+        if st not in top_stmts: print(f"   ! {st} not linked from the template node (stB001)")
+    elif st not in top_stmts|members:
+        # matches the meta-template, but Nanodash reads statements only through these links
+        print(f"   ! {st} linked neither from the template node nor from a group, so Nanodash never reads it")
 
 # a governed template: is its kind registered with the space it names? (a note, never a failure)
 report_governance(sys.argv[1])

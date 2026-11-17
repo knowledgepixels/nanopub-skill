@@ -181,7 +181,9 @@ python3 scripts/template_links_check.py <file.trig> [...]        # do the templa
 
 `check-nanopub-conformance.py` is for ordinary nanopubs (views, queries,
 instances). It reports false positives on template nanopubs, which use grouped
-statement patterns; use `check-template-conformance.py` for those.
+statement patterns; use `check-template-conformance.py` for those. That one
+handles assertion, provenance and pubinfo templates, each against its own
+meta-template.
 
 Both conformance checkers also run the last three scripts. `supersede_check.py`
 fails a new version that introduces a fresh `sub:` IRI where the version it
