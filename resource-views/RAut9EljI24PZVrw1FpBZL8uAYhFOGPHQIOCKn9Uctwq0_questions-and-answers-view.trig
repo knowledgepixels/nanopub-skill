@@ -1,0 +1,70 @@
+@prefix this: <https://w3id.org/np/RAut9EljI24PZVrw1FpBZL8uAYhFOGPHQIOCKn9Uctwq0> .
+@prefix sub: <https://w3id.org/np/RAut9EljI24PZVrw1FpBZL8uAYhFOGPHQIOCKn9Uctwq0/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:askAction a gen:ViewResultAction;
+    rdfs:label "❓ ask a question...";
+    gen:hasActionTemplate <https://w3id.org/np/RAsqh6SzmNU8NJnxOZ-viynv0tCWi8n2GFMlZ59dWZpVY>;
+    gen:hasActionTemplateTargetField "target";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:qa-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RArDU9PvHzIV0jrgxgdH1CAiML5xp34qCJgJQQO1ktLKE/qa-view-kind>;
+    dct:title "💬 Questions & answers";
+    rdfs:label "Questions and answers view";
+    gen:appliesToInstancesOf gen:MaintainedResource, gen:Space;
+    gen:hasPageSize "10";
+    gen:hasStructuralPosition "4.2.questions";
+    gen:hasViewAction sub:askAction, sub:replyAction;
+    gen:hasViewQuery <https://w3id.org/np/RA8QQUZVKyGRh4GiRUzAlI8kAq5WV4Z0BYn4wWL3teeFo/get-questions>;
+    gen:hasViewQueryTargetField "resource" .
+  
+  sub:replyAction a gen:ViewEntryAction;
+    rdfs:label "💬 reply...";
+    gen:hasActionTemplate <https://w3id.org/np/RAFpID-NunXGUAZebXPfhD9efjvfpZqB5gDBrgP2Lp5N8>;
+    gen:hasActionTemplateQueryMapping "reply_target:target";
+    gen:isVisibleTo gen:EveryoneRole .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-16T08:19:32.726+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:qa-view;
+    npx:introduces <https://w3id.org/np/RArDU9PvHzIV0jrgxgdH1CAiML5xp34qCJgJQQO1ktLKE/qa-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAPGKqs92NnMz3HQdGAIof_Bv-z2e5xct-6-6tKOvKGgA>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "Z8UbXlq7Y39rRicj8V0kPGzFwoYpP84VRVYMcYrWe5TKCPZA+pRxKasJTS3XlS3exD1ghAFKsMnl95evV0cIXNxa1BI7wdcNcb4C2CxDpEM4uFKpMqdSHmYEzpTOWg3YRsNADPicSlGoGOeIfnl0lus11MYU3fISaj1lSOCCUvA=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

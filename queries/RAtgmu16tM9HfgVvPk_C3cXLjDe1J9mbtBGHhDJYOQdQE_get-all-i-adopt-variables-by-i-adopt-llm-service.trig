@@ -1,0 +1,81 @@
+@prefix this: <https://w3id.org/np/RAtgmu16tM9HfgVvPk_C3cXLjDe1J9mbtBGHhDJYOQdQE> .
+@prefix sub: <https://w3id.org/np/RAtgmu16tM9HfgVvPk_C3cXLjDe1J9mbtBGHhDJYOQdQE/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-iadopt-llm-service-variables a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns all I-ADOPT variables by I-Adopt LLM Service with their label, entity of interest, creator, and date.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get all I-ADOPT variables by I-Adopt LLM Service";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/type/dbf3e4836e0529b98c8e70684a03a3fb3a7b48dfa7829747dd978f2b7249ada1>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix iadopt: <https://w3id.org/iadopt/ont/>
+prefix skos: <http://www.w3.org/2004/02/skos/core#>
+
+select ?variable ?variable_label ?entity ?entity_label ?creator ?date ?np (\"^\" as ?np_label) where {
+  graph npa:graph {
+    ?np npx:hasNanopubType iadopt:Variable .
+    filter not exists { ?np npx:hasNanopubType npx:ExampleNanopub . }
+    ?np npa:hasValidSignatureForPublicKeyHash ?pubkey .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pubkey . }
+    ?np dct:created ?date .
+    ?np np:hasAssertion ?a .
+    ?np npx:introduces ?variable .
+    ?np npx:signedBy ?creator .
+    filter exists { ?np npx:signedBy <https://w3id.org/np/RAwy2xTZzt5Y3ix-7f1HDTewgZqa6eRm5YnmrSKCy0PTA/I-ADOPT-LLM-Service>}
+  }
+  graph ?a {
+    ?variable a iadopt:Variable .
+    optional { ?variable rdfs:label ?variable_label . }
+    optional {
+      ?variable iadopt:hasObjectOfInterest ?entity .
+      optional { ?entity rdfs:label ?entity_label . }
+    }
+  }
+}
+order by desc(?date)""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0009-0007-7713-900X .
+}
+
+sub:pubinfo {
+  orcid:0009-0007-7713-900X foaf:name "Marvin Friedl" .
+  
+  this: dct:created "2026-11-18T11:34:48.241Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0007-7713-900X;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-iadopt-llm-service-variables;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6nKKLJLqRlne3x0edmCYSr5xQdqM6C1FWZNdRdKZIsZFOmLmkh8dSeoHfQ9j2qws06koRRmIL6eij55oCL67M9/21JmSygbDBmVkBhKCdIMOCJIXSqb+CZIeS05qhZTDjznex8PBAd9pAFIIOW3hhvhA1cNVPlbBL/jWeT6UZ3bU9MKGD9abCZZYQ63/vxX+153bECpVJISzc4YmabntbbYa5xS2vXsJeS2Sn21uKO3A85Rj+PAqLi9DrsmtEjcGtcMxdzmp+DscfR2Zigbwqs9LV3UCITymRqx01QFEgBWRryjzatsArZ+3nUI1jpywt7IRKYhUTy5gCeHY76vlSwIDAQAB";
+    npx:hasSignature "GRDUdg7viIViqbZsnTpoSjaSakjpQ67UcbxbLHwH9rDypeSYdrDIfav04oQovGYDfmeAtS11gfLB35+O7y/Bwi2kL8J9boznQmnhRK3EWMgG4xjsgANPyOUYh+O7nT+3zgt35O+XKspvzylu3wg9sDqJQVbSupXf0KKRmfb1HIZudLh9pYj3dxgJeo2PQ+wJSSM4Q3/FDnY1cFLdHgFYxLd+Mb+Afwhc98jWmmLhsNVYvFa/nOyL7P72HaM7hrEDANQFsK7LAegM5goFquB+6kO9MkL0whufbmqLKLaa+IfLhXfg/0pki6Q3gADYjsH5tYEmhuDIB+k6DiOMKrfVLQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0007-7713-900X .
+}
+

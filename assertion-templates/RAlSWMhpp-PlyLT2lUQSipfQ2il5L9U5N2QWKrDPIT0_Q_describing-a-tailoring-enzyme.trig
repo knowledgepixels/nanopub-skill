@@ -1,0 +1,136 @@
+@prefix this: <https://w3id.org/np/RAlSWMhpp-PlyLT2lUQSipfQ2il5L9U5N2QWKrDPIT0_Q> .
+@prefix sub: <https://w3id.org/np/RAlSWMhpp-PlyLT2lUQSipfQ2il5L9U5N2QWKrDPIT0_Q/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://edamontology.org/data_2291> rdfs:label "has UniProt ID" .
+  
+  <http://purl.obolibrary.org/obo/GO_0003824> rdfs:label "is enzyme of type" .
+  
+  <http://purl.org/spar/datacite/hasDescription> rdfs:label "has the description" .
+  
+  <http://purl.org/spar/datacite/hasIdentifier> rdfs:label "has MITE accession number" .
+  
+  rdf:type rdfs:label "is an instance of" .
+  
+  rdfs:label rdfs:label "has the name" .
+  
+  sub:enzyme a nt:IntroducedResource, nt:LocalResource;
+    rdfs:label "A tailoring enzyme" .
+  
+  sub:enzymeDescription a nt:LongLiteralPlaceholder;
+    rdfs:label "enter a description of the tailoring enzyme" .
+  
+  sub:enzymeName a nt:LiteralPlaceholder;
+    rdfs:label "enter the commonly used enzyme name" .
+  
+  sub:enzymeType a nt:LiteralPlaceholder;
+    rdfs:label "enter enzyme type description e.g. 'O-Methyltransferase'" .
+  
+  sub:group1 a nt:GroupedStatement;
+    nt:hasStatement sub:st10 .
+  
+  sub:group2 a nt:GroupedStatement, nt:RepeatableStatement;
+    nt:hasStatement sub:st31 .
+  
+  sub:group3 a nt:GroupedStatement;
+    nt:hasStatement sub:st32, sub:st34 .
+  
+  sub:group4 a nt:GroupedStatement;
+    nt:hasStatement sub:st33, sub:st35 .
+  
+  sub:miteAccession a nt:LiteralPlaceholder;
+    rdfs:label "enter the MITE accession number";
+    nt:hasRegex "^MITE\\d{7}$" .
+  
+  sub:st10 rdf:object <https://w3id.org/spaces/biodiversity/r/ontology/tailoringEnzyme>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:enzyme .
+  
+  sub:st31 rdf:object sub:enzymeName;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:enzyme .
+  
+  sub:st32 rdf:object sub:enzymeDescription;
+    rdf:predicate <http://purl.org/spar/datacite/hasDescription>;
+    rdf:subject sub:enzyme .
+  
+  sub:st33 a nt:OptionalStatement;
+    rdf:object sub:miteAccession;
+    rdf:predicate <http://purl.org/spar/datacite/hasIdentifier>;
+    rdf:subject sub:enzyme .
+  
+  sub:st34 rdf:object sub:enzymeType;
+    rdf:predicate <http://purl.obolibrary.org/obo/GO_0003824>;
+    rdf:subject sub:enzyme .
+  
+  sub:st35 rdf:object sub:uniprot;
+    rdf:predicate <http://edamontology.org/data_2291>;
+    rdf:subject sub:enzyme .
+  
+  sub:template a nt:AssertionTemplate, nt:UnlistedTemplate;
+    dct:description "Characterizes a non-gatekeeping enzyme involved in natural product biosynthesis.";
+    dct:isVersionOf <https://w3id.org/np/RArzZy2snnFyejqHkDM_6UH8UKctBDbrIaTencNefwA3I/templateKind>;
+    rdfs:label "Describing a tailoring enzyme";
+    gen:governedBy <https://w3id.org/spaces/zdouclab>;
+    nt:hasNanopubLabelPattern "Enzyme ${enzymeName} is a ${enzymeDescription}";
+    nt:hasStatement sub:group1, sub:group2, sub:group3, sub:group4, sub:st10, sub:st31,
+      sub:st32, sub:st33, sub:st34, sub:st35;
+    nt:hasTag "naturalProducts" .
+  
+  sub:uniprot a nt:LiteralPlaceholder;
+    rdfs:label "enter the UniProt ID";
+    nt:hasRegex "^([OPQ]\\d[A-Z0-9]{3}\\d|[A-NR-Z]\\d([A-Z][A-Z0-9]{2}\\d){1,2})$" .
+  
+  <https://w3id.org/spaces/biodiversity/r/ontology/tailoringEnzyme> rdfs:label "Tailoring Enzyme" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0001-6534-6609 .
+}
+
+sub:pubinfo {
+  orcid:0009-0008-6482-7206 foaf:name "Susanna Kummer" .
+  
+  this: dct:created "2026-11-17T22:08:58.359Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0008-6482-7206;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:template;
+    npx:introduces <https://w3id.org/np/RArzZy2snnFyejqHkDM_6UH8UKctBDbrIaTencNefwA3I/templateKind>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    rdfs:label "Describing a tailoring enzyme";
+    skos:changeNote "added uniprot field";
+    prov:wasDerivedFrom <https://w3id.org/np/RApDP5ErD8OHIiMzHqBtjN5ECezXug4ggkqSBbV8G-tsU>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAgeON_vGgJCt5E4DPMi0eOPaGwNv9tbfFTRZtBwdQL0w/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAv3qWg92NsT4k03QCtoR7f2kqamIPIQbHVQOzlLTMyFbid8EmeT7yp8LIQBMvh5CoGamIpMkUgW0bOto2UzJUVCmYLlse8g0mO/Qd/AfJZLhjqrFWZ84vimwcWE1//woyiQF6yydh+ZzNu02XNDw8AagyFh8WFSclO41evJDqWq/ZDcNtOA+pBfF6B2R14KICB210EK3ZmWkN2dt1qlMtuliTZdAE0Agp8oIpG3H4I2Ozb+WwW5HF1ffo0FtQmYin0r8lQCb5vO5s7EYA1hUJ1/FIXMVNv8oVaSujIRgm0i95HrLL+UP74s6jRfTVIC5vGliPWYoKV3pPc6hfg9O5WwIDAQAB";
+    npx:hasSignature "Qq/F+sA45P6424IOzLG40EY6a8WKnjsu/h6rMPqbOrDhlx5B+Kf1tOXsQpWon9yyeOJUTJnVZv9zrXxaVZp9FBIdrTmJJanCtCtHU+mZBswMBgP8B2fjwzP1aJeesH3lv/d57dLIp5G622y/+fhJM7FYqxuz8Bf07AqUrWm+0YCVQN0ahDnpovzUbfaK5kLt3MI/y1m9jdVGt5VL6b8vBZ3F5KpoV2htJLM+UynPGgqa/5WMKZ44GHexCCi14WRIZa3f1YiT1JLlAr5FwSGJ9p/e3kE9zJapJl3R1pq8xNMq8/9kQptuaqxt+1Nx5/TvB0ErkMHwJqDsDv/ZoCBM0g==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0008-6482-7206 .
+  
+  <https://w3id.org/spaces/zdouclab> nt:hasLabelFromApi "ZdoucLab - Describes the activities of the ZdoucLab group at the University of Vienna." .
+}
+

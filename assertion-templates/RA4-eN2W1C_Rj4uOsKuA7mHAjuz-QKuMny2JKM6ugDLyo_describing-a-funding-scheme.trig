@@ -1,0 +1,144 @@
+@prefix this: <https://w3id.org/np/RA4-eN2W1C_Rj4uOsKuA7mHAjuz-QKuMny2JKM6ugDLyo> .
+@prefix sub: <https://w3id.org/np/RA4-eN2W1C_Rj4uOsKuA7mHAjuz-QKuMny2JKM6ugDLyo/> .
+@prefix schema: <https://schema.org/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  dct:description rdfs:label "has the description" .
+  
+  dct:isPartOf rdfs:label "belongs to the broader scheme" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdfs:label rdfs:label "has the name" .
+  
+  rdfs:seeAlso rdfs:label "has a page at" .
+  
+  owl:sameAs rdfs:label "is the same thing as" .
+  
+  skos:altLabel rdfs:label "has the other name" .
+  
+  schema:FundingScheme rdfs:label "funding scheme" .
+  
+  schema:funder rdfs:label "is run by the funder" .
+  
+  sub:altlabel a nt:LiteralPlaceholder;
+    rdfs:label "another name, or its code" .
+  
+  sub:broader a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "IRI of the broader scheme or programme";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAom4OoQ8U2K6A629YRXKo9-XU-ZJM7-KZs1h11OD6c1w/find-things?type=https%3A%2F%2Fschema.org%2FFundingScheme" .
+  
+  sub:description a nt:LongLiteralPlaceholder;
+    rdfs:label "a description" .
+  
+  sub:funder a nt:ExternalUriPlaceholder, nt:GuidedChoicePlaceholder;
+    rdfs:label "ROR ID or other IRI of the funder";
+    nt:possibleValuesFromApi "https://w3id.org/np/l/nanopub-query-1.1/api/RAom4OoQ8U2K6A629YRXKo9-XU-ZJM7-KZs1h11OD6c1w/find-things?type=https%3A%2F%2Fschema.org%2FOrganization" .
+  
+  sub:label a nt:LiteralPlaceholder;
+    rdfs:label "name, or its code where it has no name" .
+  
+  sub:page a nt:ExternalUriPlaceholder;
+    rdfs:label "address of a page about it" .
+  
+  sub:sameas a nt:ExternalUriPlaceholder;
+    rdfs:label "another IRI of the same thing" .
+  
+  sub:scheme a nt:IntroducedResource, nt:UriPlaceholder;
+    rdfs:label "Funder ID, CORDIS programme page, or short name" .
+  
+  sub:st01 rdf:object schema:FundingScheme;
+    rdf:predicate rdf:type;
+    rdf:subject sub:scheme .
+  
+  sub:st02 rdf:object sub:label;
+    rdf:predicate rdfs:label;
+    rdf:subject sub:scheme .
+  
+  sub:st03 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:altlabel;
+    rdf:predicate skos:altLabel;
+    rdf:subject sub:scheme .
+  
+  sub:st04 a nt:OptionalStatement;
+    rdf:object sub:description;
+    rdf:predicate dct:description;
+    rdf:subject sub:scheme .
+  
+  sub:st05 a nt:OptionalStatement;
+    rdf:object sub:broader;
+    rdf:predicate dct:isPartOf;
+    rdf:subject sub:scheme .
+  
+  sub:st06 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:funder;
+    rdf:predicate schema:funder;
+    rdf:subject sub:scheme .
+  
+  sub:st07 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:sameas;
+    rdf:predicate owl:sameAs;
+    rdf:subject sub:scheme .
+  
+  sub:st08 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:page;
+    rdf:predicate rdfs:seeAlso;
+    rdf:subject sub:scheme .
+  
+  sub:templateVersion a nt:AssertionTemplate;
+    dct:description "Describes a funding scheme, that is a programme, a scheme or a call of a funder, following the Research Metadata Schema. A grant is part of its funding scheme, and the scheme is never the funder. The scheme is named by a Crossref Funder ID that names a programme, or else by the funder's own IRI for it, such as a CORDIS programme page, or else by a newly minted IRI.";
+    dct:isVersionOf sub:template;
+    rdfs:label "Describing a funding scheme";
+    gen:governedBy <https://w3id.org/spaces/pensoft>;
+    nt:hasNanopubLabelPattern "${label}";
+    nt:hasStatement sub:st01, sub:st02, sub:st03, sub:st04, sub:st05, sub:st06, sub:st07,
+      sub:st08;
+    nt:hasTag "Pensoft";
+    nt:hasTargetNanopubType schema:FundingScheme .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-13T17:19:40.810+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:templateVersion;
+    npx:introduces sub:template;
+    rdfs:label "Describing a funding scheme";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RA-N4_kFxcruvBTlo1yJv29E4SLOXsx5KO_th69PprMrA>,
+      <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAgeON_vGgJCt5E4DPMi0eOPaGwNv9tbfFTRZtBwdQL0w/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "BwgTBp6cwDPE502gBYITPP+oruZCJouD9zX+2p+PIZe34xeOvWH+fFssRl4sLfSl9Hz0F9UIBVws18z8hiKReJg3mk/dkrS9NxsTTmRo6hJaKKX2I2BPgcyaDj/H0OhVjvnR0/e9HWB6dOOw9XIzpbuPfARxtQEd177TdF6uhhs=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

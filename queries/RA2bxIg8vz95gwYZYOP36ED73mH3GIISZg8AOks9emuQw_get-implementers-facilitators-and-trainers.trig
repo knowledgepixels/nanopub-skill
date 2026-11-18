@@ -1,0 +1,86 @@
+@prefix this: <https://w3id.org/np/RA2bxIg8vz95gwYZYOP36ED73mH3GIISZg8AOks9emuQw> .
+@prefix sub: <https://w3id.org/np/RA2bxIg8vz95gwYZYOP36ED73mH3GIISZg8AOks9emuQw/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-qualified-users a <https://w3id.org/kpxl/grlc/grlc-query>;
+    dct:description "Returns all users who have been qualified by GO FAIR Foundation as either an Implementer, Facilitator or Trainer.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get Implementers, Facilitators and Trainers";
+    <https://w3id.org/kpxl/grlc/endpoint> <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    <https://w3id.org/kpxl/grlc/sparql> """prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix dct: <http://purl.org/dc/terms/>
+prefix tpff: <https://w3id.org/fair/3pff/>
+prefix schema: <https://schema.org/>
+prefix dcat: <https://www.w3.org/ns/dcat#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+
+select ?user (min(?name) as ?user_label) 
+	(group_concat(distinct ?qtype_label; separator=\", \") as ?qualification)
+	(max(?startdate) as ?qualified_on) 
+	(min(?np) as ?np) (\"^\" as ?np_label) 
+where {
+  graph npa:graph {
+    ?np npx:hasNanopubType tpff:3PFF-Qualification .
+    ?np npa:hasValidSignatureForPublicKeyHash ?pk .
+    filter not exists { ?npx npx:invalidates ?np ; npa:hasValidSignatureForPublicKeyHash ?pk . }
+    ?np np:hasAssertion ?a .
+  }
+  graph ?a {
+    ?np tpff:issued-to ?user .
+    ?np npx:qualifies ?qtype .
+    optional { ?np <https://schema.org/issuedBy>|<http://schema.org/issuedBy> ?issuer . }
+    optional { ?np <https://www.w3.org/ns/dcat#startDate>|<http://www.w3.org/ns/dcat#startDate> ?startdate . }
+  }
+  bind(replace(str(?qtype), \"^.*/\", \"\") as ?qtype_label)
+  optional {
+    graph npa:graph { ?inp np:hasAssertion ?ia ; npa:hasValidSignatureForPublicKey ?ipk . filter not exists { ?ix npx:invalidates ?inp ; npa:hasValidSignatureForPublicKey ?ipk . } }
+    graph ?ia { ?decl npx:declaredBy ?user . ?user foaf:name ?name . }
+  }
+} group by ?user order by ?user_label""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0009-0007-7713-900X foaf:name "Marvin Friedl" .
+  
+  this: dct:created "2026-11-16T13:23:14.321Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0007-7713-900X;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-qualified-users;
+    npx:supersedes <https://w3id.org/np/RAgRzwZm7lluYpazWmzJGRt3GR8On_iwqpcQjmuzEmgiQ>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6nKKLJLqRlne3x0edmCYSr5xQdqM6C1FWZNdRdKZIsZFOmLmkh8dSeoHfQ9j2qws06koRRmIL6eij55oCL67M9/21JmSygbDBmVkBhKCdIMOCJIXSqb+CZIeS05qhZTDjznex8PBAd9pAFIIOW3hhvhA1cNVPlbBL/jWeT6UZ3bU9MKGD9abCZZYQ63/vxX+153bECpVJISzc4YmabntbbYa5xS2vXsJeS2Sn21uKO3A85Rj+PAqLi9DrsmtEjcGtcMxdzmp+DscfR2Zigbwqs9LV3UCITymRqx01QFEgBWRryjzatsArZ+3nUI1jpywt7IRKYhUTy5gCeHY76vlSwIDAQAB";
+    npx:hasSignature "2IuYvi1ru/UlwR4qkIJ0ySHMFYlT7nIykb3E86u9/3+LRg6pK42F4bhI/1a8qxKDVSEOw1uF1ybi6iN3uAQlTLQkZKVfFi/fWbimk6NV3pLsJlw/2ZsyEHTyGUXlDNKNR1iiRFVYJXyT7nI/8v3OGBx57fUIu+SNWkJPftJpFUCcN9vzk42P06u49Lj7So6I1oc7Xq9eCHd8GEmHmrPhy9/jCvgR/cFPJsr3+aI0pvxo3iukpmAlPMh5CRSFHK0ArJ6J3WATCTouQdCAhp+Gs0u5yPhG7V1svV1F64Poeuwxd/9REyxE7a9Q3JEzsdLVpjPGPuOOhmMhb9XgzmBRMw==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0007-7713-900X .
+}
+

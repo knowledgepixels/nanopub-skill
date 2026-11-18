@@ -1,0 +1,83 @@
+@prefix this: <https://w3id.org/np/RAp3RH0OHoJ8DeXnn99FGnNaPwjZae65rauEqQCP1-OWs> .
+@prefix sub: <https://w3id.org/np/RAp3RH0OHoJ8DeXnn99FGnNaPwjZae65rauEqQCP1-OWs/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a gen:ViewResultAction;
+    rdfs:label "add...";
+    gen:hasActionTemplate <https://w3id.org/np/RAd-2jdeGmce64cnYJ_ZIQ4SdlE0GGL4tdyJwSS-4k3Qk>;
+    gen:hasActionTemplatePartField "class";
+    gen:hasActionTemplateQueryMapping "void";
+    gen:hasActionTemplateTargetField "vocabulary";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:classes-from-fairification-framework-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RAg3-5LVOXPhSKP7Wzql131pUfab51MkpPqN7fk5BOpag/classes-from-space-members-view-kind>;
+    dct:title "🏷 Classes";
+    rdfs:label "View of classes of FAIRification Framework Group";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:governedBy <https://w3id.org/spaces/fff>;
+    gen:hasStructuralPosition "4.3.classes.2";
+    gen:hasViewAction sub:addAction, sub:overrideAction;
+    gen:hasViewQuery <https://w3id.org/np/RAENlitA6jHNR8Mk3PI2nA9f4mSaP3d5zH60aETdcW-uE/get-classes-of-ontology-from-space-members>;
+    gen:hasViewQueryTargetField "ontology" .
+  
+  sub:overrideAction a gen:ViewEntryAction;
+    rdfs:label "override...";
+    gen:hasActionTemplate <https://w3id.org/np/RAd-2jdeGmce64cnYJ_ZIQ4SdlE0GGL4tdyJwSS-4k3Qk>;
+    gen:hasActionTemplateQueryMapping "override_target:@override override_template:@template";
+    gen:hasActionTemplateTargetField "resource";
+    gen:isVisibleTo gen:MemberRole .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0009-0007-7713-900X foaf:name "Marvin Friedl" .
+  
+  <https://w3id.org/np/RAENlitA6jHNR8Mk3PI2nA9f4mSaP3d5zH60aETdcW-uE/get-classes-of-ontology-from-space-members>
+    nt:hasLabelFromApi "Get the classes of an ontology from space members including namespace - Like 'Get the classes of an ontology', but only returns classes published by an admin, maintainer, or member of the space that maintains the given resource. Classes are included if their definition declares them part of the given ontology (dct:isPartOf, or the legacy dct:partOf) or if their IRI starts with the ontology's namespace (optional 'ontologyNamespace' parameter). Each class URI appears once, kept from the latest member-published definition." .
+  
+  <https://w3id.org/np/RAd-2jdeGmce64cnYJ_ZIQ4SdlE0GGL4tdyJwSS-4k3Qk> nt:hasLabelFromApi
+      "Defining a new class for the FAIRification Framework - Such a nanopublication defines a new class. Classes represent sets of concret..." .
+  
+  this: dct:created "2026-11-17T11:31:23.763Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0007-7713-900X;
+    dct:license <https://creativecommons.org/publicdomain/zero/1.0/>;
+    npx:embeds sub:classes-from-fairification-framework-view;
+    npx:introduces <https://w3id.org/np/RAg3-5LVOXPhSKP7Wzql131pUfab51MkpPqN7fk5BOpag/classes-from-space-members-view-kind>;
+    npx:supersedes <https://w3id.org/np/RAIZW9CcHPwPcXVuuc3AYYe-FXKRNxXuXp2AP-QdkrOKA>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6nKKLJLqRlne3x0edmCYSr5xQdqM6C1FWZNdRdKZIsZFOmLmkh8dSeoHfQ9j2qws06koRRmIL6eij55oCL67M9/21JmSygbDBmVkBhKCdIMOCJIXSqb+CZIeS05qhZTDjznex8PBAd9pAFIIOW3hhvhA1cNVPlbBL/jWeT6UZ3bU9MKGD9abCZZYQ63/vxX+153bECpVJISzc4YmabntbbYa5xS2vXsJeS2Sn21uKO3A85Rj+PAqLi9DrsmtEjcGtcMxdzmp+DscfR2Zigbwqs9LV3UCITymRqx01QFEgBWRryjzatsArZ+3nUI1jpywt7IRKYhUTy5gCeHY76vlSwIDAQAB";
+    npx:hasSignature "HnqUQrCjDa5z6vFLXFmU/tt6bBwKheKZN0Sy+SBVEVl+VX2gBrlLzc9vR34Xu/M13xjr/FJi3WitAs6X7+qz5L7AgUV2FhPh0kqXRVmnamhJuORi7Dh032xH8paUCL1UIhBAL4jILwTATSQTZGP4/4015jEsFuSpN3truMyywZozH5kmDuX9L74pimFNo4EVm8mkIqf7tshJQ35k2pKuBjy8macEMwzxqs6iaK0xawUxmAd4J1awsnYbsIO5RcZ9cwJNqSdCyibDEToqY5UTCQlr2U7UV+VPuwoQGX1iwrdFiXM8BYqdOwaTa5xxB5aK+QwlRcfF2+g+uFJiP+q8dQ==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0007-7713-900X .
+  
+  <https://w3id.org/spaces/fff> nt:hasLabelFromApi "FAIRification Framework group - The group working on the FAIRification Framework." .
+}
+

@@ -1,0 +1,131 @@
+@prefix this: <https://w3id.org/np/RAzhuZcCsv1zcv154bP__56eKxFhhJBz0N2_TW5-kOzIw> .
+@prefix sub: <https://w3id.org/np/RAzhuZcCsv1zcv154bP__56eKxFhhJBz0N2_TW5-kOzIw/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  <http://purl.org/spar/cito/citesAsEvidence> rdfs:label "cites as evidence" .
+  
+  <http://purl.org/spar/cito/corrects> rdfs:label "corrects" .
+  
+  <http://purl.org/spar/cito/critiques> rdfs:label "critiques" .
+  
+  <http://purl.org/spar/cito/discusses> rdfs:label "discusses" .
+  
+  <http://purl.org/spar/cito/disputes> rdfs:label "disputes" .
+  
+  <http://purl.org/spar/cito/qualifies> rdfs:label "qualifies" .
+  
+  rdf:type rdfs:label "is a" .
+  
+  rdf:value rdfs:label "has the text" .
+  
+  <https://schema.org/Question> rdfs:label "question" .
+  
+  <https://schema.org/about> rdfs:label "is about" .
+  
+  sub:about a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of what this question is about (e.g. a space)" .
+  
+  sub:evidence a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the evidence cited by this question" .
+  
+  sub:question a nt:IntroducedResource, nt:LocalResource, nt:UriPlaceholder;
+    rdfs:label "short ID of this question" .
+  
+  sub:questionText a nt:LongLiteralPlaceholder;
+    rdfs:label "text of the question" .
+  
+  sub:st1 rdf:object <https://schema.org/Question>;
+    rdf:predicate rdf:type;
+    rdf:subject sub:question .
+  
+  sub:st2 rdf:object sub:questionText;
+    rdf:predicate rdf:value;
+    rdf:subject sub:question .
+  
+  sub:st3 a nt:OptionalStatement;
+    rdf:object sub:target;
+    rdf:predicate sub:stance;
+    rdf:subject sub:question .
+  
+  sub:st4 a nt:OptionalStatement;
+    rdf:object sub:target;
+    rdf:predicate <https://www.w3.org/ns/activitystreams#inReplyTo>;
+    rdf:subject sub:question .
+  
+  sub:st5 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:evidence;
+    rdf:predicate <http://purl.org/spar/cito/citesAsEvidence>;
+    rdf:subject sub:question .
+  
+  sub:st6 a nt:OptionalStatement, nt:RepeatableStatement;
+    rdf:object sub:about;
+    rdf:predicate <https://schema.org/about>;
+    rdf:subject sub:question .
+  
+  sub:stance a nt:RestrictedChoicePlaceholder;
+    rdfs:label "choose stance relation";
+    nt:possibleValue <http://purl.org/spar/cito/corrects>, <http://purl.org/spar/cito/critiques>,
+      <http://purl.org/spar/cito/discusses>, <http://purl.org/spar/cito/disputes>, <http://purl.org/spar/cito/qualifies> .
+  
+  sub:target a nt:ExternalUriPlaceholder;
+    rdfs:label "URI of the target contribution" .
+  
+  sub:templateVersion a nt:AssertionTemplate;
+    dct:description "A question posed to the discourse graph: a schema:Question carrying its text in rdf:value. It may reply to a prior contribution (as:inReplyTo), or carry a rhetorical CiTO stance toward one when the question implicitly challenges its target (e.g. cito:disputes), and may cite evidence. It may also be about one or more resources (schema:about), such as the space in which it is asked. Answers are separate contributions that target this question. A standalone question with no target is valid.";
+    dct:isVersionOf <https://w3id.org/np/RAOp9i7XUKKJhT4qIvtCA6LpXj9Hq7qkhsZ1MrLP7UfHE/templateKind>;
+    rdfs:label "Question";
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels/nanoarguments>;
+    nt:hasNanopubLabelPattern "${questionText}";
+    nt:hasStatement sub:st1, sub:st2, sub:st3, sub:st4, sub:st5, sub:st6;
+    nt:hasTag "Discourse" .
+  
+  <https://www.w3.org/ns/activitystreams#inReplyTo> rdfs:label "is a reply to" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-18T13:30:43.553+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:templateVersion;
+    npx:introduces <https://w3id.org/np/RAOp9i7XUKKJhT4qIvtCA6LpXj9Hq7qkhsZ1MrLP7UfHE/templateKind>;
+    npx:supersedes <https://w3id.org/np/RAtA4Ue-pLKBEfM8UOl2Mc2zo72oOqJpriiabvq8RXNpU>;
+    rdfs:label "Question";
+    skos:changeNote "Add an optional, repeatable schema:about field, so that a question can be anchored to a space or other resource.";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAKc76yHLDbloE6ObluzYQsfX37v6qrZXbYeIKpe8-YUo>, <https://w3id.org/np/RAoTD7udB2KtUuOuAe74tJi1t3VzK0DyWS7rYVAq1GRvw>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAgeON_vGgJCt5E4DPMi0eOPaGwNv9tbfFTRZtBwdQL0w/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "hsHw46oc3zOctcgKGrsu8Et2K+wd7LxkUMWj+zrgqC6zjNzrW+gGTKjCCpGYlEV3msalAlrpfma9LDiP3e1Pll9hXJ1p1cshHSn1Hi+++A/d7nYTG7/EAyy0QIoZvYBM/4Ev3m/Zd8f61NFhFQJZibOUBSvDzg+CKu2iOK286Ks=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+

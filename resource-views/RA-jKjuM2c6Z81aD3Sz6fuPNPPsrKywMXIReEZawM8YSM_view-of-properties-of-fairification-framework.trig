@@ -1,0 +1,71 @@
+@prefix this: <https://w3id.org/np/RA-jKjuM2c6Z81aD3Sz6fuPNPPsrKywMXIReEZawM8YSM> .
+@prefix sub: <https://w3id.org/np/RA-jKjuM2c6Z81aD3Sz6fuPNPPsrKywMXIReEZawM8YSM/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:addAction a gen:ViewResultAction;
+    rdfs:label "add...";
+    gen:hasActionTemplate <https://w3id.org/np/RAhPZQxtlKO1wI65ZhH4RE-uL8Ql0r1LK7dHWCrFxEeDQ>;
+    gen:hasActionTemplatePartField "property";
+    gen:hasActionTemplateTargetField "ontology";
+    gen:isVisibleTo gen:EveryoneRole .
+  
+  sub:fairification-framework-properties-view a gen:ResourceView, gen:TabularView;
+    dct:isVersionOf <https://w3id.org/np/RApcalrPrUkQ3_W_TfGFg0siBX52HBA9Eix9oaIzQW5EU/ontology-classes-view-kind>;
+    dct:title "➡ Properties";
+    rdfs:label "View of properties of FAIRification Framework";
+    gen:appliesToInstancesOf gen:MaintainedResource;
+    gen:governedBy <https://w3id.org/spaces/fff>;
+    gen:hasStructuralPosition "4.4.properties.1";
+    gen:hasViewAction sub:addAction;
+    gen:hasViewQuery <https://w3id.org/np/RAai99pHUtqnXj3_UCx7ch3mla6aMfq8kEhP9Btw16t6E/get-properties-of-ontology-ns>;
+    gen:hasViewQueryTargetField "ontology" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0009-0007-7713-900X foaf:name "Marvin Friedl" .
+  
+  this: dct:created "2026-11-17T11:45:30.475Z"^^xsd:dateTime;
+    dct:creator orcid:0009-0007-7713-900X;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:fairification-framework-properties-view;
+    npx:introduces <https://w3id.org/np/RApcalrPrUkQ3_W_TfGFg0siBX52HBA9Eix9oaIzQW5EU/ontology-classes-view-kind>;
+    npx:wasCreatedAt <https://nanodash.knowledgepixels.com/>;
+    prov:wasDerivedFrom <https://w3id.org/np/RAP07i6yps24vR6QI47tRsHN80dOOfDfC2EPyQU-K0fcY>;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RARW4MsFkHuwjycNElvEVtuMjpf4yWDL10-0C5l2MqqRQ>, <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA6nKKLJLqRlne3x0edmCYSr5xQdqM6C1FWZNdRdKZIsZFOmLmkh8dSeoHfQ9j2qws06koRRmIL6eij55oCL67M9/21JmSygbDBmVkBhKCdIMOCJIXSqb+CZIeS05qhZTDjznex8PBAd9pAFIIOW3hhvhA1cNVPlbBL/jWeT6UZ3bU9MKGD9abCZZYQ63/vxX+153bECpVJISzc4YmabntbbYa5xS2vXsJeS2Sn21uKO3A85Rj+PAqLi9DrsmtEjcGtcMxdzmp+DscfR2Zigbwqs9LV3UCITymRqx01QFEgBWRryjzatsArZ+3nUI1jpywt7IRKYhUTy5gCeHY76vlSwIDAQAB";
+    npx:hasSignature "NB6TOgeteCW+7Ldt8d2yk1gp2hNszbc1oKT0/agIwE11dpB7cDboaNLWc/i1SKWpLmQtAHATjIldO/bnaX7JCH0KjGQGR/SZx91LHy9QXIILwtZSoWYKrYHDfeLUDCYyHRRE0YEWbqN7fdpdippxDCZnZquhsvnjjIHFExb+17wugv5GBllW/Su9VoEZCdZf1Ydu2JTa1cb5lVtYlVFSXu7p966sBWV8WjTDIxGf5H+2IgOF5Z9sWBytagdHHeIXactqQcgkqaRHsuI/K3zbifi2dR5mTlyL7u3nt8MoI5V91+K4rYXyA6fAaQktWwUAZRPlU4OB91O8tMQOiMvJzg==";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0009-0007-7713-900X .
+  
+  <https://w3id.org/np/RAhPZQxtlKO1wI65ZhH4RE-uL8Ql0r1LK7dHWCrFxEeDQ> nt:hasLabelFromApi
+      "Defining a new object/datatype property - This template helps to define object properties and datatype properties with ..." .
+  
+  <https://w3id.org/spaces/fff> nt:hasLabelFromApi "FAIRification Framework group - The group working on the FAIRification Framework." .
+}
+

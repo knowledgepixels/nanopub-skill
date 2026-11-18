@@ -1,0 +1,102 @@
+@prefix this: <https://w3id.org/np/RA7b12Jc0AwLoDSo56txh1MHLvdh3leXLFQOnwxlxPtuM> .
+@prefix sub: <https://w3id.org/np/RA7b12Jc0AwLoDSo56txh1MHLvdh3leXLFQOnwxlxPtuM/> .
+@prefix gen: <https://w3id.org/kpxl/gen/terms/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:01-start-action a gen:ViewResultAction;
+    rdfs:label "➕ start a discussion...";
+    gen:hasActionTemplate <https://w3id.org/np/RAviXo8yYqCIoOn6gcgHXyJKDjmWoO9CndMTpcSn5xX0c/templateVersion>;
+    gen:hasActionTemplateTargetField "about" .
+  
+  sub:02-ask-action a gen:ViewResultAction;
+    rdfs:label "❓ ask a question...";
+    gen:hasActionTemplate <https://w3id.org/np/RAzhuZcCsv1zcv154bP__56eKxFhhJBz0N2_TW5-kOzIw/templateVersion>;
+    gen:hasActionTemplateTargetField "about" .
+  
+  sub:11-reply-action a gen:ViewEntryAction;
+    rdfs:label "💬 reply...";
+    gen:hasActionTemplate <https://w3id.org/np/RAviXo8yYqCIoOn6gcgHXyJKDjmWoO9CndMTpcSn5xX0c/templateVersion>;
+    gen:hasActionTemplateTargetField "target" .
+  
+  sub:12-support-action a gen:ViewEntryAction;
+    rdfs:label "👍 support...";
+    gen:hasActionTemplate <https://w3id.org/np/RAviXo8yYqCIoOn6gcgHXyJKDjmWoO9CndMTpcSn5xX0c/templateVersion>;
+    gen:hasActionTemplateQueryMapping "support_stance:!stance";
+    gen:hasActionTemplateTargetField "target" .
+  
+  sub:13-dispute-action a gen:ViewEntryAction;
+    rdfs:label "👎 dispute...";
+    gen:hasActionTemplate <https://w3id.org/np/RAviXo8yYqCIoOn6gcgHXyJKDjmWoO9CndMTpcSn5xX0c/templateVersion>;
+    gen:hasActionTemplateQueryMapping "dispute_stance:!stance";
+    gen:hasActionTemplateTargetField "target" .
+  
+  sub:14-question-action a gen:ViewEntryAction;
+    rdfs:label "❓ question...";
+    gen:hasActionTemplate <https://w3id.org/np/RAzhuZcCsv1zcv154bP__56eKxFhhJBz0N2_TW5-kOzIw/templateVersion>;
+    gen:hasActionTemplateTargetField "target" .
+  
+  sub:viewVersion a gen:ResourceView, gen:ThreadView;
+    dct:isVersionOf sub:discussions-view;
+    dct:title "🧵 Discussions";
+    rdfs:label "Discussion threads about a resource";
+    gen:appliesToInstancesOf gen:MaintainedResource, gen:Space;
+    gen:governedBy <https://w3id.org/spaces/knowledgepixels/nanoarguments>;
+    gen:hasPageSize "10";
+    gen:hasStructuralPosition "4.2.discussions";
+    gen:hasViewAction sub:01-start-action, sub:02-ask-action, sub:11-reply-action, sub:12-support-action,
+      sub:13-dispute-action, sub:14-question-action;
+    gen:hasViewQuery <https://w3id.org/np/RAD6fvmF1vzjlokbRMCmLzzipy4Gs30wfEWONtx2ElqEc/get-threads-about-resource>;
+    gen:hasViewQueryTargetField "resource" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-18T13:32:22.292+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:viewVersion;
+    npx:introduces sub:discussions-view;
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RALLhFXriQjVFESflcok4WIpBW5W0Zh9horxrvcACD1Mw/templateVersion> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "gG5BckHzh0HRkAlmWQdKCJokqtzcBHOxDnXZKIhA1z9Bb6nSY843V/luWXOwdZoM2EW+fe7HR2NLoaBWunJ0uDmw01gtOd4/hPRvut5JDivdvuoxvV3WQ6UtyKp3REpzu545sXi/v0ZRvmd9SmValNV4kUQHj+BSpl057SzbnD8=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+  
+  <https://w3id.org/np/RAD6fvmF1vzjlokbRMCmLzzipy4Gs30wfEWONtx2ElqEc/get-threads-about-resource>
+    nt:hasLabelFromApi "Get the discussion threads about a resource" .
+  
+  <https://w3id.org/np/RAviXo8yYqCIoOn6gcgHXyJKDjmWoO9CndMTpcSn5xX0c/templateVersion>
+    nt:hasLabelFromApi "Discourse contribution" .
+  
+  <https://w3id.org/np/RAzhuZcCsv1zcv154bP__56eKxFhhJBz0N2_TW5-kOzIw/templateVersion>
+    nt:hasLabelFromApi "Question" .
+  
+  <https://w3id.org/spaces/knowledgepixels/nanoarguments> nt:hasLabelFromApi "Nanoarguments" .
+}
+

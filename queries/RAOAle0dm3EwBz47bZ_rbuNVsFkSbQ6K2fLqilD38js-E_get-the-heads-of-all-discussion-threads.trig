@@ -1,0 +1,123 @@
+@prefix this: <https://w3id.org/np/RAOAle0dm3EwBz47bZ_rbuNVsFkSbQ6K2fLqilD38js-E> .
+@prefix sub: <https://w3id.org/np/RAOAle0dm3EwBz47bZ_rbuNVsFkSbQ6K2fLqilD38js-E/> .
+@prefix np: <http://www.nanopub.org/nschema#> .
+@prefix grlc: <https://w3id.org/kpxl/grlc/> .
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix nt: <https://w3id.org/np/o/ntemplate/> .
+@prefix npx: <http://purl.org/nanopub/x/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix orcid: <https://orcid.org/> .
+@prefix prov: <http://www.w3.org/ns/prov#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+
+sub:Head {
+  this: a np:Nanopublication;
+    np:hasAssertion sub:assertion;
+    np:hasProvenance sub:provenance;
+    np:hasPublicationInfo sub:pubinfo .
+}
+
+sub:assertion {
+  sub:get-thread-heads a grlc:grlc-query;
+    dct:description "Returns the first contribution (head) of every discussion thread, whatever it is about, one row per thread, with its type, author and date, the number of responses in the thread at any depth, and the date of the latest contribution; the most recently active threads come first. A contribution is a schema:Statement or schema:Question with its text in rdf:value, following the Nanoarguments model, and it belongs to the thread of the contribution it responds to through as:inReplyTo, a rhetorical CiTO stance (supports, disputes, qualifies, agreesWith, and so on) or na:tests, pointing at the contribution itself or at the nanopublication holding it; citation relations such as cito:citesAsEvidence do not make it a response. A contribution republished under the same IRI counts with its latest version. Retracted and superseded nanopublications and example nanopublications are left out, and so are threads that start from one.";
+    dct:license <http://www.apache.org/licenses/LICENSE-2.0>;
+    rdfs:label "Get the heads of all discussion threads";
+    grlc:endpoint <https://w3id.org/np/l/nanopub-query-1.1/repo/full>;
+    grlc:sparql """prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
+prefix dct: <http://purl.org/dc/terms/>
+prefix np: <http://www.nanopub.org/nschema#>
+prefix npa: <http://purl.org/nanopub/admin/>
+prefix npx: <http://purl.org/nanopub/x/>
+prefix prov: <http://www.w3.org/ns/prov#>
+prefix foaf: <http://xmlns.com/foaf/0.1/>
+prefix schema: <https://schema.org/>
+prefix as: <https://www.w3.org/ns/activitystreams#>
+prefix cito: <http://purl.org/spar/cito/>
+prefix na: <https://w3id.org/nanoarguments/>
+prefix sio: <http://semanticscience.org/resource/>
+
+select ?discussion ?discussion_label ?type ?by ?by_label ?started ?responses ?last_activity ?reply_target ?np ?np_label
+where {
+  {
+    select ?discussion
+      (max(if(?c = ?discussion, str(?cnp), \"\")) as ?npStr)
+      (count(distinct ?c) - 1 as ?responses)
+      (max(?cdate) as ?last_activity)
+    where {
+      {
+        # the latest valid, non-example version of each contribution
+        select ?c (max(?created) as ?cdate) where {
+          values ?type { schema:Statement schema:Question }
+          graph ?va { ?c a ?type ; rdf:value ?vv . }
+          graph npa:graph {
+            ?vnp np:hasAssertion ?va ; np:hasPublicationInfo ?vpi ;
+              npa:hasValidSignatureForPublicKeyHash ?vpk ; dct:created ?created .
+            filter not exists { ?vx npx:invalidates ?vnp ; npa:hasValidSignatureForPublicKeyHash ?vpk . }
+          }
+          filter not exists { graph ?vpi { ?vnp npx:hasNanopubType npx:ExampleNanopub . } }
+        } group by ?c
+      }
+      graph npa:graph { ?cnp dct:created ?cdate ; np:hasAssertion ?ca . }
+      graph ?ca { ?c rdf:value ?cv . }
+      # the head of its thread: the contribution it leads back to that responds to no other
+      ?c (as:inReplyTo|na:tests|cito:agreesWith|cito:confirms|cito:corrects|cito:critiques|cito:derides|cito:disagreesWith|cito:discusses|cito:disputes|cito:extends|cito:parodies|cito:qualifies|cito:refutes|cito:repliesTo|cito:retracts|cito:reviews|cito:ridicules|cito:speculatesOn|cito:supports|cito:updates|npx:introduces)* ?discussion .
+      filter not exists {
+        values ?rrel {
+          as:inReplyTo na:tests cito:agreesWith cito:confirms cito:corrects cito:critiques
+          cito:derides cito:disagreesWith cito:discusses cito:disputes cito:extends cito:parodies
+          cito:qualifies cito:refutes cito:repliesTo cito:retracts cito:reviews cito:ridicules
+          cito:speculatesOn cito:supports cito:updates
+        }
+        graph ?ra { ?discussion ?rrel ?rt . }
+        values ?rtt { schema:Statement schema:Question }
+        graph ?rta { ?rt a ?rtt ; rdf:value ?rtv . }
+        filter(?rt != ?discussion)
+      }
+    } group by ?discussion
+    having (max(if(?c = ?discussion, 1, 0)) = 1)
+  }
+  bind(iri(?npStr) as ?np)
+  graph npa:graph { ?np np:hasAssertion ?a ; np:hasProvenance ?prov ; np:hasPublicationInfo ?pi ; dct:created ?started . }
+  optional { graph ?a { ?discussion rdf:value ?discussion_label . } }
+  optional { graph ?a { ?discussion a schema:Question . } bind(\"question\" as ?isq) }
+  optional {
+    values (?sub ?subname) { (sio:SIO_000284 \"hypothesis\") (sio:SIO_001394 \"evidence\") (sio:SIO_000259 \"argument\") }
+    graph ?a { ?discussion a ?sub . }
+  }
+  bind(coalesce(?isq, ?subname, \"statement\") as ?type)
+  optional { graph ?prov { ?a prov:wasAttributedTo ?attr . } }
+  optional { graph ?pi { ?np dct:creator ?creator . } }
+  bind(coalesce(?attr, ?creator) as ?by)
+  optional { graph ?pi { ?by foaf:name ?by_label . } }
+  bind(?discussion as ?reply_target)
+  bind(\"^\" as ?np_label)
+}
+order by desc(?last_activity)
+""" .
+}
+
+sub:provenance {
+  sub:assertion prov:wasAttributedTo orcid:0000-0002-1267-0234 .
+}
+
+sub:pubinfo {
+  orcid:0000-0002-1267-0234 foaf:name "Tobias Kuhn" .
+  
+  this: dct:created "2026-11-18T13:50:12.984+01:00"^^xsd:dateTime;
+    dct:creator orcid:0000-0002-1267-0234;
+    dct:license <https://creativecommons.org/licenses/by/4.0/>;
+    npx:embeds sub:get-thread-heads;
+    rdfs:label "Get the heads of all discussion threads";
+    nt:wasCreatedFromProvenanceTemplate <https://w3id.org/np/RA7lSq6MuK_TIC6JMSHvLtee3lpLoZDOqLJCLXevnrPoU>;
+    nt:wasCreatedFromPubinfoTemplate <https://w3id.org/np/RACJ58Gvyn91LqCKIO9zu1eijDQIeEff28iyDrJgjSJF8>,
+      <https://w3id.org/np/RAukAcWHRDlkqxk7H2XNSegc1WnHI569INvNr-xdptDGI>;
+    nt:wasCreatedFromTemplate <https://w3id.org/np/RAEFAt-QcFK0ZhqfvlsmS10BnzGJA0xwOICZXkO-ai87k> .
+  
+  sub:sig npx:hasAlgorithm "RSA";
+    npx:hasPublicKey "MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCwUtewGCpT5vIfXYE1bmf/Uqu1ojqnWdYxv+ySO80ul8Gu7m8KoyPAwuvaPj0lvPtHrg000qMmkxzKhYknEjq8v7EerxZNYp5B3/3+5ZpuWOYAs78UnQVjbHSmDdmryr4D4VvvNIiUmd0yxci47dTFUj4DvfHnGd6hVe5+goqdcwIDAQAB";
+    npx:hasSignature "R7T24DgUkoihdMrgIMD8uaijDmUdMxrOcHPMy+cLzyS7liCg5nCASNX4PDK8bt7/X5e03oza4CC3Okx0LGDNVL8fU6DGj22W7OrQv4zx3TV07k/cTmCG38V8Ya6GO9ZR0gtG88SIU8SO8wmxNFktkxi3CV+0aDLSwZy9crJgC0A=";
+    npx:hasSignatureTarget this:;
+    npx:signedBy orcid:0000-0002-1267-0234 .
+}
+
